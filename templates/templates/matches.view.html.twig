@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}Матч по CS:GO{% endblock %}
+{% block router %}matches{% endblock %}
+{% block description %}
+  <meta name="description" content="Матч по League of Legends, Dota и Cs:Go">
+{% endblock %}
+{% block keywords %}
+  <meta name="Keywords" content="League of Legends, Dota, CS:GO">
+{% endblock %}
+{% block body %}
+<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+  Матч по CS:GO
+</h1>
+<div class="match__view home">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        {% include 'templates/matches/result.html.twig' with {'match': match} %}
+        {% include 'templates/matches/statistics.html.twig' with {'match': match}%}
+        {% include 'templates/matches/teams.html.twig' %}
+{#        {% include 'templates/matches/comments.html.twig' %}#}
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        {% include 'templates/home/results.html.twig' %}
+        {% include 'templates/matches/maps.html.twig' %}
+{#        {% include 'templates/matches/moments.html.twig' %}#}
+      </div>
+{#      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">#}
+{#        {% include 'templates/layouts/header.video.html.twig' %}#}
+{#      </div>#}
+    </div>
+  </div>
+</div>
+{% endblock %}

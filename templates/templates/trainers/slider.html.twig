@@ -1,0 +1,80 @@
+<div class="component slider_trainers">
+  <div class="top">
+    <div class="prev">
+      <a href="{{ path('marketplace_index') }}">
+        <img src="/images/arrowLftWhite.svg" alt="arrowLftWhite" />
+        Назад
+      </a>
+    </div>
+    <div class="help"></div>
+  </div>
+  {#
+  <div class="slidesContainer">
+    <div class="slideLft" @click="sliderPrev" :style="{opacity: slideControll ? 1 : 0.2}" v-if="slideView > 0">
+      <img src="/images/arrowLftWhite.svg" />
+    </div>
+    <div class="slideRgt" @click="sliderNext" :style="{opacity: slideControll ? 1 : 0.2}" v-if="slideView < slideCounts - 1">
+      <img src="/images/arrowRgtWhite.svg" />
+    </div>
+    <div class="slidesView" id="slideClone">
+      <div class="slidesScroll" :style="{width: `${slideCounts * slideWidth}px`, left: `-${slideView * slideWidth}px`}">
+        <div class="slide" :style="{width: `${slideWidth}px`}" v-for="item in slides">
+          <div>1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  #}
+  <div class="slides_cont" :style="{left: getLeftSlide(), width: ww + 'px'}">
+    <div class="slide_clone"></div>
+    <div class="slide" v-for="(item, i) in trainers" :key="i" :class="[(slide + 1) === i ? 'active' : '']" :style="{width: width + 'px'}">
+      <div class="cont">
+        <div class="lft" @click="prevSlide()" v-if="trainers.length > 1 && slide !== -1"><img src="/images/arrowLftWhite.svg" alt="arrowLftWhite" /></div>
+        <iframe v-if="item.trainer.streamType !== 1" width="100%" height="100%" :src="'https://www.youtube.com/embed/' + item.trainer.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
+        <iframe v-if="item.trainer.streamType === 1" :src="'https://player.twitch.tv/?channel=' + item.trainer.twitch + '&parent=champs.pro&muted=true'" height="100%" width="100%" frameborder="0" scrolling="no" allowfullscreen="false"></iframe>
+        <div class="rgt" @click="nextSlide()" v-if="trainers.length > 1"><img src="/images/arrowRgtWhite.svg" alt="arrowRgtWhite" /></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="user" v-if="trainer !== null">
+    <div class="data">
+      <div class="photo">
+        <img :src="trainer.photo !== null ? '/images/temp/matches/' + trainer.photo : '/images/icons/nophoto.png'" alt="avatar" />
+      </div>
+      <div class="rgt">
+        <div class="nikname">
+          <span v-text="trainer.nickname"></span>
+        </div>
+        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0"></div>
+        <div class="info">
+          <div class="info-row">
+            <div>РЕЙТИНГ</div>
+            <div><span v-text="trainer.ratingTotal"></span> из 5</div>
+          </div>
+          <div class="info-row">
+            <div>ОТЗЫВОВ</div>
+            <div v-text="trainer.reviewCount"></div>
+          </div>
+          <div class="info-row">
+            <div>ЦЕНА</div>
+            <div><span v-text="trainer.trainer.cost"></span> ₽</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="biography">
+      <div class="name">Главное достижение</div>
+      <div class="text" v-text="trainer.trainer.about"></div>
+    </div>
+    <div class="biography">
+      <div class="name">РАНГ</div>
+      <div class="text" v-text="trainer.rank"></div>
+    </div>
+    {% if app.user %}
+    <div class="buttons">
+      <a :href="'/ru/lessons/' + trainer.id">Купить тренировку</a>
+    </div>
+    {% endif %}
+  </div>
+</div>

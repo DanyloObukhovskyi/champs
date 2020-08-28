@@ -1,0 +1,138 @@
+<div class="component updates" id="updates">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      Обновления
+    </div>
+  </div>
+  <div class="table">
+      {#
+      <a class="table-row">
+        <div class="title">
+          <div class="time">10:34</div>
+          <div class="name">
+            <div></div>
+            Событие
+          </div>
+        </div>
+        <div class="event">
+          <div class="logo">
+            <img src="/images/temp/Rectangle2.png" alt="Rectangle2" />
+          </div>
+          <div class="data">
+            <div class="title">
+              BLAST Premier Spring 2020 Europe Showtime
+            </div>
+            <div class="date">
+              1 июня - 15 июня
+            </div>
+          </div>
+        </div>
+        <div class="text">
+          Опубликована сетка матчей
+        </div>
+      </a>
+      #}
+      <a class="table-row" v-for="item in items" :href="'/ru/news/' + item.id + '-' + item.url">
+        <div class="title">
+          <div class="time" v-text="getTime(item.date)"></div>
+          <div class="name">
+            <div></div>
+            <span v-if="item.type === '1'">Трансфер</span>
+            <span v-if="item.type === '2'">Матч</span>
+            <span v-if="item.type === '3'">Видео</span>
+            <span v-if="item.type === '4'">Интервью</span>
+            <span v-if="item.type === '5'">Статья</span>
+            <span v-if="item.type === '6'">Обновления</span>
+            <span v-if="item.type === '7'">Текст</span>
+          </div>
+        </div>
+        <div class="text" v-text="item.title"></div>
+      </a>
+      {#
+      <a class="table-row">
+        <div class="title">
+          <div class="time">10:34</div>
+          <div class="name">
+            <div></div>
+            Трансфер
+          </div>
+        </div>
+        <div class="transfer">
+          <div class="logo">
+            <img src="/images/temp/Player1.png" alt="Avatar" />
+          </div>
+          <div class="data">
+            <div class="title">
+              <img src="/images/temp/flag-russia.png" alt="Flag Russian" />s1mple
+            </div>
+            <div class="name">
+              Александр Костылев
+            </div>
+          </div>
+          <div class="data">
+            <div class="tab">
+              <img src="/images/temp/Rectangle5.png" alt="Rectangle5" />Virtus.pro
+            </div>
+            <div class="tab">
+              <img src="/images/temp/Rectangle5.png" alt="Rectangle5" />Natus Vincere
+            </div>
+          </div>
+        </div>
+        <div class="text">
+          MIBR и Evil Geniuses сохранили лидерство в групповом этапе BLAST Premier: Spring 2020 Showdown для Северной Америки
+        </div>
+      </a>
+      #}
+  </div>
+</div>
+
+
+<script>
+var updates = new Vue({
+  el: '#updates',
+  data: function () {
+    return {
+      items: [],
+    };
+  },
+  methods: {
+    getTime(date) {
+      const t = date.split('T')[1].split('+')[0].split(':');
+      return `${t[0]}:${t[1]}`;
+    },
+    getAxios() {
+      const th = this;
+      let datefrom = new Date();
+      datefrom.setDate(datefrom.getDate() - 10);
+      datefrom = `${datefrom.getDate() < 10 ? '0' + datefrom.getDate() : datefrom.getDate()}.${(datefrom.getMonth() + 1) < 10 ? '0' + (datefrom.getMonth() + 1) : datefrom.getMonth() + 1}.${datefrom.getFullYear()}`;
+      let dateTo = new Date();
+      dateTo = `${dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()}.${(dateTo.getMonth() + 1) < 10 ? '0' + (dateTo.getMonth() + 1) : dateTo.getMonth() + 1}.${dateTo.getFullYear()}`;
+      axios.get(`/ru/news/search/{"type":"0","datefrom":"${datefrom}","dateto":"${dateTo}","search":""}`)
+      .then(function (response) {
+        if (response.data !== null) {
+          response.data.forEach((item, i) => {
+            if (i < 6) {
+              th.items.push(item);
+            }
+          });
+          th.items.sort(function(a, b) {
+            if (a.id > b.id) {
+              return -1;
+            }
+            if (a.id < b.id) {
+              return 1;
+            }
+            return 0;
+          });
+        }
+      })
+    },
+  },
+  mounted() {
+    this.getAxios();
+  },
+});
+</script>

@@ -1,0 +1,185 @@
+<div class="component maps">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" /></div>
+    </div>
+    <div class="title">
+      Карты
+    </div>
+  </div>
+  <div class="grid">
+
+      {% if(match.matchPickAndBans|length == 0) %}
+          <div class="map">Команды еще не приступили к пику и бану карт</div>
+      {% endif %}
+      {% for key, pickAndBan in match.matchPickAndBans %}
+          <div class="map">{{ key + 1 }}. {{ pickAndBan.team ? pickAndBan.team.name : '' }} {{ pickAndBan.operationType == 1 ? 'забанила' : (pickAndBan.operationType == 2 ? 'пикнула' : 'Оставшаяся карт - ')}} {{ pickAndBan.map }}</div>
+      {% endfor %}
+  </div>
+{#  <div class="grid-preview">#}
+
+{#    <div class="grid-preview-row">#}
+
+{#      <img src="/images/temp/matches/map.svg" class="image" />#}
+
+{#      <div class="background"></div>#}
+
+{#      <div class="title">Train</div>#}
+
+{#      <div class="rows-teams">#}
+
+{#        <div class="teamA">#}
+
+{#          <img src="/images/temp/Rectangle7.svg" />Natus Vincere#}
+
+{#        </div>#}
+
+{#        <div class="teamAScores green">13</div>#}
+
+{#        <div class="scores">#}
+
+{#          <label>#}
+
+{#            <span class="orange">9</span>#}
+
+{#            :#}
+
+{#            <span class="blue">3</span>#}
+
+{#          </label>#}
+
+{#          <label>#}
+
+{#            <span class="blue">4</span>#}
+
+{#            :#}
+
+{#            <span class="orange">0</span>#}
+
+{#          </label>#}
+
+{#        </div>#}
+
+{#        <div class="teamBScores red">3</div>#}
+
+{#        <div class="teamB">#}
+
+{#          Virtus.pro<img src="/images/temp/Rectangle6.svg" />#}
+
+{#        </div>#}
+
+{#      </div>#}
+
+{#    </div>#}
+
+{#    <div class="grid-preview-row">#}
+
+{#      <img src="/images/temp/matches/map.svg" class="image" />#}
+
+{#      <div class="background"></div>#}
+
+{#      <div class="title">Train</div>#}
+
+{#      <div class="rows-teams">#}
+
+{#        <div class="teamA">#}
+
+{#          <img src="/images/temp/Rectangle7.svg" />Natus Vincere#}
+
+{#        </div>#}
+
+{#        <div class="teamAScores red">13</div>#}
+
+{#        <div class="scores">#}
+
+{#          <label>#}
+
+{#            <span class="orange">2</span>#}
+
+{#            :#}
+
+{#            <span class="blue">9</span>#}
+
+{#          </label>#}
+
+{#          <label>#}
+
+{#            <span class="blue">2</span>#}
+
+{#            :#}
+
+{#            <span class="orange">3</span>#}
+
+{#          </label>#}
+
+{#        </div>#}
+
+{#        <div class="teamBScores green">12</div>#}
+
+{#        <div class="teamB">#}
+
+{#          Virtus.pro<img src="/images/temp/Rectangle6.svg" />#}
+
+{#        </div>#}
+
+{#      </div>#}
+
+{#    </div>#}
+
+{#    <div class="grid-preview-row">#}
+
+{#      <img src="/images/temp/matches/map.svg" class="image" />#}
+
+{#      <div class="background"></div>#}
+
+{#      <div class="title">Train</div>#}
+
+{#      <div class="rows-teams">#}
+
+{#        <div class="teamA">#}
+
+{#          <img src="/images/temp/Rectangle7.svg" />Natus Vincere#}
+
+{#        </div>#}
+
+{#        <div class="teamAScores green">13</div>#}
+
+{#        <div class="scores">#}
+
+{#          <label>#}
+
+{#            <span class="orange">9</span>#}
+
+{#            :#}
+
+{#            <span class="blue">3</span>#}
+
+{#          </label>#}
+
+{#          <label>#}
+
+{#            <span class="blue">4</span>#}
+
+{#            :#}
+
+{#            <span class="orange">0</span>#}
+
+{#          </label>#}
+
+{#        </div>#}
+
+{#        <div class="teamBScores red">3</div>#}
+
+{#        <div class="teamB">#}
+
+{#          Virtus.pro<img src="/images/temp/Rectangle6.svg" />#}
+
+{#        </div>#}
+
+{#      </div>#}
+
+{#    </div>#}
+
+{#  </div>#}
+
+</div>

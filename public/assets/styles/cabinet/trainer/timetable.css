@@ -1,0 +1,391 @@
+.cabinet .controll .dates{
+  padding-top: 1vw;
+  width: 100%;
+  font-size: 0.9vw;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.cabinet .controll .dates span:nth-child(1){
+  padding-right: 0.5vw;
+}
+.cabinet .controll .dates span:nth-child(2){
+  padding-left: 0.5vw;
+}
+.cabinet .controll .dates .arrow{
+  width: 1.3vw;
+  height: 1.3vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.cabinet .controll .dates .arrow:hover{
+  background-color: #CFDCF3;
+}
+
+.cabinet .calendarblock{
+  width: 100%;
+  background-color: #FFFFFF;
+  border: 0.04vw solid #CFDCF3;
+  margin-top: 1vw;
+  display: flex;
+  flex-direction: column;
+}
+.cabinet .calendarblock .days{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+}
+.cabinet .calendarblock .days .null{
+  width: 8vw;
+  flex-shrink: 0;
+}
+.cabinet .calendarblock .days .day{
+  width: 14.28%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1vw 0;
+}
+.cabinet .calendarblock .days .day .title{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 0.7vw;
+  text-transform: uppercase;
+  letter-spacing: 0.05vw;
+}
+.cabinet .calendarblock .days .day .date{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 0.7vw;
+  color: #888;
+}
+.cabinet .calendarblock .days .day.today .title{
+  color: #FF6D1D;
+  font-weight: 500;
+}
+.cabinet .calendarblock .days .day.today .date{
+  color: #000000;
+  font-weight: 500;
+}
+.cabinet .calendarblock .days .day:after{
+  content: '';
+  width: 0.08vw;
+  height: 0.5vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #CFDCF3;
+}
+.cabinet .calendarblock .times{
+  width: 100%;
+  flex-direction: column;
+}
+.cabinet .calendarblock .times .time{
+  width: 100%;
+  height: 4vw;
+  display: flex;
+  flex-direction: row;
+}
+.cabinet .calendarblock .times .time .text{
+  width: 8vw;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cabinet .calendarblock .times .time .text:after{
+  content: '';
+  width: 1vw;
+  height: 0.04vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #CFDCF3;
+}
+.cabinet .calendarblock .times .time .text span{
+  position: relative;
+  top: -0.6vw;
+  font-size: 0.7vw;
+}
+.cabinet .calendarblock .times .time .rows{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  /*padding: 0.2vw;*/
+}
+.cabinet .calendarblock .times .time .rows .rows-row{
+  width: 14.28%;
+  height: 100%;
+  padding: 0.2vw;
+}
+.cabinet .calendarblock .times .time .rows .rows-row:after{
+  content: '';
+  width: 0.08vw;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #CFDCF3;
+}
+.cabinet .calendarblock .times .time .rows:after{
+  content: '';
+  width: 100%;
+  height: 0.04vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #CFDCF3;
+}
+/*
+.cabinet .calendarblock .times .time .rows:before{
+  content: '';
+  width: 0.08vw;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #CFDCF3;
+}
+*/
+.cabinet .calendarblock .times .time .rows .open{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 109, 29, 0.1);
+  color: #000000;
+  font-size: 0.75vw;
+  cursor: pointer;
+}
+.cabinet .calendarblock .times .time .rows .openclose{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #CFDCF3;
+  color: #6D85AF;
+  font-size: 0.75vw;
+  cursor: pointer;
+}
+.cabinet .calendarblock .times .time .rows .user{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #F0F5FF;
+  color: #000000;
+  font-size: 0.75vw;
+  font-weight: 500;
+  padding: 0 1vw;
+}
+.cabinet .calendarblock .times .time .rows .user img{
+  width: 2vw;
+  height: 2vw;
+  margin-right: 1vw;
+  border-radius: 0.2vw;
+}
+.cabinet .calendarblock .times .time .rows .disabled{
+  background-color: #EEEEEE;
+  color: #777777;
+  cursor: default;
+}
+.cabinet .time_mobile{
+  display: none;
+}
+@media screen and (max-width: 1000px) {
+  .cabinet .controll .dates{
+    font-size: 2vw;
+  }
+  .cabinet .controll .dates .arrow{
+    margin-left: 3vw;
+  }
+  .cabinet .cont{
+    width: calc(100% - 20vw);
+    left: 20vw;
+    margin-top: 4vw;
+  }
+  .cabinet .calendarblock{
+    overflow-x: auto;
+  }
+  .cabinet .calendarblock .days{
+    width: auto;
+    min-width: 100%;
+  }
+  .cabinet .calendarblock .days .null{
+    display: none;
+  }
+  .cabinet .calendarblock .days .day{
+    width: 50%;
+    flex-shrink: 0;
+    padding: 2vw 0;
+  }
+  .cabinet .calendarblock .days .day .title{
+    font-size: 2vw;
+  }
+  .cabinet .calendarblock .days .day .date{
+    font-size: 2vw;
+    padding-top: 2vw;
+  }
+  .cabinet .time_mobile{
+    width: 20vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    left: -20vw;
+    top: 0;
+    background-color: #FFFFFF;
+    z-index: 10;
+    padding-top: 9vw;
+    border: 0.04vw solid #CFDCF3;
+    border-right: 0.4vw solid #CFDCF3;
+    border-right: 0;
+  }
+  .cabinet .time_mobile .text{
+    width: 100%;
+    height: 15vw;
+    display: flex;
+    justify-content: center;
+  }
+  .cabinet .time_mobile span{
+    font-size: 2vw;
+  }
+  .cabinet .calendarblock .times .time .text:after{
+    content: '';
+    width: 1vw;
+    height: 2vw;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #CFDCF3;
+  }
+  .cabinet .calendarblock .times .time{
+    width: auto;
+    min-width: 100%;
+    flex-shrink: 0;
+    height: 15vw;
+  }
+  .cabinet .calendarblock .times .time .text{
+    display: none;
+  }
+  .cabinet .calendarblock .times{
+    width: auto;
+    min-width: 100%;
+    flex-shrink: 0;
+  }
+  .cabinet .calendarblock .times .time .rows{
+    width: auto;
+    min-width: 100%;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row{
+    flex-shrink: 0;
+    padding: 1vw;
+  }
+  .cabinet .calendarblock .times .time .rows:after{
+    height: 0.2vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row:after{
+    width: 0.2vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .open{
+    font-size: 2vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .write{
+    font-size: 2vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row:nth-child(1):after{
+    display: none;
+  }
+  .cabinet .calendarblock .days .day:after{
+    display: none;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .disabled{
+    font-size: 2vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .user{
+    font-size: 2vw;
+    padding: 0 3vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .user img{
+    width: 5vw;
+    height: 5vw;
+    margin-right: 3vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .openclose{
+    font-size: 2vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .cabinet .calendarblock .days .day{
+    width: 100%;
+  }
+  .cabinet .calendarblock{
+    margin-top: 4vw;
+  }
+  .cabinet .controll .dates{
+    padding-top: 0;
+    font-size: 4vw;
+  }
+  .cabinet .controll .dates .dt{
+    width: 100%;
+    display: flex;
+  }
+  .cabinet .controll .dates .dt span:nth-child(1){
+    padding-right: 1vw;
+  }
+  .cabinet .controll .dates .dt span:nth-child(2){
+    padding-left: 1vw;
+  }
+  .cabinet .controll .dates .arrow{
+    flex-shrink: 0;
+    width: 8vw;
+    height: 8vw;
+    margin-left: 4vw;
+  }
+  .cabinet .time_mobile{
+    padding-top: 10vw;
+  }
+  .cabinet .calendarblock .days .day .title{
+    font-size: 3vw;
+  }
+  .cabinet .calendarblock .days .day .date{
+    font-size: 3vw;
+  }
+  .cabinet .time_mobile span{
+    font-size: 3vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .openclose{
+    font-size: 3.5vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .open{
+    font-size: 3.5vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .user{
+    font-size: 3.5vw;
+    padding: 0 4vw;
+  }
+  .cabinet .calendarblock .times .time .rows .rows-row .user img{
+    width: 6vw;
+    height: 6vw;
+    margin-right: 4vw;
+  }
+  .cabinet .calendarblock .times .time{
+    height: 18vw;
+  }
+  .cabinet .time_mobile .text{
+    height: 18vw;
+  }
+}

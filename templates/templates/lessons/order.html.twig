@@ -1,0 +1,67 @@
+<script type="text/x-template" id="order-template">
+  <div class="order">
+    <div class="title">Вы успешно записаны на занятие</div>
+    <div class="info">
+      <img src="/images/Rectangle495.svg" />
+      <div class="block">
+        <div class="name">Darklight</div>
+        <div class="list">
+          <div class="tab" v-for="item in dates">
+            <span class="round"></span>
+            <div>
+              <span v-text="getDate(item, true)"></span>
+              <span v-for="i in item.times" v-text="getDate(i, false)"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subtitle">В личном кабинете за 15 минут до начала занятия у вас появится ссылка с доступом к каналу в Discord</div>
+    <div class="buttons">
+      <a href="/user/timelist" class="button">Готово</a>
+    </div>
+  </div>
+</script>
+
+<script>
+  Vue.component('order', {
+    template: '#order-template',
+    props: {
+      items: Array,
+    },
+    data: function () {
+      return {
+        dates: [],
+      }
+    },
+    methods: {
+      getDate(date, type) {
+        if (type) {
+          return `${date.date.toLocaleString("ru", {day: 'numeric', month: 'long'})}, ${date.date.toLocaleString("ru", {weekday: 'long'})}`;
+        } else {
+          return `${date.timein} - ${date.timeout}`;
+        }
+      }
+    },
+    mounted() {
+      this.items.forEach((item, i) => {
+        let newitem = {
+          date: item.date,
+          times: [],
+        };
+        let n_ew = true;
+        this.dates.forEach((item2, i2) => {
+          if (item.date.getFullYear() === item2.date.getFullYear() && item.date.getMonth() === item2.date.getMonth() && item.date.getDate() === item2.date.getDate()) {
+            this.dates[i2].times.push(item.time);
+            n_ew = false;
+          }
+        })
+        if (n_ew) {
+          newitem.times.push(item.time);
+          this.dates.push(newitem);
+        }
+      });
+      console.log(this.dates)
+    }
+  })
+</script>

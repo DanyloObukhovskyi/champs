@@ -1,0 +1,299 @@
+{% extends 'base.html.twig' %}
+{% block title %}Marketplace{% endblock %}
+{% block router %}marketplace{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<div class="cabinet" id="cabinet" style="min-height: 40vw">
+  <div class="header">
+    <div class="lft">
+      <a href="{{ path('trainer_index') }}">РАСПИСАНИЕ</a>
+      <a class="active">КАЛЕНДАРЬ</a>
+      <a href="{{ path('purse_index') }}">КОШЕЛЕК</a>
+      <a href="{{ path('trainer_settings_index') }}">НАСТРОЙКИ</a>
+    </div>
+    <div class="rgt">
+      <a href="/logout" class="set">Выйти</a>
+      <div class="button set" style="display: none">
+        Настройка расписания
+      </div>
+    </div>
+  </div>
+  <timetables />
+</div>
+
+<script type="text/x-template" id="timetables-template">
+  <div class="timetables" :style="{opacity: block ? '0.8' : '1'}">
+    <div class="controll">
+      <div class="dates">
+        <div class="dt"><span v-text="getDate('datein')"></span> - <span v-text="getDate('dateout')"></span></div>
+        <div class="arrow" @click="prevWeek"><img src="/images/arrowL.svg" alt="arrowL" /></div>
+        <div class="arrow" @click="nextWeek"><img src="/images/arrowR.svg" alt="arrowR" /></div>
+      </div>
+    </div>
+    <div class="cont" id="calendar">
+      <div class="time_mobile">
+        <div class="text" v-for="t in getTimes">
+          <span v-text="`${t}:00`"></span>
+        </div>
+      </div>
+      <div class="calendarblock" v-for="(parent, p_i) in items" :key="p_i">
+        <div class="days">
+          <div class="null"></div>
+          <div class="day" v-for="(item, i) in parent.week" :class="[getToday(item) ? 'today' : '']">
+            <div class="title" v-text="week[i]"></div>
+            <div class="date" v-text="getDateD(item.date)"></div>
+          </div>
+        </div>
+        <div class="times" :style="{width: rowsWidth + 'px'}">
+          <div class="time" v-for="t in getTimes">
+            <div class="text">
+              <span v-text="`${t}:00`"></span>
+            </div>
+            <div class="rows" style="user-select: none">
+              <div class="rows-row" v-for="i in parent.week" :style="{width: rowWidth + 'px'}">
+                <div class="open" v-if="checkTime(t, i, 0)" @click="setCheck(t, i, 1)" :class="[checkDisabled(t, i) ? 'disabled' : '']">
+                  Открыть
+                </div>
+                <div class="openclose" v-if="checkTime(t, i, 1)" @click="setCheck(t, i, 0)" :class="[checkDisabled(t, i) ? 'disabled' : '']">
+                  Запись открыта
+                </div>
+                <div class="user" v-if="checkTime(t, i, 10)" :class="[checkDisabled(t, i) ? 'disabled' : '']">
+                  <img src="/images/temp/Rectangle506.png" /> Damenik
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script>
+  Vue.component('timetables', {
+    template: '#timetables-template',
+    props: {
+      price: Number,
+      block: Boolean,
+    },
+    computed: {
+      getTimes() {
+        let times = [];
+        if (this.items[0]) {
+          this.items[0].week.forEach((item) => {
+            item.times.forEach((time) => {
+              const hourin = time.timein.split(':');
+              if (times.indexOf(hourin[0]) === -1) {
+                times.push(hourin[0]);
+              }
+            });
+          });
+        }
+        return times;
+      }
+    },
+    methods: {
+      getToday(date) {
+        const today = new Date();
+        if (today.getFullYear() === date.date.getFullYear() && today.getMonth() === date.date.getMonth() && today.getDate() === date.date.getDate()) {
+          return true;
+        }
+        return false;
+      },
+      getTime(arr, i) {
+        let time = '';
+        arr.times.forEach((item) => {
+          const hourin = item.timein.split(':');
+          if (hourin[0] === i) {
+            time = `${item.timein} - ${item.timeout}`;
+          }
+        });
+        return time;
+      },
+      getDate(val) {
+        if (this.items[0]) {
+          if (this.items[0][val]) {
+            return new Date(this.items[0][val]).toLocaleString("ru", {day: 'numeric', month: 'long'});
+          }
+        }
+        return '';
+      },
+      getDateD(val) {
+        const date = new Date(val);
+        return `${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}.${date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
+      },
+      checkTime(t, i, status) {
+        let bool = false;
+        this.items[0].week.forEach((item) => {
+          if (item.date === i.date) {
+            item.times.forEach((item2) => {
+              const hourin = item2.timein.split(':');
+              if (hourin[0] === t) {
+                if (item2.status === status) {
+                  bool = true;
+                }
+              }
+            });
+          }
+        });
+        return bool;
+      },
+      checkDisabled(t, i) {
+        let bool = false;
+        this.items[0].week.forEach((item) => {
+          if (item.date === i.date) {
+            item.times.forEach((item2) => {
+              const hourin = item2.timein.split(':');
+              if (hourin[0] === t) {
+                const nDate = new Date(i.date.getFullYear(), i.date.getMonth(), i.date.getDate(), hourin[0]);
+                if (new Date().getTime() > nDate.getTime()) {
+                  bool = true;
+                }
+              }
+            });
+          }
+        });
+        return bool;
+      },
+      setCheck(t, i, status) {
+        if (!this.block) {
+          const today = new Date();
+          this.items[0].week = this.items[0].week.map((item) => {
+            item.times = item.times.map((item2) => {
+              const hourin = item2.timein.split(':');
+              if (hourin[0] === t && item.date === i.date) {
+                const nDate = new Date(i.date.getFullYear(), i.date.getMonth(), i.date.getDate(), hourin[0]);
+                if (new Date().getTime() < nDate.getTime()) {
+                  const stat = item2.status;
+                  item2.status = status;
+                  const form = new FormData();
+                  form.append('id', item2.id);
+                  form.append('status', status);
+                  form.append('time', item2.timein);
+                  axios.post('/ru/calendar/change/time/status/', form)
+                  .then((res) => {
+                    item2.status = status;
+                  })
+                  .catch(() => {
+                    item2.status = stat;
+                  });
+                }
+              }
+              return item2;
+            });
+            return item;
+          });
+        }
+      },
+      prevWeek() {
+        const today = new Date();
+        const date = new Date(this.today);
+        const pDate = new Date(this.today);
+
+        const day = today.getDay() === 0 ? 6 : today.getDay() - 1;
+        today.setDate((today.getDate() - day + 1) - 7);
+        date.setDate(date.getDate() - 7);
+
+        if (today.getTime() < pDate.getTime()) {
+          this.today = date;
+          this.getAjax(date);
+        }
+      },
+      nextWeek() {
+        let date = new Date(this.today);
+        date.setDate(date.getDate() + 7);
+        this.today = date;
+        this.getAjax(date);
+      },
+      getAjax(today) {
+        this.items = [];
+        const th = this;
+        if (today.getDay() !== 1) {
+          if (today.getDay() === 0) {
+            today.setDate(today.getDate() - 6);
+          } else {
+            today.setDate(today.getDate() - (today.getDay() - 1));
+          }
+        }
+        let enddate = new Date(today);
+        enddate.setDate(enddate.getDate() + 6);
+        axios.get(`/ru/calendar/user/date/week/{"user_id":"{{app.user.id}}","date":"${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}.${today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : today.getMonth() + 1}.${today.getFullYear()}"}`)
+        .then(function (response) {
+          const items = {
+            datein: today,
+            dateout: enddate,
+            week: [],
+          };
+          const data = response.data;
+          data.sort(function (a, b) {
+            return new Date(a.date) - new Date(b.date);
+          });
+          for (let i = 0; i < 7; i++) {
+            let empty = new Date(today);
+            empty.setDate(empty.getDate() + i);
+            const newitem = {
+              date: empty,
+              times: [],
+            };
+            data.forEach((item) => {
+              const newDate = new Date(item.date);
+              if (newDate.getDate() === empty.getDate() && newDate.getMonth() === empty.getMonth() && newDate.getFullYear() === empty.getFullYear()) {
+                Object.keys(item).forEach((key) => {
+                  if (key.match(/time+/i)) {
+                    let parse = key.split('time');
+                    const times = {
+                      timein: parse[1].substr(0, 2) + ':00',
+                      timeout: parse[1].substr(2, 4) + ':00',
+                      status: item[key],
+                      id: item.id,
+                    };
+                    newitem.times.push(times);
+                  }
+                })
+              }
+            });
+            items.week.push(newitem);
+          }
+          th.items.push(items);
+        });
+      },
+    },
+    data: function () {
+      return {
+        rowsWidth: 0,
+        rowWidth: 0,
+        today: '',
+        weekSelect: 0,
+        week: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+        items: [],
+      }
+    },
+    mounted() {
+      if (window.innerWidth > 1000) {
+        this.rowsWidth = 'auto';
+        this.rowWidth =  'auto';
+      } else {
+        if (window.innerWidth > 600) {
+          this.rowsWidth = (document.getElementById('calendar').clientWidth / 2) * 7;
+          this.rowWidth =  document.getElementById('calendar').clientWidth / 2;
+        } else {
+          this.rowsWidth = document.getElementById('calendar').clientWidth * 7;
+          this.rowWidth =  document.getElementById('calendar').clientWidth;
+        }
+      }
+      this.today = new Date();
+      this.getAjax(new Date());
+    }
+  })
+</script>
+
+<script>
+const cabinet = new Vue({
+  el: '#cabinet',
+})
+</script>
+{% endblock %}

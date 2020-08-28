@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+{% block title %}Карта сайта{% endblock %}
+{% block router %}map{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+  Карта сайта
+</h1>
+<div class="map">
+  <div class="container">
+    <div class="title">
+      Карта сайта
+    </div>
+    <div>
+      <a href="{{ path('main') }}">Главная</a>
+    </div>
+    <div>
+      <a href="/news">Новости</a>
+    </div>
+    <div>
+      <a href="/matches">Матчи</a>
+    </div>
+    <div>
+      <a href="/results">Результаты</a>
+    </div>
+    <div>
+      <a href="/events">События</a>
+    </div>
+    <div>
+      <a href="/gallery">Галерея</a>
+    </div>
+    <div>
+      <a href="/statistics">Статистика</a>
+    </div>
+    <div>
+      <a href="/marketplace">Маркетплейс</a>
+    </div>
+    <div class="pt1">
+      <a href="/trainers/cs">Обучение Counter-Strike: Global Offensive</a>
+    </div>
+    <div class="pt1">
+      <a href="/trainers/dota">Обучение DOTA</a>
+    </div>
+    <div class="pt1">
+      <a href="/trainers/lol">Обучение League of Legends</a>
+    </div>
+    <div>
+      <a href="/about">О нас</a>
+    </div>
+    <div>
+      <a href="/contact">Контакты</a>
+    </div>
+    <div>
+      <a href="/politica">Политика конфиденциальности</a>
+    </div>
+    <img src="/images/Champs_Logo_About.png" class="back" class="backend" />
+  </div>
+</div>
+{% endblock %}

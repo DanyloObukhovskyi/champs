@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+{% block title %}Галерея{% endblock %}
+{% block router %}gallery{% endblock %}
+{% block description %}
+  <meta name="description" content="Галерея">
+{% endblock %}
+{% block keywords %}
+  <meta name="Keywords" content="Галерея">
+{% endblock %}
+{% block body %}
+<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+  Галерея
+</h1>
+  <div class="gallery__view" id="gallery__view">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            <div class="component">
+              <div class="header">
+                <div class="round">
+                  <div><img src="/images/lamp.svg" alt="lamp" /></div>
+                </div>
+                <div class="title">
+                  {{title}}
+                </div>
+              </div>
+            </div>
+          <div class="prev_article">
+            <img src="/images/arrowLftDark.svg" alt="arrowLeft" />
+            <a href="/gallery">Назад</a>
+          </div>
+          <div class="text_article">
+            {% include 'templates/gallery/photos.html.twig' %}
+          </div>
+        </div>
+      </div>
+    <transition name="fade">
+      <div class="wrapper news-wrap" v-if="zoom" @click="clearImg">
+          <img :src="img" class="temp_clone" style="opacity: 0" alt="clone" />
+          <img :src="img" :style="{width: pos.w, height: pos.h, left: pos.l, top: pos.t}" class="clone" v-show="img !== null" :alt="img" />
+{#          {% include 'templates/gallery/comments.html.twig' %}#}
+        <div class="title_wrap">Кликните на области чтобы закрыть изображение</div>
+      </div>
+    </transition>
+  </div>
+  </div>
+  <script>
+    var gallery__view = new Vue({
+      el: '#gallery__view',
+      data: function () {
+        return {
+          img: null,
+          pos: {w: 0, h: 0, l: 0, t: 0},
+          tmp: null,
+          zoom: false,
+          block: false,
+          // lComment: 0,
+        };
+      },
+      methods: {
+        clearImg() {
+          document.querySelector('html, body').style.overflow = 'auto';
+          if (!this.block) {
+            this.pos = this.tmp;
+            this.block = true;
+            setTimeout(() => {
+              this.tmp = null;
+              this.img = null;
+              this.block = false;
+              this.zoom = false;
+            }, 500);
+          }
+        },
+      },
+      mounted() {
+        document.querySelector('.text_article').querySelectorAll('img').forEach((item) => {
+          item.addEventListener('click', (e) => {
+            document.querySelector('html, body').style.overflow = 'hidden';
+            if (!this.block) {
+              this.zoom = true;
+              this.block = true;
+              this.img= e.target.getAttribute('src');
+              const pos = e.target.getBoundingClientRect();
+              this.pos = {
+                w: pos.width + 'px',
+                h: pos.height + 'px',
+                l: pos.left + 'px',
+                t: pos.top + 'px',
+              };
+              this.tmp = this.pos;
+              setTimeout(() => {
+                // const com = document.querySelector('.component.comments').clientWidth;
+                let h = document.querySelector('.temp_clone').clientHeight;
+                let t = 0;
+                let w = document.querySelector('.temp_clone').clientWidth;
+                let l = (window.innerWidth - w) / 2/* - (com / 2) */;
+                // let lComment = l + w;
+                if (window.innerHeight > window.innerWidth) {
+                  const w_t = window.innerWidth / w;
+                  const h_t = window.innerWidth / h;
+                  const ratio = Math.min(w_t, h_t);
+                  w = Math.ceil(w * ratio);
+                  h = Math.ceil(h * ratio);
+                  l = 0;
+                  t = (window.innerHeight - h) / 2;
+                } else {
+                  if (w > h) {
+                    if (w > window.innerWidth) {
+                      const w_t = window.innerWidth / w;
+                      const h_t = window.innerWidth / h;
+                      const ratio = Math.min(w_t, h_t);
+                      w = Math.ceil(w * ratio);
+                      h = Math.ceil(h * ratio);
+                      l = 0;
+                    } else {
+                      const w_t = w / w;
+                      const h_t = w / h;
+                      const ratio = Math.min(w_t, h_t);
+                      w = Math.ceil(w * ratio);
+                      h = Math.ceil(h * ratio);
+                    }
+                    t = (window.innerHeight - h) / 2;
+                  } else {
+                    if (h > window.innerHeight) {
+                      const w_t = window.innerHeight / w;
+                      const h_t = window.innerHeight / h;
+                      const ratio = Math.min(w_t, h_t);
+                      w = Math.ceil(w * ratio);
+                      h = Math.ceil(h * ratio);
+                      l = (window.innerWidth - w) / 2;// - (com / 2);
+                      t = 0;
+                    } else {
+                      const w_t = h / w;
+                      const h_t = h / h;
+                      const ratio = Math.min(w_t, h_t);
+                      w = Math.ceil(w * ratio);
+                      h = Math.ceil(h * ratio);
+                      l = (window.innerWidth - w) / 2/* - (com / 2)*/;
+                      t = (window.innerHeight - h) / 2;
+                    }
+                  }
+                }
+                this.pos = {
+                  w: w + 'px',
+                  h: h + 'px',
+                  l: l + 'px',
+                  t: t + 'px',
+                };
+                // this.lComment = lComment;
+                this.block = false;
+              }, 50);
+            }
+          });
+        });
+      },
+    });
+  </script>
+{% endblock %}

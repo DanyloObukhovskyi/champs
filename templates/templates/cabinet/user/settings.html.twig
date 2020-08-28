@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+{% block title %}Настройки{% endblock %}
+{% block router %}cabinet{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<div class="cabinet" id="cabinet">
+  <div class="container">
+    <div class="header">
+      <div class="lft">
+        <a href="{{ path('timelist_index') }}">РАСПИСАНИЕ</a>
+        <a href="{{ path('specifications_index') }}">ХАРАКТЕРИСТИКИ</a>
+        <a href="{{ path('history_index') }}">ИСТОРИЯ</a>
+        <a class="active">НАСТРОЙКИ</a>
+      </div>
+      <div class="rgt">
+        <a href="/logout">Выйти</a>
+      </div>
+    </div>
+    <div class="cont">
+      <div class="lft">
+        <div class="title">Общие настройки</div>
+        <div class="inputs">
+          <div class="input">
+            <div>Имя<span>*</span></div>
+            <input type="text" v-model="required.name" />
+          </div>
+          <div class="input">
+            <div>Фамилия</div>
+            <input type="text" v-model="required.family" />
+          </div>
+          <div class="input">
+            <div>Никнейм<span>*</span></div>
+            <input type="text" v-model="required.nickname" />
+          </div>
+          <div class="input">
+            <div>Емейл<span>*</span></div>
+            <input type="text" v-model="required.email" />
+          </div>
+          <div class="input">
+            <div>Ваша основная игра<span>*</span></div>
+            <select v-model="required.game">
+              <option value="cs" default>CS:GO</option>
+              <option value="dota">DOTA</option>
+              <option value="lol">LOL</option>
+            </select>
+          </div>
+          <div class="input">
+            <div>Ранг/звание/MMR<span>*</span><span class="pos"><label v-text="required.rank.length"></label>/20 символов</span></div>
+            <input type="text" v-model="required.rank" maxlength="20"/>
+          </div>
+        </div>
+        <div class="title t">Изменение пароля</div>
+        <div class="inputs">
+          <div class="input">
+            <div>Изменить пароль</div>
+            <input type="password" v-model="password" />
+          </div>
+          <div class="input">
+            <div>Пароль повторно</div>
+            <input type="password" v-model="password_confirm" />
+          </div>
+        </div>
+      </div>
+      <div class="rgt">
+        <div class="title">Настройки ученика</div>
+        <div class="full-input">
+          <div>Ссылка discord</div>
+          <input type="text" v-model="discord" />
+        </div>
+        <div class="title t">Фото</div>
+        <div class="photos">
+          <div class="image">
+            <img :src="photoPath" />
+            <div class="blocked" v-if="blocked">
+              <img src="/images/Eclipse-1s-200px.gif" />
+            </div>
+          </div>
+          <div class="file">
+            <div class="blocked" v-if="blocked"></div>
+            <input type="file" @change="setPhoto($event)" accept=".jpg,.png" />
+            <div class="btn-file">Выбрать файл</div>
+          </div>
+        </div>
+        <div class="b-r top" style="display: none">
+          <div class="button discord">
+            <img src="/images/discord.svg" alt="discord" />Подключить Discord
+          </div>
+        </div>
+        <div class="b-r" style="display: none">
+          <div class="button steam">
+            <img src="/images/steam.svg" alt="steam" />Подключить Steam
+          </div>
+        </div>
+        <div class="b-r" style="display: none">
+          <div class="button epic">
+            <img src="/images/Epic.svg" alt="Epic" />Подключить Epic Store
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="save">
+      <div class="result" v-if="start">
+        <span v-if="!error && !success">Сохранение</span>
+        <span class="green" v-if="success && error === false">Сохранено</span>
+        <span class="green" v-if="error && success === false">Произошла ошибка</span>
+      </div>
+      <div class="button" @click="save" :class="[send ? '' : 'disabled']">Сохранить изменения</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const cabinet = new Vue({
+    el: '#cabinet',
+    computed: {
+    },
+    methods: {
+      save() {
+        if (this.send) {
+          this.start = true;
+          const form = new FormData();
+          form.append('id', {{app.user.id}});
+          form.append('name', this.required.name);
+          form.append('email', this.required.email);
+          form.append('nickname', this.required.nickname);
+          form.append('family', this.required.family);
+          form.append('game', this.required.game);
+          form.append('rank', this.required.rank);
+          form.append('discord', this.discord);
+          form.append('password', this.password);
+          form.append('password_repeat', this.password_confirm);
+          form.append('photo', this.photo);
+          this.start = true;
+          axios.post('/ru/user/set-info/', form)
+          .then((res) => {
+            this.success = true;
+            if (res.data.photo) {
+              this.photo = '';
+              this.photoPath = '/images/temp/matches/' + res.data.photo;
+            }
+          })
+          .catch(() => {
+            this.error = true;
+          });
+        }
+      },
+      setPhoto(event) {
+        const th = this;
+        const file = event.target.files[0]
+        if (file.type) {
+          const type = file.type.split('/')
+          if (type[1]) {
+            th.blocked = true;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+              th.blocked = false;
+              th.photo = reader.result;
+            };
+          }
+        }
+      }
+    },
+    watch: {
+      required: {
+        deep: true,
+        handler() {
+          this.send = true;
+          this.start = false;
+          this.success = false;
+          this.error = false;
+          Object.keys(this.required).forEach((key) => {
+            if (this.required[key].length === 0) {
+              this.send = false;
+            }
+          })
+        }
+      }
+    },
+    data: function () {
+      return {
+        success: false,
+        error: false,
+        start: false,
+        send: true,
+        required: {
+          name: '{{ app.user.name }}',
+          family: '{{ app.user.family }}',
+          nickname: '{{ app.user.nickname }}',
+          email: '{{ app.user.email }}',
+          rank: '{{ app.user.rank }}',
+          game: '{{ app.user.game }}',
+        },
+        discord: '{{ app.user.discord }}',
+        password: '',
+        password_confirm: '',
+        blocked: false,
+        photo: '',
+        photoPath: '{{app.user.photo ? '/images/temp/matches/' : '/uploads/images/'}}{{app.user.photo ? app.user.photo : '830f223afcf85dd280790e27079814b4.jpg'}}',
+      }
+    },
+    mounted() {
+      Object.keys(this.required).forEach((key) => {
+        if (this.required[key].length === 0) {
+          this.send = false;
+        }
+      })
+    }
+  });
+</script>
+{% endblock %}

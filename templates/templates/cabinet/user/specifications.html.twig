@@ -1,0 +1,280 @@
+{% extends 'base.html.twig' %}
+{% block title %}Характеристики{% endblock %}
+{% block router %}cabinet{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<div class="cabinet" id="cabinet">
+  <div class="container">
+    <div class="header">
+      <div class="lft">
+        <a href="{{ path('timelist_index') }}">РАСПИСАНИЕ</a>
+        <a class="active">ХАРАКТЕРИСТИКИ</a>
+        <a href="{{ path('history_index') }}">ИСТОРИЯ</a>
+        <a href="{{ path('settings_index') }}">НАСТРОЙКИ</a>
+      </div>
+      <div class="rgt">
+        <a href="/logout">Выйти</a>
+      </div>
+    </div>
+    <div class="specification">
+      <div class="title">
+        <div>i</div>Заполните поля, чтобы тренер мог заранее ознакомиться с полезной информацией, а также для Вас станет доступна функция персональных рекомендаций тренеров на странице обучения
+      </div>
+      <div class="cont">
+        <div class="tab">
+          <div class="subtitle">1. Обучение в какой игре для вас является приоритетным?</div>
+          <div class="selectBlock">
+            <select v-model="game">
+              <option value="" selected disabled hidden>Выберите игру</option>
+              <option value="Counter Strike: GO">Counter Strike: GO</option>
+              <option value="DOTA">DOTA</option>
+              <option value="League of Legends">League of Legends</option>
+            </select>
+          </div>
+        </div>
+        <div class="tab">
+          <div class="subtitle">2. Сколько часов вы играете в эту игру?</div>
+          <div class="selectBlock">
+            <input type="number" v-model="hours" placeholder="Количество часов" min="0" max="10000">
+          </div>
+        </div>
+        <div class="tab">
+          <div class="subtitle">3. На какой командной ролью вы хотите работать больше?</div>
+          <div class="selectBlock">
+            <select v-model="role">
+              <option value="" selected disabled hidden>Выберите роль</option>
+              <option value="Капитан">Капитан</option>
+              <option value="Танк">Танк</option>
+              <option value="Прикрывающий">Прикрывающий</option>
+              <option value="Снайпер">Снайпер</option>
+              <option value="Тихий игрок">Тихий игрок</option>
+            </select>
+          </div>
+        </div>
+        <div class="tab">
+          <div class="subtitle">4. Какие навыки вы хотели бы улучшить?</div>
+          <div class="selectBlock">
+            <div class="selectTab">
+              <select v-model="skillsOne">
+                <option value="" selected disabled hidden>Добавить навык</option>
+                <option value="AIM">AIM</option>
+                <option value="Тактика">Тактика</option>
+                <option value="Раскидка">Раскидки</option>
+                <option value="Игра по роли">Игра по роли</option>
+              </select>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" @click="skills.length < 3 ? skills.push({id: skills.length + 1, value: ''}) : false">
+                <path d="M6.756 15.076C6.56933 15.076 6.41067 15.0107 6.28 14.88C6.14933 14.7493 6.084 14.5907 6.084 14.404V8.944H0.736C0.549333 8.944 0.390667 8.87867 0.26 8.748C0.129333 8.61733 0.0640001 8.45867 0.0640001 8.272V6.76C0.0640001 6.57333 0.129333 6.41467 0.26 6.284C0.390667 6.15333 0.549333 6.088 0.736 6.088H6.084V0.795999C6.084 0.590666 6.14933 0.432 6.28 0.32C6.41067 0.189333 6.56933 0.123999 6.756 0.123999H8.436C8.64133 0.123999 8.8 0.189333 8.912 0.32C9.04267 0.432 9.1080.590666 9.108 0.795999V6.088H14.456C14.6427 6.088 14.8013 6.15333 14.932 6.284C15.0627 6.41467 15.128 6.57333 15.128 6.76V8.272C15.128 8.45867 15.0627 8.61733 14.932 8.748C14.82 8.87867 14.6613 8.944 14.456 8.944H9.108V14.404C9.108 14.5907 9.04267 14.7493 8.912 14.88C8.8 15.0107 8.64133 15.076 8.436 15.076H6.756Z" fill="#B6C8EB"/>
+              </svg>
+            </div>
+            <div class="selectTab" v-for="(skill, i1) in skills">
+              <select :name="`skills[${i1}]`" v-model="skill.value" @change="skill.value = $event.target.value">
+                <option value="" disabled hidden>Добавить навык</option>
+                <option value="AIM">AIM</option>
+                <option value="Тактика">Тактика</option>
+                <option value="Раскидка">Раскидки</option>
+                <option value="Игра по роли">Игра по роли</option>
+              </select>
+              <svg  @click="delSkills(i1)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 298.667 298.667" style="enable-background:new 0 0 298.667 298.667;" xml:space="preserve" width="512px" height="512px" class=""><g><g>
+              	<g>
+              		<rect y="128" width="298.667" height="42.667" data-original="#000000" class="active-path" data-old_color="#000000" fill="#B6C8EB"/>
+              	</g>
+                </g></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="tab">
+          <div class="subtitle">5. Каких результатов вы хотите добиться в игре?</div>
+          <div class="selectBlock">
+            <div class="selectTab">
+              <select v-model="goalsOne">
+                <option value="" disabled hidden>Добавить стремления</option>
+                <option value="Буст аккаунта">Буст аккаунта</option>
+                <option value="Выигрывать турниры">Выигрывать турниры</option>
+                <option value="Попасть в про">Попасть в про</option>
+              </select>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" @click="goals.length < 2 ? goals.push({id: goals.length + 1, value: ''}) : false">
+                <path d="M6.756 15.076C6.56933 15.076 6.41067 15.0107 6.28 14.88C6.14933 14.7493 6.084 14.5907 6.084 14.404V8.944H0.736C0.549333 8.944 0.390667 8.87867 0.26 8.748C0.129333 8.61733 0.0640001 8.45867 0.0640001 8.272V6.76C0.0640001 6.57333 0.129333 6.41467 0.26 6.284C0.390667 6.15333 0.549333 6.088 0.736 6.088H6.084V0.795999C6.084 0.590666 6.14933 0.432 6.28 0.32C6.41067 0.189333 6.56933 0.123999 6.756 0.123999H8.436C8.64133 0.123999 8.8 0.189333 8.912 0.32C9.04267 0.432 9.108 0.590666 9.108 0.795999V6.088H14.456C14.6427 6.088 14.8013 6.15333 14.932 6.284C15.0627 6.41467 15.128 6.57333 15.128 6.76V8.272C15.128 8.45867 15.0627 8.61733 14.932 8.748C14.82 8.87867 14.6613 8.944 14.456 8.944H9.108V14.404C9.108 14.5907 9.04267 14.7493 8.912 14.88C8.8 15.0107 8.64133 15.076 8.436 15.076H6.756Z" fill="#B6C8EB"/>
+              </svg>
+            </div>
+            <div class="selectTab" v-for="(goal, i2) in goals">
+              <select :name="`goals[${i2}]`" v-model="goal.value" @change="goal.value = $event.target.value">
+                <option value="" disabled hidden>Добавить стремления</option>
+                <option value="Буст аккаунта">Буст аккаунта</option>
+                <option value="Выигрывать турниры">Выигрывать турниры</option>
+                <option value="Попасть в про">Попасть в про</option>
+              </select>
+              <svg  @click="delGoals(goal.id)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 298.667 298.667" style="enable-background:new 0 0 298.667 298.667;" xml:space="preserve" width="512px" height="512px" class=""><g><g>
+                <g>
+                  <rect y="128" width="298.667" height="42.667" data-original="#000000" class="active-path" data-old_color="#000000" fill="#B6C8EB"/>
+                </g>
+                </g></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="tab">
+          <div class="subtitle">6. Приемлемая стоимость часовой тренировки?</div>
+          <div class="selectBlock">
+            <select v-model="cost">
+              <option value="" selected disabled hidden>Выберите сумму</option>
+              <option value="< 500">< 500</option>
+              <option value="500-1500">500-1500</option>
+              <option value="2000">2000</option>
+              <option value="Не имеет значения">Не имеет значения</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="save">
+        <div class="result" v-if="start">
+          <span v-if="!error && !success">Сохранение</span>
+          <span class="green" v-if="success && error === false">Сохранено</span>
+          <span class="green" v-if="error && success === false">Произошла ошибка</span>
+        </div>
+        <div class="button" @click="save">Сохранить изменения</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const cabinet = new Vue({
+    el: '#cabinet',
+    computed: {
+    },
+    watch: {
+      hours(val) {
+        this.hours = Math.abs(val);
+      }
+    },
+    methods: {
+      delSkills(index) {
+        const n = [];
+        this.skills.forEach((item, i) =>{
+          if (i !== index) {
+            n.push(item)
+          }
+        })
+        this.skills = n;
+      },
+      delGoals(index) {
+        const n = [];
+        this.goals.forEach((item, i) =>{
+          if (item.id !== index) {
+            n.push(item)
+          }
+        })
+        this.goals = n;
+      },
+      save() {
+        const th = this;
+        const form = new FormData();
+        let skills = '';
+        if (this.skillsOne !== '') {
+          skills = skills + this.skillsOne + ',';
+        }
+        this.skills.forEach((item) => {
+          if (item.value !== '') {
+            skills = skills + item.value + ',';
+          }
+        })
+        if (skills !== '') {
+          skills = skills.slice(0, -1);
+        }
+        let goals = '';
+        if (this.goalsOne !== '') {
+          goals = goals + this.goalsOne + ',';
+        }
+        this.goals.forEach((item) => {
+          if (item.value !== '') {
+            goals = goals + item.value + ',';
+          }
+        })
+        if (goals !== '') {
+          goals = goals.slice(0, -1);
+        }
+        if (this.game !== '' && this.hours !== '' && skills !== '' && goals !== '' && this.role !== '' && this.cost !== '') {
+          th.success = false;
+          th.error = false;
+          form.append('user_id', '{{app.user.id}}')
+          form.append('game', this.game)
+          form.append('hours', this.hours)
+          form.append('skills', skills)
+          form.append('goals', goals)
+          form.append('role', this.role)
+          form.append('cost', this.cost)
+          axios.post('/ru/user/set-characteristic/', form)
+          .then(() => {
+            th.start = true;
+            th.success = true;
+          })
+          .catch(() => {
+            th.start = true;
+            th.error = true;
+          })
+        }
+      }
+    },
+    data: function () {
+      return {
+        userid: {{app.user.id}},
+        game: '',
+        hours: '',
+        role: '',
+        skillsOne: '',
+        skills: [],
+        goalsOne: '',
+        goals: [],
+        cost: '',
+        send: false,
+        start: false,
+        success: false,
+        error: false,
+      }
+    },
+    mounted() {
+      const th = this;
+      axios.get('/ru/characteristics/by-user/{{app.user.id}}')
+      .then((res) => {
+        console.log(res.data)
+        th.game = res.data.game ? res.data.game : th.game;
+        th.hours = res.data.hours ? res.data.hours : th.hours;
+        th.role = res.data.role ? res.data.role : th.role;
+        th.skills = res.data.skills ? res.data.skills : th.skills;
+        th.goals = res.data.goals ? res.data.goals : th.goals;
+        th.cost = res.data.cost ? res.data.cost : th.cost;
+        const skills = [];
+        if (th.skills.length > 1) {
+          th.skills.forEach((item, i) => {
+            if (i > 0) {
+              skills.push({id: i, value: item});
+            }
+          });
+        }
+        if (th.skills.length > 0) {
+          th.skillsOne = th.skills[0];
+        }
+        th.skills = skills;
+        const goals = [];
+        if (th.goals.length > 1) {
+          th.goals.forEach((item, i) => {
+            if (i > 0) {
+              goals.push({id: i, value: item});
+            }
+          });
+        }
+        if (th.goals.length > 0) {
+          th.goalsOne = th.goals[0];
+        }
+        th.goals = goals;
+      })
+    }
+  });
+</script>
+
+{% endblock %}

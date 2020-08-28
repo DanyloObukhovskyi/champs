@@ -1,0 +1,76 @@
+<div class="component events" id="eventss">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      СОБЫТИЯ
+    </div>
+    <div class="controll">
+      <span :class="[type === 'general' ? 'active' : '']" @click="type = 'general'" v-if="false">Главные</span>
+      <span :class="[type === 'today' ? 'active' : '']" @click="type = 'today'" v-if="false">Сегодня</span>
+      <span :class="[type === '' ? 'active' : '']" @click="type = ''" v-if="false">Все</span>
+    </div>
+  </div>
+  <div class="grid">
+
+    <div class="grid-row" v-for="item in getItems">
+        <div class="logo">
+          <img :src="`/uploads/images/${item.image}`" :alt="item.logo" />
+        </div>
+        <div class="data">
+          <div class="title">
+            <span v-text="`${item.name.slice(0, 29)}${item.name.length > 29 ? '...' : ''}`"></span>
+          </div>
+          <div class="bottom">
+            <div class="date">
+              <span v-text="item.startedAt"></span> - <span v-text="item.endedAt"></span>
+            </div>
+            <div class="logos">
+              <img />
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const eventss = new Vue({
+    el: '#eventss',
+    computed: {
+      getItems() {
+        return this.data.filter((item) => item.type === this.type || (this.type === '' && item.type !== '') );
+      }
+    },
+    data: function () {
+      return {
+        type: 'today',
+        data: [],
+        subdata: [
+          {type:'today',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle1.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle4.png','Rectangle3.png','Rectangle5.png']},
+          {type:'today',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle2.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle1.png','Rectangle2.png','Rectangle4.png']},
+          {type:'today',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle3.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle5.png','Rectangle2.png','Rectangle3.png']},
+          {type:'general',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle4.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle1.png','Rectangle3.png','Rectangle4.png']},
+          {type:'general',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle5.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle3.png','Rectangle2.png','Rectangle5.png']},
+          {type:'general',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle1.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle2.png','Rectangle1.png','Rectangle3.png']},
+          {type:'general',title:'BLAST Premier Spring 2020 Europe Show',logo:'Rectangle2.png',datefrom:'11 июня',dateto:'11 июня',teams:['Rectangle1.png','Rectangle4.png','Rectangle3.png']}
+        ]
+      };
+    },
+    mounted() {
+      let parse = JSON.parse('{{ events|json_encode|raw }}');
+      parse.forEach((item, i) => {
+        const dFrom = new Date(item.startedAt.date);
+        const dTo = new Date(item.endedAt.date);
+        const nItem = item;
+        nItem.type = 'today';
+        nItem.startedAt = dFrom.toLocaleString("ru", {day: 'numeric',month: 'long'});
+        nItem.endedAt = dTo.toLocaleString("ru", {day: 'numeric',month: 'long'});
+        this.data.push(nItem);
+      })
+      parse = '';
+    },
+  });
+</script>

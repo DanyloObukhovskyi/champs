@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+{% block title %}Marketplace{% endblock %}
+{% block router %}marketplace{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<div class="lessons" id="lessons">
+  <div class="container" style="min-height: 40vw">
+    <div class="header">
+      <div class="lft">
+        Запись на занятие к {{nickname}}
+      </div>
+      <div class="rgt" v-if="view === 1">
+        <div class="price">
+          Итого: <span v-text="price"></span> ₽
+        </div>
+        <div @click="setPay" class="button" :class="[items ? '' : 'blocked']">
+          Далее
+        </div>
+      </div>
+    </div>
+    <div v-if="view === 1">
+      <timetables :price="price" v-on:setprice="setPrice" v-on:setitem="setItem" :block="block" />
+    </div>
+    <div v-if="view === 2">
+      <payments v-on:setview="setView" />
+    </div>
+    <div v-if="view === 3">
+      <order :items="items" />
+    </div>
+  </div>
+</div>
+
+{% include 'templates/lessons/timetables.html.twig' %}
+{% include 'templates/lessons/payments.html.twig' %}
+{% include 'templates/lessons/order.html.twig' %}
+
+<script>
+  const lessons = new Vue({
+    el: '#lessons',
+    data: function () {
+      return {
+        block: false,
+        price: 0,
+        view: 1,
+        items: null,
+      }
+    },
+    methods: {
+      setPay() {
+        const th = this;
+        if (!this.block && this.items !== null) {
+          this.block = true;
+          axios.get(`/ru/lessons/create/{"user_id":"${this.items.user_id}","trainer_id":"${this.items.trainer_id}","date":"${this.items.date}","time":"${this.items.time}","cost":"${this.items.cost}"}`)
+          .then(function (response) {
+            th.block = false;
+            if (response.data.id) {
+              window.location.assign('/ru/payment/pay/lesson-' + response.data.id)
+            } else {
+              alert('На данное время урок забронирован')
+            }
+          })
+          .catch(() => {
+            th.block = false;
+          })
+        }
+      },
+      setPrice(val) {
+        this.price = val;
+      },
+      setView(val) {
+        this.view = val;
+      },
+      setItem(val) {
+        if (val.date && val.time) {
+          if (val.add) {
+            let time = '';
+            /*
+            let item = {
+              date: val.date.date,
+              time: '',
+            };
+            */
+            val.date.times.forEach((i) => {
+              const hourin = i.timein.split(':');
+              if (hourin[0] === val.time) {
+                time = i;
+              }
+            })
+            //this.items.push(item);
+            const date = new Date(val.date.date);
+            this.items = {
+              trainer_id: {{id}},
+              user_id: {{app.user.id}},
+              date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+              time: time.timein,
+              cost: time.price,
+            };
+          } else {
+            this.items = null;
+            this.block = false;
+            /*
+            this.items = this.items.filter((item) => {
+              if (val.date.date.getFullYear() === item.date.getFullYear() && val.date.date.getMonth() === item.date.getMonth() && val.date.date.getDate() === item.date.getDate()) {
+                const hourin = item.time.timein.split(':');
+                if (hourin[0] !== val.time) {
+                  return item;
+                }
+              } else {
+                return item;
+              }
+            });
+            */
+          }
+        }
+      },
+    },
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+<div class="component upcoming_events" id="upcoming_events">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      Предстоящие события
+    </div>
+  </div>
+  {% for item in futureEvents %}
+    <div class="text_month">
+      <span>{{item.date}}</span>
+    </div>
+    <div class="grid">
+      {% for item2 in item.items %}
+        <div class="grid-row">
+          <div class="logo">
+            {% if(item2.image) %}
+            <img src="/uploads/images/{{item2.image}}" />
+            {% endif %}
+          </div>
+          <div class="data child_title">
+            <div class="title">
+              <span>{{item2.name}}</span>
+            </div>
+            <div class="bottom">
+              <div class="date">
+                <span>{{item2.startedAt|date('d F')}}</span> - <span>{{item2.endedAt|date('d F')}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="data">
+            <div class="title">
+              <span>{{item2.prize}}</span>
+            </div>
+            <div class="bottom">
+              <div class="date">
+                <span>Призовой фонд</span>
+              </div>
+            </div>
+          </div>
+          <div class="data">
+            <div class="title">
+              <span>{{item2.location}}</span>
+            </div>
+            <div class="bottom">
+              <div class="date">
+                <span>Локация</span>
+              </div>
+            </div>
+          </div>
+          <div class="data">
+            <div class="title">
+              {% if(item2.teams) %}
+                <span>{{item2.teams}}</span>
+              {% else %}
+                <span>?</span>
+              {% endif %}
+            </div>
+            <div class="bottom">
+              <div class="date">
+                <span>Команд</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>

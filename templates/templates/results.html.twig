@@ -1,0 +1,218 @@
+{% extends 'base.html.twig' %}
+{% block title %}Результаты{% endblock %}
+{% block router %}results{% endblock %}
+{% block description %}
+  <meta name="description" content="Результаты матчей и события по League of Legends, Dota и Cs:Go">
+{% endblock %}
+{% block keywords %}
+  <meta name="Keywords" content="League of Legends, Dota, Cs:Go, Результаты матчей по League of Legends, Результаты матчей по Dota, Результаты матчей по Cs:Go">
+{% endblock %}
+{% block body %}
+<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+  Результаты
+</h1>
+<div class="results__view" id="results">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+        {% include 'templates/results/events.html.twig' %}
+      </div>
+      <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+        <img src="/images/Banner.png" class="banner p" alt="banner" />
+        <img src="/images/BannerMobile.jpg" class="banner m" alt="banner" />
+        <div class="component">
+          <div class="header">
+            <div class="round">
+              <div><img src="/images/lamp.svg" alt="lamp" /></div>
+            </div>
+            <div class="title">
+              Результаты
+            </div>
+          </div>
+          <div class="table">
+            <div class="row-table" v-for="item in items" >
+              <div class="date" v-text="item.date"></div>
+              <div class="row-items">
+                <row-item v-for="subitem in item.items" :subitem="subitem" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <img src="/images/Banner.png" class="banner p" alt="banner" />
+        <img src="/images/BannerMobile.jpg" class="banner m" alt="banner" />
+      </div>
+      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12" style="display: none;">
+        {% include 'templates/matches/filter.html.twig' %}
+        {% include 'templates/layouts/live.video.html.twig' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/x-template" id="row-item-template">
+  <a :href="`/ru/results/${subitem.match_id}`" class="row-item">
+    <div class="time"></div>
+    <div class="teamA">
+      <span v-text="subitem.teamA.title"></span>
+      <img :src="`${subitem.teamA.logo}`" />
+    </div>
+    <div class="vs bold">
+      <label v-if="subitem.teamA.score !== null && subitem.teamB.score !== null">
+        <span v-text="subitem.teamA.score" :class="subitem.teamA.score > subitem.teamB.score && subitem.time !== null ? 'victory' : subitem.teamA.score < subitem.teamB.score && subitem.time !== null ? 'losing' : ''"></span>
+        -
+        <span v-text="subitem.teamB.score" :class="subitem.teamB.score > subitem.teamA.score && subitem.time !== null ? 'victory' : subitem.teamB.score < subitem.teamA.score && subitem.time !== null ? 'losing' : ''"></span>
+      </label>
+    </div>
+    <div class="teamB">
+      <img :src="`${subitem.teamB.logo}`" />
+      <span v-text="subitem.teamB.title"></span>
+    </div>
+    <div class="title">
+      <span v-text="subitem.title"></span>
+      <img :src="`${subitem.logo}`" :alt="subitem.logo" />
+    </div>
+  </a>
+</script>
+
+<script type="text/x-template" id="calendar">
+	<div class="calendar">
+		<div class="title">
+			<div class="lft">
+				<div class="month" @click="monthView = monthView ? false : true">
+					<span v-text="months[month]"></span><img src="/images/arrowCalBtn.svg" alt="arrowCalendar" />
+				</div>
+				<div class="months" v-if="monthView">
+					<div v-for="(m, i) in months" v-text="m" @click="month = i, monthView = false"></div>
+				</div>
+			</div>
+			<div class="rgt">
+				<div class="year">
+          <span @click="year = Number(year) - 1"><img src="/images/arrowCalLft.svg" alt="arrowCalendar" /></span>
+					<label v-text="year"></label>
+          <span @click="year = Number(year) + 1"><img src="/images/arrowCalRgt.svg" alt="arrowCalendar" /></span>
+				</div>
+			</div>
+		</div>
+		<div class="weeks">
+			<div class="week" v-for="week in weeks" v-text="week"></div>
+		</div>
+		<div class="days">
+			<div class="day" v-for="i in getWeekDay"></div>
+			<div class="day sel" v-for="d in getDays" v-text="d" @click="setDay(d)" :class="[day === d ? 'active' : '']"></div>
+		</div>
+	</div>
+</script>
+
+<script>
+Vue.component('row-item', {
+  props: {
+    subitem: Object,
+  },
+  template: '#row-item-template',
+})
+Vue.component('calendar', {
+  template: '#calendar',
+  props: {
+    date: String,
+  },
+	computed: {
+		getDays() {
+			const date = new Date(this.year, this.month, 32);
+			return 32 - date.getDate();
+		},
+		getWeekDay() {
+			const date = new Date(this.year, this.month, 1);
+			let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
+			return day < 0 ? 0 : day;
+		}
+	},
+	data: function () {
+    return {
+			month: 0,
+			monthView: false,
+			year: 2020,
+			months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октрябрь', 'Ноябрь', 'Декабрь'],
+			days: 0,
+      day: 0,
+			weeks: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+    };
+  },
+  methods: {
+    setDay(day) {
+      this.$emit('date', `${day  < 10 ? '0' + day : day}.${this.month  < 10 ? '0' + (this.month + 1) : this.month + 1}.${this.year}`)
+    }
+  },
+  mounted() {
+    const date = this.date.split('.');
+    this.day = Math.abs(date[0]);
+    this.month = Math.abs(date[1]) - 1;
+    this.year = date[2];
+  }
+})
+var results = new Vue({
+  el: '#results',
+  data: function () {
+    return {
+      popup: null,
+      player: '',
+      team: '',
+      overflow: 'hidden',
+      dateFrom: '21.02.2020',
+      dateFromView: false,
+      dateTo: '21.02.2020',
+      dateToView: false,
+      filterHeight: 0,
+      filterId: 0,
+      items: {{ resultsItems|json_encode|raw }}
+    };
+  },
+  methods: {
+    setViewFilter(id, e) {
+      const th = this;
+      this.overflow = 'hidden';
+      const height = e.target.closest('.tab').querySelector('.view').clientHeight;
+      if (this.filterId === id) {
+        this.filterHeight = 0;
+        this.filterId = 0;
+      } else {
+        this.filterHeight = height;
+        this.filterId = id;
+        setTimeout(() => {
+          th.overflow = 'visible';
+        }, 400);
+      }
+    },
+    setToDate(date) {
+      this.dateFromView = false;
+      this.dateToView = false;
+      this.dateTo = date;
+    },
+    setFromDate(date) {
+      this.dateFromView = false;
+      this.dateToView = false;
+      this.dateFrom = date;
+    },
+    setViewPopup(id, val) {
+      if (val.length > 0) {
+        this.popup = id;
+      } else {
+        this.popup = null;
+      }
+    }
+  },
+  mounted() {
+    const dateFrom = new Date();
+    dateFrom.setDate(dateFrom.getDate() - (32 - dateFrom.getDate()));
+    this.dateFrom = `${dateFrom.getDate() < 10 ? '0' + dateFrom.getDate() : dateFrom.getDate()}.${(dateFrom.getMonth() + 1) < 10 ? '0' + (dateFrom.getMonth() + 1) : getMonth() + 1}.${dateFrom.getFullYear()}`;
+    const dateTo = new Date();
+    this.dateTo = `${dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()}.${(dateTo.getMonth() + 1) < 10 ? '0' + (dateTo.getMonth() + 1) : getMonth() + 1}.${dateTo.getFullYear()}`;
+    window.addEventListener('click', (e) => {
+      if (e.target.closest('.calendar') || e.target.closest('.date') || e.target.closest('.months') || e.target.closest('.flex_cal')) return false;
+      this.dateFromView = false;
+      this.dateToView = false;
+    });
+  }
+});
+</script>
+
+{% endblock %}

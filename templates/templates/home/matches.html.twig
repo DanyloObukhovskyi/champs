@@ -1,0 +1,157 @@
+<div class="component matches" id="matches">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      Матчи
+    </div>
+    <div class="controll">
+      <span v-text="getDateItems"></span>
+      <label @click="prevItems">
+        <img src="/images/arrowLft.svg" alt="arrow left" />
+      </label>
+      <label @click="nextItems" >
+        <img src="/images/arrowRgt.svg" alt="arrow right" />
+      </label>
+    </div>
+  </div>
+  <div class="table">
+    <div class="table-row" v-for="(item, i) in getItems" :class="[item.time === null ? 'matches-row' : '']">
+      <div class="rows" @click="setView(i, $event)">
+        <div>
+          <label v-if="item.time !== null" v-text="item.time"></label>
+          <span v-if="item.time === null">live</span>
+        </div>
+        <div class="r-teamA">
+          <span v-text="item.teamA.title"></span>
+          <img :src="item.teamA.logo" />
+        </div>
+        <div class="r-scores" :class="item.teamA.score !== null || item.teamB.score !== null ? 'bold' : ''">
+          <label v-if="item.teamA.score === null && item.teamB.score === null">vs</label>
+          <label v-if="item.teamA.score !== null || item.teamB.score !== null">
+            <span v-text="item.teamA.score ? item.teamA.score : 0" :class="item.teamA.score > item.teamB.score && item.time !== null ? 'victory' : item.teamA.score < item.teamB.score && item.time !== null ? 'losing' : ''"></span>
+            -
+            <span v-text="item.teamB.score ? item.teamB.score : 0" :class="item.teamB.score > item.teamA.score && item.time !== null ? 'victory' : item.teamB.score < item.teamA.score && item.time !== null ? 'losing' : ''"></span>
+          </label>
+        </div>
+        <div class="r-teamB">
+          <img :src="item.teamB.logo" />
+          <span v-text="item.teamB.title"></span>
+        </div>
+        <div>
+          <label v-text="item.event.name ? item.event.name.slice(0, 18) + (item.event.name.length > 18 ? '...' : '') : 'Матч вне соревнований'"></label>
+          <span v-if="item.event.image" class="img">
+            <img :src="'/uploads/images/' + item.event.image" />
+          </span>
+        </div>
+      </div>
+      <div class="video" v-show="item.video !== null" :style="{height: index === i ? height : '0'}">
+        <div class="rows-d rowsvid">
+          <div class="row-d">
+            <img src="/images/temp/Video1.svg" alt="Video1" />
+          </div>
+          <div class="row-d">
+            <div>
+              <div><span v-text="item.teamA.title"></span>&nbsp;–&nbsp;<span v-text="item.teamB.title"></span>&nbsp;Live</div>
+              <div><img src="/images/EyeWhite.svg" alt="eye" />2459</div>
+            </div>
+          </div>
+          <div class="row-d">
+            <label>
+              <a :href="'/ru/matches/' + item.match_id" v-text="item.time === null ? 'Страница матча' : 'Результаты матча'"></a>
+              <img src="/images/arrowRightOrange.svg" alt="arrow right" />
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const matches = new Vue({
+    el: '#matches',
+    computed: {
+      getItems() {
+        return this.data[this.page] ? this.data[this.page].items : '';
+      },
+      getDateItems() {
+        return this.data[this.page] ? this.data[this.page].date : '';
+      }
+    },
+    methods: {
+      setView(index, e) {
+        this.height = index === this.index ? 0 : e.target.closest('.table-row').querySelector('.video').querySelector('.rows-d').offsetHeight + 'px';
+        this.index = index === this.index ? null : index;
+      },
+      prevItems() {
+        if (this.page > 0) {
+          this.page = this.page - 1;
+        }
+      },
+      nextItems() {
+        if (this.page < (this.data.length > 0 && this.data.length - 1)) {
+          this.page = this.page + 1;
+        }
+      }
+    },
+    data: function () {
+      return {
+        height: '200px',
+        index: null,
+        page: 0,
+        data: [],
+      };
+    },
+    mounted() {
+      let parse = JSON.parse('{{ matches|json_encode|raw }}');
+      if (Object.keys(parse).length > 0) {
+        const today = new Date();
+        const datePrevOne = new Date(today.getTime() - (3600 * 24 * 1000));
+        const dateNextOne = new Date(today.getTime() + (3600 * 24 * 1000));
+        const dateNextTwo = new Date(today.getTime() + (3600 * 48 * 1000));
+        Object.keys(parse).forEach((item, i) => {
+          const itemNew = parse[item];
+          if (datePrevOne.getDate() === Number(item)) {
+            itemNew.date = 'Вчера';
+          }
+          if (today.getDate() === Number(item)) {
+            itemNew.date = 'Сегодня';
+          }
+          if (dateNextOne.getDate() === Number(item)) {
+            itemNew.date = 'Завтра';
+          }
+          if (dateNextTwo.getDate() === Number(item)) {
+            itemNew.date = 'Послезавтра';
+          }
+          if (parse[item].items.length > 8) {
+            let newItem = {};
+            for (let i = 0; i < Math.round(parse[item].items.length / 9); i++) {
+              const newItem = {
+                date: parse[item].date,
+                items: [],
+              };
+              for (let i2 = i * 9; i2 < ((i + 1) * 9); i2++) {
+                if (parse[item].items[i2]) {
+                  newItem.items.push(parse[item].items[i2]);
+                }
+              }
+              this.data.push(newItem);
+            }
+          } else {
+            this.data.push(itemNew);
+          }
+        });
+        this.data.forEach((item, i) => {
+          if (item.date === 'Сегодня') {
+            if (this.page === 0) {
+              this.page = i;
+            }
+          }
+        })
+      }
+      parse = '';
+    }
+  });
+</script>

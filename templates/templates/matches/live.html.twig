@@ -1,0 +1,61 @@
+<div class="component live">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp.svg" /></div>
+    </div>
+    <div class="title">
+      Live
+    </div>
+  </div>
+  <div class="table">
+    {% for item in lives %}
+      {% if item.matchStatistics|length > 0 %}
+      <div class="table-row" href="/matches/live/{{ item.id }}">
+{#        <div class="title">#}
+{#          <img src="/images/temp/Rectangle4.png" alt="Rectangle4.png" />Home Sweet Home Cup 8 Closed Qalifier#}
+{#        </div>#}
+        <div class="cont">
+          <div class="titles">
+            {% for stat in item.matchStatistics %}
+              <div>{{ stat.map.shortCode }}</div>
+            {% endfor %}
+            <div>Карты</div>
+          </div>
+          <div class="row-d">
+            <div><img src="/uploads/images/{{ item.team1.logo }}" alt="{{ item.team1.name }}" />{{ item.team1.name }}</div>
+            {% for stat in item.matchStatistics %}
+              <div>{{ stat.score1 }}</div>
+            {% endfor %}
+            {{ item.score1 }}
+          </div>
+          <div class="row-d">
+            <div><img src="/uploads/images/{{ item.team2.logo }}" alt="{{ item.team2.name }}" />{{ item.team2.name }}</div>
+            {% for stat in item.matchStatistics %}
+              <div>{{ stat.score2 }}</div>
+            {% endfor %}
+            {{ item.score2 }}
+          </div>
+          <div class="row-mob">
+            <div class="t"><img src="/uploads/images/{{ item.team1.logo }}" />{{ item.team1.name }}</div>
+            {% for stat in item.matchStatistics %}
+              <div class="row-perc">
+                <div>{{ stat.map.shortCode }}</div>
+                <div>{{ stat.score1 }}</div>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="row-mob">
+            <div class="t"><img src="/uploads/images/{{ item.team2.logo }}" />{{ item.team2.name }}</div>
+              {% for stat in item.matchStatistics %}
+                <div class="row-perc">
+                  <div>{{ stat.map.shortCode }}</div>
+                  <div>{{ stat.score2 }}</div>
+                </div>
+              {% endfor %}
+            </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

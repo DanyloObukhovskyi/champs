@@ -1,0 +1,47 @@
+<div class="component results" id="results">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      Результаты
+    </div>
+  </div>
+  <div class="table">
+      <a :href="'/ru/matches/' + item.match_id" class="table-row" v-for="item in data">
+        <div v-text="item.event.name ? item.event.name : 'Матч вне соревнований'"></div>
+        <div>
+          <img src="/images/temp/flag-russia.png" alt="Flag Russian" />
+          <label v-text="item.teamA.title"></label>
+          <span v-text="item.teamA.score ? item.teamA.score : 0" :class="[item.teamA.score > item.teamB.score ? 'victory' : 'losing']"></span>
+        </div>
+        <div>
+          <img src="/images/temp/flag-russia.png" alt="Flag Russian" />
+          <label v-text="item.teamB.title"></label>
+          <span v-text="item.teamB.score ? item.teamB.score : 0" :class="[item.teamB.score > item.teamA.score ? 'victory' : 'losing']"></span>
+        </div>
+      </a>
+  </div>
+</div>
+
+<script>
+  const results = new Vue({
+    el: '#results',
+    computed: {
+    },
+    methods: {
+    },
+    data: function () {
+      return {
+        data: [],
+      };
+    },
+    mounted() {
+      const data =  JSON.parse('{{ results|json_encode|raw }}')
+
+      for (let day in data){
+        data[day].items.map( e => this.data.push(e))
+      }
+    }
+  });
+</script>

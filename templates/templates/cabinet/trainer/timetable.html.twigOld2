@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+{% block title %}Календарь{% endblock %}
+{% block router %}cabinet{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<div class="cabinet" id="cabinet">
+  <div class="container" style="min-height: 40vw">
+    <div class="header">
+      <div class="lft">
+        <a href="/trainer/timelist">РАСПИСАНИЕ</a>
+        <a class="active">КАЛЕНДАРЬ</a>
+        <a href="/trainer/purse">КОШЕЛЕК</a>
+        <a href="/trainer/settings">НАСТРОЙКИ</a>
+      </div>
+      <div class="rgt">
+        <a href="/logout" class="set">Выйти</a>
+        <div class="button set">
+          Настройка расписания
+        </div>
+      </div>
+    </div>
+    <div class="controll">
+      <div class="dates">
+        <div class="dt"><span v-text="dateIn"></span> - <span v-text="dateOut"></span></div>
+        <div class="arrow" @click="prevWeek"><img src="/images/arrowL.svg" alt="arrowL" /></div>
+        <div class="arrow" @click="nextWeek"><img src="/images/arrowR.svg" alt="arrowR" /></div>
+      </div>
+    </div>
+    <div class="cont" id="calendar">
+      <div class="time_mobile">
+        <div class="text">
+          <span>11</span>
+        </div>
+      </div>
+      <div class="calendarblock">
+        <div class="days">
+          <div class="null"></div>
+          <div class="day" v-for="(item, i) in week">
+            <div class="title" v-text="item"></div>
+            <div class="date" v-text="dates[i]"></div>
+          </div>
+        </div>
+        <div class="times">
+          <div class="time" v-for="item in items">
+            <div class="text">
+              <span v-text="item.time"></span>
+            </div>
+            <div class="rows" v-for="item2 in item.items">
+              <div class="open" v-if="item2.status === 0" @click="setCheck(t, i, 1)">
+                Открыть
+              </div>
+              <div class="openclose" v-if="item2.status === 1" @click="setCheck(t, i, 0)">
+                Запись открыта
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const cabinet = new Vue({
+    el: '#cabinet',
+    methods: {
+      prevWeek() {
+        const today = new Date(this.today);
+        today.setDate(today.getDate() - 6);
+        this.getAjax(today);
+      },
+      nextWeek() {
+        const today = new Date(this.today);
+        today.setDate(today.getDate() + 12);
+        this.getAjax(today);
+      },
+      getAjax(today) {
+        today = this.getFirstDay(today);
+        this.today = today;
+
+        // Set Date
+        this.dateIn = `${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}.${today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : today.getMonth() + 1}`;
+        const endDay = new Date(today);
+        endDay.setDate(today.getDate() + 6);
+        this.dateOut = `${endDay.getDate() < 10 ? '0' + endDay.getDate() : endDay.getDate()}.${endDay.getMonth() + 1 < 10 ? '0' + (endDay.getMonth() + 1) : endDay.getMonth() + 1}`;
+
+        // Set Days Date
+        this.dates = [];
+        const dates = new Date(this.today);
+        for(i = 0; i < 7; i++) {
+          this.dates.push(`${dates.getDate() < 10 ? '0' + dates.getDate() : dates.getDate()}.${dates.getMonth() + 1 < 10 ? '0' + (dates.getMonth() + 1) : dates.getMonth() + 1}`);
+          dates.setDate(dates.getDate() + 1);
+        }
+
+        // Set Items
+        this.temp.forEach((item) => {
+          const date = new Date(item.started_at);
+          if (this.times.indexOf(date.getHours()) < 0) {
+            this.times.push(date.getHours());
+          }
+        })
+        let dates2 = new Date(this.today);
+        this.times.forEach((item) => {
+          dates2 = new Date(this.today);
+          const newItem = {
+            time: (item < 10 ? '0' + item : item) + ':00',
+            items: [],
+          };
+          for(i = 0; i < 7; i++) {
+            let newItem2 = {
+              status: null,
+            };
+            this.temp.forEach((item2) => {
+              const date = new Date(item2.started_at);
+              console.log(dates2.getDate());
+              if (dates2.getDate() === date.getDate() && item === date.getHours()) {
+                  newItem2.status = item2.status;
+              }
+            })
+            newItem.items.push(newItem2);
+            dates2.setDate(dates2.getDate() + 1);
+          }
+          this.items.push(newItem);
+        })
+      },
+      getFirstDay(today) {
+        if (today.getDay() !== 1) {
+          if (today.getDay() === 0) {
+            today.setDate(today.getDate() - 6);
+          } else {
+            today.setDate(today.getDate() - (today.getDay() - 1));
+          }
+        }
+        return today;
+      },
+    },
+    data: function () {
+      return {
+        dateIn: '',
+        dateOut: '',
+        dates: [],
+        today: null,
+        times: [],
+
+        rowsWidth: 0,
+        rowWidth: 0,
+        weekSelect: 0,
+        week: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+        items: [],
+        temp: [
+          { started_at: '2020-07-13T16:00:00.511Z', ended_at: '2020-07-13T17:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+          { started_at: '2020-07-14T17:00:00.511Z', ended_at: '2020-07-14T18:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+          { started_at: '2020-07-15T18:00:00.511Z', ended_at: '2020-07-15T19:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+          { started_at: '2020-07-16T20:00:00.511Z', ended_at: '2020-07-16T21:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+          { started_at: '2020-07-17T22:00:00.511Z', ended_at: '2020-07-17T23:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+          { started_at: '2020-07-18T00:00:00.511Z', ended_at: '2020-07-18T01:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+          { started_at: '2020-07-19T01:00:00.511Z', ended_at: '2020-07-19T02:00:00.511Z', status: 1, cost: 0, trainer_id: 13 },
+        ],
+      }
+    },
+    created() {
+      if (window.innerWidth > 1000) {
+        this.rowsWidth = 'auto';
+        this.rowWidth =  'auto';
+      } else {
+        if (window.innerWidth > 600) {
+          this.rowsWidth = (document.getElementById('calendar').clientWidth / 2) * 7;
+          this.rowWidth =  document.getElementById('calendar').clientWidth / 2;
+        } else {
+          this.rowsWidth = document.getElementById('calendar').clientWidth * 7;
+          this.rowWidth =  document.getElementById('calendar').clientWidth;
+        }
+      }
+      this.getAjax(new Date());
+    }
+  });
+</script>
+
+{% endblock %}

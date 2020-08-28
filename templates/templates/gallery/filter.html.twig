@@ -1,0 +1,110 @@
+<div class="filter">
+  <div class="tab" :class="[filterHeight > 0 && filterId === 1 ? 'active' : '']">
+    <div class="title_f" @click="setViewFilter(1, $event)">
+      <div>Время</div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="open">
+        <path d="M10.2415 7L6 0.877971L1.75853 7L10.2415 7Z" fill="#FF6D1D" stroke="#FF6D1D"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="close">
+        <path d="M1.75853 1L6 7.12203L10.2415 1H1.75853Z" fill="#ADC0D7" stroke="#ADC0D7"/>
+      </svg>
+    </div>
+    <div class="cont" :style="{height: filterId === 1 ? filterHeight + 'px' : 0, overflow: filterId === 1 ? overflow : 'hidden'}">
+      <div class="view">
+        <div class="flex">
+          <div class="flex_row">
+            <span @click="dateFromView = dateFromView ? false : true, dateToView = false" class="flex_cal">От&nbsp;<label v-text="dateFrom">21.04.2020</label></span>
+            <calendar v-on:date="setFromDate" v-if="dateFromView" :date="dateFrom" />
+          </div>
+          <div class="flex_row">
+            <span @click="dateToView = dateToView ? false : true, dateFromView = false" class="flex_cal">До&nbsp;<label v-text="dateTo">21.04.2020</label></span>
+            <calendar v-on:date="setToDate" v-if="dateToView" :date="dateTo" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab" :class="[filterHeight > 0 && filterId === 2 ? 'active' : '']">
+    <div class="title_f" @click="setViewFilter(2, $event)">
+      <div>Карта</div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="open">
+        <path d="M10.2415 7L6 0.877971L1.75853 7L10.2415 7Z" fill="#FF6D1D" stroke="#FF6D1D"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="close">
+        <path d="M1.75853 1L6 7.12203L10.2415 1H1.75853Z" fill="#ADC0D7" stroke="#ADC0D7"/>
+      </svg>
+    </div>
+    <div class="cont" :style="{height: filterId === 2 ? filterHeight + 'px' : 0}">
+      <div class="view">
+        <div class="tab">cs_summit 6 Europe</div>
+        <div class="tab">cs_summit 6 Europe</div>
+        <div class="tab">cs_summit 6 Europe</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab" :class="[filterHeight > 0 && filterId === 3 ? 'active' : '']">
+    <div class="title_f" @click="setViewFilter(3, $event)">
+      <div>Событие</div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="open">
+        <path d="M10.2415 7L6 0.877971L1.75853 7L10.2415 7Z" fill="#FF6D1D" stroke="#FF6D1D"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="close">
+        <path d="M1.75853 1L6 7.12203L10.2415 1H1.75853Z" fill="#ADC0D7" stroke="#ADC0D7"/>
+      </svg>
+    </div>
+    <div class="cont" :style="{height: filterId === 3 ? filterHeight + 'px' : 0}">
+      <div class="view">
+        <div class="tab">cs_summit 6 Europe</div>
+        <div class="tab">cs_summit 6 Europe</div>
+        <div class="tab">cs_summit 6 Europe</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab" :class="[filterHeight > 0 && filterId === 4 ? 'active' : '']">
+    <div class="title_f" @click="setViewFilter(4, $event)">
+      <div>Игрок</div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="open">
+        <path d="M10.2415 7L6 0.877971L1.75853 7L10.2415 7Z" fill="#FF6D1D" stroke="#FF6D1D"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="close">
+        <path d="M1.75853 1L6 7.12203L10.2415 1H1.75853Z" fill="#ADC0D7" stroke="#ADC0D7"/>
+      </svg>
+    </div>
+    <div class="cont" :style="{height: filterId === 4 ? filterHeight + 'px' : 0, overflow: filterId === 4 ? overflow : 'hidden'}">
+      <div class="view">
+        <input type="text" placeholder="Поиск игрока" @keyup="setViewPopup(4, player)" v-model="player" />
+        <div class="popup" v-if="popup === 4">
+          <div class="tab">boom4ch</div>
+          <div class="tab">boom4ch</div>
+          <div class="tab">boom4ch</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab" :class="[filterHeight > 0 && filterId === 5 ? 'active' : '']">
+    <div class="title_f" @click="setViewFilter(5, $event)">
+      <div>Комманда</div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="open">
+        <path d="M10.2415 7L6 0.877971L1.75853 7L10.2415 7Z" fill="#FF6D1D" stroke="#FF6D1D"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none" class="close">
+        <path d="M1.75853 1L6 7.12203L10.2415 1H1.75853Z" fill="#ADC0D7" stroke="#ADC0D7"/>
+      </svg>
+    </div>
+    <div class="cont" :style="{height: filterId === 5 ? filterHeight + 'px' : 0, overflow: filterId === 5 ? overflow : 'hidden'}">
+      <div class="view">
+        <input type="text" placeholder="Поиск комманды" @keyup="setViewPopup(5, team)" v-model="team" />
+        <div class="popup" v-if="popup === 5">
+          <div class="tab">boom4ch</div>
+          <div class="tab">boom4ch</div>
+          <div class="tab">boom4ch</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="search">
+  <img src="/images/search.svg" alt="search" />
+  <input type="text" placeholder="Поиск..." />
+</div>

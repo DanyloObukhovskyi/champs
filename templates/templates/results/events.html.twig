@@ -1,0 +1,32 @@
+<div class="component results__events">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      События
+    </div>
+  </div>
+  <div class="grid">
+    {% for item in events %}
+      <a class="grid-row">
+        <div class="logo">
+          <img src="/images/temp/results/event1.jpg" alt="event" />
+        </div>
+        <div class="data">
+          <div class="title">
+            <span>{{item.name}}</span>
+          </div>
+          <div class="bottom">
+            <div class="date">
+              <span>{{item.startedAt|date('d F')}}</span> - <span>{{item.endedAt|date('d F')}}</span>
+            </div>
+            <div class="logos">
+                <img src="/uploads/images/{{item.image}}" alt="Rectangle4" />
+            </div>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block title %}Marketplace{% endblock %}
+{% block router %}marketplace{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+<div class="lessons" id="lessons">
+  <div class="container" style="min-height: 40vw">
+    <div class="header">
+      <div class="lft">
+        Запись на занятие к Dark
+      </div>
+    </div>
+    <div>
+      <div class="order">
+        <div class="title">Вы успешно записаны на занятие</div>
+        <div class="info">
+          <img src="/images/Rectangle495.svg" />
+          <div class="block">
+            <div class="name">Darklight</div>
+            <div class="list">
+              <div class="tab">
+                <span class="round"></span>
+                <div>
+                  <span v-text="getDate(item, true)">14 июня</span>
+                  <span>13:00 - 14:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="subtitle">В личном кабинете за 15 минут до начала занятия у вас появится ссылка с доступом к каналу в Discord</div>
+        <div class="buttons">
+          <a href="/user/timelist" class="button">Готово</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

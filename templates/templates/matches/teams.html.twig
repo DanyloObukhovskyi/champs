@@ -1,0 +1,152 @@
+<div class="component teams-matches">
+    <div class="header">
+        <div class="round">
+            <div><img src="/images/lamp.svg" alt="lamp.svg"/></div>
+        </div>
+        <div class="title">
+            Комманды
+        </div>
+    </div>
+    <div class="grid-block">
+        <div class="title">
+            <div class="lft"><img src="/uploads/images/{{ match.team1.logo }}" alt="Rectangle7"/>{{ match.team1.name }}
+            </div>
+{#            <div class="rgt">Мировой рейтинг: 1</div>#}
+        </div>
+        <div class="players l-team">
+            {% set first = true %}
+            {% set counter = 0 %}
+            {% for player in match.team1.players %}
+                {% set counter = counter + 1 %}
+                {% if(counter < 6) %}
+                <div class="player {% if first %}active{% endif %}">
+                    <div class="logo">
+                        <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
+                             class="logo" alt="PlayerA1"/>
+                    </div>
+                    <div class="name">{#<img data-team="l" src="/images/temp/matches/flag-ru.svg"
+                                           alt="flag-ru"/>#}{{ player.person.nick }}</div>
+                </div>
+                {% set first = false %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="grid-result player-srav">
+        <div class="l-block">
+            {% set firstPlayerTeam1 = match.team1.players|first %}
+            <img src="/uploads/images/{{ match.team1.logo }}" class="logo_team" alt="Rectangle7"/>
+            <img src="/uploads/images/{{ firstPlayerTeam1.person.photo }}" class="logo"
+                 alt="{{ firstPlayerTeam1.person.nick }}"/>
+        </div>
+        <div class="c-block">
+            <div class="row-c">
+                <div class="l change change-rating change-rating-l">???</div>
+                <div class="c">RATING</div>
+                <div class="r change change-rating change-rating-r">???</div>
+            </div>
+            <div class="row-c">
+                <div class="l change change-kpr change-kpr-l">???</div>
+                <div class="c">KILLS PER ROUND</div>
+                <div class="r change change-kpr change-kpr-r">???</div>
+            </div>
+            <div class="row-c">
+                <div class="l change change-kast change-kast-l">???</div>
+                <div class="c">KAST</div>
+                <div class="r change change-kast change-kast-r">???</div>
+            </div>
+            <div class="row-c" style="display: none">
+                <div class="l change change-impact change-impact-l">???</div>
+                <div class="c">IMPACT</div>
+                <div class="r change change-impact change-impact-r">???</div>
+            </div>
+            <div class="row-c">
+                <div class="l change change-adr change-adr-l">???</div>
+                <div class="c">average damage</div>
+                <div class="r change change-adr change-adr-r">???</div>
+            </div>
+        </div>
+        <div class="r-block">
+            {% set firstPlayerTeam2 = match.team2.players|first %}
+            <img src="/uploads/images/{{ match.team2.logo }}" class="logo_team" alt="Rectangle6"/>
+            <img src="/uploads/images/{{ firstPlayerTeam2.person.photo }}" class="logo"
+                 alt="{{ firstPlayerTeam2.person.nick }}"/>
+        </div>
+    </div>
+
+    <div class="grid-block">
+        <div class="title">
+            <div class="lft"><img src="/uploads/images/{{ match.team2.logo }}" alt="Rectangle6"/>{{ match.team2.name }}
+            </div>
+{#            <div class="rgt">Мировой рейтинг: 2</div>#}
+        </div>
+        <div class="players r-team">
+            {% set first = true %}
+            {% set counter = 0 %}
+            {% for player in match.team2.players %}
+                {% set counter = counter + 1 %}
+                {% if(counter < 6) %}
+                    <div class="player {% if first %}active{% endif %}">
+                        <div class="logo">
+                            <img data-team="r" data-player="{{ player.id }}"
+                                 src="/uploads/images/{{ player.person.photo }}" class="logo" alt="PlayerB1"/>
+                        </div>
+                        <div class="name">{#<img data-team="r" src="/images/temp/matches/flag-ru.svg"
+                                               alt="flag-ru"/>#}{{ player.person.nick }}</div>
+                    </div>
+                    {% set first = false %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script>
+    $('.players>.player').on('click', function () {
+        const img = $(this).find('.logo>img');
+        $('.players.' + img.data('team') + '-team>.player').removeClass('active');
+        $(this).addClass('active');
+        const numSel = '.change.' + img.data('team');
+
+        let playerId = img.data('player');
+
+        $(numSel + '.change-rating-' + img.data('team')).html($('.player-' + playerId + '-rating').html());
+        $(numSel + '.change-kpr-' + img.data('team')).html($('.player-' + playerId + '-kpr').html());
+        $(numSel + '.change-kast-' + img.data('team')).html($('.player-' + playerId + '-kast').html());
+        $(numSel + '.change-adr-' + img.data('team')).html($('.player-' + playerId + '-adr').html());
+
+        letOrange('.change-rating');
+        letOrange('.change-kpr');
+        letOrange('.change-kast');
+        letOrange('.change-adr');
+
+        $('.player-srav>.' + img.data('team') + '-block>.logo').attr('src', img.attr('src'));
+    })
+
+    function getRandomArbitrary(min, max) {
+        return Math.floor((Math.random() * (max - min) + min) * 100) / 100;
+    }
+
+    function letOrange(sel) {
+        let max = -1;
+        $(sel).each(function (index, item) {
+            if (max < parseFloat($(item).html())) {
+                max = parseFloat($(item).html());
+            }
+        })
+
+        $(sel).each(function (index, item) {
+            if (max === parseFloat($(item).html())) {
+                $(item).addClass('orange');
+            } else {
+                $(item).removeClass('orange');
+            }
+        })
+
+    }
+
+    $('.players>.player.active').click();
+</script>

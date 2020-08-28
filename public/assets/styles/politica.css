@@ -1,0 +1,45 @@
+.politica{
+  width: 100%;
+}
+.politica .container{
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 1vw;
+}
+.politica .container .title{
+  font-size: 1.2vw;
+  font-weight: 500;
+  padding: 2vw 0;
+}
+.politica .container p{
+  font-size: 0.9vw;
+}
+.politica .container p.bold{
+  font-weight: 500;
+}
+@media screen and (max-width: 1000px) {
+  .politica .container{
+    width: 100%;
+    padding-bottom: 2vw;
+  }
+  .politica .container .title{
+    font-size: 3vw;
+    padding: 2vw 0;
+  }
+  .politica .container p{
+    font-size: 2vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .politica .container{
+    width: 100%;
+    padding-bottom: 4vw;
+  }
+  .politica .container .title{
+    font-size: 5vw;
+    padding: 4vw 0;
+  }
+  .politica .container p{
+    font-size: 4vw;
+  }
+}

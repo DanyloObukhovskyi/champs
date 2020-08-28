@@ -1,0 +1,35 @@
+<div class="component live-match">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp.svg" /></div>
+    </div>
+    <div class="title">
+      Трансляция
+    </div>
+  </div>
+  <a href="/live/{{ match.id }}">
+  <div class="cont">
+    <iframe
+            width="100%"
+            height="100%"
+            src={{match.url}}
+            frameborder="1"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+    </iframe>
+    <div class="background"></div>
+    <div class="live">live</div>
+    <div class="title">
+      <div class="name">
+        <span>{{ match.team1.name }} vs {{ match.team2.name }}</span>
+      </div>
+      <div class="sub">
+        <div class="sub-name">
+          Champs
+        </div>
+        <div class="sub-view"><img src="/images/Eye.svg" alt="Eye">2459</div>
+      </div>
+    </div>
+  </div>
+  </a>
+</div>

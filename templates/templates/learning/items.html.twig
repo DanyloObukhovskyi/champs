@@ -1,0 +1,35 @@
+<div class="component learning_items">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" /></div>
+    </div>
+    <div class="title">
+      Обучения cs:go
+    </div>
+  </div>
+  <div class="table">
+    <div class="table-head">
+      <div class="r">Описание</div>
+      <div class="r">Продавец</div>
+      <div class="r">Рейтинг</div>
+      <div class="r">Цена</div>
+    </div>
+    <div class="table-row" v-for="(item, i) in data" :key="i">
+      <div class="r" v-text="item.title"></div>
+      <div class="r">
+        <div class="avatar"></div>
+        <div class="data">
+          <div class="name" v-text="item.user.name"></div>
+          <div class="period" v-text="getPeriod(item.user.period)"></div>
+        </div>
+      </div>
+      <div class="r">
+        <div class="stars">
+          <img src="/images/StarGray.svg" v-for="s in 5" :key="s" />
+        </div>
+        <div class="reviews" v-text="`${item.reviews} отзыва`"></div>
+      </div>
+      <div class="r" v-text="`${item.price} Р`"></div>
+    </div>
+  </div>
+</div>

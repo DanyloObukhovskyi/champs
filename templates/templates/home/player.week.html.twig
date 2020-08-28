@@ -1,0 +1,28 @@
+<div class="component player-week">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    </div>
+    <div class="title">
+      Игрок недели
+    </div>
+  </div>
+  {% for item in playerWeek %}
+  <div class="content">
+    <img src="/images/temp/Player1Big.png" class="photo" alt="Avatar" />
+    <div class="nik">
+      <img src="/images/temp/flag-russia.png" alt="Flag Russian" />
+      s1mple
+    </div>
+    <div class="name">
+      Александр Костылев
+    </div>
+    <div class="score">
+      0.59/раунд
+    </div>
+    <div class="bonus">
+      Лучшие убийства с AWP
+    </div>
+  </div>
+  {% endfor %}
+</div>

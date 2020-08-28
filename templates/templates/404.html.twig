@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Страница не найдена</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/ico">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/assets/styles/404.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/styles/base.css" />
+</head>
+<body>
+  <div class="notfound">
+    <img src="/images/404.jpg" class="back" />
+    <div class="block">
+      <div class="title">Ошибка 404</div>
+      <div class="subtitle">Вы ищете страницу, которой не существует Пожалуйста, перейдите на <a href="{{ path('main') }}">главную страницу сайта</a></div>
+      <a href="{{ path('main') }}" class="button">НА ГЛАВНУЮ</a>
+    </div>
+    <img src="/images/404Logo.svg" class="logo" />
+  </div>
+</body>
+</html>
