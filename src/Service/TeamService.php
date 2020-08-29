@@ -9,6 +9,7 @@ namespace App\Service;
 
 use App\Entity\Team;
 use App\Repository\TeamRepository;
+use Exception;
 
 class TeamService extends EntityService
 {
@@ -32,14 +33,17 @@ class TeamService extends EntityService
         $team = new $this->entity;
         $team->setName($values['name'])->setRegion($values['region']);
 
-        $imageLogo = DownloadFile::getImage($values['logo']);
-        if (!empty($imageLogo))
+        try {
+            $imageLogo = DownloadFile::getImage($values['logo']);
+        }catch (Exception $e){
+            $imageLogo = null;
+        }
+        if (isset($imageLogo))
         {
             $team->setLogo($imageLogo);
         }
 
         $this->entityManager->persist($team);
-
         $this->entityManager->flush();
 
         return $team;

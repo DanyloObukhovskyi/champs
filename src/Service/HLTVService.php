@@ -7,7 +7,6 @@
 namespace App\Service;
 
 
-use ApiPlatform\Core\Serializer\JsonEncoder;
 use App\Entity\MatchPickAndBan;
 use DiDom\Document;
 use DiDom\Query;
@@ -200,6 +199,8 @@ class HLTVService
      */
     public static function getMatchFull($match)
     {
+        ini_set('max_execution_time', 0);
+
         LoggerService::info("getMatchFull");
 
         $content = PageContentService::getPageContent($match['url']);
@@ -715,9 +716,14 @@ class HLTVService
     public static function getTeam($team)
     {
         ini_set('max_execution_time', 0);
+        try {
+            $content = PageContentService::getPageContent($team['url']);
+        } catch (\Exception $e){
+            LoggerService::error("get team {$team['name']} error: $e");
 
+            $content = null;
+        }
         LoggerService::info("get team {$team['name']}");
-        $content = PageContentService::getPageContent($team['url']);
         if (!$content or ($content and is_array($content) && isset($content['error'])))
         {
             return false;
@@ -824,11 +830,15 @@ class HLTVService
         ini_set('max_execution_time', 0);
 
         LoggerService::info("get player {$player['nick']} person info");
+        try {
+            $content = PageContentService::getPageContent($player['url']);
+        } catch (\Exception $e){
+            LoggerService::error("get player {$player['nick']} person error: $e");
 
+            $content = null;
+        }
 
-        $content = PageContentService::getPageContent($player['url']);
-
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
+        if (empty($content) or ($content and is_array($content) && isset($content['error'])))
         {
             return false;
         }
@@ -1343,8 +1353,15 @@ class HLTVService
     {
         ini_set('max_execution_time', 0);
 
+        try {
+            $content = PageContentService::getPageContent($team['url']);
+        } catch (\Exception $e){
+            LoggerService::error("get team {$team['name']} error: $e");
+
+            $content = null;
+        }
         LoggerService::info("get team {$team['name']}");
-        $content = PageContentService::getPageContent($team['url']);
+
         if (!$content or ($content and is_array($content) && isset($content['error'])))
         {
             return false;
@@ -1471,7 +1488,7 @@ class HLTVService
      * @return array
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public function getEventData($url): array
+    public function getEventData($url)
     {
         LoggerService::info("getEventData");
         $content = PageContentService::getPageContent($url);

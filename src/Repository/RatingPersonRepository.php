@@ -33,7 +33,7 @@ class RatingPersonRepository extends ServiceEntityRepository
      * @return RatingPerson|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByPersonId(int $personId): ?RatingPerson
+    public function findByPersonId(int $personId)
     {
         /** @var RatingPerson $ratingPerson */
         $ratingPerson =  $this->createQueryBuilder('r')

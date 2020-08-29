@@ -24,7 +24,7 @@ class RatingTeamRepository extends ServiceEntityRepository
      * @return RatingTeam
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByTeamId(int $teamId): RatingTeam
+    public function findByTeamId(int $teamId)
     {
         /** @var RatingTeam $ratingTeam */
         $ratingTeam =  $this->createQueryBuilder('r')

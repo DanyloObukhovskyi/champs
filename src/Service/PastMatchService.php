@@ -4,7 +4,9 @@
 namespace App\Service;
 
 
+use App\Entity\Match;
 use App\Entity\PastMatch;
+use App\Entity\Team;
 
 class PastMatchService extends EntityService
 {
@@ -12,7 +14,7 @@ class PastMatchService extends EntityService
 
     protected $repository;
 
-    public function create($match, $pastMatch, $matchTeam)
+    public function create(Match $match, array $pastMatch, Team $matchTeam)
     {
         $past =  $this->repository->findMatch($match, $pastMatch, $matchTeam);
 

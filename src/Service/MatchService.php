@@ -20,14 +20,14 @@ class MatchService extends EntityService
 
     public function create($values, $teams, Event $event = null)
     {
+        /** @var Match $match */
         $match = $this->repository->findByUrl($values['url']);
         if (empty($match)){
             $match = $this->repository->findByStartAtAndTeams($values['start_at'], $teams);
         }
 
-        if (!$match)
+        if (empty($match))
         {
-           /** @var Match $match */
            $match = new $this->entity;
 
            $match->setCode($values['code'])

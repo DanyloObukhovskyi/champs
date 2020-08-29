@@ -476,14 +476,13 @@ class ParserMatchesCommand extends Command
             $this->createMaps($matchDataFull);
 
             $matchEntity = $this->createMatch($matchDataFull, $teamEntityList);
-            if (empty($matchDataFull))
+            $this->updateMatchTeamPastMatches($matchEntity, $matchDataFull);
             $matchDataFull = $this->setScores($matchDataFull);
             $this->createStreams($matchEntity, $matchDataFull);
             $this->resultService->create($matchEntity, $createdAt);
 
             $this->matchService->updateStatistic($matchEntity, $matchDataFull);
             $this->updateMatchTeamWinrate($matchEntity, $matchDataFull);
-            $this->updateMatchTeamPastMatches($matchEntity, $matchDataFull);
         }
     }
 
@@ -526,7 +525,7 @@ class ParserMatchesCommand extends Command
                 $matchTeam = $this->teamService->getByName($teamName);
 
                 foreach ($pastMatches as $pastMatch){
-                    if (!empty($match))
+                    if (isset($match) and isset($matchTeam))
                     {
                         $this->pastMatchService->create($match, $pastMatch, $matchTeam);
                     }
