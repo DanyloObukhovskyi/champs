@@ -23,11 +23,6 @@ class RatingPersonRepository extends ServiceEntityRepository
         parent::__construct($registry, RatingPerson::class);
     }
 
-    public function update($person, $rating)
-    {
-
-    }
-
     /**
      * @param int $personId
      * @return RatingPerson|null
@@ -43,5 +38,29 @@ class RatingPersonRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         return $ratingPerson;
+    }
+
+    public function getRatingPersons()
+    {
+        /** @var RatingPerson $events */
+        $ratingPerson = $this->createQueryBuilder('r')
+            ->orderBy('r.id', 'DESC')
+            ->where('r.createdAt is not null')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (isset($ratingPerson)){
+            $createdAt = $ratingPerson->getCreatedAt();
+            /** @var RatingPerson[] $events */
+            $events = $this->createQueryBuilder('e')
+                ->where("e.createdAt = '$createdAt'")
+                ->orderBy('e.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            return $events;
+        }
+        return [];
     }
 }

@@ -24,13 +24,10 @@ class TeamService extends EntityService
 
         //TODO: Создание команды
         $team = $this->repository->getByName($values['name']);
-        if (isset($team))
+        if (empty($team))
         {
-            $this->entityManager->persist($team);
-            return $team;
+            $team = new $this->entity;
         }
-
-        $team = new $this->entity;
         $team->setName($values['name'])->setRegion($values['region']);
 
         try {

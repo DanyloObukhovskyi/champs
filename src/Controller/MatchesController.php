@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Match;
 use App\Entity\PlayerStatistics;
 use App\Entity\Stream;
+use App\Kernel;
 use App\Repository\MatchRepository;
 use App\Service\MatchService;
 use http\Env\Response;

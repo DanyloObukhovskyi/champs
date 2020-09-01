@@ -57,7 +57,7 @@ class RatingPerson
 
     public function getCreatedAt(): ?Carbon
     {
-        return Carbon::new($this->createdAt);
+        return new Carbon($this->createdAt);
     }
 
     public function setCreatedAt($createdAt): self

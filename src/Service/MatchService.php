@@ -18,6 +18,15 @@ class MatchService extends EntityService
     /** @var MatchRepository */
     protected $repository;
 
+    protected $imageService;
+
+    public function __construct($entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->imageService = new ImageService();
+    }
+
     public function create($values, $teams, Event $event = null)
     {
         /** @var Match $match */
@@ -159,6 +168,7 @@ class MatchService extends EntityService
 
     public function matchDecorator(Match $match)
     {
+        $this->imageService->setImage($match->getEvent() !== null ? null : $match->getEvent()->getImage());
         $matchFields = [
             "match_id" => $match->getId(),
             "time" => date("H:i", $match->getStartAt()->getTimestamp()),
@@ -170,22 +180,24 @@ class MatchService extends EntityService
                 "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
                 "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
                 "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
+                "image" => $this->imageService->getImagePath()
             ],
         ];
         $team1 = $match->getTeam1();
         if(isset($team1)){
+            $this->imageService->setImage($match->getTeam1()->getLogo());
             $matchFields['teamA'] = [
                 "title" => str_replace("'", "", $match->getTeam1()->getName()),
-                "logo" => "/uploads/images/" . $match->getTeam1()->getLogo(),
+                "logo" => $this->imageService->getImagePath(),
                 "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
             ];
         }
         $team2 = $match->getTeam2();
         if(isset($team2)){
+            $this->imageService->setImage($match->getTeam2()->getLogo());
             $matchFields['teamB'] = [
                 "title" => str_replace("'", "", $match->getTeam2()->getName()),
-                "logo" => "/uploads/images/" . $match->getTeam2()->getLogo(),
+                "logo" => $this->imageService->getImagePath(),
                 "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
             ];
         }

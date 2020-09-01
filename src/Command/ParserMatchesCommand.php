@@ -97,6 +97,7 @@ class ParserMatchesCommand extends Command
         $this->matchMapTeamWinRateService = new MatchMapTeamWinRateService($entityManager);
         $this->pastMatchService = new PastMatchService($entityManager);
 
+        LoggerService::info("Get results Matches");
         $this->updateResultsBlock();
 
         LoggerService::info("Get live Matches");
@@ -466,16 +467,14 @@ class ParserMatchesCommand extends Command
         $createdAt = Carbon::now();
 
         foreach ($resultsMatches as $resultsMatch){
-
-            $matchDataFull = HLTVService::getMatchFull($resultsMatch);
-            $teams = HLTVService::getTeams($matchDataFull);
+            $teams = HLTVService::getTeams($resultsMatch);
 
             $teamEntityList = $this->createTeams($teams);
-            $this->createMaps($matchDataFull);
+            $this->createMaps($resultsMatch);
 
-            $matchEntity = $this->createMatch($matchDataFull, $teamEntityList);
-            $this->updateMatchTeamPastMatches($matchEntity, $matchDataFull);
-            $matchDataFull = $this->setScores($matchDataFull);
+            $matchEntity = $this->createMatch($resultsMatch, $teamEntityList);
+            $this->updateMatchTeamPastMatches($matchEntity, $resultsMatch);
+            $matchDataFull = $this->setScores($resultsMatch);
             $this->createStreams($matchEntity, $matchDataFull);
             $this->resultService->create($matchEntity, $createdAt);
 

@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\Match;
+use App\Entity\RatingPerson;
 use App\Entity\Result;
 use App\Service\EventService;
 use App\Service\MatchService;
+use App\Service\RatingPersonService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -26,6 +28,7 @@ class MainController extends DefController
         $entityManager = $this->getDoctrine()->getManager();
         $matchService = new MatchService($entityManager);
         $eventService = new EventService($entityManager);
+        $ratingPlayersService = new RatingPersonService($entityManager);
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
         $matchesItems = $matchService->matchesDecorator($matches);
@@ -89,74 +92,9 @@ class MainController extends DefController
 
         ];
 
+        $ratingPlayers = $entityManager->getRepository(RatingPerson::class)->getRatingPersons();
         // RATING PLAYERS
-        $ratingPlayers = [
-            [
-                'nickname' => 's1mple',
-                'fullname' => 'Александр Костылев',
-                'image' => '/images/temp/Player1.png',
-                'team' => [
-                    'title' => 'Natus Vincere',
-                    'image' => '/images/temp/Rectangle5.png'
-                ],
-                'event' => [
-                    'title' => 'Home Sweet Home Cup',
-                    'date' => 1596104684,
-                ]
-            ],
-            [
-                'nickname' => 's1mple',
-                'fullname' => 'Александр Костылев',
-                'image' => '/images/temp/Player1.png',
-                'team' => [
-                    'title' => 'Natus Vincere',
-                    'image' => '/images/temp/Rectangle5.png'
-                ],
-                'event' => [
-                    'title' => 'Home Sweet Home Cup',
-                    'date' => 1596104684,
-                ]
-            ],
-            [
-                'nickname' => 's1mple',
-                'fullname' => 'Александр Костылев',
-                'image' => '/images/temp/Player1.png',
-                'team' => [
-                    'title' => 'Natus Vincere',
-                    'image' => '/images/temp/Rectangle5.png'
-                ],
-                'event' => [
-                    'title' => 'Home Sweet Home Cup',
-                    'date' => 1596104684,
-                ]
-            ],
-            [
-                'nickname' => 's1mple',
-                'fullname' => 'Александр Костылев',
-                'image' => '/images/temp/Player1.png',
-                'team' => [
-                    'title' => 'Natus Vincere',
-                    'image' => '/images/temp/Rectangle5.png'
-                ],
-                'event' => [
-                    'title' => 'Home Sweet Home Cup',
-                    'date' => 1596104684,
-                ]
-            ],
-            [
-                'nickname' => 's1mple',
-                'fullname' => 'Александр Костылев',
-                'image' => '/images/temp/Player1.png',
-                'team' => [
-                    'title' => 'Natus Vincere',
-                    'image' => '/images/temp/Rectangle5.png'
-                ],
-                'event' => [
-                    'title' => 'Home Sweet Home Cup',
-                    'date' => 1596104684,
-                ]
-            ],
-        ];
+        $ratingPlayers = $ratingPlayersService->retingPlayersDecorator($ratingPlayers);
 
         // RATING COMMANDS
         $ratingCommands = [

@@ -50,10 +50,7 @@ class MatchRepository extends ServiceEntityRepository
         foreach ($matches as $match)
         {
             /** @var Match $match */
-//            if($match->getScore1() < 2 && $match->getScore2() < 2 && $match->getStartAt()->getTimestamp() <= time())
-//            {
-                $results[] = $match;
-//            }
+            $results[] = $match;
         }
 
         return $results;

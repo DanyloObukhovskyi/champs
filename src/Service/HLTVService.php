@@ -1200,65 +1200,32 @@ class HLTVService
      */
     public static function getMatchesResults($maxCount = 10): array
     {
-        $matches = [];
-        $is_live = false;
-
-        $content = PageContentService::getPageContent(self::$baseUrl.'/results');
+        $content = PageContentService::getPageContent(self::$baseUrl);
 
         $document = new Document($content);
 
-        $resultBlocks = $document->find('.results-holder .results-all .results-sublist');
+        $results = $document->find('.result-box');
 
-        foreach ($resultBlocks as $resultBlock)
-        {
-            $matchCells = $resultBlock->find('.result-con');
+        $matchUrls = [];
+        foreach ($results as $result){
+            $classNames = $result->attr('class');
+            if (!stristr($classNames, 'hidden')){
+                $resultBlocks[] = $result;
 
-            foreach ($matchCells as $matchCell){
-
-                if (count($matches) === $maxCount)
-                {
-                    continue;
+                $url = $result->first('.teambox.a-reset');
+                if (isset($url)){
+                    $url = $url->attr('href');
+                    $matchUrls[] = [
+                        'url' => self::urlDecorator($url),
+                        'is_live' => false
+                    ];
                 }
-
-                $matchUrlRaw = $matchCell->first("a");
-
-                if (isset($matchUrlRaw))
-                {
-                    $url = $matchUrlRaw->attr('href');
-
-                    if (strrpos($url, 'http') === false)
-                    {
-                        $url = static::$baseUrl . $url;
-                    }
-                }
-                $start_at = $matchCell->attr('data-zonedgrouping-entry-unix');
-
-                if (!empty($start_at))
-                {
-                    $unixtime = trim($start_at);
-                    $dateTime = new \DateTime();
-                    if (strlen($unixtime) == 13)
-                    {
-                        $unixtime = substr($unixtime, 0, -3);
-                    }
-
-                    $dateTime = $dateTime->setTimestamp($unixtime);
-
-                    $start_at = $dateTime;
-                }
-                $matchTeams = $matchCell->find(".team");
-
-                $teams = [];
-                foreach($matchTeams as $teamRaw)
-                {
-                    $teams[] = trim($teamRaw->text());
-                }
-                $code =  $start_at->format('Y-m-d');
-
-                $matches[] = compact('url', 'teams', 'is_live', 'start_at', 'code');
             }
         }
-
+        $matches = [];
+        foreach ($matchUrls as $url){
+            $matches[] = self::getMatchFull($url);
+        }
         return $matches;
     }
 

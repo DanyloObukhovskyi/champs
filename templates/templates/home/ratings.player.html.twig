@@ -19,13 +19,10 @@
           <span class="name">{{item.fullname}}</span>
         </label>
       </div>
+      {% if  %}
       <div>
         <img src="{{item.team.image}}" alt="Rectangle5" />
         {{item.team.title}}
-      </div>
-      <div>
-        <span class="date">{{item.event.date|date('F d, h:s')}}</span>
-        <span>{{item.event.title}}</span>
       </div>
     </div>
     {% set i = i + 1 %}

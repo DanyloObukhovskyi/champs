@@ -103,20 +103,20 @@ class EventRepository extends ServiceEntityRepository
      */
     public function getCurrentEvents()
     {
+        /** @var Event $events */
         $event = $this->createQueryBuilder('e')
             ->orderBy('e.id', 'DESC')
+            ->where('e.createdAt is not null')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 
         if (isset($event)){
-            $dateFrom = $event->getCreatedAt()->setSeconds(0)->format('Y-m-d H:i:s');
-            $dateTo = $event->getCreatedAt()->addMinutes(5)->format('Y-m-d H:i:s');
+            $createdAt = $event->getCreatedAt();
 
             /** @var Event[] $events */
             $events = $this->createQueryBuilder('e')
-                ->where("e.createdAt >= '$dateFrom'")
-                ->andWhere("e.createdAt <= '$dateTo'")
+                ->where("e.createdAt = '$createdAt'")
                 ->orderBy('e.id', 'ASC')
                 ->getQuery()
                 ->getResult();
