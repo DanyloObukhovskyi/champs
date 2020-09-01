@@ -6,7 +6,7 @@
 
 namespace App\Service;
 
-
+use Exception;
 use Symfony\Component\HttpClient\HttpClient;
 
 class PageContentService
@@ -41,10 +41,19 @@ class PageContentService
      */
     private static function getContent($url)
     {
-        $client = HttpClient::create();
-        $response = $client->request('GET', $url);
+        $options = [];
+        if (!empty($_ENV['PROXY'])) {
+            $options['proxy'] = $_ENV['PROXY'];
+        }
 
-        $statusCode = $response->getStatusCode();
+        try {
+            $client = HttpClient::create($options);
+            $response = $client->request('GET', $url);
+
+            $statusCode = $response->getStatusCode();
+        } catch (Exception $exception) {
+            $statusCode = 404;
+        }
 
         if ($statusCode != 200)
         {

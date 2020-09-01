@@ -13,19 +13,22 @@
     <div class="table-row">
       <div>
         <span class="num">{{i}}.</span>
-        <img src="{{item.image}}" alt="Avatar" />
         <label>
-          <span><img src="/images/temp/flag-russia.png" alt="Flag Russian" />{{item.nickname}}</span>
+          <span>{{item.nickname}}</span>
           <span class="name">{{item.fullname}}</span>
         </label>
       </div>
       <div>
-        <img src="{{item.team.image}}" alt="Rectangle5" />
-        {{item.team.title}}
+        {% if item.team.image is defined %}
+          <img src="{{item.team.image}}" alt="Rectangle5" />
+          {{item.team.title}}
+        {% endif %}
       </div>
       <div>
-        <span class="date">{{item.event.date|date('F d, h:s')}}</span>
-        <span>{{item.event.title}}</span>
+        {% if item.event is defined %}
+          <span class="date">{{item.event.date|date('F d, h:s')}}</span>
+          <span>{{item.event.title}}</span>
+        {% endif %}
       </div>
     </div>
     {% set i = i + 1 %}

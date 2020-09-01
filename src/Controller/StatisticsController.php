@@ -2,6 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\{
+    Person,
+    RatingTeam,
+    RatingPerson,
+    WeaponRating
+};
+use App\Service\{
+    ImageService,
+    RatingTeamService,
+    RatingPersonService,
+    WeaponRatingService
+};
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,77 +24,37 @@ class StatisticsController extends AbstractController
       */
     public function index()
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $ratingPlayersService = new RatingPersonService($entityManager);
+        $ratingTeamService = new RatingTeamService($entityManager);
+        $weaponService = new WeaponRatingService($entityManager);
+        $imageService = new ImageService();
+
         // RATING PLAYERS
-        $ratingPlayers = [
-          [
-            'nickname' => 's1mple',
-            'fullname' => 'Александр Костылев',
-            'image' => '/images/temp/Player1.png',
-            'team' => [
-              'title' => 'Natus Vincere',
-              'image' => '/images/temp/Rectangle5.png'
-            ],
-            'event' => [
-              'title' => 'Home Sweet Home Cup',
-              'date' => 1596104684,
-            ]
-          ],
-          [
-            'nickname' => 's1mple',
-            'fullname' => 'Александр Костылев',
-            'image' => '/images/temp/Player1.png',
-            'team' => [
-              'title' => 'Natus Vincere',
-              'image' => '/images/temp/Rectangle5.png'
-            ],
-            'event' => [
-              'title' => 'Home Sweet Home Cup',
-              'date' => 1596104684,
-            ]
-          ]
-        ];
+        $ratingPlayers = $entityManager->getRepository(RatingPerson::class)->getRatingPersons();
+        $ratingPlayers = $ratingPlayersService->retingPlayersDecorator($ratingPlayers);
 
         // RATING COMMANDS
-        $ratingCommands = [
-          [
-            'title' => 'Natus Vincere',
-            'image' => '/images/temp/Rectangle5.png',
-            'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-          ],
-          [
-            'title' => 'Natus Vincere',
-            'image' => '/images/temp/Rectangle5.png',
-            'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-          ]
-        ];
+        $ratingCommands = $entityManager->getRepository(RatingTeam::class)->getRatingTeams();
+        $ratingCommands = $ratingTeamService->retingTeamsDecorator($ratingCommands);
 
         // BEST PLAYER WEEK
-        $playerWeek = [
-          [
-            'nickname' => 's1mple',
-            'fullname' => 'Александр Костылев',
-            'image' => '/images/temp/Player1Big.png',
-            'rate' => '0.59',
-            'skill' => 'Лучшие убийства с AWP',
-            'rating' => '1.16',
-            'killRound' => '0.75',
-            'percentLife' => '0.67',
-            'effect' => '70.2%',
-            'damage' => '85.0',
-          ]
-        ];
+        /** @var Person $playerWeek */
+        $playerWeek = $entityManager->getRepository(Person::class)->getWeekPlayer();
+        if (isset($playerWeek)){
+            $imageService->setImage($playerWeek->getPhoto());
+
+            $playerWeek = [
+                'nickname' => $playerWeek->getNick(),
+                'fullname' => $playerWeek->getName(),
+                'image' => $imageService->getImagePath(),
+                'rate' => $playerWeek->getRating(),
+            ];
+        }
 
         // WEAPONS STATISTICS
-        $weapons = [
-          'awp' => 9,
-          'm4a1' => 20,
-          'ak47' => 30,
-          'cz75a' => 8,
-          'deagles' => 12,
-          'famas' => 3,
-          'p250' => 7,
-          'ump45' => 14
-        ];
+        $weaponModel = $entityManager->getRepository(WeaponRating::class)->findAll();
+        $weapons = $weaponService->ratingWeaponsDecorator($weaponModel);
 
         return $this->render('templates/statistics.html.twig', [
           'router' => 'statistics',

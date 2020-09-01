@@ -41,4 +41,14 @@ class WeaponRatingService extends EntityService
 
         return $weaponRating;
     }
+
+    public function ratingWeaponsDecorator($weapons) {
+        $ratingWeapons = [];
+
+        foreach ($weapons as $weapon) {
+            $ratingWeapons[$weapon->getName()] = $weapon->getRating();
+        }
+
+        return $ratingWeapons;
+    }
 }
