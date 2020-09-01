@@ -543,7 +543,7 @@
 }
 .matches__view .table .row-table .date{
   width: 100%;
-  padding: 1vw 0;
+  padding: 1vw 0 0 0;
   font-size: 1vw;
   font-weight: 500;
 }

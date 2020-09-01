@@ -110,4 +110,20 @@ class EventService extends EntityService
 
         return null;
     }
+
+    public function eventsDecorator(array $events)
+    {
+        $eventItems = [];
+        foreach ($events as $event)
+        {
+            /** @var Event $event */
+            $eventItems[] = [
+                "name" => $event->getName(),
+                "startedAt" => $event->getStartedAt(),
+                "endedAt" => $event->getEndedAt(),
+                "image" => $event->getImage(),
+            ];
+        }
+        return $eventItems;
+    }
 }

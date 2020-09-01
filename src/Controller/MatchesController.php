@@ -6,6 +6,7 @@ use App\Entity\Match;
 use App\Entity\PlayerStatistics;
 use App\Entity\Stream;
 use App\Repository\MatchRepository;
+use App\Service\MatchService;
 use http\Env\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,44 +19,15 @@ class MatchesController extends AbstractController
     public function index()
     {
         $entityManager = $this->getDoctrine()->getManager();
+        $matchService = new MatchService($entityManager);
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesNotEnded();
-
-        $items    = [];
-        $currDate = null;
-
-        foreach ($matches as $match)
-        {
-            /** @var Match $match */
-
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
-                $items[date("d", $match->getStartAt()->getTimestamp())] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $items[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => $match->getTeam1() !== null ? $match->getTeam1()->getName() : null,
-                        "logo" => "/uploads/images/" . ($match->getTeam1() !== null ?$match->getTeam1()->getLogo() : null),
-                    ],
-                    "teamB" => [
-                        "title" => $match->getTeam2() !== null ? $match->getTeam2()->getName() : null,
-                        "logo" => "/uploads/images/" .( $match->getTeam2() !== null ? $match->getTeam2()->getLogo() : null),
-                    ],
-                ];
-        }
+        $matchesItems = $matchService->matchesDecorator($matches);
 
         $lives = $entityManager->getRepository(Match::class)->findLive();
 
         return $this->render('templates/matches.html.twig',
-            ['router' => 'matches', 'matches' => $matches, "items" => $items, "lives" => $lives]);
+            ['router' => 'matches', 'matches' => $matches, "items" => $matchesItems, "lives" => $lives]);
     }
 
     /**

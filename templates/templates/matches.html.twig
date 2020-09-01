@@ -33,7 +33,10 @@
             <div class="row-table" v-for="item in items" >
               <div class="date" v-text="item.date"></div>
               <div class="row-items">
-                <row-item v-for="subitem in item.items" :subitem="subitem" />
+               <a class="d-block mt-2" v-for="match in item.items" :href="`matches/${match.match_id}`">
+                 <match :match="match" v-if="checkEmptyTeam(match)"/>
+                 <empty-match :match="match" v-else/>
+               </a>
               </div>
             </div>
           </div>
@@ -97,12 +100,37 @@
 	</div>
 </script>
 
+<script type="text/x-template" id="match-template">
+    <div class="row-item">
+        <div class="time" v-text="subitem.time"></div>
+        <div class="teamA">
+            <span v-text="subitem.teamA.title ?? null"></span>
+            <img :src="`${subitem.teamA.logo}`" />
+        </div>
+        <div class="vs">vs</div>
+        <div class="teamB">
+            <img :src="`${subitem.teamB.logo ?? '#'}`" />
+            <span v-text="subitem.teamB.title ?? null"></span>
+        </div>
+        <div class="title">
+            <img :src="`${subitem.logo ?? '#'}`" />
+            <span v-text="subitem.title ?? null"></span>
+        </div>
+    </div>
+</script>
+
 <script>
-Vue.component('row-item', {
+Vue.component('match', {
   props: {
-    subitem: Object,
+      match: Object,
   },
-  template: '#row-item-template',
+  template: '#match-template',
+})
+Vue.component('empty-match', {
+    props: {
+        match: Object,
+    },
+    template: '#empty-match-template',
 })
 Vue.component('calendar', {
   template: '#calendar',
@@ -175,6 +203,16 @@ var app = new Vue({
           th.overflow = 'visible';
         }, 400);
       }
+    },
+    checkEmptyTeam(match) {
+      let result = true;
+
+      if (match.teamA === null)
+          result = false
+      if (match.teamB === null)
+          result = false
+
+      return result
     },
     setToDate(date) {
       this.dateFromView = false;

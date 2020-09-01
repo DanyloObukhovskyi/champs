@@ -18,44 +18,17 @@
   </div>
   <div class="table">
     <div class="table-row" v-for="(item, i) in getItems" :class="[item.time === null ? 'matches-row' : '']">
-      <div class="rows" @click="setView(i, $event)">
-        <div>
-          <label v-if="item.time !== null" v-text="item.time"></label>
-          <span v-if="item.time === null">live</span>
-        </div>
-        <div class="r-teamA">
-          <span v-text="item.teamA.title"></span>
-          <img :src="item.teamA.logo" />
-        </div>
-        <div class="r-scores" :class="item.teamA.score !== null || item.teamB.score !== null ? 'bold' : ''">
-          <label v-if="item.teamA.score === null && item.teamB.score === null">vs</label>
-          <label v-if="item.teamA.score !== null || item.teamB.score !== null">
-            <span v-text="item.teamA.score ? item.teamA.score : 0" :class="item.teamA.score > item.teamB.score && item.time !== null ? 'victory' : item.teamA.score < item.teamB.score && item.time !== null ? 'losing' : ''"></span>
-            -
-            <span v-text="item.teamB.score ? item.teamB.score : 0" :class="item.teamB.score > item.teamA.score && item.time !== null ? 'victory' : item.teamB.score < item.teamA.score && item.time !== null ? 'losing' : ''"></span>
-          </label>
-        </div>
-        <div class="r-teamB">
-          <img :src="item.teamB.logo" />
-          <span v-text="item.teamB.title"></span>
-        </div>
-        <div>
-          <label v-text="item.event.name ? item.event.name.slice(0, 18) + (item.event.name.length > 18 ? '...' : '') : 'Матч вне соревнований'"></label>
-          <span v-if="item.event.image" class="img">
-            <img :src="'/uploads/images/' + item.event.image" />
-          </span>
-        </div>
+      <div class="table-row border-0" @click="setView(i, $event)">
+        <match :match="item" v-if="checkEmptyTeam(item)"></match>
+        <empty-match :match="item" v-else></empty-match>
       </div>
-      <div class="video" v-show="item.video !== null" :style="{height: index === i ? height : '0'}">
+      <div class="video" v-show="item.video !== null" :style="{height: index === i ? height : '0'}" >
         <div class="rows-d rowsvid">
           <div class="row-d">
             <img src="/images/temp/Video1.svg" alt="Video1" />
           </div>
           <div class="row-d">
-            <div>
-              <div><span v-text="item.teamA.title"></span>&nbsp;–&nbsp;<span v-text="item.teamB.title"></span>&nbsp;Live</div>
-              <div><img src="/images/EyeWhite.svg" alt="eye" />2459</div>
-            </div>
+            
           </div>
           <div class="row-d">
             <label>
@@ -69,16 +42,80 @@
   </div>
 </div>
 
+<script type="text/x-template" id="match-template">
+  <div class="rows">
+    <div>
+      <label v-if="match.time !== null" v-text="match.time"></label>
+      <span v-if="match.time === null">live</span>
+    </div>
+    <div class="r-teamA">
+      <span v-text="match.teamA.title"></span>
+      <img :src="match.teamA.logo"/>
+    </div>
+    <div class="r-scores" :class="match.teamA.score !== null || match.teamB.score !== null ? 'bold' : ''">
+      <label v-if="match.teamA.score === null && match.teamB.score === null">vs</label>
+      <label v-if="match.teamA.score !== null || match.teamB.score !== null">
+        <span v-text="match.teamA.score ? match.teamA.score : 0" :class="match.teamA.score > match.teamB.score && match.time !== null ? 'victory' : match.teamA.score < match.teamB.score && item.time !== null ? 'losing' : ''"></span>
+        -
+        <span v-text="match.teamB.score ? match.teamB.score : 0" :class="match.teamB.score > match.teamA.score && match.time !== null ? 'victory' : match.teamB.score < match.teamA.score && item.time !== null ? 'losing' : ''"></span>
+      </label>
+    </div>
+    <div class="r-teamB">
+      <img :src="match.teamB.logo"/>
+      <span v-text="match.teamB.title"></span>
+    </div>
+    <div>
+      <label v-text="match.event.name ? match.event.name.slice(0, 18) + (match.event.name.length > 18 ? '...' : '') : 'Матч вне соревнований'"></label>
+      <span v-if="match.event.image" class="img">
+          <img :src="'/uploads/images/' + match.event.image" />
+        </span>
+    </div>
+  </div>
+</script>
+
+<script type="text/x-template" id="empty-match-template">
+  <div class="rows">
+    <div>
+      <label v-if="match.time !== null" v-text="match.time"></label>
+      <span v-if="match.time === null">live</span>
+    </div>
+    <div class="r-teamA">
+    </div>
+    <div class="r-scores">
+    </div>
+    <div class="w-100">
+      <label v-text="match.event.name ? match.event.name : 'Матч вне соревнований'" class="w-100"></label>
+      <span v-if="match.event.image" class="img">
+          <img :src="'/uploads/images/' + match.event.image" />
+        </span>
+    </div>
+  </div>
+</script>
+
 <script>
+  const match = Vue.component('match',{
+    props: ['match'],
+    template: '#match-template'
+  })
+
+  const emptyMatch = Vue.component('empty-match', {
+    props: ['match'],
+    template: '#empty-match-template'
+  })
+
   const matches = new Vue({
     el: '#matches',
+    components: {
+      'match': match,
+      'empty-match': emptyMatch
+    },
     computed: {
       getItems() {
         return this.data[this.page] ? this.data[this.page].items : '';
       },
       getDateItems() {
         return this.data[this.page] ? this.data[this.page].date : '';
-      }
+      },
     },
     methods: {
       setView(index, e) {
@@ -94,6 +131,16 @@
         if (this.page < (this.data.length > 0 && this.data.length - 1)) {
           this.page = this.page + 1;
         }
+      },
+      checkEmptyTeam(match) {
+        let result = true;
+
+        if (match.teamA === null)
+          result = false
+        if (match.teamB === null)
+          result = false
+
+        return result
       }
     },
     data: function () {
@@ -111,6 +158,7 @@
         const datePrevOne = new Date(today.getTime() - (3600 * 24 * 1000));
         const dateNextOne = new Date(today.getTime() + (3600 * 24 * 1000));
         const dateNextTwo = new Date(today.getTime() + (3600 * 48 * 1000));
+
         Object.keys(parse).forEach((item, i) => {
           const itemNew = parse[item];
           if (datePrevOne.getDate() === Number(item)) {
@@ -126,7 +174,6 @@
             itemNew.date = 'Послезавтра';
           }
           if (parse[item].items.length > 8) {
-            let newItem = {};
             for (let i = 0; i < Math.round(parse[item].items.length / 9); i++) {
               const newItem = {
                 date: parse[item].date,

@@ -6,7 +6,6 @@ use App\Entity\Match;
 use App\Entity\MatchPickAndBan;
 use App\Entity\Player;
 use App\Service\EventService;
-use App\Service\GosuGamersService;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
 use App\Service\MapService;
@@ -172,7 +171,6 @@ class ParserMatchesCommand extends Command
         }
 
         LoggerService::info("done");
-        dd(Carbon::now());
         return 0;
     }
 

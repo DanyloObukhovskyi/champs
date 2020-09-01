@@ -5,7 +5,8 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\Result;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\EventService;
+use App\Service\MatchService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -18,74 +19,21 @@ class MainController extends DefController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
+        $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        //return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        $authenticationUtils->getLastUsername();
 
         $entityManager = $this->getDoctrine()->getManager();
+        $matchService = new MatchService($entityManager);
+        $eventService = new EventService($entityManager);
+
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
+        $matchesItems = $matchService->matchesDecorator($matches);
 
         $events = $entityManager->getRepository(Event::class)->getCurrentEvents();
+        $eventItems = $eventService->eventsDecorator($events);
 
-        $eventItems    = [];
-
-        foreach ($events as $event)
-        {
-            /** @var Event $event */
-            $eventItems[] = [
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $event->getImage(),
-            ];
-        }
-
-
-        $items    = [];
-        $currDate = null;
-
-        foreach ($matches as $match)
-        {
-            /** @var Match $match */
-
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
-                $items[date("d", $match->getStartAt()->getTimestamp())] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-
-            $items[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => $match->getTeam1() !== null ? str_replace("'", "", $match->getTeam1()->getName()): null,
-                        "logo" => "/uploads/images/" .($match->getTeam1() !== null ? $match->getTeam1()->getLogo(): null),
-                        "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
-                    ],
-                    "teamB" => [
-                        "title" => $match->getTeam2() !== null ? str_replace("'", "", $match->getTeam2()->getName()): null,
-                        "logo" => "/uploads/images/" . ($match->getTeam2() !== null ? $match->getTeam2()->getLogo(): null),
-                        "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
-                    ],
-                    "event" => [
-                        "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
-                        "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                        "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                        "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
-                    ],
-                ];
-        }
-        $matchesItems = $items;
-
-        $results =  $entityManager->getRepository(Result::class)
-            ->getCurrent();
+        $results =  $entityManager->getRepository(Result::class)->getCurrent();
         $matchResults = [];
 
         $currDate = null;
@@ -103,35 +51,8 @@ class MainController extends DefController
                     "items" => [],
                 ];
             }
-            $matchResults[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => str_replace("'", "", $match->getTeam1()->getName()),
-                        "logo" => "/uploads/images/" . $match->getTeam1()->getLogo(),
-                        "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
-                    ],
-                    "teamB" => [
-                        "title" => str_replace("'", "", $match->getTeam2()->getName()),
-                        "logo" => "/uploads/images/" . $match->getTeam2()->getLogo(),
-                        "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
-                    ],
-                    "event" => [
-                        "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
-                        "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                        "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                        "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
-                    ],
-                ];
+            $matchResults[$key]["items"][] = $matchService->matchDecorator($match);
         }
-        $lives = $entityManager->getRepository(Match::class)->findLive();
-        $livesItems = [];
-        $video = [];
-
-
         $video = [
             1 => 'sfXOTa-69Rc',
             2 => 'kgitmggEgrA',
@@ -167,19 +88,6 @@ class MainController extends DefController
             ],
 
         ];
-
-//        foreach ($lives as $live)
-//        {
-//            $k++;
-//            /** @var Match $live */
-//            $livesItems[] = [
-//                'id' => $live->getId(),
-//                'videoId' => $video[$k % 4],
-//                'videoType' => 0,
-//                'title' => str_replace("'", "", $live->getTeam1()->getName()) ." vs " . str_replace("'", "", $live->getTeam2()->getName()),
-////                'url' => $live->getUrl(),
-//            ];
-//        }
 
         // RATING PLAYERS
         $ratingPlayers = [

@@ -137,4 +137,58 @@ class MatchService extends EntityService
     {
         return $this->repository->findByUrl($url);
     }
+
+    public function matchesDecorator(array $matches)
+    {
+        $items = [];
+
+        foreach ($matches as $match)
+        {
+            $startDay = date("d", $match->getStartAt()->getTimestamp());
+            if (!array_key_exists($startDay, $items))
+            {
+                $items[$startDay] = [
+                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
+                    "items" => [],
+                ];
+            }
+            $items[$startDay]["items"][] = $this->matchDecorator($match);
+        }
+        return $items;
+    }
+
+    public function matchDecorator(Match $match)
+    {
+        $matchFields = [
+            "match_id" => $match->getId(),
+            "time" => date("H:i", $match->getStartAt()->getTimestamp()),
+            "title" => "",
+            "logo" => "",
+            "teamA" => null,
+            "teamB" => null,
+            "event" => [
+                "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
+                "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
+                "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
+                "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
+            ],
+        ];
+        $team1 = $match->getTeam1();
+        if(isset($team1)){
+            $matchFields['teamA'] = [
+                "title" => str_replace("'", "", $match->getTeam1()->getName()),
+                "logo" => "/uploads/images/" . $match->getTeam1()->getLogo(),
+                "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
+            ];
+        }
+        $team2 = $match->getTeam2();
+        if(isset($team2)){
+            $matchFields['teamB'] = [
+                "title" => str_replace("'", "", $match->getTeam2()->getName()),
+                "logo" => "/uploads/images/" . $match->getTeam2()->getLogo(),
+                "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
+            ];
+        }
+        return $matchFields;
+    }
 }
