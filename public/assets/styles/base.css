@@ -123,10 +123,12 @@ label{
 }
 .header_nav .nav .social span img,
 .header_nav .nav .social a img{
+  width: 0.7vw;
   height: 0.7vw;
 }
 .header_nav .nav .social span svg,
 .header_nav .nav .social a svg{
+  width: 0.7vw;
   height: 0.7vw;
 }
 .header_nav .nav .social span svg:hover,
@@ -232,16 +234,22 @@ label{
   align-items: center;
   color: #FFF;
   padding: 0 1vw;
+  justify-content: center;
+}
+.header_nav .nav .login a.icon{
+  padding: 0;
 }
 .header_nav .nav .login div{
+  width: 2vw;
   flex-shrink: 0;
   height: 100%;
   align-items: center;
   display: flex;
   background-color: #FF6D1D;
-  padding: 0 0.7vw;
+  justify-content: center;
 }
 .header_nav .nav .login div img{
+  width: 0.7vw;
   height: 0.7vw;
 }
 .header_nav .nav .menu-btn-cont{
@@ -456,6 +464,15 @@ label{
 }
 .login_form .login_block .send:hover{
   opacity: 0.5;
+}
+.login_form .login_block .error{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  font-size: 0.8vw;
+  padding: 1vw 0;
 }
 .login_form .login_block .subtext{
   width: 100%;
@@ -1113,6 +1130,7 @@ label{
 }
 .footer .container .social span svg,
 .footer .container .social a svg{
+  width: 0.7vw;
   height: 0.7vw;
 }
 .footer .container .social span svg:hover,
@@ -1561,6 +1579,95 @@ label{
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+.fade-enter, .fade-leave-to /* .fade-leave-active Ð´Ð¾ Ð²ÐµÑ€ÑÐ¸Ð¸ 2.1.8 */ {
   opacity: 0;
+}
+
+/* STREAM BLOCK */
+.stream{
+  width: 25vw;
+  height: 15vw;
+  background-color: #232323;
+  right: 1vw;
+  bottom: 1vw;
+  position: fixed;
+  z-index: 999999;
+  box-shadow: 0 0 3vw #000000;
+  padding: 0.5vw;
+  display: flex;
+  flex-direction: column;
+}
+.stream .title{
+  width: 100%;
+  padding: 0.5vw 0.5vw;
+  padding-top: 0;
+  color: #FFFFFF;
+  font-size: 1vw;
+  font-weight: 500;
+}
+.stream .title svg{
+  position: absolute;
+  right: 0.5vw;
+  top: 0.5vw;
+  width: 0.7vw;
+  height: 0.7vw;
+  cursor: pointer;
+  fill: #FFFFFF;
+}
+.stream .title svg:hover{
+  opacity: 0.5;
+}
+.stream .player{
+  width: 100%;
+  height: 100%;
+}
+.stream .playerWin{
+  width: 100%;
+  height: 100%;
+}
+.stream .playerWin iframe{
+  width: 100%;
+  height: 100%;
+}
+.stream .buttons{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: 0.3s;
+}
+.stream:hover .buttons{
+  opacity: 1;
+}
+.stream .buttons .button{
+  width: 33.33%;
+  height: 100%;
+}
+.stream .buttons .button span{
+  width: 3vw;
+  height: 3vw;
+  position: absolute;
+  left: calc(50% - 1.5vw);
+  top: calc(50% - 1.5vw);
+  z-index: 3;
+  cursor: pointer;
+}
+.stream .buttons .button div{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stream .buttons .button div svg{
+  width: 3vw;
+  height: 3vw;
+}
+.stream .buttons .button div svg path{
+  fill: #FFFFFF;
 }

@@ -67,7 +67,7 @@
     <div>
       <label v-text="match.event.name ? match.event.name.slice(0, 18) + (match.event.name.length > 18 ? '...' : '') : 'Матч вне соревнований'"></label>
       <span v-if="match.event.image" class="img">
-          <img :src="'/uploads/images/' + match.event.image" />
+          <img :src="match.event.image" />
         </span>
     </div>
   </div>
@@ -86,7 +86,7 @@
     <div class="w-100">
       <label v-text="match.event.name ? match.event.name : 'Матч вне соревнований'" class="w-100"></label>
       <span v-if="match.event.image" class="img">
-          <img :src="'/uploads/images/' + match.event.image" />
+          <img :src="match.event.image" />
         </span>
     </div>
   </div>

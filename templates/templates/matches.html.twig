@@ -34,10 +34,10 @@
               <div class="date" v-text="item.date"></div>
               <div class="row-items">
                 <template v-for="match in item.items">
-                  <a class="d-block mt-2"  :href="`matches/${match.match_id}`" v-if="checkEmptyTeam(match)">
+                  <a class="row-item" v-if="checkEmptyTeams(match)">
                     <match :match="match"/>
                   </a>
-                  <a class="d-block mt-2"  :href="`matches/${match.match_id}`" v-if="!checkEmptyTeam(match)">
+                  <a class="row-item" v-if="!checkEmptyTeams(match)">
                     <empty-match :match="match"/>
                   </a>
                 </template>
@@ -86,7 +86,7 @@
 </script>
 
 <script type="text/x-template" id="match-template">
-    <div class="row-item">
+      <div class="w-100" :href="`matches/${match.match_id}`" >
         <div class="time" v-text="match.time"></div>
         <div class="w-100 justify-content-center">
           <div class="teamA">
@@ -103,14 +103,14 @@
             <span v-text="match.title ?? null"></span>
           </div>
         </div>
-    </div>
+      </div>
 </script>
 
 <script type="text/x-template" id="empty-match-template">
-  <div class="row-item">
+  <div class="w-100" :href="`matches/${match.match_id}`" >
       <div class="time" v-text="match.time"></div>
       <div class="w-100 d-flex justify-content-center">
-        <div class="vs w-25" v-html="match.event.name">
+        <div class="vs w-50" v-html="match.event.name">
         </div>
         <div class="time"></div>
         <div class="time"></div>
@@ -206,7 +206,7 @@ var app = new Vue({
         }, 400);
       }
     },
-    checkEmptyTeam(match) {
+    checkEmptyTeams(match) {
       let result = true;
 
       if (match.teamA === null)

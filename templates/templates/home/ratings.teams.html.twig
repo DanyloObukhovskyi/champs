@@ -17,9 +17,7 @@
         <label>{{item.title}}</label>
       </div>
       <div>
-        {% for team in item.teams %}
-          <img src="{{team}}" />
-        {% endfor %}
+        {{ item.rating }}
       </div>
     </div>
     {% set i = i + 1 %}

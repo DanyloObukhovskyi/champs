@@ -33,6 +33,11 @@ class RatingTeam
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $rating;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,7 +57,7 @@ class RatingTeam
 
     public function getCreatedAt(): ?Carbon
     {
-        return Carbon::new($this->createdAt);
+        return new Carbon($this->createdAt);
     }
 
     public function setCreatedAt($createdAt): self
@@ -73,5 +78,21 @@ class RatingTeam
         $this->team = $team;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param mixed $rating
+     */
+    public function setRating($rating): void
+    {
+        $this->rating = $rating;
     }
 }

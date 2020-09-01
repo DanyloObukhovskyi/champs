@@ -35,24 +35,6 @@
             {% endfor %}
             {{ item.score2 }}
           </div>
-          <div class="row-mob">
-            <div class="t"><img src="/uploads/images/{{ item.team1.logo }}" />{{ item.team1.name }}</div>
-            {% for stat in item.matchStatistics %}
-              <div class="row-perc">
-                <div>{{ stat.map.shortCode }}</div>
-                <div>{{ stat.score1 }}</div>
-              </div>
-            {% endfor %}
-          </div>
-          <div class="row-mob">
-            <div class="t"><img src="/uploads/images/{{ item.team2.logo }}" />{{ item.team2.name }}</div>
-              {% for stat in item.matchStatistics %}
-                <div class="row-perc">
-                  <div>{{ stat.map.shortCode }}</div>
-                  <div>{{ stat.score2 }}</div>
-                </div>
-              {% endfor %}
-            </div>
         </div>
       </div>
       {% endif %}

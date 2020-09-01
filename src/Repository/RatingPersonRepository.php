@@ -52,14 +52,14 @@ class RatingPersonRepository extends ServiceEntityRepository
 
         if (isset($ratingPerson)){
             $createdAt = $ratingPerson->getCreatedAt();
-            /** @var RatingPerson[] $events */
-            $events = $this->createQueryBuilder('e')
+            /** @var RatingPerson[] $ratingPersons */
+            $ratingPersons = $this->createQueryBuilder('e')
                 ->where("e.createdAt = '$createdAt'")
                 ->orderBy('e.id', 'ASC')
                 ->getQuery()
                 ->getResult();
 
-            return $events;
+            return $ratingPersons;
         }
         return [];
     }

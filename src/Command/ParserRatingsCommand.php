@@ -145,12 +145,14 @@ class ParserRatingsCommand extends Command
             if (empty($ratingTeam)){
                 $this->ratingTeamService->create(
                     $teamEntity,
-                    $this->parseDate
+                    $this->parseDate,
+                    $teamsRating['rating']
                 );
             } else {
                 $this->ratingTeamService->update(
                     $ratingTeam,
-                    $this->parseDate
+                    $this->parseDate,
+                    $teamsRating['rating']
                 );
             }
         }
@@ -159,11 +161,10 @@ class ParserRatingsCommand extends Command
     protected function updateWeekPlayer()
     {
         $weekPlayer = HLTVService::getWeekPlayer();
-
         $person = $this->entityManager->getRepository(Person::class)->getByNick($weekPlayer['nick']);
 
         if (isset($person)){
-            $this->personService->updateWeekPlayer($person);
+            $this->personService->updateWeekPlayer($person, $weekPlayer['data']);
         }
     }
 

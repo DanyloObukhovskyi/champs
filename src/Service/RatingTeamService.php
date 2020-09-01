@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\Entity\RatingTeam;
+use App\Entity\Team;
 use App\Repository\RatingTeamRepository;
 
 class RatingTeamService extends EntityService
@@ -14,21 +15,50 @@ class RatingTeamService extends EntityService
     /** @var RatingTeamRepository */
     protected $repository;
 
-    public function update($ratingTeam, $createdAt)
+    protected $imageService;
+
+    public function __construct($entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->imageService = new ImageService();
+    }
+
+    public function update($ratingTeam, $createdAt, $rating)
     {
         $ratingTeam->setCreatedAt($createdAt);
+        $ratingTeam->setRating($rating);
 
         $this->entityManager->persist($ratingTeam);
         $this->entityManager->flush();
     }
 
-    public function create($team, $createdAt)
+    public function create($team, $createdAt, $rating)
     {
         $ratingTeam = new $this->entity;
         $ratingTeam->setTeam($team)
+            ->setRating($rating)
             ->setCreatedAt($createdAt);
 
         $this->entityManager->persist($ratingTeam);
         $this->entityManager->flush();
+    }
+
+    public function retingTeamsDecorator($ratingTeams)
+    {
+        $teams = [];
+        /** @var RatingTeam $ratingTeam */
+        foreach ($ratingTeams as $ratingTeam){
+
+            /** @var Team $team */
+            $team = $ratingTeam->getTeam();
+            $this->imageService->setImage($team->getLogo());
+            $teams[] = [
+                'title' => $team->getName(),
+                'image' => $this->imageService->getImagePath(),
+                'rating' => $ratingTeam->getRating(),
+            ];
+        }
+        return $teams;
     }
 }

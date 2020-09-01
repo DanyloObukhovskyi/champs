@@ -65,17 +65,18 @@ class PersonService extends EntityService
         return $person;
     }
 
-    public function updateWeekPlayer(Person $person)
+    public function updateWeekPlayer(Person $person, $rating)
     {
         $weekPlayer = $this->repository->getWeekPlayer();
+
         if (isset($weekPlayer)){
             $weekPlayer->setIsWeekPlayer(false);
             $this->entityManager->persist($weekPlayer);
-
         }
         $person->setIsWeekPlayer(true);
-        $this->entityManager->persist($person);
+        $person->setRating($rating);
 
+        $this->entityManager->persist($person);
         $this->entityManager->flush();
 
         return $person;

@@ -42,6 +42,11 @@ class Person
      */
     private $isWeekPlayer;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $rating;
+
 
     public function getId(): ?int
     {
@@ -115,6 +120,22 @@ class Person
     public function setIsWeekPlayer($isWeekPlayer): void
     {
         $this->isWeekPlayer = $isWeekPlayer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param mixed $rating
+     */
+    public function setRating($rating): void
+    {
+        $this->rating = $rating;
     }
 
 }

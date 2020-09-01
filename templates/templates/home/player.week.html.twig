@@ -7,22 +7,34 @@
       Игрок недели
     </div>
   </div>
-  {% for item in playerWeek %}
+  {% if playerWeek is not null %}
   <div class="content">
-    <img src="/images/temp/Player1Big.png" class="photo" alt="Avatar" />
+    <img src="{{ playerWeek.image }}" class="photo" alt="Avatar" />
     <div class="nik">
       <img src="/images/temp/flag-russia.png" alt="Flag Russian" />
-      s1mple
+      {{ playerWeek.nickname }}
     </div>
     <div class="name">
-      Александр Костылев
+      {{ playerWeek.fullname }}
     </div>
     <div class="score">
-      0.59/раунд
-    </div>
-    <div class="bonus">
-      Лучшие убийства с AWP
+      {{ playerWeek.rate }}
     </div>
   </div>
-  {% endfor %}
+  {% else %}
+    <div class="content">
+      <img src="/images/temp/Player1Big.png" class="photo" alt="Avatar" />
+      <div class="nik">
+        <img src="/images/temp/flag-russia.png" alt="Flag Russian" />
+        s1mple
+      </div>
+      <div class="name">
+        Александр Костылев
+      </div>
+      <div class="score">
+        0.59/раунд
+      </div>
+    </div>
+
+  {% endif %}
 </div>

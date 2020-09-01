@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\Match;
+use App\Entity\Person;
 use App\Entity\RatingPerson;
+use App\Entity\RatingTeam;
 use App\Entity\Result;
 use App\Service\EventService;
+use App\Service\ImageService;
 use App\Service\MatchService;
 use App\Service\RatingPersonService;
+use App\Service\RatingTeamService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -29,6 +33,8 @@ class MainController extends DefController
         $matchService = new MatchService($entityManager);
         $eventService = new EventService($entityManager);
         $ratingPlayersService = new RatingPersonService($entityManager);
+        $ratingCommandService = new RatingTeamService($entityManager);
+        $imageService = new ImageService();
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
         $matchesItems = $matchService->matchesDecorator($matches);
@@ -39,6 +45,27 @@ class MainController extends DefController
         $results =  $entityManager->getRepository(Result::class)->getCurrent();
         $matchResults = [];
 
+        // RATING PLAYERS
+        $ratingPlayers = $entityManager->getRepository(RatingPerson::class)->getRatingPersons();
+        $ratingPlayers = $ratingPlayersService->retingPlayersDecorator($ratingPlayers);
+
+        // RATING COMMANDS
+        $ratingCommands = $entityManager->getRepository(RatingTeam::class)->getRatingTeams();
+        $ratingCommands = $ratingCommandService->retingTeamsDecorator($ratingCommands);
+
+        // BEST PLAYER WEEK
+        /** @var Person $playerWeek */
+        $playerWeek = $entityManager->getRepository(Person::class)->getWeekPlayer();
+        if (isset($playerWeek)){
+            $imageService->setImage($playerWeek->getPhoto());
+
+            $playerWeek = [
+                'nickname' => $playerWeek->getNick(),
+                'fullname' => $playerWeek->getName(),
+                'image' => $imageService->getImagePath(),
+                'rate' => $playerWeek->getRating(),
+            ];
+        }
         $currDate = null;
         foreach ($results as $result)
         {
@@ -90,50 +117,6 @@ class MainController extends DefController
                 'title' => "ТОП-КОММЕНТ #1 / угадай, кому этот комментарий / Dota 2, CS:GO / ModirDred x Hino / Champs",
             ],
 
-        ];
-
-        $ratingPlayers = $entityManager->getRepository(RatingPerson::class)->getRatingPersons();
-        // RATING PLAYERS
-        $ratingPlayers = $ratingPlayersService->retingPlayersDecorator($ratingPlayers);
-
-        // RATING COMMANDS
-        $ratingCommands = [
-            [
-                'title' => 'Natus Vincere',
-                'image' => '/images/temp/Rectangle5.png',
-                'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-            ],
-            [
-                'title' => 'Natus Vincere',
-                'image' => '/images/temp/Rectangle5.png',
-                'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-            ],
-            [
-                'title' => 'Natus Vincere',
-                'image' => '/images/temp/Rectangle5.png',
-                'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-            ],
-            [
-                'title' => 'Natus Vincere',
-                'image' => '/images/temp/Rectangle5.png',
-                'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-            ],
-            [
-                'title' => 'Natus Vincere',
-                'image' => '/images/temp/Rectangle5.png',
-                'teams' => ['/images/temp/Rectangle2.png', '/images/temp/Rectangle4.png'],
-            ],
-        ];
-
-        // BEST PLAYER WEEK
-        $playerWeek = [
-          [
-            'nickname' => 's1mple',
-            'fullname' => 'Александр Костылев',
-            'image' => '/images/temp/Player1.png',
-            'rate' => '0.59',
-            'skill' => 'Лучшие убийства с AWP',
-          ]
         ];
 
         return $this->render('templates/home.html.twig', [

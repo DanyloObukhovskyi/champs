@@ -35,4 +35,28 @@ class RatingTeamRepository extends ServiceEntityRepository
 
         return $ratingTeam;
     }
+
+    public function getRatingTeams()
+    {
+        /** @var RatingTeam $events */
+        $ratingTeam = $this->createQueryBuilder('r')
+            ->orderBy('r.createdAt', 'DESC')
+            ->where('r.createdAt is not null')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (isset($ratingTeam)){
+            $createdAt = $ratingTeam->getCreatedAt();
+            /** @var RatingTeam[] $ratingTeams */
+            $ratingTeams = $this->createQueryBuilder('r')
+                ->where("r.createdAt = '$createdAt'")
+                ->orderBy('r.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            return $ratingTeams;
+        }
+        return [];
+    }
 }

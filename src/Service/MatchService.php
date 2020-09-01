@@ -168,7 +168,7 @@ class MatchService extends EntityService
 
     public function matchDecorator(Match $match)
     {
-        $this->imageService->setImage($match->getEvent() !== null ? null : $match->getEvent()->getImage());
+        $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImage());
         $matchFields = [
             "match_id" => $match->getId(),
             "time" => date("H:i", $match->getStartAt()->getTimestamp()),
