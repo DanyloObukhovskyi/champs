@@ -29,7 +29,7 @@ class DownloadFile
      * @param $url
      * @return bool
      */
-    public static function getImage($url): bool
+    public static function getImage($url)
     {
         ini_set('max_execution_time', 0);
         global $kernel;
@@ -39,13 +39,13 @@ class DownloadFile
         $fileResponse = static::getContent($url);
         if (!$fileResponse)
         {
-            return false;
+            return null;
         }
 
         if (!static::isFileImage($fileResponse['type']))
         {
             LoggerService::error("{$url} is not image");
-            return false;
+            return null;
         }
 
         if (!$ext)
@@ -56,13 +56,14 @@ class DownloadFile
         if (empty($ext))
         {
             LoggerService::error("{$url} wrong extension");
-            return false;
+            return null;
         }
 
         $filename = $fileResponse['name'] . '.' . $ext;
         $uploadDir = $kernel->getProjectDir() . '/public/uploads/images';
 
-        return static::saveFile($uploadDir . '/' . $filename, $filename, $fileResponse['content']);
+        $result = static::saveFile($uploadDir . '/' . $filename, $filename, $fileResponse['content']);
+        return $result ? $filename : null;
     }
 
 

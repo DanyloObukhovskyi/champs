@@ -33,10 +33,14 @@
             <div class="row-table" v-for="item in items" >
               <div class="date" v-text="item.date"></div>
               <div class="row-items">
-               <a class="d-block mt-2" v-for="match in item.items" :href="`matches/${match.match_id}`">
-                 <match :match="match" v-if="checkEmptyTeam(match)"/>
-                 <empty-match :match="match" v-else/>
-               </a>
+                <template v-for="match in item.items">
+                  <a class="d-block mt-2"  :href="`matches/${match.match_id}`" v-if="checkEmptyTeam(match)">
+                    <match :match="match"/>
+                  </a>
+                  <a class="d-block mt-2"  :href="`matches/${match.match_id}`" v-if="!checkEmptyTeam(match)">
+                    <empty-match :match="match"/>
+                  </a>
+                </template>
               </div>
             </div>
           </div>
@@ -51,25 +55,6 @@
     </div>
   </div>
 </div>
-
-<script type="text/x-template" id="row-item-template">
-  <a class="row-item" :href="`matches/${subitem.match_id}`">
-    <div class="time" v-text="subitem.time"></div>
-    <div class="teamA">
-      <span v-text="subitem.teamA.title ?? null"></span>
-      <img :src="`${subitem.teamA.logo}`" />
-    </div>
-    <div class="vs">vs</div>
-    <div class="teamB">
-      <img :src="`${subitem.teamB.logo ?? '#'}`" />
-      <span v-text="subitem.teamB.title ?? null"></span>
-    </div>
-    <div class="title">
-      <img :src="`${subitem.logo ?? '#'}`" />
-      <span v-text="subitem.title ?? null"></span>
-    </div>
-  </a>
-</script>
 
 <script type="text/x-template" id="calendar">
 	<div class="calendar">
@@ -102,21 +87,38 @@
 
 <script type="text/x-template" id="match-template">
     <div class="row-item">
-        <div class="time" v-text="subitem.time"></div>
-        <div class="teamA">
-            <span v-text="subitem.teamA.title ?? null"></span>
-            <img :src="`${subitem.teamA.logo}`" />
-        </div>
-        <div class="vs">vs</div>
-        <div class="teamB">
-            <img :src="`${subitem.teamB.logo ?? '#'}`" />
-            <span v-text="subitem.teamB.title ?? null"></span>
-        </div>
-        <div class="title">
-            <img :src="`${subitem.logo ?? '#'}`" />
-            <span v-text="subitem.title ?? null"></span>
+        <div class="time" v-text="match.time"></div>
+        <div class="w-100 justify-content-center">
+          <div class="teamA">
+            <span v-text="match.teamA.title ?? null"></span>
+            <img :src="`${match.teamA.logo}`" />
+          </div>
+          <div class="vs">vs</div>
+          <div class="teamB">
+            <img :src="`${match.teamB.logo ?? '#'}`" />
+            <span v-text="match.teamB.title ?? null"></span>
+          </div>
+          <div class="title">
+            <img :src="`${match.logo ?? '#'}`" />
+            <span v-text="match.title ?? null"></span>
+          </div>
         </div>
     </div>
+</script>
+
+<script type="text/x-template" id="empty-match-template">
+  <div class="row-item">
+      <div class="time" v-text="match.time"></div>
+      <div class="w-100 d-flex justify-content-center">
+        <div class="vs w-25" v-html="match.event.name">
+        </div>
+        <div class="time"></div>
+        <div class="time"></div>
+      </div>
+      <div class="time justify-content-end">
+        <img :src="`${match.event.image ?? '#'}`" />
+      </div>
+  </div>
 </script>
 
 <script>

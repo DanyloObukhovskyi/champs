@@ -35,9 +35,9 @@ class EventService extends EntityService
 
         /** @var Event $event */
         $event = $this->getByNameAndStartDate($values['name'], $values['started_at']);
-        if ($event)
+        if (empty($event))
         {
-            return $event;
+            $event = new $this->entity;
         }
         if (empty($values['ended_at'])){
             $values['ended_at'] =  $values['started_at'];
@@ -47,7 +47,6 @@ class EventService extends EntityService
         }
 
         /** @var Event $event */
-        $event = new $this->entity;
         $event
             ->setPrize($values['prize'])
             ->setCommandCount($values['teams'])
@@ -60,7 +59,7 @@ class EventService extends EntityService
         if (!empty($values['image']))
         {
             $image = DownloadFile::getImage($values['image']);
-            if (!empty($image))
+            if (isset($image))
             {
                 $event->setImage($image);
             }
