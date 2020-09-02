@@ -1039,7 +1039,7 @@ class HLTVService
      * @return array|bool
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public static function getEvents()
+    public static function getMainEvents()
     {
         LoggerService::add("hltv get events", LoggerService::TYPE_INFO);
         $content = PageContentService::getPageContent(static::$baseUrl);
@@ -1172,17 +1172,17 @@ class HLTVService
             $result['prize'] = $prize;
         }
 
-        $teamNameRaw = $document->find("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' teamsNumber ')]", Query::TYPE_XPATH);
+        $teamNameRaw = $document->first("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' teamsNumber ')]", Query::TYPE_XPATH);
 
-        if (count($teamNameRaw) !== 0)
+        if (isset($teamNameRaw))
         {
-            $result['teams'] = $teamNameRaw[0]->text() === 'TBA' ? null : ((int) filter_var($teamNameRaw[0]->text(), FILTER_SANITIZE_NUMBER_INT));
+            $result['teams'] = $teamNameRaw->text() === 'TBA' ? null : ((int) filter_var($teamNameRaw->text(), FILTER_SANITIZE_NUMBER_INT));
         }
 
-        $locationRaw = $document->find("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' location  ')]//span[contains(concat(' ', normalize-space(@class), ' '), ' text-ellipsis  ')]", Query::TYPE_XPATH);
-        if (count($locationRaw) !== 0)
+        $locationRaw = $document->first("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' location  ')]//span[contains(concat(' ', normalize-space(@class), ' '), ' text-ellipsis  ')]", Query::TYPE_XPATH);
+        if (isset($locationRaw))
         {
-            $result['location'] = $locationRaw[0]->text();
+            $result['location'] = $locationRaw->text();
         }
 
         $eventDates = static::getEventDate($document);
@@ -1532,5 +1532,36 @@ class HLTVService
             }
         }
         return $weaponsRatings;
+    }
+
+    public function getEvents()
+    {
+        $content = PageContentService::getPageContent(self::$baseUrl. '/events');
+
+        $document = new Document($content);
+
+        $eventsBlocks = $document->find('.events-month');
+
+        $events = [];
+        foreach ($eventsBlocks as $eventsBlock)
+        {
+            $smallEvents = $eventsBlock->find('a.small-event');
+            $bigEvents = $eventsBlock->find('a.big-event');
+
+            foreach ($smallEvents as $smallEvent){
+                $eventItem = static::getEventMainInfo($smallEvent);
+
+                $events[] = $eventItem;
+            }
+
+            foreach ($bigEvents as $bigEvent){
+                $eventItem = static::getEventMainInfo($bigEvent);
+
+                $events[] = $eventItem;
+            }
+        }
+
+        return $events;
+
     }
 }

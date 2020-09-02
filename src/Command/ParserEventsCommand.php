@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Service\EventService;
+use App\Service\EventShowService;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
 use DateTime;
@@ -17,11 +18,14 @@ class ParserEventsCommand extends Command
 {
     protected static $defaultName = 'parser:events';
 
+    /** @var DateTime */
+    private $parseDate;
+
     /** @var EventService */
     private $eventService;
 
-    /** @var DateTime */
-    private $parseDate;
+    /** @var EventShowService */
+    private $eventShowService;
 
     protected function configure()
     {
@@ -41,48 +45,73 @@ class ParserEventsCommand extends Command
 
 
         $this->eventService = new EventService($entityManager);
+        $this->eventShowService = new EventShowService($entityManager);
+
+        $mainEvents = $this->getMainEvents();
+
+        if (empty($mainEvents))
+        {
+            LoggerService::error("hltv events not found");
+            return 0;
+        }
+        $this->createEvents($mainEvents);
 
         $events = $this->getEvents();
-
         if (empty($events))
         {
             LoggerService::error("hltv events not found");
             return 0;
         }
-
-        $this->createEvents($events);
+        $this->createEvents($events, true);
 
         LoggerService::info("done");
         return 0;
     }
 
-    private function getEvents()
+    private function getMainEvents()
     {
         LoggerService::info("get events");
 
-        $events = HLTVService::getEvents();
+        $events = HLTVService::getMainEvents();
         if (empty($events))
         {
-            return false;
+            return null;
         }
         return $events;
     }
 
-    private function createEvents($events)
+    private function createEvents($events, bool $isNotMain = false)
     {
         $result = [];
         foreach ($events as $event)
         {
-            $eventEntity = $this->eventService->create($event, $this->parseDate);
-
-            if (!isset($eventEntity))
-            {
-                LoggerService::error("event entity {$event['name']} didnt created");
-                return false;
+            $parseDate = $this->parseDate;
+            if ($isNotMain ){
+                $parseDate = null;
             }
-            $result[] = $eventEntity;
+            $eventEntity = $this->eventService->create($event, $parseDate);
+
+            if (empty($eventEntity)) {
+                LoggerService::error("event entity {$event['name']} didnt created");
+            } else {
+                if ($isNotMain ){
+                    $this->eventShowService->createOrUpdate($eventEntity, $this->parseDate);
+                }
+                $result[] = $eventEntity;
+            }
         }
 
-        return !empty($result) ? $result : false;
+        return !empty($result) ? $result : null;
+    }
+
+    public function getEvents()
+    {
+        $events = HLTVService::getEvents();
+
+        if (empty($events))
+        {
+            return null;
+        }
+        return $events;
     }
 }
