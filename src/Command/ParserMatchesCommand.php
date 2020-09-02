@@ -201,13 +201,23 @@ class ParserMatchesCommand extends Command
 
                 $matchEmptyTeams = HLTVService::getMatchFull($matchEmptyTeams);
 
+
                 $teams = [];
                 foreach ($matchEmptyTeams['teams'] as $team)
                 {
                     $team = $this->teamService->getByName($team['name'] ?? null);
-                    if (empty($team))
+                    if (empty($team) or empty($team->getLogo()))
                     {
-                        continue;
+                        if (!empty($matchEmptyTeams['teams'])) {
+                            $matchTeams = HLTVService::getTeams($matchEmptyTeams);
+
+                            $this->createTeams($matchTeams);
+                        }
+                        $team = $this->teamService->getByName($team['name'] ?? null);
+                        if (empty($team))
+                        {
+                            continue;
+                        }
                     }
                     $teams[] = $team;
                 }

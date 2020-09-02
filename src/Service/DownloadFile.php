@@ -26,8 +26,7 @@ class DownloadFile
     }
 
     /**
-     * @param $url
-     * @return bool
+     * @param string $url
      */
     public static function getImage($url)
     {

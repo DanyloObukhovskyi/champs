@@ -10,7 +10,7 @@
     <div class="grid-block">
         <div class="title">
             <div class="lft">
-                {% if match.team1 is not null %}
+                {% if match.team1 is not null and match.team1.logo is not null%}
                     <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" />{{ match.team1.name }}
                 {% else %}
                     <img src="/images/noLogo.png" alt="ua.svg" />???
@@ -18,7 +18,7 @@
             </div>
 {#            <div class="rgt">Мировой рейтинг: 1</div>#}
         </div>
-        {% if match.team1 is not null %}
+        {% if match.team1 is not null%}
             <div class="players l-team">
                 {% set first = true %}
                 {% set counter = 0 %}
@@ -27,11 +27,15 @@
                     {% if(counter < 6) %}
                     <div class="player {% if first %}active{% endif %}">
                         <div class="logo">
-                            <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
-                                 class="logo" alt="PlayerA1"/>
+                            {% if player.person.photo is not null%}
+                                <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
+                                    class="logo" alt="PlayerA1"/>
+                            {% else %}
+                                <img data-team="l" data-player="{{ player.id }}" src="/images/noLogo.png"
+                                     class="logo" alt="PlayerA1"/>
+                            {% endif %}
                         </div>
-                        <div class="name">{#<img data-team="l" src="/images/temp/matches/flag-ru.svg"
-                                               alt="flag-ru"/>#}{{ player.person.nick }}</div>
+                        <div class="name">{{ player.person.nick }}</div>
                     </div>
                     {% set first = false %}
                     {% endif %}
@@ -42,7 +46,7 @@
 
     <div class="grid-result player-srav">
         <div class="l-block">
-            {% if match.team1 is not null %}
+            {% if match.team1 is not null and match.team1.logo is not null%}
                 {% set firstPlayerTeam1 = match.team1.players|first %}
                 <img src="/uploads/images/{{ match.team1.logo }}" class="logo_team" alt="Rectangle7"/>
                 <img src="/uploads/images/{{ firstPlayerTeam1.person.photo }}" class="logo"
@@ -106,11 +110,15 @@
                     {% if(counter < 6) %}
                         <div class="player {% if first %}active{% endif %}">
                             <div class="logo">
-                                <img data-team="r" data-player="{{ player.id }}"
-                                     src="/uploads/images/{{ player.person.photo }}" class="logo" alt="PlayerB1"/>
+                                {% if player.person.photo is not null%}
+                                    <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
+                                         class="logo" alt="PlayerA1"/>
+                                {% else %}
+                                    <img data-team="l" data-player="{{ player.id }}" src="/images/noLogo.png"
+                                         class="logo" alt="PlayerA1"/>
+                                {% endif %}
                             </div>
-                            <div class="name">{#<img data-team="r" src="/images/temp/matches/flag-ru.svg"
-                                                   alt="flag-ru"/>#}{{ player.person.nick }}</div>
+                            <div class="name">{{ player.person.nick }}</div>
                         </div>
                         {% set first = false %}
                     {% endif %}
