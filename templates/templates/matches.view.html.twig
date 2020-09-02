@@ -18,12 +18,21 @@
         {% include 'templates/matches/result.html.twig' with {'match': match} %}
         {% include 'templates/matches/statistics.html.twig' with {'match': match}%}
         {% include 'templates/matches/teams.html.twig' %}
+        {% if matchStats|length > 0 %}
+          {% include 'templates/matches/mapStats.html.twig' %}
+        {% endif %}
+        {% if pastMatches|length > 0 %}
+          {% include 'templates/matches/pastTeamsMatches.html.twig' %}
+        {% endif %}
 {#        {% include 'templates/matches/comments.html.twig' %}#}
       </div>
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
         {% include 'templates/home/results.html.twig' %}
         {% include 'templates/matches/maps.html.twig' %}
+        {% include 'templates/matches/headToHead.html.twig' %}
 {#        {% include 'templates/matches/moments.html.twig' %}#}
+      </div>
+      <div>
       </div>
 {#      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">#}
 {#        {% include 'templates/layouts/header.video.html.twig' %}#}

@@ -1,0 +1,37 @@
+<div class="component maps">
+    <div class="header">
+        <div class="round">
+            <div><img src="/images/lamp.svg" /></div>
+        </div>
+        <div class="title">
+            Статистика карт
+        </div>
+    </div>
+    <div class="component statistics">
+        <div class="grid-block statistics-maps">
+            <div class="grid-row">
+                <div class="r w-100">
+                    <span>
+                         <strong>Карта</strong>
+                    </span>
+                </div>
+                {% for team, data in matchStats %}
+                    <div class="r w-100">
+                        <img style="height: 1.2vw;" src="{{ data.logo }}">
+                        <strong> {{ team }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        {% for map in maps %}
+            <div class="grid-row">
+                <div class="r w-100">
+                    <span>{{ map }}</span>
+                </div>
+                {% for team, data in matchStats %}
+                    <div class="r w-100">{{ attribute(data.maps, map) }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>

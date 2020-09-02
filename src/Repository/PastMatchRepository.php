@@ -64,4 +64,13 @@ class PastMatchRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getByMatch(Match $match)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.match_id = :match_id')
+            ->setParameter('match_id', $match->getId())
+            ->getQuery()
+            ->getResult();
+    }
 }

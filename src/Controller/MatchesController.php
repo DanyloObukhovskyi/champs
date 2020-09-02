@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Match;
 use App\Entity\PlayerStatistics;
 use App\Entity\Stream;
+use App\Entity\PastMatch;
 use App\Kernel;
 use App\Repository\MatchRepository;
 use App\Service\MatchService;
-use http\Env\Response;
+use App\Service\ImageService;
+use App\Entity\MatchMapTeamStatistic;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,14 +40,17 @@ class MatchesController extends AbstractController
     public function view($id, $router = 'matches')
     {
         $entityManager = $this->getDoctrine()->getManager();
-
+        $imageService = new ImageService();
         /** @var Match $match */
-        $match_view                 = $entityManager->getRepository(Match::class)->findOneBy([
+        $match_view = $entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
         ]);
-        $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)->findByMatchTeam($match_view->getId(),
+        $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
+            ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam1());
-        $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)->findByMatchTeam($match_view->getId(),
+
+        $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
+            ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam2());
 
         $results = $entityManager->getRepository(Match::class)->findResults();
@@ -103,11 +108,43 @@ class MatchesController extends AbstractController
         str_replace("November", "Ноября", $date);
         str_replace("December", "Декабря", $date);
 
+        $matchStats = [];
+        $maps = [];
+        $matchStatsEntities = $this->getDoctrine()->getRepository(MatchMapTeamStatistic::class)
+            ->getMatchTeamStatistic($match_view);
+
+        foreach ($matchStatsEntities as $matchStatEntity){
+            $team = $matchStatEntity->getTeam();
+            $imageService->setImage($team->getLogo());
+
+            $map = $matchStatEntity->getMap();
+
+            $matchStats[$team->getName()]['logo'] = $imageService->getImagePath();
+            $matchStats[$team->getName()]['name'] =$team->getName();
+            $matchStats[$team->getName()]['maps'][$map->getName()] = $matchStatEntity->getWinRate();
+            $maps[$map->getName()] = $map->getName();
+        }
+        $pastMatches = [];
+        $pastMatchesEntities = $this->getDoctrine()->getRepository(PastMatch::class)->getByMatch($match_view);
+        foreach ($pastMatchesEntities as $pastMatchesEntity){
+            $team = $pastMatchesEntity->getTeam();
+            $imageService->setImage($team->getLogo());
+
+            $pastMatches[$team->getName()]['logo'] = $imageService->getImagePath();
+            $pastMatches[$team->getName()]['matches'][] = [
+                'opponent' => $pastMatchesEntity->getTeamTwo(),
+                'score' => $pastMatchesEntity->getScore()
+            ];
+        }
+
         return $this->render('templates/matches.view.html.twig', [
             'router' => $router,
             'match' => $match_view,
             'results' => $items,
             'date' => $date,
+            'matchStats' => $matchStats,
+            'pastMatches' => $pastMatches,
+            'maps' => $maps,
             'playerStatisticsTeam1' => $playerStatisticsTeam1,
             'playerStatisticsTeam2' => $playerStatisticsTeam2,
         ]);

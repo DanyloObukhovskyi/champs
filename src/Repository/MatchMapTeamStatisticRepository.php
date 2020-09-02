@@ -42,4 +42,13 @@ class MatchMapTeamStatisticRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getMatchTeamStatistic(Match $match)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.match_id = :match')
+            ->setParameter('match', $match->getId())
+            ->getQuery()
+            ->getResult();
+    }
 }

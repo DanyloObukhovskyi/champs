@@ -1,0 +1,56 @@
+<div class="component maps">
+    <div class="header">
+        <div class="round">
+            <div><img src="/images/lamp.svg" /></div>
+        </div>
+        <div class="title">
+            Head to head
+        </div>
+    </div>
+    <div class="component statistics">
+        <div class="grid-block statistics-maps">
+            <div class="grid-header">
+                <div class="r w-100">
+                    <span>
+                        <strong>
+                            Команда
+                        </strong>
+                    </span>
+                </div>
+                <div class="r w-100">
+                    <span>
+                        <strong>
+                            Побед
+                        </strong>
+                    </span>
+                </div>
+            </div>
+            <div class="grid-header">
+                <div class="r w-100">
+                    <span>
+                        <img style="height: 1.2vw;" src="/uploads/images/{{ match.team1.logo }}">
+                        {{ match.team1.name }}
+                    </span>
+                </div>
+                <div class="r w-100">
+                    <span>
+                        {{ match.team1WinRate }}
+                    </span>
+                </div>
+            </div>
+            <div class="grid-header">
+                <div class="r w-100">
+                    <img style="height: 1.2vw;" src="/uploads/images/{{ match.team2.logo }}">
+                    <span>
+                       {{ match.team2.name }}
+                    </span>
+                </div>
+                <div class="r w-100">
+                    <span>
+                        {{ match.team2WinRate }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
