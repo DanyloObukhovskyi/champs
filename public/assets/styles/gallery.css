@@ -176,7 +176,7 @@
     height: 15.75vw;
     margin-top: 1vw;
     margin-left: 1vw;
-    display: flex;
+    overflow: hidden;
 }
 .gallery__view .component {
     margin-top: 0;
@@ -398,7 +398,6 @@
     height: 15.75vw;
     margin-top: 1vw;
     margin-left: 1vw;
-    display: flex;
     overflow: hidden;
 }
 .gallery__view .component.albums .grid .grid-row:after {
@@ -411,8 +410,7 @@
     background: linear-gradient(180deg, rgba(53, 57, 62, 0) 33.33%, #35393E 100%);
 }
 .gallery__view .component.albums .grid .grid-row img.logo {
-    min-width: 100%;
-    min-height: 100%;
+    width: 100%;
     transition: 0.3s;
 }
 .gallery__view .component.albums .grid .grid-row:hover img.logo {

@@ -23,7 +23,11 @@
     <div class="grid-block statistics-maps">
         <div class="grid-header">
             <div class="r">
-              <img src="/uploads/images/{{ match.team1.logo }}" />{{ match.team1.name }}
+                {% if match.team1 is not null %}
+                    <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" />{{ match.team1.name }}
+                {% else %}
+                    <img src="/images/noLogo.png" alt="ua.svg" />???
+                {% endif %}
             </div>
             <div class="r">K-D</div>
             <div class="r">+/-</div>
@@ -67,7 +71,11 @@
     <div class="grid-block">
         <div class="grid-header">
             <div class="r">
-              <img src="/uploads/images/{{ match.team2.logo }}">{{ match.team2.name }}
+                {% if match.team2 is not null %}
+                    <img src="/uploads/images/{{match.team2.logo}}" class="logo" alt="ua.svg" />{{ match.team2.name }}
+                {% else %}
+                    <img src="/images/noLogo.png" alt="ua.svg" />???
+                {% endif %}
             </div>
             <div class="r">K-D</div>
             <div class="r">+/-</div>

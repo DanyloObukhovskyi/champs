@@ -1,13 +1,29 @@
 <div class="component_result">
   <div class="l_logo">
-    <img src="/uploads/images/{{ match.team1.logo }}" alt="ua.svg" />
+    {% if match.team1 is not null %}
+      <img src="/uploads/images/{{match.team1.logo}}" alt="ua.svg" />
+    {% else %}
+      <img src="/images/noLogo.png" alt="ua.svg" />
+    {% endif %}
   </div>
   <div class="r_logo">
-    <img src="/uploads/images/{{ match.team2.logo }}" alt="ru.svg" />
+    {% if match.team2 is not null %}
+      <img src="/uploads/images/{{match.team2.logo}}" alt="ua.svg" />
+    {% else %}
+      <img src="/images/noLogo.png" alt="ua.svg" />
+    {% endif %}
   </div>
   <div class="l_data">
-    <img src="/uploads/images/{{ match.team1.logo }}" class="logo" alt="Rectangle7.svg" />
-    <div class="name">{{ match.team1.name }}</div>
+    {% if match.team1 is not null %}
+      <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" />
+    {% endif %}
+    <div class="name">
+        {% if match.team1.name is defined %}
+            {{ match.team1.name }}
+        {% else %}
+            ???
+        {% endif %}
+    </div>
     <div class="score green">{{ match.score1 }}</div>
   </div>
   <div class="c_data">
@@ -17,7 +33,6 @@
       {% set setMonth = month[match.startAt|date('n') - 1] %}
       <div>{{match.startAt|date('d')}} {{setMonth}} {{match.startAt|date('Y')}}</div>
     </div>
-{#    <div class="title">Europe Cup Champions 2020</div>#}
     <div class="result">
       {% if match.live %}
         Матч идет
@@ -29,8 +44,16 @@
     </div>
   </div>
   <div class="r_data">
-    <img src="/uploads/images/{{ match.team2.logo }}" class="logo" alt="Rectangle6.svg" />
-    <div class="name">{{ match.team2.name }}</div>
+      {% if match.team2 is not null %}
+          <img src="/uploads/images/{{match.team2.logo}}" class="logo" alt="ua.svg" />
+      {% endif %}
+      <div class="name">
+          {% if match.team2.name is defined %}
+              {{ match.team2.name }}
+          {% else %}
+              ???
+          {% endif %}
+      </div>
     <div class="score green">{{ match.score2 }}</div>
   </div>
 </div>

@@ -76,6 +76,10 @@
   background-color: #FF6D1D;
   color: #FFFFFF;
 }
+.cabinet .list .lft .list-table .item .button.w{
+  width: 15vw;
+  background-color: transparent;
+}
 .cabinet .list .lft .list-table .item .r.active .button.s{
   background-color: #FF6D1D;
   color: #FFFFFF;
@@ -150,6 +154,15 @@
   margin-bottom: 0.5vw;
   letter-spacing: 0.05vw;
   font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+.cabinet .list .lft .list-table .item .b .accordion .tags .list div.active{
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+}
+.cabinet .list .lft .list-table .item .b .accordion .tags .list div:hover{
+  opacity: 0.2vw;
 }
 .cabinet .list .lft .list-table .item .b .accordion .input{
   width: 25%;
@@ -369,7 +382,8 @@
   .cabinet .list .lft .list-table .item .b .accordion .tags .list div{
     margin-bottom: 2vw;
     margin-right: 2vw;
-    font-size: 2vw;
+    font-size: 3vw;
+    font-weight: 400;
     padding: 2vw 3vw;
   }
   .cabinet .list .lft .list-table .item .b .accordion .input{

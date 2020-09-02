@@ -1,0 +1,235 @@
+.lives-c{
+  width: 100%;
+  padding: 1vw 3vw;
+  padding-bottom: 2vw;
+}
+.lives-c .component .grid{
+  width: 100%;
+  margin-top: 2vw;
+}
+.lives-c .component .grid .video{
+  width: 75%;
+  height: 40vw;
+  padding-right: 1vw;
+  display: flex;
+  flex-direction: column;
+}
+.lives-c .component .grid .video .block{
+  width: 100%;
+  height: 100%;
+}
+.lives-c .component .grid .video .block iframe{
+  width: 100%;
+  height: 100%;
+}
+.lives-c .component .grid .comments{
+  width: 25%;
+  height: 40vw;
+  padding-left: 1vw;
+  display: flex;
+  flex-direction: column;
+}
+.lives-c .component .grid .comments .block{
+  width: 100%;
+  height: 100%;
+  background-color: #FFFFFF;
+  border: 0.04vw solid #CFDCF3;
+  font-size: 0.9vw;
+  display: flex;
+  flex-direction: column;
+}
+.lives-c .component .grid .comments .block .com{
+  width: 100%;
+  height: 100%;
+  padding: 1vw;
+}
+.lives-c .component .grid .comments .block .com .grid-row{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding: 1vw;
+}
+.lives-c .component .grid .comments .block .com .grid-row .ava{
+  width: 2.5vw;
+  height: 2.5vw;
+  border-radius: 50%;
+  background-color: #F24F13;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-size: 0.8vw;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+.lives-c .component .grid .comments .block .com .grid-row .ava.lives-c{
+  background-color: #F5B800;
+}
+.lives-c .component .grid .comments .block .com .grid-row .data{
+  width: 100%;
+  padding: 0 1vw;
+}
+.lives-c .component .grid .comments .block .com .grid-row .data .name{
+  font-weight: 500;
+  font-size: 0.9vw;
+}
+.lives-c .component .grid .comments .block .com .grid-row .data .text{
+  font-size: 0.8vw;
+  margin-top: 0.5vw;
+  color: #212427;
+}
+.lives-c .component .grid .comments .block .com .grid-row .date{
+  flex-shrink: 0;
+  font-size: 0.7vw;
+  color: #555555;
+}
+.lives-c .component .grid .comments .block .com .grid-row .date .arrow{
+  width: 1.5vw;
+  height: 1.5vw;
+  border-radius: 0.3vw;
+  box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1vw;
+  margin-top: 0.5vw;
+  cursor: pointer;
+}
+.lives-c .component .grid .comments .block .com .grid-row .date .arrow img{
+  height: 1vw;
+}
+.lives-c .component .grid .comments .block .add{
+  width: 100%;
+  height: 7vw;
+  border-top: 0.04vw solid #CFDCF3;
+  flex-shrink: 0;
+}
+.lives-c .component .grid .comments .block .add textarea{
+  width: 100%;
+  height: 100%;
+  font-size: 0.9vw;
+  padding: 1vw 2vw;
+  color: #444444;
+  border: none;
+  outline: none;
+  resize: none;
+}
+@media screen and (max-width: 1000px) {
+  .lives-c{
+    width: 100%;
+    padding: 3vw;
+  }
+  .lives-c .component .grid{
+    width: 100%;
+    margin-top: 2vw;
+  }
+  .lives-c .component .grid .video{
+    width: 100%;
+    height: 50vw;
+    padding-right: 0;
+  }
+  .lives-c .component .grid .video .block iframe{
+    width: 100%;
+    height: 100%;
+  }
+  .lives-c .component .grid .comments{
+    width: 100%;
+    height: 100vw;
+    padding-left: 0;
+    margin-top: 3vw;
+  }
+  .lives-c .component .grid .comments .block{
+    font-size: 2vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row{
+    padding: 2vw 0;
+  }
+  .lives-c .component .grid .comments .block .com{
+    padding: 3vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .data{
+    padding: 0 2vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .data .name{
+    font-size: 2vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .data .text{
+    font-size: 1.5vw;
+    margin-top: 1vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .date{
+    font-size: 1.5vw;
+  }
+  .lives-c .component .grid .comments .block .add{
+    height: 15vw;
+  }
+  .lives-c .component .grid .comments .block .add textarea{
+    font-size: 2vw;
+    padding: 2vw 3vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .ava{
+    font-size: 2vw;
+    width: 6vw;
+    height: 6vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .lives-c{
+    width: 100%;
+    padding: 4vw;
+  }
+  .lives-c .component .grid{
+    width: 100%;
+    margin-top: 4vw;
+  }
+  .lives-c .component .grid .video{
+    width: 100%;
+    height: 50vw;
+    padding-right: 0;
+  }
+  .lives-c .component .grid .video .block iframe{
+    width: 100%;
+    height: 100%;
+  }
+  .lives-c .component .grid .comments{
+    width: 100%;
+    height: 200vw;
+    padding-left: 0;
+    margin-top: 4vw;
+  }
+  .lives-c .component .grid .comments .block{
+    font-size: 4vw;
+  }
+  .lives-c .component .grid .comments .block .com{
+    padding: 4vw;
+  }
+  .lives-c .component .grid .comments .block .add{
+    height: 30vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row{
+    padding: 2vw 0;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .data{
+    padding: 0 4vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .data .name{
+    font-size: 4vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .data .text{
+    font-size: 3.5vw;
+    margin-top: 2vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .date{
+    font-size: 3vw;
+  }
+  .lives-c .component .grid .comments .block .add textarea{
+    font-size: 4vw;
+    padding: 4vw 4vw;
+  }
+  .lives-c .component .grid .comments .block .com .grid-row .ava{
+    font-size: 4vw;
+    width: 10vw;
+    height: 10vw;
+  }
+}

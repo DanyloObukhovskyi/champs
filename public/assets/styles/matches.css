@@ -3,7 +3,7 @@
 }
 .matches__view .banner{
   width: 100%;
-  height: 8vw;
+  height: auto;
   margin-top: 1.5vw;
 }
 
@@ -76,6 +76,9 @@
   height: 1vw;
   margin-right: 1vw;
 }
+.matches__view .live .table .table-row .cont .row-mob{
+  display: none;
+}
 @media screen and (max-width: 1000px) {
   .matches__view .live .table .table-row{
     margin-top: 2vw;
@@ -83,10 +86,6 @@
   .matches__view .live .table .table-row .title{
     font-size: 2vw;
     padding: 2vw 3vw;
-  }
-  .matches__view .live .table .table-row .title img,
-  .matches__view .live .table .table-row .cont .row-d div img{
-    display: none;
   }
   .matches__view .live .table .table-row .cont .titles,
   .matches__view .live .table .table-row .cont .row-d{
@@ -110,18 +109,55 @@
   }
   .matches__view .live .table .table-row .title img,
   .matches__view .live .table .table-row .cont .row-d div img{
-    display: none;
+    width: 5vw;
+    height: 5vw;
   }
   .matches__view .live .table .table-row .cont .titles,
   .matches__view .live .table .table-row .cont .row-d{
     padding: 3vw 0;
+    justify-content: flex-end;
+    padding-right: 6vw;
+  }
+  .matches__view .live .table .table-row .cont .row-d{
+    display: none;
   }
   .matches__view .live .table .table-row .cont .titles div,
   .matches__view .live .table .table-row .cont .row-d div{
     font-size: 3.5vw;
+    display: none;
   }
   .matches__view .live .table .table-row .cont .row-d div:nth-child(1) {
     padding-left: 4vw;
+  }
+  .matches__view .live .table .table-row .cont .titles div:last-child{
+    display: block;
+  }
+  .matches__view .live .table .table-row .cont .row-mob{
+    width: 100%;
+    padding: 3vw;
+    display: block;
+  }
+  .matches__view .live .table .table-row .cont .row-mob .t{
+    width: 100%;
+    display: flex;
+    font-size: 4vw;
+    align-items: center;
+  }
+  .matches__view .live .table .table-row .cont .row-mob .t img{
+    width: 4vw;
+    height: 4vw;
+    margin-right: 4vw;
+  }
+  .matches__view .live .table .table-row .cont .row-mob .row-perc{
+    width: 100%;
+    display: flex;
+    font-size: 4vw;
+    padding: 2vw;
+    padding-left: 6vw;
+  }
+  .matches__view .live .table .table-row .cont .row-mob .row-perc div{
+    width: 50%;
+    text-align: right;
   }
 }
 
@@ -543,7 +579,7 @@
 }
 .matches__view .table .row-table .date{
   width: 100%;
-  padding: 1vw 0 0 0;
+  padding: 1vw 0;
   font-size: 1vw;
   font-weight: 500;
 }
@@ -609,7 +645,6 @@
 @media screen and (max-width: 1000px) {
   .matches__view .banner{
     width: 100%;
-    height: 20vw;
     margin-top: 1vw;
   }
   .matches__view .table .row-table .date{
@@ -653,7 +688,6 @@
 @media screen and (max-width: 600px) {
   .matches__view .banner{
     width: 100%;
-    height: 25vw;
     margin-top: 4vw;
   }
   .matches__view .table .row-table .date{
@@ -693,7 +727,6 @@
   }
   .matches__view .table .row-table .row-items .row-item div img{
     height: 4vw;
-    display: none;
   }
 }
 
@@ -716,6 +749,7 @@
   top: 0;
   width: 35%;
   height: 100%;
+  display: flex;
 }
 .component_result .r_logo{
   left: auto;
@@ -723,8 +757,9 @@
 }
 .component_result .l_logo img,
 .component_result .r_logo img{
-  width: 100%;
+  width: auto;
   height: 100%;
+  margin: 0 auto;
 }
 .component_result .l_logo:after,
 .component_result .r_logo:after{
@@ -801,6 +836,18 @@
   .component_result .l_data img.logo,
   .component_result .r_data img.logo{
     height: 8vw;
+    width: 8vw;
+  }
+  .component_result .l_logo,
+  .component_result .r_logo{
+    display: flex;
+    justify-content: center;
+  }
+  .component_result .l_logo img,
+  .component_result .r_logo img{
+    width: auto;
+    height: 80%;
+    margin-top: 2vw;
   }
   .component_result .l_data div,
   .component_result .r_data div{
@@ -847,6 +894,7 @@
   .component_result .l_data img.logo,
   .component_result .r_data img.logo{
     height: 20vw;
+    width: 20vw;
   }
   .component_result .l_data div,
   .component_result .r_data div{
@@ -1743,6 +1791,128 @@
   }
   .match__view .component.maps .grid-preview-row .rows-teams .scores label{
     width: 50%;
+  }
+}
+
+/* MATCH VIDEO COMP */
+.component.live-match{
+  width: 100%;
+  margin-top: 1vw;
+}
+.component.live-match.header{
+  margin-top: 2vw;
+}
+.component.live-match .cont{
+  margin-top: 0;
+}
+.component.live-match .image{
+  width: 100%;
+}
+.component.live-match .background{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(31, 44, 54, 0) 33.33%, #1F2C36 100%);
+}
+.component.live-match .live{
+  padding: 0.1vw 0.5vw;
+  background-color: #E73333;
+  color: #FFF;
+  text-transform: uppercase;
+  font-size: 0.7vw;
+  position: absolute;
+  right: 1vw;
+  top: 1vw;
+  z-index: 4;
+  border-radius: 3vw;
+  font-weight: 500;
+  letter-spacing: 0.06vw;
+}
+.component.live-match .cont .title{
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 1vw;
+  font-size: 0.8vw;
+  z-index: 3;
+}
+.component.live-match .cont .title .name{
+  border-bottom: 0.04vw solid rgba(242, 242, 242, 0.6);
+  padding-bottom: 0.5vw;
+}
+.component.live-match .cont .title .name span{
+  color: #FFFFFF;
+}
+.component.live-match .cont .title .sub{
+  width: 100%;
+  padding-top: 0.5vw;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.component.live-match .cont .title .sub-name{
+  width: 100%;
+  font-weight: 500;
+}
+.component.live-match .cont .title .sub-view{
+  flex-shrink: 0;
+}
+.component.live-match .cont .title .sub-view img{
+  height: 0.6vw;
+  margin-right: 0.5vw;
+}
+@media screen and (max-width: 1000px) {
+  .component.live-match{
+    margin-top: 4vw;
+  }
+  .component.live-match .live{
+    top: 4vw;
+    right: 4vw;
+    font-size: 2vw;
+    padding: 1.5vw 3vw;
+    border-radius: 15vw;
+  }
+  .component.live-match .cont .title{
+    font-size: 3vw;
+    padding: 4vw;
+  }
+  .component.live-match .cont .title .name{
+    padding-bottom: 2vw;
+  }
+  .component.live-match .cont .title .sub{
+    padding-top: 2vw;
+  }
+  .component.live-match .cont .title .sub-view img{
+    height: 3vw;
+    margin-right: 3vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .component.live-match .live{
+    top: 4vw;
+    right: 4vw;
+    font-size: 3vw;
+    padding: 0.7vw 2.5vw;
+    border-radius: 8vw;
+  }
+  .component.live-match .cont .title{
+    font-size: 4vw;
+    padding: 4vw;
+  }
+  .component.live-match .cont .title .name{
+    padding-bottom: 2vw;
+  }
+  .component.live-match .cont .title .sub{
+    padding-top: 2vw;
+  }
+  .component.live-match .cont .title .sub-view img{
+    height: 3vw;
+    margin-right: 3vw;
   }
 }
 

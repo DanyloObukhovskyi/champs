@@ -42,13 +42,13 @@ class EventsController extends AbstractController
                     "startedAt" => $match->getStartAt()->getTimestamp(),
                     "logo" => "",
                     "teamA" => [
-                        "title" => str_replace("'", "", $match->getTeam1()->getName()),
-                        "logo" => "/uploads/images/" . $match->getTeam1()->getLogo(),
+                        "title" => empty( $match->getTeam1()) ? null: str_replace("'", "", $match->getTeam1()->getName()),
+                        "logo" => empty( $match->getTeam1()) ? '/images/noLogo.png': "/uploads/images/" . $match->getTeam1()->getLogo(),
                         "score" => $match->getScore1()
                     ],
                     "teamB" => [
-                        "title" => str_replace("'", "", $match->getTeam2()->getName()),
-                        "logo" => "/uploads/images/" . $match->getTeam2()->getLogo(),
+                        "title" => empty( $match->getTeam1()) ? null: str_replace("'", "", $match->getTeam2()->getName()),
+                        "logo" => empty( $match->getTeam1()) ? '/images/noLogo.png': "/uploads/images/" . $match->getTeam2()->getLogo(),
                         "score" => $match->getScore2()
                     ],
                     "event" => [

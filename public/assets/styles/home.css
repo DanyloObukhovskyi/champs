@@ -347,8 +347,13 @@
   font-size: 0.9vw;
   font-weight: 500;
 }
-.home .component.matches .table .table-row div.video .rows-d .row-d:nth-child(3) label{
+.home .component.matches .table .table-row div.video .rows-d .row-d:nth-child(3) label,
+.home .component.matches .table .table-row div.video .rows-d .row-d:nth-child(3) label a{
   color: #FF6D1D;
+  transition: 0.3s;
+}
+.home .component.matches .table .table-row div.video .rows-d .row-d:nth-child(3) label a:hover{
+  opacity: 0.5;
 }
 .home .component.matches .table .table-row div.video .rows-d .row-d:nth-child(3) img{
   margin-left: 0.5vw;
@@ -488,7 +493,7 @@
 }
 .home .component.videos .grid .grid-row{
   width: calc(50% - 0.5vw);
-  height: 15.75vw;
+  height: 16.08vw;
   margin-top: 1vw;
   display: flex;
   overflow: hidden;

@@ -46,21 +46,6 @@ label{
   }
 }
 
-.banner.p{
-  display: block;
-}
-.banner.m{
-  display: none;
-}
-@media screen and (max-width: 600px) {
-  .banner.p{
-    display: none;
-  }
-  .banner.m{
-    display: block;
-  }
-}
-
 /* MENU BLOCK */
 .header_nav{
   width: 100%;
@@ -909,10 +894,9 @@ border-left: none;
     padding: 0 3vw;
   }
   .header_nav .nav .login div{
-    padding: 0 4vw;
+    padding: 0 3vw;
   }
   .header_nav .nav .login div img{
-    width: 2.5vw;
     height: 2.5vw;
   }
   .header_nav .nav .menu .search{
@@ -1140,29 +1124,22 @@ border-left: none;
   flex-direction: row;
   align-items: center;
 }
+.footer .container .social span,
 .footer .container .social a{
   margin: 0 0.5vw;
 }
+.footer .container .social span svg,
 .footer .container .social a svg{
   width: 0.7vw;
   height: 0.7vw;
 }
-.footer .container .social a.b{
-  margin-left: 0.2vw;
-}
-.footer .container .social a.b svg{
-  width: 1vw;
-  height: 0.8vw;
-}
-.footer .container .social a.h svg:hover{
+.footer .container .social span svg:hover,
+.footer .container .social a svg:hover{
   stroke: #FFFFFF;
   fill: #FFFFFF;
 }
-.footer .container .social a.h svg:hover path{
-  stroke: #FFFFFF;
-  fill: #FFFFFF;
-}
-.footer .container .social a.a svg:hover path:nth-child(2){
+.footer .container .social span svg:hover path,
+.footer .container .social a svg:hover path{
   stroke: #FFFFFF;
   fill: #FFFFFF;
 }
@@ -1330,13 +1307,6 @@ border-left: none;
   .footer .container .social a svg{
     width: 6vw;
     height: 6vw;
-  }
-  .footer .container .social a.b{
-    margin-left: 1vw;
-  }
-  .footer .container .social a.b svg{
-    width: 8.5vw;
-    height: 6.8vw;
   }
 }
 
@@ -1700,48 +1670,4 @@ border-left: none;
 }
 .stream .buttons .button div svg path{
   fill: #FFFFFF;
-}
-@media screen and (max-width: 600px) {
-  .stream{
-    width: 75vw;
-    height: 55vw;
-    right: 4vw;
-    bottom: 4vw;
-    padding: 3vw;
-  }
-  .stream .title{
-    padding: 3vw 3vw;
-    padding-top: 0;
-    font-size: 4vw;
-  }
-  .stream .title svg{
-    right: 2vw;
-    top: 1vw;
-    width: 3vw;
-    height: 3vw;
-  }
-  .stream .buttons .button{
-    width: 33.33%;
-    height: 100%;
-  }
-  .stream .buttons .button span{
-    width: 3vw;
-    height: 3vw;
-    left: calc(50% - 1.5vw);
-    top: calc(50% - 1.5vw);
-  }
-  .stream .buttons .button div svg{
-    width: 5vw;
-    height: 5vw;
-  }
-  .stream.full{
-    width: 100%;
-    height: 100%;
-    right: 0;
-    bottom: 0;
-    padding: 0;
-  }
-  .stream.full .title{
-    display: none;
-  }
 }

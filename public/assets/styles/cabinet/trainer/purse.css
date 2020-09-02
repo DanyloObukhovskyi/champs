@@ -8,7 +8,7 @@
   width: calc(70% - 0.75vw);
   margin-top: 1.5vw;
   margin-right: 0.75vw;
-  border: 0.04vw solid #CFDCF3;
+  border-top: 0.04vw solid #CFDCF3;
 }
 .cabinet .list .lft .list-table{
   width: 100%;
@@ -17,6 +17,8 @@
   width: 100%;
   background-color: #F0F5FF;
   border-bottom: 0.04vw solid #CFDCF3;
+  border-left: 0.04vw solid #CFDCF3;
+  border-right: 0.04vw solid #CFDCF3;
   padding: 1vw 1.5vw;
   font-weight: 500;
   color: #000000;
@@ -26,6 +28,8 @@
   width: 100%;
   background-color: #FFFFFF;
   border-bottom: 0.04vw solid #CFDCF3;
+  border-left: 0.04vw solid #CFDCF3;
+  border-right: 0.04vw solid #CFDCF3;
   padding: 1vw 1.5vw;
   display: flex;
   flex-direction: row;
@@ -266,10 +270,12 @@
   padding-top: 1vw;
   flex-direction: column;
   margin: 0;
+  max-height: 30vw;
+  overflow-y: auto;
 }
 .cabinet .list .history{
   width: 100%;
-  padding: 1vw 2vw;
+  padding: 1vw 1vw;
   display: flex;
   flex-direction: row;
   align-items: center;

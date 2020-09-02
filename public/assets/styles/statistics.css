@@ -1,4 +1,4 @@
-/* INDEX INDEX */
+/* INDEX INDEX 1*/
 .staistics__view{
   width: 100%;
   padding: 1.7vw 0;
@@ -264,10 +264,11 @@
 /* DOUGHUT */
 .staistics__view .doughnut .content{
   padding: 1vw 0;
+  height: 20.5vw;
 }
 .staistics__view #doughnut_main{
   width: 60%;
-  height: 17.5vw;
+  height: 20.5vw;
   margin: 0 auto;
 }
 .staistics__view #doughnut_main svg text{
@@ -284,6 +285,9 @@
   }
 }
 @media screen and (max-width: 600px) {
+  .staistics__view .doughnut .content{
+    height: auto;
+  }
   .staistics__view .component.doughnut{
     margin-top: 4vw;
   }
@@ -301,14 +305,15 @@
   display: flex;
   flex-direction: row;
   padding: 1vw 2vw;
+  height: 20.5vw;
 }
 .staistics__view .player .content .image{
   width: 50%;
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 .staistics__view .player .content .image img{
-  width: 100%;
+  width: 70%;
+  height: auto;
   margin: 0 auto;
 }
 .staistics__view .player .content .data{
@@ -356,6 +361,7 @@
 @media screen and (max-width: 1000px) {
   .staistics__view .player .content{
     padding-bottom: 2vw;
+    height: auto;
   }
   .staistics__view .player .content .image{
     width: 50%;
@@ -363,7 +369,7 @@
     justify-content: center;
   }
   .staistics__view .player .content .image img{
-    width: 75%;
+    max-width: 75%;
     height: auto;
   }
   .staistics__view .player .content .data{
@@ -456,10 +462,22 @@
   justify-content: center;
   padding-bottom: 1vw;
 }
+.staistics__view .banner.p{
+  display: block;
+}
+.staistics__view .banner.m{
+  display: none;
+}
 @media screen and (max-width: 1000px) {
   .staistics__view .banner{
     width: 100%;
     height: auto;
+  }
+  .staistics__view .banner.p{
+    display: none;
+  }
+  .staistics__view .banner.m{
+    display: block;
   }
 }
 @media screen and (max-width: 600px) {

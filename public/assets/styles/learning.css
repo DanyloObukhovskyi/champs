@@ -264,18 +264,18 @@
 /* BANNER  */
 .learning .banner{
   width: 100%;
-  height: 7vw;
+  height: auto;
   background-color: #C4C4C4;
   margin-top: 1.5vw;
 }
 @media screen and (max-width: 1000px) {
   .learning .banner{
-    height: 20vw;
+    height: auto;
   }
 }
 @media screen and (max-width: 600px) {
   .learning .banner{
-    height: 30vw;
+    height: auto;
   }
 }
 

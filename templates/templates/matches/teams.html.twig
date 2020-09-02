@@ -9,36 +9,45 @@
     </div>
     <div class="grid-block">
         <div class="title">
-            <div class="lft"><img src="/uploads/images/{{ match.team1.logo }}" alt="Rectangle7"/>{{ match.team1.name }}
+            <div class="lft">
+                {% if match.team1 is not null %}
+                    <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" />{{ match.team1.name }}
+                {% else %}
+                    <img src="/images/noLogo.png" alt="ua.svg" />???
+                {% endif %}
             </div>
 {#            <div class="rgt">Мировой рейтинг: 1</div>#}
         </div>
-        <div class="players l-team">
-            {% set first = true %}
-            {% set counter = 0 %}
-            {% for player in match.team1.players %}
-                {% set counter = counter + 1 %}
-                {% if(counter < 6) %}
-                <div class="player {% if first %}active{% endif %}">
-                    <div class="logo">
-                        <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
-                             class="logo" alt="PlayerA1"/>
+        {% if match.team1 is not null %}
+            <div class="players l-team">
+                {% set first = true %}
+                {% set counter = 0 %}
+                {% for player in match.team1.players %}
+                    {% set counter = counter + 1 %}
+                    {% if(counter < 6) %}
+                    <div class="player {% if first %}active{% endif %}">
+                        <div class="logo">
+                            <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
+                                 class="logo" alt="PlayerA1"/>
+                        </div>
+                        <div class="name">{#<img data-team="l" src="/images/temp/matches/flag-ru.svg"
+                                               alt="flag-ru"/>#}{{ player.person.nick }}</div>
                     </div>
-                    <div class="name">{#<img data-team="l" src="/images/temp/matches/flag-ru.svg"
-                                           alt="flag-ru"/>#}{{ player.person.nick }}</div>
-                </div>
-                {% set first = false %}
-                {% endif %}
-            {% endfor %}
-        </div>
+                    {% set first = false %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
     <div class="grid-result player-srav">
         <div class="l-block">
-            {% set firstPlayerTeam1 = match.team1.players|first %}
-            <img src="/uploads/images/{{ match.team1.logo }}" class="logo_team" alt="Rectangle7"/>
-            <img src="/uploads/images/{{ firstPlayerTeam1.person.photo }}" class="logo"
-                 alt="{{ firstPlayerTeam1.person.nick }}"/>
+            {% if match.team1 is not null %}
+                {% set firstPlayerTeam1 = match.team1.players|first %}
+                <img src="/uploads/images/{{ match.team1.logo }}" class="logo_team" alt="Rectangle7"/>
+                <img src="/uploads/images/{{ firstPlayerTeam1.person.photo }}" class="logo"
+                     alt="{{ firstPlayerTeam1.person.nick }}"/>
+            {% endif %}
         </div>
         <div class="c-block">
             <div class="row-c">
@@ -68,37 +77,46 @@
             </div>
         </div>
         <div class="r-block">
-            {% set firstPlayerTeam2 = match.team2.players|first %}
-            <img src="/uploads/images/{{ match.team2.logo }}" class="logo_team" alt="Rectangle6"/>
-            <img src="/uploads/images/{{ firstPlayerTeam2.person.photo }}" class="logo"
-                 alt="{{ firstPlayerTeam2.person.nick }}"/>
+            {% if match.team2 is not null %}
+                {% set firstPlayerTeam2 = match.team2.players|first %}
+                <img src="/uploads/images/{{ match.team2.logo }}" class="logo_team" alt="Rectangle6"/>
+                <img src="/uploads/images/{{ firstPlayerTeam2.person.photo }}" class="logo"
+                     alt="{{ firstPlayerTeam2.person.nick }}"/>
+            {% endif %}
         </div>
     </div>
 
     <div class="grid-block">
         <div class="title">
-            <div class="lft"><img src="/uploads/images/{{ match.team2.logo }}" alt="Rectangle6"/>{{ match.team2.name }}
+            <div class="lft">
+                {% if match.team2 is not null %}
+                    <img src="/uploads/images/{{match.team2.logo}}" class="logo" alt="ua.svg" />{{ match.team2.name }}
+                {% else %}
+                    <img src="/images/noLogo.png" alt="ua.svg" />???
+                {% endif %}
             </div>
 {#            <div class="rgt">Мировой рейтинг: 2</div>#}
         </div>
-        <div class="players r-team">
-            {% set first = true %}
-            {% set counter = 0 %}
-            {% for player in match.team2.players %}
-                {% set counter = counter + 1 %}
-                {% if(counter < 6) %}
-                    <div class="player {% if first %}active{% endif %}">
-                        <div class="logo">
-                            <img data-team="r" data-player="{{ player.id }}"
-                                 src="/uploads/images/{{ player.person.photo }}" class="logo" alt="PlayerB1"/>
+        {% if match.team2 is not null %}
+            <div class="players r-team">
+                {% set first = true %}
+                {% set counter = 0 %}
+                {% for player in match.team2.players %}
+                    {% set counter = counter + 1 %}
+                    {% if(counter < 6) %}
+                        <div class="player {% if first %}active{% endif %}">
+                            <div class="logo">
+                                <img data-team="r" data-player="{{ player.id }}"
+                                     src="/uploads/images/{{ player.person.photo }}" class="logo" alt="PlayerB1"/>
+                            </div>
+                            <div class="name">{#<img data-team="r" src="/images/temp/matches/flag-ru.svg"
+                                                   alt="flag-ru"/>#}{{ player.person.nick }}</div>
                         </div>
-                        <div class="name">{#<img data-team="r" src="/images/temp/matches/flag-ru.svg"
-                                               alt="flag-ru"/>#}{{ player.person.nick }}</div>
-                    </div>
-                    {% set first = false %}
-                {% endif %}
-            {% endfor %}
-        </div>
+                        {% set first = false %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
 

@@ -19,6 +19,9 @@
   font-size: 1.1vw;
   font-weight: 500;
 }
+.cabinet .cont .title.t{
+  margin-top: 2vw;
+}
 .cabinet .cont .inputs{
   width: 100%;
   display: flex;
@@ -62,23 +65,82 @@
   width: 100%;
   margin-top: 1vw;
 }
+.cabinet .cont .full-input.small{
+  width: 50%;
+}
 .cabinet .cont .full-input div{
   width: 100%;
   font-size: 0.85vw;
 }
 .cabinet .cont .full-input div span{
+  color: red;
+}
+.cabinet .cont .full-input div span.pos{
   position: absolute;
   right: 0;
   color: #9E9797;
 }
 .cabinet .cont .full-input textarea{
   width: 100%;
-  height: 7.55vw;
+  height: 7vw;
   font-size: 0.9vw;
-  padding: 1vw;
+  padding: 0.9vw;
+  border: 0.04vw solid #CFDCF3;
+  margin-top: 0.5vw;
+  resize: none;
+  outline: none;
+}
+.cabinet .cont .full-input.sm textarea{
+  height: 4.6vw;
+}
+.cabinet .cont .full-input input,
+.cabinet .cont .full-input select{
+  width: 100%;
+  height: 2.4vw;
+  font-size: 0.9vw;
+  padding: 0 1vw;
   border: 0.04vw solid #CFDCF3;
   margin-top: 0.5vw;
   outline: none;
+}
+.cabinet .cont .photos{
+  width: 100%;
+  display: flex;
+  margin-top: 1.5vw;
+}
+.cabinet .cont .photos img{
+  width: 15vw;
+  height: 15vw;
+  margin-right: 2vw;
+}
+.cabinet .cont .photos .file{
+  width: 15vw;
+  height: 2.6vw;
+}
+.cabinet .cont .photos .file input{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+.cabinet .cont .photos .file div{
+  width: 100%;
+  height: 100%;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+  transition: 0.3s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9vw;
+}
+.cabinet .cont .photos .file:hover div{
+  opacity: 0.7;
 }
 .cabinet .cont .b-r{
   width: 50%;
