@@ -99,8 +99,9 @@ class ParserRatingsCommand extends Command
 
         foreach ($playerRatings as $playerRating)
         {
+            /** @var Person $person */
             $person = $this->entityManager->getRepository(Person::class)->getByNick($playerRating['nick']);
-            if (empty($person)){
+            if (empty($person) or empty($person->getPhoto()) or empty($person->getFlagIcon())){
                 $person = HLTVService::getPerson($playerRating);
                 $person = $this->personService->create($person);
             }
