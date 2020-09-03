@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Service\EventService;
+use App\Service\MatchService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Match;
@@ -17,94 +19,23 @@ class EventsController extends AbstractController
     public function events_index()
     {
         $entityManager = $this->getDoctrine()->getManager();
+        $matchService = new MatchService($entityManager);
+        $eventService = new EventService($entityManager);
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDay(new \DateTime());
-
-        $items    = [];
-        $currDate = null;
-
-        foreach ($matches as $match)
-        {
-            /** @var Match $match */
-
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
-                $items[date("d", $match->getStartAt()->getTimestamp())] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $items[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "startedAt" => $match->getStartAt()->getTimestamp(),
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => empty( $match->getTeam1()) ? null: str_replace("'", "", $match->getTeam1()->getName()),
-                        "logo" => empty( $match->getTeam1()) ? '/images/noLogo.png': "/uploads/images/" . $match->getTeam1()->getLogo(),
-                        "score" => $match->getScore1()
-                    ],
-                    "teamB" => [
-                        "title" => empty( $match->getTeam1()) ? null: str_replace("'", "", $match->getTeam2()->getName()),
-                        "logo" => empty( $match->getTeam1()) ? '/images/noLogo.png': "/uploads/images/" . $match->getTeam2()->getLogo(),
-                        "score" => $match->getScore2()
-                    ],
-                    "event" => [
-                        "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
-                        "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                        "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                        "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
-                    ],
-                ];
-        }
+        $matches = $matchService->matchesDecorator($matches);
 
         $events = $entityManager->getRepository(Event::class)->findByDate(new \DateTime());
+        $eventItems = $eventService->eventsDecorator($events);
 
-        $eventItems    = [];
-        foreach ($events as $event)
-        {
-            /** @var Event $event */
-            $eventItems[] = [
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $event->getImage(),
-            ];
-        }
-//        dump($eventItems);exit();
-
-        $events = $entityManager->getRepository(Event::class)->findFutureEvents(new \DateTime());
-
-        $futureEventItems    = [];
-        foreach ($events as $event)
-        {
-
-            /** @var Event $event */
-            if (!array_key_exists(date("F Y", $event->getStartedAt()->getTimestamp()), $futureEventItems))
-            {
-                $futureEventItems[date("F Y",$event->getStartedAt()->getTimestamp())] = [
-                    "date" => date("F Y", $event->getStartedAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $event->getImage(),
-                "teams" => $event->getCommandCount(),
-                "location" => $event->getLocation(),
-                "prize" => $event->getPrize()
-            ];
-        }
+        $futureEvents = $entityManager->getRepository(Event::class)->findFutureEvents(new \DateTime());
+        $futureEventItems = $eventService->futureEventsDecorator($futureEvents);
 
         $lives = $entityManager->getRepository(Match::class)->findLive();
         return $this->render('templates/events.html.twig',
             [
                 'router' => 'events',
-                'matches' => $items,
+                'matches' => $matches,
                 "lives" => $lives,
                 "events" => $eventItems,
                 "futureEvents" => $futureEventItems,

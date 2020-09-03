@@ -1745,3 +1745,17 @@ border-left: none;
     display: none;
   }
 }
+.map-bg{
+  background-size: cover;
+}
+.map-bg .map-title{
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(0,0,0,.5);
+  text-align: center;
+  font-size: 13px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}

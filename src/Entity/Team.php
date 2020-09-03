@@ -35,9 +35,23 @@ class Team
     private $region;
 
     /**
+     * @ORM\Column(type="integer", nullable=true, name="flag_icon_id")
+     */
+    private $flagIconId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=FlagIcon::class)
+     */
+    private $flagIcon;
+    /**
      * @ORM\OneToMany(targetEntity=Player::class, mappedBy="team")
      */
     private $players;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true, name="parse_logo_date")
+     */
+    private $parseLogoDate;
 
     public function __construct()
     {
@@ -114,6 +128,54 @@ class Team
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlagIconId()
+    {
+        return $this->flagIconId;
+    }
+
+    /**
+     * @param mixed $flagIconId
+     */
+    public function setFlagIconId($flagIconId): void
+    {
+        $this->flagIconId = $flagIconId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlagIcon()
+    {
+        return $this->flagIcon;
+    }
+
+    /**
+     * @param mixed $flagIcon
+     */
+    public function setFlagIcon($flagIcon): void
+    {
+        $this->flagIcon = $flagIcon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParseLogoDate()
+    {
+        return $this->parseLogoDate;
+    }
+
+    /**
+     * @param mixed $parseLogoDate
+     */
+    public function setParseLogoDate($parseLogoDate): void
+    {
+        $this->parseLogoDate = $parseLogoDate;
     }
 
 }

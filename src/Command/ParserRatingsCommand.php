@@ -22,6 +22,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class ParserRatingsCommand
+ * @package App\Command
+ */
 class ParserRatingsCommand extends Command
 {
     protected static $defaultName = 'parser:ratings';
@@ -44,9 +48,10 @@ class ParserRatingsCommand extends Command
     /** @var PlayerService */
     protected $playerService;
 
-    protected $entityManager;
-
+    /** @var WeaponRatingService */
     protected $weaponRatingService;
+
+    protected $entityManager;
 
     protected function configure()
     {
@@ -57,6 +62,12 @@ class ParserRatingsCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->parseDate = Carbon::now();
@@ -79,7 +90,10 @@ class ParserRatingsCommand extends Command
         return 0;
     }
 
-    protected function updatePlayersRating()
+    /**
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
+    protected function updatePlayersRating(): void
     {
         $playerRatings = HLTVService::getPlayersRating();
 
@@ -109,7 +123,10 @@ class ParserRatingsCommand extends Command
         }
     }
 
-    protected function updateTeamsRating()
+    /**
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
+    protected function updateTeamsRating(): void
     {
         $teamsRatings = HLTVService::getTeamsRating();
 
@@ -158,7 +175,10 @@ class ParserRatingsCommand extends Command
         }
     }
 
-    protected function updateWeekPlayer()
+    /**
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
+    protected function updateWeekPlayer(): void
     {
         $weekPlayer = HLTVService::getWeekPlayer();
         $person = $this->entityManager->getRepository(Person::class)->getByNick($weekPlayer['nick']);
@@ -168,6 +188,9 @@ class ParserRatingsCommand extends Command
         }
     }
 
+    /**
+     * @return mixed
+     */
     protected function getEntityManager()
     {
         return $this->getApplication()
@@ -177,7 +200,10 @@ class ParserRatingsCommand extends Command
             ->getManager();
     }
 
-    protected function updateWeaponsRating()
+    /**
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
+    protected function updateWeaponsRating(): void
     {
         $weapons = HLTVService::getRatingWeapons();
 

@@ -18,10 +18,15 @@
       <div class="table-row">
         <div>
           <span class="num">{{i}}.</span>
-
+          <img src="{{item.image}}" alt="Avatar">
           <label>
-            <span>{{item.nickname}}</span>
-            <span class="name">{{item.fullname}}</span>
+            <span>
+              <img src="{{item.flag}}">
+              {{item.nickname}}
+            </span>
+            <span class="name">
+              {{item.fullname}}
+            </span>
           </label>
         </div>
 

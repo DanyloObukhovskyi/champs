@@ -18,19 +18,15 @@ class MapService extends EntityService
         $code = $this->makeCode($name);
         /** @var Map $map */
         $map = $this->getByCode($code);
-        if ($map)
+        if (empty($map))
         {
-            $this->entityManager->persist($map);
-            return $map;
+            /** @var Map $map */
+            $map = new $this->entity;
+            $map->setName($name)
+                ->setCode($code);
         }
 
-        /** @var Map $map */
-        $map = new $this->entity;
-        $map->setName($name)
-            ->setCode($code);
-
         $this->entityManager->persist($map);
-
         $this->entityManager->flush();
 
         return $map;
@@ -64,5 +60,22 @@ class MapService extends EntityService
         }
 
         return false;
+    }
+
+    public function updateImage(Map $map, $image)
+    {
+        if (isset($image) and empty($map->getImage())){
+            $image = DownloadFile::getImage($image);
+
+            if (isset($image))
+            {
+                $map->setImage($image);
+            }
+        }
+
+        $this->entityManager->persist($map);
+        $this->entityManager->flush();
+
+        return $map;
     }
 }

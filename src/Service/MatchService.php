@@ -185,20 +185,32 @@ class MatchService extends EntityService
         ];
         $team1 = $match->getTeam1();
         if(isset($team1)){
+            $flag = empty($match->getTeam1()->getFlagIcon()) ? null: $match->getTeam1()->getFlagIcon()->getName();
+
+            $this->imageService->setImage($flag);
+            $flag = $this->imageService->getImagePath();
+
             $this->imageService->setImage($match->getTeam1()->getLogo());
             $matchFields['teamA'] = [
                 "title" => str_replace("'", "", $match->getTeam1()->getName()),
                 "logo" => $this->imageService->getImagePath(),
                 "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
+                "flag" => $flag
             ];
         }
         $team2 = $match->getTeam2();
         if(isset($team2)){
+            $flag = empty($match->getTeam2()->getFlagIcon()) ? null: $match->getTeam2()->getFlagIcon()->getName();
+
+            $this->imageService->setImage($flag);
+            $flag = $this->imageService->getImagePath();
+
             $this->imageService->setImage($match->getTeam2()->getLogo());
             $matchFields['teamB'] = [
                 "title" => str_replace("'", "", $match->getTeam2()->getName()),
                 "logo" => $this->imageService->getImagePath(),
                 "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
+                "flag" => $flag
             ];
         }
         return $matchFields;

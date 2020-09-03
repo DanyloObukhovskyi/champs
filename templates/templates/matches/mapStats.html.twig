@@ -1,3 +1,4 @@
+
 <div class="component maps">
     <div class="header">
         <div class="round">
@@ -10,10 +11,8 @@
     <div class="component statistics">
         <div class="grid-block statistics-maps">
             <div class="grid-row">
-                <div class="r w-100">
-                    <span>
-                         <strong>Карта</strong>
-                    </span>
+                <div class="r w-100 pl-0 text-center">
+                     <strong class=" w-100">Карта</strong>
                 </div>
                 {% for team, data in matchStats %}
                     <div class="r w-100">
@@ -24,11 +23,11 @@
             </div>
         {% for map in maps %}
             <div class="grid-row">
-                <div class="r w-100">
-                    <span>{{ map }}</span>
+                <div class="r w-100 map-bg pl-0" style="background-image: url('/uploads/images/{{ map.image }}')">
+                    <span class="map-title">{{ map.name }}</span>
                 </div>
                 {% for team, data in matchStats %}
-                    <div class="r w-100">{{ attribute(data.maps, map) }}</div>
+                    <div class="r w-100 ">{{ attribute(data.maps, map.name) }}</div>
                 {% endfor %}
             </div>
         {% endfor %}

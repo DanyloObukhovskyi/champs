@@ -84,7 +84,7 @@ class HLTVService
             }
         }
 
-//        LoggerService::add("match not found", LoggerService::TYPE_WARNING);
+        LoggerService::add("match not found", LoggerService::TYPE_WARNING);
         return false;
     }
 
@@ -273,6 +273,12 @@ class HLTVService
                 {
                     $name = self::getSubElemByClass($map, '.mapname');
                     $winRates = $map->find('.map-stats-infobox-stats');
+                    $image = $map->first('img');
+                    if (isset($image)){
+                        $image = $image->attr('src');
+
+                        $image = self::urlDecorator($image);
+                    }
 
                     $winRateTeam = null;
                     if (count($winRates) === 2)
@@ -282,6 +288,7 @@ class HLTVService
 
                     $mapsData[$team['name']][] = [
                         'name' => $name,
+                        'image' => $image,
                         'winrate' => $winRateTeam,
                     ];
                 }
@@ -289,6 +296,7 @@ class HLTVService
 
             $match['winrate'] = $mapsData;
         }
+
         //Past matches
         $pastMatches = $document->first('.past-matches');
         if (isset($pastMatches)){
@@ -731,45 +739,51 @@ class HLTVService
 
         $document = new Document($content);
 
-        $teamLogoRaw = $document->find("//img[contains(concat(' ', normalize-space(@class), ' '), ' teamlogo ')]", Query::TYPE_XPATH);
-        if (count($teamLogoRaw) == 0)
+        $teamLogoRaw = $document->first('img.teamlogo');
+        if (empty($teamLogoRaw))
         {
             LoggerService::error('team logo not found');
             return false;
         }
 
         $team = [
-            'logo' => trim($teamLogoRaw[0]->attr('src')),
+            'logo' => trim($teamLogoRaw->attr('src')),
             'players' => []
         ];
 
-        $profileRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' profile-team-info ')]", Query::TYPE_XPATH);
-        if (count($profileRaw) == 0)
+        $profileRaw = $document->first('.profile-team-info');
+        if (empty($profileRaw))
         {
             LoggerService::error('team profile not found');
             return false;
         }
 
-        $profileRaw = $profileRaw[0];
-
-        $nameTeamRaw = $profileRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' profile-team-name ')]", Query::TYPE_XPATH);
-        if (count($nameTeamRaw) == 0)
+        $nameTeamRaw = $profileRaw->first('.profile-team-name');
+        if (empty($nameTeamRaw))
         {
             LoggerService::error('team name not found');
             return false;
         }
 
-        $team['name'] = trim($nameTeamRaw[0]->text());
+        $team['name'] = trim($nameTeamRaw->text());
 
-        $regionTeamRaw = $profileRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' team-country ')]/img", Query::TYPE_XPATH);
-        if (count($regionTeamRaw) > 0)
+        $regionTeamRaw = $profileRaw->first("//div[contains(concat(' ', normalize-space(@class), ' '), ' team-country ')]/img", Query::TYPE_XPATH);
+        if (isset($regionTeamRaw))
         {
-            $team['region'] = trim($regionTeamRaw[0]->attr('title'));
+            $team['region'] = trim($regionTeamRaw->attr('title'));
+
+            LoggerService::info('team get region icon name');
+
+            $flagIconPath = parse_url($regionTeamRaw->attr('src'), PHP_URL_PATH);
+            $flagIcon = explode('/', $flagIconPath);
+            $flagIcon = end($flagIcon);
+
+            $team['regionIconName'] = explode('.', $flagIcon)[0];
         }
 
         $teamPersonsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' bodyshot-team ')]/a[contains(concat(' ', normalize-space(@class), ' '), ' col-custom ')]", Query::TYPE_XPATH);
 
-        if (count($teamPersonsRaw) == 0)
+        if (count($teamPersonsRaw) === 0)
         {
             LoggerService::error('teams players not found');
             return false;
@@ -788,10 +802,10 @@ class HLTVService
                 'url' => $playerUrl
             ];
 
-            $playerImageRaw = $teamPersonRaw->find("//img[contains(@class, 'bodyshot-team-img')]", Query::TYPE_XPATH);
-            if (count($playerImageRaw) > 0)
+            $playerImageRaw = $teamPersonRaw->first("//img[contains(@class, 'bodyshot-team-img')]", Query::TYPE_XPATH);
+            if (isset($playerImageRaw))
             {
-                $player['photo'] = trim($playerImageRaw[0]->attr('src'));
+                $player['photo'] = trim($playerImageRaw->attr('src'));
             }
 
             $team['players'][] = $player;
@@ -872,10 +886,18 @@ class HLTVService
             $player['realname'] = trim($profileRealNameRaw[0]->text());
         }
 
-        $profileRegionRaw = $profileRaw->find("//div[contains(@class, 'playerRealname')]/img[contains(@class, 'flag')]", Query::TYPE_XPATH);
-        if (count($profileRegionRaw) > 0)
+        $profileRegionRaw = $profileRaw->first("//div[contains(@class, 'playerRealname')]/img[contains(@class, 'flag')]", Query::TYPE_XPATH);
+        if (isset($profileRegionRaw))
         {
-            $player['region'] = trim($profileRegionRaw[0]->attr('title'));
+            $player['region'] = trim($profileRegionRaw->attr('title'));
+
+            LoggerService::info('person get region icon name');
+
+            $flagIconPath = parse_url($profileRegionRaw->attr('src'), PHP_URL_PATH);
+            $flagIcon = explode('/', $flagIconPath);
+            $flagIcon = end($flagIcon);
+
+            $player['regionIconName'] = explode('.', $flagIcon)[0];
         }
 
         $profilePhotoRaw = $profileRaw->find("//img[contains(@class, 'bodyshot-img')]", Query::TYPE_XPATH);
@@ -942,7 +964,6 @@ class HLTVService
             }
         }
 
-
         return $player;
     }
 
@@ -957,7 +978,7 @@ class HLTVService
         if (empty($match['teams']))
         {
             LoggerService::error('teams not found');
-            return false;
+            return null;
         }
 
         foreach ($match['teams'] as $team)
@@ -967,14 +988,13 @@ class HLTVService
                 continue;
             }
             $teamItem = static::getTeam($team);
+
             if (!$teamItem)
             {
-                LoggerService::error("team not found");
-                return false;
+                LoggerService::error("team not found {$team['name']}");
+            } else {
+                $result[] = $teamItem;
             }
-
-            $result[] = $teamItem;
-
         }
 
         return $result;
@@ -1455,7 +1475,7 @@ class HLTVService
      * @return array
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public function getEventData($url)
+    public static function getEventData($url)
     {
         LoggerService::info("getEventData");
         $content = PageContentService::getPageContent($url);
@@ -1508,7 +1528,7 @@ class HLTVService
      * @return array|mixed|\PhpParser\Comment|\PhpParser\Node
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public function getRatingWeapons()
+    public static function getRatingWeapons()
     {
         $weaponsRatings = [];
         $content = PageContentService::getPageContent(self::$baseUrl. '/stats');
@@ -1534,7 +1554,11 @@ class HLTVService
         return $weaponsRatings;
     }
 
-    public function getEvents()
+    /**
+     * @return array
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
+    public static function getEvents()
     {
         $content = PageContentService::getPageContent(self::$baseUrl. '/events');
 
@@ -1562,6 +1586,34 @@ class HLTVService
         }
 
         return $events;
+    }
 
+    /**
+     * @param string $url
+     * @return array
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
+    public static function parseFlags(string $url): array
+    {
+        $content = PageContentService::getPageContent($url);
+
+        $document = new Document($content);
+        $flags = $document->find('a');
+
+        unset($flags[0]);
+
+        $urls = [];
+
+        foreach ($flags as $flag){
+            $href = $flag->attr('href');
+            [$name, $extension] = explode('.', $href);
+
+            $urls[] = [
+                'url' => $url.$href,
+                'name' => $name,
+                'extension' => $extension
+            ];
+        }
+        return $urls;
     }
 }

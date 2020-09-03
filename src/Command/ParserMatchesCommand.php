@@ -27,6 +27,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class ParserMatchesCommand
+ * @package App\Command
+ */
 class ParserMatchesCommand extends Command
 {
     protected static $defaultName = 'parser:matches';
@@ -77,6 +81,12 @@ class ParserMatchesCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('max_execution_time', 0);
@@ -175,11 +185,20 @@ class ParserMatchesCommand extends Command
         return 0;
     }
 
-    protected function isExist($match)
+    /**
+     * @param $match
+     * @return bool
+     */
+    protected function isExist($match): bool
     {
         return (bool) $this->matchService->isExist($match['url']);
     }
 
+    /**
+     * @param $matches
+     * @return bool
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
     protected function updateMatchInfoFromArray($matches)
     {
         LoggerService::info("check live matches");
@@ -211,7 +230,9 @@ class ParserMatchesCommand extends Command
                         if (!empty($matchEmptyTeams['teams'])) {
                             $matchTeams = HLTVService::getTeams($matchEmptyTeams);
 
-                            $this->createTeams($matchTeams);
+                            if (!empty($matchTeams)){
+                                $this->createTeams($matchTeams);
+                            }
                         }
                         $team = $this->teamService->getByName($team['name'] ?? null);
                         if (empty($team))
@@ -232,7 +253,7 @@ class ParserMatchesCommand extends Command
             }
             else
             {
-                $matchStatistics = [];//GosuGamersService::getMatchStatistic($match->getUrl());
+                $matchStatistics = [];
             }
             if (!$matchStatistics)
             {
@@ -296,6 +317,7 @@ class ParserMatchesCommand extends Command
                 $this->matchService->save($match);
             }
             LoggerService::add("get match command 216", LoggerService::TYPE_INFO);
+
             $this->updateMatchStatistics($match, $matchStatistics);
             LoggerService::add("get match command 218", LoggerService::TYPE_INFO);
         }
@@ -303,6 +325,11 @@ class ParserMatchesCommand extends Command
         return true;
     }
 
+    /**
+     * @param Match $match
+     * @param $matchStatistics
+     * @return bool
+     */
     private function updateMatchStatistics(Match $match, $matchStatistics)
     {
         if (empty($matchStatistics['maps']))
@@ -332,6 +359,12 @@ class ParserMatchesCommand extends Command
         return true;
     }
 
+    /**
+     * @param Match $match
+     * @param $mapEntity
+     * @param $teamStat
+     * @return array|bool
+     */
     private function createPlayerStatistics(Match $match, $mapEntity, $teamStat)
     {
         LoggerService::add("get match command 255", LoggerService::TYPE_INFO);
@@ -357,11 +390,21 @@ class ParserMatchesCommand extends Command
         return !empty($result) ? $result : false;
     }
 
+    /**
+     * @param Match $match
+     * @param $mapEntity
+     * @param $matchStat
+     * @return \App\Entity\MatchStatistics|bool|null
+     */
     private function createMatchStatistics(Match $match, $mapEntity, $matchStat)
     {
         return $this->matchStatisticsService->create($match, $mapEntity, $matchStat);
     }
 
+    /**
+     * @param $teams
+     * @return array|bool
+     */
     private function createTeams($teams)
     {
         $result = [];
@@ -402,6 +445,10 @@ class ParserMatchesCommand extends Command
         return !empty($result) ? $result : false;
     }
 
+    /**
+     * @param $matchData
+     * @return array|bool
+     */
     private function createMaps($matchData)
     {
         $result = [];
@@ -426,6 +473,11 @@ class ParserMatchesCommand extends Command
         return !empty($result) ? $result : false;
     }
 
+    /**
+     * @param Match $match
+     * @param $matchData
+     * @return array|bool
+     */
     private function createStreams(Match $match, $matchData)
     {
         $result = [];
@@ -450,6 +502,13 @@ class ParserMatchesCommand extends Command
         return !empty($result) ? $result : false;
     }
 
+    /**
+     * @param $matchDataFull
+     * @param $teamEntityList
+     * @return Match|mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     private function createMatch($matchDataFull, $teamEntityList)
     {
         $eventEntity = null;
@@ -464,6 +523,13 @@ class ParserMatchesCommand extends Command
         return $this->matchService->create($matchDataFull, $teamEntityList, $eventEntity);
     }
 
+    /**
+     * @param $url
+     * @return \App\Entity\Event
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     private function getEvent($url)
     {
         $event = HLTVService::getEventData($url);
@@ -471,6 +537,12 @@ class ParserMatchesCommand extends Command
         return $this->eventService->create($event);
     }
 
+    /**
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     private function updateResultsBlock()
     {
         $resultsMatches = HLTVService::getMatchesResults();
@@ -493,6 +565,10 @@ class ParserMatchesCommand extends Command
         }
     }
 
+    /**
+     * @param $matchDataFull
+     * @return mixed
+     */
     private function setScores($matchDataFull)
     {
         $matchDataFull['score1'] = $matchDataFull['teams'][0]['score'] ?? null;
@@ -501,6 +577,13 @@ class ParserMatchesCommand extends Command
         return $matchDataFull;
     }
 
+    /**
+     * @param $match
+     * @param $matchDataFull
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     protected function updateMatchTeamWinrate($match, $matchDataFull)
     {
         if (isset($matchDataFull['winrate']))
@@ -515,6 +598,8 @@ class ParserMatchesCommand extends Command
                     if (empty($map)) {
                         $map = $this->mapService->create($winRate['name']);
                     }
+                    $this->mapService->updateImage($map, $winRate['image']);
+
                     if (isset($team) and isset($match) and isset($map)){
                         $this->matchMapTeamWinRateService->create($team, $match, $map, $winRate['winrate']);
                     }
@@ -523,6 +608,10 @@ class ParserMatchesCommand extends Command
         }
     }
 
+    /**
+     * @param $match
+     * @param $matchDataFull
+     */
     protected function updateMatchTeamPastMatches($match, $matchDataFull)
     {
         if (isset($matchDataFull['pastMatches']))

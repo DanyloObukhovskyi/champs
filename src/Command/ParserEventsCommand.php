@@ -14,6 +14,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class ParserEventsCommand
+ * @package App\Command
+ */
 class ParserEventsCommand extends Command
 {
     protected static $defaultName = 'parser:events';
@@ -36,6 +40,12 @@ class ParserEventsCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->parseDate = new DateTime();
@@ -68,6 +78,10 @@ class ParserEventsCommand extends Command
         return 0;
     }
 
+    /**
+     * @return array|bool|null
+     * @throws \DiDom\Exceptions\InvalidSelectorException
+     */
     private function getMainEvents()
     {
         LoggerService::info("get events");
@@ -80,6 +94,13 @@ class ParserEventsCommand extends Command
         return $events;
     }
 
+    /**
+     * @param $events
+     * @param bool $isNotMain
+     * @return array|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     private function createEvents($events, bool $isNotMain = false)
     {
         $result = [];
@@ -104,6 +125,9 @@ class ParserEventsCommand extends Command
         return !empty($result) ? $result : null;
     }
 
+    /**
+     * @return array|null
+     */
     public function getEvents()
     {
         $events = HLTVService::getEvents();

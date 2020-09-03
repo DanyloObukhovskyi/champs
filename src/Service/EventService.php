@@ -10,6 +10,7 @@ namespace App\Service;
 use DateTime;
 use App\Entity\Event;
 use App\Repository\EventRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EventService extends EntityService
 {
@@ -17,6 +18,15 @@ class EventService extends EntityService
 
     /** @var EventRepository */
     protected $repository;
+
+    protected $imageService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->imageService = new ImageService();
+    }
 
     /**
      * @param $values
@@ -124,5 +134,34 @@ class EventService extends EntityService
             ];
         }
         return $eventItems;
+    }
+
+    public function futureEventsDecorator($events)
+    {
+        $futureEventItems = [];
+        foreach ($events as $event)
+        {
+
+            /** @var Event $event */
+            if (!array_key_exists(date("F Y", $event->getStartedAt()->getTimestamp()), $futureEventItems))
+            {
+                $futureEventItems[date("F Y",$event->getStartedAt()->getTimestamp())] = [
+                    "date" => date("F Y", $event->getStartedAt()->getTimestamp()),
+                    "items" => [],
+                ];
+            }
+            $this->imageService->setImage($event->getImage());
+
+            $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
+                "name" => $event->getName(),
+                "startedAt" => $event->getStartedAt(),
+                "endedAt" => $event->getEndedAt(),
+                "image" => $this->imageService->getImagePath(),
+                "teams" => $event->getCommandCount(),
+                "location" => $event->getLocation(),
+                "prize" => $event->getPrize()
+            ];
+        }
+        return $futureEventItems;
     }
 }

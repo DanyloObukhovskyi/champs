@@ -27,7 +27,7 @@
               <span v-text="item.datefrom"></span> - <span v-text="item.dateto"></span>
             </div>
             <div class="logos">
-                <img :src="`/images/temp/${t}`" v-for="t in item.teams" />
+                <img :src="`${t}`" v-for="t in item.teams" />
             </div>
           </div>
         </div>

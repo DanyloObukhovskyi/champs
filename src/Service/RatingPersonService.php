@@ -65,11 +65,19 @@ class RatingPersonService extends EntityService
         $this->imageService->setImage($person->getPhoto());
         $image = $this->imageService->getImagePath();
 
+        $flag = $person->getFlagIcon();
+        if (isset($flag)){
+            $flag = $flag->getName();
+        }
+        $this->imageService->setImage($flag);
+        $flag = $this->imageService->getImagePath();
+
         $player = [
             'rating' => $ratingPerson->getRating(),
             'nickname' => $person->getNick(),
             'fullname' => $person->getName(),
             'image' => $image,
+            'flag' => $flag
         ];
 
 

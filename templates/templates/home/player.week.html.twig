@@ -11,7 +11,11 @@
   <div class="content">
     <img src="{{ playerWeek.image }}" class="photo" alt="Avatar" />
     <div class="nik">
-      <img src="/images/temp/flag-russia.png" alt="Flag Russian" />
+      {% if playerWeek.flagIcon.name is defined %}
+        <img src="/uploads/images/{{ playerWeek.flagIcon.name }}"/>
+      {% else %}
+        <img src="/images/noLogo.png"/>
+      {% endif %}
       {{ playerWeek.nickname }}
     </div>
     <div class="name">

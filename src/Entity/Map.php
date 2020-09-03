@@ -27,6 +27,11 @@ class Map
      */
     private $code;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,5 +66,21 @@ class Map
         $vowels = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", " ");
         $yourString = str_replace($vowels, "", $this->getCode());
         return $yourString;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image): void
+    {
+        $this->image = $image;
     }
 }

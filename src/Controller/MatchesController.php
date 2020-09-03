@@ -113,28 +113,36 @@ class MatchesController extends AbstractController
         $matchStatsEntities = $this->getDoctrine()->getRepository(MatchMapTeamStatistic::class)
             ->getMatchTeamStatistic($match_view);
 
+        $team1Id = !empty($match_view->getTeam1()) ? $match_view->getTeam1()->getId() : null;
+        $team2Id = !empty($match_view->getTeam2()) ? $match_view->getTeam2()->getId() : null;
+
         foreach ($matchStatsEntities as $matchStatEntity){
             $team = $matchStatEntity->getTeam();
-            $imageService->setImage($team->getLogo());
+            if ($team1Id === $team->getId() or $team2Id === $team->getId()){
+                $imageService->setImage($team->getLogo());
 
-            $map = $matchStatEntity->getMap();
+                $map = $matchStatEntity->getMap();
 
-            $matchStats[$team->getName()]['logo'] = $imageService->getImagePath();
-            $matchStats[$team->getName()]['name'] =$team->getName();
-            $matchStats[$team->getName()]['maps'][$map->getName()] = $matchStatEntity->getWinRate();
-            $maps[$map->getName()] = $map->getName();
+                $matchStats[$team->getName()]['logo'] = $imageService->getImagePath();
+                $matchStats[$team->getName()]['name'] =$team->getName();
+                $matchStats[$team->getName()]['maps'][$map->getName()] = $matchStatEntity->getWinRate();
+                $maps[$map->getName()]['name'] = $map->getName();
+                $maps[$map->getName()]['image'] = $map->getImage();
+            }
         }
         $pastMatches = [];
         $pastMatchesEntities = $this->getDoctrine()->getRepository(PastMatch::class)->getByMatch($match_view);
         foreach ($pastMatchesEntities as $pastMatchesEntity){
             $team = $pastMatchesEntity->getTeam();
-            $imageService->setImage($team->getLogo());
+            if ($team1Id === $team->getId() or $team2Id === $team->getId()) {
+                $imageService->setImage($team->getLogo());
 
-            $pastMatches[$team->getName()]['logo'] = $imageService->getImagePath();
-            $pastMatches[$team->getName()]['matches'][] = [
-                'opponent' => $pastMatchesEntity->getTeamTwo(),
-                'score' => $pastMatchesEntity->getScore()
-            ];
+                $pastMatches[$team->getName()]['logo'] = $imageService->getImagePath();
+                $pastMatches[$team->getName()]['matches'][] = [
+                    'opponent' => $pastMatchesEntity->getTeamTwo(),
+                    'score' => $pastMatchesEntity->getScore()
+                ];
+            }
         }
 
         return $this->render('templates/matches.view.html.twig', [

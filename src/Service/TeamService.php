@@ -9,6 +9,8 @@ namespace App\Service;
 
 use App\Entity\Team;
 use App\Repository\TeamRepository;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class TeamService extends EntityService
@@ -17,6 +19,16 @@ class TeamService extends EntityService
 
     /** @var TeamRepository */
     protected $repository;
+
+    /** @var FlagIconService */
+    protected $flagIconService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->flagIconService = new FlagIconService($entityManager);
+    }
 
     public function create($values)
     {
@@ -30,14 +42,15 @@ class TeamService extends EntityService
         }
         $team->setName($values['name'])->setRegion($values['region']);
 
-        try {
-            $imageLogo = DownloadFile::getImage($values['logo']);
-        }catch (Exception $e){
-            $imageLogo = null;
-        }
-        if (isset($imageLogo))
+        $this->setTeamLogo($values['logo'], $team);
+
+        if (isset($values['regionIconName']))
         {
-            $team->setLogo($imageLogo);
+            $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
+
+            if (isset($flagIcon)){
+                $team->setFlagIcon($flagIcon);
+            }
         }
 
         $this->entityManager->persist($team);
@@ -55,5 +68,25 @@ class TeamService extends EntityService
             return $team;
         }
         return null;
+    }
+
+    public function setTeamLogo($photo, Team $team)
+    {
+        if (!empty($photo))
+        {
+            $parseDate = new Carbon($team->getParseLogoDate());
+            if ($parseDate->addWeek(1) >= Carbon::now() or $team->getLogo() === null){
+                try {
+                    $imagePhoto = DownloadFile::getImage($photo);
+                    if (!empty($imagePhoto))
+                    {
+                        $team->setLogo($imagePhoto);
+                        $team->setParseLogoDate(Carbon::now());
+                    }
+                }catch (\Exception $e){
+                    LoggerService::add("Download image error: $e");
+                }
+            }
+        }
     }
 }

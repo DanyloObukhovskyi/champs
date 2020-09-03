@@ -8,60 +8,74 @@ namespace App\Service;
 
 
 use App\Entity\Person;
+use App\Repository\PersonRepository;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PersonService extends EntityService
 {
     protected $entity = Person::class;
 
+    /**
+     * @var PersonRepository
+     */
     protected $repository;
+
+    /**
+     * @var FlagIconService
+     */
+    protected $flagIconService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->flagIconService = new FlagIconService($entityManager);
+    }
 
     public function create($values)
     {
-        LoggerService::add("personService 18");
+        LoggerService::add("personService create");
         if (empty($values['realname']))
         {
-            LoggerService::add("personService 22");
+            LoggerService::add("personService getByNick");
+            /** @var Person $person */
             $person = $this->repository->getByNick($values['nick']);
         }
         else
         {
-            LoggerService::add("personService 27");
+            LoggerService::add("personService getByNameAndNick");
             $person = $this->repository->getByNameAndNick($values['realname'], $values['nick']);
         }
 
-        LoggerService::add("personService 28");
-        if (isset($person))
+        LoggerService::add("personService check empty");
+        if (empty($person))
         {
-            $this->entityManager->persist($person);
-            return $person;
+            $person = new $this->entity;
         }
-
-        /** @var Person $person */
-        $person = new $this->entity;
-        $person->setNick($values['nick']);
-
-        if (!empty($values['photo']) && strpos($values['photo'], 'blankplayer.svg') === false)
-        {
-            try {
-                $imagePhoto = DownloadFile::getImage($values['photo']);
-                if (!empty($imagePhoto))
-                {
-                    $person->setPhoto($imagePhoto);
-                }
-            }catch (\Exception $e){
-                LoggerService::add("Download image error: $e");
-            }
+        if (isset($values['nick'])){
+            $person->setNick($values['nick']);
         }
-
-        if (!empty($values['realname']))
+        if (isset($values['realname']))
         {
             $person->setName($values['realname']);
         }
+        if (isset($values['regionIconName']))
+        {
+            LoggerService::add("personService setFlagIcon");
+            $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
+
+            if (isset($flagIcon)){
+                $person->setFlagIcon($flagIcon);
+            }
+        }
+        LoggerService::add("personService setPersonPhoto");
+        $this->setPersonPhoto($values['photo'], $person);
 
         $this->entityManager->persist($person);
-
         $this->entityManager->flush();
-        LoggerService::add("personService 56");
+
+        LoggerService::add("personService save");
         return $person;
     }
 
@@ -80,5 +94,25 @@ class PersonService extends EntityService
         $this->entityManager->flush();
 
         return $person;
+    }
+
+    public function setPersonPhoto($photo, Person $person)
+    {
+        if (!empty($photo) && strpos($photo, 'blankplayer.svg') === false)
+        {
+            $parseDate = new Carbon($person->getParsePhotoDate());
+            if ($parseDate->addMonth(1) >= Carbon::now() or $person->getPhoto() === null){
+                try {
+                    $imagePhoto = DownloadFile::getImage($photo);
+                    if (!empty($imagePhoto))
+                    {
+                        $person->setPhoto($imagePhoto);
+                        $person->setParsePhotoDate(Carbon::now());
+                    }
+                }catch (\Exception $e){
+                    LoggerService::add("Download image error: $e");
+                }
+            }
+        }
     }
 }

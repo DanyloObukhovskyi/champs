@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PersonRepository;
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,6 +48,20 @@ class Person
      */
     private $rating;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true, name="parse_photo_date")
+     */
+    private $parsePhotoDate;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true, name="flag_icon_id")
+     */
+    private $flagIconId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=FlagIcon::class)
+     */
+    private $flagIcon;
 
     public function getId(): ?int
     {
@@ -136,6 +151,55 @@ class Person
     public function setRating($rating): void
     {
         $this->rating = $rating;
+    }
+
+    /**
+     * @return Carbon
+     * @throws \Exception
+     */
+    public function getParsePhotoDate()
+    {
+        return $this->parsePhotoDate;
+    }
+
+    /**
+     * @param mixed $parsePhotoDate
+     */
+    public function setParsePhotoDate($parsePhotoDate): void
+    {
+        $this->parsePhotoDate = $parsePhotoDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlagIconId()
+    {
+        return $this->flagIconId;
+    }
+
+    /**
+     * @param mixed $flagIconId
+     */
+    public function setFlagIconId($flagIconId): void
+    {
+        $this->flagIconId = $flagIconId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlagIcon()
+    {
+        return $this->flagIcon;
+    }
+
+    /**
+     * @param mixed $flagIcon
+     */
+    public function setFlagIcon($flagIcon): void
+    {
+        $this->flagIcon = $flagIcon;
     }
 
 }
