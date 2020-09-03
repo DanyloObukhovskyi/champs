@@ -16,7 +16,7 @@
 
     <div class="grid-row" v-for="item in getItems">
         <div class="logo">
-          <img :src="`/uploads/images/${item.image}`" :alt="item.logo" />
+          <img :src="item.image !== null ?`/uploads/images/${item.image}`: '/images/noLogo.png'" :alt="item.logo" />
         </div>
         <div class="data">
           <div class="title">
