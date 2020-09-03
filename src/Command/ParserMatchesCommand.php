@@ -211,41 +211,38 @@ class ParserMatchesCommand extends Command
         /** @var Match $match */
         foreach ($matches as $match)
         {
-            if (empty($match->getTeam1()) or empty($match->getTeam2()))
+            $matchEmptyTeams = [
+                'url' => $match->getUrl(),
+                'code' => $match->getCode(),
+            ];
+
+            $matchEmptyTeams = HLTVService::getMatchFull($matchEmptyTeams);
+
+            $teams = [];
+            foreach ($matchEmptyTeams['teams'] as $team)
             {
-                $matchEmptyTeams = [
-                    'url' => $match->getUrl(),
-                    'code' => $match->getCode(),
-                ];
-
-                $matchEmptyTeams = HLTVService::getMatchFull($matchEmptyTeams);
-
-
-                $teams = [];
-                foreach ($matchEmptyTeams['teams'] as $team)
+                $teamEntity = $this->teamService->getByName($team['name'] ?? null);
+                if (empty($teamEntity) or empty($teamEntity->getLogo()))
                 {
-                    $team = $this->teamService->getByName($team['name'] ?? null);
-                    if (empty($team) or empty($team->getLogo()))
-                    {
-                        if (!empty($matchEmptyTeams['teams'])) {
-                            $matchTeams = HLTVService::getTeams($matchEmptyTeams);
+                    if (!empty($matchEmptyTeams['teams'])) {
+                        $matchTeams = HLTVService::getTeams($matchEmptyTeams);
 
-                            if (!empty($matchTeams)){
-                                $this->createTeams($matchTeams);
-                            }
-                        }
-                        $team = $this->teamService->getByName($team['name'] ?? null);
-                        if (empty($team))
-                        {
-                            continue;
+                        if (!empty($matchTeams)){
+                            $this->createTeams($matchTeams);
                         }
                     }
-                    $teams[] = $team;
+                    $teamEntity = $this->teamService->getByName($team['name'] ?? null);
+                    if (empty($teamEntity))
+                    {
+                        continue;
+                    }
                 }
-                $match = $this->matchService->updateTeams($matchEmptyTeams, $teams);
-                $this->updateMatchTeamWinrate($match, $matchEmptyTeams);
-                $this->updateMatchTeamPastMatches($match, $matchEmptyTeams);
+                $teams[] = $teamEntity;
             }
+            $match = $this->matchService->updateTeams($matchEmptyTeams, $teams);
+            $this->updateMatchTeamWinrate($match, $matchEmptyTeams);
+            $this->updateMatchTeamPastMatches($match, $matchEmptyTeams);
+
             $isMatchChanged = false;
             if ($match->getDetailInfo())
             {

@@ -98,10 +98,15 @@ class PersonService extends EntityService
 
     public function setPersonPhoto($photo, Person $person)
     {
+        global $kernel;
+
         if (!empty($photo) && strpos($photo, 'blankplayer.svg') === false)
         {
             $parseDate = new Carbon($person->getParsePhotoDate());
-            if ($parseDate->addMonth(1) >= Carbon::now() or $person->getPhoto() === null){
+
+            $photoPath = $kernel->getProjectDir().'/public/uploads/images/'.$person->getPhoto();
+
+            if ($parseDate->addMonth(1) >= Carbon::now() or $person->getPhoto() === null or !file_exists($photoPath)){
                 try {
                     $imagePhoto = DownloadFile::getImage($photo);
                     if (!empty($imagePhoto))
