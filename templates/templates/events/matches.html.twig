@@ -16,12 +16,20 @@
           </div>
           <div class="teams">
             <div>
-              <img src="{{item2.teamA.logo}}" />
-              {{item2.teamA.title}}
+              {% if item2.teamA is not null %}
+                <img src="{{item2.teamA.logo}}" />
+                {{item2.teamA.title}}
+              {% else %}
+                <img src="/images/noLogo.png" />???
+              {% endif %}
             </div>
             <div>
+              {% if item2.teamA is not null %}
               <img src="{{item2.teamB.logo}}" />
               {{item2.teamB.title}}
+              {% else %}
+                <img src="/images/noLogo.png" />???
+              {% endif %}
             </div>
             <span>{{item2.event.startedAt|date('d/m')}} {{item2.time}}</span>
           </div>
