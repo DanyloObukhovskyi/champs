@@ -6,25 +6,25 @@
 parameters:
     proxy:
         first:
-            host: 'host'
-            port: 'port'
-            user: 'user'
-            password: 'password'
+            host: '144.172.97.6'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
         two:
-            host: 'host'
-            port: 'port'
-            user: 'user'
-            password: 'password'
+            host: '107.189.12.74'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
         third:
-            host: 'host'
-            port: 'port'
-            user: 'user'
-            password: 'password'
+            host: '185.196.191.108'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
         fourth:
-            host: 'host'
-            port: 'port'
-            user: 'user'
-            password: 'password'
+            host: '196.16.179.81'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
 
 services:
     # default configuration for services in *this* file
