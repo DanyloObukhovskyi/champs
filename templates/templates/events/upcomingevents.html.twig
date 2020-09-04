@@ -17,7 +17,10 @@
           <div class="logo">
             {% if(item2.image) %}
             <img src="{{item2.image}}" />
+            {% else %}
+              <img class="h-25" src="{{item2.imageHeader}}" />
             {% endif %}
+
           </div>
           <div class="data child_title">
             <div class="title">

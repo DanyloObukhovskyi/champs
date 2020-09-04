@@ -132,6 +132,7 @@ class EventService extends EntityService
     public function eventsDecorator(array $events)
     {
         $eventItems = [];
+
         foreach ($events as $event)
         {
             /** @var Event $event */
@@ -140,6 +141,7 @@ class EventService extends EntityService
                 "startedAt" => $event->getStartedAt(),
                 "endedAt" => $event->getEndedAt(),
                 "image" => $event->getImage(),
+                'imageHeader' => $event->getImageHeader()
             ];
         }
         return $eventItems;
@@ -159,13 +161,22 @@ class EventService extends EntityService
                     "items" => [],
                 ];
             }
-            $this->imageService->setImage($event->getImage());
+            $image = $event->getImage();
+            $this->imageService->setImage($image);
+
+            $image = isset($image) ? $this->imageService->getImagePath(): null;
+
+            $headerImage = $event->getImageHeader();
+            $this->imageService->setImage($headerImage);
+
+            $headerImage = $this->imageService->getPhotoPath();
 
             $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
                 "name" => $event->getName(),
                 "startedAt" => $event->getStartedAt(),
                 "endedAt" => $event->getEndedAt(),
-                "image" => $this->imageService->getImagePath(),
+                "image" => $image,
+                "imageHeader" => $headerImage,
                 "teams" => $event->getCommandCount(),
                 "location" => $event->getLocation(),
                 "prize" => $event->getPrize()
