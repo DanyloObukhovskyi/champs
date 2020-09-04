@@ -109,7 +109,9 @@ class ParserRatingsCommand extends Command
                 {
                     $team = HLTVService::getTeam($personParse['currentTeam']);
 
-                    $team = $this->createTeam($team);
+                    if ($team){
+                        $team = $this->createTeam($team);
+                    }
                 }
                 $person = $this->personService->create($personParse);
                 if (isset($person) and isset($team))

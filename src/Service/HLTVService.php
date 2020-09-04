@@ -829,8 +829,7 @@ class HLTVService
                 $player = $player + $personItem;
             }
         }
-
-
+        
         return $team;
     }
 
