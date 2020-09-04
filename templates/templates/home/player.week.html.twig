@@ -9,20 +9,20 @@
   </div>
   {% if playerWeek is not null %}
   <div class="content">
-    <img src="{{ playerWeek.image }}" class="photo" alt="Avatar" />
+    <img src="/uploads/images/{{ playerWeek.photo }}" class="photo" alt="Avatar" />
     <div class="nik">
       {% if playerWeek.flagIcon.name is defined %}
         <img src="/uploads/images/{{ playerWeek.flagIcon.name }}"/>
       {% else %}
         <img src="/images/noLogo.png"/>
       {% endif %}
-      {{ playerWeek.nickname }}
+      {{ playerWeek.nick }}
     </div>
     <div class="name">
-      {{ playerWeek.fullname }}
+      {{ playerWeek.name }}
     </div>
     <div class="score">
-      {{ playerWeek.rate }}
+      {{ playerWeek.rating }}
     </div>
   </div>
   {% else %}

@@ -34,7 +34,6 @@ class MainController extends DefController
         $eventService = new EventService($entityManager);
         $ratingPlayersService = new RatingPersonService($entityManager);
         $ratingCommandService = new RatingTeamService($entityManager);
-        $imageService = new ImageService();
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
         $matchesItems = $matchService->matchesDecorator($matches);
@@ -56,16 +55,7 @@ class MainController extends DefController
         // BEST PLAYER WEEK
         /** @var Person $playerWeek */
         $playerWeek = $entityManager->getRepository(Person::class)->getWeekPlayer();
-        if (isset($playerWeek)){
-            $imageService->setImage($playerWeek->getPhoto());
 
-            $playerWeek = [
-                'nickname' => $playerWeek->getNick(),
-                'fullname' => $playerWeek->getName(),
-                'image' => $imageService->getPhotoPath(),
-                'rate' => $playerWeek->getRating(),
-            ];
-        }
         $currDate = null;
         foreach ($results as $result)
         {
@@ -83,14 +73,6 @@ class MainController extends DefController
             }
             $matchResults[$key]["items"][] = $matchService->matchDecorator($match);
         }
-
-        $video = [
-            1 => 'sfXOTa-69Rc',
-            2 => 'kgitmggEgrA',
-            3 => 'vz03NPJGhQk',
-            0 => 'EkJu4laFGTs',
-        ];
-        $k = 0;
 
         $livesItems = [
             [
@@ -119,7 +101,7 @@ class MainController extends DefController
             ],
 
         ];
-
+        
         return $this->render('templates/home.html.twig', [
             'events' => $eventItems,
             'router' => 'home',
