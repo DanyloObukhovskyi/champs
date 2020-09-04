@@ -1113,8 +1113,11 @@ class HLTVService
 
             $eventItem['imageHeader'] = $imageHeaderUrl;
         }
-        $eventItem += static::getEventFull($eventUrl);
+        $eventFull = static::getEventFull($eventUrl);
 
+        if (is_array($eventFull)){
+            $eventItem += $eventFull;
+        }
         return $eventItem;
     }
 
