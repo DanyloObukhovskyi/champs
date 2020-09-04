@@ -5,23 +5,53 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     proxy:
-        first:
+        1:
             host: '144.172.97.6'
             port: '3199'
             user: 'alexander_hong-e9rdh'
             password: 'T2g6KR8pVI'
-        two:
+        2:
             host: '107.189.12.74'
             port: '3199'
             user: 'alexander_hong-e9rdh'
             password: 'T2g6KR8pVI'
-        third:
+        3:
             host: '185.196.191.108'
             port: '3199'
             user: 'alexander_hong-e9rdh'
             password: 'T2g6KR8pVI'
-        fourth:
+        4:
             host: '196.16.179.81'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
+        5:
+            host: '104.249.7.227'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
+        6:
+            host: '185.195.222.57'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
+        7:
+            host: '185.205.196.22'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
+        8:
+            host: '185.199.116.46'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
+        9:
+            host: '67.227.120.67'
+            port: '3199'
+            user: 'alexander_hong-e9rdh'
+            password: 'T2g6KR8pVI'
+        10:
+            host: '185.207.99.204'
             port: '3199'
             user: 'alexander_hong-e9rdh'
             password: 'T2g6KR8pVI'
