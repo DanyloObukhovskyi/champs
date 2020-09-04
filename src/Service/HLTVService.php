@@ -854,7 +854,7 @@ class HLTVService
 
         if (empty($content) or ($content and is_array($content) && isset($content['error'])))
         {
-            return false;
+            return null;
         }
 
         $document = new Document($content);
@@ -863,7 +863,7 @@ class HLTVService
 
         if (count($profileRaw) == 0)
         {
-            return false;
+            return null;
         }
 
         $profileRaw = $profileRaw[0];

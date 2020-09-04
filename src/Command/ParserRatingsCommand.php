@@ -101,23 +101,24 @@ class ParserRatingsCommand extends Command
         {
             /** @var Person $person */
             $person = HLTVService::getPerson($playerRating);
-            $person = $this->personService->create($person);
+            if (isset($person)){
+                $person = $this->personService->create($person);
 
+                $ratingPerson = $this->entityManager->getRepository(RatingPerson::class)->findByPersonId($person->getId());
 
-            $ratingPerson = $this->entityManager->getRepository(RatingPerson::class)->findByPersonId($person->getId());
-
-            if (empty($ratingPerson)){
-               $this->ratingPersonService->create(
-                    $person,
-                    $playerRating['rating'],
-                    $this->parseDate
-                );
-            } else {
-                $this->ratingPersonService->update(
-                    $ratingPerson,
-                    $playerRating['rating'],
-                    $this->parseDate
-                );
+                if (empty($ratingPerson)){
+                    $this->ratingPersonService->create(
+                        $person,
+                        $playerRating['rating'],
+                        $this->parseDate
+                    );
+                } else {
+                    $this->ratingPersonService->update(
+                        $ratingPerson,
+                        $playerRating['rating'],
+                        $this->parseDate
+                    );
+                }
             }
         }
     }
