@@ -74,6 +74,14 @@ class EventService extends EntityService
                 $event->setImage($image);
             }
         }
+        if (!empty($values['imageHeader']))
+        {
+            $image = DownloadFile::getImage($values['imageHeader']);
+            if (isset($image))
+            {
+                $event->setImageHeader($image);
+            }
+        }
 
         $this->entityManager->persist($event);
 

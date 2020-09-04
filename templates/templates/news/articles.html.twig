@@ -38,7 +38,7 @@
       {% for item in items %}
         <a href="/news/{{item.id}}-{{item.url}}" class="table-row">
           <div class="title">
-            <div class="time">{{item.date|date("H:i")}}</div>
+            <div class="time">{{item.date|date("m-d H:i")}}</div>
             <div class="name">
               <div></div>
               {% if item.type == 1 %}Трансфер{% endif %}

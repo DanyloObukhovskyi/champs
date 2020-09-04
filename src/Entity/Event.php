@@ -40,6 +40,11 @@ class Event
     private $image;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true, name="image_header")
+     */
+    private $imageHeader;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $prize;
@@ -161,5 +166,21 @@ class Event
         $this->createdAt = $date;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageHeader()
+    {
+        return $this->imageHeader;
+    }
+
+    /**
+     * @param mixed $imageHeader
+     */
+    public function setImageHeader($imageHeader): void
+    {
+        $this->imageHeader = $imageHeader;
     }
 }

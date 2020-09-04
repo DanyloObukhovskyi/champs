@@ -33,12 +33,16 @@ class ResultsController extends MatchesController
             $event = $eventShow->getEvent();
 
             $imageService->setImage($event->getImage());
+            $eventImage = $imageService->getImagePath();
+
+            $eventImageHeader = !empty($event->getImageHeader()) ?  '/uploads/images/'.$event->getImageHeader(): null;
 
             $eventItems[] = [
                 "name" => $event->getName(),
                 "startedAt" => $event->getStartedAt(),
                 "endedAt" => $event->getEndedAt(),
-                "image" => $imageService->getImagePath(),
+                "image" => $eventImage,
+                "imageHeader" => $eventImageHeader,
             ];
         }
 
@@ -48,8 +52,6 @@ class ResultsController extends MatchesController
                 'resultsItems' => array_reverse($matchesItems),
                 'events' => $eventItems
             ]);
-
-
     }
 
     /**

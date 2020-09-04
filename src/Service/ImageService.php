@@ -43,4 +43,9 @@ class ImageService
         }
         return $this->image;
     }
+
+    public function getImageHeaderEvent()
+    {
+        return $this->image;
+    }
 }

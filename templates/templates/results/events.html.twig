@@ -11,7 +11,7 @@
     {% for item in events %}
       <a class="grid-row">
         <div class="logo">
-          <img src="/images/temp/results/event1.jpg" alt="event" />
+          <img src="{{item.imageHeader ? item.imageHeader: item.image}}" class="{{item.imageHeader ? 'h-100': 'w-25'}}"/>
         </div>
         <div class="data">
           <div class="title">

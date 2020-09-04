@@ -13,6 +13,8 @@ use App\Service\ImageService;
 use App\Entity\MatchMapTeamStatistic;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Translator;
 
 class MatchesController extends AbstractController
 {

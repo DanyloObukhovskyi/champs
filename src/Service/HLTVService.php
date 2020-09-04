@@ -1098,13 +1098,21 @@ class HLTVService
             'url' => $eventUrl,
         ];
 
-        $imageRaw = $eventCellLink->find("//img[contains(@class, 'logo')]", Query::TYPE_XPATH);
+        $imageRaw = $eventCellLink->first("//img[contains(@class, 'logo')]", Query::TYPE_XPATH);
 
-        if (count($imageRaw) > 0)
+        if (isset($imageRaw))
         {
-            $eventItem['image'] = trim($imageRaw[0]->attr('src'));
+            $eventItem['image'] = trim($imageRaw->attr('src'));
         }
+        $imageHeaderRaw = $eventCellLink->first('.event-header');
 
+        if (isset($imageHeaderRaw))
+        {
+            $imageHeaderUrl = trim($imageHeaderRaw->attr('src'));
+            $imageHeaderUrl = self::urlDecorator($imageHeaderUrl);
+
+            $eventItem['imageHeader'] = $imageHeaderUrl;
+        }
         $eventItem += static::getEventFull($eventUrl);
 
         return $eventItem;

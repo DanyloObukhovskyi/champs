@@ -153,24 +153,30 @@ class MatchService extends EntityService
 
         foreach ($matches as $match)
         {
-            $startDay = date("d", $match->getStartAt()->getTimestamp());
-            $startMonth = (int)date("m", $match->getStartAt()->getTimestamp());
+            $startDay = date("md", $match->getStartAt()->getTimestamp());
+
             if (!array_key_exists($startDay, $items))
             {
                 $items[$startDay] = [
-                    "month" => $startMonth,
                     "date" => date("d F", $match->getStartAt()->getTimestamp()),
                     "items" => [],
                 ];
             }
             $items[$startDay]["items"][] = $this->matchDecorator($match);
         }
+        ksort($items);
+        
         return $items;
     }
 
     public function matchDecorator(Match $match)
     {
-        $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImage());
+        if (!empty($match->getEvent()) and !empty($match->getEvent()->getImage())){
+            $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImage());
+        } else {
+            $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImageHeader());
+        }
+
         $matchFields = [
             "match_id" => $match->getId(),
             "time" => date("H:i", $match->getStartAt()->getTimestamp()),
