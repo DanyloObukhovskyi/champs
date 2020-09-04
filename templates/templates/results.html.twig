@@ -54,7 +54,7 @@
     <div class="time"></div>
     <div class="teamA">
       <span v-text="subitem.teamA.title"></span>
-      <img :src="subitem.teamA.logo !== null ? subitem.teamA.logo : '/images/noLogo.png'" />
+      <img :src="subitem.teamA.logo ? subitem.teamA.logo : '/images/noLogo.png'" />
     </div>
     <div class="vs bold">
       <label v-if="subitem.teamA.score !== null && subitem.teamB.score !== null">
@@ -64,7 +64,7 @@
       </label>
     </div>
     <div class="teamB">
-      <img :src="subitem.teamB.logo !== null ? subitem.teamB.logo : '/images/noLogo.png'" />
+      <img :src="subitem.teamB.logo ? subitem.teamB.logo : '/images/noLogo.png'" />
       <span v-text="subitem.teamB.title"></span>
     </div>
     <div class="title">
