@@ -25,13 +25,13 @@
                     {% set counter = counter + 1 %}
                     {% if(counter < 6) %}
                     <div class="player {% if first %}active{% endif %}">
-                        <div class="logo d-flex justify-content-center align-items-center">
+                        <div class="logo">
                             {% if player.person.photo is not null%}
                                 <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
                                     class="logo" alt="PlayerA1"/>
                             {% else %}
-                                <img data-team="l" data-player="{{ player.id }}" src="/images/noLogo.png"
-                                     class="logo w-50 h-50" alt="PlayerA1"/>
+                                <img data-team="l" data-player="{{ player.id }}" src="/images/blankplayer.svg"
+                                     class="logo w-100 h-100" alt="PlayerA1"/>
                             {% endif %}
                         </div>
                         <div class="name">{{ player.person.nick }}</div>
@@ -107,13 +107,13 @@
                     {% set counter = counter + 1 %}
                     {% if(counter < 6) %}
                         <div class="player {% if first %}active{% endif %}">
-                            <div class="logo d-flex justify-content-center align-items-center">
+                            <div class="logo">
                                 {% if player.person.photo is not null%}
                                     <img data-team="r" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
                                          class="logo" alt="PlayerA1"/>
                                 {% else %}
-                                    <img data-team="r" data-player="{{ player.id }}" src="/images/noLogo.png"
-                                         class="logo w-50 h-50" alt="PlayerA1"/>
+                                    <img data-team="r" data-player="{{ player.id }}" src="/images/blankplayer.svg"
+                                         class="logo" alt="PlayerA1"/>
                                 {% endif %}
                             </div>
                             <div class="name">{{ player.person.nick }}</div>

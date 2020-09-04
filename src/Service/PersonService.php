@@ -100,7 +100,7 @@ class PersonService extends EntityService
     {
         global $kernel;
 
-        if (!empty($photo))
+        if (!empty($photo) && strpos($photo, 'blankplayer.svg') === false)
         {
             $parseDate = new Carbon($person->getParsePhotoDate());
 

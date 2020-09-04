@@ -154,9 +154,11 @@ class MatchService extends EntityService
         foreach ($matches as $match)
         {
             $startDay = date("d", $match->getStartAt()->getTimestamp());
+            $startMonth = (int)date("m", $match->getStartAt()->getTimestamp());
             if (!array_key_exists($startDay, $items))
             {
                 $items[$startDay] = [
+                    "month" => $startMonth,
                     "date" => date("d F", $match->getStartAt()->getTimestamp()),
                     "items" => [],
                 ];
