@@ -29,7 +29,9 @@ class PageContentService
                 return static::getPageContent($url, ++$count);
             }
 
-            throw new Exception($response['message']);
+            LoggerService::error($response['message']);
+
+            return null;
         }
         return $response->getContent();
     }
