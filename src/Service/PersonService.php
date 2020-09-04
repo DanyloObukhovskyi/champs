@@ -70,7 +70,9 @@ class PersonService extends EntityService
             }
         }
         LoggerService::add("personService setPersonPhoto");
-        $this->setPersonPhoto($values['photo'], $person);
+        if (!empty($values['photo'])){
+            $this->setPersonPhoto($values['photo'], $person);
+        }
 
         $this->entityManager->persist($person);
         $this->entityManager->flush();
