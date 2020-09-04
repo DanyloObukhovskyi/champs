@@ -5,12 +5,12 @@
   <div class="dates">
     <div class="date">
       <span @click="dateFromView = dateFromView ? false : true, dateToView = false">От <label v-text="dateFrom">21.04.2020</label></span>
-      <img src="/images/calendar.svg" class="ico" />
+      <img src="/images/calendar.svg" class="ico" @click="dateFromView = dateFromView ? false : true, dateToView = false"/>
       <calendar v-on:date="setFromDate" v-if="dateFromView" :date="dateFrom" />
     </div>
     <div class="date">
       <span @click="dateToView = dateToView ? false : true, dateFromView = false">До <label v-text="dateTo">21.04.2020</label></span>
-      <img src="/images/calendar.svg" class="ico" />
+      <img src="/images/calendar.svg" class="ico"  @click="dateToView = dateToView ? false : true, dateFromView = false"/>
       <calendar v-on:date="setToDate" v-if="dateToView" :date="dateTo" />
     </div>
   </div>
