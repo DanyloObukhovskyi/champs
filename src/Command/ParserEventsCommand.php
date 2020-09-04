@@ -110,7 +110,7 @@ class ParserEventsCommand extends Command
             if ($isNotMain ){
                 $parseDate = null;
             }
-            if (isset($events['started_at']))
+            if (isset($event['started_at']))
             {
                 $eventEntity = $this->eventService->create($event, $parseDate);
             }
