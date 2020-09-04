@@ -8,7 +8,6 @@ namespace App\Service;
 
 use Exception;
 use Symfony\Component\HttpClient\CurlHttpClient;
-use Symfony\Component\HttpClient\HttpClient;
 
 class PageContentService
 {
