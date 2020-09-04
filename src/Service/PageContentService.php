@@ -28,9 +28,9 @@ class PageContentService
                 sleep(10);
                 return static::getPageContent($url, ++$count);
             }
-            return $response;
-        }
 
+            throw new Exception($response['message']);
+        }
         return $response->getContent();
     }
 
@@ -53,18 +53,21 @@ class PageContentService
             $options['proxy'] = "{$proxy['user']}:{$proxy['password']}@{$proxy['host']}:{$proxy['port']}";
         }
 
+        $message = null;
         try {
             $client = HttpClient::create($options);
             $response = $client->request('GET', $url);
 
             $statusCode = $response->getStatusCode();
+
         } catch (Exception $exception) {
+            $message = $exception->getMessage();
             $statusCode = 404;
         }
 
         if ($statusCode != 200)
         {
-            return ['status' => $statusCode, 'error' => true];
+            return ['status' => $statusCode, 'error' => true, 'message' => $message];
         }
 
         return $response;
