@@ -1081,7 +1081,15 @@ class HLTVService
     public static function getMainEvents()
     {
         LoggerService::add("hltv get events", LoggerService::TYPE_INFO);
-        $content = PageContentService::getPageContent(static::$baseUrl);
+
+        try {
+            $content = PageContentService::getPageContent(static::$baseUrl);
+        }catch (\Exception $e){
+            LoggerService::error("hltv get events $e", LoggerService::TYPE_INFO);
+
+            $content = null;
+        }
+
         if ($content and is_array($content) && isset($content['error']))
         {
             return false;
@@ -1190,7 +1198,15 @@ class HLTVService
     protected static function getEventFull($url)
     {
         LoggerService::add("hltv get event full", LoggerService::TYPE_INFO);
-        $content = PageContentService::getPageContent($url);
+
+        try {
+            $content = PageContentService::getPageContent($url);
+        }catch (\Exception $e){
+
+            LoggerService::error("hltv get event $e", LoggerService::TYPE_INFO);
+            $content = null;
+        }
+
         if ($content and is_array($content) && isset($content['error']))
         {
             return false;
@@ -1590,7 +1606,13 @@ class HLTVService
      */
     public static function getEvents()
     {
-        $content = PageContentService::getPageContent(self::$baseUrl. '/events');
+        try {
+            $content = PageContentService::getPageContent(self::$baseUrl. '/events');
+        }catch (\Exception $e){
+            LoggerService::info("getEvents $e");
+
+            return [];
+        }
 
         $document = new Document($content);
 

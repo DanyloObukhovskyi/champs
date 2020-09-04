@@ -87,10 +87,7 @@ class RatingTeam
         return $this->rating;
     }
 
-    /**
-     * @param mixed $rating
-     */
-    public function setRating($rating): void
+    public function setRating($rating)
     {
         $this->rating = $rating;
 
