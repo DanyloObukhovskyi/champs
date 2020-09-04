@@ -42,9 +42,9 @@ class PageContentService
     private static function getContent($url)
     {
         global $kernel;
-        $options = [];
 
-        if (getenv('ENABLE_PROXY')) {
+        $options = [];
+        if ($_ENV['ENABLE_PROXY'] === 'true') {
             $proxySettings = $kernel->getContainer()->getParameter('proxy');
 
             $key = array_rand($proxySettings, 1);
