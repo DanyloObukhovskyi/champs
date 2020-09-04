@@ -41,9 +41,16 @@ class PageContentService
      */
     private static function getContent($url)
     {
+        global $kernel;
         $options = [];
-        if (!empty($_ENV['PROXY'])) {
-            $options['proxy'] = $_ENV['PROXY'];
+
+        if (getenv('ENABLE_PROXY')) {
+            $proxySettings = $kernel->getContainer()->getParameter('proxy');
+
+            $key = array_rand($proxySettings, 1);
+            $proxy = $proxySettings[$key];
+
+            $options['proxy'] = "{$proxy['user']}:{$proxy['password']}@{$proxy['host']}:{$proxy['port']}";
         }
 
         try {
