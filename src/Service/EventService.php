@@ -41,6 +41,7 @@ class EventService extends EntityService
         {
             $values['name'] = '';
         }
+
         $values['started_at'] = $values['started_at']->format("Y-m-d");
 
         /** @var Event $event */

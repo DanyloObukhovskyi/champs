@@ -110,7 +110,10 @@ class ParserEventsCommand extends Command
             if ($isNotMain ){
                 $parseDate = null;
             }
-            $eventEntity = $this->eventService->create($event, $parseDate);
+            if (isset($events['started_at']))
+            {
+                $eventEntity = $this->eventService->create($event, $parseDate);
+            }
 
             if (empty($eventEntity)) {
                 LoggerService::error("event entity {$event['name']} didnt created");
