@@ -62,7 +62,6 @@ class RatingTeam
 
     public function setCreatedAt($createdAt): self
     {
-
         $this->createdAt = $createdAt;
 
         return $this;
@@ -94,5 +93,7 @@ class RatingTeam
     public function setRating($rating): void
     {
         $this->rating = $rating;
+
+        return $this;
     }
 }
