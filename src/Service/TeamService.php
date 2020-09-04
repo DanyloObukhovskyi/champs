@@ -34,7 +34,6 @@ class TeamService extends EntityService
     {
         ini_set('max_execution_time', 0);
 
-        //TODO: Создание команды
         $team = $this->repository->getByName($values['name']);
         if (empty($team))
         {

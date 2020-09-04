@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\EventShow;
 use App\Entity\Match;
 use App\Service\ImageService;
+use App\Service\MatchService;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ResultsController extends MatchesController
@@ -16,42 +17,13 @@ class ResultsController extends MatchesController
     public function index()
     {
         $manager = $this->getDoctrine()->getManager();
+        $matchService = new MatchService($manager);
 
         $matches = $manager->getRepository(Match::class)->findResults();
         $imageService = new ImageService();
 
-        $items    = [];
+        $matchesItems = $matchService->matchesDecorator($matches);
         $currDate = null;
-
-        foreach ($matches as $match)
-        {
-            /** @var Match $match */
-
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
-                $items[date("d", $match->getStartAt()->getTimestamp())] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $items[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => $match->getTeam1() !== null ? $match->getTeam1()->getName() : null,
-                        "logo" => ($match->getTeam1() !== null ? "/uploads/images/" .  $match->getTeam1()->getLogo(): '/images/noLogo.png'),
-                        "score" => $match->getScore1()
-                    ],
-                    "teamB" => [
-                        "title" => $match->getTeam2() !== null ? $match->getTeam2()->getName(): null,
-                        "logo" =>  ($match->getTeam2() !== null ? "/uploads/images/" .  $match->getTeam2()->getLogo(): '/images/noLogo.png'),
-                        "score" => $match->getScore2()
-                    ],
-                ];
-        }
 
         $eventsShow = $manager->getRepository(EventShow::class)->getCurrent();
         $eventItems = [];
@@ -73,7 +45,7 @@ class ResultsController extends MatchesController
         return $this->render('templates/results.html.twig',
             [
                 'router' => 'results',
-                'resultsItems' => array_reverse($items),
+                'resultsItems' => array_reverse($matchesItems),
                 'events' => $eventItems
             ]);
 

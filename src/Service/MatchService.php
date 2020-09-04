@@ -194,7 +194,7 @@ class MatchService extends EntityService
             $matchFields['teamA'] = [
                 "title" => str_replace("'", "", $match->getTeam1()->getName()),
                 "logo" => $this->imageService->getImagePath(),
-                "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
+                "score" => $match->getScore1(),
                 "flag" => $flag
             ];
         }
@@ -209,7 +209,7 @@ class MatchService extends EntityService
             $matchFields['teamB'] = [
                 "title" => str_replace("'", "", $match->getTeam2()->getName()),
                 "logo" => $this->imageService->getImagePath(),
-                "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
+                "score" => $match->getScore2(),
                 "flag" => $flag
             ];
         }

@@ -22,7 +22,7 @@ class FlagIconRepository extends ServiceEntityRepository
     public function getFlagByOrigName($name): ?FlagIcon
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.origName = :name')
+            ->andWhere('f.origName like :name')
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult()
