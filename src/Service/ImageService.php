@@ -12,6 +12,8 @@ class ImageService
 
     public const DEFAULT = '/images/noLogo.png';
 
+    public const DEFAULT_PERSON = '/images/blankplayer.svg';
+
     public function setImage($image, $withPath = false)
     {
         $this->image = $image;
@@ -30,6 +32,14 @@ class ImageService
     {
         if(empty($this->image) or !$this->isExist()){
             return self::DEFAULT;
+        }
+        return $this->image;
+    }
+
+    public function getPhotoPath(): string
+    {
+        if(empty($this->image) or !$this->isExist()){
+            return self::DEFAULT_PERSON;
         }
         return $this->image;
     }

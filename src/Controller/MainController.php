@@ -62,7 +62,7 @@ class MainController extends DefController
             $playerWeek = [
                 'nickname' => $playerWeek->getNick(),
                 'fullname' => $playerWeek->getName(),
-                'image' => $imageService->getImagePath(),
+                'image' => $imageService->getPhotoPath(),
                 'rate' => $playerWeek->getRating(),
             ];
         }
