@@ -99,13 +99,28 @@ class ParserRatingsCommand extends Command
 
         foreach ($playerRatings as $playerRating)
         {
-            /** @var Person $person */
-            $person = HLTVService::getPerson($playerRating);
-            if (isset($person)){
-                $person = $this->personService->create($person);
 
+            $personParse = HLTVService::getPerson($playerRating);
+            if (isset($personParse)){
+                /** @var Person $person */
+
+                $team = null;
+                if (isset($personParse['currentTeam']))
+                {
+                    $team = HLTVService::getTeam($personParse['currentTeam']);
+
+                    $team = $this->createTeam($team);
+                }
+                $person = $this->personService->create($personParse);
+                if (isset($person) and isset($team))
+                {
+                    $this->playerService->create($person, $team);
+                }
                 $ratingPerson = $this->entityManager->getRepository(RatingPerson::class)->findByPersonId($person->getId());
 
+                if (isset($person) and isset($team)){
+                    $this->playerService->create($person, $team);
+                }
                 if (empty($ratingPerson)){
                     $this->ratingPersonService->create(
                         $person,
@@ -137,30 +152,11 @@ class ParserRatingsCommand extends Command
                 LoggerService::info("team empty {$team['name']}");
                 continue;
             }
-            $teamEntity = $this->teamService->create($team);
-
+            $teamEntity = $this->createTeam($team);
             if (empty($teamEntity))
             {
-                LoggerService::error("team entity {$team['name']} didnt created");
+                LoggerService::info("teamEntity empty {$team['name']}");
                 continue;
-            }
-            foreach ($team['players'] as $playerValues)
-            {
-                $personEntity = $this->personService->create($playerValues);
-
-                if (!isset($personEntity))
-                {
-                    LoggerService::error("person entity {$playerValues['nick']} didn't created");
-                    continue;
-                }
-
-                /** @var Player|null $playerEntity */
-                $playerEntity = $this->playerService->create($personEntity, $teamEntity);
-                if (!isset($playerEntity))
-                {
-                    LoggerService::error("player entity {$playerValues['nick']} didn't created");
-                    continue;
-                }
             }
             $ratingTeam = $this->entityManager->getRepository(RatingTeam::class)->findByTeamId($teamEntity->getId());
 
@@ -178,6 +174,36 @@ class ParserRatingsCommand extends Command
                 );
             }
         }
+    }
+
+    public function createTeam($team)
+    {
+        $teamEntity = $this->teamService->create($team);
+
+        if (empty($teamEntity))
+        {
+            LoggerService::error("team entity {$team['name']} didnt created");
+            return null;
+        }
+        foreach ($team['players'] as $playerValues)
+        {
+            $personEntity = $this->personService->create($playerValues);
+
+            if (!isset($personEntity))
+            {
+                LoggerService::error("person entity {$playerValues['nick']} didn't created");
+                continue;
+            }
+
+            /** @var Player|null $playerEntity */
+            $playerEntity = $this->playerService->create($personEntity, $teamEntity);
+            if (!isset($playerEntity))
+            {
+                LoggerService::error("player entity {$playerValues['nick']} didn't created");
+                continue;
+            }
+        }
+        return $teamEntity;
     }
 
     /**

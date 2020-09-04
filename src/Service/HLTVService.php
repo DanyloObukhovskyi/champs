@@ -907,21 +907,21 @@ class HLTVService
         }
 
         $profileTeamsRaw = $profileRaw->find("//table[contains(@class, 'team-breakdown')]/tbody/tr", Query::TYPE_XPATH);
+
         if (count($profileTeamsRaw) > 0)
         {
             $player['teams'] = [];
             foreach ($profileTeamsRaw as $profileTeamRaw)
             {
 
-                $teamNameRaw = $profileTeamRaw->find("//td[contains(@class, 'team-name-cell')]//img[contains(@class, 'team-logo')]", Query::TYPE_XPATH);
-                if (count($teamNameRaw) == 0)
+                $teamNameRaw = $profileTeamRaw->first("//td[contains(@class, 'team-name-cell')]//img[contains(@class, 'team-logo')]", Query::TYPE_XPATH);
+                if (empty($teamNameRaw))
                 {
                     continue;
                 }
-
                 $team = [
-                    'name' => trim($teamNameRaw[0]->attr('title')),
-                    'logo' => trim($teamNameRaw[0]->attr('src'))
+                    'name' => trim($teamNameRaw->attr('title')),
+                    'logo' => trim($teamNameRaw->attr('src'))
                 ];
 
                 $timePeriodRaw = $profileTeamRaw->find("//td[contains(@class, 'time-period-cell')]", Query::TYPE_XPATH);
@@ -962,6 +962,26 @@ class HLTVService
 
                 $player['teams'][] = $team;
             }
+        }
+        //get current team
+        $currentTeamBlock = $document->first('.playerTeam');
+        if (isset($currentTeamBlock)){
+            $currentTeamName = $currentTeamBlock->first('a');
+
+            $teamUrl = $currentTeamName->attr('href');
+            $teamUrl = self::urlDecorator($teamUrl);
+
+            $teamName = trim($currentTeamName->text());
+
+            $teamIcon = $currentTeamBlock->first('img');
+            $teamIcon = isset($teamIcon) ? $teamIcon->attr('src'): null;
+            $teamIcon = isset($teamIcon) ? self::urlDecorator($teamIcon): null;
+
+            $player['currentTeam'] = [
+                'name' => $teamName,
+                'url' => $teamUrl,
+                'logo' => $teamIcon
+            ];
         }
 
         return $player;
