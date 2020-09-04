@@ -163,6 +163,7 @@ class ParserMatchesCommand extends Command
                     LoggerService::note('Матч пока без определенной второй команды');
                     continue;
                 }
+
                 $teamEntityList = $this->createTeams($teams);
             }
 
@@ -230,7 +231,7 @@ class ParserMatchesCommand extends Command
                         if (!empty($matchEmptyTeams['teams'])) {
                             $matchTeams = HLTVService::getTeams($matchEmptyTeams);
 
-                            if (!empty($matchTeams)){
+                            if (!empty($matchTeams) ){
                                 $this->createTeams($matchTeams);
                             }
                         }

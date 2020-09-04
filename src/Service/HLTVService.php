@@ -997,7 +997,7 @@ class HLTVService
         if (empty($match['teams']))
         {
             LoggerService::error('teams not found');
-            return null;
+            return [];
         }
 
         foreach ($match['teams'] as $team)
