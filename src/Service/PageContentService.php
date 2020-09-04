@@ -7,6 +7,7 @@
 namespace App\Service;
 
 use Exception;
+use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\HttpClient;
 
 class PageContentService
@@ -55,7 +56,7 @@ class PageContentService
 
         $message = null;
         try {
-            $client = HttpClient::create($options);
+            $client = new CurlHttpClient($options);
             $response = $client->request('GET', $url);
 
             $statusCode = $response->getStatusCode();
