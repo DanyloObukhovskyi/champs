@@ -41,16 +41,6 @@ class StatisticsController extends AbstractController
         // BEST PLAYER WEEK
         /** @var Person $playerWeek */
         $playerWeek = $entityManager->getRepository(Person::class)->getWeekPlayer();
-        if (isset($playerWeek)){
-            $imageService->setImage($playerWeek->getPhoto());
-
-            $playerWeek = [
-                'nickname' => $playerWeek->getNick(),
-                'fullname' => $playerWeek->getName(),
-                'image' => $imageService->getImagePath(),
-                'rate' => $playerWeek->getRating(),
-            ];
-        }
 
         // WEAPONS STATISTICS
         $weaponModel = $entityManager->getRepository(WeaponRating::class)->findAll();
