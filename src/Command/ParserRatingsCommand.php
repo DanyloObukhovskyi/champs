@@ -132,6 +132,11 @@ class ParserRatingsCommand extends Command
 
         foreach ($teamsRatings as $teamsRating){
             $team = HLTVService::getTeamRatingInfo($teamsRating);
+            if (empty($team))
+            {
+                LoggerService::info("team empty {$team['name']}");
+                continue;
+            }
             $teamEntity = $this->teamService->create($team);
 
             if (empty($teamEntity))
