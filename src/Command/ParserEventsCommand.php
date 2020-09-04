@@ -116,7 +116,7 @@ class ParserEventsCommand extends Command
             }
 
             if (empty($eventEntity)) {
-                LoggerService::error("event entity {$event['name']} didnt created");
+                LoggerService::error("event entity didnt created");
             } else {
                 if ($isNotMain ){
                     $this->eventShowService->createOrUpdate($eventEntity, $this->parseDate);
