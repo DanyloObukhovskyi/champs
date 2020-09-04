@@ -219,27 +219,31 @@ class ParserMatchesCommand extends Command
             $matchEmptyTeams = HLTVService::getMatchFull($matchEmptyTeams);
 
             $teams = [];
-            foreach ($matchEmptyTeams['teams'] as $team)
-            {
-                $teamEntity = $this->teamService->getByName($team['name'] ?? null);
-                if (empty($teamEntity) or empty($teamEntity->getLogo()))
-                {
-                    if (!empty($matchEmptyTeams['teams'])) {
-                        $matchTeams = HLTVService::getTeams($matchEmptyTeams);
 
-                        if (!empty($matchTeams)){
-                            $this->createTeams($matchTeams);
+            if (is_array($matchEmptyTeams['teams']))
+            {
+                foreach ($matchEmptyTeams['teams'] as $team)
+                {
+                    $teamEntity = $this->teamService->getByName($team['name'] ?? null);
+                    if (empty($teamEntity) or empty($teamEntity->getLogo()))
+                    {
+                        if (!empty($matchEmptyTeams['teams'])) {
+                            $matchTeams = HLTVService::getTeams($matchEmptyTeams);
+
+                            if (!empty($matchTeams)){
+                                $this->createTeams($matchTeams);
+                            }
+                        }
+                        $teamEntity = $this->teamService->getByName($team['name'] ?? null);
+                        if (empty($teamEntity))
+                        {
+                            continue;
                         }
                     }
-                    $teamEntity = $this->teamService->getByName($team['name'] ?? null);
-                    if (empty($teamEntity))
-                    {
-                        continue;
-                    }
+                    $teams[] = $teamEntity;
                 }
-                $teams[] = $teamEntity;
+                $match = $this->matchService->updateTeams($matchEmptyTeams, $teams);
             }
-            $match = $this->matchService->updateTeams($matchEmptyTeams, $teams);
             $this->updateMatchTeamWinrate($match, $matchEmptyTeams);
             $this->updateMatchTeamPastMatches($match, $matchEmptyTeams);
 
