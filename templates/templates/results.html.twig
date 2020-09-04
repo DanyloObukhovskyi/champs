@@ -33,7 +33,7 @@
             <div class="row-table" v-for="item in items" >
               <div class="date" v-text="item.date"></div>
               <div class="row-items">
-                <row-item v-for="subitem in item.items" :subitem="subitem" />
+                  <match-result v-for="match in item.items" :subitem="match"></match-result>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
     <div class="time"></div>
     <div class="teamA">
       <span v-text="subitem.teamA.title"></span>
-      <img :src="`${subitem.teamA.logo}`" />
+      <img :src="subitem.teamA.logo !== null ? subitem.teamA.logo : '/images/noLogo.png'" />
     </div>
     <div class="vs bold">
       <label v-if="subitem.teamA.score !== null && subitem.teamB.score !== null">
@@ -64,7 +64,7 @@
       </label>
     </div>
     <div class="teamB">
-      <img :src="`${subitem.teamB.logo}`" />
+      <img :src="subitem.teamB.logo !== null ? subitem.teamB.logo : '/images/noLogo.png'" />
       <span v-text="subitem.teamB.title"></span>
     </div>
     <div class="title">
@@ -104,12 +104,13 @@
 </script>
 
 <script>
-Vue.component('row-item', {
-  props: {
-    subitem: Object,
-  },
-  template: '#row-item-template',
-})
+
+    Vue.component('match-result', {
+        props: {
+            subitem: Object,
+        },
+        template: '#row-item-template',
+    })
 Vue.component('calendar', {
   template: '#calendar',
   props: {
@@ -198,7 +199,17 @@ var results = new Vue({
       } else {
         this.popup = null;
       }
-    }
+    },
+    checkEmptyTeams(match) {
+      let result = true;
+
+      if (match.teamA === null)
+          result = false
+      if (match.teamB === null)
+          result = false
+
+      return result
+    },
   },
   mounted() {
     const dateFrom = new Date();

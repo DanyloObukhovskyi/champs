@@ -22,14 +22,26 @@
             <div>Карты</div>
           </div>
           <div class="row-d">
-            <div><img src="/uploads/images/{{ item.team1.logo }}" alt="{{ item.team1.name }}" />{{ item.team1.name }}</div>
+            <div>
+              {% if item.team1.logo is not null %}
+                <img src="/uploads/images/{{ item.team1.logo }}" alt="{{ item.team1.name }}" />{{ item.team1.name }}
+              {% else %}
+                <img src="/images/noLogo.png" alt="{{ item.team1.name }}" />{{ item.team1.name }}
+              {% endif %}
+            </div>
             {% for stat in item.matchStatistics %}
               <div>{{ stat.score1 }}</div>
             {% endfor %}
             {{ item.score1 }}
           </div>
           <div class="row-d">
-            <div><img src="/uploads/images/{{ item.team2.logo }}" alt="{{ item.team2.name }}" />{{ item.team2.name }}</div>
+            <div>
+              {% if item.team2.logo is not null %}
+                  <img src="/uploads/images/{{ item.team2.logo }}" alt="{{ item.team2.name }}" />{{ item.team2.name }}
+              {% else %}
+                <img src="/images/noLogo.png" alt="{{ item.team2.name }}" />{{ item.team2.name }}
+              {% endif %}
+            </div>
             {% for stat in item.matchStatistics %}
               <div>{{ stat.score2 }}</div>
             {% endfor %}

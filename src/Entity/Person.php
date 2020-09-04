@@ -82,7 +82,7 @@ class Person
 
     public function getPhoto(): ?string
     {
-        return !empty($this->photo) ? $this->photo : '830f223afcf85dd280790e27079814b4.jpg';
+        return $this->photo;
     }
 
     public function setPhoto(?string $photo): self

@@ -1,20 +1,20 @@
 <div class="component_result">
   <div class="l_logo">
-    {% if match.team1 is not null %}
+    {% if match.team1 is not null and match.team1.logo is not null %}
       <img src="/uploads/images/{{match.team1.logo}}" alt="ua.svg" />
     {% else %}
       <img src="/images/noLogo.png" alt="ua.svg" />
     {% endif %}
   </div>
   <div class="r_logo">
-    {% if match.team2 is not null %}
+    {% if match.team2 is not null and match.team2.logo is not null %}
       <img src="/uploads/images/{{match.team2.logo}}" alt="ua.svg" />
     {% else %}
       <img src="/images/noLogo.png" alt="ua.svg" />
     {% endif %}
   </div>
   <div class="l_data">
-    {% if match.team1 is not null %}
+    {% if match.team1 is not null and match.team1.logo is not null %}
       <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" />
     {% endif %}
     <div class="name">
@@ -44,7 +44,7 @@
     </div>
   </div>
   <div class="r_data">
-      {% if match.team2 is not null %}
+      {% if match.team2 is not null and match.team2.logo is not null %}
           <img src="/uploads/images/{{match.team2.logo}}" class="logo" alt="ua.svg" />
       {% endif %}
       <div class="name">

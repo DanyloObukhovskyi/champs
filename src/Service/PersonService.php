@@ -100,13 +100,15 @@ class PersonService extends EntityService
     {
         global $kernel;
 
-        if (!empty($photo) && strpos($photo, 'blankplayer.svg') === false)
+        if (!empty($photo))
         {
             $parseDate = new Carbon($person->getParsePhotoDate());
 
             $photoPath = $kernel->getProjectDir().'/public/uploads/images/'.$person->getPhoto();
 
-            if ($parseDate->addMonth(1) >= Carbon::now() or $person->getPhoto() === null or !file_exists($photoPath)){
+            if ($parseDate->addMonth(1) >= Carbon::now() or
+                $person->getPhoto() === null or
+                !file_exists($photoPath)){
                 try {
                     $imagePhoto = DownloadFile::getImage($photo);
                     if (!empty($imagePhoto))
@@ -115,7 +117,7 @@ class PersonService extends EntityService
                         $person->setParsePhotoDate(Carbon::now());
                     }
                 }catch (\Exception $e){
-                    LoggerService::add("Download image error: $e");
+                    LoggerService::error("Download image error: $e");
                 }
             }
         }
