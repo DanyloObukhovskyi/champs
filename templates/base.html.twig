@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {% if app.environment == 'prod' %}
       <!-- Global site tag (gtag.js) - Google Analytics -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177285165-1"></script>
       <script>
@@ -10,7 +9,7 @@
         gtag('js', new Date());
         gtag('config', 'UA-177285165-1');
       </script>
-    {% endif %}
+
     <meta charset="UTF-8" />
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block description %}{% endblock %}
@@ -44,16 +43,7 @@
     <link type="text/css" rel="stylesheet" href="/assets/styles/about.css" />
 
   {% block css %}{% endblock %}
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-169835565-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-169835565-1');
-  </script>
 
-  {% if app.environment == 'prod' %}
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -73,7 +63,7 @@
       </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
-  {% endif %}
+
 </head>
 <body>
 {#{{ dump(app.environment) }}#}
@@ -564,7 +554,7 @@ document.oncopy = addLink;
   let mute = false;
   let play = false;
   let playerYT = null;
-  let links = 'sfXOTa-69Rc';
+  let links = 'Wi42W9ISAoQ';
   let typeYT = '0';
   let full = false;
 
@@ -575,7 +565,7 @@ document.oncopy = addLink;
 
   function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('playerYT', {
-      videoId: 'sfXOTa-69Rc',
+      videoId: 'Wi42W9ISAoQ',
       playerVars: {
         controls: 0,
         disablekb: 1,

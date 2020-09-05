@@ -77,29 +77,28 @@ class MainController extends DefController
         $livesItems = [
             [
                 'id' => 1,
-                'videoId' => "sfXOTa-69Rc",
+                'videoId' => "Nz3_Vg5GBio",
                 'videoType' => 0,
-                'title' => "Битва Инстаграмов #2 / путешествие kanecsgo, cгоревший ceh999 / ModirDred x bRuslan / Champs",
+                'title' => "ТОП 5 мобильных игр | Champs | Hino",
             ],
             [
                 'id' => 2,
-                'videoId' => "qgtn3ZKjYNI",
+                'videoId' => "1NnA3hbwqRY",
                 'videoType' => 0,
-                'title' => "Битва Инстаграмов #1 / мемы от NaVi, выход og_n0tail / Dota 2, CS:GO / ModirDred x Hino / Champs",
+                'title' => "ММОшим / Champs / ModirDred",
             ],
             [
                 'id' => 3,
-                'videoId' => "oSOcsUuexpo",
+                'videoId' => "Lmz9itL7sqs",
                 'videoType' => 0,
-                'title' => "Зал славы #1 / интервью Black^ / история игрока Dota 2 / Montem / Champs",
+                'title' => "Новости недели / Hino x ModirDred / Champs",
             ],
             [
                 'id' => 4,
-                'videoId' => "AXyQ4-PbwgA",
+                'videoId' => "cwd6zSjKEW4",
                 'videoType' => 0,
-                'title' => "ТОП-КОММЕНТ #1 / угадай, кому этот комментарий / Dota 2, CS:GO / ModirDred x Hino / Champs",
+                'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
             ],
-
         ];
         
         return $this->render('templates/home.html.twig', [
