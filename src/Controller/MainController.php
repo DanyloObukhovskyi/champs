@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\Match;
+use App\Entity\News;
 use App\Entity\Person;
 use App\Entity\RatingPerson;
 use App\Entity\RatingTeam;
@@ -74,6 +75,9 @@ class MainController extends DefController
             $matchResults[$key]["items"][] = $matchService->matchDecorator($match);
         }
 
+        $repository = $entityManager->getRepository(News::class);
+        $news = $repository->findBy([],['date'=>'DESC'],6,0);
+
         $livesItems = [
             [
                 'id' => 1,
@@ -110,6 +114,7 @@ class MainController extends DefController
             'ratingPlayers' => $ratingPlayers,
             'ratingCommands' => $ratingCommands,
             'playerWeek' => $playerWeek,
+            'news' => $news
             ]);
     }
 
