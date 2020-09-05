@@ -1625,13 +1625,22 @@ class HLTVService
             $bigEvents = $eventsBlock->find('a.big-event');
 
             foreach ($smallEvents as $smallEvent){
-                $eventItem = static::getEventFull($smallEvent->attr('href'));
+                $url = $smallEvent->attr('href');
+                if (isset($url)){
+                    $url = self::urlDecorator($url);
+                }
+
+                $eventItem = static::getEventFull($url);
 
                 $events[] = $eventItem;
             }
 
             foreach ($bigEvents as $bigEvent){
-                $eventItem = static::getEventFull($bigEvents->attr('href'));
+                $url = $bigEvent->attr('href');
+                if (isset($url)){
+                    $url = self::urlDecorator($url);
+                }
+                $eventItem = static::getEventFull($url);
 
                 $events[] = $eventItem;
             }
