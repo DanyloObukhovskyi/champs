@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Match;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
@@ -132,12 +133,15 @@ class MatchRepository extends ServiceEntityRepository
      */
     public function findResults(): array
     {
-        /** @var Match[] $matches */
+        $date = new \DateTime();
+        $from = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('-7 day');
+        $to = $date->format("Y-m-d")." 23:59:59";
+
         $matches = $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
-            ->andWhere('m.start_at <= :date')
-            ->andWhere('m.live = 0')
-            ->setParameter('date', date('Y-m-d H:i:s'))
+            ->andWhere('m.start_at BETWEEN :from AND :to')
+            ->setParameter('from', $from )
+            ->setParameter('to', $to)
             ->getQuery()
             ->getResult();
 
