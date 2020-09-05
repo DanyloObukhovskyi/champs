@@ -9,8 +9,7 @@
   </div>
   <div class="table" v-if="start">
     {% for new in news %}
-{#      <a href="/news/{{new.id}}-{{new.url}}" class="table-row">#}
-      <div class="table-row">
+      <a href="/ru/news/{{new.id}}-{{new.url}}" class="table-row">
         <div class="title">
           <div class="time">{{new.date|date("m-d H:i")}}</div>
           <div class="name">
@@ -25,8 +24,7 @@
           </div>
         </div>
         <div class="text">{{new.title}}</div>
-      </div>
-{#      </a>#}
+      </a>
     {% endfor %}
   </div>
 </div>
