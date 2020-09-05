@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Teachers
 {
-    private const SERVICE_COMMISION = 10, //percents
-                SERVICE_COST_MULTIPLIER = 1.1;
+    private const SERVICE_COMMISION = 0, //percents
+                SERVICE_COST_MULTIPLIER = 1;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
