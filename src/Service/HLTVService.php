@@ -1677,4 +1677,60 @@ class HLTVService
         }
         return $urls;
     }
+
+    public static function getResultMatches()
+    {
+        $content = PageContentService::getPageContent(self::$baseUrl.'/results');
+
+        $document = new Document($content);
+
+
+        $matchSections = $document->find(".results-sublist");
+
+        $matchesSortedByDay = [];
+        foreach ($matchSections as $matchSection){
+            $is_live = false;
+            $matchCells = $matchSection->find(".result-con");
+
+            foreach ($matchCells as $matchCell){
+                $matchUrlRaw = $matchCell->first('a');
+
+                if (isset($matchUrlRaw))
+                {
+                    $url = $matchUrlRaw->attr('href');
+
+                    if (strrpos($url, 'http') === false)
+                    {
+                        $url = static::$baseUrl . $url;
+                    }
+                }
+                $start_at = $matchCell->attr('data-zonedgrouping-entry-unix');
+
+                if (!empty($start_at))
+                {
+                    $unixtime = trim($start_at);
+                    $dateTime = new \DateTime();
+                    if (strlen($unixtime) == 13)
+                    {
+                        $unixtime = substr($unixtime, 0, -3);
+                    }
+
+                    $dateTime = $dateTime->setTimestamp($unixtime);
+
+                    $start_at = $dateTime;
+
+                    $matchesSortedByDay[$start_at->format('m.d')][] = compact('url', 'is_live', 'start_at');
+                }
+            }
+        }
+        $matchesResults = [];
+
+        foreach ($matchesSortedByDay as $matches){
+            foreach ($matches as $match){
+                $matchesResults[] = $match;
+            }
+        }
+
+        return $matchesResults;
+    }
 }

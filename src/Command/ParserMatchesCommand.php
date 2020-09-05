@@ -107,8 +107,11 @@ class ParserMatchesCommand extends Command
         $this->matchMapTeamWinRateService = new MatchMapTeamWinRateService($entityManager);
         $this->pastMatchService = new PastMatchService($entityManager);
 
-        LoggerService::info("Get results Matches");
+        LoggerService::info("Get results main Matches");
         $this->updateResultsBlock();
+
+        LoggerService::info("Get results Matches");
+        $this->updateResultMatches();
 
         LoggerService::info("Get live Matches");
         $this->updateMatchInfoFromArray($this->matchService->getLiveMatches());
@@ -119,6 +122,7 @@ class ParserMatchesCommand extends Command
         $this->updateMatchInfoFromArray($this->matchService->getMatchesWhereEmptyTeams());
 
         $hlTvMatches = HLTVService::getMatches();
+
         if (!$hlTvMatches)
         {
             LoggerService::error("hltv matches not found");
@@ -630,5 +634,37 @@ class ParserMatchesCommand extends Command
                 }
             }
         }
+    }
+
+    protected function updateResultMatches()
+    {
+        $resultMatches = HLTVService::getResultMatches();
+
+       foreach ($resultMatches as $resultMatch)
+       {
+           $matchFull = HLTVService::getMatchFull($resultMatch);
+
+           if (empty($matchFull))
+           {
+               continue;
+           }
+           $teams = HLTVService::getTeams($matchFull);
+
+           if (!empty($teams)){
+               $teamEntityList = $this->createTeams($teams);
+               $this->createMaps($resultMatch);
+
+               $matchEntity = $this->createMatch($matchFull, $teamEntityList);
+               $this->updateMatchTeamPastMatches($matchEntity, $matchFull);
+
+               if (isset($matchEntity)){
+                   $matchDataFull = $this->setScores($matchFull);
+                   $this->createStreams($matchEntity, $matchDataFull);
+
+                   $this->matchService->updateStatistic($matchEntity, $matchDataFull);
+                   $this->updateMatchTeamWinrate($matchEntity, $matchDataFull);
+               }
+           }
+       }
     }
 }
