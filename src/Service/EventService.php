@@ -64,8 +64,12 @@ class EventService extends EntityService
             ->setLocation($values['location'])
             ->setName($values['name'])
             ->setStartedAt(new \DateTime($values['started_at']))
-            ->setCreatedAt($parseDate)
+
             ->setEndedAt($values['ended_at']);
+
+        if (isset($parseDate)){
+            $event->setCreatedAt($parseDate);
+        }
 
         if (!empty($values['image']))
         {

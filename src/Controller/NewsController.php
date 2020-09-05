@@ -16,12 +16,8 @@ class NewsController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $entityManager->getRepository(News::class);
-        $items = $repository->findBy(array(),array('id'=>'DESC'),10,0);
 
-//        $items = [
-//            ['id' => 1,'logo' => 'News1.png','title' => '11 июня корпорация Sony провела презентацию их новой консоли PlayStation 5','ticket' => ''],
-//            ['id' => 2,'logo' => 'News1.png','title' => 'новость 2','ticket' => ''],
-//        ];
+        $items = $repository->findBy(array(),array('id'=>'DESC'),10,0);
 
         return $this->render('templates/news.html.twig', ['items' => $items, 'counts' => ceil(count($items) / 5) - 1, 'router' => 'news']);
     }
