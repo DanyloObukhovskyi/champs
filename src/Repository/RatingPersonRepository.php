@@ -42,25 +42,14 @@ class RatingPersonRepository extends ServiceEntityRepository
 
     public function getRatingPersons()
     {
-        /** @var RatingPerson $events */
-        $ratingPerson = $this->createQueryBuilder('r')
-            ->orderBy('r.id', 'DESC')
-            ->where('r.createdAt is not null')
-            ->setMaxResults(1)
+        /** @var RatingPerson[] $ratingPersons */
+        $ratingPersons = $this->createQueryBuilder('r')
+            ->orderBy('r.createdAt', 'DESC')
+            ->andWhere('r.createdAt is not null')
+            ->setMaxResults(8)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
 
-        if (isset($ratingPerson)){
-            $createdAt = $ratingPerson->getCreatedAt();
-            /** @var RatingPerson[] $ratingPersons */
-            $ratingPersons = $this->createQueryBuilder('e')
-                ->where("e.createdAt = '$createdAt'")
-                ->orderBy('e.id', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            return $ratingPersons;
-        }
-        return [];
+        return $ratingPersons;
     }
 }

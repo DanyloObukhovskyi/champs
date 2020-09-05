@@ -29,25 +29,13 @@ class ResultRepository extends ServiceEntityRepository
      */
     public function getCurrent(): array
     {
-        $results = [];
-
-        /** @var Result $result */
-        $result = $this->createQueryBuilder('r')
-            ->orderBy('r.id', 'DESC')
-            ->setMaxResults(1)
+        /** @var Result[] $results */
+        $results = $this->createQueryBuilder('r')
+            ->orderBy('r.createdAt', 'DESC')
+            ->andWhere('r.createdAt is not null')
+            ->setMaxResults(6)
             ->getQuery()
-            ->getOneOrNullResult();
-
-
-        if (!empty($result)){
-            $createdAt = $result->getCreatedAt()->format('Y-m-d H:i:s');
-
-            /** @var Result[] $results */
-            $results =  $this->createQueryBuilder('r')
-                ->where("r.createdAt = '$createdAt'")
-                ->getQuery()
-                ->getResult();
-        }
+            ->getResult();
 
         return $results;
     }
