@@ -18,10 +18,10 @@
   </div>
   <div class="table">
     <div class="table-row" v-for="(item, i) in getItems" :class="[item.time === null ? 'matches-row' : '']">
-      <div class="table-row border-0" @click="setView(i, $event)">
+      <a :href="`/ru/matches/${item.match_id}`" class="table-row border-0 text-dark pointer" @click="setView(i, $event)">
         <match :match="item" v-if="checkEmptyTeam(item)"></match>
         <empty-match :match="item" v-else></empty-match>
-      </div>
+      </a>
       <div class="video" v-show="item.video !== null" :style="{height: index === i ? height : '0'}" >
         <div class="rows-d rowsvid">
           <div class="row-d">
@@ -53,12 +53,7 @@
       <img :src="match.teamA.logo"/>
     </div>
     <div class="r-scores" :class="match.teamA.score !== null || match.teamB.score !== null ? 'bold' : ''">
-      <label v-if="match.teamA.score === null && match.teamB.score === null">vs</label>
-      <label v-if="match.teamA.score !== null || match.teamB.score !== null">
-        <span v-text="match.teamA.score ? match.teamA.score : 0" :class="match.teamA.score > match.teamB.score && match.time !== null ? 'victory' : match.teamA.score < match.teamB.score && item.time !== null ? 'losing' : ''"></span>
-        -
-        <span v-text="match.teamB.score ? match.teamB.score : 0" :class="match.teamB.score > match.teamA.score && match.time !== null ? 'victory' : match.teamB.score < match.teamA.score && item.time !== null ? 'losing' : ''"></span>
-      </label>
+      <label>vs</label>
     </div>
     <div class="r-teamB">
       <img :src="match.teamB.logo"/>

@@ -34,10 +34,10 @@
               <div class="date" v-text="item.date"></div>
               <div class="row-items">
                 <template v-for="match in item.items">
-                  <a class="row-item" v-if="checkEmptyTeams(match)" :href="`matches/${match.match_id}`">
+                  <a class="row-item" v-if="checkEmptyTeams(match)" :href="`/ru/matches/${match.match_id}`">
                     <match :match="match"/>
                   </a>
-                  <a class="row-item" v-if="!checkEmptyTeams(match)" :href="`matches/${match.match_id}`">
+                  <a class="row-item" v-if="!checkEmptyTeams(match)" :href="`/ru/matches/${match.match_id}`">
                     <empty-match :match="match"/>
                   </a>
                 </template>
