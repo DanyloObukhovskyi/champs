@@ -1,0 +1,20 @@
+@import 'mixins.scss';
+@import 'reset.scss';
+@import 'classes.scss';
+@import 'variables.scss';
+@import 'buttons.scss';
+@import 'header.scss';
+@import 'table.scss';
+@import 'main.scss';
+@import 'footer.scss';
+@import 'inputs.scss';
+@import 'dropdown.scss';
+@import 'icons.scss';
+@import 'modal.scss';
+@import 'site.scss';
+@import 'post.scss';
+@import 'media.scss';
+body {
+    font-family: Source Sans Pro;
+    min-width: 768px;
+}

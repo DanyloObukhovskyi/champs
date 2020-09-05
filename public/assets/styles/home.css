@@ -1,6 +1,9 @@
 .home{
   padding: 2vw 0;
 }
+.videoBox {
+width: 260px;
+}
 .component{
   width: 100%;
   margin-top: 1.5vw;
@@ -121,7 +124,7 @@
     max-width: 100%;
   }
   .home .banner{
-    height: 20vw;
+   /* height: 20vw;*/
   }
 }
 @media screen and (max-width: 600px) {

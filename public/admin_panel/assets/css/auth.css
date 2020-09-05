@@ -1,0 +1,310 @@
+.or_use {
+    height: 19px;
+    font-family: 'Source Sans Pro';
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #7f8fa4;
+    text-align: center;
+    margin-top: 21px;
+    /* margin-bottom: 21px; */
+}
+
+.fogot_passw {
+    height: 19px;
+    font-family: 'Source Sans Pro';
+    font-size: 14px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #f25500;
+    margin-top: 21px;
+    z-index: 11;
+}
+
+.accaunt_ex {
+    font-family: 'Source Sans Pro';
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #7f8fa4;
+    text-align: center;
+    margin-top: 21px;
+    width: 335px;
+}
+
+.log_in {
+    font-size: 14px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #39b54a;
+    margin-left: 10px;
+}
+
+.bg_img {
+    background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/bg_full.svg);
+    width: 100%;
+    float: right;
+    /* height: 600px; */
+    height: 100%;
+    position: relative;
+    z-index: 4;
+    background-size: cover;
+}
+
+.main_bg {
+    width: 1200px;
+    height: 700px;
+    float: right;
+    margin-top: -560px;
+    position: relative;
+}
+
+.table_img {
+    bottom: 20px;
+    right: 400px;
+    z-index: 5;
+    width: 473px;
+    float: right;
+    height: 300px;
+    position: absolute;
+    background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/man_table_img.svg);
+}
+
+.scr1 {
+    bottom: 270px;
+    right: 270px;
+    z-index: 6;
+    width: 180px;
+    float: right;
+    height: 125px;
+    position: absolute;
+    background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+}
+
+.scr2 {
+    opacity: 0.7;
+    bottom: 310px;
+    right: 325px;
+    z-index: 5;
+    width: 180px;
+    float: right;
+    height: 125px;
+    position: absolute;
+    background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+}
+
+.scr3 {
+    opacity: 0.5;
+    bottom: 350px;
+    right: 380px;
+    z-index: 5;
+    width: 180px;
+    float: right;
+    height: 125px;
+    position: absolute;
+    background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+}
+
+@media screen and (max-width: 1367px) {
+    .main_bg {
+        width: 1000px;
+        height: 600px;
+        float: right;
+        margin-top: -460px;
+        position: relative;
+    }
+}
+
+@media screen and (max-width: 1281px) and (max-height: 721px) {
+    .main_bg {
+        width: 900px;
+        height: 500px;
+        float: right;
+        margin-top: -379px;
+        position: relative;
+    }
+}
+
+@media screen and (max-width: 1025px) and (max-height: 769px) {
+    .main_bg {
+        width: 600px;
+        height: 500px;
+        float: right;
+        margin-top: -359px;
+        position: relative;
+    }
+
+    .table_img {
+        bottom: 20px;
+        right: 150px;
+        z-index: 5;
+        width: 473px;
+        float: right;
+        height: 300px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/man_table_img.svg);
+    }
+
+    .scr1 {
+        bottom: 270px;
+        right: 90px;
+        z-index: 6;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+
+    .scr2 {
+        opacity: 0.7;
+        bottom: 310px;
+        right: 145px;
+        z-index: 5;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+
+    .scr3 {
+        opacity: 0.5;
+        bottom: 350px;
+        right: 200px;
+        z-index: 5;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+}
+
+@media screen and (max-width: 1025px) and (max-height: 601px) {
+    .main_bg {
+        width: 600px;
+        height: 300px;
+        float: right;
+        margin-top: -299px;
+        position: relative;
+    }
+
+    .table_img {
+        bottom: 20px;
+        right: 50px;
+        z-index: 5;
+        width: 473px;
+        float: right;
+        height: 300px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/man_table_img.svg);
+    }
+
+    .scr1 {
+        bottom: 270px;
+        right: 0px;
+        z-index: 6;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+
+    .scr2 {
+        opacity: 0.7;
+        bottom: 310px;
+        right: 45px;
+        z-index: 5;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+
+    .scr3 {
+        display: none;
+        opacity: 0.5;
+        bottom: 350px;
+        right: 110px;
+        z-index: 5;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+}
+
+@media screen and (max-width: 769px) and (max-height: 1025px) {
+    .main_bg {
+        width: 600px;
+        height: 500px;
+        float: right;
+        margin-top: -360px;
+        position: relative;
+    }
+
+    .table_img {
+        bottom: 20px;
+        right: 150px;
+        z-index: 5;
+        width: 473px;
+        float: right;
+        height: 300px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/man_table_img.svg);
+    }
+
+    .scr1 {
+        bottom: 270px;
+        right: 90px;
+        z-index: 6;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+
+    .scr2 {
+        opacity: 0.7;
+        bottom: 310px;
+        right: 145px;
+        z-index: 5;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+
+    .scr3 {
+        display: none;
+        opacity: 0.5;
+        bottom: 350px;
+        right: 200px;
+        z-index: 5;
+        width: 180px;
+        float: right;
+        height: 125px;
+        position: absolute;
+        background-image: url(http://chershoee.bid/sitemanager2/new_assets/img/auth/web_1_img.svg);
+    }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>awesome/play</title>
+    <defs>
+        <path d="M18.2502924,10.6962963 L7.27173486,4.2058479 C6.37972706,3.67875238 5.01364518,4.19025336 5.01364518,5.49395707 L5.01364518,18.4717349 C5.01364518,19.6413256 6.2830409,20.3461989 7.27173486,19.7598441 L18.2502924,13.2725146 C19.2296297,12.6955166 19.2327486,11.2732943 18.2502924,10.6962963 Z" id="path-1"></path>
+    </defs>
+    <g id="awesome/play" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g fill-rule="nonzero"></g>
+        <g id="Group" mask="url(#mask-2)" fill="#F25500">
+            <g id="🎨-color">
+                <rect id="Base" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

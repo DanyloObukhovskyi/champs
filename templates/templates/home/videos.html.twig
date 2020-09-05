@@ -11,7 +11,7 @@
     {% for item in videoNews|slice(0,4) %}
     <a class="grid-row setStreamButton" data-id="{{item.videoId}}" data-link="{{item.id}}" data-type="{{item.videoType}}">
       {# <div class="live">Live</div> #}
-      <img src="//img.youtube.com/vi/{{item.videoId}}/hqdefault.jpg" class="logo" alt="Video" />
+      <img src="//img.youtube.com/vi/{{item.videoId}}/hqdefault.jpg" class="logo videoBox" alt="Video" />
       <div class="title-block">
         <div class="title">
           {{item.title}}

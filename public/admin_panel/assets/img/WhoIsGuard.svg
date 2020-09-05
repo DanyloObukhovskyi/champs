@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>awesome/shield-alt</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M19.4853802,7.9922027 C19.4853802,14.8937856 15.2457232,18.7413646 12.5757817,19.8536609 C12.2072714,20.0072065 11.7926975,20.0072065 11.4241871,19.8536609 C8.08561401,18.4627837 4.51461984,14.1828304 4.51461984,7.9922027 C4.51461879,7.38782427 4.87802358,6.84272323 5.43591419,6.61027677 L11.4242183,4.11515005 C11.7927286,3.96160445 12.2073025,3.96160445 12.5758129,4.11515005 L18.564117,6.61027677 C19.1219954,6.84273291 19.4853865,7.38783184 19.4853802,7.9922027 Z M12,17.9200936 L12.0020585,17.921154 C14.9255673,16.4649669 17.3820819,13.0460507 17.4856297,8.3233684 L12,6.03767638 L12,17.9200936 Z" id="path-1"></path>
+    </defs>
+    <g id="API" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Settings-Namechimp-Add_1_new_dn" transform="translate(-856.000000, -533.000000)">
+            <g id="Dropdown" transform="translate(338.000000, 448.000000)">
+                <g id="awesome/shield-alt" transform="translate(514.000000, 81.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g fill-rule="nonzero"></g>
+                    <g id="UI/Color/Flat/Green" mask="url(#mask-2)" fill="#39B54A" fill-rule="evenodd">
+                        <rect id="Base" x="0" y="0" width="24" height="24"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
