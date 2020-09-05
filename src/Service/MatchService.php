@@ -179,6 +179,7 @@ class MatchService extends EntityService
 
         $matchFields = [
             "match_id" => $match->getId(),
+            "startAt" =>  $match->getStartAt(),
             "time" => date("H:i", $match->getStartAt()->getTimestamp()),
             "title" => "",
             "logo" => "",
