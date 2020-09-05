@@ -85,15 +85,15 @@ class EventRepository extends ServiceEntityRepository
      */
     public function findFutureEvents(\Datetime $date)
     {
-        /** @var Match[] $matches */
-        $matches = $this->createQueryBuilder('m')
+        /** @var Event[] $events */
+        $events = $this->createQueryBuilder('m')
             ->orderBy('m.started_at', 'ASC')
             ->andWhere(' m.started_at > :date')
             ->setParameter('date', (new \DateTime($date->format("Y-m-d"))) )
             ->getQuery()
             ->getResult();
 
-        return $matches;
+        return $events;
 
     }
 
@@ -103,6 +103,14 @@ class EventRepository extends ServiceEntityRepository
      */
     public function getCurrentEvents()
     {
-        return $this->findBy([], ['createdAt' => 'DESC'], 5, 0);
+        /** @var Event[] $events */
+        $events = $this->createQueryBuilder('e')
+            ->orderBy('e.createdAt', 'DESC')
+            ->andWhere(' e.createdAt is not null')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        return $events;
     }
 }

@@ -1625,13 +1625,13 @@ class HLTVService
             $bigEvents = $eventsBlock->find('a.big-event');
 
             foreach ($smallEvents as $smallEvent){
-                $eventItem = static::getEventMainInfo($smallEvent);
+                $eventItem = static::getEventFull($smallEvent);
 
                 $events[] = $eventItem;
             }
 
             foreach ($bigEvents as $bigEvent){
-                $eventItem = static::getEventMainInfo($bigEvent);
+                $eventItem = static::getEventFull($bigEvents);
 
                 $events[] = $eventItem;
             }
