@@ -560,11 +560,13 @@ document.oncopy = addLink;
   let typeYT = '0';
   let full = false;
 
-  const playerTW = new Twitch.Player('playerTW', {
+const playerTW = new Object();
+
+ /* const playerTW = new Twitch.Player('playerTW', {
     channel: "esbcsgo",
     parent: ["champs.pro"]
   });
-
+*/
   function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('playerYT', {
       videoId: links,
