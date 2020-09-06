@@ -572,13 +572,13 @@ playerTW.pause= function (){}
   function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('playerYT', {
       videoId: links,
-      host: 'https://www.youtube.com',
       playerVars: {
-        controls: 0,
-        disablekb: 1,
-        showinfo: 0,
-        rel: 0,
-        autoplay: 0,
+        'controls': 0,
+        'disablekb': 1,
+        'showinfo': 0,
+        'rel': 0,
+        'autoplay': 0,
+        'origin': 'http://champs.pro',
       },
       events: {
         'onReady': (event) => {
