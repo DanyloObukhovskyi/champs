@@ -570,6 +570,7 @@ const playerTW = new Object();
   function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('playerYT', {
       videoId: links,
+      host: 'https://www.youtube.com',
       playerVars: {
         controls: 0,
         disablekb: 1,
