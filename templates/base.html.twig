@@ -625,7 +625,7 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         playerTW.pause();
         document.getElementById('playerYT').style.display = 'block';
         document.getElementById('playerTW').style.display = 'none';
-        playerYT.loadVideoById({'host': 'https://www.youtube.com',videoId: `${e.target.getAttribute('data-id')}`});
+        playerYT.loadVideoById({videoId: `${e.target.getAttribute('data-id')}`});
       } else {
         playerYT.stopVideo();
         document.getElementById('playerYT').style.display = 'none';
