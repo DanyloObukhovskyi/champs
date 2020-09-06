@@ -613,7 +613,7 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         },
       }
     });
-    playerYT.YTConfig = {'host': 'https://www.youtube.com'}
+    
   }
 
   document.querySelectorAll('.setStreamButton').forEach((item) => {
@@ -625,7 +625,7 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         playerTW.pause();
         document.getElementById('playerYT').style.display = 'block';
         document.getElementById('playerTW').style.display = 'none';
-        playerYT.loadVideoById({videoId: `${e.target.getAttribute('data-id')}`});
+        playerYT.loadVideoById({'host': 'https://www.youtube.com',videoId: `${e.target.getAttribute('data-id')}`});
       } else {
         playerYT.stopVideo();
         document.getElementById('playerYT').style.display = 'none';
