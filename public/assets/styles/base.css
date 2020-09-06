@@ -89,6 +89,7 @@
 }
 .a {
   display: inline-block;
+  width: 100%;
 }
 .object {
   pointer-events: none;
