@@ -578,6 +578,7 @@ playerTW.pause= function (){}
         'showinfo': 0,
         'rel': 0,
         'autoplay': 0,
+        'enablejsapi': 1,
         'origin': 'http://champs.pro',
       },
       events: {
@@ -632,6 +633,7 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         'rel': 0,
         'autoplay': 0,
         'origin': 'http://champs.pro',
+        'enablejsapi':1,
       }, videoId: `${e.target.getAttribute('data-id')}`});
       } else {
         playerYT.stopVideo();
