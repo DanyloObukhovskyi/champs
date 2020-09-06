@@ -625,7 +625,14 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         playerTW.pause();
         document.getElementById('playerYT').style.display = 'block';
         document.getElementById('playerTW').style.display = 'none';
-        playerYT.loadVideoById({videoId: `${e.target.getAttribute('data-id')}`});
+        playerYT.loadVideoById({playerVars: {
+        'controls': 0,
+        'disablekb': 1,
+        'showinfo': 0,
+        'rel': 0,
+        'autoplay': 0,
+        'origin': 'http://champs.pro',
+      }, videoId: `${e.target.getAttribute('data-id')}`});
       } else {
         playerYT.stopVideo();
         document.getElementById('playerYT').style.display = 'none';
