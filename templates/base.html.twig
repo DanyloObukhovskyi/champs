@@ -613,6 +613,7 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         },
       }
     });
+    playerYT.YTConfig = {'host': 'https://www.youtube.com'}
   }
 
   document.querySelectorAll('.setStreamButton').forEach((item) => {
@@ -629,7 +630,7 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
         playerYT.stopVideo();
         document.getElementById('playerYT').style.display = 'none';
         document.getElementById('playerTW').style.display = 'block';
-        playerTW.setChannel( {host: 'https://www.youtube.com', videoId: `${e.target.getAttribute('data-id')}`});
+        playerTW.setChannel( { videoId: `${e.target.getAttribute('data-id')}`});
       }
       play = true;
       document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">' +
