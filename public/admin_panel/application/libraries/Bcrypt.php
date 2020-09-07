@@ -37,7 +37,7 @@ class Bcrypt {
    * @return bool
      */
   public function verify($input, $existingHash) {
-    $hash = crypt($input, $existingHash);
+    return $hash = password_verify($input, $existingHash);
     return $hash === $existingHash;
   }
 

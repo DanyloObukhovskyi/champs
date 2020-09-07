@@ -2006,7 +2006,7 @@ footer .footer-socials img:nth-child(3) {
 .input input[type="email"],
 .input input[type="number"] {
   border: none;
-  position: absolute;
+  /*position: absolute;*/
   top: 0;
   left: 0;
   height: 100%;

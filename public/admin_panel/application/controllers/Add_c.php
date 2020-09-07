@@ -24,6 +24,7 @@
 		}
 		
 		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="") {
+			$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 			if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
 				$update_data = array();
 				$update_data['title'] = $post_title;
@@ -38,7 +39,7 @@
 				$update_data['logo'] = $article_img[0];
 				$update_data['created_at'] = date("Y-m-d H:i:s");
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
-				$update_data['date'] = date("Y-m-d H:i:s");
+				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
 				
 				$created_id = $this->add_m->addNews($update_data);
@@ -52,15 +53,16 @@
 		
 		public function stream($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="") {
 			if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
 				$update_data['title'] = $post_title;
 				$update_data['url'] = urlencode(str_replace(" ","-",$post_url));
-//				$update_data['text'] = $post_content;
-				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+				$update_data['text'] = $post_content;
+//				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 				$update_data['logo'] = $article_img;
 				$update_data['created_at'] = date("Y-m-d H:i:s");
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
-				$update_data['date'] = date("Y-m-d H:i:s");
+				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
 				
 				$created_id = $this->add_m->addNews($update_data);
@@ -74,15 +76,16 @@
 		
 		public function video($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="") {
 			if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
 				$update_data['title'] = $post_title;
 				$update_data['url'] = urlencode(str_replace(" ","-",$post_url));
-//				$update_data['text'] = $post_content;
-				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+				$update_data['text'] = $post_content;
+//				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 				$update_data['logo'] = $article_img;
 				$update_data['created_at'] = date("Y-m-d H:i:s");
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
-				$update_data['date'] = date("Y-m-d H:i:s");
+				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
 				
 				$created_id = $this->add_m->addNews($update_data);
@@ -102,53 +105,50 @@
 					$post_content = (isset($_POST["post_content"])) ? trim($_POST["post_content"]): '';
 					$post_type = (isset($_POST["post_type"])) ? trim($_POST["post_type"]): '';
 					$post_url = (isset($_POST["post_url"])) ? trim($_POST["post_url"]): '';
+					$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 					if($post_type == 9) {
 						if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
-							if ($post_type == 9) {
-								$article_img = array();
-								if(isset($_FILES["userfile"])) {
-									if(!empty($_FILES["userfile"]["name"])) {
-										$count = count($_FILES['userfile']['name']);
-										for ($i = 0; $i < $count; $i++){
-											$config['upload_path'] = $this->config->item ('upload_article-pic');
-											$config['allowed_types'] = 'jpeg|jpg|png';
-											$config['max_size'] = 5048;
-											$config['max_width'] = 3000;
-											$config['max_height'] = 3000;
+							$article_img = array();
+							if(isset($_FILES["userfile"])) {
+								if(!empty($_FILES["userfile"]["name"])) {
+									$count = count($_FILES['userfile']['name']);
+									$files = $_FILES;
+									$this->load->library ('upload');
+									for ($i = 0; $i < $count; $i++){
+										$config['upload_path'] = $this->config->item ('upload_article-pic');
+										$config['allowed_types'] = 'jpeg|jpg|png';
+										$config['max_size'] = 256831;
+										$config['max_width'] = 5000;
+										$config['max_height'] = 5000;
+										$this->upload->initialize($config);
 										
-											$_FILES['file']['type'] = $_FILES['userfile']['type'][$i];
-											$_FILES['file']['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
-											$_FILES['file']['error'] = $_FILES['userfile']['error'][$i];
-											$_FILES['file']['size'] = $_FILES['userfile']['size'][$i];
+										$_FILES['userfile']['type']= $files['userfile']['type'][$i];
+										$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
+										$_FILES['userfile']['error']= $files['userfile']['error'][$i];
+										$_FILES['userfile']['size']= $files['userfile']['size'][$i];
 										
-											$bytes = random_bytes (11);
+										$bytes = random_bytes (11);
 										
-											$ext = explode (".", $_FILES["userfile"]["name"][$i]);
-											$ext = array_pop ($ext);
-											$fileName = bin2hex ($bytes).".".$ext;
-											
-											$config['file_name'] = $fileName;
-											$_FILES['file']['name'] = $fileName;
-											
-											$this->load->library ('upload', $config);
-											
-											if (!$this->upload->do_upload ('file')) {
-												$error = array ('error' => $this->upload->display_errors ());
-												redirect ($_SERVER["HTTP_REFERER"]);
-												die();
-											} else {
-												$data = array ('upload_data' => $this->upload->data ());
-												$article_img[$i] = $data["upload_data"]["orig_name"];
-											}
+										$ext = explode (".", $files["userfile"]["name"][$i]);
+										$ext = array_pop ($ext);
+										$fileName = bin2hex ($bytes).".".$ext;
+										
+										$_FILES['userfile']['name'] = $fileName;
+										
+										if (!$this->upload->do_upload()) {
+											$error = array ('error' => $this->upload->display_errors ());
+											redirect ($_SERVER["HTTP_REFERER"]);
+											die();
+										} else {
+											$data = array ('upload_data' => $this->upload->data());
+											$article_img[$i] = $data["upload_data"]["orig_name"];
 										}
 									}
 								}
-								
-								
-								$this->gallery ($post_title, $post_content, $post_type, $post_url, $article_img);
-								redirect ($_SERVER["HTTP_REFERER"]);
-								die();
 							}
+							$this->gallery ($post_title, $post_content, $post_type, $post_url, $article_img);
+							redirect ($_SERVER["HTTP_REFERER"]);
+							die();
 						}
 					}
 					if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
@@ -200,7 +200,7 @@
 						$update_data['logo'] = $article_img;
 						$update_data['created_at'] = date("Y-m-d H:i:s");
 						$update_data['updated_at'] = date("Y-m-d H:i:s");
-						$update_data['date'] = date("Y-m-d H:i:s");
+						$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 						$update_data['type'] = $post_type;
 						
 						$created_id = $this->add_m->addNews($update_data);

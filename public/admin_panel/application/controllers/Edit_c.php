@@ -23,6 +23,7 @@
 		
 		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
 			if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
+				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
 				$update_data['title'] = $post_title;
 				$update_data['url'] = urlencode(str_replace(" ","-",$post_url));
@@ -36,7 +37,7 @@
 				$update_data['logo'] = $article_img[0];
 				$update_data['created_at'] = date("Y-m-d H:i:s");
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
-				$update_data['date'] = date("Y-m-d H:i:s");
+				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
 				
 				$this->edit_m->update_news($post_id, $update_data);
@@ -50,15 +51,17 @@
 		
 		public function stream($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
 			if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
 				$update_data['title'] = $post_title;
 				$update_data['url'] = urlencode(str_replace(" ","-",$post_url));
-//				$update_data['text'] = $post_content;
+				$update_data['text'] = $post_content;
 				if(!empty($article_img)){
 					$update_data['logo'] = $article_img;
 				}
-				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+//				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
+				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
 				
 				$created_id = $this->edit_m->update_news($post_id,$update_data);
@@ -72,15 +75,17 @@
 		
 		public function video($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
 			if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
 				$update_data['title'] = $post_title;
 				$update_data['url'] = urlencode(str_replace(" ","-",$post_url));
-//				$update_data['text'] = $post_content;
-				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+				$update_data['text'] = $post_content;
+//				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 				if(!empty($article_img)){
 					$update_data['logo'] = $article_img;
 				}
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
+				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
 				
 				$this->edit_m->update_news($post_id,$update_data);
@@ -100,6 +105,8 @@
 					$post_content = (isset($_POST["post_content"])) ? trim($_POST["post_content"]): '';
 					$post_type = (isset($_POST["post_type"])) ? trim($_POST["post_type"]): '';
 					$post_url = (isset($_POST["post_url"])) ? trim($_POST["post_url"]): '';
+					$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
+					
 					if($post_type == 9) {
 						if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
 							if ($post_type == 9) {
@@ -196,6 +203,7 @@
 						$update_data['title'] = $post_title;
 						$update_data['text'] = $post_content;
 						$update_data['updated_at'] = date("Y-m-d H:i:s");
+						$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 						$update_data['type'] = $post_type;
 						
 						$this->edit_m->update_news($post_id, $update_data);

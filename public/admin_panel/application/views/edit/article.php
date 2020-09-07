@@ -3,7 +3,7 @@
 	var current_type = 5;
 </script>
 
-
+<link href="<?php print base_url("assets/css/datepicker.css"); ?>" rel="stylesheet">
 <main class="flex create-new-website-page">
 	<?php
 		$errors = validation_errors('<li>', '</li>');
@@ -164,6 +164,9 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+			
+			
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -189,6 +192,9 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+			
+			
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -213,13 +219,16 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title" placeholder="Имя поста" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
-						<!-- <div class="editor-title_descr">Рекомендуем загружать фотографии или картинки в формате 4:3 или 1:1 для лучшего отображения на страницу</div> -->
+					
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
-								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="video/avi,video/mpeg" name="userfile" style="opacity: 0"/>
+								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" name="userfile" style="opacity: 0"/>
 									<div class="changePassBTN change-img-edit-btn upload-img-nd-btn add-video-edit" style="margin-top: -20px !important;">Загрузить превью</div>
 									<img class="icos3" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 								</div>
@@ -231,7 +240,7 @@
 						<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="http://"  name="post_content" value='<?php print $post_fields["text"]; ?>'>
 					</div>
 					<div class="wrapper-editor-preview-form-right">
-						<div class="editor-preview-photo-block"><?php print "<img src='".$imgs_url.$post_fields['logo']."' style='width: 100%;height: 100%;'>"; ?></div>
+						<div class="editor-preview-photo-block"><?php print "<img src='".$imgs_url.$post_fields['logo']."' style='width: 100%;height: 100%;' id='img_preview'>"; ?></div>
 						<img class="icos4" src="<?php print base_url("assets/icons/search.svg"); ?>" /><span class="search-preview-right-block">preview</span>
 						<div class="btn-play-editor-block"></div>
 					</div>
@@ -248,6 +257,8 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -272,6 +283,8 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -296,6 +309,8 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+			
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -320,6 +335,8 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -347,11 +364,12 @@
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
-						<!-- <div class="editor-title_descr">Рекомендуем загружать фотографии или картинки в формате 4:3 или 1:1 для лучшего отображения на страницу</div> -->
+						<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+						
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
-								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="video/avi,video/mpeg" name="userfile" style="opacity: 0"/>
-									<div class="changePassBTN change-img-edit-btn upload-img-nd-btn add-video-edit" style="margin-top: -20px !important;">Загрузить видео</div>
+								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file"  name="userfile" style="opacity: 0"/>
+									<div class="changePassBTN change-img-edit-btn upload-img-nd-btn add-video-edit" style="margin-top: -20px !important;">Загрузить превью</div>
 									<img class="icos3" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 								</div>
 							</div>
@@ -362,7 +380,7 @@
 						<input class="editor_input_nd input-video-upload-editor" name="post_content" type="text" placeholder="http://" value='<?php print $post_fields["text"]; ?>'>
 					</div>
 					<div class="wrapper-editor-preview-form-right">
-						<div class="editor-preview-photo-block"></div>
+						<div class="editor-preview-photo-block"><?php print "<img src='".$imgs_url.$post_fields['logo']."' style='width: 100%;height: 100%;' id='img_preview1'>"; ?></div>
 						<img class="icos4" src="<?php print base_url("assets/icons/search.svg"); ?>" /><span class="search-preview-right-block">preview</span>
 						<div class="btn-play-editor-block"></div>
 					</div>
@@ -379,6 +397,8 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="Имя поста" name="post_title"  value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker9" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Фотогалерея</div>
@@ -394,7 +414,11 @@
 								Загружено N изображений, N Mb
 							</div>
 						</div>
-						<div class="photo-gallery-editor" name="post_content"><div id="imges_preview"><?php print $post_fields['text']; ?></div></div>
+						<?php
+							$post_fields['text'] = str_replace("width:250px;", "width:110px; padding:10px;", $post_fields['text']);
+						    $post_fields['text'] = str_replace("height:250px","height:90px", $post_fields['text']);
+						?>
+						<div class="photo-gallery-editor"><div id="imges_preview" name="post_content"><?php print $post_fields['text']; ?></div></div>
 						<button type="submit" class="main-post-button-edit main-post-button-edit-photo-gallery">Сохранить и Загрузить</button>
 					</div>
 			</form>
@@ -403,17 +427,24 @@
 </main>
 
 <script src="<?php echo base_url('assets/js/dropdown.js'); ?>"></script>
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-<script>tinymce.init({selector:'textarea'});</script>
+<script src="<?php echo base_url('assets/js/tinyMCE.js'); ?>" referrerpolicy="origin"></script>
+<script src="<?php echo base_url('assets/js/datepicker.js'); ?>" referrerpolicy="origin"></script>
 <script>
+	tinymce.init({selector:'textarea'});
+	$( function() {
+		for(var i = 1; i <= 9; i++){
+			$( "#datepicker"+i ).datetimepicker({
+				format:'Y-m-d H:i:s',
+				lang:'ru',
+			});
+		}
+		
+	} );
 	window.addEventListener('load', function() {
 		var inputs = document.querySelectorAll('input[type="file"]');
-		
 		inputs.forEach(function(item, i, arr) {
 			item.addEventListener('change', function() {
-				
 				if (current_type == 3){
-					alert();
 					if (this.files && this.files[0]) {
 						var url = URL.createObjectURL(this.files[0]);
 						if (this.files[0].type != "image/jpg" && this.files[0].type != "image/jpeg" && this.files[0].type != "image/png") {
@@ -421,11 +452,8 @@
 						}
 						$("#img_preview").attr("src", url);
 					}
-					
-				}
-				if (current_type == 9){
-					
-					$("#imges_preview").empty();
+				} else if (current_type == 9){
+					$("#imges_preview9").empty();
 					if (this.files && this.files[0]) {
 						var files = this.files.length-1;
 						
@@ -442,6 +470,15 @@
 						
 					}
 					
+				} if(current_type == 8){
+					var url = URL.createObjectURL(this.files[0]);
+					$("#img_preview1").attr("src", url);
+				} else {
+					$("#uploaded_img_name"+current_type).empty();
+					if (this.files[0].type != "image/jpg" && this.files[0].type != "image/jpeg" && this.files[0].type != "image/png") {
+						return;
+					}
+					$("#uploaded_img_name"+current_type).append(this.files[0].name);
 				}
 			});
 		});

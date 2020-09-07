@@ -3,6 +3,7 @@
 	var current_type = 5;
 </script>
 
+<link href="<?php print base_url("assets/css/datepicker.css"); ?>" rel="stylesheet">
 
 <main class="flex create-new-website-page">
 	<?php
@@ -68,6 +69,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10 " type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -75,7 +77,7 @@
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
-					<div class="change-img-edit-warning" id="uploaded_img_name">
+					<div class="change-img-edit-warning" id="uploaded_img_name1">
 						Загрузите в формате .jpg или .png
 					</div>
 				</div>
@@ -92,6 +94,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -99,7 +102,7 @@
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
-					<div class="change-img-edit-warning" id="uploaded_img_name">
+					<div class="change-img-edit-warning" id="uploaded_img_name2">
 						Загрузите в формате .jpg или .png
 					</div>
 				</div>
@@ -115,6 +118,7 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title" placeholder="Имя поста">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
@@ -126,7 +130,7 @@
 									<img class="icos3" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 								</div>
 							</div>
-							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name">
+							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name3">
 								<!-- Нет файла .jpeg или .png -->
 							
 							</div>
@@ -136,7 +140,7 @@
 					</div>
 					<div class="wrapper-editor-preview-form-right">
 						<div class="editor-preview-photo-block">
-							<div class="inner-editor-preview-form"><img src="" class="inner-div-editor-preview-form" id="img_preview"></div>
+							<div class="inner-editor-preview-form"><img src="" class="inner-div-editor-preview-form" id="img_preview" /></div>
 						</div>
 						<img class="icos4" src="<?php print base_url("assets/icons/search.svg"); ?>" /><span class="search-preview-right-block">preview</span>
 						<div class="btn-play-editor-block"></div>
@@ -155,6 +159,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -162,7 +167,7 @@
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
-					<div class="change-img-edit-warning" id="uploaded_img_name">
+					<div class="change-img-edit-warning" id="uploaded_img_name4">
 						Загрузите в формате .jpg или .png
 					</div>
 				</div>
@@ -180,6 +185,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -187,7 +193,7 @@
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
-					<div class="change-img-edit-warning" id="uploaded_img_name">
+					<div class="change-img-edit-warning" id="uploaded_img_name5">
 						Загрузите в формате .jpg или .png
 					</div>
 				</div>
@@ -205,6 +211,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -212,7 +219,7 @@
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
-					<div class="change-img-edit-warning" id="uploaded_img_name">
+					<div class="change-img-edit-warning" id="uploaded_img_name6">
 						Загрузите в формате .jpg или .png
 					</div>
 				</div>
@@ -228,6 +235,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -235,7 +243,7 @@
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
-					<div class="change-img-edit-warning" id="uploaded_img_name">
+					<div class="change-img-edit-warning" id="uploaded_img_name7">
 						Загрузите в формате .jpg или .png
 					</div>
 				</div>
@@ -255,6 +263,7 @@
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
 						<!-- <div class="editor-title_descr">Рекомендуем загружать фотографии или картинки в формате 4:3 или 1:1 для лучшего отображения на страницу</div> -->
+						<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
 								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file"name="userfile" style="opacity: 0"/>
@@ -262,14 +271,16 @@
 									<img class="icos3" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 								</div>
 							</div>
-							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name">
+							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name8">
 							</div>
 						</div>
 						<div class="editor-title_post editor-title_post-mt">Ссылка на видео</div>
 						<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="http://" name="post_content">
 					</div>
 					<div class="wrapper-editor-preview-form-right">
-						<div class="editor-preview-photo-block"></div>
+						<div class="editor-preview-photo-block">
+							<div class="inner-editor-preview-form"><img src="" class="inner-div-editor-preview-form" id="img_preview1" /></div>
+						</div>
 						<img class="icos4" src="<?php print base_url("assets/icons/search.svg"); ?>" /><span class="search-preview-right-block">preview</span>
 						<div class="btn-play-editor-block"></div>
 					</div>
@@ -290,6 +301,7 @@
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Фотогалерея</div>
 						<div class="editor-title_descr">Рекомендуем загружать фотографии или картинки в формате 4:3 или 1:1 для лучшего отображения на страницу</div>
+						<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker9" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
 								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" multiple name="userfile[]" style="opacity: 0"/>
@@ -297,8 +309,7 @@
 									<img class="icos3" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 								</div>
 							</div>
-							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name">
-								Загружено N изображений, N Mb
+							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name9">
 							</div>
 						</div>
 						<div class="photo-gallery-editor" name="post_content"><div id="imges_preview"></div></div>
@@ -308,7 +319,19 @@
 		</div>
 	</div>
 </main>
+<script src="<?php echo base_url('assets/js/dropdown.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/tinyMCE.js'); ?>" referrerpolicy="origin"></script>
+<script src="<?php echo base_url('assets/js/datepicker.js'); ?>" referrerpolicy="origin"></script>
 <script>
+	tinymce.init({selector:'textarea'});
+	$( function() {
+		for(var i = 1; i <= 9; i++){
+			$( "#datepicker"+i ).datetimepicker({
+				format:'Y-m-d H:i:s',
+				lang:'ru',
+			});
+		}
+	} );
 	window.addEventListener('load', function() {
 		var inputs = document.querySelectorAll('input[type="file"]');
 		inputs.forEach(function(item, i, arr) {
@@ -321,10 +344,8 @@
 						}
 						$("#img_preview").attr("src", url);
 					}
-					
-				}
-				if (current_type == 9){
-					$("#imges_preview").empty();
+				} else if (current_type == 9){
+					$("#imges_preview9").empty();
 					if (this.files && this.files[0]) {
 						var files = this.files.length-1;
 						
@@ -341,6 +362,15 @@
 						
 					}
 					
+				} if(current_type == 8){
+					var url = URL.createObjectURL(this.files[0]);
+					$("#img_preview1").attr("src", url);
+				} else {
+					$("#uploaded_img_name"+current_type).empty();
+					if (this.files[0].type != "image/jpg" && this.files[0].type != "image/jpeg" && this.files[0].type != "image/png") {
+						return;
+					}
+					$("#uploaded_img_name"+current_type).append(this.files[0].name);
 				}
 			});
 		});
@@ -348,6 +378,3 @@
 	});
 
 </script>
-<script src="<?php echo base_url('assets/js/dropdown.js'); ?>"></script>
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-<script>tinymce.init({selector:'textarea'});</script>
