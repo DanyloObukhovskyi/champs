@@ -265,7 +265,7 @@ class MatchRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByStartAtAndTeams(\DateTime $startAt, array $teams)
+    public function findByStartAtAndTeams(\DateTime $startAt, $teams)
     {
         $team1Id = isset($teams[0]) ? $teams[0]->getId(): null;
         $team2Id = isset($teams[1]) ? $teams[1]->getId(): null;

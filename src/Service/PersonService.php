@@ -124,4 +124,9 @@ class PersonService extends EntityService
             }
         }
     }
+
+    public function getByNick($nick)
+    {
+        return $this->repository->getByNick($nick);
+    }
 }

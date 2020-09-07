@@ -11,6 +11,7 @@ use App\Repository\MatchRepository;
 use App\Service\MatchService;
 use App\Service\ImageService;
 use App\Entity\MatchMapTeamStatistic;
+use App\Service\PlayerStatisticsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -43,6 +44,8 @@ class MatchesController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $imageService = new ImageService();
+        $playerStatisticsService = new PlayerStatisticsService($entityManager);
+
         /** @var Match $match */
         $match_view = $entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
@@ -51,9 +54,13 @@ class MatchesController extends AbstractController
             ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam1());
 
+        $playerStatisticsTeam1 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam1);
+
         $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
             ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam2());
+
+        $playerStatisticsTeam2 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam2);
 
         $results = $entityManager->getRepository(Match::class)->findResults();
 

@@ -17,22 +17,6 @@ class PlayerStatistics
      */
     private $id;
 
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $side;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $kill_value;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $death_value;
-
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -61,50 +45,33 @@ class PlayerStatistics
     private $player;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $mapId;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Map::class)
      */
     private $map;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $kd;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true, name="plus_minus")
+     */
+    private $plusMinus;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSide(): ?string
-    {
-        return $this->side;
-    }
-
-    public function setSide(string $side): self
-    {
-        $this->side = $side;
-
-        return $this;
-    }
-
-    public function getKillValue(): ?string
-    {
-        return $this->kill_value;
-    }
-
-    public function setKillValue(string $kill_value): self
-    {
-        $this->kill_value = $kill_value;
-
-        return $this;
-    }
-
-    public function getDeathValue(): ?string
-    {
-        return $this->death_value;
-    }
-
-    public function setDeathValue(string $death_value): self
-    {
-        $this->death_value = $death_value;
-
-        return $this;
     }
 
     public function getAdr(): ?string
@@ -177,5 +144,69 @@ class PlayerStatistics
         $this->map = $map;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMapId()
+    {
+        return $this->mapId;
+    }
+
+    /**
+     * @param mixed $mapId
+     */
+    public function setMapId($mapId): void
+    {
+        $this->mapId = $mapId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKd()
+    {
+        return $this->kd;
+    }
+
+    /**
+     * @param mixed $kd
+     */
+    public function setKd($kd): void
+    {
+        $this->kd = $kd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlusMinus()
+    {
+        return $this->plusMinus;
+    }
+
+    /**
+     * @param mixed $plusMinus
+     */
+    public function setPlusMinus($plusMinus): void
+    {
+        $this->plusMinus = $plusMinus;
     }
 }

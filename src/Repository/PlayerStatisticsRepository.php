@@ -61,14 +61,30 @@ class PlayerStatisticsRepository extends ServiceEntityRepository
      * @return PlayerStatistics|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getByMatchAndPlayer($matchId, $playerId): ?PlayerStatistics
+    public function getByMatchAndPlayerAndType($matchId, $playerId, $type): ?PlayerStatistics
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.game_match = :match_id AND p.player = :player_id')
+            ->andWhere('p.type = :type')
+            ->andWhere('p.mapId is null')
             ->setParameter('match_id', $matchId)
             ->setParameter('player_id', $playerId)
+            ->setParameter('type', $type)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
+    }
+
+    public function getByMatchAndPlayerAndTypeAndMap($matchId, $playerId, $type, $mapId): ?PlayerStatistics
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.game_match = :match_id AND p.player = :player_id')
+            ->andWhere('p.type = :type')
+            ->andWhere('p.mapId = :map_id')
+            ->setParameter('map_id', $mapId)
+            ->setParameter('match_id', $matchId)
+            ->setParameter('player_id', $playerId)
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

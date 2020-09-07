@@ -206,7 +206,7 @@ class HLTVService
         $content = PageContentService::getPageContent($match['url']);
         if (!$content or ($content and is_array($content) && isset($content['error'])))
         {
-            return false;
+            return null;
         }
 
         $document = new Document($content);
@@ -375,6 +375,7 @@ class HLTVService
             return false;
         }
 
+
         LoggerService::add("get match {$matchUrl} statistic hltv debug", LoggerService::TYPE_INFO);
         $document = new Document($content);
 
@@ -436,6 +437,7 @@ class HLTVService
                 $match['live'] = $eventRaw->text() == 'LIVE' ? 1 : 0;
             }
         }
+        $match['playerMapStats'] = self::getMatchsMapsStatistics($document);
 
         LoggerService::add("get match {$matchUrl} statistic hltv debug beforeend", LoggerService::TYPE_INFO);
         return $match;
@@ -1264,7 +1266,7 @@ class HLTVService
      * @return array
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public static function getMatchesResults($maxCount = 10): array
+    public static function getMatchesResults(): array
     {
         $content = PageContentService::getPageContent(self::$baseUrl);
 
@@ -1290,7 +1292,11 @@ class HLTVService
         }
         $matches = [];
         foreach ($matchUrls as $url){
-            $matches[] = self::getMatchFull($url);
+            $match = self::getMatchFull($url);
+
+            if (isset($match)){
+                $matches[] = $match;
+            }
         }
         return $matches;
     }
@@ -1334,7 +1340,7 @@ class HLTVService
      * @param $class
      * @return string
      */
-    private static function getSubElemByClass($elem, $class): string
+    private static function getSubElemByClass($elem, $class)
     {
         $element = $elem->first($class);
         if (isset($element)){
@@ -1526,6 +1532,9 @@ class HLTVService
         LoggerService::info("getEventData");
         $content = PageContentService::getPageContent($url);
 
+        if (empty($content)){
+            return null;
+        }
         $document = new Document($content);
 
         $eventName = self::getSubElemByClass($document, '.eventname');
@@ -1732,5 +1741,82 @@ class HLTVService
         }
 
         return $matchesResults;
+    }
+
+    public static function getMatchsMapsStatistics($document)
+    {
+
+        $matchMapPlayersStats = $document->first('.matchstats');
+        $pageMatchStatisticsMenu = $matchMapPlayersStats->first('.box-headline.flexbox.nowrap.header');
+
+        $menuOptions = $pageMatchStatisticsMenu->find('.dynamic-map-name-full');
+        $maps = [];
+
+        foreach ($menuOptions as $menuOption)
+        {
+            $maps[] = [
+                'name' => $menuOption->text(),
+                'id' => $menuOption->attr('id')
+            ];
+        }
+        $mapStats = [];
+
+        foreach ($maps as $map)
+        {
+            $mapStats[$map['name']] = [
+                'name' => $map['name']
+            ];
+            $mapStat = $matchMapPlayersStats->first("#{$map['id']}-content");
+
+            if (isset($mapStat)){
+                $totalStat = $mapStat->find('.totalstats');
+
+                if (!empty($totalStat) and count($totalStat) > 1)
+                {
+                    $mapStats[$map['name']]['stat']['left']['total'] =  self::getMatchPlayersStatsArray($totalStat[0]);
+                    $mapStats[$map['name']]['stat']['right']['total'] =  self::getMatchPlayersStatsArray($totalStat[1]);
+                }
+
+                $terroristStat = $mapStat->find('.tstats');
+
+                if (!empty($terroristStat) and count($terroristStat) > 1)
+                {
+                    $mapStats[$map['name']]['stat']['left']['terrorist'] =  self::getMatchPlayersStatsArray($terroristStat[0]);
+                    $mapStats[$map['name']]['stat']['right']['terrorist'] =  self::getMatchPlayersStatsArray($terroristStat[1]);
+                }
+
+                $counterTerroristStat = $mapStat->find('.ctstats');
+
+                if (!empty($counterTerroristStat) and count($counterTerroristStat) > 1)
+                {
+                    $mapStats[$map['name']]['stat']['left']['counterTerrorist'] =  self::getMatchPlayersStatsArray($counterTerroristStat[0]);
+                    $mapStats[$map['name']]['stat']['right']['counterTerrorist'] =  self::getMatchPlayersStatsArray($counterTerroristStat[1]);
+                }
+            }
+        }
+
+        return $mapStats;
+    }
+
+    public static function getMatchPlayersStatsArray($stats)
+    {
+        $playersStats = $stats->find('tr');
+
+        unset($playersStats[0]);
+
+        $players = [];
+        foreach ($playersStats as $playersStat){
+
+            $nick = self::getSubElemByClass($playersStat, '.players .player-nick');
+            $kd = self::getSubElemByClass($playersStat, '.kd');
+            $plusMinus = self::getSubElemByClass($playersStat, '.plus-minus');
+            $adr = self::getSubElemByClass($playersStat, '.adr');
+            $kast = self::getSubElemByClass($playersStat, '.kast');
+            $rating = self::getSubElemByClass($playersStat, '.rating');
+
+            $players[] = compact('nick', 'kd', 'plusMinus', 'adr', 'kast', 'rating');
+        }
+
+        return $players;
     }
 }

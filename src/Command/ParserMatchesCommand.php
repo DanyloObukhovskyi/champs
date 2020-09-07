@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Match;
 use App\Entity\MatchPickAndBan;
+use App\Entity\Person;
 use App\Entity\Player;
 use App\Service\EventService;
 use App\Service\HLTVService;
@@ -352,16 +353,27 @@ class ParserMatchesCommand extends Command
                 $mapEntity = $this->mapService->create($map['name']);
             }
             LoggerService::add("get match command 239", LoggerService::TYPE_INFO);
-            $this->createMatchStatistics( $match, $mapEntity, $map['stat']);
-
-            if (!empty($map['full_stat']))
+            $this->createMatchStatistics($match, $mapEntity, $map['stat']);
+        }
+        if (isset($matchStatistics['playerMapStats']))
+        {
+            foreach ($matchStatistics['playerMapStats'] as $name => $mapStats)
             {
-                LoggerService::add("get match command 244", LoggerService::TYPE_INFO);
-                $this->createPlayerStatistics( $match, $mapEntity, $map['full_stat']['teams']);
-                LoggerService::add("get match command 246", LoggerService::TYPE_INFO);
+                $mapEntity = null;
+                if ($name !== 'All maps')
+                {
+                    $code = $this->mapService->makeCode($name);
+                    $mapEntity = $this->mapService->getByCode($code);
+                }
+                //Left team
+                foreach ($mapStats['stat']['left'] as $type => $playersStats){
+                    $this->createPlayerStatistics($match, $mapEntity, $playersStats, $type);
+                }
+                foreach ($mapStats['stat']['right'] as $type => $playersStats){
+                    $this->createPlayerStatistics($match, $mapEntity, $playersStats, $type);
+                }
             }
         }
-
         return true;
     }
 
@@ -371,27 +383,22 @@ class ParserMatchesCommand extends Command
      * @param $teamStat
      * @return array|bool
      */
-    private function createPlayerStatistics(Match $match, $mapEntity, $teamStat)
+    private function createPlayerStatistics(Match $match, $mapEntity, $playersStats, $type)
     {
+        //dd( $match, $mapEntity, $playersStats);
         LoggerService::add("get match command 255", LoggerService::TYPE_INFO);
-        $result = [];
-        foreach ($teamStat as $stat)
+        foreach ($playersStats as $playerStat)
         {
-            $team = $this->teamService->getByName($stat['name']);
-            LoggerService::add("get match command 259", LoggerService::TYPE_INFO);
-            foreach ($stat['players'] as $playerStat)
-            {
-                LoggerService::add("get match command 263", LoggerService::TYPE_INFO);
-                $player = $this->playerService->getByTeamAndNick($team->getId(), $playerStat['nick']);
-                if (!$player)
-                {
-                    continue;
-                }
-                LoggerService::add("get match command 269", LoggerService::TYPE_INFO);
-                $result[] = $this->playerStatisticsService->create($player, $match, $mapEntity, $playerStat);
-                LoggerService::add("get match command 271", LoggerService::TYPE_INFO);
+            /** @var Person $person */
+            $person = $this->personService->getByNick($playerStat['nick']);
+            if (isset($person) and !empty( $person->getPlayer())){
+                $player = $person->getPlayer();
+
+                $result[] = $this->playerStatisticsService->create($player, $match, $mapEntity, $playerStat, $type);
             }
         }
+        $result = [];
+
         LoggerService::add("get match command 274", LoggerService::TYPE_INFO);
         return !empty($result) ? $result : false;
     }
@@ -409,7 +416,7 @@ class ParserMatchesCommand extends Command
 
     /**
      * @param $teams
-     * @return array|bool
+     * @return array|null
      */
     private function createTeams($teams)
     {
@@ -422,7 +429,7 @@ class ParserMatchesCommand extends Command
             if (!isset($teamEntity))
             {
                 LoggerService::error("team entity {$team['name']} didnt created");
-                return false;
+                return [];
             }
             LoggerService::add("parserMatchesCommand 290");
             foreach ($team['players'] as $playerValues)
@@ -441,14 +448,14 @@ class ParserMatchesCommand extends Command
                 if (!isset($playerEntity))
                 {
                     LoggerService::error("player entity {$playerValues['nick']} didn't created");
-                    return false;
+                    continue;
                 }
             }
 
             $result[] = $teamEntity;
         }
 
-        return !empty($result) ? $result : false;
+        return !empty($result) ? $result : null;
     }
 
     /**
@@ -555,16 +562,22 @@ class ParserMatchesCommand extends Command
         $createdAt = Carbon::now();
 
         foreach ($resultsMatches as $resultsMatch){
+
             $teams = HLTVService::getTeams($resultsMatch);
 
             $teamEntityList = $this->createTeams($teams);
             $this->createMaps($resultsMatch);
 
             $matchEntity = $this->createMatch($resultsMatch, $teamEntityList);
+
             $this->updateMatchTeamPastMatches($matchEntity, $resultsMatch);
             $matchDataFull = $this->setScores($resultsMatch);
+
             $this->createStreams($matchEntity, $matchDataFull);
             $this->resultService->create($matchEntity, $createdAt);
+
+            $matchStatistics = HLTVService::getMatchStatistic($matchEntity->getUrl());
+            $this->updateMatchStatistics($matchEntity, $matchStatistics);
 
             $this->matchService->updateStatistic($matchEntity, $matchDataFull);
             $this->updateMatchTeamWinrate($matchEntity, $matchDataFull);
