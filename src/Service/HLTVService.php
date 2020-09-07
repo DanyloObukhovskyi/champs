@@ -1755,7 +1755,7 @@ class HLTVService
         foreach ($menuOptions as $menuOption)
         {
             $maps[] = [
-                'name' => $menuOption->text(),
+                'name' => trim($menuOption->text()),
                 'id' => $menuOption->attr('id')
             ];
         }
