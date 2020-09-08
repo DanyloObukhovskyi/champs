@@ -19,7 +19,7 @@
 				redirect ('login/auth');
 				die();
 			}
-			$this->load->model(array ('add_m', 'users_model'));
+			$this->load->model(array ('add_m', 'users_model', 'edit_m', 'trainers_model'));
 			$this->user_capabilities = $this->config->item('user_capabilities');
 		}
 		
@@ -98,6 +98,14 @@
 		}
 		
 		public function post($user_id=0) {
+			$current_u_can = $this->users_model->get_capabilities($this->UserID);
+			if(isset($current_u_can[0]["roles"])) {
+				$current_u_can = json_decode($current_u_can[0]["roles"]);
+				$current_u_can = $current_u_can[0];
+			} else {
+				redirect($this->config->item(base_url('404_override')));
+				die();
+			}
 			if(isset($_POST['add'])) {
 				if(trim($_POST['add']) == true  && (int)$user_id == $this->UserID) {
 				
@@ -222,12 +230,20 @@
 			
 			$data['UserID']  = $this->UserID;
 			$data['user']  = $this->ion_auth->user()->row();
-			
+			$data['current_u_can'] = $current_u_can;
 			$data['output'] = $this->load->view('add/article', $data, true);
 			$this->load->view('layout/add', $data);
 		}
 		
 		public function user($user_id=0) {
+			$current_u_can = $this->users_model->get_capabilities($this->UserID);
+			if(isset($current_u_can[0]["roles"])) {
+				$current_u_can = json_decode($current_u_can[0]["roles"]);
+				$current_u_can = $current_u_can[0];
+			} else {
+				redirect($this->config->item(base_url('404_override')));
+				die();
+			}
 			if(isset($_POST['add']) && (int)$user_id == $this->UserID) {
 				if(trim($_POST['add']) == true) {
 					$nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
@@ -256,7 +272,7 @@
 					
 					if($new_passw == $new_passw_confirm && !empty($new_passw)) {
 						$this->load->model(array('Ion_auth_model'));
-						$update_data['password'] = $this->Ion_auth_model->hash_password($new_passw, FALSE, FALSE);
+						$update_data['password'] = $this->create_user_passw($new_passw);
 					} else {
 						redirect ($_SERVER["HTTP_REFERER"]);
 						die();
@@ -313,13 +329,137 @@
 				
 				$data['UserID']  = $this->UserID;
 				$data['user']  = $this->ion_auth->user()->row();
-				
+				$data['current_u_can'] = $current_u_can;
 				$data['output'] = $this->load->view('add/user', $data, true);
 				$this->load->view('layout/add', $data);
 			}
 		}
 		
 		public function trainer($user_id=0) {
+			$current_u_can = $this->users_model->get_capabilities($this->UserID);
+			if(isset($current_u_can[0]["roles"])) {
+				$current_u_can = json_decode($current_u_can[0]["roles"]);
+				$current_u_can = $current_u_can[0];
+			} else {
+				redirect($this->config->item(base_url('404_override')));
+				die();
+			}
+			if(isset($_POST['add'])) {
+				if(trim($_POST['add']) == true  && (int)$user_id == $this->UserID) {
+					$nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
+					$Email = (isset($_POST["Email"]) && !empty($_POST["Email"])) ? trim($_POST["Email"]) : '';
+					
+					$new_passw = (isset($_POST["new_password"]) && !empty($_POST["new_password"])) ? trim($_POST["new_password"]) : '';
+					$new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
+					
+					$price =  (int)(isset($_POST["price"]) && !empty($_POST["price"])) ? trim($_POST["price"]) : '';
+					$video_url =  (isset($_POST["video_url"]) && !empty($_POST["video_url"])) ? trim($_POST["video_url"]) : '';
+					$about =  (isset($_POST["about"]) && !empty($_POST["about"])) ? trim($_POST["about"]) : '';
+					$method =  (isset($_POST["method"]) && !empty($_POST["method"])) ? trim($_POST["method"]) : '';
+					
+					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
+					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
+					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
+					
+					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price) && !empty($video_url) && !empty($about) && !empty($method)) {
+						$mask = "ROLE_USER";
+						$user_capabilities = array($mask);
+						
+						$update_data = array();
+						
+						$update_data['nickname'] = $nickname;
+						$update_data['email'] = $nickname;
+						$update_data['istrainer'] = 1;
+						
+						if($new_passw == $new_passw_confirm) {
+							$this->load->model(array('Ion_auth_model'));
+							$update_data['password'] = $this->create_user_passw($new_passw);
+						} else {
+							redirect ($_SERVER["HTTP_REFERER"]);
+							die();
+						}
+						
+						$update_data['roles'] = json_encode($user_capabilities);
+						$where = array ("email" =>  $Email);
+						$check_user = $this->users_model->get_all($where, false, array(), array(), true, true);
+						if(!empty($check_user[0])) {
+							$check_user = $check_user[0];
+							if (isset($check_user['email'])) {
+								$this->edit_m->updateUser($check_user['id'], $update_data);
+								$created_id = $check_user['id'];
+							}
+						} else {
+							$created_id = $this->add_m->addUser($update_data);
+						}
+						
+						$update_data = array();
+						$update_data['cost'] = $price;
+						$update_data['about'] = $about;
+						$update_data['videolink'] = $video_url;
+						$update_data['method'] = $method;
+						$update_data['userid'] = $created_id;
+						$update_data['twitch'] = $twitch;
+						$update_data['shorttitle'] = $shorttitle;
+						$update_data['stream_type'] = $stream_type;
+						
+						$check_teacher =  $this->trainers_model->check_teacher_data($created_id);
+						if(!empty($check_teacher[0])) {
+							$check_teacher = $check_teacher[0];
+							if (isset($check_teacher['userid'])) {
+								$this->edit_m->updateTeacher($check_teacher['userid'], $update_data);
+							}
+						} else {
+							$this->add_m->addTeacher($update_data);
+						}
+						
+						if(isset($_FILES["userfile"])) {
+							if(!empty($_FILES["userfile"]["name"])) {
+								$config['upload_path']          = $this->config->item('upload_trainers-pic');
+								$config['allowed_types']        = 'jpeg|jpg|png';
+								$config['max_size']             = 2048;
+								$config['max_width']            = 1920;
+								$config['max_height']           = 1080;
+								
+								$this->load->library('upload', $config);
+								
+								$bytes = random_bytes(11);
+								
+								$ext = explode(".", $_FILES["userfile"]["name"] );
+								$ext = array_pop($ext);
+								$fileName = bin2hex($bytes).".".$ext;
+								
+								$_FILES["userfile"]["name"] = $fileName;
+								if ( ! $this->upload->do_upload('userfile'))
+								{
+									$error = array('error' => $this->upload->display_errors());
+								}
+								else
+								{
+									$data = array('upload_data' => $this->upload->data());
+									$this->load->model("edit_m");
+									$this->edit_m->change_user_img($created_id, $data["upload_data"]["orig_name"]);
+								}
+							} else {
+								$this->load->model("edit_m");
+								$this->edit_m->change_user_img($created_id, "prof-pic.svg");
+							}
+							
+						} else {
+							$this->load->model("edit_m");
+							$this->edit_m->change_user_img($created_id, "prof-pic.svg");
+						}
+						
+						
+					} else {
+						redirect($_SERVER["HTTP_REFERER"]);
+						die();
+					}
+				}
+				redirect (base_url("c-admin/trainer/edit/$created_id/$this->UserID"));
+				die();
+			}
+			//-----
+			//-----
 			if($this->UserID != (int)$user_id) {
 				redirect ($this->config->item('login_Ok'));
 				die();
@@ -327,12 +467,21 @@
 			
 			$data['UserID']  = $this->UserID;
 			$data['user']  = $this->ion_auth->user()->row();
-			
+			$data['current_u_can'] = $current_u_can;
+			$data['imgs_url'] = $this->config->item('upload_trainers-pic');
 			$data['output'] = $this->load->view('add/trainer', $data, true);
 			$this->load->view('layout/add', $data);
 		}
 		
 		public function admin($user_id=0) {
+			$current_u_can = $this->users_model->get_capabilities($this->UserID);
+			if(isset($current_u_can[0]["roles"])) {
+				$current_u_can = json_decode($current_u_can[0]["roles"]);
+				$current_u_can = $current_u_can[0];
+			} else {
+				redirect($this->config->item(base_url('404_override')));
+				die();
+			}
 			if(isset($_POST['add'])) {
 				if(trim($_POST['add']) == true  && (int)$user_id == $this->UserID) {
 					$nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
@@ -353,6 +502,30 @@
 					}
 					
 					$user_capabilities = array($mask);
+					
+					if(!empty($Email)) {
+						$where = array ("email" =>  $Email);
+						$check_user = $this->users_model->get_all($where, false, array(), array(), true, true);
+						if(!empty($check_user[0])) {
+							$check_user = $check_user[0];
+							if(isset($check_user['email'])) {
+								$update_data = array();
+								if(!empty($nickname)) {
+									$update_data['nickname'] = $nickname;
+								}
+								
+								if($new_passw == $new_passw_confirm && !empty($new_passw)) {
+									$this->load->model(array('Ion_auth_model'));
+									$update_data['password'] = $this->Ion_auth_model->hash_password($new_passw, FALSE, FALSE);
+								}
+								
+								$update_data['roles'] = json_encode($user_capabilities);
+								$this->edit_m->updateAdmin($check_user['id'], $update_data);
+								redirect (base_url("c-admin/admin/edit/".$check_user['id']."/$this->UserID"));
+								die();
+							}
+						}
+					}
 					
 					$update_data = array();
 					
@@ -399,8 +572,51 @@
 			
 			$data['UserID']  = $this->UserID;
 			$data['user']  = $this->ion_auth->user()->row();
-			
+			$data['current_u_can'] = $current_u_can;
 			$data['output'] = $this->load->view('add/admin', $data, true);
 			$this->load->view('layout/add', $data);
+		}
+		
+		function create_user_passw($new_passw) {
+			$password = $new_passw;
+			$algo = PASSWORD_BCRYPT;
+			$cost = $cost ?? 13;
+			$opsLimit = $opsLimit ?? max(4, \defined('SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE') ? SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE : 4);
+			$memLimit = $memLimit ?? max(64 * 1024 * 1024, \defined('SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE') ? SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE : 64 * 1024 * 1024);
+			
+			if (3 > $opsLimit) {
+				throw new \InvalidArgumentException('$opsLimit must be 3 or greater.');
+			}
+			
+			if (10 * 1024 > $memLimit) {
+				throw new \InvalidArgumentException('$memLimit must be 10k or greater.');
+			}
+			
+			if ($cost < 4 || 31 < $cost) {
+				throw new \InvalidArgumentException('$cost must be in the range of 4-31.');
+			}
+			
+			$algos = array(1 => PASSWORD_BCRYPT, '2y' => PASSWORD_BCRYPT);
+			
+			if (\defined('PASSWORD_ARGON2I')) {
+				$this->algo = $algos[2] = $algos['argon2i'] = (string) PASSWORD_ARGON2I;
+			}
+			
+			if (\defined('PASSWORD_ARGON2ID')) {
+				$this->algo = $algos[3] = $algos['argon2id'] = (string) PASSWORD_ARGON2ID;
+			}
+			
+			if (null !== $algo) {
+				$this->algo = $algos[$algo] ?? $algo;
+			}
+			
+			$this->options = array(
+				'cost' => $cost,
+				'time_cost' => $opsLimit,
+				'memory_cost' => $memLimit >> 10,
+				'threads' => 1,
+			);
+			$hash = password_hash($password, $this->algo, $this->options);
+			return $hash;
 		}
 	}

@@ -87,7 +87,16 @@
 					<input type="password" name="new_confirm" value="" id="new_confirm" placeholder="************" title="Invalid password confirm" pattern="^.{8}.*$" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIUlEQVQ4EX2TOYhTURSG87IMihDsjGghBhFBmHFDHLWwSqcikk4RRKJgk0KL7C8bMpWpZtIqNkEUl1ZCgs0wOo0SxiLMDApWlgOPrH7/5b2QkYwX7jvn/uc//zl3edZ4PPbNGvF4fC4ajR5VrNvt/mo0Gr1ZPOtfgWw2e9Lv9+chX7cs64CS4Oxg3o9GI7tUKv0Q5o1dAiTfCgQCLwnOkfQOu+oSLyJ2A783HA7vIPLGxX0TgVwud4HKn0nc7Pf7N6vV6oZHkkX8FPG3uMfgXC0Wi2vCg/poUKGGcagQI3k7k8mcp5slcGswGDwpl8tfwGJg3xB6Dvey8vz6oH4C3iXcFYjbwiDeo1KafafkC3NjK7iL5ESFGQEUF7Sg+ifZdDp9GnMF/KGmfBdT2HCwZ7TwtrBPC7rQaav6Iv48rqZwg+F+p8hOMBj0IbxfMdMBrW5pAVGV/ztINByENkU0t5BIJEKRSOQ3Aj+Z57iFs1R5NK3EQS6HQqF1zmQdzpFWq3W42WwOTAf1er1PF2USFlC+qxMvFAr3HcexWX+QX6lUvsKpkTyPSEXJkw6MQ4S38Ljdbi8rmM/nY+CvgNcQqdH6U/xrYK9t244jZv6ByUOSiDdIfgBZ12U6dHEHu9TpdIr8F0OP692CtzaW/a6y3y0Wx5kbFHvGuXzkgf0xhKnPzA4UTyaTB8Ph8AvcHi3fnsrZ7Wore02YViqVOrRXXPhfqP8j6MYlawoAAAAASUVORK5CYII=); background-attachment: scroll; background-size: 16px 18px; cursor: auto; background-position: 98% 50%; background-repeat: no-repeat no-repeat;">
 				</div>
 			</div>
+			<div class="col-item">
+				<div class="admin-notice" style="height: 38px;">
+					<div style="display: block; height: 50px;   vertical-align: top;" class="ml-35 mt-10">
+						<input name="add_trainer" value="1" type="checkbox" class="admin-checkbox" style="margin-top: 13px;" >
+						<div class="admin-notice-text" style=" margin-top: 10px;">Добавить в тренера</div>
+					</div>
+				</div>
+			</div>
 		</div>
+		
 		<!--- --->
 		<!--- --->
 		<!--- --->
@@ -107,7 +116,7 @@
 			<div class="col-item">
 				<label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img style="top: 3px;" class="search-img" src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
 				<div class="mb-10 preview_img">
-					<img class="img_preview" id="img_preview" src="<?php print base_url ("assets/profile-pic/".$user_info[0]['photo']); ?>">
+					<img class="img_preview" id="img_preview" src="<?php print $imgs_url.$user_info[0]['photo']; ?>">
 				</div>
 <!--				<button class="btn btn-orange mt-15 mr-10 fw-400">Сохранить изображение</button>-->
 				

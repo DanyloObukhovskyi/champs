@@ -17,12 +17,12 @@
 		<?php } ?>
 	<aside>
 		<ul>
-			<li class="active"><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
-			<li><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
-			<li><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
-			<li><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
-			<li><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
-			<li><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[1]) ? '' : 'display:none'; ?>" class="active"><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[2]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[3]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
 		</ul>
 	</aside>
 	<!--- ---->
@@ -164,7 +164,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 			
 			
 				<div class="change-editor-edit-ban">
@@ -192,7 +192,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 			
 			
 				<div class="change-editor-edit-ban">
@@ -220,7 +220,7 @@
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
 				
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 				
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
@@ -257,7 +257,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 				
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -283,7 +283,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 				
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -309,7 +309,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 			
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -335,7 +335,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 				
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -364,7 +364,7 @@
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
-						<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+						<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 						
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
@@ -397,7 +397,7 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="Имя поста" name="post_title"  value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker9" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker9" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
 				
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">

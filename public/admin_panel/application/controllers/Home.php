@@ -89,6 +89,7 @@
 //			    $data['posts'] = $posts;
 				
 				//----------
+				$data['current_u_can'] = $current_u_can;
 				$data['output'] = $this->load->view('home/articles', $data, true);
 				$this->load->view('layout/home', $data);
 			} else {
@@ -162,8 +163,8 @@
 				$statistics[2] = array('date'=>'20 June', 'time'=>1590364800, 'team1'=>'Renegades', 'team2'=>'Chiefs', 'team1_ico'=>'team-pic.png', 'team2_ico' =>'team-pic.png');
 				$statistics[3] = array('date'=>'21 July', 'time'=>1590364800, 'team1'=>'Renegades', 'team2'=>'Chiefs', 'team1_ico'=>'team-pic.png', 'team2_ico' =>'team-pic.png');
 				$data['statistics'] = $statistics;
-			
-			
+				
+				$data['current_u_can'] = $current_u_can;
 				$data['output'] = $this->load->view('home/matches', $data, true);
 				$this->load->view('layout/home', $data);
 			} else {
@@ -246,7 +247,7 @@
 //			    $data['users'] = $users;
 			
 				$data['imgs_url'] = $this->config->item('display_profile-pic');
-				
+				$data['current_u_can'] = $current_u_can;
 				$data['output'] = $this->load->view('home/users', $data, true);
 				$this->load->view('layout/home', $data);
 			} else {
@@ -318,6 +319,7 @@
 				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
 //			    $sort = array_merge(array('id' => 'ASC'), $sort);
 				$data['users'] = $this->trainers_model->get_all_trainers($where, false, $sort, array($offset, $this->post_per_page), true);
+
 			
 				foreach($data['users'] as $key =>&$user_data) {
 					$user_data['roles'] = json_decode($user_data['roles']);
@@ -325,6 +327,7 @@
 				}
 //			    $users = array();
 //			    $data['users'] = $users;
+				$data['current_u_can'] = $current_u_can;
 				$data['imgs_url'] = $this->config->item('display_trainers-pic');
 				$data['output'] = $this->load->view('home/trainers', $data, true);
 				$this->load->view('layout/home', $data);
@@ -396,7 +399,7 @@
 				$where['0001'] = 'user_role';
 			
 				$offset = $this->post_per_page * $page;
-				$posts_count = $this->users_model->get_all($where, true);;
+				$posts_count = $this->users_model->get_all_admins($where, true);;
 			
 				$config = $this->config->item('pagination');
 				$config['base_url'] = site_url('c-admin/posts/page/');
@@ -418,7 +421,7 @@
 				$data['sort_email'] = isset($sort['email']) ? $sort['email'] : '';
 				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
 				//$sort = array_merge(array('id' => 'ASC'), $sort);
-				$data['users'] = $this->users_model->get_all($where, false, $sort, array($offset, $this->post_per_page));
+				$data['users'] = $this->users_model->get_all_admins($where, false, $sort, array($offset, $this->post_per_page));
 			
 				foreach($data['users'] as $key =>&$user_data) {
 					$user_data['roles'] = json_decode($user_data['roles']);
@@ -428,6 +431,7 @@
 //			    $data['users'] = $users;
 			
 				//----------
+				$data['current_u_can'] = $current_u_can;
 				$data['output'] = $this->load->view('home/admins', $data, true);
 				$this->load->view('layout/home', $data);
 			} else {

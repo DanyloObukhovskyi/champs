@@ -8,7 +8,7 @@
 	
 	class Edit_m extends CI_Model {
 		
-		private $table = array("users" => "user", "posts" => "news", "trainers" => "user", "admins" => "user", "payments" => "payments");
+		private $table = array("users" => "user", "posts" => "news", "trainers" => "teachers", "admins" => "admins", "payments" => "payments");
 		
 		public function __construct()
 		{
@@ -26,6 +26,13 @@
 			if($user_id > 0 && ! empty($update)) {
 				$this->db->where('id', $user_id);
 				$this->db->update($this->table['users'], $update);
+			}
+		}
+		
+		public function updateTeacher($user_id = 0, $update = array()) {
+			if($user_id > 0 && ! empty($update)) {
+				$this->db->where('userid', $user_id);
+				$this->db->update($this->table['trainers'], $update);
 			}
 		}
 		

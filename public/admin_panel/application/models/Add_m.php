@@ -8,7 +8,7 @@
 	
 	class Add_m extends CI_Model {
 		
-		private $table = array("users" => "user", "posts" => "news", "trainers" => "user", "admins" => "user", "payments" => "payments");
+		private $table = array("users" => "user", "posts" => "news", "trainers" => "user", "admins" => "admins", "payments" => "payments", "teacher"=>"teachers");
 		
 		public function __construct()
 		{
@@ -21,6 +21,14 @@
 				return $this->db->insert_id();
 			}
 		}
+		
+		public function addTeacher($insert=array()) {
+			if(!empty($insert)) {
+				$this->db->insert($this->table['teacher'], $insert);
+				return $this->db->insert_id();
+			}
+		}
+		
 		
 		public function addAdmin($insert=array()) {
 			if(!empty($insert)) {

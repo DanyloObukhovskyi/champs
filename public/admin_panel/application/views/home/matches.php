@@ -11,12 +11,12 @@
 		<?php } ?>
 	<aside>
 		<ul>
-			<li><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
-			<li class="active"><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
-			<li><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
-			<li><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
-			<li><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
-			<li><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[1]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[2]) ? '' : 'display:none'; ?>" class="active"><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[3]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
 		</ul>
 	</aside>
 	<!--- ---->

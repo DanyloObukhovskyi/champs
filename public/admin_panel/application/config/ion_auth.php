@@ -28,7 +28,7 @@
 	| Database table names.
 	*/
 //	$config['tables']['users']           = 'users';
-	$config['tables']['users']           = 'user';
+	$config['tables']['users']           = 'admins';
 //	$config['tables']['groups']          = 'groups';
 //	$config['tables']['groups']          = 'groups';
 //	$config['tables']['users_groups']    = 'users_groups';
@@ -41,7 +41,7 @@
 	 | Joins from users.id
 	 | Joins from groups.id
 	 */
-	$config['join']['users']  = 'user_id';
+	$config['join']['users']  = 'id';
 //	$config['join']['groups'] = 'group_id';
 	
 	/*

@@ -11,12 +11,12 @@
 		<?php } ?>
 	<aside>
 		<ul>
-			<li><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
-			<li><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
-			<li><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
-			<li class="active" ><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
-			<li><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
-			<li><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[1]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[2]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
+			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[3]) ? '' : 'display:none'; ?>" class="active" ><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
+			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
 		</ul>
 	</aside>
 	<!--- ---->
@@ -66,9 +66,9 @@
 						<tr>
 							<td><?php echo $val['id']; ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print $imgs_url.$val['photo']; ?>" /></td>
-							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print "10.руб/час" ?></td>
+							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['cost'].".руб/час" ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['nickname']; ?></td>
-							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/trainer/edit/".$val['id']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <a href="<?php print base_url("c-admin/trainer/delete/".$val['id']."/".$UserID); ?>" class="pointer txt-orange ml-15 fw-600">Удалить</a></td>
+							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/trainer/edit/".$val['userid']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <a href="<?php print base_url("c-admin/trainer/delete/".$val['userid']."/".$UserID); ?>" class="pointer txt-orange ml-15 fw-600">Удалить</a></td>
 						
 						</tr>
 						<?php  $rmo_i++; }}
@@ -85,7 +85,7 @@
 			
 			<?php if(isset($pagination[0][0])){?>
 			<div class="pagination">
-				<?php print ('<a href="'.site_url('c-admin/admins/page/').$pagination[0][0].'">')."  <div class='pagination__prev'></div></a>";?>
+				<?php print ('<a href="'.site_url('c-admin/trainers/page/').$pagination[0][0].'">')."  <div class='pagination__prev'></div></a>";?>
 				
 				<?php
 					$next_page = 1;
@@ -103,10 +103,10 @@
 					} else {
 						$active = '';
 					}
-					print ('<a href="'.site_url('c-admin/users/page/').$page_i.'">')."<div class='pagination__item ".$active."'>$page_i</div></a>";?>
+					print ('<a href="'.site_url('c-admin/trainers/page/').$page_i.'">')."<div class='pagination__item ".$active."'>$page_i</div></a>";?>
 					<?php
 					$page_i++; }?>
-				<?php print ('<a href="'.site_url('c-admin/users/page/').$next_page.'">')."  <div class='pagination__next'></div></a>";?>
+				<?php print ('<a href="'.site_url('c-admin/trainers/page/').$next_page.'">')."  <div class='pagination__next'></div></a>";?>
 			</div>
 		</div>
 		<?php }?>

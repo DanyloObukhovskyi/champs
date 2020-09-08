@@ -27,6 +27,26 @@
 				if(isset($current_u_can[0]["roles"])) {
 					$current_u_can = json_decode($current_u_can[0]["roles"]);
 					$current_u_can = $current_u_can[0];
+				} else {
+					$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+					
+					$this->data['identity'] = array('name' => 'identity',
+						'id' => 'identity',
+						'type' => 'email',
+						'placeholder' => 'Email',
+					);
+					$this->data['password'] = array('name' => 'password',
+						'id' => 'password',
+						'type' => 'password',
+						'placeholder' => "Password",
+					);
+					
+					$output = $this->load->view("auth/Auth", $this->data, true);
+					$this->load->view('layout/auth', array(
+							'output' => $output,
+							'top_menu' => false)
+					);
+					return;
 				}
 				if($current_u_can[0] == "1") {
 					redirect($this->config->item('admin_login'), 'refresh');

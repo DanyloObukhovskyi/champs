@@ -34,7 +34,7 @@
 	?>
 	<!--- ---->
 	<div class="main-content">
-		<h1 class="main-title">Создать профильт админа</h1>
+		<h1 class="main-title">Создать профиль админа</h1>
 		
 		
 		<form action="<?php print base_url("c-admin/admin/add/".$UserID); ?>" method="post" enctype="multipart/form-data">

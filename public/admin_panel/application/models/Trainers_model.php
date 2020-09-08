@@ -15,14 +15,24 @@
 			$this->load->database();
 		}
 		
+		function check_teacher_data($id = 0) {
+			if($id > 0) {
+				$this->db->select('*');
+				$this->db->from("teachers");
+				$this->db->where('userid', $id);
+				$result = $this->db->get();
+				return $result->result_array();
+			}
+		}
+		
 		function get_all_trainers($where = array(), $is_count = false, $sort = array(), $limit = array())
 		{
-			
 			$this->db->select('*');
 			$this->db->from($this->table);
+			$this->db->join('teachers', 'user.id = teachers.userid');
 			
 			if (!empty($where['id'])) {
-				$this->db->where('id', $where['id']);
+				$this->db->where('user.id', $where['id']);
 			}
 			else {
 				$ij = 1;
@@ -75,7 +85,7 @@
 				
 				$this->db->limit($per_page, $offset);
 			}
-			$this->db->where('istrainer', 1);
+			$this->db->where('user.istrainer', 1);
 			$result = $this->db->get();
 //			echo "<pre>", print_r ($this->db->last_query());
 			if ($is_count) {
