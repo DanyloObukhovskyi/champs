@@ -55,15 +55,15 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            $message = (new \Swift_Message('Welcome'))
-                ->setFrom('mailer@champs.pro')
-                ->setTo($user->getEmail())
-                ->setBody(
-                    "Поздравляем! Вы успешно зарегистрировались на сайте champs.pro",
-                    'text/html'
-                )
-            ;
-            $this->mailer->send($message);
+//            $message = (new Swift_Message('Welcome'))
+//                ->setFrom('mailer@champs.pro')
+//                ->setTo($user->getEmail())
+//                ->setBody(
+//                    "Поздравляем! Вы успешно зарегистрировались на сайте champs.pro",
+//                    'text/html'
+//                )
+//            ;
+//            $this->mailer->send($message);
             return $this->json([
                 'router' => 'main',
                 'route' => 'app_login',
