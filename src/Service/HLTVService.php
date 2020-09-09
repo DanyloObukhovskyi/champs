@@ -788,7 +788,7 @@ class HLTVService
         if (count($teamPersonsRaw) === 0)
         {
             LoggerService::error('teams players not found');
-            return false;
+            return $team;
         }
 
         foreach ($teamPersonsRaw as $teamPersonRaw)
@@ -1199,13 +1199,10 @@ class HLTVService
      */
     protected static function getEventFull($url)
     {
-        LoggerService::add("hltv get event full", LoggerService::TYPE_INFO);
-
         try {
             $content = PageContentService::getPageContent($url);
         }catch (\Exception $e){
 
-            LoggerService::error("hltv get event $e", LoggerService::TYPE_INFO);
             $content = null;
         }
 
@@ -1223,6 +1220,7 @@ class HLTVService
         }
 
         $result = [
+            'url' => $url,
             'name' => $eventNameRaw[0]->text(),
             'prize' => 'Other',
             'teams' => null,
@@ -1237,8 +1235,10 @@ class HLTVService
 
             $prize = str_replace('spots in', 'места в', $prize);
             $prize = str_replace('spot at', 'место в', $prize);
+
             $result['prize'] = $prize;
         }
+
 
         $teamNameRaw = $document->first("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' teamsNumber ')]", Query::TYPE_XPATH);
 
@@ -1247,10 +1247,33 @@ class HLTVService
             $result['teams'] = $teamNameRaw->text() === 'TBA' ? null : ((int) filter_var($teamNameRaw->text(), FILTER_SANITIZE_NUMBER_INT));
         }
 
-        $locationRaw = $document->first("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' location  ')]//span[contains(concat(' ', normalize-space(@class), ' '), ' text-ellipsis  ')]", Query::TYPE_XPATH);
+        $locationRaw = $document->first('.location .flag-align');
         if (isset($locationRaw))
         {
             $result['location'] = $locationRaw->text();
+
+            $locationIcon = $locationRaw->first('img');
+
+            if (isset($locationIcon))
+            {
+                $iconUrl = $locationIcon->attr('src');
+                $iconUrlExplode = explode('/', $iconUrl);
+                [$iconName, $extension] = explode('.', end($iconUrlExplode));
+
+                $result['flag'] = [
+                    'url' => $iconUrl,
+                    'name' => $iconName,
+                    'extension' => $extension
+                ];
+            }
+        }
+        $imageHeader = $document->first('.header img.event-img');
+        if (isset($imageHeader))
+        {
+            $imageHeader = $imageHeader->attr('src');
+            $imageHeader = self::urlDecorator($imageHeader);
+
+            $result['imageHeader'] = $imageHeader;
         }
 
         $eventDates = static::getEventDate($document);
@@ -1641,6 +1664,15 @@ class HLTVService
 
                 $eventItem = static::getEventFull($url);
 
+                $image = $smallEvent->first('img.logo');
+
+                if (isset($image)) {
+                    $image = $image->attr('src');
+
+                    $image = self::urlDecorator($image);
+
+                    $eventItem['image'] = $image;
+                }
                 $events[] = $eventItem;
             }
 
@@ -1654,7 +1686,6 @@ class HLTVService
                 $events[] = $eventItem;
             }
         }
-
         return $events;
     }
 
@@ -1818,5 +1849,127 @@ class HLTVService
         }
 
         return $players;
+    }
+
+    public static function getEndEventData($url = 'https://www.hltv.org/events/5449/nine-to-five-3-dawn')
+    {
+        $eventItem = static::getEventFull($url);
+
+        $content = PageContentService::getPageContent($url);
+
+        $document = new Document($content);
+
+        $prizeDistributionBlock = $document->first('.placements');
+
+        if (isset($prizeDistributionBlock))
+        {
+            $prizeDistributions = $prizeDistributionBlock->find('.placement');
+
+            foreach ($prizeDistributions as $prizeDistribution)
+            {
+                $distribution = [];
+                $team = $prizeDistribution->first('.team a');
+                if (isset($team))
+                {
+                    $teamName = trim($team->text());
+                    $teamUrl = $team->attr('href');
+
+                    if (isset($teamUrl))
+                    {
+                        $teamUrl = self::urlDecorator($teamUrl);
+                    }
+
+                    $distribution['teamName'] = $teamName;
+                    $distribution['teamUrl'] = $teamUrl;
+                }
+                $position = $prizeDistribution->first('div:nth-child(2)');
+                if (isset($position))
+                {
+                    $distribution['position'] = trim($position->text());
+                }
+                $prizes = $prizeDistribution->find('.prizeMoney');
+                if (!empty($prizes))
+                {
+                    foreach ($prizes as $prize)
+                    {
+                        if (!empty(trim($prize->text())))
+                        {
+                            $distribution['prize'] = trim($prize->text());
+                        }
+                    }
+                }
+                $eventItem['prizeDistributions'][] = $distribution;
+            }
+        }
+
+        $groupPlayBlock = $document->first('.groups-container');
+
+        $groups = [];
+        if (isset($groupPlayBlock))
+        {
+            $groupPlays = $groupPlayBlock->find('.group');
+            foreach ($groupPlays as $groupPlay)
+            {
+                $teams = $groupPlay->find('tr');
+
+                if (!empty($teams))
+                {
+                    $groupHeader = $teams[0]->find('td');
+
+                    $groupName = trim($groupHeader[0]->text());
+                    $groups[$groupName] = [];
+
+                    unset($teams[0]);
+
+                    foreach ($teams as $team)
+                    {
+                        $teamValues = $team->find('td');
+                        $teamName = trim($teamValues[0]->text());
+                        $groups[$groupName][$teamName] = [];
+
+                        unset($teamValues[0]);
+                        for ($i = 1; $i <= (int)count($teamValues); $i++)
+                        {
+                            $fieldName = trim($groupHeader[$i]->text());
+                            $groups[$groupName][$teamName][$fieldName] = trim($teamValues[$i]->text());
+                        }
+                    }
+                }
+            }
+            $eventItem['groupPLay'] = $groups;
+        }
+        $mapPoolBlock = $document->first('.map-pool');
+
+        if (isset($mapPoolBlock))
+        {
+            $maps = [];
+            $mapPools = $mapPoolBlock->find('.map-pool-map-name');
+
+            foreach ($mapPools as $mapPool)
+            {
+                $maps[] = trim($mapPool->text());
+            }
+
+            $eventItem['mapsPool'] = $maps;
+        }
+        $relatedEventsBlock = $document->first('.related-events');
+
+        if (isset($relatedEventsBlock))
+        {
+            $relatedEvents = [];
+            $events = $relatedEventsBlock->find('.related-event a');
+            foreach ($events as $event)
+            {
+                $eventUrl = $event->attr('href');
+                if (isset($eventUrl))
+                {
+                    $eventUrl = self::urlDecorator($eventUrl);
+
+                    $relatedEvents[] =  self::getEventFull($eventUrl);
+                }
+            }
+            $eventItem['relatedEvents'] = $relatedEvents;
+        }
+        return $eventItem;
     }
 }

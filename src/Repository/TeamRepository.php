@@ -27,7 +27,7 @@ class TeamRepository extends ServiceEntityRepository
     public function getByName($name): ?Team
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.name = :name')
+            ->andWhere('t.name like :name')
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult()

@@ -7,6 +7,7 @@ use App\Entity\Match;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -108,6 +109,39 @@ class EventRepository extends ServiceEntityRepository
             ->orderBy('e.createdAt', 'DESC')
             ->andWhere(' e.createdAt is not null')
             ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        return $events;
+    }
+
+    public function getLastWeekEvents()
+    {
+        $dateNow = date('Y.m.d');
+        $dateWeek = date('Y.m.d', strtotime("-7 days"));
+
+        /** @var Event[] $events */
+        $events = $this->createQueryBuilder('e')
+            ->andWhere(' e.url is not null')
+            ->andWhere('e.ended_at <= :dateNow')
+            ->andWhere('e.ended_at >= :dateWeek')
+            ->setParameter('dateNow', $dateNow)
+            ->setParameter('dateWeek', $dateWeek)
+            ->getQuery()
+            ->getResult();
+
+        return $events;
+    }
+
+    public function getFeatureEvents()
+    {
+        $date = date('Y.m.d');
+
+        /** @var Event[] $events */
+        $events = $this->createQueryBuilder('e')
+            ->andWhere(' e.url is not null')
+            ->andWhere('e.ended_at >= :date')
+            ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
 

@@ -11,6 +11,7 @@ use DateTime;
 use App\Entity\Event;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class EventService extends EntityService
 {
@@ -21,11 +22,36 @@ class EventService extends EntityService
 
     protected $imageService;
 
+    protected $flagIconService;
+
+    protected $eventPrizeDistributionService;
+
+    protected $eventGroupPlayService;
+
+    protected $teamService;
+
+    protected $eventMapPoolService;
+
+    protected $relatedEventService;
+
+    /** @var MapService */
+    protected $mapService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->imageService = new ImageService();
+        $this->flagIconService = new FlagIconService($entityManager);
+
+        $this->eventPrizeDistributionService = new EventPrizeDistributionService($entityManager);
+        $this->eventGroupPlayService = new EventGroupPlayService($entityManager);
+
+        $this->teamService = new TeamService($entityManager);
+        $this->mapService = new MapService($entityManager);
+
+        $this->eventMapPoolService = new EventMapPoolService($entityManager);
+        $this->relatedEventService = new RelatedEventService($entityManager);
     }
 
     /**
@@ -37,60 +63,19 @@ class EventService extends EntityService
      */
     public function create($values, DateTime $parseDate = null): Event
     {
-        if (empty($values['name']))
-        {
-            $values['name'] = '';
-        }
+        $event = $this->createBaseEvent($values, $parseDate);
 
-        $values['started_at'] = $values['started_at']->format("Y-m-d");
+        $prizeDistributions = $values['prizeDistributions'] ?? null;
+        $this->setPrizeDistributions($event, $prizeDistributions);
 
-        /** @var Event $event */
-        $event = $this->getByNameAndStartDate($values['name'], $values['started_at']);
-        if (empty($event))
-        {
-            $event = new $this->entity;
-        }
-        if (empty($values['ended_at'])){
-            $values['ended_at'] =  $values['started_at'];
-        }
-        if (is_string($values['ended_at'])){
-            $values['ended_at'] = new \DateTime($values['ended_at']);
-        }
+        $groupPlay = $values['groupPLay'] ?? null;
+        $this->setGroupPLay($event, $groupPlay);
 
-        /** @var Event $event */
-        $event
-            ->setPrize($values['prize'])
-            ->setCommandCount($values['teams'])
-            ->setLocation($values['location'])
-            ->setName($values['name'])
-            ->setStartedAt(new \DateTime($values['started_at']))
+        $mapPool = $values['mapsPool'] ?? null;
+        $this->setMapPool($event, $mapPool);
 
-            ->setEndedAt($values['ended_at']);
-
-        if (isset($parseDate)){
-            $event->setCreatedAt($parseDate);
-        }
-
-        if (!empty($values['image']))
-        {
-            $image = DownloadFile::getImage($values['image']);
-            if (isset($image))
-            {
-                $event->setImage($image);
-            }
-        }
-        if (!empty($values['imageHeader']))
-        {
-            $image = DownloadFile::getImage($values['imageHeader']);
-            if (isset($image))
-            {
-                $event->setImageHeader($image);
-            }
-        }
-
-        $this->entityManager->persist($event);
-
-        $this->entityManager->flush();
+        $relatedEvents = $values['relatedEvents'] ?? null;
+        $this->setRelatedEvents($event, $relatedEvents);
 
         return $event;
     }
@@ -187,5 +172,135 @@ class EventService extends EntityService
             ];
         }
         return $futureEventItems;
+    }
+
+    public function createBaseEvent($values, $parseDate = null)
+    {
+        $startedAt = $values['started_at']->format("Y-m-d");
+
+        /** @var Event $event */
+        $event = $this->getByNameAndStartDate($values['name'] ?? '', $startedAt);
+        if (empty($event))
+        {
+            $event = new $this->entity;
+        }
+        if (empty($values['ended_at'])){
+            $values['ended_at'] =  $values['started_at'];
+        }
+        if (is_string($values['ended_at'])){
+            $values['ended_at'] = new \DateTime($values['ended_at']);
+        }
+
+        /** @var Event $event */
+        $event->setPrize($values['prize']);
+        $event->setCommandCount($values['teams']);
+        $event->setLocation($values['location']);
+        $event->setName($values['name']);
+        $event->setStartedAt(new \DateTime($startedAt));
+        $event->setEndedAt($values['ended_at']);
+        $event->setCreatedAt($parseDate);
+        $event->setUrl($values['url'] ?? null);
+
+        if (!empty($values['image']))
+        {
+            $image = DownloadFile::getImage($values['image']);
+            if (isset($image))
+            {
+                $event->setImage($image);
+            }
+        }
+        if (!empty($values['imageHeader']))
+        {
+            try {
+                $image = DownloadFile::getImage($values['imageHeader']);
+            }catch (Exception $e){
+                LoggerService::error("event download header image error: $e");
+            }
+            if (isset($image))
+            {
+                $event->setImageHeader($image);
+            }
+        }
+        if (isset($values['flag']))
+        {
+            $flag = $this->flagIconService->getFlagByOrigName($values['flag']['name']);
+            if (empty($flag)){
+                $flag = $this->flagIconService->createOrUpdate($values['flag']);
+            }
+            $event->setFlagIcon($flag);
+        }
+
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
+
+        return $event;
+    }
+
+    public function setPrizeDistributions($event, $prizeDistributions)
+    {
+        if (isset($prizeDistributions))
+        {
+            foreach ($prizeDistributions as $prizeDistribution)
+            {
+                $this->eventPrizeDistributionService->create($prizeDistribution, $event);
+            }
+        }
+    }
+
+    public function setGroupPLay($event, $groupPlay)
+    {
+        if (isset($groupPlay)){
+            foreach ($groupPlay as $groupName => $teams)
+            {
+                foreach ($teams as $teamName => $teamFields)
+                {
+                    $team = $this->teamService->getByName($teamName);
+                    if (isset($team))
+                    {
+                        $this->eventGroupPlayService->create($event, $team, $groupName, $teamFields);
+                    }
+                }
+            }
+        }
+    }
+
+    public function setMapPool($event, $mapPool)
+    {
+        if (isset($mapPool))
+        {
+            foreach ($mapPool as $mapName){
+                $map = $this->mapService->getByName($mapName);
+
+                if (isset($map)){
+                    $this->eventMapPoolService->create($event, $map);
+                }
+            }
+        }
+    }
+
+    public function setRelatedEvents($event, $relatedEvents)
+    {
+        if (isset($relatedEvents))
+        {
+            foreach ($relatedEvents as $relatedEvent)
+            {
+                $relatedEventEntity = $this->createBaseEvent($relatedEvent);
+
+                if (isset($relatedEventEntity))
+                {
+                    $this->relatedEventService->create($event, $relatedEventEntity);
+                }
+            }
+        }
+    }
+
+    public function getLastWeekEvents()
+    {
+        return $this->repository->getLastWeekEvents();
+    }
+
+    public function getFeatureEvents()
+    {
+        return $this->repository->getFeatureEvents();
     }
 }

@@ -64,6 +64,16 @@ class Event
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $url;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=FlagIcon::class)
+     */
+    private $flagIcon;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -182,5 +192,37 @@ class Event
     public function setImageHeader($imageHeader): void
     {
         $this->imageHeader = $imageHeader;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url): void
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlagIcon()
+    {
+        return $this->flagIcon;
+    }
+
+    /**
+     * @param mixed $flagIcon
+     */
+    public function setFlagIcon($flagIcon): void
+    {
+        $this->flagIcon = $flagIcon;
     }
 }

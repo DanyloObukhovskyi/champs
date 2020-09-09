@@ -7,6 +7,7 @@
 namespace App\Service;
 
 
+use App\Entity\Player;
 use App\Entity\Team;
 use App\Repository\TeamRepository;
 use Carbon\Carbon;
@@ -23,11 +24,17 @@ class TeamService extends EntityService
     /** @var FlagIconService */
     protected $flagIconService;
 
+    protected $personService;
+
+    protected $playerService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->flagIconService = new FlagIconService($entityManager);
+        $this->personService = new PersonService($entityManager);
+        $this->playerService = new PlayerService($entityManager);
     }
 
     public function create($values)
@@ -87,5 +94,45 @@ class TeamService extends EntityService
                 }
             }
         }
+    }
+
+    public function createTeams($teams)
+    {
+        $result = [];
+        foreach ($teams as $team)
+        {
+            LoggerService::add("parserMatchesCommand 283");
+            $teamEntity = $this->create($team);
+
+            if (!isset($teamEntity))
+            {
+                LoggerService::error("team entity {$team['name']} didnt created");
+                return [];
+            }
+            LoggerService::add("parserMatchesCommand 290");
+            foreach ($team['players'] as $playerValues)
+            {
+                LoggerService::add("parserMatchesCommand 293");
+                $personEntity = $this->personService->create($playerValues);
+                LoggerService::add("parserMatchesCommand 295");
+                if (!isset($personEntity))
+                {
+                    LoggerService::error("person entity {$playerValues['nick']} didn't created");
+                    continue;
+                }
+                LoggerService::add("parserMatchesCommand 299");
+                /** @var Player|null $playerEntity */
+                $playerEntity = $this->playerService->create($personEntity, $teamEntity);
+                if (!isset($playerEntity))
+                {
+                    LoggerService::error("player entity {$playerValues['nick']} didn't created");
+                    continue;
+                }
+            }
+
+            $result[] = $teamEntity;
+        }
+
+        return !empty($result) ? $result : null;
     }
 }

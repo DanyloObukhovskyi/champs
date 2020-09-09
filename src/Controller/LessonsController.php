@@ -385,5 +385,4 @@ class LessonsController extends AbstractController
 
         return $this->json($response);
     }
-
 }
