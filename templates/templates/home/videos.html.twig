@@ -12,11 +12,11 @@
     <a class="grid-row setStreamButton" data-id="{{item.videoId}}" data-link="{{item.id}}" data-type="{{item.videoType}}">
       {# <div class="live">Live</div> #}
       <img src="//img.youtube.com/vi/{{item.videoId}}/hqdefault.jpg" class="logo videoBox" alt="Video" />
-      <div class="title-block">
-        <div class="title">
+      <div class="title-block" data-id="{{item.videoId}}">
+        <div class="title" data-id="{{item.videoId}}">
           {{item.title}}
         </div>
-        <div class="bottom">
+        <div class="bottom" data-id="{{item.videoId}}">
           Champs
           <span style="display: none">
             <img src="/images/Eye.svg" alt="Eye" />
