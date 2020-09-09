@@ -505,7 +505,7 @@
 					
 					if(!empty($Email)) {
 						$where = array ("email" =>  $Email);
-						$check_user = $this->users_model->get_all($where, false, array(), array(), true, true);
+						$check_user = $this->users_model->get_all_admins($where, false, array(), array(), true, true);
 						if(!empty($check_user[0])) {
 							$check_user = $check_user[0];
 							if(isset($check_user['email'])) {
