@@ -283,7 +283,7 @@
 					
 					if(isset($_FILES["userfile"])) {
 						if(!empty($_FILES["userfile"]["name"])) {
-							$config['upload_path']          = './assets/profile-pic/';
+							$config['upload_path']          = $this->config->item('upload_profile-pic');
 							$config['allowed_types']        = 'jpeg|jpg|png';
 							$config['max_size']             = 2048;
 							$config['max_width']            = 1920;
