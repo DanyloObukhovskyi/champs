@@ -90,7 +90,7 @@ $route['c-admin/admin/add/(:num)'] = 'add_c/admin/$1';
 
 $route['c-admin/upload_img/(:num)'] = 'upload_img/index/$1';
 	
-	
+$route['c-admin/ajax/update'] = 'handle_a_request';	
 $route['download/db'] = 'downloaddb';
 
 $route['404_override'] = '';
