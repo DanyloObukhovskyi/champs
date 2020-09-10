@@ -145,13 +145,7 @@
 			</div>
 		</div>
 		<?php }?>
-		
-		<div class="flex">
-			<a href="<?php echo site_url('create/websites'); ?>">
-				<button class="btn btn-orange mt-15 mr-10">Добавить матч</button>
-			</a>
-		</div>
-	
+		<div class="flex"></div>
 	</div>
 </main>
 <script src="<?php echo base_url('assets/js/table-expander.js'); ?>"></script>
