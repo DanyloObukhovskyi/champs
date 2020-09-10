@@ -49,6 +49,20 @@ class RatingPersonRepository extends ServiceEntityRepository
             ->setMaxResults(8)
             ->getQuery()
             ->getResult();
+        $ratingPersonsIds = [];
+
+        foreach ($ratingPersons as $ratingPerson)
+        {
+            $ratingPersonsIds[] = $ratingPerson->getId();
+        }
+
+        $ratingPersons = $this->createQueryBuilder('r')
+            ->orderBy('r.rating', 'DESC')
+            ->andWhere('r.id IN (:ids)')
+            ->setParameter('ids', $ratingPersonsIds)
+            ->setMaxResults(8)
+            ->getQuery()
+            ->getResult();
 
         return $ratingPersons;
     }
