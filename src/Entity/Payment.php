@@ -45,6 +45,11 @@ class Payment
     private $payment_status;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $lesson_id;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -148,5 +153,21 @@ class Payment
         $this->updated_at = new \DateTime();
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLessonId()
+    {
+        return $this->lesson_id;
+    }
+
+    /**
+     * @param mixed $lesson_id
+     */
+    public function setLessonId($lesson_id): void
+    {
+        $this->lesson_id = $lesson_id;
     }
 }

@@ -19,6 +19,17 @@ class PaymentRepository extends ServiceEntityRepository
         parent::__construct($registry, Payment::class);
     }
 
+    public function findNotPayedByLessonsIds($lessonsIds)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere("p.lesson_id IN (:lessonsIds)")
+            ->setParameter('lessonsIds', $lessonsIds)
+            ->andWhere("p.payment_status = 0")
+            ->orderBy('p.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Payment[] Returns an array of Payment objects
     //  */

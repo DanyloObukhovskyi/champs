@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Lessons;
+use App\Entity\Payment;
 use App\Entity\PurseHistory;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
@@ -351,14 +352,25 @@ class LessonsController extends AbstractController
                 break;
         }
 
+        /** @var Lessons $oldLesson */
         $oldLesson = $entityManager->getRepository(Lessons::class)->findBy([
             'trainer_id' => $form->trainer_id,
             'datetime' => $date,
             'student_id' => $form->user_id,
         ]);
 
-        if($oldLesson){
-            return new Response('ЭТОТ УРОК УЖЕ ЗАНЯТ');
+        $oldLesson = $oldLesson[0] ?? null;
+
+        if(!empty($oldLesson)){
+            $payed = $entityManager->getRepository(Payment::class)->findBy([
+                'lesson_id' => $oldLesson->getId(),
+                'payment_status' => '1'
+            ]);
+
+            if (!empty($payed))
+            {
+                return new Response('ЭТОТ УРОК УЖЕ ЗАНЯТ');
+            }
         }
         /** @var Teachers $trainer */
         $trainer = $entityManager->getRepository(Teachers::class)->findOneBy([
