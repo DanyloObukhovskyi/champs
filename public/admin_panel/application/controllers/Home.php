@@ -350,7 +350,56 @@
 			if($current_u_can[0] == "1") {
 				$data['UserID']  = $this->UserID;
 				$data['user']  = $this->ion_auth->user()->row();
-			
+				$this->load->model("selectdata");
+				
+				$page = (int)$page;
+				if ($page > 0) {
+					$page = $page - 1;
+				}
+				
+				$data['UserID']  = $this->UserID;
+				$data['user']  = $this->ion_auth->user()->row();
+				
+				$data['field_search'] = array(
+					'type' => 'text',
+					'name' => 'search',
+					'id' => 'search'
+				);
+				$search = $this->input->post('search');
+				if ((int) $search > 0) {
+					$where['search'] = (int) $search;
+				}
+				else {
+					$where['search'] = $search;
+				}
+				
+				
+				$offset = $this->post_per_page * $page;
+		    	$posts_count = $this->selectdata->get_all_payments($where, true);;
+				
+				$config = $this->config->item('pagination');
+				$config['base_url'] = site_url('c-admin/posts/page/');
+				$config['total_rows'] = $posts_count;
+				$config['per_page'] = $this->post_per_page;
+				$config['use_page_numbers'] = true;
+				$config['reuse_query_string'] = true;
+				
+				$this->pagination->initialize($config);
+				$data['pagination'] = $this->pagination->rmo_create_links();
+				
+				
+				$sort = $this->input->get('sort');
+				if (empty($sort)) {
+					$sort = array();
+				}
+				
+				$data['sort_id'] = isset($sort['id']) ? $sort['id'] : '';
+				$data['sort_email'] = isset($sort['email']) ? $sort['email'] : '';
+				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
+				
+				
+				$data['payments'] = $this->selectdata->get_all_payments($where, false, $sort, array($offset, $this->post_per_page), true);
+				
 			
 				$data['output'] = $this->load->view('home/payments', $data, true);
 				$this->load->view('layout/home', $data);
