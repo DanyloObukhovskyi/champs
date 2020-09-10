@@ -350,7 +350,7 @@
 			if($current_u_can[0] == "1") {
 				$data['UserID']  = $this->UserID;
 				$data['user']  = $this->ion_auth->user()->row();
-				$this->load->model("selectdata");
+				$this->load->model("selectData");
 				
 				$page = (int)$page;
 				if ($page > 0) {
@@ -375,7 +375,7 @@
 				
 				
 				$offset = $this->post_per_page * $page;
-		    	$posts_count = $this->selectdata->get_all_payments($where, true);;
+		    	$posts_count = $this->selectData->get_all_payments($where, true);;
 				
 				$config = $this->config->item('pagination');
 				$config['base_url'] = site_url('c-admin/posts/page/');
@@ -398,7 +398,7 @@
 				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
 				
 				
-				$data['payments'] = $this->selectdata->get_all_payments($where, false, $sort, array($offset, $this->post_per_page), true);
+				$data['payments'] = $this->selectData->get_all_payments($where, false, $sort, array($offset, $this->post_per_page), true);
 				
 			
 				$data['output'] = $this->load->view('home/payments', $data, true);
