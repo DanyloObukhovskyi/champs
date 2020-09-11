@@ -30,6 +30,15 @@ class PaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByLessonId($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere("p.lesson_id = :id")
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Payment[] Returns an array of Payment objects
     //  */

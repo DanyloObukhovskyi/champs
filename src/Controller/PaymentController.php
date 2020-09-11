@@ -11,6 +11,7 @@ use App\Repository\LessonsRepository;
 use App\Service\Payment\YandexKassa\YandexKassaPaymentService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use YandexCheckout\Model\ConfirmationType;
@@ -42,14 +43,14 @@ class PaymentController extends AbstractController
     /**
      * @Route("/ru/payment/pay/lesson-{lesson_id}", name="payment_pay")
      */
-    public function index(int $lesson_id)
+    public function index( int $lesson_id)
     {
         /** @var Lessons $lesson */
         $lesson = $this->getDoctrine()->getRepository(Lessons::class)->find($lesson_id);
 
         $paymentService = new YandexKassaPaymentService($this->getDoctrine()->getManager());
 
-        $payment = $paymentService->createPayment($lesson, $lesson->getCost(), $_ENV['YANDEX_KASSA_RETURN_URL']);
+        $payment = $paymentService->createPayment($lesson, $lesson->getCost(), $_ENV['YANDEX_KASSA_RETURN_URL'] . $lesson_id);
 
         if($payment && $payment->getConfirmation()->getType() === ConfirmationType::REDIRECT)
         {
@@ -59,10 +60,34 @@ class PaymentController extends AbstractController
         //TODO Редирект на ошибку
     }
 
+
+    /**
+     * @Route("/ru/payment/result/{id}", name="payment_page")
+     */
+    public function paymentPage($id)
+    {
+        /** @var Payment $lesson */
+        $paymentLesson = $this->getDoctrine()->getRepository(Payment::class)->findByLessonId($id);
+        $message = 'Ваша покупка успешно отменена!';
+        $messageClass = 'text-danger';
+
+        if (isset($paymentLesson) and $paymentLesson->getPaymentStatus() !== 0)
+        {
+            $message = 'Спасибо за покупку!';
+            $messageClass = 'text-success';
+        }
+
+        return $this->render('templates/message.view.html.twig', [
+            'router' => 'payed',
+            'message' => $message,
+            'messageClass' => $messageClass
+        ]);
+    }
+
     /**
      * @Route("/ru/payment/webhook", name="payment_webhook")
      */
-    public function webhook()
+    public function webhook(Request $request)
     {
         $source = file_get_contents('php://input');
         $requestBody = json_decode($source, true);
@@ -74,13 +99,6 @@ class PaymentController extends AbstractController
                 $notification = new NotificationSucceeded($requestBody);
 
                 (new YandexKassaPaymentService($this->getDoctrine()->getManager()))->markSuccess($notification->getObject()->getId());
-
-
-                return $this->render('templates/message.view.html.twig', [
-                    'router' => 'payed',
-                    'message' => 'Спасибо за покупку!',
-                    'messageClass' => 'text-success'
-                ]);
             }
         } catch (\Exception $e) {
             if ($requestBody['event'] === NotificationEventType::PAYMENT_CANCELED)
@@ -92,12 +110,6 @@ class PaymentController extends AbstractController
         }
 
         $this->checkIsPayedSuccess($requestBody);
-
-        return $this->render('templates/message.view.html.twig', [
-            'router' => 'payed',
-            'message' => 'Ваша покупка успешно отменена!',
-            'messageClass' => 'text-danger'
-        ]);
     }
 
     public function checkIsPayedSuccess($requestBody)
