@@ -66,6 +66,8 @@ class PaymentController extends AbstractController
      */
     public function paymentPage($id)
     {
+        $this->checkIsPayedSuccess();
+
         /** @var Payment $lesson */
         $paymentLesson = $this->getDoctrine()->getRepository(Payment::class)->findByLessonId($id);
         $message = 'Ваша покупка успешно отменена!';
@@ -108,11 +110,9 @@ class PaymentController extends AbstractController
                 (new YandexKassaPaymentService($this->getDoctrine()->getManager()))->onCancel($notification->getObject()->getId());
             }
         }
-
-        $this->checkIsPayedSuccess($requestBody);
     }
 
-    public function checkIsPayedSuccess($requestBody)
+    public function checkIsPayedSuccess($requestBody = null)
     {
         if ($requestBody === null)
         {
