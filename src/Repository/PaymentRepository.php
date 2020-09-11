@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Payment;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,32 +40,14 @@ class PaymentRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    // /**
-    //  * @return Payment[] Returns an array of Payment objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getPaymentWithinThirtyMinutes()
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $time = (new \DateTime())->modify('-30 minutes');
 
-    /*
-    public function findOneBySomeField($value): ?Payment
-    {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere("p.updated_at <= :time")
+            ->setParameter('time', $time)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

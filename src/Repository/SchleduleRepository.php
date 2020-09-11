@@ -119,15 +119,25 @@ class SchleduleRepository extends ServiceEntityRepository
         $to->modify('+6 day');
 
         $qb = $this->createQueryBuilder("e");
-        $qb
-            ->andWhere('e.date BETWEEN :from AND :to')
+        $qb->andWhere('e.date BETWEEN :from AND :to')
             ->setParameter('from', $from )
             ->setParameter('to', $to)
             ->andWhere('e.trainer_id = :val')
-            ->setParameter('val', $trainer_id)
-        ;
+            ->setParameter('val', $trainer_id);
+
         $result = $qb->getQuery()->getResult();
 
         return $result;
+    }
+
+    public function findByTrainerAndDate(int $trainerId, string $date)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.trainer_id = :trainer_id')
+            ->andWhere('s.date = :date')
+            ->setParameter('trainer_id', $trainerId)
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

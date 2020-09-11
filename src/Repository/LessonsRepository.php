@@ -181,4 +181,15 @@ class LessonsRepository extends ServiceEntityRepository
             ;
     }
 
+    public function getByTeacherAndDate($teacher, $datetime)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.trainer_id = :teacher')
+            ->andWhere('l.datetime = :datetime')
+            ->setParameter('teacher', $teacher)
+            ->setParameter('datetime', $datetime)
+            ->getQuery()
+            ->getResult();
+    }
+
 }
