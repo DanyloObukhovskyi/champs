@@ -356,6 +356,7 @@
 					$video_url =  (isset($_POST["video_url"]) && !empty($_POST["video_url"])) ? trim($_POST["video_url"]) : '';
 					$about =  (isset($_POST["about"]) && !empty($_POST["about"])) ? trim($_POST["about"]) : '';
 					$method =  (isset($_POST["method"]) && !empty($_POST["method"])) ? trim($_POST["method"]) : '';
+					$game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
 					
 					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
@@ -370,6 +371,10 @@
 						$update_data['nickname'] = $nickname;
 						$update_data['email'] = $nickname;
 						$update_data['istrainer'] = 1;
+						
+						if(!empty($game)) {
+							$update_data['game'] = $game;
+						}
 						
 						if($new_passw == $new_passw_confirm) {
 							$this->load->model(array('Ion_auth_model'));
