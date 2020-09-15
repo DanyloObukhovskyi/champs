@@ -120,6 +120,10 @@
 					<div class="input mb-20" id="input">
 						<input required type="text" class="fw-600 input2_txt" name="shorttitle" id="shorttitle" placeholder=""  title="введите правильный">
 					</div>
+					<label class="label" for="">Игра</label>
+					<div class="input mb-5" id="input">
+						<input type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""  value="<?php print $user_info[0]['game']; ?>" title="введите правильный">
+					</div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">About</label>
