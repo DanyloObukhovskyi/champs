@@ -363,7 +363,7 @@
 					
 					$delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
 					
-					if(!empty($nickname) && !empty($Email) && !empty($price) && !empty($video_url) && !empty($about) && !empty($method)) {
+					if(!empty($nickname) && !empty($Email) && !empty($price) && !empty($about) && !empty($method)) {
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
 						
