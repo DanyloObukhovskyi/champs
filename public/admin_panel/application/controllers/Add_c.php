@@ -361,7 +361,7 @@
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
 					
-					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price) && !empty($video_url) && !empty($about) && !empty($method)) {
+					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price) && !empty($about) && !empty($method)) {
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
 						
