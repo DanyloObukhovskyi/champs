@@ -387,4 +387,9 @@ class EventService extends EntityService
     {
         $this->repository->getByUrl($url);
     }
+
+    public function getByName($name)
+    {
+        $this->repository->getByName($name);
+    }
 }

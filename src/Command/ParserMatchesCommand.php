@@ -546,6 +546,11 @@ class ParserMatchesCommand extends Command
             }
         }
 
+        if (isset($matchDataFull['eventName']))
+        {
+            $eventEntity = $this->eventService->getByName($matchDataFull['eventName']);
+        }
+
         return $this->matchService->create($matchDataFull, $teamEntityList, $eventEntity);
     }
 
