@@ -77,7 +77,10 @@ class EventsController extends AbstractController
         $eventItems = $this->eventService->eventsDecorator($events);
 
         $futureEvents = $this->entityManager->getRepository(Event::class)->findFutureEvents(new \DateTime());
-        $futureEventItems = $this->eventService->futureEventsDecorator($futureEvents);
+        $futureEvents = $this->eventService->futureEventsDecorator($futureEvents);
+
+        $finishedEvents = $this->entityManager->getRepository(Event::class)->getOldEvents();
+        $finishedEvents = $this->eventService->futureEventsDecorator($finishedEvents);
 
         $lives = $this->entityManager->getRepository(Match::class)->findLive();
 
@@ -87,7 +90,8 @@ class EventsController extends AbstractController
                 'matches' => $matches,
                 "lives" => $lives,
                 "events" => $eventItems,
-                "futureEvents" => $futureEventItems,
+                "futureEvents" => $futureEvents,
+                'finishedEvents' => $finishedEvents
             ]);
     }
 

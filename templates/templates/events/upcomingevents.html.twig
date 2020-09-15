@@ -6,6 +6,10 @@
     <div class="title">
       Предстоящие события
     </div>
+    <div class="controll">
+      <label class="toggler" :class="{active: isActive}" @click="isActive = true">
+      </label>
+    </div>
   </div>
   {% for item in futureEvents %}
     <div class="text_month">
