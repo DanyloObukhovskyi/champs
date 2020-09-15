@@ -370,7 +370,7 @@
 						$update_data = array();
 						
 						$update_data['nickname'] = $nickname;
-						$update_data['email'] = $nickname;
+						$update_data['email'] = $Email;
 						
 
 						if($new_passw == $new_passw_confirm && !empty($new_passw)) {
