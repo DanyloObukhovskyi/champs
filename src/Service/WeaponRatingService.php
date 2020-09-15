@@ -45,8 +45,18 @@ class WeaponRatingService extends EntityService
     public function ratingWeaponsDecorator($weapons) {
         $ratingWeapons = [];
 
+        $weaponsRatingSum = 0;
         foreach ($weapons as $weapon) {
-            $ratingWeapons[$weapon->getName()] = $weapon->getRating();
+            $weaponsRatingSum += (int)$weapon->getRating();
+        }
+
+        foreach ($weapons as $weapon) {
+
+            $ratingInPercentage = ((int)$weapon->getRating() / $weaponsRatingSum) * 100;
+            $ratingInPercentage = round($ratingInPercentage, 1);
+
+            $weaponNameWithRatingPercentage = $weapon->getName() . " $ratingInPercentage%";
+            $ratingWeapons[$weaponNameWithRatingPercentage] = $weapon->getRating();
         }
 
         return $ratingWeapons;
