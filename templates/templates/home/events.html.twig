@@ -14,7 +14,7 @@
   </div>
   <div class="grid">
 
-    <div class="grid-row" v-for="item in getItems">
+    <a :href="'/ru/event/' + item.id" class="grid-row" v-for="item in getItems">
         <div class="logo">
           <img :src="`/uploads/images/${item.image}`" :alt="item.logo" />
         </div>
@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-    </div>
+    </a>
 
   </div>
 </div>
