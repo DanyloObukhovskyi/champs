@@ -23,11 +23,36 @@
             </a>
           </div>
           {% include 'templates/events/currentevents.html.twig' %}
-          <div v-if="isActive === false">
-              {% include 'templates/events/upcomingevents.html.twig' %}
-          </div>
-          <div v-if="isActive === true">
-              {% include 'templates/events/finishedEvents.html.twig' %}
+            <div class="component upcoming_events" id="upcoming_events">
+                <div class="header">
+                    <div class="round">
+                        <div><img src="/images/lamp.svg" alt="lamp" /></div>
+                    </div>
+                    <div class="title" v-if="isActive === false">
+                        Предстоящие события
+                    </div>
+                    <div class="title" v-if="isActive === true">
+                        Завершенные события
+                    </div>
+                    <div class="controll pr-1">
+                        <label class="toggler mr-1" :class="{active: isActive}" @click="isActive = !isActive">
+                        </label>
+                        <img
+                            style="width: 15px"
+                            src="/images/noLogo.png"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            :data-original-title="isActive ? 'Переключить на Предстоящие события':  'Переключить на Завершенные события'"
+                            :title="isActive ? 'Переключить на Предстоящие события':  'Переключить на Завершенные события'">
+                    </div>
+                </div>
+                <div v-if="isActive === false">
+                    {% include 'templates/events/upcomingevents.html.twig' %}
+                </div>
+                <div v-if="isActive === true">
+                    {% include 'templates/events/finishedEvents.html.twig' %}
+                </div>
+            </div>
           </div>
         </div>
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
@@ -45,5 +70,8 @@
                 isActive: false,
             }
         })
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     </script>
 {% endblock %}
