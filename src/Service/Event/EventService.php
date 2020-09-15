@@ -392,4 +392,12 @@ class EventService extends EntityService
     {
         return $this->repository->getByName($name);
     }
+
+    /**
+     * @return Event[]
+     */
+    public function getOldEvents()
+    {
+        return $this->repository->getOldEvents();
+    }
 }

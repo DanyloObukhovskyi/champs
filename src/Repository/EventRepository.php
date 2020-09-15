@@ -170,4 +170,26 @@ class EventRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getOldEvents()
+    {
+        $dateNow = date('Y.m.d');
+        if(isset($_ENV['DATE_FROM_EVENT_PARSE'])) {
+            $dateFrom = $_ENV['DATE_FROM_EVENT_PARSE'];
+        } else {
+            $dateFrom = date('Y.m.d', strtotime("-7 days"));
+        }
+
+        /** @var Event[] $events */
+        $events = $this->createQueryBuilder('e')
+            ->andWhere(' e.url is not null')
+            ->andWhere('e.ended_at <= :dateNow')
+            ->andWhere('e.ended_at >= :dateFrom')
+            ->setParameter('dateNow', $dateNow)
+            ->setParameter('dateFrom', $dateFrom)
+            ->getQuery()
+            ->getResult();
+
+        return $events;
+    }
 }
