@@ -369,7 +369,7 @@
 						$update_data = array();
 						
 						$update_data['nickname'] = $nickname;
-						$update_data['email'] = $nickname;
+						$update_data['email'] = $Email;
 						$update_data['istrainer'] = 1;
 						
 						if(!empty($game)) {
