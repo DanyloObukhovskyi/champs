@@ -30,6 +30,7 @@ class MapRepository extends ServiceEntityRepository
             ->andWhere('m.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
             ;
     }
@@ -45,6 +46,7 @@ class MapRepository extends ServiceEntityRepository
             ->andWhere('m.code = :code')
             ->setParameter('code', $code)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
             ;
     }

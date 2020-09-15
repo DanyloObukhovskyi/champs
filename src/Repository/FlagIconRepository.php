@@ -25,6 +25,7 @@ class FlagIconRepository extends ServiceEntityRepository
             ->andWhere('f.origName like :name')
             ->setParameter('name', $name)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }

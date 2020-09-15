@@ -34,6 +34,7 @@ class WeaponRatingRepository extends ServiceEntityRepository
             ->andWhere('w.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

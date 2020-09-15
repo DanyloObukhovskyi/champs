@@ -138,6 +138,7 @@ class SchleduleRepository extends ServiceEntityRepository
             ->setParameter('trainer_id', $trainerId)
             ->setParameter('date', $date)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

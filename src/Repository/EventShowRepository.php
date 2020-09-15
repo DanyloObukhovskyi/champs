@@ -52,6 +52,7 @@ class EventShowRepository extends ServiceEntityRepository
             ->andWhere('e.event_id = :event')
             ->setParameter('event', $event->getId())
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

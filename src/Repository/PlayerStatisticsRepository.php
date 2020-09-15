@@ -71,6 +71,7 @@ class PlayerStatisticsRepository extends ServiceEntityRepository
             ->setParameter('player_id', $playerId)
             ->setParameter('type', $type)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
@@ -85,6 +86,7 @@ class PlayerStatisticsRepository extends ServiceEntityRepository
             ->setParameter('player_id', $playerId)
             ->setParameter('type', $type)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

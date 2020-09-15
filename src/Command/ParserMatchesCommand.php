@@ -111,6 +111,21 @@ class ParserMatchesCommand extends Command
         LoggerService::info("Get results main Matches");
         $this->updateResultsBlock();
 
+        $hlTvMatches = HLTVService::getMatches();
+
+        // create base match
+        foreach ($hlTvMatches as $match)
+        {
+            $teamsEntity = [];
+
+            if (!empty($match['teams']))
+            {
+                $teamsEntity = $this->findTeams($match['teams']);
+            }
+
+            $this->createMatch($match, $teamsEntity);
+        }
+        
         LoggerService::info("Get results Matches");
         $this->updateResultMatches();
 
@@ -121,8 +136,6 @@ class ParserMatchesCommand extends Command
 
         $this->updateMatchInfoFromArray($this->matchService->getNotFullMatches());
         $this->updateMatchInfoFromArray($this->matchService->getMatchesWhereEmptyTeams());
-
-        $hlTvMatches = HLTVService::getMatches();
 
         if (!$hlTvMatches)
         {
@@ -679,5 +692,15 @@ class ParserMatchesCommand extends Command
                }
            }
        }
+    }
+
+    public function findTeams($teams)
+    {
+        $teamsEntity = [];
+
+        $teamsEntity[0] = $this->teamService->getByName($teams[0]);
+        $teamsEntity[1] = $this->teamService->getByName($teams[1]);
+
+        return $teamsEntity;
     }
 }

@@ -8,13 +8,14 @@ namespace App\Service;
 
 
 use App\Entity\MatchPickAndBan;
+use App\Service\Parser\MatchParserService;
 use DiDom\Document;
 use DiDom\Query;
 use PhpParser\JsonDecoder;
 
 class HLTVService
 {
-    private static $baseUrl = 'https://www.hltv.org';
+    public static $baseUrl = 'https://www.hltv.org';
 
     const TEAM_RESULT_STAT_RIGHT = 'results-right';
     const TEAM_RESULT_STAT_LEFT = 'results-left';
@@ -32,6 +33,8 @@ class HLTVService
      */
     public static function getMatches()
     {
+        $parseMatchService = new MatchParserService();
+
         LoggerService::add("hltv get matches", LoggerService::TYPE_INFO);
         $content = PageContentService::getPageContent(static::$baseUrl . '/matches');
         if ($content and is_array($content) && isset($content['error']))
@@ -64,63 +67,21 @@ class HLTVService
             $dateTime = (new \DateTime());
             $matchItem['start_at'] = $dateTime->setTime($dateTime->format('H'),0,0);
             $matchItem['teams'] = [];
+
             foreach($teams as $teamRaw)
             {
                 $matchItem['teams'][] = trim($teamRaw->text());
             }
 
+            if (empty($matchItem['code'])){
+                $matchItem['code'] =  $matchItem['url'];
+            }
+            $matchItem['code'] = md5($matchItem['code']);
+
             $matches[] = $matchItem;
         }
-        $matchSections = $document->find(".upcomingMatchesSection");
 
-        $matchesSortedByDay = [];
-        foreach ($matchSections as $matchSection){
-            $is_live = false;
-            $matchCells = $matchSection->find(".upcomingMatch");
-
-            foreach ($matchCells as $matchCell){
-                $matchUrlRaw = $matchCell->first('a');
-
-                if (isset($matchUrlRaw))
-                {
-                    $url = $matchUrlRaw->attr('href');
-
-                    if (strrpos($url, 'http') === false)
-                    {
-                        $url = static::$baseUrl . $url;
-                    }
-                }
-                $start_at = $matchCell->attr('data-zonedgrouping-entry-unix');
-
-                if (!empty($start_at))
-                {
-                    $unixtime = trim($start_at);
-                    $dateTime = new \DateTime();
-                    if (strlen($unixtime) == 13)
-                    {
-                        $unixtime = substr($unixtime, 0, -3);
-                    }
-
-                    $dateTime = $dateTime->setTimestamp($unixtime);
-
-                    $start_at = $dateTime;
-                }
-                $matchTeamsSector = $matchCell->first(".matchTeams");
-
-                $teams = [];
-                if (isset($matchTeamsSector)){
-                    $matchTeams = $matchTeamsSector->find('.matchTeam');
-
-                    foreach($matchTeams as $teamRaw)
-                    {
-                        $teams[] = trim($teamRaw->text());
-                    }
-                }
-
-                $matchesSortedByDay[$start_at->format('m.d')][] = compact('url', 'teams', 'is_live', 'start_at');
-            }
-        }
-        $matchesSortedByDay = array_slice($matchesSortedByDay, 0, 7);
+        $matchesSortedByDay = $parseMatchService->getUpcomingMatches($document);
 
         foreach ($matchesSortedByDay as $matchesDay){
 
@@ -1775,14 +1736,17 @@ class HLTVService
         $players = [];
         foreach ($playersStats as $playersStat){
 
-            $nick = self::getSubElemByClass($playersStat, '.players .player-nick');
-            $kd = self::getSubElemByClass($playersStat, '.kd');
-            $plusMinus = self::getSubElemByClass($playersStat, '.plus-minus');
-            $adr = self::getSubElemByClass($playersStat, '.adr');
-            $kast = self::getSubElemByClass($playersStat, '.kast');
-            $rating = self::getSubElemByClass($playersStat, '.rating');
+            if (isset($playersStat))
+            {
+                $nick = self::getSubElemByClass($playersStat, '.players .player-nick');
+                $kd = self::getSubElemByClass($playersStat, '.kd');
+                $plusMinus = self::getSubElemByClass($playersStat, '.plus-minus');
+                $adr = self::getSubElemByClass($playersStat, '.adr');
+                $kast = self::getSubElemByClass($playersStat, '.kast');
+                $rating = self::getSubElemByClass($playersStat, '.rating');
 
-            $players[] = compact('nick', 'kd', 'plusMinus', 'adr', 'kast', 'rating');
+                $players[] = compact('nick', 'kd', 'plusMinus', 'adr', 'kast', 'rating');
+            }
         }
 
         return $players;

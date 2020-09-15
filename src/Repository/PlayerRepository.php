@@ -35,6 +35,7 @@ class PlayerRepository extends ServiceEntityRepository
             ->andWhere('p.person = :person_id')
             ->setParameter('person_id', $personId)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }
@@ -54,6 +55,7 @@ class PlayerRepository extends ServiceEntityRepository
                 'team_id' => $teamId,
                 'nick' => $nick])
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }

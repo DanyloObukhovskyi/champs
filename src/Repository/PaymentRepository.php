@@ -37,6 +37,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->andWhere("p.lesson_id = :id")
             ->setParameter('id', $id)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 

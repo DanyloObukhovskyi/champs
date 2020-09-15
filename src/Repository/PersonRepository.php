@@ -32,6 +32,7 @@ class PersonRepository extends ServiceEntityRepository
                 ->andWhere('p.nick = :nick')
                 ->setParameter('nick', $nick)
                 ->getQuery()
+                ->setMaxResults(1)
                 ->getOneOrNullResult();
         }
         catch (\Exception $e)
@@ -57,6 +58,7 @@ class PersonRepository extends ServiceEntityRepository
                 ->setParameter('name', $name)
                 ->setParameter('nick', $nick)
                 ->getQuery()
+                ->setMaxResults(1)
                 ->getOneOrNullResult();
         }
         catch (\Exception $e)
@@ -76,6 +78,7 @@ class PersonRepository extends ServiceEntityRepository
         $weekPlayer = $this->createQueryBuilder('p')
             ->andWhere('p.isWeekPlayer = true')
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         return $weekPlayer;

@@ -33,6 +33,7 @@ class MatchStatisticsRepository extends ServiceEntityRepository
             ->setParameter('match_id', $matchId)
             ->setParameter('map_id', $mapId)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }

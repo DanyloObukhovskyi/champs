@@ -30,6 +30,7 @@ class TeamRepository extends ServiceEntityRepository
             ->andWhere('t.name like :name')
             ->setParameter('name', $name)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }

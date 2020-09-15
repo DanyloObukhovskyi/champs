@@ -38,6 +38,7 @@ class StreamRepository extends ServiceEntityRepository
             ->setParameter(':matchId', $matchId)
             ->setParameter(':name', $name)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }

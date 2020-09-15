@@ -40,6 +40,7 @@ class EventRepository extends ServiceEntityRepository
             ->setParameter('name', $name)
             ->setParameter('started_at', $startAt)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
@@ -57,6 +58,7 @@ class EventRepository extends ServiceEntityRepository
             ->setParameter('name', $name)
             ->setParameter('date', $date)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 

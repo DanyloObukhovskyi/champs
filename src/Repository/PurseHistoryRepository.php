@@ -43,6 +43,7 @@ class PurseHistoryRepository extends ServiceEntityRepository
             ->andWhere('m.operation > 0')
             ->select('SUM(m.operation) as sum')
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
@@ -66,6 +67,7 @@ class PurseHistoryRepository extends ServiceEntityRepository
             ->andWhere('m.operation > 0')
             ->select('SUM(m.operation) as sum')
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

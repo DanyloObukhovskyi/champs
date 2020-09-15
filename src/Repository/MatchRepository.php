@@ -32,6 +32,7 @@ class MatchRepository extends ServiceEntityRepository
             ->andWhere('m.code = :code')
             ->setParameter('code', $code)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }
@@ -100,6 +101,7 @@ class MatchRepository extends ServiceEntityRepository
             ->andWhere('m.url = :url')
             ->setParameter('url', $url)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
@@ -240,6 +242,7 @@ class MatchRepository extends ServiceEntityRepository
             ->andWhere("m.team2_id = '$team2'")
             ->andWhere("m.url = '$url'")
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         return $match;
@@ -278,6 +281,7 @@ class MatchRepository extends ServiceEntityRepository
             ->andWhere("m.team1_id = :team1_id")
             ->andWhere("m.team2_id = :team2_id")
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         return $match;
