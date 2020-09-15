@@ -125,10 +125,10 @@ class ParserMatchesCommand extends Command
 
             $this->createMatch($match, $teamsEntity);
         }
-        
+
         LoggerService::info("Get results Matches");
         $this->updateResultMatches();
-
+   
         LoggerService::info("Get live Matches");
         $this->updateMatchInfoFromArray($this->matchService->getLiveMatches());
 
