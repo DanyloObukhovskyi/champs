@@ -372,10 +372,8 @@
 						
 						$update_data['nickname'] = $nickname;
 						$update_data['email'] = $Email;
+						$update_data['game'] = $game;
 						
-						if(!empty($game)) {
-							$update_data['game'] = $game;
-						}
 						
 						if($new_passw == $new_passw_confirm && !empty($new_passw)) {
 //							$this->load->model(array('Ion_auth_model'));
