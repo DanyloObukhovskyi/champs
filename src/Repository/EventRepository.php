@@ -163,8 +163,8 @@ class EventRepository extends ServiceEntityRepository
     public function getByName($name)
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.name = :name')
             ->orderBy('e.id', 'DESC')
+            ->andWhere('e.name like :name')
             ->setParameter('name', $name)
             ->setMaxResults(1)
             ->getQuery()
