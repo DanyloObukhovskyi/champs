@@ -435,7 +435,6 @@ width: 260px;
     padding: 3vw;
     font-size: 3.5vw;
   }
-  .home .component.matches .table .table-row .rows img,
   .home .component.matches .table .table-row .rows div:nth-child(5){
     display: none;
   }
