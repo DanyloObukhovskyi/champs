@@ -1,10 +1,12 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Event;
 
 
 use App\Entity\EventPrizeDistribution;
+use App\Service\EntityService;
+use App\Service\TeamService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EventPrizeDistributionService extends EntityService
@@ -43,10 +45,27 @@ class EventPrizeDistributionService extends EntityService
         $eventPrizeDistribution->setPosition($values['position'] ?? null);
         $eventPrizeDistribution->setPrize($values['prize'] ?? null);
 
-        $this->entityManager->persist($eventPrizeDistribution);
-        $this->entityManager->flush();
+        return $this->save($eventPrizeDistribution);
+    }
 
-        return $eventPrizeDistribution;
+    public function prizeDecorator($prizeDistributions)
+    {
+        $prizes = [];
 
+        /** @var EventPrizeDistribution $prizeDistribution */
+        foreach ($prizeDistributions as $prizeDistribution)
+        {
+            $prize = [];
+            $prize['position'] = $prizeDistribution->getPosition();
+            $prize['prize'] = $prizeDistribution->getPrize();
+
+            $team = $prizeDistribution->getTeam();
+            if (!empty($team)){
+                $prize['team'] = $this->teamService->teamDecorator($team);
+            }
+
+            $prizes[] = $prize;
+        }
+        return $prizes;
     }
 }

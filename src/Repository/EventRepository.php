@@ -147,4 +147,14 @@ class EventRepository extends ServiceEntityRepository
 
         return $events;
     }
+
+    public function getByUrl($url)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.name = :url')
+            ->setParameter('url', $url)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

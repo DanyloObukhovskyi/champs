@@ -1,0 +1,27 @@
+{% if teamsAttending is not empty %}
+    <div class="component col-6">
+        <div class="header">
+            <div class="round">
+                <div><img src="/images/lamp.svg"></div>
+            </div>
+            <div class="title">
+                Участвующие Команды
+            </div>
+        </div>
+        <div class="component statistics">
+            <div class="grid-block statistics-maps">
+                {% for team in teamsAttending %}
+                    <div class="grid-header">
+                        <div class="r w-100">
+                            <img src="{{ team.logo }}" class="logo" alt="ua.svg">
+                            {{ team.name }}
+                        </div>
+                        <div class="r">
+                            {{ team.number }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

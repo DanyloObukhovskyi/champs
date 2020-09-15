@@ -30,8 +30,9 @@ abstract class EntityService
 
     public function save($entity)
     {
-        $this->entityManager->persist($entity);
+        $this->checkIsOpenEntityManager();
 
+        $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
         return $entity;
@@ -43,4 +44,13 @@ abstract class EntityService
         $this->entityManager->flush();
     }
 
+    public function checkIsOpenEntityManager()
+    {
+        if (!$this->entityManager->isOpen()) {
+            $this->entityManager = $this->entityManager->create(
+                $this->entityManager->getConnection(),
+                $this->entityManager->getConfiguration()
+            );
+        }
+    }
 }

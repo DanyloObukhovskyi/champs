@@ -18,31 +18,43 @@ class EventGroup
     private $id;
 
     /**
+     * Матчей
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $m;
 
     /**
+     * Выиграно матчей
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $w;
 
     /**
+     * Матчи ничья
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $t;
 
     /**
+     * Проигранные матчи
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $l;
 
     /**
+     * Разница раундов
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $rd;
 
     /**
+     * Очки
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $p;

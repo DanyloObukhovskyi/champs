@@ -1,11 +1,12 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Event;
 
 
 use App\Entity\EventGroup;
 use App\Repository\EventGroupRepository;
+use App\Service\EntityService;
 
 class EventGroupPlayService extends EntityService
 {
@@ -33,9 +34,26 @@ class EventGroupPlayService extends EntityService
         $eventGroup->setRd($fields['RD'] ?? null);
         $eventGroup->setP($fields['P'] ?? null);
 
-        $this->entityManager->persist($eventGroup);
-        $this->entityManager->flush();
+        return $this->save($eventGroup);
+    }
 
-        return $eventGroup;
+    public function groupsDecorator($eventGroups)
+    {
+        $groups = [];
+
+        /** @var EventGroup $eventGroup */
+        foreach ($eventGroups as $eventGroup)
+        {
+            $groups[$eventGroup->getGroupName()][] = [
+                'team' => $eventGroup->getTeam(),
+                'm' => $eventGroup->getM(),
+                'w' => $eventGroup->getW(),
+                't' => $eventGroup->getT(),
+                'l' => $eventGroup->getL(),
+                'rd' => $eventGroup->getRd(),
+                'p' => $eventGroup->getP()
+            ];
+        }
+        return $groups;
     }
 }

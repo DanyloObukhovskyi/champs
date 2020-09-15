@@ -24,9 +24,14 @@ class TeamService extends EntityService
     /** @var FlagIconService */
     protected $flagIconService;
 
+    /** @var PersonService */
     protected $personService;
 
+    /** @var PlayerService */
     protected $playerService;
+
+    /** @var ImageService */
+    protected $imageService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -35,6 +40,7 @@ class TeamService extends EntityService
         $this->flagIconService = new FlagIconService($entityManager);
         $this->personService = new PersonService($entityManager);
         $this->playerService = new PlayerService($entityManager);
+        $this->imageService = new ImageService($entityManager);
     }
 
     public function create($values)
@@ -101,31 +107,31 @@ class TeamService extends EntityService
         $result = [];
         foreach ($teams as $team)
         {
-            LoggerService::add("parserMatchesCommand 283");
+            //LoggerService::add("parserMatchesCommand 283");
             $teamEntity = $this->create($team);
 
             if (!isset($teamEntity))
             {
-                LoggerService::error("team entity {$team['name']} didnt created");
+                //LoggerService::error("team entity {$team['name']} didnt created");
                 return [];
             }
-            LoggerService::add("parserMatchesCommand 290");
+            //LoggerService::add("parserMatchesCommand 290");
             foreach ($team['players'] as $playerValues)
             {
-                LoggerService::add("parserMatchesCommand 293");
+                //LoggerService::add("parserMatchesCommand 293");
                 $personEntity = $this->personService->create($playerValues);
-                LoggerService::add("parserMatchesCommand 295");
+                //LoggerService::add("parserMatchesCommand 295");
                 if (!isset($personEntity))
                 {
-                    LoggerService::error("person entity {$playerValues['nick']} didn't created");
+                    //LoggerService::error("person entity {$playerValues['nick']} didn't created");
                     continue;
                 }
-                LoggerService::add("parserMatchesCommand 299");
+                //LoggerService::add("parserMatchesCommand 299");
                 /** @var Player|null $playerEntity */
                 $playerEntity = $this->playerService->create($personEntity, $teamEntity);
                 if (!isset($playerEntity))
                 {
-                    LoggerService::error("player entity {$playerValues['nick']} didn't created");
+                    //LoggerService::error("player entity {$playerValues['nick']} didn't created");
                     continue;
                 }
             }
@@ -134,5 +140,19 @@ class TeamService extends EntityService
         }
 
         return !empty($result) ? $result : null;
+    }
+
+    /**
+     * @param Team $team
+     * @return array
+     */
+    public function teamDecorator(Team $team): array
+    {
+        $this->imageService->setImage($team->getLogo());
+
+        return [
+            'name' => $team->getName(),
+            'logo' => $this->imageService->getImagePath()
+        ];
     }
 }

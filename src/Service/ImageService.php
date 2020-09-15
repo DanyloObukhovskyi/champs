@@ -36,14 +36,6 @@ class ImageService
         return $this->image;
     }
 
-    public function getPhotoPath(): string
-    {
-        if(empty($this->image) or !$this->isExist()){
-            return self::DEFAULT_PERSON;
-        }
-        return $this->image;
-    }
-
     public function getImageHeaderEvent()
     {
         return $this->image;

@@ -13,7 +13,7 @@
     </div>
     <div class="grid">
       {% for item2 in item.items %}
-        <div class="grid-row">
+        <a href="{{ url('event.page', {'id': item2.id}) }}" class="grid-row">
           <div class="logo">
             {% if(item2.image) %}
             <img src="{{item2.image}}" />
@@ -66,7 +66,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </a>
       {% endfor %}
     </div>
   {% endfor %}

@@ -1,10 +1,11 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Event;
 
 
 use App\Entity\RelatedEvent;
+use App\Service\EntityService;
 
 class RelatedEventService extends EntityService
 {
@@ -24,9 +25,6 @@ class RelatedEventService extends EntityService
             $related->setRelated($relatedEvent);
         }
 
-        $this->entityManager->persist($related);
-        $this->entityManager->flush();
-
-        return $related;
+        return  $this->save($related);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\EventMapPool;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,7 +28,19 @@ class EventMapPoolRepository extends ServiceEntityRepository
             ->setParameter('event', $event)
             ->setParameter('map', $map)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
+    }
+
+    public function findByEvent(Event $event)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.event = :event')
+            ->setParameter('event', $event)
+            ->orderBy('e.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
     }
 
     // /**

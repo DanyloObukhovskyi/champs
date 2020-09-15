@@ -47,7 +47,7 @@ class MapService extends EntityService
             return $match;
         }
 
-        return false;
+        return null;
     }
 
     public function getByCode($code)

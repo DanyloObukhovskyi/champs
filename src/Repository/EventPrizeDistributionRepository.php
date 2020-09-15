@@ -21,15 +21,29 @@ class EventPrizeDistributionRepository extends ServiceEntityRepository
 
     public function findByTeamAndEvent($position, $event, $team)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.position = :position')
-            ->andWhere('e.event = :event')
-            ->andWhere('e.team = :team')
-            ->setParameter('position', $position)
-            ->setParameter('event', $event)
-            ->setParameter('team', $team)
-            ->getQuery()
+        $eventPrize = $this->createQueryBuilder('e')
+                ->andWhere('e.position = :position')
+                ->andWhere('e.event = :event')
+                ->setParameter('position', $position)
+                ->setParameter('event', $event);
+
+        if (isset($team)){
+            $eventPrize = $eventPrize
+                ->andWhere('e.team = :team')
+                ->setParameter('team', $team);
+        }
+        return $eventPrize->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
+    }
+
+    public function findByEvent($event)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.event = :event')
+            ->setParameter('event', $event)
+            ->getQuery()
+            ->getResult();
     }
 
     /*

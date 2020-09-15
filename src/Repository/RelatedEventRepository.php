@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\RelatedEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,15 +20,26 @@ class RelatedEventRepository extends ServiceEntityRepository
         parent::__construct($registry, RelatedEvent::class);
     }
 
-    public function findByEventAndRelated($event, $relatedEvent)
+    public function findByEventAndRelated(Event $event, Event $relatedEvent)
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.event = :event')
             ->andWhere('r.related = :related')
             ->setParameter('event', $event)
             ->setParameter('related', $relatedEvent)
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findByEvent(Event $event)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.event = :event')
+            ->setParameter('event', $event)
+            ->orderBy('r.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
     // /**
     //  * @return RelatedEvent[] Returns an array of RelatedEvent objects

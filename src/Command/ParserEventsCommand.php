@@ -3,8 +3,8 @@
 namespace App\Command;
 
 use App\Message\Event;
-use App\Service\EventService;
-use App\Service\EventShowService;
+use App\Service\Event\EventService;
+use App\Service\Event\EventShowService;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
 use App\Service\TeamService;

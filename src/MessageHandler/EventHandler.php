@@ -4,8 +4,9 @@
 namespace App\MessageHandler;
 
 use App\Message\Event;
-use App\Service\EventService;
+use App\Service\Event\EventService;
 use App\Service\HLTVService;
+use App\Service\LoggerService;
 use App\Service\TeamService;
 use App\Traits\EntityManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -36,6 +37,12 @@ class EventHandler implements MessageHandlerInterface
         {
             $this->createTeams($event['prizeDistributions']);
         }
+
+        if (!empty($event['teamsAttending']))
+        {
+            $this->createTeams($event['teamsAttending']);
+        }
+
         $this->eventService->create($event);
     }
 

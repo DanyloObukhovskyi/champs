@@ -27,68 +27,6 @@ class HLTVService
     const PLAYER_STAT_PARAM_RATING = 'rating';
 
     /**
-     * @param $match
-     * @param $matches
-     * @return bool|mixed
-     * @throws \Exception
-     */
-    public static function findMatch($match, $matches)
-    {
-        LoggerService::add("try to find on hltv get match {$match['teams'][0]['name']} vs {$match['teams'][1]['name']}", LoggerService::TYPE_INFO);
-
-        if (empty($match['start_at']))
-        {
-            return false;
-        }
-
-        foreach ($matches as $matchItem)
-        {
-            $matchDateTime = false;
-            if (!empty($matchItem['is_live']))
-            {
-                $matchDateTime = new \DateTime('now');
-            }
-            elseif (!empty($matchItem['start_at']))
-            {
-                $matchDateTime = $matchItem['start_at'];
-            }
-
-            if (empty($matchDateTime))
-            {
-                continue;
-            }
-
-            if ($match['start_at']->format('Y-m-d') != $matchDateTime->format('Y-m-d'))
-            {
-                continue;
-            }
-
-            $foundItemsCount = 0;
-            $matchItem['start_at'] = $match['start_at'];
-            $matchItem['code'] = $matchItem['start_at']->format('Y-m-d');
-
-            foreach ($match['teams'] as $team)
-            {
-                if (in_array($team['name'], $matchItem['teams']) || in_array($team['full_name'], $matchItem['teams']))
-                {
-                    $matchItem['code'] .= (!empty($matchItem['code']) ? '|' : "") . $team['name'];
-                    $foundItemsCount++;
-                }
-            }
-
-            $matchItem['code'] = md5($matchItem['code']);
-
-            if ($foundItemsCount == 2)
-            {
-                return $matchItem;
-            }
-        }
-
-        LoggerService::add("match not found", LoggerService::TYPE_WARNING);
-        return false;
-    }
-
-    /**
      * @return array|bool
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
@@ -729,11 +667,10 @@ class HLTVService
         try {
             $content = PageContentService::getPageContent($team['url']);
         } catch (\Exception $e){
-            LoggerService::error("get team {$team['name']} error: $e");
 
             $content = null;
         }
-        LoggerService::info("get team {$team['name']}");
+        // LoggerService::info("get team {$team['name']}");
         if (!$content or ($content and is_array($content) && isset($content['error'])))
         {
             return false;
@@ -744,7 +681,7 @@ class HLTVService
         $teamLogoRaw = $document->first('img.teamlogo');
         if (empty($teamLogoRaw))
         {
-            LoggerService::error('team logo not found');
+            // LoggerService::error('team logo not found');
             return false;
         }
 
@@ -756,14 +693,14 @@ class HLTVService
         $profileRaw = $document->first('.profile-team-info');
         if (empty($profileRaw))
         {
-            LoggerService::error('team profile not found');
+            // LoggerService::error('team profile not found');
             return false;
         }
 
         $nameTeamRaw = $profileRaw->first('.profile-team-name');
         if (empty($nameTeamRaw))
         {
-            LoggerService::error('team name not found');
+            // LoggerService::error('team name not found');
             return false;
         }
 
@@ -774,7 +711,7 @@ class HLTVService
         {
             $team['region'] = trim($regionTeamRaw->attr('title'));
 
-            LoggerService::info('team get region icon name');
+            // LoggerService::info('team get region icon name');
 
             $flagIconPath = parse_url($regionTeamRaw->attr('src'), PHP_URL_PATH);
             $flagIcon = explode('/', $flagIconPath);
@@ -787,7 +724,7 @@ class HLTVService
 
         if (count($teamPersonsRaw) === 0)
         {
-            LoggerService::error('teams players not found');
+            // LoggerService::error('teams players not found');
             return $team;
         }
 
@@ -825,7 +762,7 @@ class HLTVService
                 $personItem = static::getPerson($player);
                 if (!$personItem)
                 {
-                    LoggerService::error("person of player {$player['nick']} not found");
+                    // LoggerService::error("person of player {$player['nick']} not found");
                     continue;
                 }
                 $player = $player + $personItem;
@@ -844,11 +781,11 @@ class HLTVService
     {
         ini_set('max_execution_time', 0);
 
-        LoggerService::info("get player {$player['nick']} person info");
+        // LoggerService::info("get player {$player['nick']} person info");
         try {
             $content = PageContentService::getPageContent($player['url']);
         } catch (\Exception $e){
-            LoggerService::error("get player {$player['nick']} person error: $e");
+            // LoggerService::error("get player {$player['nick']} person error: $e");
 
             $content = null;
         }
@@ -892,7 +829,7 @@ class HLTVService
         {
             $player['region'] = trim($profileRegionRaw->attr('title'));
 
-            LoggerService::info('person get region icon name');
+            // LoggerService::info('person get region icon name');
 
             $flagIconPath = parse_url($profileRegionRaw->attr('src'), PHP_URL_PATH);
             $flagIcon = explode('/', $flagIconPath);
@@ -1158,8 +1095,8 @@ class HLTVService
     {
         $result = [];
 
-        $eventDateFrom = $document->first('td.eventdate > span:nth-child(1)');
-        $eventDateTo =  $document->first('td.eventdate > span:nth-child(2) > span');
+        $eventDateFrom = $document->first('.eventdate > span:nth-child(1)');
+        $eventDateTo =  $document->first('.eventdate > span:nth-child(2) > span');
 
         if (!empty($eventDateFrom))
         {
@@ -1197,7 +1134,7 @@ class HLTVService
      * @return array|bool
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    protected static function getEventFull($url)
+    public static function getEventFull($url)
     {
         try {
             $content = PageContentService::getPageContent($url);
@@ -1563,13 +1500,13 @@ class HLTVService
         $eventName = self::getSubElemByClass($document, '.eventname');
         $dates = $document->first('td.eventdate');
 
-        $dateFrom = $dates->first('td.eventdate > span:nth-child(1)');
+        $dateFrom = $dates->first('.eventdate > span:nth-child(1)');
         $dateFrom = isset($dateFrom) ? $dateFrom->attr('data-unix'): null;
         $dateFrom = isset($dateFrom) ? self::parseUnixToDateTime($dateFrom): null;
 
         LoggerService::info("getEventData dateFrom");
 
-        $dateTo = $dates->first('td.eventdate > span:nth-child(2) > span');
+        $dateTo = $dates->first('.eventdate > span:nth-child(2) > span');
         $dateTo = isset($dateTo) ? $dateTo->attr('data-unix'): null;
         $dateTo = isset($dateTo) ? self::parseUnixToDateTime($dateTo): null;
 
@@ -1970,6 +1907,42 @@ class HLTVService
             }
             $eventItem['relatedEvents'] = $relatedEvents;
         }
+        $eventItem['teamsAttending'] = self::parseTeamsAttenting($document);
+
         return $eventItem;
+    }
+
+    public static function parseTeamsAttenting($document)
+    {
+        $attendingBlock = $document->first('.teams-attending');
+
+        if (empty($attendingBlock))
+        {
+            return [];
+        }
+        $teamsAttendingCols = $attendingBlock->find('.col');
+
+        $teamsAttending = [];
+        foreach ($teamsAttendingCols as $team)
+        {
+            $teamLink = $team->first('.team-name a');
+
+            if (empty($teamLink))
+            {
+                continue;
+            }
+
+            $teamUrl = self::urlDecorator($teamLink->attr('href'));
+            $teamName = self::getSubElemByClass($teamLink, '.text');
+            $number = self::getSubElemByClass($teamLink, '.event-world-rank');
+
+            $teamsAttending[] = [
+                'teamName' => $teamName,
+                'teamUrl' => $teamUrl,
+                'number' => $number
+            ];
+        }
+
+        return $teamsAttending;
     }
 }

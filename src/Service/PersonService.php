@@ -35,20 +35,20 @@ class PersonService extends EntityService
 
     public function create($values)
     {
-        LoggerService::add("personService create");
+        //LoggerService::add("personService create");
         if (empty($values['realname']))
         {
-            LoggerService::add("personService getByNick");
+            //LoggerService::add("personService getByNick");
             /** @var Person $person */
             $person = $this->repository->getByNick($values['nick']);
         }
         else
         {
-            LoggerService::add("personService getByNameAndNick");
+            //LoggerService::add("personService getByNameAndNick");
             $person = $this->repository->getByNameAndNick($values['realname'], $values['nick']);
         }
 
-        LoggerService::add("personService check empty");
+        //LoggerService::add("personService check empty");
         if (empty($person))
         {
             $person = new $this->entity;
@@ -62,14 +62,14 @@ class PersonService extends EntityService
         }
         if (isset($values['regionIconName']))
         {
-            LoggerService::add("personService setFlagIcon");
+            //LoggerService::add("personService setFlagIcon");
             $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
 
             if (isset($flagIcon)){
                 $person->setFlagIcon($flagIcon);
             }
         }
-        LoggerService::add("personService setPersonPhoto");
+        //LoggerService::add("personService setPersonPhoto");
         if (!empty($values['photo'])){
             $this->setPersonPhoto($values['photo'], $person);
         }
@@ -77,7 +77,7 @@ class PersonService extends EntityService
         $this->entityManager->persist($person);
         $this->entityManager->flush();
 
-        LoggerService::add("personService save");
+        //LoggerService::add("personService save");
         return $person;
     }
 

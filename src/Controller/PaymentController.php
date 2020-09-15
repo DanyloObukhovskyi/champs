@@ -50,7 +50,7 @@ class PaymentController extends AbstractController
 
         $paymentService = new YandexKassaPaymentService($this->getDoctrine()->getManager());
 
-        $payment = $paymentService->createPayment($lesson, $lesson->getCost(), $_ENV['YANDEX_KASSA_RETURN_URL'] . $lesson_id);
+        $payment = $paymentService->createPayment($lesson, $lesson->getCost(), $_ENV['YANDEX_KASSA_RETURN_URL']);
 
         if($payment && $payment->getConfirmation()->getType() === ConfirmationType::REDIRECT)
         {
@@ -89,7 +89,7 @@ class PaymentController extends AbstractController
     /**
      * @Route("/ru/payment/webhook", name="payment_webhook")
      */
-    public function webhook(Request $request)
+    public function webhook()
     {
         $source = file_get_contents('php://input');
         $requestBody = json_decode($source, true);

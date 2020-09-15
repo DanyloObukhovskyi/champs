@@ -1,11 +1,12 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Event;
 
 
 use App\Entity\Event;
 use App\Entity\EventShow;
+use App\Service\EntityService;
 
 class EventShowService extends  EntityService
 {

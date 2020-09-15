@@ -6,7 +6,7 @@ use App\Entity\Match;
 use App\Entity\MatchPickAndBan;
 use App\Entity\Person;
 use App\Entity\Player;
-use App\Service\EventService;
+use App\Service\Event\EventService;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
 use App\Service\MapService;
@@ -545,7 +545,7 @@ class ParserMatchesCommand extends Command
      */
     private function getEvent($url)
     {
-        $event = HLTVService::getEventData($url);
+        $event = HLTVService::getEventFull($url);
 
         return $this->eventService->create($event);
     }

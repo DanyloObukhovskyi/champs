@@ -9,7 +9,7 @@ use App\Entity\Person;
 use App\Entity\RatingPerson;
 use App\Entity\RatingTeam;
 use App\Entity\Result;
-use App\Service\EventService;
+use App\Service\Event\EventService;
 use App\Service\MatchService;
 use App\Service\RatingPersonService;
 use App\Service\RatingTeamService;

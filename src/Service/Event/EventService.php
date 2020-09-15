@@ -4,9 +4,15 @@
  * Date: 24/06/2020
  */
 
-namespace App\Service;
+namespace App\Service\Event;
 
 
+use App\Service\DownloadFile;
+use App\Service\EntityService;
+use App\Service\FlagIconService;
+use App\Service\ImageService;
+use App\Service\MapService;
+use App\Service\TeamService;
 use DateTime;
 use App\Entity\Event;
 use App\Repository\EventRepository;
@@ -20,22 +26,32 @@ class EventService extends EntityService
     /** @var EventRepository */
     protected $repository;
 
+    /** @var ImageService */
     protected $imageService;
 
+    /** @var FlagIconService */
     protected $flagIconService;
 
+    /** @var EventPrizeDistributionService */
     protected $eventPrizeDistributionService;
 
+    /** @var EventGroupPlayService */
     protected $eventGroupPlayService;
 
+    /** @var TeamService */
     protected $teamService;
 
+    /** @var EventMapPoolService */
     protected $eventMapPoolService;
 
+    /** @var RelatedEventService */
     protected $relatedEventService;
 
     /** @var MapService */
     protected $mapService;
+
+    /** @var EventTeamAttendingService */
+    protected $eventTeamAttendingService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -52,16 +68,17 @@ class EventService extends EntityService
 
         $this->eventMapPoolService = new EventMapPoolService($entityManager);
         $this->relatedEventService = new RelatedEventService($entityManager);
+
+        $this->eventTeamAttendingService = new EventTeamAttendingService($entityManager);
     }
 
     /**
      * @param $values
      * @param DateTime|null $parseDate
-     * @return Event
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function create($values, DateTime $parseDate = null): Event
+    public function create($values, DateTime $parseDate = null)
     {
         $event = $this->createBaseEvent($values, $parseDate);
 
@@ -76,6 +93,9 @@ class EventService extends EntityService
 
         $relatedEvents = $values['relatedEvents'] ?? null;
         $this->setRelatedEvents($event, $relatedEvents);
+
+        $teamsAttending = $values['teamsAttending'] ?? [];
+        $this->createEventTeamsAttending($event, $teamsAttending);
 
         return $event;
     }
@@ -118,7 +138,11 @@ class EventService extends EntityService
         return null;
     }
 
-    public function eventsDecorator(array $events)
+    /**
+     * @param array $events
+     * @return array
+     */
+    public function eventsDecorator(array $events): array
     {
         $eventItems = [];
 
@@ -126,6 +150,7 @@ class EventService extends EntityService
         {
             /** @var Event $event */
             $eventItems[] = [
+                "id" => $event->getId(),
                 "name" => $event->getName(),
                 "startedAt" => $event->getStartedAt(),
                 "endedAt" => $event->getEndedAt(),
@@ -136,7 +161,11 @@ class EventService extends EntityService
         return $eventItems;
     }
 
-    public function futureEventsDecorator($events)
+    /**
+     * @param $events
+     * @return array
+     */
+    public function futureEventsDecorator($events): array
     {
         $futureEventItems = [];
         foreach ($events as $event)
@@ -158,9 +187,10 @@ class EventService extends EntityService
             $headerImage = $event->getImageHeader();
             $this->imageService->setImage($headerImage);
 
-            $headerImage = $this->imageService->getPhotoPath();
+            $headerImage = $this->imageService->getImagePath();
 
             $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
+                "id" => $event->getId(),
                 "name" => $event->getName(),
                 "startedAt" => $event->getStartedAt(),
                 "endedAt" => $event->getEndedAt(),
@@ -174,18 +204,31 @@ class EventService extends EntityService
         return $futureEventItems;
     }
 
+    /**
+     * @param $values
+     * @param null $parseDate
+     * @return Event
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function createBaseEvent($values, $parseDate = null)
     {
-        $startedAt = $values['started_at']->format("Y-m-d");
-
         /** @var Event $event */
-        $event = $this->getByNameAndStartDate($values['name'] ?? '', $startedAt);
+        $event = $this->getByUrl($values['url']);
+
         if (empty($event))
         {
             $event = new $this->entity;
         }
+        if (!empty($values['started_at']))
+        {
+            $startedAt = $values['started_at']->format("Y-m-d");
+
+            $event->setStartedAt(new \DateTime($startedAt));
+        }
         if (empty($values['ended_at'])){
-            $values['ended_at'] =  $values['started_at'];
+            $values['ended_at'] =  $values['started_at'] ?? null;
         }
         if (is_string($values['ended_at'])){
             $values['ended_at'] = new \DateTime($values['ended_at']);
@@ -196,7 +239,6 @@ class EventService extends EntityService
         $event->setCommandCount($values['teams']);
         $event->setLocation($values['location']);
         $event->setName($values['name']);
-        $event->setStartedAt(new \DateTime($startedAt));
         $event->setEndedAt($values['ended_at']);
         $event->setCreatedAt($parseDate);
         $event->setUrl($values['url'] ?? null);
@@ -229,13 +271,15 @@ class EventService extends EntityService
             }
             $event->setFlagIcon($flag);
         }
-
-        $this->entityManager->persist($event);
-        $this->entityManager->flush();
+        $this->save($event);
 
         return $event;
     }
 
+    /**
+     * @param $event
+     * @param $prizeDistributions
+     */
     public function setPrizeDistributions($event, $prizeDistributions)
     {
         if (isset($prizeDistributions))
@@ -247,6 +291,10 @@ class EventService extends EntityService
         }
     }
 
+    /**
+     * @param $event
+     * @param $groupPlay
+     */
     public function setGroupPLay($event, $groupPlay)
     {
         if (isset($groupPlay)){
@@ -264,6 +312,10 @@ class EventService extends EntityService
         }
     }
 
+    /**
+     * @param $event
+     * @param $mapPool
+     */
     public function setMapPool($event, $mapPool)
     {
         if (isset($mapPool))
@@ -278,6 +330,13 @@ class EventService extends EntityService
         }
     }
 
+    /**
+     * @param $event
+     * @param $relatedEvents
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function setRelatedEvents($event, $relatedEvents)
     {
         if (isset($relatedEvents))
@@ -294,13 +353,38 @@ class EventService extends EntityService
         }
     }
 
+    /**
+     * @return Event[]
+     */
     public function getLastWeekEvents()
     {
         return $this->repository->getLastWeekEvents();
     }
 
+    /**
+     * @return Event[]
+     */
     public function getFeatureEvents()
     {
         return $this->repository->getFeatureEvents();
+    }
+
+    public function createEventTeamsAttending($event, $teamsAttending)
+    {
+        foreach ($teamsAttending as $teamAttending)
+        {
+            $team = $this->teamService->getByName($teamAttending['teamName']);
+
+            if (empty($team))
+            {
+                continue;
+            }
+            $this->eventTeamAttendingService->create($event, $team, $teamAttending['number']);
+        }
+    }
+
+    public function getByUrl($url)
+    {
+        $this->repository->getByUrl($url);
     }
 }

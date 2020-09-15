@@ -10,9 +10,9 @@ namespace App\Traits;
 trait EntityManager
 {
     /**
-     * @return mixed
+     * @return \Doctrine\ORM\EntityManager
      */
-    public function getEntityManager()
+    public function getEntityManager(): \Doctrine\ORM\EntityManager
     {
         global $kernel;
 
