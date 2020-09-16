@@ -296,6 +296,7 @@ width: 260px;
 }
 .home .component.matches .table .table-row .rows div:nth-child(5) .img img{
   height: 1.6vw;
+  width: 100%;
 }
 .home .component.matches .table .table-row div.video{
   width: 100%;
