@@ -1,3 +1,8 @@
+<?php
+	$url =  base_url();
+	$url =  str_replace("[::1]", "localhost", $url);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/popup.css'; ?>">
 <main class="flex create-new-website-page">
 	<?php
 		$errors = validation_errors('<li>', '</li>');
@@ -54,13 +59,14 @@
 			<table class="new-table">
 				<thead>
 				<tr>
-					<td class="width-5"><a href="<?php print base_url('c-admin/users/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">ID</a></td>
-					<td class="width-5"><a href="<?php print base_url('c-admin/users/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">lesson id</a></td>
-					<td class="width-20"><a href="<?php print base_url('c-admin/users/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> yandex kassa id</a></td>
-					<td class="width-30"><a href="<?php print base_url('c-admin/users/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> yandex data</a></td>
-					<td class="width-10"><a href="<?php print base_url('c-admin/users/page/1?sort[email]='.($sort_email == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">payment status</a></td>
-					<td class="width-15"><a href="<?php print base_url('c-admin/users/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">created at</a></td>
-					<td class="width-15"><a href="<?php print base_url('c-admin/users/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">updated at</a></td>
+					<td class="width-5"><a href="<?php print base_url('c-admin/payments/page/1?sort[payment-id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">ID</a></td>
+					<td class="width-15"><a href="<?php print base_url('c-admin/payments/page/1?sort[user-nickname]=' . ($sort_n == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Тренер</a></td>
+					<td class="width-15"><a href="<?php print base_url('c-admin/payments/page/1?sort[payment-created_at]=' . ($sort_c == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Дата оплаты</a></td>
+					<td class="width-15" class="table-head-col">Время урока</td>
+					<td class="width-15" class="table-head-col">Cтудент</td>
+					<td class="width-10" class="table-head-col">Сумма</td>
+					<td class="width-10" class="table-head-col">Сумма Refund</td>
+					<td class="width-15" class="table-head-col">Refund</td>
 				</tr>
 				</thead>
 				<tbody>
@@ -73,38 +79,38 @@
 						
 						<tr>
 							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['id']; ?></td>
-							<td data-id="<?php echo $rmo_i; ?>"> <?php echo $val['lesson_id']; ?></td>
-							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['yandex_kassa_id']; ?></td>
+							<td data-id="<?php echo $rmo_i; ?>"> <?php echo $val['nickname']; ?></td>
+							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['created_at']; ?></td>
+							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['datetime']; ?></td>
+							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val["student"][0]["nickname"]; ?></td>
 							
 							<td data-id="<?php echo $rmo_i; ?>">
 								<?php
-									$data = (array)json_decode($val['yandex_data']);
-									foreach($data as $key2 => $value) {
-//										print "<strong>".$key2."</strong> ";
-										if(gettype($value) == "object") {
-											$value2 = (array)$value;
-											
-											foreach($value2 as $key3 => $value3) {
-												print "<strong>$key3 -- ".$value3."</strong></br>";
-											}
-										} else {
-											if(gettype($value) == "array") {
-												foreach($value as $key4 => $value4) {
-													print "<strong> $key4" ." -- ". $value4."</strong></br>";
-												}
-											} else {
-												print "<strong> $key2 "." -- ".$value."</strong></br>";
-											}
+									$payment_id = $val['yandex_kassa_id'];
+									$amount = 0;
+									$currency = "RUB";
+									if(!empty($val['yandex_data'])) {
+										$data = (array)json_decode ($val['yandex_data']);
+										if (!empty($data)) {
+											$amount = $data["amount"]->value;
+											$currency = $data["amount"]->currency;
+											print $data["amount"]->value." ".$data["amount"]->currency;
 										}
-										
 									}
 								?>
 							</td>
+							<td data-id="<?php echo $rmo_i; ?>">
+								<?php
+									if(isset($val["refund"][0]["id"])) {
+										$data =  array_shift($val["refund"]);
+										echo $data["amount"]." RUB";
+									} else {
+										echo "0 RUB";
+									}
+								?>
+							</td>
+							<td data-id="<?php echo $rmo_i; ?>"><button class="btn btn-dark-blue btn-small" onclick="refund(<?php print "'".$amount ."', '$payment_id', ".$UserID.", '".$currency."', '".base_url("c-admin/refund/$UserID")."', ".$val['id']; ?>)">Refund</button></td>
 							
-							<td data-id="<?php echo $rmo_i; ?>"><?php print $val['payment_status']; ?></td>
-							<td data-id="<?php echo $rmo_i; ?>"><?php print $val['created_at']; ?></td>
-							<td data-id="<?php echo $rmo_i; ?>"><div class="pl-10" style="display: inline-block;"><?php print $val['updated_at']; ?></div></td>
-						
 						</tr>
 						<?php  $rmo_i++; }}
 				else{ ?>
@@ -120,14 +126,13 @@
 			
 			<?php if(isset($pagination[0][0])){?>
 			<div class="pagination">
-				<?php print ('<a href="'.site_url('c-admin/admins/page/').$pagination[0][0].'">')."  <div class='pagination__prev'></div></a>";?>
+				<?php print ('<a href="'.site_url('c-admin/payments/page/').$pagination[0][0].'">')."  <div class='pagination__prev'></div></a>";?>
 				
 				<?php
 					$next_page = 1;
 					$ij = 1;
-					$page_i=1; for($ij; $ij <= (int)$pagination[0][1]; $ij++){?>
-					<?php
-//							$active = ($pagination[1] == $page_i)? 'active':'';
+					$page_i=1; for($ij; $ij <= (int)$pagination[0][1]; $ij++){
+					
 					if($pagination[1] == $page_i){
 						$active = 'active';
 						if($page_i+1 <= $pagination[0][1]) {
@@ -138,15 +143,85 @@
 					} else {
 						$active = '';
 					}
-					print ('<a href="'.site_url('c-admin/users/page/').$page_i.'">')."<div class='pagination__item ".$active."'>$page_i</div></a>";?>
+					print ('<a href="'.site_url('c-admin/payments/page/').$page_i.'">')."<div class='pagination__item ".$active."'>$page_i</div></a>";?>
 					<?php
 					$page_i++; }?>
-				<?php print ('<a href="'.site_url('c-admin/users/page/').$next_page.'">')."  <div class='pagination__next'></div></a>";?>
+				<?php print ('<a href="'.site_url('c-admin/payments/page/').$next_page.'">')."  <div class='pagination__next'></div></a>";?>
 			</div>
 		</div>
 		<?php }?>
-		<div class="flex"></div>
+		
+	
 	</div>
 </main>
+<div id="confirm_delete" class="modal">
+	<!-- Modal content -->
+	<div class="confirm_modal-content">
+		<a href=""><div class="close">×</div></a><br>
+		<div id="modal_text">
+			<div class="no_license"> Are You sure?</div><br><br>
+			<div class="want_delete" id="confirm_text"></div>
+			<div class="confirm_text">
+				<div class="type_delete">Type amount to confirm Refund</div>
+				<input type="text" id="confirmation_text" class="input_style" placeholder="Value">
+				<input type="hidden" id="c_payment_id">
+				<input type="hidden" id="yandex_kassa_id">
+				<input type="hidden" id="c_user_id">
+				<input type="hidden" id="c_currency">
+				<input type="hidden" id="c_url">
+			
+				<div class="confrim_btn" id="rmo_delete" onclick="confirm_refund()"><div class="confirm">REFUND</div></div>
+				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Cancel</div></div> </a>
+			</div>
+		</div>
+	
+	</div>
+</div>
+<script>
+	function refund(amount=0, yandex_kassa_id="", user_id = 0, currency="", c_url="", c_payment_id=0){
+		document.getElementById('confirmation_text').value = amount;
+		document.getElementById('yandex_kassa_id').value = yandex_kassa_id;
+		document.getElementById('c_payment_id').value = c_payment_id;
+		document.getElementById('c_user_id').value = user_id;
+		document.getElementById('c_currency').value = currency;
+		document.getElementById('c_url').value = c_url;
+	
+		var modal_confirm = document.getElementById('confirm_delete');
+		modal_confirm.style.display = "block";
+	}
+	
+	function confirm_refund(){
+		let c_amount = document.getElementById('confirmation_text').value;
+		let yandex_kassa_id = document.getElementById('yandex_kassa_id').value;
+		let c_payment_id = document.getElementById('c_payment_id').value;
+		let c_user_id = document.getElementById('c_user_id').value;
+		let c_currency = document.getElementById('c_currency').value;
+		let url = document.getElementById('c_url').value;
+		
+		if(url && url.length>1){
+			var param = {
+				yandex_kassa_id: yandex_kassa_id,
+				payment_id: c_payment_id,
+				amount: c_amount,
+				user_id: c_user_id,
+				currency: c_currency
+			};
+					
+			$.post(url, param, function (data) {
+				console.log(data);
+				var modal_confirm = document.getElementById('confirm_delete');
+				modal_confirm.style.display = "none";
+				if(data == 1) {
+					location.reload();
+				} else {
+					alert(data);
+				}
+				
+			});
+		}
+		
+	}
+	
+</script>
 <script src="<?php echo base_url('assets/js/table-expander.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/common.js'); ?>"></script>
