@@ -13,7 +13,12 @@
           <div class="map">Команды еще не приступили к пику и бану карт</div>
       {% endif %}
       {% for key, pickAndBan in match.matchPickAndBans %}
-          <div class="map">{{ key + 1 }}. {{ pickAndBan.team ? pickAndBan.team.name : '' }} {{ pickAndBan.operationType == 1 ? 'забанила' : (pickAndBan.operationType == 2 ? 'пикнула' : 'Оставшаяся карт - ')}} {{ pickAndBan.map }}</div>
+       {#     <div class="map">{{ key + 1 }}. {{ pickAndBan.team ? pickAndBan.team.name : '' }} {{ pickAndBan.operationType == 1 ? 'забанила' : (pickAndBan.operationType == 2 ? 'пикнула' : 'Оставшаяся карт - ')}} {{ pickAndBan.map }}</div>#}
+          <div class="map">{{ key + 1 }}.
+            <div style="display:inline-block">{{ pickAndBan.team ? pickAndBan.team.name : '' }}</div>
+            <div style="display:inline-block" attr-row-id="{{ pickAndBan.team ? pickAndBan.id : '' }}" attr-value="{{pickAndBan.operationType}}" attr-row-field="operation_type" attr-row-table="match_pick_and_ban" onclick="EditData(this, 'date')">{{ pickAndBan.operationType == 1 ? 'забанила' : (pickAndBan.operationType == 2 ? 'пикнула' : 'Оставшаяся карт - ')}} </div>
+            <div style="display:inline-block" attr-row-id="{{ pickAndBan.team ? pickAndBan.id : '' }}" attr-row-field="map" attr-row-table="match_pick_and_ban" onclick="EditData(this)">{{ pickAndBan.map }}</div>
+          </div>
       {% endfor %}
   </div>
 {#  <div class="grid-preview">#}
