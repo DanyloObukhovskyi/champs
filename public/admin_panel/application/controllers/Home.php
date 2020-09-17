@@ -109,6 +109,7 @@
 			}
 			
 			if($current_u_can[0] == "1" || $current_u_can[2] == "1") {
+				$this->load->model('posts_model');
 				$page = (int)$page;
 				if ($page > 0) {
 					$page = $page - 1;
@@ -132,8 +133,7 @@
 			
 			
 				$offset = $this->post_per_page * $page;
-				$posts_count = 3;
-//		    	$posts_count = $this->posts_model->get_all($where, true);;
+		    	$posts_count = $this->posts_model->select_matches($where, true);;
 			
 				$config = $this->config->item('pagination');
 				$config['base_url'] = site_url('c-admin/posts/page/');
@@ -151,18 +151,19 @@
 					$sort = array();
 				}
 			
-				$data['sort_id'] = isset($sort['id']) ? $sort['id'] : '';
-				$data['sort_email'] = isset($sort['email']) ? $sort['email'] : '';
-				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
+				$data['sort_id'] = isset($sort['start_at']) ? $sort['start_at'] : '';
+				$data['team1_sid'] = isset($sort['team1_id']) ? $sort['team1_id'] : '';
+				$data['team2_sid'] = isset($sort['team2_id']) ? $sort['team2_id'] : '';
 //		    	$sort = array_merge(array('id' => 'ASC'), $sort);
-			
-			
-				$statistics = array();
-				$statistics[0] = array('date'=>'26 June', 'time'=>1590364800, 'team1'=>'Renegades', 'team2'=>'Chiefs', 'team1_ico'=>'team-pic.png', 'team2_ico' =>'team-pic.png');
-				$statistics[1] = array('date'=>'20 July', 'time'=>1590364800, 'team1'=>'Renegades', 'team2'=>'Chiefs', 'team1_ico'=>'team-pic.png', 'team2_ico' =>'team-pic.png');
-				$statistics[2] = array('date'=>'20 June', 'time'=>1590364800, 'team1'=>'Renegades', 'team2'=>'Chiefs', 'team1_ico'=>'team-pic.png', 'team2_ico' =>'team-pic.png');
-				$statistics[3] = array('date'=>'21 July', 'time'=>1590364800, 'team1'=>'Renegades', 'team2'=>'Chiefs', 'team1_ico'=>'team-pic.png', 'team2_ico' =>'team-pic.png');
-				$data['statistics'] = $statistics;
+				
+				$data['statistics'] = $this->posts_model->select_matches($where, false, $sort, array($offset, $this->post_per_page));
+				
+				foreach($data['statistics'] as $key =>&$value) {
+					$value['team1_data'] = $this->posts_model->get_team($value["team1_id"]);
+					$value['team2_data'] = $this->posts_model->get_team($value["team2_id"]);
+				}
+				
+				$data['imgs_url'] = $this->config->item('display_team-pic');
 				
 				$data['current_u_can'] = $current_u_can;
 				$data['output'] = $this->load->view('home/matches', $data, true);
@@ -375,7 +376,7 @@
 				
 				
 				$offset = $this->post_per_page * $page;
-		    	$posts_count = $this->selectData->get_all_payments($where, true);;
+		    	$posts_count = $this->selectData->get_all_payments($where, true);
 				
 				$config = $this->config->item('pagination');
 				$config['base_url'] = site_url('c-admin/posts/page/');
@@ -391,15 +392,24 @@
 				$sort = $this->input->get('sort');
 				if (empty($sort)) {
 					$sort = array();
+				} else {
+					$sort= array_flip($sort);
+					foreach($sort as $key => &$value) {
+						$value = str_replace("-",".",$value);
+					}
+					$sort = array_flip($sort);
 				}
 				
-				$data['sort_id'] = isset($sort['id']) ? $sort['id'] : '';
-				$data['sort_email'] = isset($sort['email']) ? $sort['email'] : '';
-				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
+				$data['sort_id'] = isset($sort['payment.id']) ? $sort['payment.id'] : '';
+				$data['sort_n'] = isset($sort['user.nickname']) ? $sort['user.nickname'] : '';
+				$data['sort_c'] = isset($sort['payment.created_at']) ? $sort['payment.created_at'] : '';
 				
 				
 				$data['payments'] = $this->selectData->get_all_payments($where, false, $sort, array($offset, $this->post_per_page), true);
-				
+				foreach($data['payments'] as $key =>&$value) {
+					$value['refund'] = $this->selectData->checkRefund((int)$value["id"]);
+					$value['student'] = $this->selectData->getStudent((int)$value["student_id_id"]);
+				}
 			
 				$data['output'] = $this->load->view('home/payments', $data, true);
 				$this->load->view('layout/home', $data);

@@ -364,7 +364,7 @@
 					
 					$delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
 					
-					if(!empty($nickname) && !empty($Email) && !empty($price)) {
+					if(!empty($nickname) && !empty($Email) && !empty($price) && !empty($about) && !empty($method)) {
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
 						
@@ -374,7 +374,7 @@
 						$update_data['email'] = $Email;
 						$update_data['game'] = $game;
 						
-						
+
 						if($new_passw == $new_passw_confirm && !empty($new_passw)) {
 //							$this->load->model(array('Ion_auth_model'));
 							$update_data['password'] = $this->create_user_passw($new_passw);
@@ -432,11 +432,10 @@
 									$this->load->model("edit_m");
 									$this->edit_m->change_user_img($id, $data["upload_data"]["orig_name"]);
 								}
-							} 
-							//else {
-								//$this->load->model("edit_m");
-								//$this->edit_m->change_user_img($id, "prof-pic.svg");
-							//}
+							} else {
+								$this->load->model("edit_m");
+								$this->edit_m->change_user_img($id, "prof-pic.svg");
+							}
 							
 						} else {
 							$this->load->model("edit_m");

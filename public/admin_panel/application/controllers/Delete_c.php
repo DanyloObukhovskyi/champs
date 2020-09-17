@@ -61,7 +61,7 @@
 			}
 			
 			if($current_u_can[0] == "1" || $current_u_can[2] == "1") {
-					//TODO ACTION !!!!
+				$this->delete_m->delete_match($match_id);
 				redirect($_SERVER["HTTP_REFERER"]);
 				die();
 			}

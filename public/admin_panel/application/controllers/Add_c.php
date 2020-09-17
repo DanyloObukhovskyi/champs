@@ -362,7 +362,7 @@
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
 					
-					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price) {
+					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price) && !empty($about) && !empty($method)) {
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
 						
@@ -371,7 +371,6 @@
 						$update_data['nickname'] = $nickname;
 						$update_data['email'] = $Email;
 						$update_data['istrainer'] = 1;
-						
 						if(!empty($game)) {
 							$update_data['game'] = $game;
 						}
