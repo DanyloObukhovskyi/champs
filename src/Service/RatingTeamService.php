@@ -54,6 +54,8 @@ class RatingTeamService extends EntityService
             $team = $ratingTeam->getTeam();
             $this->imageService->setImage($team->getLogo());
             $teams[] = [
+                "id" =>$ratingTeam->getId (),
+                'team_id' => $team->getId(),
                 'title' => $team->getName(),
                 'image' => $this->imageService->getImagePath(),
                 'rating' => $ratingTeam->getRating(),
