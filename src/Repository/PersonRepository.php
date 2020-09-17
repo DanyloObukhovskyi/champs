@@ -83,4 +83,20 @@ class PersonRepository extends ServiceEntityRepository
 
         return $weekPlayer;
     }
+	
+	public function getPersonById($id) {
+		$sql = "SELECT * FROM person as p join rating_person as r ON p.id = r.person_id WHERE p.id = ".$id." and r.created_at is not null ORDER BY r.created_at DESC LIMIT 8";
+		$stmt = $this->_em->getConnection()->prepare($sql);
+		$stmt->execute();
+		return $stmt->fetchAll();
+//		return $Persons;
+	}
+	
+	public function getAllFlags() {
+		$sql = "SELECT `orig_name`, `id` FROM flag_icon";
+		$stmt = $this->_em->getConnection()->prepare($sql);
+		$stmt->execute();
+		return $stmt->fetchAll();
+//		return $Persons;
+	}
 }
