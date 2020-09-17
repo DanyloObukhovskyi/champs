@@ -66,6 +66,8 @@ class RatingPersonService extends EntityService
         $image = $this->imageService->getImagePath();
 
         $flag = $person->getFlagIcon();
+        $flagID = $person->getFlagIconId();
+
         if (isset($flag)){
             $flag = $flag->getName();
         }
@@ -73,11 +75,14 @@ class RatingPersonService extends EntityService
         $flag = $this->imageService->getImagePath();
 
         $player = [
+            'user_id' => $person->getId (),
+        	'person_id' => $ratingPerson->getId(),
             'rating' => $ratingPerson->getRating(),
             'nickname' => $person->getNick(),
             'fullname' => $person->getName(),
             'image' => $image,
-            'flag' => $flag
+            'flag' => $flag,
+            'flag_id' => $flagID
         ];
 
 
@@ -89,7 +94,8 @@ class RatingPersonService extends EntityService
 
             $player['team'] = [
                 'title' => $team->getName(),
-                'image' =>$logo
+                'image' =>$logo,
+                'id' => $team->getId()
             ];
         }
         return $player;
