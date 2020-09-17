@@ -1,8 +1,3 @@
-<?php
-	$url =  base_url();
-	$url =  str_replace("[::1]", "localhost", $url);
-?>
-<link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/popup.css'; ?>">
 <main class="flex create-new-website-page">
 	<?php
 		$errors = validation_errors('<li>', '</li>');
@@ -154,7 +149,7 @@
 	
 	</div>
 </main>
-<div id="confirm_delete" class="modal">
+<div id="confirm_delete1" class="modal">
 	<!-- Modal content -->
 	<div class="confirm_modal-content">
 		<a href=""><div class="close">×</div></a><br>
@@ -170,7 +165,7 @@
 				<input type="hidden" id="c_currency">
 				<input type="hidden" id="c_url">
 			
-				<div class="confrim_btn" id="rmo_delete" onclick="confirm_refund()"><div class="confirm">REFUND</div></div>
+				<div class="confrim_btn" onclick="confirm_refund()"><div class="confirm">REFUND</div></div>
 				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Cancel</div></div> </a>
 			</div>
 		</div>
@@ -186,7 +181,7 @@
 		document.getElementById('c_currency').value = currency;
 		document.getElementById('c_url').value = c_url;
 	
-		var modal_confirm = document.getElementById('confirm_delete');
+		var modal_confirm = document.getElementById('confirm_delete1');
 		modal_confirm.style.display = "block";
 	}
 	

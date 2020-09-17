@@ -85,7 +85,7 @@
 							<td><?php echo $val['id']; ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['email']; ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="pr-10" style="vertical-align: middle;" src="<?php print base_url('assets/icons/'.$img.'.svg'); ?>"/><?php print $Type; ?></td>
-							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/admin/edit/".$val['id']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <a href="<?php print base_url("c-admin/admin/delete/".$val['id']."/".$UserID); ?>" class="pointer txt-orange ml-15 fw-600">Удалить</a></td>
+							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/admin/edit/".$val['id']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <div onclick="c_delete(<?php print "'". base_url("c-admin/admin/delete/".$val['id']."/".$UserID)."'"; ?>,<?php print "'".$val['email']."'";?>,'Post')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div></td>
 						
 						</tr>
 						<?php  $rmo_i++; }}

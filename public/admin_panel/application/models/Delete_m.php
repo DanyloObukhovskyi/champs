@@ -26,12 +26,39 @@
 		}
 		
 		function delete_match($id=0) {
-
+			$id = (int) $id;
+			if ($id > 0) {
+				//DELETE FROM `match_pick_and_ban`
+				//WHERE `game_id` = 1;
+				//
+				//DELETE FROM `match_statistics`
+				//WHERE `game_match_id` = 1;
+				//
+				//DELETE FROM `player_statistics`
+				//WHERE `game_match_id` = 1;
+				//
+				//DELETE FROM `stream`
+				//WHERE `game_match_id` = 1;
+				//
+				//DELETE FROM `match`
+				//WHERE `id` = 1;
+				$this->db->delete('match_pick_and_ban', array('game_id' => $id));
+				$this->db->delete('match_statistics', array('game_match_id' => $id));
+				$this->db->delete('player_statistics', array('game_match_id' => $id));
+				$this->db->delete('stream', array('game_match_id' => $id));
+				$this->db->delete('match', array('id' => $id));
+				
+				return true;
+			}
+			
+			return false;
 		}
 		
 		function delete_user($id=0) {
 			$id = (int) $id;
 			if ($id > 0) {
+				$this->db->delete('purse_history', array('user_id' => $id));
+				$this->db->delete('charactristics', array('user_id' => $id));
 				$this->db->delete($this->table['users'], array('id' => $id));
 				return true;
 			}
