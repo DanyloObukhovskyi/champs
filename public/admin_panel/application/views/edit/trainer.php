@@ -103,17 +103,25 @@
 				<div class="col-item">
 					<label class="label" for="">Video URL</label>
 					<div class="input mb-20" id="input">
-						<input type="text" class="fw-600 input2_txt" name="video_url" id="video_url" placeholder="https://"  title="введите правильный E-mail" value="<?php print $user_info[0]['videolink']; ?>">
+						<input required type="text" class="fw-600 input2_txt" name="video_url" id="video_url" placeholder="https://"  title="введите правильный E-mail" value="<?php print $user_info[0]['videolink']; ?>">
 					</div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">Twitch URL</label>
 					<div class="input mb-20" id="input">
-						<input type="text" class="fw-600 input2_txt" name="twitch" id="twitch" placeholder="https://"  title="введите правильный" value="<?php print $user_info[0]['twitch']; ?>">
+						<input required type="text" class="fw-600 input2_txt" name="twitch" id="twitch" placeholder="https://"  title="введите правильный" value="<?php print $user_info[0]['twitch']; ?>">
 					</div>
 					<label class="label" for="">Тип стрима</label>
 					<div class="input mb-5" id="input">
-						<input type="text" class="fw-600 input2_txt" name="stream_type" id="stream_type" placeholder=""  value="<?php print $user_info[0]['stream_type']; ?>" title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
+						<input required type="text" class="fw-600 input2_txt" name="stream_type" id="stream_type" placeholder=""  value="<?php print $user_info[0]['stream_type']; ?>" title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
+					</div>
+					<div class="mb-15">
+						<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
+						<div class="info_txt">Формат поля - числовой</div>
+					</div>
+					<label class="label" for="">сколько текущий админ будет получать с ставки тренера в %</label>
+					<div class="input mb-5" id="input">
+						<input required type="text" class="fw-600 input2_txt" name="admin_percentage" id="admin_percentage " placeholder="" value="<?php print $user_info[0]['admin_percentage']; ?>" title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
 					</div>
 					<div class="mb-15">
 						<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
@@ -127,20 +135,20 @@
 					</div>
 					<label class="label" for="">Игра</label>
 					<div class="input mb-5" id="input">
-						<input type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""  value="<?php print $user_info[0]['game']; ?>" title="введите правильный">
+						<input required type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""  value="<?php print $user_info[0]['game']; ?>" title="введите правильный">
 					</div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">About</label>
 					<div class=" mb-20" id="input" >
-						<textarea  name="about"  style="width: 100%; resize:none;" rows="7"><?php print $user_info[0]['about']; ?></textarea>
+						<textarea  name="about"  style="width: 100%; resize:none;" rows="7" required><?php print $user_info[0]['about']; ?></textarea>
 					</div>
 				
 				</div>
 				<div class="col-item">
 					<label class="label" for="">Метод</label>
 					<div class=" mb-20" id="input" >
-						<textarea  style="width: 100%; resize:none;" rows="7" name="method"><?php print $user_info[0]['method']; ?></textarea>
+						<textarea  style="width: 100%; resize:none;" rows="7" name="method" required><?php print $user_info[0]['method']; ?></textarea>
 					</div>
 				</div>
 				<div class="col-item">
@@ -180,9 +188,8 @@
 				<!--- --->
 				<!--- --->
 				<div class="flex">
-					<a href="<?php echo ""; ?>">
-						<button class="btn btn-orange mt-15 mr-10 fw-400">Сохранить изменения</button>
-					</a>
+					<button type="submit" class="btn btn-orange mt-15 mr-10 fw-400">Сохранить изменения</button>
+					
 					<a href="<?php print base_url("c-admin/trainer/delete/".$user_info[0]['userid']."/".$UserID); ?>" class="changePass mt-25" style="height: 36px;top: -9px; position: relative">
 						<div class="changePassBTN" style="margin-top: 9px;  ">Удалить профиль</div>
 					</a>

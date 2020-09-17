@@ -361,6 +361,7 @@
 					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
+					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
 					
 					$delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
 					
@@ -401,6 +402,7 @@
 							$update_data['twitch'] = $twitch;
 							$update_data['shorttitle'] = $shorttitle;
 							$update_data['stream_type'] = $stream_type;
+							$update_data['admin_percentage'] = $admin_percentage;
 							
 							$this->edit_m->updateTeacher($id, $update_data);
 						}
@@ -432,11 +434,7 @@
 									$this->load->model("edit_m");
 									$this->edit_m->change_user_img($id, $data["upload_data"]["orig_name"]);
 								}
-							} else {
-								$this->load->model("edit_m");
-								$this->edit_m->change_user_img($id, "prof-pic.svg");
 							}
-							
 						} else {
 							$this->load->model("edit_m");
 							$this->edit_m->change_user_img($id, "prof-pic.svg");
