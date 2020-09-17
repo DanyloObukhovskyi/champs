@@ -36,7 +36,7 @@
                     </span>
                 </div>
                 <div class="r w-100">
-                    <span>
+                    <span attr-row-id="{{match.id}}" attr-row-field="team1_win_rate" attr-row-table="match" onclick="EditData(this)">
                         {{ match.team1WinRate }}
                     </span>
                 </div>
@@ -50,7 +50,7 @@
                     {% endif %}
                 </div>
                 <div class="r w-100">
-                    <span>
+                    <span attr-row-id="{{match.id}}" attr-row-field="team2_win_rate" attr-row-table="match" onclick="EditData(this)">
                         {{ match.team2WinRate  }}
                     </span>
                 </div>
