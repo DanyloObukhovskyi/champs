@@ -91,7 +91,7 @@ $route['c-admin/admin/add/(:num)'] = 'add_c/admin/$1';
 $route['c-admin/upload_img/(:num)'] = 'upload_img/index/$1';
 	
 $route['c-admin/ajax/update'] = 'handle_a_request';	
-$route['c-admin/ajax/check/'] = 'handle_a_request/check';
+$route['c-admin/ajax/check'] = 'handle_a_request/check';
 $route['c-admin/refund/(:num)'] = 'refund_c/index/$1';
 
 $route['404_override'] = '';
