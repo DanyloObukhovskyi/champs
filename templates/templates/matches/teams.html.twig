@@ -28,13 +28,13 @@
                         <div class="logo">
                             {% if player.person.photo is not null%}
                                 <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
-                                    class="logo" alt="PlayerA1"/>
+                                    class="logo" alt="PlayerA1" attr-row-id="{{player.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                             {% else %}
                                 <img data-team="l" data-player="{{ player.id }}" src="/images/blankplayer.svg"
-                                     class="logo w-100 h-100" alt="PlayerA1"/>
+                                     class="logo w-100 h-100" alt="PlayerA1" attr-row-id="{{player.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                             {% endif %}
                         </div>
-                        <div class="name">{{ player.person.nick }}</div>
+                        <div class="name" attr-row-id="{{player.id}}" attr-row-field="nick" attr-row-table="person" onclick="EditData(this)" >{{ player.person.nick }}</div>
                     </div>
                     {% set first = false %}
                     {% endif %}
@@ -110,13 +110,13 @@
                             <div class="logo">
                                 {% if player.person.photo is not null%}
                                     <img data-team="r" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
-                                         class="logo" alt="PlayerA1"/>
+                                         class="logo" alt="PlayerA1" attr-row-id="{{player.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                                 {% else %}
                                     <img data-team="r" data-player="{{ player.id }}" src="/images/blankplayer.svg"
-                                         class="logo" alt="PlayerA1"/>
+                                         class="logo" alt="PlayerA1"  attr-row-id="{{player.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                                 {% endif %}
                             </div>
-                            <div class="name">{{ player.person.nick }}</div>
+                            <div class="name" attr-row-id="{{player.id}}" attr-row-field="nick" attr-row-table="person" onclick="EditData(this)">{{ player.person.nick }}</div>
                         </div>
                         {% set first = false %}
                     {% endif %}
