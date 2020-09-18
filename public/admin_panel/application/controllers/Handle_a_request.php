@@ -148,7 +148,7 @@
 				$toUnlick = (string)array_pop($toUnlick);
 				$path =  $this->config->item('upload_person-pic').$toUnlick;
 				$error = 0;
-				if (!unlink($path)) {
+				if (@!unlink($path)) {
 					$error=1;
 				}
 				$result = $this->edit_fr_front->update_data(array($filed_name["field"] =>$dataU["upload_data"]["orig_name"]), $request_name, $where);
