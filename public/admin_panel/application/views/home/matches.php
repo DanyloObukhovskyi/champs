@@ -79,7 +79,7 @@
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print  date("H:i", strtotime($val["start_at"])); ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print isset($team1['logo']) ? $imgs_url.$team1['logo'] : ''; ?>" /><div class="pl-10" style="display: inline-block;"><?php print (isset($team1['name']))? $team1['name'] : ''; ?></div></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print isset($team2['logo']) ? $imgs_url.$team2['logo'] : ''; ?>" /><div class="pl-10" style="display: inline-block;"><?php print (isset($team2['name']))? $team2['name'] : ''; ?></div></td>
-							<td class="t-a-r pr-15"><a href="http://champs2.loc/ru/results/<?php print $val['id']; ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <div  onclick="c_delete(<?php print "'".  base_url("c-admin/match/delete/").$val['id']."/".$UserID."'"; ?>,<?php print "'".$val["start_at"]."'";?>,'Match')"  class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div></td>
+							<td class="t-a-r pr-15"><a href="https://champs.pro/ru/results/<?php print $val['id']; ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <div  onclick="c_delete(<?php print "'".  base_url("c-admin/match/delete/").$val['id']."/".$UserID."'"; ?>,<?php print "'".$val["start_at"]."'";?>,'Match')"  class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div></td>
 						
 						</tr>
 						<?php  $rmo_i++; }}
