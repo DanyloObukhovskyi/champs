@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="content">
-    <div id="doughnut_main"></div>
+    <div id="doughnut_main"  style="width: 80%"></div>
   </div>
 </div>
 {% set keys = [] %}
@@ -48,7 +48,7 @@ var color = d3.scaleOrdinal()
 // Compute the position of each group on the pie:
 var pie = d3.pie()
   .sort(null) // Do not sort group by size
-  .value(function(d) {return d.value[0]; })
+  .value(function(d) {return d.value; })
 var data_ready = pie(d3.entries(data))
 
 // The arc generator
@@ -68,11 +68,6 @@ svg
   .enter()
   .append('path')
   .attr('d', arc)
-  .attr('attr-row-id',  function(d) { return d.data.value[1]})
-  .attr('attr-row-field', 'rating')
-  .attr('attr-row-table', 'weapon_rating')
-  .attr('attr-row-rating', function(d) { return d.data.value[0]})
-  .attr('onclick', 'EditData(this, "svg2")')
   .attr('fill', function(d){ return(color(d.data.key)) })
   .attr("stroke", "white")
   .style("stroke-width", "2px")
@@ -103,10 +98,6 @@ svg
   .enter()
   .append('text')
     .text( function(d) { return d.data.key } )
-    .attr('attr-row-id',  function(d) { return d.data.value[1]} )
-    .attr('attr-row-field', 'name')
-    .attr('attr-row-table', 'weapon_rating')
-    .attr('onclick', 'EditData(this, "svg")')
     .attr('transform', function(d) {
         var pos = outerArc.centroid(d);
         var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
