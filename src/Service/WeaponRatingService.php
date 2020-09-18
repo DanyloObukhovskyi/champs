@@ -12,6 +12,12 @@ class WeaponRatingService extends EntityService
 
     protected $repository;
 
+    /**
+     * @param $weapon
+     * @return mixed
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create($weapon)
     {
         $weaponRating = new $this->entity;
@@ -25,6 +31,12 @@ class WeaponRatingService extends EntityService
         return $weaponRating;
     }
 
+    /**
+     * @param $weapon
+     * @return mixed
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function update($weapon)
     {
         $weaponRating = $this->repository->findByName($weapon['label']);
@@ -42,6 +54,10 @@ class WeaponRatingService extends EntityService
         return $weaponRating;
     }
 
+    /**
+     * @param $weapons
+     * @return array
+     */
     public function ratingWeaponsDecorator($weapons) {
         $ratingWeapons = [];
 

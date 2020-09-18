@@ -53,6 +53,11 @@ class Team
      */
     private $parseLogoDate;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true, name="parse_date")
+     */
+    private $parseDate;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
@@ -176,6 +181,22 @@ class Team
     public function setParseLogoDate($parseLogoDate): void
     {
         $this->parseLogoDate = $parseLogoDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParseDate()
+    {
+        return $this->parseDate;
+    }
+
+    /**
+     * @param mixed $parseDate
+     */
+    public function setParseDate($parseDate): void
+    {
+        $this->parseDate = $parseDate;
     }
 
 }

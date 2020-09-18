@@ -11,6 +11,15 @@ use Symfony\Component\HttpClient\CurlHttpClient;
 
 class PageContentService
 {
+    /**
+     * @param $url
+     * @param int $count
+     * @return string|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
     public static function getPageContent($url, $count = 1)
     {
         sleep(1);

@@ -79,6 +79,7 @@ class ParserEventsCommand extends Command
             LoggerService::error("hltv events not found");
             return 0;
         }
+
         $this->createEvents($mainEvents);
 
         $events = $this->getEvents();

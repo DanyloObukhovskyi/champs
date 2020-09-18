@@ -70,34 +70,31 @@ class MatchService extends EntityService
            $match->setLive($values['is_live']);
         }
 
-        $this->entityManager->persist($match);
-
-        $this->entityManager->flush();
+        $this->save($match);
 
         return $match;
     }
 
     public function updateStatistic(Match $match, $values)
     {
-        $isChanged = false;
         if (isset($values['score1']))
         {
             $match->setScore1($values['score1']);
-            $isChanged = true;
         }
         if (isset($values['score2']))
         {
             $match->setScore2($values['score2']);
-            $isChanged = true;
         }
 
-        if ($isChanged)
-        {
-            $this->entityManager->persist($match);
-            $this->entityManager->flush();
-        }
+        $this->save($match);
     }
 
+    /**
+     * @param $code
+     * @return Match|bool|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getByCode($code)
     {
         $match = $this->repository->getByCode($code);
@@ -110,6 +107,13 @@ class MatchService extends EntityService
         return false;
     }
 
+    /**
+     * @param $team1
+     * @param $team2
+     * @param $url
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function getByData($team1, $team2, $url)
     {
         $match = $this->repository->getByData($team1, $team2, $url);
@@ -122,31 +126,56 @@ class MatchService extends EntityService
         return $this->repository->findLiveForParse();
     }
 
+    /**
+     * @return Match[]|array
+     */
     public function getNotFullMatches()
     {
         return $this->repository->getNotFullMatches();
     }
 
+    /**
+     * @return array
+     */
     public function getMatchesWhereEmptyTeams()
     {
         return $this->repository->getMatchesWhereEmptyTeams();
     }
 
+    /**
+     * @param string $url
+     * @return Match|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function isExist(string $url)
     {
         return $this->repository->findByUrl($url);
     }
 
+    /**
+     * @param $values
+     * @param $teams
+     * @return Match|mixed
+     */
     public function updateTeams($values, $teams)
     {
         return $this->create($values, $teams);
     }
 
+    /**
+     * @param $url
+     * @return Match|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findByUrl($url)
     {
         return $this->repository->findByUrl($url);
     }
 
+    /**
+     * @param array $matches
+     * @return array
+     */
     public function matchesDecorator(array $matches)
     {
         $items = [];
@@ -169,6 +198,10 @@ class MatchService extends EntityService
         return $items;
     }
 
+    /**
+     * @param Match $match
+     * @return array
+     */
     public function matchDecorator(Match $match)
     {
         if (!empty($match->getEvent()) and !empty($match->getEvent()->getImage())){

@@ -14,6 +14,14 @@ class PastMatchService extends EntityService
 
     protected $repository;
 
+    /**
+     * @param Match $match
+     * @param array $pastMatch
+     * @param Team $matchTeam
+     * @return mixed
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create(Match $match, array $pastMatch, Team $matchTeam)
     {
         $past =  $this->repository->findMatch($match, $pastMatch, $matchTeam);

@@ -21,6 +21,10 @@ class RatingPersonService extends EntityService
     /** @var ImageService */
     protected $imageService;
 
+    /**
+     * RatingPersonService constructor.
+     * @param $entityManager
+     */
     public function __construct($entityManager)
     {
         parent::__construct($entityManager);
@@ -28,6 +32,13 @@ class RatingPersonService extends EntityService
         $this->imageService = new ImageService();
     }
 
+    /**
+     * @param $ratingPerson
+     * @param $rating
+     * @param $createdAt
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function update($ratingPerson, $rating, $createdAt)
     {
         $ratingPerson->setRating($rating)
@@ -37,6 +48,13 @@ class RatingPersonService extends EntityService
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $person
+     * @param $rating
+     * @param $createdAt
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create($person, $rating, $createdAt)
     {
         $ratingPerson = new $this->entity;
@@ -48,6 +66,10 @@ class RatingPersonService extends EntityService
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $ratingPlayers
+     * @return array
+     */
     public function retingPlayersDecorator($ratingPlayers)
     {
         $players = [];
@@ -58,6 +80,10 @@ class RatingPersonService extends EntityService
         return $players;
     }
 
+    /**
+     * @param RatingPerson $ratingPerson
+     * @return array
+     */
     public function retingPlayerDecorator(RatingPerson $ratingPerson)
     {
         /** @var Person $person */

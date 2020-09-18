@@ -31,8 +31,7 @@ class ResultService extends EntityService
         $result->setMatch($match)
             ->setCreatedAt(new \DateTime($date));
 
-        $this->entityManager->persist($result);
-        $this->entityManager->flush();
+        $this->save($result);
 
         return $result;
     }

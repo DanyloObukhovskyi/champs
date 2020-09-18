@@ -96,7 +96,7 @@ class Event
         return $this->started_at;
     }
 
-    public function setStartedAt(\DateTimeInterface $started_at): self
+    public function setStartedAt( $started_at): self
     {
         $this->started_at = $started_at;
 
@@ -108,7 +108,7 @@ class Event
         return $this->ended_at;
     }
 
-    public function setEndedAt(\DateTimeInterface $ended_at): self
+    public function setEndedAt( $ended_at): self
     {
         $this->ended_at = $ended_at;
 

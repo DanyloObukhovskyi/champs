@@ -19,6 +19,14 @@ class PlayerService extends EntityService
     /** @var PlayerRepository */
     protected $repository;
 
+    /**
+     * @param Person $person
+     * @param Team $team
+     * @return Player|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create(Person $person, Team $team)
     {
         $player = $this->repository->getByPersonId($person->getId());
@@ -40,6 +48,12 @@ class PlayerService extends EntityService
         return $player;
     }
 
+    /**
+     * @param $teamId
+     * @param $nick
+     * @return Player|bool|null
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getByTeamAndNick($teamId, $nick)
     {
         try

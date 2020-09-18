@@ -92,7 +92,15 @@ class Teachers
 
     public function getCost(): ?int
     {
-        return $this->cost;
+        $percentageMarkup = $_ENV['PERCENTAGE_MARKUP_LESSON'];
+
+        $cost = $this->cost;
+
+        if (isset($percentageMarkup))
+        {
+            $cost = ($this->cost / 100)  * ($percentageMarkup + 100);
+        }
+        return $cost;
     }
 
     public function setCost(?int $cost): self

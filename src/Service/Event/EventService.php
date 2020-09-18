@@ -256,7 +256,7 @@ class EventService extends EntityService
             try {
                 $image = DownloadFile::getImage($values['imageHeader']);
             }catch (Exception $e){
-                LoggerService::error("event download header image error: $e");
+                //
             }
             if (isset($image))
             {
@@ -399,5 +399,18 @@ class EventService extends EntityService
     public function getOldEvents()
     {
         return $this->repository->getOldEvents();
+    }
+
+    public function setEventImage($event, $image)
+    {
+        if (!empty($image))
+        {
+            $image = DownloadFile::getImage($image);
+            if (isset($image))
+            {
+                $event->setImage($image);
+            }
+        }
+        return $this->save($event);
     }
 }
