@@ -11,7 +11,7 @@
 			<div class="no_license"> Are You sure?</div><br><br>
 			<div class="want_delete" id="confirm_text"></div>
 			<div class="confirm_text">
-				<div class="type_delete">Type amount to confirm DELETE</div>
+				<div class="type_delete">Type DELETE to confirm</div>
 				<input type="text" id="confirmation_text22" class="input_style s2t2" placeholder="Value">
 				<div class="confrim_btn" id="rmo_delete" style="width: 70px" onclick="confirm_delete()"><div class="confirm">DELETE</div></div>
 				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Cancel</div></div> </a>
