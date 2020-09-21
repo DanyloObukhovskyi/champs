@@ -1,4 +1,5 @@
 var canEdit = false;
+var TMP_Value = "";
 
 $(document).ready(function () {
 	var identity = getCookie("identity");
@@ -46,13 +47,22 @@ function EditData(element, flag = "") {
 }
 
 function OnEdit(element, flag = "") {
-
+	TMP_Value = "";
 	let issetEdit = document.querySelectorAll("#EditPopUp");
 	if (issetEdit.length == 0) {
 		var popup = document.createElement('div');
 		popup.id = "EditPopUp";
 		if (flag == "svg") {
 			var c_value = element.innerHTML;
+			c_value = c_value.split(" - ");
+			if(c_value[0]){
+				if(c_value[1]){
+					TMP_Value = c_value[1];
+				}
+				c_value = c_value[0];
+			} else {
+				var c_value = element.innerHTML;
+			}
 		} else if (flag == "svg2") {
 			var c_value = element.getAttribute('attr-row-rating');
 		} else if (flag == "flag") {
@@ -120,8 +130,9 @@ function closeEdit() {
 function SaveEdit() {
 	if (canEdit == true) {
 		let current_val = $('#current_edit_V').val();
-
-		document.getElementsByClassName("opened_edit")[0].innerHTML = current_val;
+		
+		document.getElementsByClassName("opened_edit")[0].innerHTML = current_val + " - "+TMP_Value;
+		TMP_Value = "";
 		let WhereKey = document.getElementsByClassName("opened_edit")[0].getAttribute("attr-row-id");
 		let field = document.getElementsByClassName("opened_edit")[0].getAttribute("attr-row-field");
 		let table = document.getElementsByClassName("opened_edit")[0].getAttribute("attr-row-table");
