@@ -58,30 +58,28 @@ class WeaponRatingService extends EntityService
      * @param $weapons
      * @return array
      */
-    public function ratingWeaponsDecorator($weapons) {
-        $ratingWeapons = [];
-
-        $weaponsRatingSum = 0;
-        foreach ($weapons as $weapon) {
-            $weaponsRatingSum += (int)$weapon->getRating();
-        }
-	    $tmp = array();
-        foreach ($weapons as $weapon) {
-
-            $ratingInPercentage = ((int)$weapon->getRating() / $weaponsRatingSum) * 100;
-            $ratingInPercentage = round($ratingInPercentage, 1);
-
-            $weaponNameWithRatingPercentage = $weapon->getName() . " $ratingInPercentage%";
-            $ratingWeapons[$weaponNameWithRatingPercentage] = $weapon->getRating();
-	        
-			//Придумать как нормально объеденить код
-	        // Вынести в отдельную переменную $ratingInPercentage так что бы можно было отдельно базе редактировать?
-	        // или???
-	        // $tmp[0] = $weapon->getRating();
-	        // $tmp[1] = $weapon->getId();
-	        // $ratingWeapons[$weapon->getName()] = $tmp;
-        }
-
-        return $ratingWeapons;
-    }
+	public function ratingWeaponsDecorator($weapons) {
+		$ratingWeapons = [];
+		
+		$weaponsRatingSum = 0;
+		foreach ($weapons as $weapon) {
+			$weaponsRatingSum += (int)$weapon->getRating();
+		}
+		$tmp = array();
+		foreach ($weapons as $weapon) {
+			
+			$ratingInPercentage = ((int)$weapon->getRating() / $weaponsRatingSum) * 100;
+			$ratingInPercentage = round($ratingInPercentage, 1);
+			
+			$weaponNameWithRatingPercentage = $weapon->getName() . " - $ratingInPercentage%";
+			//$ratingWeapons[$weaponNameWithRatingPercentage] = $weapon->getRating();
+			
+			$tmp[0] = $weapon->getRating();
+			$tmp[1] = $weapon->getId();
+			// $tmp[2] = $ratingInPercentage;
+			$ratingWeapons[$weaponNameWithRatingPercentage] = $tmp;
+		}
+		
+		return $ratingWeapons;
+	}
 }
