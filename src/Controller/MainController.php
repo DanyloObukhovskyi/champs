@@ -76,33 +76,37 @@ class MainController extends DefController
 
         $repository = $entityManager->getRepository(News::class);
         $news = $repository->findBy([],['date'=>'DESC'],6,0);
-
-        $livesItems = [
-            [
-                'id' => 1,
-                'videoId' => "Nz3_Vg5GBio",
-                'videoType' => 0,
-                'title' => "ТОП 5 мобильных игр | Champs | Hino",
-            ],
-            [
-                'id' => 2,
-                'videoId' => "1NnA3hbwqRY",
-                'videoType' => 0,
-                'title' => "ММОшим / Champs / ModirDred",
-            ],
-            [
-                'id' => 3,
-                'videoId' => "Lmz9itL7sqs",
-                'videoType' => 0,
-                'title' => "Новости недели / Hino x ModirDred / Champs",
-            ],
-            [
-                'id' => 4,
-                'videoId' => "cwd6zSjKEW4",
-                'videoType' => 0,
-                'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
-            ],
-        ];
+	
+	    $livesItems = [
+		    [
+			    'id' => 1,
+			    'video_id' => "Nz3_Vg5GBio",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "ТОП 5 мобильных игр | Champs | Hino",
+		    ],
+		    [
+			    'id' => 2,
+			    'video_id' => "1NnA3hbwqRY",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "ММОшим / Champs / ModirDred",
+		    ],
+		    [
+			    'id' => 3,
+			    'video_id' => "Lmz9itL7sqs",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "Новости недели / Hino x ModirDred / Champs",
+		    ],
+		    [
+			    'id' => 4,
+			    'video_id' => "cwd6zSjKEW4",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
+		    ],
+	    ];
         
 	    /*
 	    * stream - news type - 8
