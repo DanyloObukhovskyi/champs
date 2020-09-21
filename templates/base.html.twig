@@ -565,14 +565,14 @@ document.oncopy = addLink;
   let full = false;
 
 //temporary fix, rewrite this part for add videos
-const playerTW = new Object();
-playerTW.pause= function (){}
+//const playerTW = new Object();
+//playerTW.pause= function (){}
 
-/* const playerTW = new Twitch.Player('playerTW', {
+  playerTW = new Twitch.Player('playerTW', {
     channel: "esbcsgo",
     parent: ["champs.pro"]
   });
-*/
+
   function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('playerYT', {
       videoId: links,
