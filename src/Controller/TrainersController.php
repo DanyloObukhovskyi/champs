@@ -41,8 +41,10 @@ class TrainersController extends AbstractController
         $trainer  = $entityManager->getRepository(Teachers::class)->findOneBy([
             'userid' => $user
         ]);
+	    $canEdit = true;
         return $this->render('templates/lessons.html.twig', [
           'router' => 'marketplace',
+	      'canEdit' =>$canEdit,
           'styles' => [
             'lessons.css',
           ],
