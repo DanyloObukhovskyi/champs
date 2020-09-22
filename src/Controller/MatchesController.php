@@ -50,15 +50,30 @@ class MatchesController extends AbstractController
         $match_view = $entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
         ]);
+	
+	    $stat_array = array();
+	    
         $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
             ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam1());
+	
+	    foreach($playerStatisticsTeam1 as $key1 =>$value) {
+		    $player_tmp_id = $value->getPlayer()->getId();
+		    $stat_tmp_id = $value->getId();
+		    $stat_array[$player_tmp_id] = $stat_tmp_id;
+	    }
 
         $playerStatisticsTeam1 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam1);
 
         $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
             ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam2());
+	
+	    foreach($playerStatisticsTeam2 as $key1 =>$value) {
+		    $player_tmp_id = $value->getPlayer()->getId();
+		    $stat_tmp_id = $value->getId();
+		    $stat_array[$player_tmp_id] = $stat_tmp_id;
+	    }
 
         $playerStatisticsTeam2 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam2);
 
@@ -170,6 +185,7 @@ class MatchesController extends AbstractController
             'maps' => $maps,
             'playerStatisticsTeam1' => $playerStatisticsTeam1,
             'playerStatisticsTeam2' => $playerStatisticsTeam2,
+	        'stat_array' =>$stat_array,
         ]);
     }
 

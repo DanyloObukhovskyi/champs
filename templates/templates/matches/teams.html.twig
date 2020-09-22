@@ -137,10 +137,42 @@
 
         let playerId = img.data('player');
 
+        let users_stat = JSON.parse('{{ stat_array|json_encode|raw }}')
+        let row_id = users_stat[playerId];
+
         $(numSel + '.change-rating-' + img.data('team')).html($('.player-' + playerId + '-rating').html());
         $(numSel + '.change-kpr-' + img.data('team')).html($('.player-' + playerId + '-kpr').html());
         $(numSel + '.change-kast-' + img.data('team')).html($('.player-' + playerId + '-kast').html());
         $(numSel + '.change-adr-' + img.data('team')).html($('.player-' + playerId + '-adr').html());
+
+        //
+        let u_rating = $('.player-' + playerId + '-rating').html();
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-data", u_rating);
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-field", "rating");
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-rating-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
+        //
+        let u_kpr = $('.player-' + playerId + '-kpr').html();
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-data", u_kpr);
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-field", "plus_minus");
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-kpr-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
+        //
+        let u_kast = $('.player-' + playerId + '-kast').html();
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-data", u_kast);
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-field", "kast");
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-kast-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
+        //
+        let u_adr = $('.player-' + playerId + '-adr').html();
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-data", u_adr);
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-field", "adr");
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-adr-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
 
         letOrange('.change-rating');
         letOrange('.change-kpr');

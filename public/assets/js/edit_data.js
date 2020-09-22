@@ -63,6 +63,8 @@ function OnEdit(element, flag = "") {
 			} else {
 				var c_value = element.innerHTML;
 			}
+		} else if(flag == "player_d") {
+			var c_value = element.getAttribute('attr-row-data');
 		} else if (flag == "svg2") {
 			var c_value = element.getAttribute('attr-row-rating');
 		} else if (flag == "flag") {
