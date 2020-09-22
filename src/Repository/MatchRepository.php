@@ -98,7 +98,7 @@ class MatchRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
             ->andWhere('m.detail_info = 1')
-            ->andWhere('m.url = :url')
+            ->andWhere('m.url like :url')
             ->setParameter('url', $url)
             ->getQuery()
             ->setMaxResults(1)

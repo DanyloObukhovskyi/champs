@@ -7,12 +7,15 @@
 namespace App\Service\Event;
 
 
+use App\Message\Match;
 use App\Service\DownloadFile;
 use App\Service\EntityService;
 use App\Service\FlagIconService;
 use App\Service\ImageService;
 use App\Service\MapService;
+use App\Service\MatchService;
 use App\Service\TeamService;
+use App\Traits\Dispatchable;
 use DateTime;
 use App\Entity\Event;
 use App\Repository\EventRepository;
@@ -21,6 +24,8 @@ use Exception;
 
 class EventService extends EntityService
 {
+    use Dispatchable;
+
     protected $entity = Event::class;
 
     /** @var EventRepository */
@@ -53,6 +58,12 @@ class EventService extends EntityService
     /** @var EventTeamAttendingService */
     protected $eventTeamAttendingService;
 
+    /** @var EventBracketService */
+    protected $eventBracketService;
+
+    /** @var MatchService */
+    protected $matchService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -70,6 +81,9 @@ class EventService extends EntityService
         $this->relatedEventService = new RelatedEventService($entityManager);
 
         $this->eventTeamAttendingService = new EventTeamAttendingService($entityManager);
+        $this->eventBracketService = new EventBracketService($entityManager);
+
+        $this->matchService = new MatchService($entityManager);
     }
 
     /**
@@ -81,6 +95,9 @@ class EventService extends EntityService
     public function create($values, DateTime $parseDate = null)
     {
         $event = $this->createBaseEvent($values, $parseDate);
+
+        $brackets = $values['brackets'] ?? [];
+        $this->createBrackets($event, $brackets);
 
         $prizeDistributions = $values['prizeDistributions'] ?? null;
         $this->setPrizeDistributions($event, $prizeDistributions);
@@ -220,6 +237,7 @@ class EventService extends EntityService
         if (empty($event))
         {
             $event = new $this->entity;
+            $event->setUrl($values['url'] ?? null);
         }
         if (!empty($values['started_at']))
         {
@@ -241,16 +259,8 @@ class EventService extends EntityService
         $event->setName($values['name']);
         $event->setEndedAt($values['ended_at']);
         $event->setCreatedAt($parseDate);
-        $event->setUrl($values['url'] ?? null);
 
-        if (!empty($values['image']))
-        {
-            $image = DownloadFile::getImage($values['image']);
-            if (isset($image))
-            {
-                $event->setImage($image);
-            }
-        }
+        $event = $this->setImageLogo($event, $values);
         if (!empty($values['imageHeader']))
         {
             try {
@@ -412,5 +422,64 @@ class EventService extends EntityService
             }
         }
         return $this->save($event);
+    }
+
+    public function setImageLogo($event, $values)
+    {
+        if (!empty($values['image']))
+        {
+            $image = DownloadFile::getImage($values['image']);
+            if (isset($image))
+            {
+                $event->setImage($image);
+            }
+        } else {
+            /** @var Event $prevent */
+            $prevent = $this->getByName($values['name']);
+            if (isset($prevent))
+            {
+                $event->setImage($prevent->getImage());
+            }
+        }
+        return $event;
+    }
+
+    public function createBrackets($event, $brackets)
+    {
+        $brackets = $brackets['rounds'] ?? [];
+
+        foreach ($brackets as $type => $bracket)
+        {
+            foreach ($bracket as $name => $matches){
+
+                foreach ($matches as $match) {
+                    if (isset($match['team1']['name']))
+                    {
+                        $team1 = $this->teamService->getByName($match['team1']['name']);
+                    }
+                    if (isset($match['team2']['name']))
+                    {
+                        $team2 = $this->teamService->getByName($match['team2']['name']);
+                    }
+                    if (isset($match['matchUrl'])){
+                        $matchEntity = $this->matchService->findByUrl($match['matchUrl']);
+
+                        if (empty($matchEntity)) {
+                            $this->dispatch(new Match(['url' => $match['matchUrl']]));
+                        }
+                    }
+
+                    $this->eventBracketService->create(
+                        $match,
+                        $event,
+                        $team1 ?? null,
+                        $team2 ?? null,
+                        $matchEntity ?? null,
+                        $type,
+                        $name
+                    );
+                }
+            }
+        }
     }
 }

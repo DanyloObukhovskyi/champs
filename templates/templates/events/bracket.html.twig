@@ -1,0 +1,57 @@
+{% if brackets['teams'] is not empty and brackets['matches'] is not empty %}
+<div class="col-12">
+    <div class="component">
+        <div class="header">
+            <div class="round">
+                <div><img src="/images/lamp.svg" alt="lamp.svg"></div>
+            </div>
+            <div class="title">
+                Сетка матчей
+            </div>
+        </div>
+        <div class="component statistics">
+            <div class="grid-block statistics-maps tournament w-100">
+               <div id="tournament-bracket" class="m-4">
+
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+</style>
+<script>
+
+    const minimalData = {
+        teams : [
+            {% if  brackets['teams'] is defined %}
+                {% for teams  in brackets['teams']%}
+                    [
+                        $('<div><img class="logo" src="{{ teams[0].logo }}">{{ teams[0].name }}</div>').html(),
+                        $('<div><img class="logo" src="{{ teams[1].logo }}">{{ teams[1].name }}</div>').html(),
+                    ],
+                {% endfor %}
+            {% endif %}
+        ],
+        results :[
+            {% if  brackets['matches']['upper'] is defined %}
+                JSON.parse('{{ brackets['matches']['upper']|json_encode|raw}}'),
+            {% endif %}
+            {% if  brackets['matches']['lower'] is defined %}
+                JSON.parse('{{ brackets['matches']['lower']|json_encode|raw}}'),
+            {% endif %}
+            {% if  brackets['matches']['grandFinal'] is defined %}
+                JSON.parse('{{ brackets['matches']['grandFinal']|json_encode|raw}}'),
+            {% endif %}
+        ],
+    }
+
+    $(function() {
+        $('#tournament-bracket').bracket({
+            teamWidth: 100,
+            centerConnectors: true,
+            init: minimalData
+        })
+    })
+</script>
+{% endif %}

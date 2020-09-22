@@ -5,21 +5,21 @@ namespace App\Service\Parser;
 
 
 use App\Service\HLTVService;
-use App\Service\PageContentService;
 use DiDom\Document;
 use DiDom\Query;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class EventParserService
 {
     /**
-     * @param $document
+     * @param Document $document
      * @param $url
      * @param bool $isRelated
      * @return array|bool
+     * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public function getEventFull($document, $url, $isRelated = false)
+    public function getEventFull(Document $document, $url, $isRelated = false)
     {
+        dump($url);
         $eventNameRaw = $document->first("//div[contains(concat(' ', normalize-space(@class), ' '), ' event-page ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' eventname ')]", Query::TYPE_XPATH);
 
         if (empty($eventNameRaw))
@@ -87,6 +87,7 @@ class EventParserService
             $result += $eventDates;
         }
         $eventItem = $result;
+        $eventItem['brackets'] = $this->getBracketsTable($document);
 
         $prizeDistributionBlock = $document->first('.placements');
 
@@ -281,5 +282,130 @@ class EventParserService
         }
 
         return $teamsAttending;
+    }
+
+    /**
+     * @param $document
+     * @return array
+     */
+    public function getBracketsTable($document)
+    {
+        $brackets = $document->first('.slotted-bracket-placeholder');
+
+        $bracketsTeamInfo = [];
+        if (isset($brackets))
+        {
+            $brackets = $brackets->attr('data-slotted-bracket-json');
+
+            $brackets = json_decode($brackets, false);
+
+            $bracketsJson = $brackets;
+
+            if (isset($bracketsJson->rounds))
+            {
+                $bracketsJson = $bracketsJson->rounds;
+            } else {
+                unset($bracketsJson->name);
+                unset($bracketsJson->display);
+            }
+
+            foreach ($bracketsJson as $roundsType => $rounds)
+            {
+                $roundName = $rounds->roundName->name ?? null;
+
+                if (!is_string($rounds) and isset($roundName)){
+                    $bracketsTeamInfo['rounds'][$roundsType][$roundName] = [];
+                }
+            }
+
+            foreach ($bracketsJson as $roundsType => $rounds)
+            {
+                dump($rounds->roundName->name ?? null);
+                if (isset($rounds->match))
+                {
+                    $bracket = [
+                        'matchUrl' => HLTVService::urlDecorator($rounds->slot1->match->matchPageURL),
+                    ];
+                    $bracketsTeamInfo['rounds'][$roundsType][$rounds->roundName->name][] = $bracket;
+                } else {
+                    dump('---------------------------------------------------');
+
+                    if (!is_string($rounds)){
+                        $roundName = $rounds->roundName->name;
+
+                        unset($rounds->roundName);
+
+                        foreach ($rounds as $type => $round)
+                        {
+
+                            if (!empty($round->match))
+                            {
+                                $team1Score = isset($round->result) ? $round->result->matchScore->team1Score ?? null: null;
+                                $team2Score = isset($round->result) ? $round->result->matchScore->team2Score ?? null: null;
+                                $bracket = [
+                                    'matchUrl' => HLTVService::urlDecorator($round->match->matchPageURL),
+                                ];
+                                if (isset($round->team1) and isset($round->team1->team)){
+                                    $bracket['team1'] = [
+                                        'name' => $round->team1->team->name,
+                                        'url' => HLTVService::urlDecorator($round->team1->team->profileURL),
+                                        'logo' => $round->team1->team->logoURL,
+                                        'score' => $team1Score
+                                    ];
+                                }
+                                if (isset($round->team2) and isset($round->team2->team)){
+                                    $bracket['team2'] = [
+                                        'name' => $round->team2->team->name,
+                                        'url' => HLTVService::urlDecorator($round->team2->team->profileURL),
+                                        'logo' => $round->team2->team->logoURL,
+                                        'score' => $team2Score
+                                    ];
+                                }
+                                $bracketsTeamInfo['rounds'][$roundsType][$roundName][] = $bracket;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            $brackets = $document->first('.bracket');
+
+            if (isset($brackets))
+            {
+                $bracketsJson = $brackets->attr('data-bracket-json');
+
+                $bracketsJson = json_decode($bracketsJson, false);
+
+                foreach ($bracketsJson->rounds as $round)
+                {
+                    $roundMatches = [];
+                    foreach ($round->matchUps as $match)
+                    {
+                        $bracket = [];
+                        if (isset($match->team1)){
+                            $name = str_replace('...', '', $match->team1->name);
+
+                            $bracket['team1'] = [
+                                'name' => $name,
+                                'logo' => $match->team1->country,
+                                'score' => $match->team1->score,
+                            ];
+                        }
+                        if (isset($match->team2)){
+                            $name = str_replace('...', '', $match->team2->name);
+
+                            $bracket['team2'] = [
+                                'name' => $name,
+                                'logo' => $match->team2->country,
+                                'score' => $match->team2->score,
+                            ];
+                        }
+                        $roundMatches[] = $bracket;
+                    }
+                    $bracketsTeamInfo['rounds'][] = [$roundMatches];
+                }
+            }
+        }
+        return $bracketsTeamInfo;
     }
 }
