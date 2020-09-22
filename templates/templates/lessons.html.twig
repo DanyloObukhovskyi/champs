@@ -101,7 +101,7 @@
             const date = new Date(val.date.date);
             this.items = {
               trainer_id: {{id}},
-              user_id: {{app.user.id}},
+              user_id: {{user_id}},
               date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
               time: time.timein,
               cost: time.price,
