@@ -95,4 +95,29 @@
 				return $result->result_array();
 			}
 		}
+		
+		public function check_trainer_time($data=array()) {
+			if(!empty($data)) {
+				$this->db->select('*');
+				$this->db->from("schledule");
+				$this->db->where($data);
+				$result = $this->db->get();
+				return $result->result_array();
+			}
+		}
+		
+		public function update_trainer_time($update=array(), $where=array()) {
+			if(!empty($update) && !empty($where)) {
+				$this->db->where("trainer_id", $where["trainer_id"]);
+				$this->db->where("date", $where["date"]);
+				$this->db->update("schledule", $update);
+			}
+		}
+		
+		public function insert_trainer_time($insert=array()) {
+			if(!empty($insert)) {
+				$this->db->insert("schledule", $insert);
+				return $this->db->insert_id();
+			}
+		}
 	}

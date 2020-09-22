@@ -69,7 +69,11 @@
 					if($identity == $control_user_identity && $remember_code == $control_code) {
 						$data = (isset($_POST["new_data"])) ? ($_POST["new_data"]): '';
 						$data = (array)json_decode($data);
-						$update_data = array($data["field"] => $data["value"]);
+						if(!isset($_POST["open_date"])) {
+							$update_data = array ($data["field"] => $data["value"]);
+						} else {
+							$update_data = array ();
+						}
 						$where = (isset($_POST["where"])) ? ($_POST["where"]): '';
 						$request_type = (isset($_POST["request_type"])) ? trim($_POST["request_type"]): '';
 						if(!empty($data) && !empty($request_type)) {
@@ -90,6 +94,15 @@
 								echo json_encode(array($result));
 								die();
 							} elseif($request_type == "insert"){
+								if(isset($_POST["open_date"])) {
+									if(trim($_POST["open_date"]) == true) {
+										$this->setTrainerTime($data, $request_name);
+										die();
+									} else {
+										echo json_encode(array("wrong update request"));
+										die();
+									}
+								}
 								$this->load->model("edit_fr_front");
 								foreach($data as $key => &$value) {
 									$value = htmlspecialchars($value);
@@ -116,6 +129,65 @@
 					die();
 				}
 			}
+		}
+		
+		private function setTrainerTime($data=array(), $table="") {
+			if(!empty($data) && !empty($table)) {
+				$this->load->model('trainers_model');
+				$table_fields = array(
+					10 =>"time10_11",
+					11 =>"time11_12",
+					12 =>"time12_13",
+					13 =>"time13_14",
+					14 =>"time14_15",
+					15 =>"time15_16",
+					16 =>"time16_17",
+					17 =>"time17_18",
+				);
+				
+				$user_id = (isset($data["user_id"])) ? (int)$data["user_id"] : 0;
+				$date = date("Y-m-d", strtotime($data["date"]));
+				$field = $table_fields[$data["time_from"]];
+				$check_date = $this->trainers_model->check_trainer_time(array('trainer_id' => $user_id, 'date'=> $date));
+				if(isset($check_date[0]["id"])) {
+					//update
+					$check_date = $check_date[0];
+					$update_v = 0;
+					
+					if($check_date[$field] == 0) {
+						$update_v = 1;
+					}
+					if($check_date[$field] == 1) {
+						$update_v = 0;
+					}
+					if($check_date[$field] == 10) {
+						echo json_encode(array("0"));
+						die();
+					}
+					
+					$this->trainers_model->update_trainer_time(array($field=>$update_v) ,array('trainer_id' => $user_id, 'date'=> $date));
+					echo "true";
+					die();
+				}
+				else {
+					//insert
+					$insert = array();
+					foreach($table_fields as $key =>$value){
+						if($value == $field) {
+							$insert[$field] = 1;
+						} else {
+							$insert[$value] = 0;
+						}
+					}
+					$insert['date'] = $date;
+					$insert['trainer_id'] = $user_id;
+					$id = $this->trainers_model->insert_trainer_time($insert);
+					echo "true";
+					die();
+				}
+			}
+			echo json_encode(array("wrong request or data"));
+			die();
 		}
 		
 		private function upload($filed_name="",$request_name="", $where=array()) {
