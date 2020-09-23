@@ -11,22 +11,49 @@
   <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
     События
   </h1>
-  <div class="events_view">
+  <div class="events_view" id="events">
     <div class="container">
       <div class="row">
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
           <div class="banner">
-<!--          <img src="/images/banner2.svg" class="banner p" alt="banner" />
-          <img src="/images/banner2.svg" class="banner m" alt="banner" />-->
-<a href="https://bit.ly/35pUtMC" target="_blank" class="a">
-    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">
-        <img src="/images/Banner.png"/>
-    </object>
-</a>
-
+            <a href="https://bit.ly/35pUtMC" target="_blank" class="a">
+{#                <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
+{#                    <img src="/images/Banner.png"/>#}
+{#                </object>#}
+            </a>
           </div>
           {% include 'templates/events/currentevents.html.twig' %}
-          {% include 'templates/events/upcomingevents.html.twig' %}
+            <div class="component upcoming_events" id="upcoming_events">
+                <div class="header">
+                    <div class="round">
+                        <div><img src="/images/lamp.svg" alt="lamp" /></div>
+                    </div>
+                    <div class="title" v-if="isActive === false">
+                        Предстоящие события
+                    </div>
+                    <div class="title" v-if="isActive === true">
+                        Завершенные события
+                    </div>
+                    <div class="controll pr-1">
+                        <label class="toggler mr-1" :class="{active: isActive}" @click="isActive = !isActive">
+                        </label>
+                        <img
+                            style="width: 15px"
+                            src="/images/noLogo.png"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            :data-original-title="isActive ? 'Переключить на Предстоящие события':  'Переключить на Завершенные события'"
+                            :title="isActive ? 'Переключить на Предстоящие события':  'Переключить на Завершенные события'">
+                    </div>
+                </div>
+                <div v-if="isActive === false">
+                    {% include 'templates/events/upcomingevents.html.twig' %}
+                </div>
+                <div v-if="isActive === true">
+                    {% include 'templates/events/finishedEvents.html.twig' %}
+                </div>
+            </div>
+          </div>
         </div>
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
           <div class="row"style="padding-left: 0.5vw;">
@@ -36,4 +63,15 @@
       </div>
     </div>
   </div>
+    <script>
+        const events = new Vue({
+            el: '#events',
+            data: {
+                isActive: false,
+            }
+        })
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}

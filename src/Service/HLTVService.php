@@ -8,7 +8,9 @@ namespace App\Service;
 
 
 use App\Entity\MatchPickAndBan;
+use App\Service\Parser\EventParserService;
 use App\Service\Parser\MatchParserService;
+use App\Service\Parser\TeamParserService;
 use DiDom\Document;
 use DiDom\Query;
 use PhpParser\JsonDecoder;
@@ -41,53 +43,24 @@ class HLTVService
         {
             return false;
         }
-
         $document = new Document($content);
 
-        $matches = [];
-        $matchLiveCells = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' liveMatch ')]//a[contains(@class, 'a-reset')]", Query::TYPE_XPATH);
-
-        foreach ($matchLiveCells as $matchCellLink)
-        {
-            $matchUrl = $matchCellLink->attr('href');
-            $matchUrl = self::urlDecorator($matchUrl);
-
-            $matchItem = [
-                'url' => $matchUrl,
-                'is_live' => true,
-            ];
-
-            $teams = $matchCellLink->find("//div[contains(@class, 'matchTeams')]//div[contains(@class, 'matchTeamName')]", Query::TYPE_XPATH);
-
-            if (count($teams) == 0)
-            {
-                continue;
-            }
-
-            $dateTime = (new \DateTime());
-            $matchItem['start_at'] = $dateTime->setTime($dateTime->format('H'),0,0);
-            $matchItem['teams'] = [];
-
-            foreach($teams as $teamRaw)
-            {
-                $matchItem['teams'][] = trim($teamRaw->text());
-            }
-
-            if (empty($matchItem['code'])){
-                $matchItem['code'] =  $matchItem['url'];
-            }
-            $matchItem['code'] = md5($matchItem['code']);
-
-            $matches[] = $matchItem;
-        }
-
+        $matches = $parseMatchService->getLiveMatches($document);
         $matchesSortedByDay = $parseMatchService->getUpcomingMatches($document);
+
+        $content = PageContentService::getPageContent(self::$baseUrl.'/results');
+
+        $document = new Document($content);
+        $resultMatchesSortedByDay = $parseMatchService->getMatchesResults($document);
 
         foreach ($matchesSortedByDay as $matchesDay){
 
-            $matches =  array_merge($matches, $matchesDay);
+            $matches =  array_merge((array)$matches, $matchesDay);
         }
+        foreach ($resultMatchesSortedByDay as $matchesDay){
 
+            $matches =  array_merge((array)$matches, $matchesDay);
+        }
         return $matches;
     }
 
@@ -98,523 +71,18 @@ class HLTVService
      */
     public static function getMatchFull($match)
     {
-        ini_set('max_execution_time', 0);
+        $matchParserService = new MatchParserService();
 
-        LoggerService::info("getMatchFull");
+        ini_set('max_execution_time', 0);
 
         $content = PageContentService::getPageContent($match['url']);
         if (!$content or ($content and is_array($content) && isset($content['error'])))
         {
             return null;
         }
-
-        $document = new Document($content);
-        $teamsCells = $document->find("//div[contains(@class, 'teamsBox')]//div[contains(concat(' ', normalize-space(@class), ' '), ' team ')]", Query::TYPE_XPATH);
-
-        $match['teams'] = [];
-
-        foreach ($teamsCells as $teamCell)
-        {
-            $team = [];
-            $teamUrlRaw = $teamCell->find("//a", Query::TYPE_XPATH);
-            if (count($teamUrlRaw) > 0)
-            {
-                $team['name'] = trim($teamUrlRaw[0]->text());
-                $teamUrl = $teamUrlRaw[0]->attr('href');
-                $teamUrl = self::urlDecorator($teamUrl);
-
-                $team['url'] = $teamUrl;
-            }
-
-            $teamScoreRaw = $teamCell->find("//div[contains(@class, '-gradient')]//div[contains(@class, 'lost')]", Query::TYPE_XPATH);
-            if (count($teamScoreRaw) == 0)
-            {
-                $teamScoreRaw = $teamCell->find("//div[contains(@class, '-gradient')]//div[contains(@class, 'won')]", Query::TYPE_XPATH);
-            }
-
-            if (count($teamScoreRaw) > 0)
-            {
-                $team['score'] = trim($teamScoreRaw[0]->text());
-            }
-
-            $match['teams'][] = $team;
-        }
-
-        if (empty($match['code'])){
-            $match['code'] =  $match['url'];
-        }
-        $match['code'] = md5($match['code']);
-
-        $match['maps'] = static::getMatchMapsInfo($document);
-        $match['streams'] = static::getStreams($document);
-
-        $match['is_detail_info'] = true;
-
-        $eventRaw = $document->first('.event a');
-        if (isset($eventRaw))
-        {
-            $eventUrl = $eventRaw->attr('href');
-            $eventUrl = self::urlDecorator($eventUrl);
-
-            $match['event'] = $eventRaw->text();
-            $match['eventUrl'] = $eventUrl;
-        }
-        $matchMaps = $document->first('.map-stats-infobox');
-
-        if (isset($matchMaps)){
-            $maps = $matchMaps->find('.map-stats-infobox-maps');
-
-            $mapsData = [];
-
-            foreach ($match['teams'] as $num => $team)
-            {
-                foreach ($maps as $map)
-                {
-                    $name = self::getSubElemByClass($map, '.mapname');
-                    $winRates = $map->find('.map-stats-infobox-stats');
-                    $image = $map->first('img');
-                    if (isset($image)){
-                        $image = $image->attr('src');
-
-                        $image = self::urlDecorator($image);
-                    }
-
-                    $winRateTeam = null;
-                    if (count($winRates) === 2)
-                    {
-                        $winRateTeam = self::getSubElemByClass($winRates[$num], 'a');
-                    }
-
-                    $mapsData[$team['name']][] = [
-                        'name' => $name,
-                        'image' => $image,
-                        'winrate' => $winRateTeam,
-                    ];
-                }
-            }
-
-            $match['winrate'] = $mapsData;
-        }
-
-        //Past matches
-        $pastMatches = $document->first('.past-matches');
-        if (isset($pastMatches)){
-            $teamBoxes = $pastMatches->find('.standard-box');
-
-            $teamBoxData = [];
-            foreach ($teamBoxes as $teamBox)
-            {
-                $teamName = self::getSubElemByClass($teamBox, 'a');
-
-                $teamMatches = $teamBox->find('.matches tr');
-                foreach ($teamMatches as $teamMatch)
-                {
-                    $matchResult = $teamMatch->first('.result');
-                    if (isset($matchResult))
-                    {
-                        $matchResult = $matchResult->text();
-                    }
-                    $opponent = $teamMatch->first('.opponent a');
-                    if (isset($opponent))
-                    {
-                        $opponent = $opponent->text();
-                    }
-                    if (isset($matchResult)){
-
-                        $teamBoxData[$teamName][] = [
-                            'score' => $matchResult,
-                            'team_two' => $opponent
-                        ];
-                    }
-                }
-            }
-            $match['pastMatches'] = $teamBoxData;
-        }
-
-        //head to head
-        $headToHead = $document->first('.head-to-head');
-        if (isset($headToHead)){
-            $leftTeamWins =  $document->first('.flexbox-column.flexbox-center.grow.right-border');
-            if (isset($leftTeamWins)){
-                $leftTeamWins = self::getSubElemByClass($leftTeamWins, '.bold');
-                if (isset($leftTeamWins)){
-                    $match['headToHead'][0] = $leftTeamWins;
-                }
-            }
-            $rightTeamWins = $document->first('.flexbox-column.flexbox-center.grow.left-border');
-            if (isset($rightTeamWins)){
-                $rightTeamWins = self::getSubElemByClass($rightTeamWins, '.bold');
-                if (isset($rightTeamWins)){
-                    $match['headToHead'][1] = $rightTeamWins;
-                }
-            }
-        }
-
-        if (empty($match['start_at']))
-        {
-            $time = $document->first('.time');
-            $time = $time->attr('data-unix');
-            $match['start_at'] = self::parseUnixToDateTime($time);
-        }
-        return $match;
-    }
-
-    /**
-     * @param $matchUrl
-     * @return array|bool
-     * @throws \DiDom\Exceptions\InvalidSelectorException
-     */
-    public static function getMatchStatistic($matchUrl)
-    {
-        LoggerService::add("get match {$matchUrl} statistic", LoggerService::TYPE_INFO);
-
-        $content = PageContentService::getPageContent($matchUrl);
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
-            return false;
-        }
-
-
-        LoggerService::add("get match {$matchUrl} statistic hltv debug", LoggerService::TYPE_INFO);
         $document = new Document($content);
 
-        $teamsCells = $document->find("//div[contains(@class, 'teamsBox')]//div[contains(concat(' ', normalize-space(@class), ' '), ' team ')]", Query::TYPE_XPATH);
-
-        if (count($teamsCells) == 0)
-        {
-            LoggerService::error("teams not found");
-            return false;
-        }
-
-        LoggerService::add("get match {$matchUrl} statistic hltv debug 2", LoggerService::TYPE_INFO);
-        $match = [];
-
-        foreach ($teamsCells as $teamCell)
-        {
-            $teamScoreRaw = $teamCell->find("//div[contains(@class, '-gradient')]//div[contains(@class, 'lost')]", Query::TYPE_XPATH);
-            if (count($teamScoreRaw) == 0)
-            {
-                $teamScoreRaw = $teamCell->find("//div[contains(@class, '-gradient')]//div[contains(@class, 'won')]", Query::TYPE_XPATH);
-            }
-            LoggerService::add("get match {$matchUrl} statistic hltv debug cicle", LoggerService::TYPE_INFO);
-            if (count($teamScoreRaw) > 0)
-            {
-                if (!array_key_exists('score1', $match))
-                {
-                    $match['score1'] = trim($teamScoreRaw[0]->text());
-                }
-                else
-                {
-                    $match['score2'] = trim($teamScoreRaw[0]->text());
-                }
-            }
-        }
-
-        LoggerService::add("get match {$matchUrl} statistic hltv debug after cicle", LoggerService::TYPE_INFO);
-        try {
-            $match['maps'] = static::getMatchMapsInfo($document);
-            $match['streams'] = static::getStreams($document);
-            $match['maps-pick'] = static::getMathPickInfo($document);
-        } catch (\Exception $e){
-            $match['maps'] = [];
-            $match['streams'] = [];
-            $match['maps-pick'] = [];
-
-            LoggerService::error("get match {$matchUrl} statistic hltv error: $e", LoggerService::TYPE_ERROR);
-        }
-
-
-        $eventRaw = $document->find("//div[contains(@class, 'match-page')]//div[contains(@class, 'timeAndEvent')]//div[contains(@class, 'countdown')]", Query::TYPE_XPATH);
-        if ($eventRaw)
-        {
-            if(is_array($eventRaw))
-            {
-                $match['live'] = $eventRaw[0]->text() == 'LIVE' ? 1 : 0;
-            }
-            else
-            {
-                $match['live'] = $eventRaw->text() == 'LIVE' ? 1 : 0;
-            }
-        }
-        $match['playerMapStats'] = self::getMatchsMapsStatistics($document);
-
-        LoggerService::add("get match {$matchUrl} statistic hltv debug beforeend", LoggerService::TYPE_INFO);
-        return $match;
-    }
-
-    /**
-     * @param $document
-     * @return array|bool
-     */
-    protected static function getMatchMapsInfo($document)
-    {
-        $maps = [];
-        $mapsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' maps ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' mapholder ')]", Query::TYPE_XPATH);
-
-        if (count($mapsRaw) > 0)
-        {
-
-            $maps = [];
-            foreach ($mapsRaw as $mapRaw)
-            {
-
-                $mapsNameRaw = $mapRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' map-name-holder ')]/div[contains(concat(' ', normalize-space(@class), ' '), ' mapname ')]", Query::TYPE_XPATH);
-                if (count($mapsNameRaw) == 0)
-                {
-                    continue;
-                }
-
-                $map = [
-                    'name' => trim($mapsNameRaw[0]->text()),
-                    'stat' => []
-                ];
-
-                $mapsStatItemRaw = $mapRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' results ')]", Query::TYPE_XPATH);
-                if (count($mapsStatItemRaw) == 0)
-                {
-                    continue;
-                }
-
-                $mapsStatItemRaw = $mapsStatItemRaw[0];
-
-                $teamLeftStat = static::getMapResultByType($mapsStatItemRaw, static::TEAM_RESULT_STAT_LEFT);
-                if (empty($teamLeftStat))
-                {
-                    LoggerService::add("left team info not found", LoggerService::TYPE_ERROR);
-                    return false;
-                }
-
-                $teamRightStat = static::getMapResultByType($mapsStatItemRaw, static::TEAM_RESULT_STAT_RIGHT);
-                if (empty($teamRightStat))
-                {
-                    LoggerService::add("right team info not found", LoggerService::TYPE_ERROR);
-                    return false;
-                }
-
-                $map['stat'] = [
-                    $teamLeftStat,
-                    $teamRightStat,
-                ];
-                unset($teamLeftStat, $teamRightStat);
-
-                $resultLinkRaw = $mapsStatItemRaw->find("//a[contains(concat(' ', normalize-space(@class), ' '), ' results-stats ')]", Query::TYPE_XPATH);
-                if (count($resultLinkRaw) > 0)
-                {
-                    $statUrl = $resultLinkRaw[0]->attr('href');
-                    $statUrl = self::urlDecorator($statUrl);
-                    $map['stat_url'] = $statUrl;
-                    unset($resultLinkRaw);
-                }
-
-                $maps[] = $map;
-            }
-        }
-
-        if (!empty($maps))
-        {
-            foreach ($maps as &$map)
-            {
-                if (empty($map['stat_url']))
-                {
-                    continue;
-                }
-
-                $fullStat = static::getMapStat($map['stat_url']);
-                if (!$fullStat)
-                {
-                    LoggerService::error("maps full stat error {$map['stat_url']}");
-                    continue;
-                }
-
-                $map['full_stat'] = $fullStat;
-            }
-            unset($map);
-        }
-
-        return $maps;
-    }
-
-    /**
-     * @param $document
-     * @return array
-     */
-    protected static function getMathPickInfo($document): array
-    {
-        $maps = [];
-        $mapsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' maps ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' standard-box ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' padding ')]", Query::TYPE_XPATH);
-
-        if (count($mapsRaw) == 2)
-        {
-            $mapRaw = $mapsRaw[1];
-            foreach ($mapRaw->find("//div//div", Query::TYPE_XPATH) as $mapPick)
-            {
-                if (!$mapPick)
-                {
-                    continue;
-                }
-
-                preg_match('/\d\. (.*) removed (.*)/', $mapPick->text(), $matchesRemoved);
-                preg_match('/\d\. (.*) picked (.*)/', $mapPick->text(), $matchesPicked);
-                preg_match('/\d\. (.*) was left over/', $mapPick->text(), $matchesLeft);
-                $map = [];
-
-                if($matchesRemoved)
-                {
-                    $map['map'] = $matchesRemoved[2];
-                    $map['type'] = MatchPickAndBan::OPERATION_TYPE_REMOVED;
-                    $map['team'] = $matchesRemoved[1];
-                }
-                if($matchesPicked)
-                {
-                    $map['map'] = $matchesPicked[2];
-                    $map['type'] = MatchPickAndBan::OPERATION_TYPE_PICKED;
-                    $map['team'] = $matchesPicked[1];
-                }
-                if($matchesLeft)
-                {
-                    $map['map'] = $matchesLeft[1];
-                    $map['type'] = MatchPickAndBan::OPERATION_TYPE_LEFT;
-                }
-
-                $maps[] = $map;
-            }
-        }
-
-        return $maps;
-    }
-
-    /**
-     * @param $mapsStatItemRaw
-     * @param $type
-     * @return array|bool
-     */
-    private static function getMapResultByType($mapsStatItemRaw, $type)
-    {
-        if (!in_array($type, [static::TEAM_RESULT_STAT_RIGHT, static::TEAM_RESULT_STAT_LEFT]))
-        {
-            return false;
-        }
-
-        $resultRaw = $mapsStatItemRaw->find("//*[contains(concat(' ', normalize-space(@class), ' '), ' {$type} ')]", Query::TYPE_XPATH);
-
-        if (count($resultRaw) == 0)
-        {
-            LoggerService::add("{$type} team info block not found", LoggerService::TYPE_ERROR);
-            return false;
-        }
-
-        $resultRaw = $resultRaw[0];
-        $resultTeamNameRaw = $resultRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' results-teamname ')]", Query::TYPE_XPATH);
-
-        if (count($resultTeamNameRaw) == 0)
-        {
-            LoggerService::add("{$type} team name info not found", LoggerService::TYPE_ERROR);
-            return false;
-        }
-
-        $resultTeamScoreRaw = $resultRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' results-team-score ')]", Query::TYPE_XPATH);
-
-        if (count($resultTeamScoreRaw) == 0)
-        {
-            LoggerService::add("{$type} team score info not found", LoggerService::TYPE_ERROR);
-            return false;
-        }
-
-        return [
-            'name' => trim($resultTeamNameRaw[0]->text()),
-            'score' => trim($resultTeamScoreRaw[0]->text())
-        ];
-    }
-
-    /**
-     * @param $mapStatUrl
-     * @return array|bool
-     * @throws \DiDom\Exceptions\InvalidSelectorException
-     */
-    private static function getMapStat($mapStatUrl)
-    {
-        $content = PageContentService::getPageContent($mapStatUrl);
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
-            return false;
-        }
-
-        $result = [];
-
-        $document = new Document($content);
-        $statTables = $document->find("//table[contains(@class, 'stats-table')]", Query::TYPE_XPATH);
-        if (count($statTables) == 0)
-        {
-            LoggerService::add("map stat info not found", LoggerService::TYPE_ERROR);
-            return false;
-        }
-
-        $result['teams'] = [];
-
-        foreach ($statTables as $statTableRaw)
-        {
-            $teamRaw = $statTableRaw->find("//th[contains(@class, 'st-teamname')]", Query::TYPE_XPATH);
-            if (count($teamRaw) == 0)
-            {
-                continue;
-            }
-
-            $team = [
-                'name' => trim($teamRaw[0]->text()),
-                'players' => []
-            ];
-
-            $playersStatRaw = $statTableRaw->find("//tbody/tr", Query::TYPE_XPATH);
-            if (count($playersStatRaw) == 0)
-            {
-                continue;
-            }
-
-            foreach ($playersStatRaw as $playerStatRaw)
-            {
-                $playerStat = static::getPlayerStat($playerStatRaw);
-                if (empty($playerStat))
-                {
-                    continue;
-                }
-                $team['players'][] = $playerStat;
-            }
-
-            $result['teams'][] = $team;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $playerStatRaw
-     * @return array|bool
-     */
-    private static function getPlayerStat($playerStatRaw)
-    {
-
-        $result = [];
-        $params = [
-            static::PLAYER_STAT_PARAM_NICK => 'st-player',
-            static::PLAYER_STAT_PARAM_KILLS => 'st-kills',
-            static::PLAYER_STAT_PARAM_DEATH => 'st-deaths',
-            static::PLAYER_STAT_PARAM_ADR => 'st-adr',
-            static::PLAYER_STAT_PARAM_KAST => 'st-kdratio',
-            static::PLAYER_STAT_PARAM_RATING => 'st-rating',
-        ];
-
-        foreach ($params as $paramCode => $paramPattern)
-        {
-            $paramRaw = $playerStatRaw->find("//td[contains(@class, '{$paramPattern}')]", Query::TYPE_XPATH);
-            if (count($paramRaw) == 0)
-            {
-                continue;
-            }
-
-            $result[$paramCode] = trim($paramRaw[0]->text());
-        }
-
-        return (!empty($result) ? $result : false);
+        return $matchParserService->getMatchFull($document, $match);
     }
 
     /**
@@ -625,13 +93,14 @@ class HLTVService
     public static function getTeam($team)
     {
         ini_set('max_execution_time', 0);
+        $teamParserService = new TeamParserService();
+
         try {
             $content = PageContentService::getPageContent($team['url']);
         } catch (\Exception $e){
 
             $content = null;
         }
-        // LoggerService::info("get team {$team['name']}");
         if (!$content or ($content and is_array($content) && isset($content['error'])))
         {
             return false;
@@ -639,98 +108,7 @@ class HLTVService
 
         $document = new Document($content);
 
-        $teamLogoRaw = $document->first('img.teamlogo');
-        if (empty($teamLogoRaw))
-        {
-            // LoggerService::error('team logo not found');
-            return false;
-        }
-
-        $team = [
-            'logo' => trim($teamLogoRaw->attr('src')),
-            'players' => []
-        ];
-
-        $profileRaw = $document->first('.profile-team-info');
-        if (empty($profileRaw))
-        {
-            // LoggerService::error('team profile not found');
-            return false;
-        }
-
-        $nameTeamRaw = $profileRaw->first('.profile-team-name');
-        if (empty($nameTeamRaw))
-        {
-            // LoggerService::error('team name not found');
-            return false;
-        }
-
-        $team['name'] = trim($nameTeamRaw->text());
-
-        $regionTeamRaw = $profileRaw->first("//div[contains(concat(' ', normalize-space(@class), ' '), ' team-country ')]/img", Query::TYPE_XPATH);
-        if (isset($regionTeamRaw))
-        {
-            $team['region'] = trim($regionTeamRaw->attr('title'));
-
-            // LoggerService::info('team get region icon name');
-
-            $flagIconPath = parse_url($regionTeamRaw->attr('src'), PHP_URL_PATH);
-            $flagIcon = explode('/', $flagIconPath);
-            $flagIcon = end($flagIcon);
-
-            $team['regionIconName'] = explode('.', $flagIcon)[0];
-        }
-
-        $teamPersonsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' bodyshot-team ')]/a[contains(concat(' ', normalize-space(@class), ' '), ' col-custom ')]", Query::TYPE_XPATH);
-
-        if (count($teamPersonsRaw) === 0)
-        {
-            // LoggerService::error('teams players not found');
-            return $team;
-        }
-
-        foreach ($teamPersonsRaw as $teamPersonRaw)
-        {
-            $playerUrl = $teamPersonRaw->attr('href');
-            if (strrpos($playerUrl, 'http') === false)
-            {
-                $playerUrl = static::$baseUrl . $playerUrl;
-            }
-
-            $player = [
-                'nick' => trim($teamPersonRaw->attr('title')),
-                'url' => $playerUrl
-            ];
-
-            $playerImageRaw = $teamPersonRaw->first("//img[contains(@class, 'bodyshot-team-img')]", Query::TYPE_XPATH);
-            if (isset($playerImageRaw))
-            {
-                $player['photo'] = trim($playerImageRaw->attr('src'));
-            }
-
-            $team['players'][] = $player;
-        }
-
-        if (!empty($team['players']))
-        {
-            foreach ($team['players'] as &$player)
-            {
-                if (empty($player['url']))
-                {
-                    continue;
-                }
-
-                $personItem = static::getPerson($player);
-                if (!$personItem)
-                {
-                    // LoggerService::error("person of player {$player['nick']} not found");
-                    continue;
-                }
-                $player = $player + $personItem;
-            }
-        }
-        
-        return $team;
+        return $teamParserService->getMatchTeam($document);
     }
 
     /**
@@ -742,11 +120,9 @@ class HLTVService
     {
         ini_set('max_execution_time', 0);
 
-        // LoggerService::info("get player {$player['nick']} person info");
         try {
             $content = PageContentService::getPageContent($player['url']);
         } catch (\Exception $e){
-            // LoggerService::error("get player {$player['nick']} person error: $e");
 
             $content = null;
         }
@@ -887,94 +263,6 @@ class HLTVService
     }
 
     /**
-     * @param $match
-     * @return array|bool
-     * @throws \DiDom\Exceptions\InvalidSelectorException
-     */
-    public static function getTeams($match)
-    {
-        $result = [];
-        if (empty($match['teams']))
-        {
-            LoggerService::error('teams not found');
-            return [];
-        }
-
-        foreach ($match['teams'] as $team)
-        {
-            if(empty($team))
-            {
-                continue;
-            }
-            $teamItem = static::getTeam($team);
-
-            if (!$teamItem)
-            {
-                LoggerService::error("team not found {$team['name']}");
-            } else {
-                $result[] = $teamItem;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $document
-     * @return array|bool
-     */
-    protected static function getStreams($document)
-    {
-        $streamsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' streams ') ]//div[contains(concat(' ', normalize-space(@class), ' '), ' stream-box ') and not(contains(concat(' ', normalize-space(@class), ' '), ' hltv-live '))]//div[contains(concat(' ', normalize-space(@class), ' '), ' stream-box-embed ')]", Query::TYPE_XPATH);
-        if (count($streamsRaw) == 0)
-        {
-            return false;
-        }
-
-        $streams = [];
-        foreach ($streamsRaw as $streamRaw)
-        {
-            $streamItem = [
-                'url' => trim($streamRaw->attr('data-stream-embed')),
-                'name' => trim($streamRaw->text()),
-            ];
-
-            $streamLanguageRaw = $streamRaw->find("//img", Query::TYPE_XPATH);
-            if (count($streamLanguageRaw) > 0)
-            {
-                $streamItem['language'] = trim($streamLanguageRaw[0]->attr('title'));
-            }
-
-            $streams[] = $streamItem;
-        }
-
-        return $streams;
-    }
-
-    /**
-     * @param $streamUrl
-     * @return bool|string
-     * @throws \DiDom\Exceptions\InvalidSelectorException
-     */
-    protected static function getStreamUrl($streamUrl)
-    {
-        $content = PageContentService::getPageContent($streamUrl);
-        if ($content and is_array($content) && isset($content['error']))
-        {
-            return false;
-        }
-
-        $document = new Document($content);
-        $streamRaw = $document->find("//iframe", Query::TYPE_XPATH);
-        if (count($streamRaw) == 0)
-        {
-            return false;
-        }
-
-        return trim($streamRaw[0]->attr('src'));
-    }
-
-    /**
      * @return array|bool
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
@@ -997,6 +285,7 @@ class HLTVService
         $document = new Document($content);
         $events = [];
         $eventLiveCells = $document->find('.event');
+
         foreach ($eventLiveCells as $eventCellLink){
             $eventItem = static::getEventMainInfo($eventCellLink);
 
@@ -1009,9 +298,11 @@ class HLTVService
         return $events;
     }
 
+
     /**
      * @param $eventCellLink
      * @return array|bool
+     * @throws \DiDom\Exceptions\InvalidSelectorException
      */
     protected static function getEventMainInfo($eventCellLink)
     {
@@ -1045,31 +336,8 @@ class HLTVService
         if (is_array($eventFull)){
             $eventItem += $eventFull;
         }
+
         return $eventItem;
-    }
-
-    /**
-     * @param $document
-     * @return array
-     */
-    protected static function getEventDate($document): array
-    {
-        $result = [];
-
-        $eventDateFrom = $document->first('.eventdate > span:nth-child(1)');
-        $eventDateTo =  $document->first('.eventdate > span:nth-child(2) > span');
-
-        if (!empty($eventDateFrom))
-        {
-            $result['started_at'] = static::parseUnixToDateTime($eventDateFrom->attr('data-unix'));
-            $result['ended_at'] = static::parseUnixToDateTime($eventDateFrom->attr('data-unix'));
-        }
-        if (!empty($eventDateTo))
-        {
-            $result['ended_at'] = static::parseUnixToDateTime($eventDateTo->attr('data-unix'));
-        }
-
-        return $result;
     }
 
     /**
@@ -1077,7 +345,7 @@ class HLTVService
      * @return \DateTime
      * @throws \Exception
      */
-    protected static function parseUnixToDateTime($unix): \DateTime
+    public static function parseUnixToDateTime($unix): \DateTime
     {
         $unixtime = trim($unix);
         $dateTime = new \DateTime();
@@ -1095,131 +363,23 @@ class HLTVService
      * @return array|bool
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
-    public static function getEventFull($url)
+    public static function getEventFull($url, $isRelated = false)
     {
+        $eventParserService = new EventParserService();
+
         try {
             $content = PageContentService::getPageContent($url);
         }catch (\Exception $e){
 
             $content = null;
         }
-
         if ($content and is_array($content) && isset($content['error']))
         {
             return false;
         }
         $document = new Document($content);
 
-        $eventNameRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' event-page ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' eventname ')]", Query::TYPE_XPATH);
-
-        if (count($eventNameRaw) == 0)
-        {
-            return false;
-        }
-
-        $result = [
-            'url' => $url,
-            'name' => $eventNameRaw[0]->text(),
-            'prize' => 'Other',
-            'teams' => null,
-            'location' => 'Online'
-        ];
-
-        $prizeNameRaw = $document->find("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' prizepool ')]", Query::TYPE_XPATH);
-
-        if (count($prizeNameRaw) !== 0)
-        {
-            $prize = $prizeNameRaw[0]->text();
-
-            $prize = str_replace('spots in', 'места в', $prize);
-            $prize = str_replace('spot at', 'место в', $prize);
-
-            $result['prize'] = $prize;
-        }
-
-
-        $teamNameRaw = $document->first("//table[contains(concat(' ', normalize-space(@class), ' '), ' info ')]//td[contains(concat(' ', normalize-space(@class), ' '), ' teamsNumber ')]", Query::TYPE_XPATH);
-
-        if (isset($teamNameRaw))
-        {
-            $result['teams'] = $teamNameRaw->text() === 'TBA' ? null : ((int) filter_var($teamNameRaw->text(), FILTER_SANITIZE_NUMBER_INT));
-        }
-
-        $locationRaw = $document->first('.location .flag-align');
-        if (isset($locationRaw))
-        {
-            $result['location'] = $locationRaw->text();
-
-            $locationIcon = $locationRaw->first('img');
-
-            if (isset($locationIcon))
-            {
-                $iconUrl = $locationIcon->attr('src');
-                $iconUrlExplode = explode('/', $iconUrl);
-                [$iconName, $extension] = explode('.', end($iconUrlExplode));
-
-                $result['flag'] = [
-                    'url' => $iconUrl,
-                    'name' => $iconName,
-                    'extension' => $extension
-                ];
-            }
-        }
-        $imageHeader = $document->first('.header img.event-img');
-        if (isset($imageHeader))
-        {
-            $imageHeader = $imageHeader->attr('src');
-            $imageHeader = self::urlDecorator($imageHeader);
-
-            $result['imageHeader'] = $imageHeader;
-        }
-
-        $eventDates = static::getEventDate($document);
-        if (count($eventDates) !== 0)
-        {
-            $result += $eventDates;
-        }
-        return $result;
-    }
-
-    /**
-     * @param int $maxCount
-     * @return array
-     * @throws \DiDom\Exceptions\InvalidSelectorException
-     */
-    public static function getMatchesResults(): array
-    {
-        $content = PageContentService::getPageContent(self::$baseUrl);
-
-        $document = new Document($content);
-
-        $results = $document->find('.result-box');
-
-        $matchUrls = [];
-        foreach ($results as $result){
-            $classNames = $result->attr('class');
-            if (!stristr($classNames, 'hidden')){
-                $resultBlocks[] = $result;
-
-                $url = $result->first('.teambox.a-reset');
-                if (isset($url)){
-                    $url = $url->attr('href');
-                    $matchUrls[] = [
-                        'url' => self::urlDecorator($url),
-                        'is_live' => false
-                    ];
-                }
-            }
-        }
-        $matches = [];
-        foreach ($matchUrls as $url){
-            $match = self::getMatchFull($url);
-
-            if (isset($match)){
-                $matches[] = $match;
-            }
-        }
-        return $matches;
+        return $eventParserService->getEventFull($document, $url, $isRelated);
     }
 
     /**
@@ -1261,7 +421,7 @@ class HLTVService
      * @param $class
      * @return string
      */
-    private static function getSubElemByClass($elem, $class)
+    public static function getSubElemByClass($elem, $class)
     {
         $element = $elem->first($class);
         if (isset($element)){
@@ -1444,63 +604,6 @@ class HLTVService
     }
 
     /**
-     * @param $url
-     * @return array
-     * @throws \DiDom\Exceptions\InvalidSelectorException
-     */
-    public static function getEventData($url)
-    {
-        LoggerService::info("getEventData");
-        $content = PageContentService::getPageContent($url);
-
-        if (empty($content)){
-            return null;
-        }
-        $document = new Document($content);
-
-        $eventName = self::getSubElemByClass($document, '.eventname');
-        $dates = $document->first('td.eventdate');
-
-        $dateFrom = $dates->first('.eventdate > span:nth-child(1)');
-        $dateFrom = isset($dateFrom) ? $dateFrom->attr('data-unix'): null;
-        $dateFrom = isset($dateFrom) ? self::parseUnixToDateTime($dateFrom): null;
-
-        LoggerService::info("getEventData dateFrom");
-
-        $dateTo = $dates->first('.eventdate > span:nth-child(2) > span');
-        $dateTo = isset($dateTo) ? $dateTo->attr('data-unix'): null;
-        $dateTo = isset($dateTo) ? self::parseUnixToDateTime($dateTo): null;
-
-        LoggerService::info("getEventData dateTo");
-
-        $image = $document->first('.sidebar-first-level .event-logo');
-        $image = isset($image) ? $image->attr('src'): null;
-
-        if (isset($image)){
-            $image = self::urlDecorator($image);
-        }
-        LoggerService::info("getEventData image $image");
-
-
-        $prize = self::getSubElemByClass($document, 'td.prizepool');
-        $location = self::getSubElemByClass($document, '.location span');
-        $teamsCount = self::getSubElemByClass($document, 'td.teamsNumber');
-
-        LoggerService::info("getEventData prize $prize , location $location, teamsCount $teamsCount");
-
-        $event = [
-            'name' => $eventName,
-            'started_at' => $dateFrom,
-            'ended_at' => $dateTo,
-            'image' => $image,
-            'location' => $location,
-            'prize' => $prize,
-            'teams' => $teamsCount
-        ];
-        return $event;
-    }
-
-    /**
      * @return array|mixed|\PhpParser\Comment|\PhpParser\Node
      * @throws \DiDom\Exceptions\InvalidSelectorException
      */
@@ -1616,297 +719,15 @@ class HLTVService
         return $urls;
     }
 
-    public static function getResultMatches()
+    /**
+     * @return array
+     */
+    public static function getMainMatchesResults()
     {
-        $content = PageContentService::getPageContent(self::$baseUrl.'/results');
-
+        $matchParserService = new MatchParserService();
+        $content = PageContentService::getPageContent(self::$baseUrl);
         $document = new Document($content);
 
-
-        $matchSections = $document->find(".results-sublist");
-
-        $matchesSortedByDay = [];
-        foreach ($matchSections as $matchSection){
-            $is_live = false;
-            $matchCells = $matchSection->find(".result-con");
-
-            foreach ($matchCells as $matchCell){
-                $matchUrlRaw = $matchCell->first('a');
-
-                if (isset($matchUrlRaw))
-                {
-                    $url = $matchUrlRaw->attr('href');
-
-                    if (strrpos($url, 'http') === false)
-                    {
-                        $url = static::$baseUrl . $url;
-                    }
-                }
-                $start_at = $matchCell->attr('data-zonedgrouping-entry-unix');
-
-                if (!empty($start_at))
-                {
-                    $unixtime = trim($start_at);
-                    $dateTime = new \DateTime();
-                    if (strlen($unixtime) == 13)
-                    {
-                        $unixtime = substr($unixtime, 0, -3);
-                    }
-
-                    $dateTime = $dateTime->setTimestamp($unixtime);
-
-                    $start_at = $dateTime;
-
-                    $matchesSortedByDay[$start_at->format('m.d')][] = compact('url', 'is_live', 'start_at');
-                }
-            }
-        }
-        $matchesResults = [];
-
-        foreach ($matchesSortedByDay as $matches){
-            foreach ($matches as $match){
-                $matchesResults[] = $match;
-            }
-        }
-
-        return $matchesResults;
-    }
-
-    public static function getMatchsMapsStatistics($document)
-    {
-
-        $matchMapPlayersStats = $document->first('.matchstats');
-        $pageMatchStatisticsMenu = $matchMapPlayersStats->first('.box-headline.flexbox.nowrap.header');
-
-        $menuOptions = $pageMatchStatisticsMenu->find('.dynamic-map-name-full');
-        $maps = [];
-
-        foreach ($menuOptions as $menuOption)
-        {
-            $maps[] = [
-                'name' => trim($menuOption->text()),
-                'id' => $menuOption->attr('id')
-            ];
-        }
-        $mapStats = [];
-
-        foreach ($maps as $map)
-        {
-            $mapStats[$map['name']] = [
-                'name' => $map['name']
-            ];
-            $mapStat = $matchMapPlayersStats->first("#{$map['id']}-content");
-
-            if (isset($mapStat)){
-                $totalStat = $mapStat->find('.totalstats');
-
-                if (!empty($totalStat) and count($totalStat) > 1)
-                {
-                    $mapStats[$map['name']]['stat']['left']['total'] =  self::getMatchPlayersStatsArray($totalStat[0]);
-                    $mapStats[$map['name']]['stat']['right']['total'] =  self::getMatchPlayersStatsArray($totalStat[1]);
-                }
-
-                $terroristStat = $mapStat->find('.tstats');
-
-                if (!empty($terroristStat) and count($terroristStat) > 1)
-                {
-                    $mapStats[$map['name']]['stat']['left']['terrorist'] =  self::getMatchPlayersStatsArray($terroristStat[0]);
-                    $mapStats[$map['name']]['stat']['right']['terrorist'] =  self::getMatchPlayersStatsArray($terroristStat[1]);
-                }
-
-                $counterTerroristStat = $mapStat->find('.ctstats');
-
-                if (!empty($counterTerroristStat) and count($counterTerroristStat) > 1)
-                {
-                    $mapStats[$map['name']]['stat']['left']['counterTerrorist'] =  self::getMatchPlayersStatsArray($counterTerroristStat[0]);
-                    $mapStats[$map['name']]['stat']['right']['counterTerrorist'] =  self::getMatchPlayersStatsArray($counterTerroristStat[1]);
-                }
-            }
-        }
-
-        return $mapStats;
-    }
-
-    public static function getMatchPlayersStatsArray($stats)
-    {
-        $playersStats = $stats->find('tr');
-
-        unset($playersStats[0]);
-
-        $players = [];
-        foreach ($playersStats as $playersStat){
-
-            if (isset($playersStat))
-            {
-                $nick = self::getSubElemByClass($playersStat, '.players .player-nick');
-                $kd = self::getSubElemByClass($playersStat, '.kd');
-                $plusMinus = self::getSubElemByClass($playersStat, '.plus-minus');
-                $adr = self::getSubElemByClass($playersStat, '.adr');
-                $kast = self::getSubElemByClass($playersStat, '.kast');
-                $rating = self::getSubElemByClass($playersStat, '.rating');
-
-                $players[] = compact('nick', 'kd', 'plusMinus', 'adr', 'kast', 'rating');
-            }
-        }
-
-        return $players;
-    }
-
-    public static function getEndEventData($url = 'https://www.hltv.org/events/5449/nine-to-five-3-dawn')
-    {
-        $eventItem = static::getEventFull($url);
-
-        $content = PageContentService::getPageContent($url);
-
-        $document = new Document($content);
-
-        $prizeDistributionBlock = $document->first('.placements');
-
-        if (isset($prizeDistributionBlock))
-        {
-            $prizeDistributions = $prizeDistributionBlock->find('.placement');
-
-            foreach ($prizeDistributions as $prizeDistribution)
-            {
-                $distribution = [];
-                $team = $prizeDistribution->first('.team a');
-                if (isset($team))
-                {
-                    $teamName = trim($team->text());
-                    $teamUrl = $team->attr('href');
-
-                    if (isset($teamUrl))
-                    {
-                        $teamUrl = self::urlDecorator($teamUrl);
-                    }
-
-                    $distribution['teamName'] = $teamName;
-                    $distribution['teamUrl'] = $teamUrl;
-                }
-                $position = $prizeDistribution->first('div:nth-child(2)');
-                if (isset($position))
-                {
-                    $distribution['position'] = trim($position->text());
-                }
-                $prizes = $prizeDistribution->find('.prizeMoney');
-                if (!empty($prizes))
-                {
-                    foreach ($prizes as $prize)
-                    {
-                        if (!empty(trim($prize->text())))
-                        {
-                            $distribution['prize'] = trim($prize->text());
-                        }
-                    }
-                }
-                $eventItem['prizeDistributions'][] = $distribution;
-            }
-        }
-
-        $groupPlayBlock = $document->first('.groups-container');
-
-        $groups = [];
-        if (isset($groupPlayBlock))
-        {
-            $groupPlays = $groupPlayBlock->find('.group');
-            foreach ($groupPlays as $groupPlay)
-            {
-                $teams = $groupPlay->find('tr');
-
-                if (!empty($teams))
-                {
-                    $groupHeader = $teams[0]->find('td');
-
-                    $groupName = trim($groupHeader[0]->text());
-                    $groups[$groupName] = [];
-
-                    unset($teams[0]);
-
-                    foreach ($teams as $team)
-                    {
-                        $teamValues = $team->find('td');
-                        $teamName = trim($teamValues[0]->text());
-                        $groups[$groupName][$teamName] = [];
-
-                        unset($teamValues[0]);
-                        for ($i = 1; $i <= (int)count($teamValues); $i++)
-                        {
-                            $fieldName = trim($groupHeader[$i]->text());
-                            $groups[$groupName][$teamName][$fieldName] = trim($teamValues[$i]->text());
-                        }
-                    }
-                }
-            }
-            $eventItem['groupPLay'] = $groups;
-        }
-        $mapPoolBlock = $document->first('.map-pool');
-
-        if (isset($mapPoolBlock))
-        {
-            $maps = [];
-            $mapPools = $mapPoolBlock->find('.map-pool-map-name');
-
-            foreach ($mapPools as $mapPool)
-            {
-                $maps[] = trim($mapPool->text());
-            }
-
-            $eventItem['mapsPool'] = $maps;
-        }
-        $relatedEventsBlock = $document->first('.related-events');
-
-        if (isset($relatedEventsBlock))
-        {
-            $relatedEvents = [];
-            $events = $relatedEventsBlock->find('.related-event a');
-            foreach ($events as $event)
-            {
-                $eventUrl = $event->attr('href');
-                if (isset($eventUrl))
-                {
-                    $eventUrl = self::urlDecorator($eventUrl);
-
-                    $relatedEvents[] =  self::getEventFull($eventUrl);
-                }
-            }
-            $eventItem['relatedEvents'] = $relatedEvents;
-        }
-        $eventItem['teamsAttending'] = self::parseTeamsAttenting($document);
-
-        return $eventItem;
-    }
-
-    public static function parseTeamsAttenting($document)
-    {
-        $attendingBlock = $document->first('.teams-attending');
-
-        if (empty($attendingBlock))
-        {
-            return [];
-        }
-        $teamsAttendingCols = $attendingBlock->find('.col');
-
-        $teamsAttending = [];
-        foreach ($teamsAttendingCols as $team)
-        {
-            $teamLink = $team->first('.team-name a');
-
-            if (empty($teamLink))
-            {
-                continue;
-            }
-
-            $teamUrl = self::urlDecorator($teamLink->attr('href'));
-            $teamName = self::getSubElemByClass($teamLink, '.text');
-            $number = self::getSubElemByClass($teamLink, '.event-world-rank');
-
-            $teamsAttending[] = [
-                'teamName' => $teamName,
-                'teamUrl' => $teamUrl,
-                'number' => $number
-            ];
-        }
-
-        return $teamsAttending;
+        return $matchParserService->getMainMatchesResults($document);
     }
 }

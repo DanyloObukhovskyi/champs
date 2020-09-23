@@ -6,7 +6,6 @@ namespace App\MessageHandler;
 use App\Message\Event;
 use App\Service\Event\EventService;
 use App\Service\HLTVService;
-use App\Service\LoggerService;
 use App\Service\TeamService;
 use App\Traits\EntityManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -31,7 +30,7 @@ class EventHandler implements MessageHandlerInterface
     {
         dump($event->getUrl());
 
-        $event = HLTVService::getEndEventData($event->getUrl());
+        $event = HLTVService::getEventFull($event->getUrl());
 
         if (isset($event['prizeDistributions']))
         {

@@ -28,13 +28,13 @@
                         <div class="logo">
                             {% if player.person.photo is not null%}
                                 <img data-team="l" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
-                                    class="logo" alt="PlayerA1"/>
+                                    class="logo" alt="PlayerA1" attr-row-id="{{player.person.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                             {% else %}
-                                <img data-team="l" data-player="{{ player.id }}" src="/images/blankplayer.svg"
-                                     class="logo w-100 h-100" alt="PlayerA1"/>
+                                <img data-team="l" data-player="{{ player.id}}" src="/images/blankplayer.svg"
+                                     class="logo w-100 h-100" alt="PlayerA1" attr-row-id="{{player.person.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                             {% endif %}
                         </div>
-                        <div class="name">{{ player.person.nick }}</div>
+                        <div class="name" attr-row-id="{{player.person.id}}" attr-row-field="nick" attr-row-table="person" onclick="EditData(this)" >{{ player.person.nick }}</div>
                     </div>
                     {% set first = false %}
                     {% endif %}
@@ -110,13 +110,13 @@
                             <div class="logo">
                                 {% if player.person.photo is not null%}
                                     <img data-team="r" data-player="{{ player.id }}" src="/uploads/images/{{ player.person.photo }}"
-                                         class="logo" alt="PlayerA1"/>
+                                         class="logo" alt="PlayerA1" attr-row-id="{{player.person.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                                 {% else %}
-                                    <img data-team="r" data-player="{{ player.id }}" src="/images/blankplayer.svg"
-                                         class="logo" alt="PlayerA1"/>
+                                    <img data-team="r" data-player="{{player.id}}" src="/images/blankplayer.svg"
+                                         class="logo" alt="PlayerA1"  attr-row-id="{{player.person.id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img2')" />
                                 {% endif %}
                             </div>
-                            <div class="name">{{ player.person.nick }}</div>
+                            <div class="name" attr-row-id="{{player.person.id}}" attr-row-field="nick" attr-row-table="person" onclick="EditData(this)">{{ player.person.nick }}</div>
                         </div>
                         {% set first = false %}
                     {% endif %}
@@ -137,10 +137,45 @@
 
         let playerId = img.data('player');
 
+        let row_id = $('.player-' + playerId + '-rating').attr('attr-row-id');
+
         $(numSel + '.change-rating-' + img.data('team')).html($('.player-' + playerId + '-rating').html());
         $(numSel + '.change-kpr-' + img.data('team')).html($('.player-' + playerId + '-kpr').html());
         $(numSel + '.change-kast-' + img.data('team')).html($('.player-' + playerId + '-kast').html());
         $(numSel + '.change-adr-' + img.data('team')).html($('.player-' + playerId + '-adr').html());
+
+        //
+        let u_rating = $('.player-' + playerId + '-rating').html();
+        u_rating = u_rating.replace(/\-/g, "");
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-data", u_rating);
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-field", "rating");
+        $(numSel + '.change-rating-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-rating-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
+        //
+        let u_kpr = $('.player-' + playerId + '-kpr').html();
+        u_kpr = u_kpr.replace(/\-/g, "");
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-data", u_kpr);
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-field", "plus_minus");
+        $(numSel + '.change-kpr-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-kpr-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
+        //
+        let u_kast = $('.player-' + playerId + '-kast').html();
+        u_kast = u_kast.replace(/\-/g, "");
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-data", u_kast);
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-field", "kast");
+        $(numSel + '.change-kast-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-kast-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
+        //
+        let u_adr = $('.player-' + playerId + '-adr').html();
+        u_adr = u_adr.replace(/\-/g, "");
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-data", u_adr);
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-id", row_id);
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-field", "adr");
+        $(numSel + '.change-adr-' + img.data('team')).attr("attr-row-table", "player_statistics");
+        $(numSel + '.change-adr-' + img.data('team')).attr("onclick", "EditData(this, 'player_d')");
 
         letOrange('.change-rating');
         letOrange('.change-kpr');

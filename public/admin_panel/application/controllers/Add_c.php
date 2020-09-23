@@ -361,8 +361,9 @@
 					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
+					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
 					
-					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price) {
+					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price)) {
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
 						
@@ -371,7 +372,6 @@
 						$update_data['nickname'] = $nickname;
 						$update_data['email'] = $Email;
 						$update_data['istrainer'] = 1;
-						
 						if(!empty($game)) {
 							$update_data['game'] = $game;
 						}
@@ -406,6 +406,7 @@
 						$update_data['twitch'] = $twitch;
 						$update_data['shorttitle'] = $shorttitle;
 						$update_data['stream_type'] = $stream_type;
+						$update_data['admin_percentage'] = $admin_percentage;
 						
 						$check_teacher =  $this->trainers_model->check_teacher_data($created_id);
 						if(!empty($check_teacher[0])) {
@@ -416,6 +417,8 @@
 						} else {
 							$this->add_m->addTeacher($update_data);
 						}
+						
+						
 						
 						if(isset($_FILES["userfile"])) {
 							if(!empty($_FILES["userfile"]["name"])) {

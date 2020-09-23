@@ -48,10 +48,10 @@
 			<table class="new-table">
 				<thead>
 				<tr>
-					<td class="width-15"><a href="<?php print base_url('c-admin/users/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> Дата</a></td>
-					<td class="width-15"><a href="<?php print base_url('c-admin/users/page/1?sort[email]='.($sort_email == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> Время</a></td>
-					<td class="width-25"><a href="<?php print base_url('c-admin/users/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Команда 1</a></td>
-					<td class="width-25"><a href="<?php print base_url('c-admin/users/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Команда 2</a></td>
+					<td class="width-15"><a href="<?php print base_url('c-admin/matches/page/1?sort[start_at]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> Дата</a></td>
+					<td class="width-15"><a href="<?php print base_url('c-admin/matches/page/1?sort[start_at]='.($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> Время</a></td>
+					<td class="width-25"><a href="<?php print base_url('c-admin/matches/page/1?sort[team1_id]='.($team1_sid == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Команда 1</a></td>
+					<td class="width-25"><a href="<?php print base_url('c-admin/matches/page/1?sort[team2_id]='.($team2_sid == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Команда 2</a></td>
 					<td class="width-20 pr-140 t-a-r">Опции</td>
 				
 				</tr>
@@ -61,15 +61,25 @@
 					$rmo_i = 1;
 					foreach ($statistics AS $key => $val) {
 						$style_class = $rmo_i%2 ==0?'even': '';
-						
+						$team1 = array();
+						$team2 = array();
+						if(isset($val["team1_data"][0]["id"])) {
+							$team1['logo'] = $val["team1_data"][0]["logo"];
+							$team1['name'] = $val["team1_data"][0]["name"];
+							
+						}
+						if(isset($val["team2_data"][0]["id"])) {
+							$team2['logo'] = $val["team2_data"][0]["logo"];
+							$team2['name'] = $val["team2_data"][0]["name"];
+						}
 						?>
 						
 						<tr>
-							<td><?php echo $val['date']; ?></td>
-							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print  date("d-m-Y", strtotime($val['time'])); ?></td>
-							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print base_url("assets/team-img/".$val['team1_ico']); ?>" /><div class="pl-10" style="display: inline-block;"><?php print $val['team1']; ?></div></td>
-							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print base_url("assets/team-img/".$val['team2_ico']); ?>" /><div class="pl-10" style="display: inline-block;"><?php print $val['team2']; ?></div></td>
-							<td class="t-a-r pr-15"><button class="btn btn-dark-blue btn-small">Редактировать</button> <a class="pointer txt-orange ml-15 fw-600">Удалить</a></td>
+							<td><?php echo date("Y-M", strtotime($val["start_at"])); ?></td>
+							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print  date("H:i", strtotime($val["start_at"])); ?></td>
+							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print isset($team1['logo']) ? $imgs_url.$team1['logo'] : ''; ?>" /><div class="pl-10" style="display: inline-block;"><?php print (isset($team1['name']))? $team1['name'] : ''; ?></div></td>
+							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print isset($team2['logo']) ? $imgs_url.$team2['logo'] : ''; ?>" /><div class="pl-10" style="display: inline-block;"><?php print (isset($team2['name']))? $team2['name'] : ''; ?></div></td>
+							<td class="t-a-r pr-15"><a href="https://champs.pro/ru/results/<?php print $val['id']; ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <div  onclick="c_delete(<?php print "'".  base_url("c-admin/match/delete/").$val['id']."/".$UserID."'"; ?>,<?php print "'".$val["start_at"]."'";?>,'Match')"  class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div></td>
 						
 						</tr>
 						<?php  $rmo_i++; }}
@@ -86,7 +96,7 @@
 			
 			<?php if(isset($pagination[0][0])){?>
 			<div class="pagination">
-				<?php print ('<a href="'.site_url('c-admin/admins/page/').$pagination[0][0].'">')."  <div class='pagination__prev'></div></a>";?>
+				<?php print ('<a href="'.site_url('c-admin/matches/page/').$pagination[0][0].'">')."  <div class='pagination__prev'></div></a>";?>
 				
 				<?php
 					$next_page = 1;
@@ -104,19 +114,14 @@
 					} else {
 						$active = '';
 					}
-					print ('<a href="'.site_url('c-admin/users/page/').$page_i.'">')."<div class='pagination__item ".$active."'>$page_i</div></a>";?>
+					print ('<a href="'.site_url('c-admin/matches/page/').$page_i.'">')."<div class='pagination__item ".$active."'>$page_i</div></a>";?>
 					<?php
 					$page_i++; }?>
-				<?php print ('<a href="'.site_url('c-admin/users/page/').$next_page.'">')."  <div class='pagination__next'></div></a>";?>
+				<?php print ('<a href="'.site_url('c-admin/matches/page/').$next_page.'">')."  <div class='pagination__next'></div></a>";?>
 			</div>
 		</div>
 		<?php }?>
 		
-		<div class="flex">
-			<a href="<?php echo site_url('create/websites'); ?>">
-				<button class="btn btn-orange mt-15 mr-10">Добавить матч</button>
-			</a>
-		</div>
 		
 	</div>
 </main>

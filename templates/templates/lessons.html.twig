@@ -7,6 +7,7 @@
   {% endfor %}
 {% endblock %}
 {% block body %}
+<script src="{{base_url}}assets/js/jquery351.js"></script>
 <div class="lessons" id="lessons">
   <div class="container" style="min-height: 40vw">
     <div class="header">
@@ -37,6 +38,12 @@
 {% include 'templates/lessons/timetables.html.twig' %}
 {% include 'templates/lessons/payments.html.twig' %}
 {% include 'templates/lessons/order.html.twig' %}
+
+{% if app.user.id is not defined and canEdit == true %}
+    {% set user_id = 0 %}
+{% else %}
+    {% set  user_id = app.user.id %}
+{% endif %}
 
 <script>
   const lessons = new Vue({
@@ -94,7 +101,7 @@
             const date = new Date(val.date.date);
             this.items = {
               trainer_id: {{id}},
-              user_id: {{app.user.id}},
+              user_id: {{user_id}},
               date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
               time: time.timein,
               cost: time.price,
@@ -120,5 +127,5 @@
     },
   });
 </script>
-
+<script src="{{base_url}}assets/js/edit_data.js"></script>
 {% endblock %}

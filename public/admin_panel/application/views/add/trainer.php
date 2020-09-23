@@ -71,13 +71,13 @@
 				<div class="col-item">
 					<label class="label" for="">Пароль</label>
 					<div class="input mb-10">
-						<input type="password" name="new_password" id="new" placeholder="************" title="Invalid new password" pattern="^.{8}.*$" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIUlEQVQ4EX2TOYhTURSG87IMihDsjGghBhFBmHFDHLWwSqcikk4RRKJgk0KL7C8bMpWpZtIqNkEUl1ZCgs0wOo0SxiLMDApWlgOPrH7/5b2QkYwX7jvn/uc//zl3edZ4PPbNGvF4fC4ajR5VrNvt/mo0Gr1ZPOtfgWw2e9Lv9+chX7cs64CS4Oxg3o9GI7tUKv0Q5o1dAiTfCgQCLwnOkfQOu+oSLyJ2A783HA7vIPLGxX0TgVwud4HKn0nc7Pf7N6vV6oZHkkX8FPG3uMfgXC0Wi2vCg/poUKGGcagQI3k7k8mcp5slcGswGDwpl8tfwGJg3xB6Dvey8vz6oH4C3iXcFYjbwiDeo1KafafkC3NjK7iL5ESFGQEUF7Sg+ifZdDp9GnMF/KGmfBdT2HCwZ7TwtrBPC7rQaav6Iv48rqZwg+F+p8hOMBj0IbxfMdMBrW5pAVGV/ztINByENkU0t5BIJEKRSOQ3Aj+Z57iFs1R5NK3EQS6HQqF1zmQdzpFWq3W42WwOTAf1er1PF2USFlC+qxMvFAr3HcexWX+QX6lUvsKpkTyPSEXJkw6MQ4S38Ljdbi8rmM/nY+CvgNcQqdH6U/xrYK9t244jZv6ByUOSiDdIfgBZ12U6dHEHu9TpdIr8F0OP692CtzaW/a6y3y0Wx5kbFHvGuXzkgf0xhKnPzA4UTyaTB8Ph8AvcHi3fnsrZ7Wore02YViqVOrRXXPhfqP8j6MYlawoAAAAASUVORK5CYII=); background-attachment: scroll; background-size: 16px 18px; cursor: auto; background-position: 98% 50%; background-repeat: no-repeat no-repeat;">
+						<input required type="password" name="new_password" id="new" placeholder="************" title="Invalid new password" pattern="^.{8}.*$" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIUlEQVQ4EX2TOYhTURSG87IMihDsjGghBhFBmHFDHLWwSqcikk4RRKJgk0KL7C8bMpWpZtIqNkEUl1ZCgs0wOo0SxiLMDApWlgOPrH7/5b2QkYwX7jvn/uc//zl3edZ4PPbNGvF4fC4ajR5VrNvt/mo0Gr1ZPOtfgWw2e9Lv9+chX7cs64CS4Oxg3o9GI7tUKv0Q5o1dAiTfCgQCLwnOkfQOu+oSLyJ2A783HA7vIPLGxX0TgVwud4HKn0nc7Pf7N6vV6oZHkkX8FPG3uMfgXC0Wi2vCg/poUKGGcagQI3k7k8mcp5slcGswGDwpl8tfwGJg3xB6Dvey8vz6oH4C3iXcFYjbwiDeo1KafafkC3NjK7iL5ESFGQEUF7Sg+ifZdDp9GnMF/KGmfBdT2HCwZ7TwtrBPC7rQaav6Iv48rqZwg+F+p8hOMBj0IbxfMdMBrW5pAVGV/ztINByENkU0t5BIJEKRSOQ3Aj+Z57iFs1R5NK3EQS6HQqF1zmQdzpFWq3W42WwOTAf1er1PF2USFlC+qxMvFAr3HcexWX+QX6lUvsKpkTyPSEXJkw6MQ4S38Ljdbi8rmM/nY+CvgNcQqdH6U/xrYK9t244jZv6ByUOSiDdIfgBZ12U6dHEHu9TpdIr8F0OP692CtzaW/a6y3y0Wx5kbFHvGuXzkgf0xhKnPzA4UTyaTB8Ph8AvcHi3fnsrZ7Wore02YViqVOrRXXPhfqP8j6MYlawoAAAAASUVORK5CYII=); background-attachment: scroll; background-size: 16px 18px; cursor: auto; background-position: 98% 50%; background-repeat: no-repeat no-repeat;">
 					</div>
 				</div>
 				<div class="col-item" id="new_change">
 					<label class="label" for="">Подтвердить пароль</label>
 					<div class="input mb-10">
-						<input type="password" name="new_confirm" value="" id="new_confirm" placeholder="************" title="Invalid password confirm" pattern="^.{8}.*$" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIUlEQVQ4EX2TOYhTURSG87IMihDsjGghBhFBmHFDHLWwSqcikk4RRKJgk0KL7C8bMpWpZtIqNkEUl1ZCgs0wOo0SxiLMDApWlgOPrH7/5b2QkYwX7jvn/uc//zl3edZ4PPbNGvF4fC4ajR5VrNvt/mo0Gr1ZPOtfgWw2e9Lv9+chX7cs64CS4Oxg3o9GI7tUKv0Q5o1dAiTfCgQCLwnOkfQOu+oSLyJ2A783HA7vIPLGxX0TgVwud4HKn0nc7Pf7N6vV6oZHkkX8FPG3uMfgXC0Wi2vCg/poUKGGcagQI3k7k8mcp5slcGswGDwpl8tfwGJg3xB6Dvey8vz6oH4C3iXcFYjbwiDeo1KafafkC3NjK7iL5ESFGQEUF7Sg+ifZdDp9GnMF/KGmfBdT2HCwZ7TwtrBPC7rQaav6Iv48rqZwg+F+p8hOMBj0IbxfMdMBrW5pAVGV/ztINByENkU0t5BIJEKRSOQ3Aj+Z57iFs1R5NK3EQS6HQqF1zmQdzpFWq3W42WwOTAf1er1PF2USFlC+qxMvFAr3HcexWX+QX6lUvsKpkTyPSEXJkw6MQ4S38Ljdbi8rmM/nY+CvgNcQqdH6U/xrYK9t244jZv6ByUOSiDdIfgBZ12U6dHEHu9TpdIr8F0OP692CtzaW/a6y3y0Wx5kbFHvGuXzkgf0xhKnPzA4UTyaTB8Ph8AvcHi3fnsrZ7Wore02YViqVOrRXXPhfqP8j6MYlawoAAAAASUVORK5CYII=); background-attachment: scroll; background-size: 16px 18px; cursor: auto; background-position: 98% 50%; background-repeat: no-repeat no-repeat;">
+						<input required type="password" name="new_confirm" value="" id="new_confirm" placeholder="************" title="Invalid password confirm" pattern="^.{8}.*$" style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIUlEQVQ4EX2TOYhTURSG87IMihDsjGghBhFBmHFDHLWwSqcikk4RRKJgk0KL7C8bMpWpZtIqNkEUl1ZCgs0wOo0SxiLMDApWlgOPrH7/5b2QkYwX7jvn/uc//zl3edZ4PPbNGvF4fC4ajR5VrNvt/mo0Gr1ZPOtfgWw2e9Lv9+chX7cs64CS4Oxg3o9GI7tUKv0Q5o1dAiTfCgQCLwnOkfQOu+oSLyJ2A783HA7vIPLGxX0TgVwud4HKn0nc7Pf7N6vV6oZHkkX8FPG3uMfgXC0Wi2vCg/poUKGGcagQI3k7k8mcp5slcGswGDwpl8tfwGJg3xB6Dvey8vz6oH4C3iXcFYjbwiDeo1KafafkC3NjK7iL5ESFGQEUF7Sg+ifZdDp9GnMF/KGmfBdT2HCwZ7TwtrBPC7rQaav6Iv48rqZwg+F+p8hOMBj0IbxfMdMBrW5pAVGV/ztINByENkU0t5BIJEKRSOQ3Aj+Z57iFs1R5NK3EQS6HQqF1zmQdzpFWq3W42WwOTAf1er1PF2USFlC+qxMvFAr3HcexWX+QX6lUvsKpkTyPSEXJkw6MQ4S38Ljdbi8rmM/nY+CvgNcQqdH6U/xrYK9t244jZv6ByUOSiDdIfgBZ12U6dHEHu9TpdIr8F0OP692CtzaW/a6y3y0Wx5kbFHvGuXzkgf0xhKnPzA4UTyaTB8Ph8AvcHi3fnsrZ7Wore02YViqVOrRXXPhfqP8j6MYlawoAAAAASUVORK5CYII=); background-attachment: scroll; background-size: 16px 18px; cursor: auto; background-position: 98% 50%; background-repeat: no-repeat no-repeat;">
 					</div>
 				</div>
 			</div>
@@ -98,17 +98,25 @@
 				<div class="col-item">
 					<label class="label" for="">Video URL</label>
 					<div class="input mb-20" id="input">
-						<input type="text" class="fw-600 input2_txt" name="video_url" id="video_url" placeholder="https://"  title="введите правильный ">
+						<input required type="text" class="fw-600 input2_txt" name="video_url" id="video_url" placeholder="https://"  title="введите правильный ">
 					</div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">Twitch URL</label>
 					<div class="input mb-20" id="input">
-						<input type="text" class="fw-600 input2_txt" name="twitch" id="twitch" placeholder="https://"  title="введите правильный">
+						<input required type="text" class="fw-600 input2_txt" name="twitch" id="twitch" placeholder="https://"  title="введите правильный">
 					</div>
 					<label class="label" for="">Тип стрима</label>
 					<div class="input mb-5" id="input">
-						<input type="text" class="fw-600 input2_txt" name="stream_type" id="stream_type" placeholder=""  title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
+						<input required type="text" class="fw-600 input2_txt" name="stream_type" id="stream_type" placeholder=""  title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
+					</div>
+					<div class="mb-15">
+						<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
+						<div class="info_txt">Формат поля - числовой</div>
+					</div>
+					<label class="label" for="">сколько текущий админ будет получать с ставки тренера в %</label>
+					<div class="input mb-5" id="input">
+						<input required type="text" class="fw-600 input2_txt" name="admin_percentage" id="admin_percentage" placeholder=""  title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
 					</div>
 					<div class="mb-15">
 						<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
@@ -122,19 +130,19 @@
 					</div>
 					<label class="label" for="">Игра</label>
 					<div class="input mb-5" id="input">
-						<input type="text" class="fw-600 input2_txt" name="game" id="game" placeholder="" title="введите правильный">
+						<input required type="text" class="fw-600 input2_txt" name="game" id="game" placeholder="" title="введите правильный">
 					</div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">About</label>
 					<div class=" mb-20" id="input" >
-						<textarea  name="about"  style="width: 100%; resize:none;" rows="7"></textarea>
+						<textarea  name="about"  style="width: 100%; resize:none;" rows="7" required></textarea>
 					</div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">Метод</label>
 					<div class=" mb-20" id="input" >
-						<textarea  name="method"  style="width: 100%; resize:none;" rows="7"></textarea>
+						<textarea  name="method"  style="width: 100%; resize:none;" rows="7" required></textarea>
 					</div>
 				</div>
 			</div>
@@ -166,9 +174,7 @@
 				<!--- --->
 				<!--- --->
 				<div class="flex">
-					<a href="<?php echo ""; ?>">
-						<button class="btn btn-orange mt-15 mr-10 fw-400">Сохранить изменения</button>
-					</a>
+					<button type="submit" class="btn btn-orange mt-15 mr-10 fw-400">Сохранить изменения</button>
 				</div>
 			</div>
 		</form>

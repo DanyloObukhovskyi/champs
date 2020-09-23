@@ -411,7 +411,6 @@
 								</div>
 							</div>
 							<div class="change-img-edit-warning change-video-warning" id="uploaded_img_name">
-								Загружено N изображений, N Mb
 							</div>
 						</div>
 						<?php

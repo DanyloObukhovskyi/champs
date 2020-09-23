@@ -66,6 +66,16 @@ class PaymentController extends AbstractController
      */
     public function paymentPage($id)
     {
+        /** @var User $authUser */
+        $authUser = $this->get('security.token_storage')
+            ->getToken()
+            ->getUser();
+
+        if (!($authUser instanceof User))
+        {
+            return $this->redirectToRoute('main');
+        }
+
         $this->checkIsPayedSuccess();
 
         /** @var Payment $lesson */

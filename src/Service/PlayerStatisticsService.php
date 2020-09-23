@@ -22,8 +22,7 @@ class PlayerStatisticsService extends EntityService
 
     public function create(Player $player, Match $match, $map, array $values, $type)
     {
-        if (isset($map))
-        {
+        if (isset($map)) {
             $playerStatistics = $this->repository->getByMatchAndPlayerAndTypeAndMap(
                 $match->getId(),
                 $player->getId(),
@@ -37,12 +36,9 @@ class PlayerStatisticsService extends EntityService
                 $type
             );
         }
-        if (isset($playerStatistics))
-        {
+        if (isset($playerStatistics)) {
             $this->entityManager->persist($playerStatistics);
-        }
-        else
-        {
+        } else {
             /** @var PlayerStatistics $playerStatistics */
             $playerStatistics = new $this->entity;
             $playerStatistics->setMap($map)
@@ -50,33 +46,27 @@ class PlayerStatisticsService extends EntityService
                 ->setPlayer($player);
 
         }
-        if (!empty($values['kd']) && $values['kd'] != $playerStatistics->getKd())
-        {
+        if (!empty($values['kd']) && $values['kd'] != $playerStatistics->getKd()) {
             $playerStatistics->setKd($values['kd']);
         }
 
-        if (!empty($values['plusMinus']) && $values['plusMinus'] != $playerStatistics->getPlusMinus())
-        {
+        if (!empty($values['plusMinus']) && $values['plusMinus'] != $playerStatistics->getPlusMinus()) {
             $playerStatistics->setPlusMinus($values['plusMinus']);
         }
 
-        if (!empty($values['adr']) && $values['adr'] != $playerStatistics->getAdr())
-        {
+        if (!empty($values['adr']) && $values['adr'] != $playerStatistics->getAdr()) {
             $playerStatistics->setAdr($values['adr']);
         }
 
-        if (!empty($values['kast']) && $values['kast'] != $playerStatistics->getKast())
-        {
+        if (!empty($values['kast']) && $values['kast'] != $playerStatistics->getKast()) {
             $playerStatistics->setKast($values['kast']);
         }
 
-        if (!empty($values['rating']) && $values['rating'] != $playerStatistics->getRating())
-        {
+        if (!empty($values['rating']) && $values['rating'] != $playerStatistics->getRating()) {
             $playerStatistics->setRating($values['rating']);
         }
 
-        if (!empty($type) && $type != $playerStatistics->getType())
-        {
+        if (!empty($type) && $type != $playerStatistics->getType()) {
             $playerStatistics->setType($type);
         }
 
@@ -90,22 +80,29 @@ class PlayerStatisticsService extends EntityService
     {
         $stat = [];
         /** @var PlayerStatistics $statistic */
-        foreach ($statisticsList as $statistic)
-        {
-            if ($statistic->getMap() === null){
+        foreach ($statisticsList as $statistic) {
+            if ($statistic->getMap() === null) {
                 $map = 'Все карты';
             } else {
                 $map = $statistic->getMap()->getName();
             }
             $stat[$map][$statistic->getType()][] = [
+                'stat_id' => $statistic->getId(),
+                'player_id' => $statistic->getPlayer()->getId(),
+//                'player_id' => $statistic->getPlayer()->getPerson()->getId(),
                 'player' => $statistic->getPlayer()->getPerson()->getNick(),
                 'kd' => $statistic->getKd(),
                 'adr' => $statistic->getAdr(),
                 'kast' => $statistic->getKast(),
                 'rating' => $statistic->getRating(),
-                'plusMinus' => $statistic->getPlusMinus()
+                'plusMinus' => $statistic->getPlusMinus(),
             ];
         }
         return $stat;
+    }
+
+    public function getKpr($d)
+    {
+
     }
 }

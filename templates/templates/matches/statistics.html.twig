@@ -22,7 +22,6 @@
             <span :class="{active: selectedType === 'counterTerrorist'}" @click=" selectedType = 'counterTerrorist'">CT</span>
         </div>
     </div>
-
     <div class="grid-block">
         <div class="grid-header">
             <div class="r">
@@ -39,12 +38,46 @@
             <div class="r">Rating</div>
         </div>
         <div class="grid-row" v-for="player in getLeftTeamStatistic()">
-            <div class="r" v-html="player.player"></div>
-            <div class="r" v-html="player.kd"></div>
-            <div class="r" v-html="player.plusMinus"></div>
-            <div class="r" v-html="player.adr"></div>
-            <div class="r" v-html="player.kast"></div>
-            <div class="r" v-html="player.rating"></div>
+            <div class="r"
+                 v-html="player.player"
+                 :attr-row-id="player.player_id"
+                 attr-row-field="nick" attr-row-table="person"
+                 onclick="EditData(this)">
+            </div>
+            <div class="r"
+                 v-html="player.kd"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="kd"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.plusMinus"
+                 :attr-row-id="player.stat_id"
+                 :class="`player-${player.player_id}-kpr`"
+                 attr-row-field="plus_minus"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.adr"
+                 :attr-row-id="player.stat_id"
+                 :class="`player-${player.player_id}-adr`"
+                 attr-row-field="adr"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.kast"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="kast"
+                 :class="`player-${player.player_id}-kast`"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 :class="`player-${player.player_id}-rating`"
+                 v-html="player.rating"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="rating"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
         </div>
     </div>
 
@@ -64,12 +97,46 @@
             <div class="r">Rating</div>
         </div>
         <div class="grid-row" v-for="player in getRightTeamStatistic()">
-            <div class="r" v-html="player.player"></div>
-            <div class="r" v-html="player.kd"></div>
-            <div class="r" v-html="player.plusMinus"></div>
-            <div class="r" v-html="player.adr"></div>
-            <div class="r" v-html="player.kast"></div>
-            <div class="r" v-html="player.rating"></div>
+            <div class="r"
+                 v-html="player.player"
+                 :attr-row-id="player.player_id"
+                 attr-row-field="nick"
+                 attr-row-table="person"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.kd"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="kd"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.plusMinus"
+                 :attr-row-id="player.stat_id"
+                 :class="`player-${player.player_id}-kpr`"
+                 attr-row-field="plus_minus"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 :class="`player-${player.player_id}-adr`"
+                 v-html="player.adr"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="adr"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.kast"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="kast"
+                 :class="`player-${player.player_id}-kast`"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
+            <div class="r"
+                 v-html="player.rating"
+                 :attr-row-id="player.stat_id"
+                 attr-row-field="rating"
+                 :class="`player-${player.player_id}-rating`"
+                 attr-row-table="player_statistics"
+                 onclick="EditData(this)"></div>
         </div>
     </div>
 </div>
@@ -80,7 +147,7 @@
             teamLeft: JSON.parse('{{ playerStatisticsTeam1|json_encode|raw }}'),
             teamRight: JSON.parse('{{ playerStatisticsTeam2|json_encode|raw }}'),
             selectedMapName: 'Все карты',
-            selectedType: 'total'
+            selectedType: 'total',
         },
         methods: {
             getLeftTeamStatistic() {
@@ -88,7 +155,7 @@
             },
             getRightTeamStatistic() {
                 return this.teamRight[this.selectedMapName][this.selectedType];
-            }
+            },
         }
     })
 </script>

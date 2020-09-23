@@ -18,6 +18,13 @@ class StreamService extends EntityService
     /** @var StreamRepository */
     protected $repository;
 
+    /**
+     * @param Match $match
+     * @param array $values
+     * @return Stream
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create(Match $match, array $values)
     {
         /** @var Stream $stream */
@@ -46,6 +53,13 @@ class StreamService extends EntityService
         return $stream;
     }
 
+    /**
+     * @param $matchId
+     * @param $name
+     * @return Stream|bool|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getByName($matchId, $name)
     {
         $stream = $this->repository->getByName($matchId, $name);

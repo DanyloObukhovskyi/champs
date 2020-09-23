@@ -13,6 +13,8 @@
           <span v-text="`${t}:00`"></span>
         </div>
       </div>
+
+
       <div class="calendarblock" v-for="(parent, p_i) in items" :key="p_i">
         <div class="days">
           <div class="null"></div>
@@ -27,7 +29,8 @@
               <span v-text="`${t}:00`"></span>
             </div>
             <div class="rows" style="user-select: none">
-              <div class="rows-row" v-for="i in parent.week" :style="{width: rowWidth + 'px'}">
+              <div class="rows-row" v-for="i in parent.week" :style="{width: rowWidth + 'px'}" v-bind:attr-row-time="t"  v-bind:attr-row-date="i.date" attr-row-userid="{{id}}" attr-row-table="schledule" onclick="setOpenDate(this)">
+
                 <div class="open" v-if="checkTime(t, i, 1)" @click="setCheck(t, i, 3)" :class="[checkDisabled(t, i) ? 'disabled' : '']">
                   Запись открыта
                 </div>
@@ -44,6 +47,7 @@
 </script>
 
 <script>
+
   Vue.component('timetables', {
     template: '#timetables-template',
     props: {
@@ -97,12 +101,14 @@
         return `${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}.${date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
       },
       checkTime(t, i, status) {
+
         let bool = false;
         this.items[0].week.forEach((item) => {
           if (item.date === i.date) {
             item.times.forEach((item2) => {
               const hourin = item2.timein.split(':');
               if (hourin[0] === t) {
+
                 if (item2.status === status) {
                   bool = true;
                 }
@@ -110,6 +116,7 @@
             });
           }
         });
+
         return bool;
       },
       checkDisabled(t, i) {
@@ -196,6 +203,7 @@
             dateout: enddate,
             week: [],
           };
+
           const data = response.data;
           data.sort(function (a, b) {
             return new Date(a.date) - new Date(b.date);

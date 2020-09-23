@@ -46,12 +46,15 @@ class StatisticsController extends AbstractController
         $weaponModel = $entityManager->getRepository(WeaponRating::class)->findAll();
         $weapons = $weaponService->ratingWeaponsDecorator($weaponModel);
 
+        $allFlags = $entityManager->getRepository(Person::class)->getAllFlags();
+
         return $this->render('templates/statistics.html.twig', [
           'router' => 'statistics',
           'ratingPlayers' => $ratingPlayers,
           'ratingCommands' => $ratingCommands,
           'playerWeek' => $playerWeek,
           'weapons' => $weapons,
+          'all_flags' => $allFlags
         ]);
     }
 }

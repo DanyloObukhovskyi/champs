@@ -1,3 +1,9 @@
+<script>
+{% if all_flags is defined %}
+    var All_Flags = [];
+    All_Flags = {{all_flags|json_encode|raw}}
+{% endif %}
+</script>
 <div class="component ratings">
   <div class="header">
     <div class="round">
@@ -18,13 +24,13 @@
       <div class="table-row">
         <div>
           <span class="num">{{i}}.</span>
-          <img src="{{item.image}}" alt="Avatar">
+          <img src="{{item.image}}" alt="Avatar" attr-row-id="{{item.user_id}}" attr-row-field="photo" attr-row-table="person" onclick="EditData(this,'img')">
           <label>
             <span>
-              <img src="{{item.flag}}">
-              {{item.nickname}}
+              <img src="{{item.flag}}" attr-value="{{item.flag_id}}" attr-row-id="{{item.user_id}}" attr-row-field="flag_icon_id" attr-row-table="person" onclick="EditData(this, 'flag')">
+              <div style="display:inline-block;" attr-row-id="{{item.user_id}}" attr-row-field="nick" attr-row-table="person" onclick="EditData(this)" >{{item.nickname}}</div>
             </span>
-            <span class="name">
+            <span class="name" attr-row-id="{{item.user_id}}" attr-row-field="name" attr-row-table="person" onclick="EditData(this)">
               {{item.fullname}}
             </span>
           </label>
@@ -32,16 +38,21 @@
 
         {% if  item.team.image is defined%}
           <div>
-            <img src="{{item.team.image}}" alt="Rectangle5" /> {{item.team.title}}
+            <img src="{{item.team.image}}" alt="Rectangle5"  attr-row-id="{{item.team.id}}" attr-row-field="logo" attr-row-table="team" onclick="EditData(this,'img')" />
+            <div style="display:inline-block;" attr-row-id="{{item.team.id}}" attr-row-field="name" attr-row-table="team" onclick="EditData(this)">
+            {{item.team.title}}
+            </div>
           </div>
         {% else %}
           <div>
           </div>
         {% endif %}
 
-        <div class="text-center">
-          {{item.rating}}
-        </div>
+
+            <div class="text-center"  attr-row-id="{{item.person_id}}" attr-row-field="rating" attr-row-table="rating_person" onclick="EditData(this)">
+                {{item.rating}}
+            </div>
+
       </div>
       {% set i = i + 1 %}
     {% endfor %}

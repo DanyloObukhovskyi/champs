@@ -23,11 +23,24 @@
             </div>
         {% for map in maps %}
             <div class="grid-row">
-                <div class="r w-100 map-bg pl-0" style="background-image: url('/uploads/images/{{ map.image }}')">
-                    <span class="map-title">{{ map.name }}</span>
+                <div class="r w-100 map-bg pl-0 {{map.name}}" style="background-image: url('/uploads/images/{{ map.image }}')" >
+                    <span class="map-title" attr-row-id="{{map.id}}" attr-row-field="name" attr-row-table="map" onclick="EditData(this)" >{{ map.name }}</span>
+                    <script>
+                    $( document ).ready(function() {
+                    setTimeout(function(){
+                         if(canEdit == true) {
+                            let dataT = document.createElement('div');
+                            dataT.style="margin-left: 5px; position: absolute;width: 30px; height: 30px;";
+                            dataT.innerHTML = '<div attr-row-id="{{map.id}}" attr-row-field="image" attr-row-table="map" onclick="EditData(this,\'img\')" style="border-radius: 5px; width: 30px; height: 30px; background-size: cover;background-image: url(\'/images/edit_ico2.png\');"></div>';
+                             document.querySelector(".r.w-100.map-bg.pl-0.{{map.name}}").append(dataT);
+                        }
+                        },500);
+                    });
+                    </script>
                 </div>
                 {% for team, data in matchStats %}
-                    <div class="r w-100 ">{{ attribute(data.maps, map.name) }}</div>
+                {% set tmp_name = map.name %}
+                    <div class="r w-100 " attr-row-id="{{data.s_id[tmp_name]}}" attr-row-field="win_rate" attr-row-table="match_map_team_statistic" onclick="EditData(this)">{{ attribute(data.maps, map.name) }}</div>
                 {% endfor %}
             </div>
         {% endfor %}

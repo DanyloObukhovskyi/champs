@@ -9,14 +9,20 @@
   </div>
   <div class="grid">
     {% for item in videoNews|slice(0,4) %}
-    <a class="grid-row setStreamButton" data-id="{{item.videoId}}" data-link="{{item.id}}" data-type="{{item.videoType}}">
+     <a class="grid-row setStreamButton" data-id="{{item['video_id']}}" data-link="{{item['id']}}" data-type="{{item['video_type']}}">
       {# <div class="live">Live</div> #}
-      <img src="//img.youtube.com/vi/{{item.videoId}}/hqdefault.jpg" class="logo videoBox" alt="Video" />
-      <div class="title-block" data-id="{{item.videoId}}">
-        <div class="title" data-id="{{item.videoId}}">
-          {{item.title}}
+       {% if item['logo'] is empty  %}
+           {% if item['video_type'] != 1  %}
+              <img src="//img.youtube.com/vi/{{item['video_id']}}/hqdefault.jpg" class="logo videoBox" alt="Video" />
+           {% endif %}
+       {% else %}
+           <img src="{{base_url}}images/temp/news/{{item['logo']}}" class="logo videoBox" alt="Video" />
+      {% endif %}
+      <div class="title-block" data-id="{{item['video_id']}}">
+        <div class="title" data-id="{{item['video_id']}}">
+          {{item['title']}}
         </div>
-        <div class="bottom" data-id="{{item.videoId}}">
+        <div class="bottom" data-id="{{item['video_id']}}">
           Champs
           <span style="display: none">
             <img src="/images/Eye.svg" alt="Eye" />

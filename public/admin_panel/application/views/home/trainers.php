@@ -50,8 +50,9 @@
 				<tr>
 					<td class="width-5"><a href="<?php print base_url('c-admin/trainers/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> ID</a></td>
 					<td class="width-5"><a href="<?php print base_url('c-admin/trainers/page/1?sort[email]='.($sort_email == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> Фото</a></td>
-					<td class="width-10"><a href="<?php print base_url('c-admin/trainers/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Цена/час</a></td>
-					<td class="width-20"><a href="<?php print base_url('c-admin/trainers/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Никнейм</a></td>
+					<td class="width-20"><a href="<?php print base_url('c-admin/trainers/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Цена/час</a></td>
+					<td class="width-25"><a href="<?php print base_url('c-admin/trainers/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Никнейм</a></td>
+					<td class="width-15">Каледдарь</td>
 					<td class="width-10 pr-140 t-a-r">Опции</td>
 				
 				</tr>
@@ -68,7 +69,8 @@
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print $imgs_url.$val['photo']; ?>" /></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['cost'].".руб/час" ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['nickname']; ?></td>
-							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/trainer/edit/".$val['userid']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <a href="<?php print base_url("c-admin/trainer/delete/".$val['userid']."/".$UserID); ?>" class="pointer txt-orange ml-15 fw-600">Удалить</a></td>
+							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><a class="pointer" href="<?php print "https://champs.pro/ru/lessons/".$val['userid']; ?>"><button class="btn btn-dark-blue btn-small">Календарь</button></a></td>
+							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/trainer/edit/".$val['userid']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <div onclick="c_delete(<?php print "'". base_url("c-admin/trainer/delete/".$val['userid']."/".$UserID)."'"; ?>,<?php print "'".$val['nickname']."'";?>,'Post')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div></td>
 						
 						</tr>
 						<?php  $rmo_i++; }}

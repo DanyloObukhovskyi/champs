@@ -1,0 +1,59 @@
+<div class="component videos" id="videos">
+  <div class="header">
+    <div class="round">
+      <div><img src="/images/lamp.svg" /></div>
+    </div>
+    <div class="title">
+      ВИДЕО НОВОСТИ
+    </div>
+  </div>
+  <div class="grid">
+    {% for item in videoNews|slice(0,4) %}
+    <a class="grid-row setStreamButton" data-id="{{item.videoId}}" data-link="{{item.id}}" data-type="{{item.videoType}}">
+      {# <div class="live">Live</div> #}
+      <img src="//img.youtube.com/vi/{{item.videoId}}/hqdefault.jpg" class="logo videoBox" alt="Video" />
+      <div class="title-block" data-id="{{item.videoId}}">
+        <div class="title" data-id="{{item.videoId}}">
+          {{item.title}}
+        </div>
+        <div class="bottom" data-id="{{item.videoId}}">
+          Champs
+          <span style="display: none">
+            <img src="/images/Eye.svg" alt="Eye" />
+            2459
+          </span>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+var videos = new Vue({
+  el: '#videos',
+  data: function () {
+    return {
+      items: [],
+    };
+  },
+  methods: {
+    getAxios() {
+      let datefrom = new Date();
+      datefrom.setMonth(datefrom.getMonth() - 1);
+      datefrom = `${datefrom.getDate() < 10 ? '0' + datefrom.getDate() : datefrom.getDate()}.${(datefrom.getMonth() + 1) < 10 ? '0' + (datefrom.getMonth() + 1) : datefrom.getMonth() + 1}.${datefrom.getFullYear()}`;
+      let dateTo = new Date();
+      dateTo = `${dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()}.${(dateTo.getMonth() + 1) < 10 ? '0' + (dateTo.getMonth() + 1) : dateTo.getMonth() + 1}.${dateTo.getFullYear()}`;
+      axios.get(`/ru/news/search/{"type":"3","datefrom":"${datefrom}","dateto":"${dateTo}","search":""}`)
+      .then(function (response) {
+        if (response.data !== null) {
+          console.log(response.data);
+        }
+      })
+    },
+  },
+  mounted() {
+    this.getAxios();
+  },
+});
+</script>

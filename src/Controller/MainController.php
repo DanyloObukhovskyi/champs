@@ -76,47 +76,107 @@ class MainController extends DefController
 
         $repository = $entityManager->getRepository(News::class);
         $news = $repository->findBy([],['date'=>'DESC'],6,0);
-
-        $livesItems = [
-            [
-                'id' => 1,
-                'videoId' => "Nz3_Vg5GBio",
-                'videoType' => 0,
-                'title' => "ТОП 5 мобильных игр | Champs | Hino",
-            ],
-            [
-                'id' => 2,
-                'videoId' => "1NnA3hbwqRY",
-                'videoType' => 0,
-                'title' => "ММОшим / Champs / ModirDred",
-            ],
-            [
-                'id' => 3,
-                'videoId' => "Lmz9itL7sqs",
-                'videoType' => 0,
-                'title' => "Новости недели / Hino x ModirDred / Champs",
-            ],
-            [
-                'id' => 4,
-                'videoId' => "cwd6zSjKEW4",
-                'videoType' => 0,
-                'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
-            ],
-        ];
+	
+	    $livesItems = [
+		    [
+			    'id' => 1,
+			    'video_id' => "Nz3_Vg5GBio",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "ТОП 5 мобильных игр | Champs | Hino",
+		    ],
+		    [
+			    'id' => 2,
+			    'video_id' => "1NnA3hbwqRY",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "ММОшим / Champs / ModirDred",
+		    ],
+		    [
+			    'id' => 3,
+			    'video_id' => "Lmz9itL7sqs",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "Новости недели / Hino x ModirDred / Champs",
+		    ],
+		    [
+			    'id' => 4,
+			    'video_id' => "cwd6zSjKEW4",
+			    'video_type' => 0,
+			    'logo' => "",
+			    'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
+		    ],
+	    ];
+        
+	    /*
+	    * stream - news type - 8
+	    * video - news type - 3
+	    */
+	    $VideoData = $repository->findBy(['type'=>array(8, 3)],['date'=>'DESC'],4,0); //8 - stream; 3 - video
+	    $VideoItems = $this->prepare_video($VideoData);
+	    if(count($VideoItems) < 4) {
+		    $ij =  4 - (4 - count($VideoItems));
+		    for($ij; $ij < 4; $ij++) {
+			    $VideoItems[$ij] = $livesItems[$ij];
+		    }
+	    }
         
         return $this->render('templates/home.html.twig', [
             'events' => $eventItems,
             'router' => 'home',
             'matches' => $matchesItems,
             'results' => $matchResults,
-            'videoNews' => $livesItems,
+//            'videoNews' => $livesItems,
+	        'videoNews' => $VideoItems,
             'ratingPlayers' => $ratingPlayers,
             'ratingCommands' => $ratingCommands,
             'playerWeek' => $playerWeek,
             'news' => $news
             ]);
     }
-
+	
+	public function prepare_video($data=array()) {
+		$VideoItems = array();
+		if(!empty($data)) {
+			foreach ($data as $v_key => &$v_value) {
+				$tmp = array();
+				$tmp['id'] = $v_value->getId();
+				
+				$link = $v_value->getText();
+				preg_match("/http|s:\/\//",$link,$match_items);
+				preg_match("/twitch/",$link,$is_TW);
+				preg_match("/youtu/",$link,$is_YT);
+				if(strlen($link) == 11 && count($match_items) == 0) {
+					$tmp['video_type'] = 0; //YouTube video
+					$tmp['video_id'] = $link;
+				}
+				if(count($is_TW) > 0) {
+					$tmp['video_type'] = 1; //Twich video
+					$link = str_replace("https://www.twitch.tv/", "", $link);
+					$link = str_replace("http://www.twitch.tv/", "", $link);
+					$link = str_replace("https://twitch.tv/", "", $link);
+					$link = str_replace("http://twitch.tv/", "", $link);
+					$link = str_replace("https://player.twitch.tv/?channel=", "", $link);
+					$link = str_replace("http://player.twitch.tv/?channel=", "", $link);
+					$tmp['video_id'] = $link;
+				}
+				if(count($is_YT) > 0) {
+					$tmp['video_type'] = 0; //YouTube video
+					$link = str_replace("https://youtu.be/", "", $link);
+					$link = str_replace("http://youtu.be/", "", $link);
+					$link = str_replace("https://www.youtube.com/watch?v=", "", $link);
+					$link = str_replace("http://www.youtube.com/watch?v=", "", $link);
+					
+					$tmp['video_id'] = $link;
+				}
+				$tmp['logo'] = $v_value->getLogo();
+				$tmp['title'] = $v_value->getTitle();
+				$VideoItems[$v_key] = $tmp;
+			}
+		}
+		return $VideoItems;
+	}
+	
     /**
      * @Route("/ru/404", name="notFound")
      */

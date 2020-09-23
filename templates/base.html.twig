@@ -37,12 +37,17 @@
     <link type="text/css" rel="stylesheet" href="/assets/styles/trainers.css" />
     <link type="text/css" rel="stylesheet" href="/assets/styles/statistics.css" />
     <link type="text/css" rel="stylesheet" href="/assets/styles/timetable.css" />
+    <link  type="text/css" rel="stylesheet" href="/assets/js/jquery.bracket.min.css">
 
     <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css?ver=1" />
     <link type="text/css" rel="stylesheet" href="/assets/styles/contact.css" />
     <link type="text/css" rel="stylesheet" href="/assets/styles/competition.css" />
     <link type="text/css" rel="stylesheet" href="/assets/styles/about.css" />
 
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="/assets/js/jquery.bracket.min.js"></script>
   {% block css %}{% endblock %}
 
     <!-- Yandex.Metrika counter -->
@@ -561,14 +566,14 @@ document.oncopy = addLink;
   let full = false;
 
 //temporary fix, rewrite this part for add videos
-const playerTW = new Object();
-playerTW.pause= function (){}
+//const playerTW = new Object();
+//playerTW.pause= function (){}
 
-/* const playerTW = new Twitch.Player('playerTW', {
+  playerTW = new Twitch.Player('playerTW', {
     channel: "esbcsgo",
     parent: ["champs.pro"]
   });
-*/
+
   function onYouTubeIframeAPIReady() {
     playerYT = new YT.Player('playerYT', {
       videoId: links,

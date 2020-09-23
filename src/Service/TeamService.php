@@ -33,6 +33,10 @@ class TeamService extends EntityService
     /** @var ImageService */
     protected $imageService;
 
+    /**
+     * TeamService constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -43,6 +47,11 @@ class TeamService extends EntityService
         $this->imageService = new ImageService($entityManager);
     }
 
+    /**
+     * @param $values
+     * @return Team|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function create($values)
     {
         ini_set('max_execution_time', 0);
@@ -64,13 +73,18 @@ class TeamService extends EntityService
                 $team->setFlagIcon($flagIcon);
             }
         }
-
-        $this->entityManager->persist($team);
-        $this->entityManager->flush();
+        $team->setParseDate(new \DateTime());
+        $this->save($team);
 
         return $team;
     }
 
+    /**
+     * @param $name
+     * @return Team|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getByName($name)
     {
         $team = $this->repository->getByName($name);
@@ -82,6 +96,11 @@ class TeamService extends EntityService
         return null;
     }
 
+    /**
+     * @param $photo
+     * @param Team $team
+     * @throws Exception
+     */
     public function setTeamLogo($photo, Team $team)
     {
         if (!empty($photo))
@@ -102,36 +121,34 @@ class TeamService extends EntityService
         }
     }
 
+    /**
+     * @param $teams
+     * @return array|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function createTeams($teams)
     {
         $result = [];
         foreach ($teams as $team)
         {
-            //LoggerService::add("parserMatchesCommand 283");
             $teamEntity = $this->create($team);
 
             if (!isset($teamEntity))
             {
-                //LoggerService::error("team entity {$team['name']} didnt created");
                 return [];
             }
-            //LoggerService::add("parserMatchesCommand 290");
             foreach ($team['players'] as $playerValues)
             {
-                //LoggerService::add("parserMatchesCommand 293");
                 $personEntity = $this->personService->create($playerValues);
-                //LoggerService::add("parserMatchesCommand 295");
+
                 if (!isset($personEntity))
                 {
-                    //LoggerService::error("person entity {$playerValues['nick']} didn't created");
                     continue;
                 }
-                //LoggerService::add("parserMatchesCommand 299");
                 /** @var Player|null $playerEntity */
                 $playerEntity = $this->playerService->create($personEntity, $teamEntity);
                 if (!isset($playerEntity))
                 {
-                    //LoggerService::error("player entity {$playerValues['nick']} didn't created");
                     continue;
                 }
             }

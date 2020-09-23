@@ -1,37 +1,37 @@
 <div class="component_result">
   <div class="l_logo">
     {% if match.team1 is not null and match.team1.logo is not null %}
-      <img src="/uploads/images/{{match.team1.logo}}" alt="ua.svg" />
+      <img src="/uploads/images/{{match.team1.logo}}" alt="ua.svg" attr-row-id="{{match.team1.id}}" attr-row-field="logo" attr-row-table="team" onclick="EditData(this,'img')" />
     {% else %}
       <img src="/images/noLogo.png" alt="ua.svg" />
     {% endif %}
   </div>
   <div class="r_logo">
     {% if match.team2 is not null and match.team2.logo is not null %}
-      <img src="/uploads/images/{{match.team2.logo}}" alt="ua.svg" />
+      <img src="/uploads/images/{{match.team2.logo}}" alt="ua.svg" attr-row-id="{{match.team2.id}}" attr-row-field="logo" attr-row-table="team" onclick="EditData(this,'img')"  />
     {% else %}
       <img src="/images/noLogo.png" alt="ua.svg" />
     {% endif %}
   </div>
   <div class="l_data">
     {% if match.team1 is not null and match.team1.logo is not null %}
-      <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" />
+      <img src="/uploads/images/{{match.team1.logo}}" class="logo" alt="ua.svg" attr-row-id="{{match.team1.id}}" attr-row-field="logo" attr-row-table="team" onclick="EditData(this,'img')"  />
     {% endif %}
     <div class="name">
         {% if match.team1.name is defined %}
-            {{ match.team1.name }}
+           <div attr-row-id="{{match.team1.id}}" attr-row-field="name" attr-row-table="team" onclick="EditData(this)"> {{ match.team1.name }} </div>
         {% else %}
             ???
         {% endif %}
     </div>
-    <div class="score green">{{ match.score1 }}</div>
+    <div class="score green" attr-row-id="{{match.id}}" attr-row-field="score1" attr-row-table="match" onclick="EditData(this)">{{ match.score1 }}</div>
   </div>
   <div class="c_data">
     <div class="time">{{ match.startAt|date("H:i") }}</div>
     <div class="date">
       {% set month = ['Января','Февраля','Марта','Апреля','Мая','Июня','Июля','Августа','Сентября','Октября','Ноября','Декабря'] %}
       {% set setMonth = month[match.startAt|date('n') - 1] %}
-      <div>{{match.startAt|date('d')}} {{setMonth}} {{match.startAt|date('Y')}}</div>
+      <div attr-row-id="{{match.id}}" attr-value="{{match.startAt|date('Y')}}-{{match.startAt|date('m')}}-{{match.startAt|date('d')}} {{match.startAt|date("H:i")}}" attr-row-field="start_at" attr-row-table="match" onclick="EditData(this,'date')">{{match.startAt|date('d')}} {{setMonth}} {{match.startAt|date('Y')}}</div>
     </div>
     <div class="result">
       {% if match.live %}
@@ -45,15 +45,15 @@
   </div>
   <div class="r_data">
       {% if match.team2 is not null and match.team2.logo is not null %}
-          <img src="/uploads/images/{{match.team2.logo}}" class="logo" alt="ua.svg" />
+          <img src="/uploads/images/{{match.team2.logo}}" class="logo" alt="ua.svg" attr-row-id="{{match.team2.id}}" attr-row-field="logo" attr-row-table="team" onclick="EditData(this,'img')"  />
       {% endif %}
       <div class="name">
           {% if match.team2.name is defined %}
-              {{ match.team2.name }}
+          <div attr-row-id="{{match.team2.id}}" attr-row-field="name" attr-row-table="team" onclick="EditData(this)"> {{ match.team2.name }} </div>
           {% else %}
               ???
           {% endif %}
       </div>
-    <div class="score green">{{ match.score2 }}</div>
+    <div class="score green"  attr-row-id="{{match.id}}" attr-row-field="score2" attr-row-table="match" onclick="EditData(this)">{{ match.score2 }}</div>
   </div>
 </div>

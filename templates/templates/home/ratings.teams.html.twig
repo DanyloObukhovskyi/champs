@@ -13,12 +13,16 @@
     <div class="table-row">
       <div>
         <span class="num">{{i}}.</span>
-        <img src="{{item.image}}" />
-        <label>{{item.title}}</label>
+        <img src="{{item.image}}" attr-row-id="{{item.team_id}}" attr-row-field="logo" attr-row-table="team" onclick="EditData(this,'img')" />
+        <div>
+            <label attr-row-id="{{item.team_id}}" attr-row-field="name" attr-row-table="team" onclick="EditData(this)">{{item.title}}</label>
+        </div>
       </div>
       <div>
-        {{ item.rating }}
-      </div>
+        <div attr-row-id="{{item.id}}" attr-row-field="rating" attr-row-table="rating_team" onclick="EditData(this)">
+            {{ item.rating }}
+         </div>
+       </div>
     </div>
     {% set i = i + 1 %}
     {% endfor %}

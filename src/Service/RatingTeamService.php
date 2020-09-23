@@ -17,6 +17,10 @@ class RatingTeamService extends EntityService
 
     protected $imageService;
 
+    /**
+     * RatingTeamService constructor.
+     * @param $entityManager
+     */
     public function __construct($entityManager)
     {
         parent::__construct($entityManager);
@@ -24,6 +28,13 @@ class RatingTeamService extends EntityService
         $this->imageService = new ImageService();
     }
 
+    /**
+     * @param $ratingTeam
+     * @param $createdAt
+     * @param $rating
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function update($ratingTeam, $createdAt, $rating)
     {
         $ratingTeam->setCreatedAt($createdAt);
@@ -33,6 +44,13 @@ class RatingTeamService extends EntityService
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $team
+     * @param $createdAt
+     * @param $rating
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create($team, $createdAt, $rating)
     {
         $ratingTeam = new $this->entity;
@@ -44,6 +62,10 @@ class RatingTeamService extends EntityService
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $ratingTeams
+     * @return array
+     */
     public function retingTeamsDecorator($ratingTeams)
     {
         $teams = [];
@@ -54,6 +76,8 @@ class RatingTeamService extends EntityService
             $team = $ratingTeam->getTeam();
             $this->imageService->setImage($team->getLogo());
             $teams[] = [
+                "id" =>$ratingTeam->getId (),
+                'team_id' => $team->getId(),
                 'title' => $team->getName(),
                 'image' => $this->imageService->getImagePath(),
                 'rating' => $ratingTeam->getRating(),

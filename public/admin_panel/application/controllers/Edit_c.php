@@ -122,35 +122,35 @@
 								if(isset($_FILES["userfile"])) {
 									if(!empty($_FILES["userfile"]["name"])) {
 										$count = count($_FILES['userfile']['name']);
+										$files = $_FILES;
+										$this->load->library ('upload');
 										for ($i = 0; $i < $count; $i++){
 											$config['upload_path'] = $this->config->item ('upload_article-pic');
 											$config['allowed_types'] = 'jpeg|jpg|png';
-											$config['max_size'] = 5048;
-											$config['max_width'] = 3000;
-											$config['max_height'] = 3000;
+											$config['max_size'] = 256831;
+											$config['max_width'] = 5000;
+											$config['max_height'] = 5000;
+											$this->upload->initialize($config);
 											
-											$_FILES['file']['type'] = $_FILES['userfile']['type'][$i];
-											$_FILES['file']['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
-											$_FILES['file']['error'] = $_FILES['userfile']['error'][$i];
-											$_FILES['file']['size'] = $_FILES['userfile']['size'][$i];
+											$_FILES['userfile']['type']= $files['userfile']['type'][$i];
+											$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
+											$_FILES['userfile']['error']= $files['userfile']['error'][$i];
+											$_FILES['userfile']['size']= $files['userfile']['size'][$i];
 											
 											$bytes = random_bytes (11);
 											
-											$ext = explode (".", $_FILES["userfile"]["name"][$i]);
+											$ext = explode (".", $files["userfile"]["name"][$i]);
 											$ext = array_pop ($ext);
 											$fileName = bin2hex ($bytes).".".$ext;
 											
-											$config['file_name'] = $fileName;
-											$_FILES['file']['name'] = $fileName;
+											$_FILES['userfile']['name'] = $fileName;
 											
-											$this->load->library ('upload', $config);
-											
-											if (!$this->upload->do_upload ('file')) {
+											if (!$this->upload->do_upload()) {
 												$error = array ('error' => $this->upload->display_errors ());
 												redirect ($_SERVER["HTTP_REFERER"]);
 												die();
 											} else {
-												$data = array ('upload_data' => $this->upload->data ());
+												$data = array ('upload_data' => $this->upload->data());
 												$article_img[$i] = $data["upload_data"]["orig_name"];
 											}
 										}
@@ -361,6 +361,7 @@
 					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
+					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
 					
 					$delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
 					
@@ -374,7 +375,7 @@
 						$update_data['email'] = $Email;
 						$update_data['game'] = $game;
 						
-						
+
 						if($new_passw == $new_passw_confirm && !empty($new_passw)) {
 //							$this->load->model(array('Ion_auth_model'));
 							$update_data['password'] = $this->create_user_passw($new_passw);
@@ -401,6 +402,7 @@
 							$update_data['twitch'] = $twitch;
 							$update_data['shorttitle'] = $shorttitle;
 							$update_data['stream_type'] = $stream_type;
+							$update_data['admin_percentage'] = $admin_percentage;
 							
 							$this->edit_m->updateTeacher($id, $update_data);
 						}
@@ -432,12 +434,7 @@
 									$this->load->model("edit_m");
 									$this->edit_m->change_user_img($id, $data["upload_data"]["orig_name"]);
 								}
-							} 
-							//else {
-								//$this->load->model("edit_m");
-								//$this->edit_m->change_user_img($id, "prof-pic.svg");
-							//}
-							
+							}
 						} else {
 							$this->load->model("edit_m");
 							$this->edit_m->change_user_img($id, "prof-pic.svg");

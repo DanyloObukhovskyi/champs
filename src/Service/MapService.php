@@ -13,6 +13,12 @@ class MapService extends EntityService
 {
     protected $entity = Map::class;
 
+    /**
+     * @param $name
+     * @return Map
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create($name)
     {
         $code = $this->makeCode($name);
@@ -32,6 +38,10 @@ class MapService extends EntityService
         return $map;
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     public function makeCode($value)
     {
         $value = str_replace(' ', '-', trim($value));
@@ -50,6 +60,11 @@ class MapService extends EntityService
         return null;
     }
 
+    /**
+     * @param $code
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getByCode($code)
     {
         $match = $this->repository->getByCode($code);
@@ -62,6 +77,13 @@ class MapService extends EntityService
         return false;
     }
 
+    /**
+     * @param Map $map
+     * @param $image
+     * @return Map
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function updateImage(Map $map, $image)
     {
         if (isset($image) and empty($map->getImage())){

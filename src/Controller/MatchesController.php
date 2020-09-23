@@ -50,15 +50,30 @@ class MatchesController extends AbstractController
         $match_view = $entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
         ]);
+	
+	    $stat_array = array();
+	    
         $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
             ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam1());
+	
+	    foreach($playerStatisticsTeam1 as $key1 =>$value) {
+		    $player_tmp_id = $value->getPlayer()->getId();
+		    $stat_tmp_id = $value->getId();
+		    $stat_array[$player_tmp_id] = $stat_tmp_id;
+	    }
 
         $playerStatisticsTeam1 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam1);
 
         $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
             ->findByMatchTeam($match_view->getId(),
             $match_view->getTeam2());
+	
+	    foreach($playerStatisticsTeam2 as $key1 =>$value) {
+		    $player_tmp_id = $value->getPlayer()->getId();
+		    $stat_tmp_id = $value->getId();
+		    $stat_array[$player_tmp_id] = $stat_tmp_id;
+	    }
 
         $playerStatisticsTeam2 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam2);
 
@@ -124,7 +139,7 @@ class MatchesController extends AbstractController
 
         $team1Id = !empty($match_view->getTeam1()) ? $match_view->getTeam1()->getId() : null;
         $team2Id = !empty($match_view->getTeam2()) ? $match_view->getTeam2()->getId() : null;
-
+	    $ij=0;
         foreach ($matchStatsEntities as $matchStatEntity){
             $team = $matchStatEntity->getTeam();
             if ($team1Id === $team->getId() or $team2Id === $team->getId()){
@@ -134,13 +149,17 @@ class MatchesController extends AbstractController
 
                 $matchStats[$team->getName()]['logo'] = $imageService->getImagePath();
                 $matchStats[$team->getName()]['name'] =$team->getName();
+	            $matchStats[$team->getName()]['s_id'][$map->getName()] = $matchStatEntity->getId ();
                 $matchStats[$team->getName()]['maps'][$map->getName()] = $matchStatEntity->getWinRate();
+	            $maps[$map->getName()]['id'] = $map->getId();
                 $maps[$map->getName()]['name'] = $map->getName();
                 $maps[$map->getName()]['image'] = $map->getImage();
+	            $ij++;
             }
         }
         $pastMatches = [];
         $pastMatchesEntities = $this->getDoctrine()->getRepository(PastMatch::class)->getByMatch($match_view);
+	    $ij=0;
         foreach ($pastMatchesEntities as $pastMatchesEntity){
             $team = $pastMatchesEntity->getTeam();
             if ($team1Id === $team->getId() or $team2Id === $team->getId()) {
@@ -148,9 +167,11 @@ class MatchesController extends AbstractController
 
                 $pastMatches[$team->getName()]['logo'] = $imageService->getImagePath();
                 $pastMatches[$team->getName()]['matches'][] = [
+	                'opponent_id' => $pastMatchesEntities[$ij]->getId(),
                     'opponent' => $pastMatchesEntity->getTeamTwo(),
                     'score' => $pastMatchesEntity->getScore()
                 ];
+	            $ij++;
             }
         }
 
@@ -164,6 +185,7 @@ class MatchesController extends AbstractController
             'maps' => $maps,
             'playerStatisticsTeam1' => $playerStatisticsTeam1,
             'playerStatisticsTeam2' => $playerStatisticsTeam2,
+	        'stat_array' =>$stat_array,
         ]);
     }
 

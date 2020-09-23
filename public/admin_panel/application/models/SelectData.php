@@ -16,8 +16,11 @@
 		public function get_all_payments($where = array(), $is_count = false, $sort = array(), $limit = array(), $nickname=false, $user=false)
 		{
 			
-			$this->db->select('*');
+			$this->db->select('payment.id, user.nickname, payment.created_at, payment.yandex_kassa_id, lessons.student_id_id, payment.yandex_data, lessons.datetime');
 			$this->db->from("payment");
+			$this->db->join("lessons", "payment.lesson_id = lessons.id");
+			$this->db->join("teachers", "lessons.trainer_id_id = teachers.id");
+			$this->db->join("user", "teachers.userid = user.id");
 			
 			if (!empty($where['id'])) {
 				$this->db->where('id', $where['id']);
@@ -26,14 +29,14 @@
 				$ij = 1;
 				$search_flag = false;
 				foreach ($where AS $key => $val) {
-					if ($key == 'id') {
+					if ($key == 'payment.id') {
 						continue;
 					}
 					
 					if ($key == 'search') {
 						$search_flag = true;
 						if (is_numeric($val)) {
-							$this->db->like('id', $val);
+							$this->db->like('payment.id', $val);
 						}
 //						else {
 //							if($nickname == false) {
@@ -111,6 +114,41 @@
 				);
 				
 				$this->db->insert('TransactionData', $insert);
+			}
+		}
+		
+		public function addRefund($insert=array())
+		{
+			if(!empty($insert)) {
+				$this->db->insert('refund', $insert);
+			}
+		}
+		
+		public function checkRefund($id=0) {
+			if($id > 0) {
+				$this->db->select('*');
+				$this->db->from("refund");
+				$this->db->where('payment_id', (int)$id);
+				$this->db->order_by('id DESC');
+				$result = $this->db->get();
+				return $result->result_array();
+			}
+		}
+		
+		public function updateRefund($payment_id=0,$update=array()) {
+			if($payment_id > 0 && !empty($update)) {
+				$this->db->where('payment_id', $payment_id);
+				$this->db->update("refund", $update);
+			}
+		}
+		
+		public function getStudent($id=0) {
+			if($id > 0) {
+				$this->db->select('nickname');
+				$this->db->from("user");
+				$this->db->where('id', (int)$id);
+				$result = $this->db->get();
+				return $result->result_array();
 			}
 		}
 	}

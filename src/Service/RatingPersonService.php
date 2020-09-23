@@ -21,6 +21,10 @@ class RatingPersonService extends EntityService
     /** @var ImageService */
     protected $imageService;
 
+    /**
+     * RatingPersonService constructor.
+     * @param $entityManager
+     */
     public function __construct($entityManager)
     {
         parent::__construct($entityManager);
@@ -28,6 +32,13 @@ class RatingPersonService extends EntityService
         $this->imageService = new ImageService();
     }
 
+    /**
+     * @param $ratingPerson
+     * @param $rating
+     * @param $createdAt
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function update($ratingPerson, $rating, $createdAt)
     {
         $ratingPerson->setRating($rating)
@@ -37,6 +48,13 @@ class RatingPersonService extends EntityService
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $person
+     * @param $rating
+     * @param $createdAt
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create($person, $rating, $createdAt)
     {
         $ratingPerson = new $this->entity;
@@ -48,6 +66,10 @@ class RatingPersonService extends EntityService
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $ratingPlayers
+     * @return array
+     */
     public function retingPlayersDecorator($ratingPlayers)
     {
         $players = [];
@@ -58,6 +80,10 @@ class RatingPersonService extends EntityService
         return $players;
     }
 
+    /**
+     * @param RatingPerson $ratingPerson
+     * @return array
+     */
     public function retingPlayerDecorator(RatingPerson $ratingPerson)
     {
         /** @var Person $person */
@@ -66,6 +92,8 @@ class RatingPersonService extends EntityService
         $image = $this->imageService->getImagePath();
 
         $flag = $person->getFlagIcon();
+        $flagID = $person->getFlagIconId();
+
         if (isset($flag)){
             $flag = $flag->getName();
         }
@@ -73,11 +101,14 @@ class RatingPersonService extends EntityService
         $flag = $this->imageService->getImagePath();
 
         $player = [
+            'user_id' => $person->getId (),
+        	'person_id' => $ratingPerson->getId(),
             'rating' => $ratingPerson->getRating(),
             'nickname' => $person->getNick(),
             'fullname' => $person->getName(),
             'image' => $image,
-            'flag' => $flag
+            'flag' => $flag,
+            'flag_id' => $flagID
         ];
 
 
@@ -89,7 +120,8 @@ class RatingPersonService extends EntityService
 
             $player['team'] = [
                 'title' => $team->getName(),
-                'image' =>$logo
+                'image' =>$logo,
+                'id' => $team->getId()
             ];
         }
         return $player;

@@ -1,13 +1,4 @@
-<div class="component upcoming_events" id="upcoming_events">
-  <div class="header">
-    <div class="round">
-      <div><img src="/images/lamp.svg" alt="lamp" /></div>
-    </div>
-    <div class="title">
-      Предстоящие события
-    </div>
-  </div>
-  {% for item in futureEvents %}
+ {% for item in futureEvents %}
     <div class="text_month">
       <span>{{item.date}}</span>
     </div>
@@ -70,4 +61,3 @@
       {% endfor %}
     </div>
   {% endfor %}
-</div>

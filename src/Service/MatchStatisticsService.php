@@ -21,6 +21,14 @@ class MatchStatisticsService extends EntityService
     /** @var MatchStatisticsRepository */
     protected $repository;
 
+    /**
+     * @param Match $match
+     * @param Map $map
+     * @param $values
+     * @return MatchStatistics|bool|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create(Match $match, Map $map, $values)
     {
         $isNew = false;
@@ -81,6 +89,13 @@ class MatchStatisticsService extends EntityService
         return $matchStatistics;
     }
 
+    /**
+     * @param $matchId
+     * @param $mapId
+     * @return MatchStatistics|bool|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getByMatchAndMap($matchId, $mapId)
     {
         $matchStatistics = $this->repository->getByMatchAndMap($matchId, $mapId);

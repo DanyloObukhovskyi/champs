@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\EventBracket;
 use App\Entity\EventGroup;
 use App\Entity\EventMapPool;
 use App\Entity\EventPrizeDistribution;
 use App\Entity\EventTeamAttending;
 use App\Entity\RelatedEvent;
+use App\Service\Event\EventBracketService;
 use App\Service\Event\EventGroupPlayService;
 use App\Service\Event\EventMapPoolService;
 use App\Service\Event\EventPrizeDistributionService;
@@ -48,6 +50,9 @@ class EventsController extends AbstractController
 
     /** @var EventMapPoolService */
     public $eventMapPoolService;
+
+    /** @var EventBracketService */
+    public $eventBracketService;
     /**
      * EventsController constructor.
      */
@@ -63,6 +68,7 @@ class EventsController extends AbstractController
 
         $this->eventTeamAttendingService = new EventTeamAttendingService($this->entityManager);
         $this->eventMapPoolService = new EventMapPoolService($this->entityManager);
+        $this->eventBracketService = new EventBracketService($this->entityManager);
     }
 
     /**
@@ -77,7 +83,10 @@ class EventsController extends AbstractController
         $eventItems = $this->eventService->eventsDecorator($events);
 
         $futureEvents = $this->entityManager->getRepository(Event::class)->findFutureEvents(new \DateTime());
-        $futureEventItems = $this->eventService->futureEventsDecorator($futureEvents);
+        $futureEvents = $this->eventService->futureEventsDecorator($futureEvents);
+
+        $finishedEvents = $this->entityManager->getRepository(Event::class)->getOldEvents();
+        $finishedEvents = $this->eventService->futureEventsDecorator($finishedEvents);
 
         $lives = $this->entityManager->getRepository(Match::class)->findLive();
 
@@ -87,7 +96,8 @@ class EventsController extends AbstractController
                 'matches' => $matches,
                 "lives" => $lives,
                 "events" => $eventItems,
-                "futureEvents" => $futureEventItems,
+                "futureEvents" => $futureEvents,
+                'finishedEvents' => $finishedEvents
             ]);
     }
 
@@ -116,6 +126,9 @@ class EventsController extends AbstractController
         $relatedEvents = $this->entityManager->getRepository(RelatedEvent::class)->findByEvent($event);
         $events = [];
 
+        $brackets =  $this->entityManager->getRepository(EventBracket::class)->findByEvent($event);
+        $brackets = $this->eventBracketService->eventBracketDecorator($brackets);
+
         /** @var RelatedEvent $relatedEvent */
         foreach ($relatedEvents as $relatedEvent)
         {
@@ -130,7 +143,8 @@ class EventsController extends AbstractController
             'groupPlays',
             'teamsAttending',
             'mapsPool',
-            'relatedEvents'
+            'relatedEvents',
+            'brackets'
         ));
     }
 }
