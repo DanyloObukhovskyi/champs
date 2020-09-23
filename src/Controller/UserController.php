@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Traits\AuthUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 class UserController extends AbstractController
 {
+    use AuthUser;
 
     private $passwordEncoder;
 

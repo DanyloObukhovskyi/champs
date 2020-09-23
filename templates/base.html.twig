@@ -48,6 +48,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="/assets/js/jquery.bracket.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
   {% block css %}{% endblock %}
 
     <!-- Yandex.Metrika counter -->
@@ -118,7 +119,7 @@
       <div class="round"></div>
       <div class="text">Live</div>
     </div>
-    <div class="games" v-if="false">
+    <div class="games">
       <div class="select-block" :class="[show ? 'shadow' : '']">
         <div class="select" @click="show=show?false:true">
           <img :src="`/images/${icon}`" class="logo" />
@@ -754,6 +755,12 @@ document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<s
     }
   });
 </script>
+  <script>
+    (function(w,d,u){
+      var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
+      var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+    })(window,document,'https://cdn.bitrix24.ua/b15413561/crm/site_button/loader_2_stikh3.js');
+  </script>
 {% endif %}
 </body>
 </html>

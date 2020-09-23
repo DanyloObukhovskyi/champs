@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+{% block description %}
+    <meta name="description" content="Турниры">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords" content="Турниры">
+{% endblock %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Турниры
+    </h1>
+    <div class="events_view" id="tournaments">
+        <div class="container">
+            <div class="row">
+                <div class="component upcoming_events" id="upcoming_events">
+                    <div class="header">
+                        <div class="round">
+                            <div><img src="/images/lamp.svg" alt="lamp" /></div>
+                        </div>
+                        <div class="title">
+                            Турниры
+                        </div>
+                    </div>
+                    <div class="grid" v-for="tournament in tournaments">
+                        <a :href="'/ru/mvp/tournament/' + tournament.id" class="grid-row">
+                            <div class="logo">
+                                <img :src="tournament.logo" />
+                            </div>
+                            <div class="data">
+                                <div class="title">
+                                    <span v-html="tournament.name"></span>
+                                </div>
+                                <div class="bottom">
+                                    <div class="date">
+                                        <span>Название</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data">
+                                <div class="title">
+                                    <span v-html="tournament.date"></span>
+                                </div>
+                                <div class="bottom">
+                                    <div class="date">
+                                        <span>Дата</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data">
+                                <div class="title">
+                                    <span v-html="tournament.mode"></span>
+                                </div>
+                                <div class="bottom">
+                                    <div class="date">
+                                        <span>Режим</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data">
+                                <div class="title">
+                                    <i class="fas fa-lock-open" v-if="tournament.access"></i>
+                                    <i class="fas fa-lock" v-else></i>
+                                </div>
+                                <div class="bottom">
+                                    <div class="date">
+                                        <span>Доступ</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data">
+                                <div class="title">
+                                    <span v-html="tournament.prize"></span>
+                                </div>
+                                <div class="bottom">
+                                    <div class="date">
+                                        <span>Приз</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const Tournaments = new Vue({
+            el: '#tournaments',
+            data: {
+                tournaments: JSON.parse('{{ tournaments|json_encode|raw }}')
+            },
+            methods: {
+
+            }
+        })
+    </script>
+{% endblock %}

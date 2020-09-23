@@ -75,6 +75,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $steam_id;
+
+
     private $trainer = null;
     /**
      * @ORM\OneToMany(targetEntity=Charactristics::class, mappedBy="user")

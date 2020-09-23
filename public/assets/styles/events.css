@@ -728,6 +728,7 @@ color: #718088;
   width: 40%;
   justify-content: flex-start;
   padding-left: 1.5vw;
+  padding-right: 1.5vw;
   border-left: 0;
 }
 .events_view .component.event .grid-block .grid-header .r:nth-child(1) img,
