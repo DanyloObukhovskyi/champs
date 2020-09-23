@@ -69,7 +69,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10 " type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -94,7 +94,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -118,7 +118,7 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title" placeholder="Имя поста">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
@@ -159,7 +159,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -185,7 +185,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -211,7 +211,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -235,7 +235,7 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -263,7 +263,7 @@
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
 						<!-- <div class="editor-title_descr">Рекомендуем загружать фотографии или картинки в формате 4:3 или 1:1 для лучшего отображения на страницу</div> -->
-						<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+						<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
 								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file"name="userfile" style="opacity: 0"/>
@@ -301,7 +301,7 @@
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Фотогалерея</div>
 						<div class="editor-title_descr">Рекомендуем загружать фотографии или картинки в формате 4:3 или 1:1 для лучшего отображения на страницу</div>
-						<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker9" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
+						<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker9" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print date("Y-m-d H:i:s"); ?>">
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
 								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" multiple name="userfile[]" style="opacity: 0"/>
