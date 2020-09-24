@@ -13,7 +13,7 @@
 			<div class="confirm_text">
 				<div class="type_delete">Напишите УДАЛИТЬ для подтверждения</div>
 				<input type="text" id="confirmation_text22" class="input_style s2t2" placeholder="Value">
-				<div class="confrim_btn" id="rmo_delete" style="width: 70px" onclick="confirm_delete()"><div class="confirm">УДАЛИТЬ</div></div>
+				<div class="confrim_btn" id="rmo_delete" style="width: 78px" onclick="confirm_delete()"><div class="confirm">УДАЛИТЬ</div></div>
 				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Отмена</div></div> </a>
 			</div>
 		</div>
@@ -32,7 +32,7 @@
 		button = document.getElementById("confirmation_text22");
 		button.addEventListener("input", function(){
 			
-			if(document.getElementById('confirmation_text22').value == "DELETE"){
+			if(document.getElementById('confirmation_text22').value == "УДАЛИТЬ"){
 				$('.confrim_btn').css('background-color','#39b54a');
 				$('.s2t2').css('border-color','#39b54a');
 			}else{
