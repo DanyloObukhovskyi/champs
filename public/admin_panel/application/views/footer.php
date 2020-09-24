@@ -8,13 +8,13 @@
 	<div class="confirm_modal-content">
 		<a href=""><div class="close">×</div></a><br>
 		<div id="modal_text">
-			<div class="no_license"> Are You sure?</div><br><br>
+			<div class="no_license"> Вы уверенны?</div><br><br>
 			<div class="want_delete" id="confirm_text"></div>
 			<div class="confirm_text">
-				<div class="type_delete">Type DELETE to confirm</div>
+				<div class="type_delete">Напишите УДАЛИТЬ для подтверждения</div>
 				<input type="text" id="confirmation_text22" class="input_style s2t2" placeholder="Value">
-				<div class="confrim_btn" id="rmo_delete" style="width: 70px" onclick="confirm_delete()"><div class="confirm">DELETE</div></div>
-				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Cancel</div></div> </a>
+				<div class="confrim_btn" id="rmo_delete" style="width: 70px" onclick="confirm_delete()"><div class="confirm">УДАЛИТЬ</div></div>
+				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Отмена</div></div> </a>
 			</div>
 		</div>
 	
@@ -24,7 +24,7 @@
 <script>
 	function c_delete(value, item, subject){
 		document.getElementById('confirmation_text22').setAttribute("link", value);
-		var confirm_text = "Now You want to delete "+subject+" ("+item+")?";
+		var confirm_text = "Вы хотите удалить "+subject+" ("+item+")?";
 		$("#confirm_text").append(confirm_text);
 		var modal_confirm = document.getElementById('confirm_delete');
 		modal_confirm.style.display = "block";
@@ -44,7 +44,7 @@
 	
 	function confirm_delete(){
 		var check_text = document.getElementById('confirmation_text22').value;
-		if(check_text == "DELETE"){
+		if(check_text == "УДАЛИТЬ"){
 			var url = document.getElementById('confirmation_text22').getAttribute("link");
 			if(url && url.length>1){
 				
