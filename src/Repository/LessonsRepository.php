@@ -192,4 +192,25 @@ class LessonsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByIds($ids)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.id in (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getEndedLessonsByTrainerAndUser($trainerId, $userId)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.trainer_id = :teacher')
+            ->andWhere('l.student_id = :user')
+            ->andWhere('l.student_status = 1')
+            ->andWhere('l.trainer_status = 1')
+            ->setParameter('teacher', $trainerId)
+            ->setParameter('user', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,0 +1,146 @@
+<script type="text/x-template" id="trainer-page-template">
+    <div class="trainers" id="trainers" v-show="trainer !== null">
+        {% include 'templates/trainers/slider.html.twig' %}
+        <div class="container" v-if="trainers.length > 0">
+            <div class="products">
+                <div class="row w-100">
+                    {% include 'templates/trainers/order.html.twig' %}
+                    <review :trainer="trainer" :load="loadReview"/>
+                </div>
+                {% include 'templates/trainers/reviews.html.twig' %}
+            </div>
+        </div>
+        <div class="container" v-if="trainers.length > 0">
+            <trainer-lessons :trainer="trainer"></trainer-lessons>
+        </div>
+    </div>
+</script>
+{% include 'templates/trainers/review.html.twig' %}
+{% include 'templates/marketplace/trainer/lessons.html.twig' %}
+<script>
+    Vue.component('trainer-page', {
+        template: '#trainer-page-template',
+        props: ['trainers', 'trainer'],
+        methods: {
+            getTrainerReviews() {
+                this.loadReview = true
+                axios.post('/ru/trainer/reviews/' + this.trainer.id)
+                    .then(({data}) => {
+                        this.trainer.review = data;
+                        this.trainer.reviewCount = data.length;
+
+                        this.loadReview = false
+                    })
+            },
+            toTrainerPage() {
+                this.$parent.trainer = null;
+            },
+            prevSlide() {
+                this.slide = this.slide > -1 ? this.slide - 1 : this.slide;
+                this.trainer = this.trainers[this.slide + 1];
+            },
+            nextSlide() {
+                this.slide = this.slide < this.trainers.length ? this.slide + 1 : this.slide;
+                this.trainer = this.trainers[this.slide + 1];
+            },
+            getLeftSlide() {
+                if (window.innerWidth > 1000) {
+                    if (this.slide >= 0) {
+                        return '-' + this.slide * this.width + 'px';
+                    } else {
+                        return this.width + 'px';
+                    }
+                } else {
+                    if (this.slide < 0) {
+                        return 0 + 'px';
+                    } else if (this.slide < 0) {
+                        return '-' + this.width + 'px';
+                    } else {
+                        return '-' + (this.slide + 1) * this.width + 'px';
+                    }
+                }
+            },
+            getDateReview(val) {
+                const parse = new Date(val);
+                const today = new Date();
+                let result = `${parse.getDate() < 10 ? '0' + parse.getDate() : parse.getDate()}.${(parse.getMonth() + 1) < 10 ? '0' + (parse.getMonth() + 1) : parse.getMonth() + 1}.${parse.getFullYear()}`;
+                if (parse.getMonth() === today.getMonth()) {
+                    result = 'В этом месяце';
+                }
+                return result;
+            },
+            getRateReview(val) {
+                if (this.trainer.rating[val]) {
+                    return this.trainer.rating[val];
+                } else {
+                    return 0;
+                }
+                return rate;
+            },
+            getBarReview(val) {
+                if (this.trainer.rating && this.trainer.reviewCount > 0) {
+                    const rate = this.getRateReview(val);
+                    return rate / this.trainer.reviewCount * 100 + '%';
+                } else {
+                    return 0;
+                }
+            },
+            sliderPrev(){
+                if (this.slideControll && this.slideView > 0) {
+                    this.slideControll = false;
+                    this.slideView = this.slideView - 1;
+                    setTimeout(() => {
+                        this.slideControll = true;
+                    }, 500);
+                }
+            },
+            sliderNext(){
+                if (this.slideControll && this.slideView < this.slides.length - 1) {
+                    this.slideControll = false;
+                    this.slideView = this.slideView + 1;
+                    setTimeout(() => {
+                        this.slideControll = true;
+                    }, 500);
+                }
+            }
+        },
+        data: function () {
+            return {
+                slideControll: true,
+                slideView: 0,
+                slideWidth: 0,
+                slideCounts: 3,
+                slides: [{id: 1}, {id: 2}, {id: 3}],
+                loadReview: false,
+                ww: 0,
+                width: 0,
+                slide: -1,
+                paymentView: false,
+                payment: 1,
+                payments: [
+                    { id: 1, icon: 'ym.svg', name: 'Яндекс.Деньги' },
+                    { id: 2, icon: 'wm.svg', name: 'Webmoney' },
+                    { id: 3, icon: 'visa.svg', name: 'Visa' }
+                ],
+                isLastLessonFinished: false,
+                reviews: [],
+                pp: false,
+                load: false,
+                reviews: []
+            };
+        },
+        mounted() {
+            this.slide += this.trainers.indexOf(this.trainer)
+            if(window.innerWidth > 1000){
+                this.width = (window.innerWidth / 2) - ((window.innerWidth / 2) / 5) - 100;
+            }else{
+                this.width = (window.innerWidth / 2) + ((window.innerWidth / 2) / 2) - 100;
+            }
+            this.ww = this.trainers.length * this.width;
+
+            if (document.getElementById('slide_clone')) {
+                this.slideWidth = document.getElementById('slide_clone').clientWidth;
+            }
+        }
+    })
+</script>
