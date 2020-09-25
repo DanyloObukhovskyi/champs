@@ -1,19 +1,24 @@
 <script type="text/x-template" id="filters-template">
-    <div class="component d-flex flex-wrap justify-content-center justify-content-lg-end">
-        <div class="col-lg-5 col-12 pl-0 pr-0 d-flex flex-wrap justify-content-center">
-            <div class="input mb-3 p-1 col-6" v-for="filter in filters">
-                <div v-html="filter.label">
-                </div>
-                <input type="number" v-model="filter.value" class="w-100">
-            </div>
+    <form class="form-style-7 p-0">
+        <div class="w-100 m-1">
+            Стоимость занятия
         </div>
-        <div class="mb-3 p-1 d-none d-lg-flex align-items-end">
-            <a class="btn-orange pointer text-white" @click="search">Поиск</a>
+        <ul class="col-12 d-flex">
+            <li class="w-100 m-1">
+                <input type="text" class="text-light" v-model="filters.studyCostFrom.value">
+                <span >От</span>
+            </li>
+            <li class="w-100 m-1">
+                <input type="text" class="text-light" v-model="filters.studyCostTo.value">
+                <span >До</span>
+            </li>
+        </ul>
+        <div class="col-12 mt-4 p-1">
+            <a @click="search" class="btn-orange text-white pointer p-2">
+                <i class="fas fa-search"></i>&nbsp;Поиск
+            </a>
         </div>
-        <div class="mb-3 p-1 d-flex align-items-center col-md-12 d-lg-none">
-            <a class="btn-orange p-2 pointer text-center text-white w-100" @click="search">Поиск</a>
-        </div>
-    </div>
+    </form>
 </script>
 
 <script>
