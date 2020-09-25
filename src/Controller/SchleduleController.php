@@ -152,15 +152,11 @@ class SchleduleController extends AbstractController
     public function viewSchleduleWeek($form)
     {
         $form = json_decode($form);
+
         $user_id = $form->user_id;
         $dateFrom = new \DateTime($form->date);
 
-
-        $this->scheduleService->createWeek($user_id, $dateFrom);
-
-        $scheledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->findByTrainerAndDateWeek($user_id, $dateFrom);
+        $scheledule = $this->scheduleService->createWeek($user_id, $dateFrom);
 
         return $this->json($scheledule);
     }
