@@ -17,9 +17,8 @@
     <div class="marketplace" id="marketplace">
         <market-header :selected-game="sidebarActiveItem"></market-header>
         <div class="wrapper d-flex align-items-stretch">
-           <sidebar :active="sidebarActiveItem" :items="gammelist"></sidebar>
+           <sidebar :filters="filters" :active="sidebarActiveItem" :items="gammelist" @search="search"></sidebar>
             <div id="content" class="pl-md-5 pr-md-5 pb-md-5 mt-4">
-                <filters :filters="filters" @search="search" v-if="trainer === null"></filters>
                 <div class="load w-100 h-100 d-flex justify-content-center align-items-center" v-if="load">
                     <div>
                         <img src="/images/load.gif">

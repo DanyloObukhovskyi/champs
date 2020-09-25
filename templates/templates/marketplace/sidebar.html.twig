@@ -11,6 +11,18 @@
                     <span v-html="item.title"></span>
                 </a>
             </li>
+            <li class="pointer">
+                <a class="d-flex align-items-center" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <i class="fas fa-cog"></i>&nbsp;&nbsp;Фильтры
+                </a>
+                <div class="card bg-dark">
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                            <filters @search="search" :filters="filters"></filters>
+                        </div>
+                    </div>
+                </div>
+            </li>
         </ul>
     </nav>
 </script>
@@ -25,10 +37,13 @@
         methods: {
             collapse(){
                 $('#sidebar').toggleClass('active');
+            },
+            search(){
+                this.$emit('search');
             }
         },
         props: [
-          'items'
+          'items', 'filters'
         ],
         watch: {
             active(){
@@ -44,6 +59,6 @@
             $(window).resize(function(){
                 $('.js-fullheight').css('height', $(window).height());
             });
-        }
+        },
     })
 </script>
