@@ -1,7 +1,7 @@
-<div class="component slider_trainers">
+<div class="component slider_trainers" style="animation: bounce 0.5s ease-in-out; box-shadow: 0 0 0.4vw #000000;">
   <div class="top">
     <div class="prev">
-      <a href="{{ path('marketplace_index') }}">
+      <a @click="toTrainerPage" class="pointer">
         <img src="/images/arrowLftWhite.svg" alt="arrowLftWhite" />
         Назад
       </a>
@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <div class="user" v-if="trainer !== null">
+  <div class="user w-40" v-if="trainer !== null">
     <div class="data">
       <div class="photo">
         <img :src="trainer.photo !== null ? '/images/temp/matches/' + trainer.photo : '/images/icons/nophoto.png'" alt="avatar" />
@@ -71,10 +71,10 @@
       <div class="name">РАНГ</div>
       <div class="text" v-text="trainer.rank"></div>
     </div>
-    {% if app.user %}
-    <div class="buttons">
-      <a :href="'/ru/lessons/' + trainer.id">Купить тренировку</a>
-    </div>
+    {% if app.user and false %}
+      <div class="pt-1">
+        <a class="btn-orange text-white pointer" :href="'/ru/lessons/' + trainer.id">Купить тренировку</a>
+      </div>
     {% endif %}
   </div>
 </div>

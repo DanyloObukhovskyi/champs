@@ -234,8 +234,7 @@ class TrainerController extends AbstractController
                 $result = round($sum / $count, 2);
             }
 
-            $trainer->setCost($trainer->getComissionCost());
-
+            $trainer->setCost($trainer->getCost());
 
             $response[] = [
                 'id' => $user->getId(),

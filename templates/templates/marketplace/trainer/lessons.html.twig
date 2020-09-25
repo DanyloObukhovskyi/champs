@@ -1,0 +1,113 @@
+<link type="text/css" rel="stylesheet" href="/assets/styles/lessons.css" />
+<script src="{{base_url}}assets/js/jquery351.js"></script>
+<script type="text/x-template" id="lessons-template">
+    <div class="lessons" id="lessons">
+        <div class="container" style="min-height: 40vw">
+            <div class="header">
+                <div class="lft" v-html="`Запись на занятие к ${trainer.nickname}`">
+
+                </div>
+                <div class="rgt" v-if="view === 1">
+                    <div class="price">
+                        Итого: <span v-text="getPrice()"></span> ₽
+                    </div>
+                    <div @click="setPay" class="button" :class="[items.length > 0 ? '' : 'blocked']">
+                        Далее
+                    </div>
+                </div>
+            </div>
+            <div>
+                <timetables :trainer="trainer" v-on:setprice="setPrice" v-on:setitem="setItem" :block="block" />
+            </div>
+            <div v-if="view === 2">
+                <payments v-on:setview="setView" />
+            </div>
+            <div v-if="view === 3">
+                <order :items="items" />
+            </div>
+        </div>
+    </div>
+</script>
+    {% if app.user.id is not defined and canEdit == true %}
+        {% set user_id = 0 %}
+    {% else %}
+        {% set  user_id = app.user.id %}
+    {% endif %}
+
+    <script>
+        Vue.component('trainer-lessons', {
+            template: '#lessons-template',
+            data: function () {
+                return {
+                    block: false,
+                    view: 1,
+                    items: [],
+                }
+            },
+            props: ['trainer'],
+            methods: {
+                getPrice(){
+                    let cost = 0;
+                    console.log(this.items)
+                    this.items.map(i => {
+                        cost += this.trainer.trainer.cost
+                    })
+                    return cost;
+                },
+                setPay() {
+                    const th = this;
+                    if (!this.block && this.items !== null) {
+                        this.block = true;
+                        axios.post(`/ru/lessons/create/`, {data: this.items})
+                            .then(function (response) {
+                                th.block = false;
+                                if (response.data.ids) {
+                                    console.log(JSON.stringify(response.data.ids))
+                                    window.location.assign('/ru/payment/pay/lesson?lessonIds=' + JSON.stringify(response.data.ids))
+                                } else {
+                                    alert('На данное время урок забронирован')
+                                }
+                            })
+                            .catch(() => {
+                                th.block = false;
+                            })
+                    }
+                },
+                setPrice(val) {
+                    this.price = val;
+                },
+                setView(val) {
+                    this.view = val;
+                },
+                setItem(val) {
+                    if (val.date && val.time) {
+                        let time = '';
+                        val.date.times.forEach((i) => {
+                            const hourin = i.timein.split(':');
+                            if (hourin[0] === val.time) {
+                                time = i;
+                            }
+                        })
+                        const date = new Date(val.date.date);
+
+                        const item = {
+                            trainer_id: this.trainer.id,
+                            user_id: {{user_id}},
+                            date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+                            time: time.timein,
+                            cost: this.trainer.trainer.cost,
+                        };
+                        if (val.add) {
+                            this.items.push(item)
+                        } else {
+                            this.items = this.items.filter(i => {
+                                return (i.date === item.date && i.time !== item.time) || i.date !== item.date;
+                            })
+                        }
+                    }
+                },
+            },
+        });
+    </script>
+    <script src="{{base_url}}assets/js/edit_data.js"></script>
+

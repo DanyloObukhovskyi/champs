@@ -37,6 +37,7 @@ class ReviewController extends AbstractController
         $lesson = $this->getDoctrine()
             ->getRepository(Lessons::class)
             ->find(intval($request->request->get('lesson_id')));
+
         /** @var Review $review */
         $review = new Review();
         $review->setLesson($lesson);
@@ -95,5 +96,19 @@ class ReviewController extends AbstractController
 
 
         return $this->json($result);
+    }
+
+    /**
+     * Characteristic /ru/review/*
+     *
+     * @Route("/ru/trainer/reviews/{trainerId}", methods={"POST"}, name="get_user_rate")
+     */
+    public function getTrainerReviews($trainerId)
+    {
+        $reviews = $this->getDoctrine()
+            ->getRepository(Review::class)
+            ->findRateByTrainerId($trainerId);
+
+        return $this->json($reviews['entity']);
     }
 }

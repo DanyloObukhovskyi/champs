@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Service\ScheduleService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +15,15 @@ use Symfony\Component\Validator\Constraints\Date;
 
 class SchleduleController extends AbstractController
 {
+    use EntityManager;
+
+    public $scheduleService;
+
+    public function __construct()
+    {
+        $this->scheduleService = new ScheduleService($this->getEntityManager());
+    }
+
     /**
      * @Route("/schledule", name="schledule")
      */
@@ -142,11 +153,14 @@ class SchleduleController extends AbstractController
     {
         $form = json_decode($form);
         $user_id = $form->user_id;
-        $date = new \DateTime($form->date);
+        $dateFrom = new \DateTime($form->date);
+
+
+        $this->scheduleService->createWeek($user_id, $dateFrom);
 
         $scheledule = $this->getDoctrine()
             ->getRepository(Schledule::class)
-            ->findByTrainerAndDateWeek($user_id, $date);
+            ->findByTrainerAndDateWeek($user_id, $dateFrom);
 
         return $this->json($scheledule);
     }
@@ -203,7 +217,6 @@ class SchleduleController extends AbstractController
             (new \DateTime())->modify('+26 day'),
             (new \DateTime())->modify('+27 day'),
             (new \DateTime())->modify('+28 day'),
-
         ];
         /** @var Teachers $teacher */
         foreach ($teachers as $teacher)

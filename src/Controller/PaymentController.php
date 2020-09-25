@@ -36,21 +36,28 @@ class PaymentController extends AbstractController
      */
     public function succeed()
     {
-        dump($this->logger);
         exit();
     }
 
     /**
-     * @Route("/ru/payment/pay/lesson-{lesson_id}", name="payment_pay")
+     * @Route("/ru/payment/pay/lesson/", name="payment_pay")
      */
-    public function index( int $lesson_id)
+    public function index(Request $request)
     {
-        /** @var Lessons $lesson */
-        $lesson = $this->getDoctrine()->getRepository(Lessons::class)->find($lesson_id);
+        $lessonIds = $request->get('lessonIds', []);
+        $lessonIds = json_decode($lessonIds);
+
+        /** @var Lessons[] $lessons */
+        $lessons = $this->getDoctrine()->getRepository(Lessons::class)->findByIds($lessonIds);
 
         $paymentService = new YandexKassaPaymentService($this->getDoctrine()->getManager());
 
-        $payment = $paymentService->createPayment($lesson, $lesson->getCost(), $_ENV['YANDEX_KASSA_RETURN_URL']);
+        $cost = 0;
+        foreach ($lessons as $lesson)
+        {
+            $cost += (int)$lesson->getCost();
+        }
+        $payment = $paymentService->createPayment($lessons, $cost, $_ENV['YANDEX_KASSA_RETURN_URL']);
 
         if($payment && $payment->getConfirmation()->getType() === ConfirmationType::REDIRECT)
         {

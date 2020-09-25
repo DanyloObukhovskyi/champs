@@ -172,6 +172,6 @@ class Teachers
 
     public function getComissionCost()
     {
-        return ($this->getCost()) * self::SERVICE_COST_MULTIPLIER;
+        return ($this->cost) * self::SERVICE_COST_MULTIPLIER;
     }
 }

@@ -21,4 +21,14 @@ class LessonService extends EntityService
     {
         return $this->repository->getByTeacherAndDate($teacher, $datetime);
     }
+
+    /**
+     * @param $teacherId
+     * @param $userId
+     * @return mixed
+     */
+    public function getEndedLessonsByTrainerAndUser($teacherId, $userId)
+    {
+        return $this->repository->getEndedLessonsByTrainerAndUser($teacherId, $userId);
+    }
 }

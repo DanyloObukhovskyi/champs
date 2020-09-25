@@ -69,4 +69,31 @@ class ScheduleService extends EntityService
 
         return $schedule;
     }
+
+    public function createWeek($userId, $dateFrom)
+    {
+        $from = new \DateTime($dateFrom->format("Y-m-d")." 00:00:00");
+
+        for ($i = 0; $i < 7; $i++)
+        {
+            $schedule = $this->repository->findByTrainerAndDate($userId, $dateFrom->format("Y-m-d"));
+
+            if (empty($schedule)){
+                $schedule = new Schledule();
+                $schedule->setDate($from);
+                $schedule->setTime1011(0);
+                $schedule->setTime1112(0);
+                $schedule->setTime1213(0);
+                $schedule->setTime1314(0);
+                $schedule->setTime1415(0);
+                $schedule->setTime1516(0);
+                $schedule->setTime1617(0);
+                $schedule->setTime1718(0);
+                $schedule->setTrainerId($userId);
+
+                $this->save($schedule);
+            }
+            $from = $from->modify('+1 day');
+        }
+    }
 }

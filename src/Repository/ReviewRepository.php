@@ -90,4 +90,22 @@ class ReviewRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findByLessonAndTrainerAndStudent($lesson, $trainer, $student)
+    {
+        $query = $this->createQueryBuilder('l')
+            ->andWhere('l.lesson = :lesson')
+            ->andWhere('l.trainer = :trainer')
+            ->andWhere('l.student = :student')
+            ->setParameter('lesson', $lesson)
+            ->setParameter('trainer', $trainer)
+            ->setParameter('student', $student)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+
+        return $query;
+    }
+
+
 }

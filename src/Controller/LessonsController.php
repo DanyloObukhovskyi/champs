@@ -5,10 +5,14 @@ namespace App\Controller;
 use App\Entity\Lessons;
 use App\Entity\Payment;
 use App\Entity\PurseHistory;
+use App\Entity\Review;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Service\LessonService;
+use App\Traits\EntityManager;
 use DateTime;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +21,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LessonsController extends AbstractController
 {
+    use EntityManager;
+
+    public $lessonsService;
+
+    public function __construct()
+    {
+        $this->lessonsService = new LessonService($this->getEntityManager());
+    }
+
     /**
      * @Route("/lessons", name="lessons")
      */
@@ -308,93 +321,135 @@ class LessonsController extends AbstractController
     /**
      * Lessons /ru/lessons/*
      *
-     * @Route("/ru/lessons/create/{form}", methods={"GET","POST"}, name="create_student_trainer_lesson")
+     * @Route("/ru/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
      */
-    public function createNewLesson($form)
+    public function createNewLesson(Request $request)
     {
-        $form = json_decode($form);
+        $data = json_decode($request->getContent());
+
         $entityManager = $this->getDoctrine()->getManager();
 
-        $lesson = new Lessons();
+        $lessonsIds = [];
+        $sum = 0;
 
-        $date = DateTime::createFromFormat('j.n.Y H:i:s',$form->date . ' ' . $form->time . ':00');
-
-        $date->format('Y-m-d H:i:s');
-        /** @var Schledule $schledule */
-        $schledule = $entityManager->getRepository(Schledule::class)->findOneBy([
-            'trainer_id' => $form->trainer_id,
-            'date' => $date,
-        ]);
-        switch ($form->time){
-            case "10:00":
-                $schledule->setTime1011(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "11:00":
-                $schledule->setTime1112(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "12:00":
-                $schledule->setTime1213(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "13:00":
-                $schledule->setTime1314(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "14:00":
-                $schledule->setTime1415(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "15:00":
-                $schledule->setTime1516(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "16:00":
-                $schledule->setTime1617(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "17:00":
-                $schledule->setTime1718(Schledule::TIME_STATUS_RESERVED);
-                break;
-        }
-
-        /** @var Lessons $oldLesson */
-        $oldLesson = $entityManager->getRepository(Lessons::class)->findBy([
-            'trainer_id' => $form->trainer_id,
-            'datetime' => $date,
-            'student_id' => $form->user_id,
-        ]);
-
-        $oldLesson = $oldLesson[0] ?? null;
-
-        if(!empty($oldLesson)){
-            $payed = $entityManager->getRepository(Payment::class)->findBy([
-                'lesson_id' => $oldLesson->getId(),
-                'payment_status' => '1'
-            ]);
-
-            if (!empty($payed))
+        if (isset($data->data)){
+            foreach ($data->data as $form)
             {
-                return new Response('ЭТОТ УРОК УЖЕ ЗАНЯТ');
+                $lesson = new Lessons();
+                $date = DateTime::createFromFormat('j.n.Y H:i:s',$form->date . ' ' . $form->time . ':00');
+
+                $date->format('Y-m-d H:i:s');
+                /** @var Schledule $schledule */
+                $schledule = $entityManager->getRepository(Schledule::class)->findOneBy([
+                    'trainer_id' => $form->trainer_id,
+                    'date' => $date,
+                ]);
+                switch ($form->time) {
+                    case "10:00":
+                        $schledule->setTime1011(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "11:00":
+                        $schledule->setTime1112(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "12:00":
+                        $schledule->setTime1213(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "13:00":
+                        $schledule->setTime1314(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "14:00":
+                        $schledule->setTime1415(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "15:00":
+                        $schledule->setTime1516(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "16:00":
+                        $schledule->setTime1617(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                    case "17:00":
+                        $schledule->setTime1718(Schledule::TIME_STATUS_RESERVED);
+                        break;
+                }
+
+
+                /** @var Lessons $oldLesson */
+                $oldLesson = $entityManager->getRepository(Lessons::class)->findBy([
+                    'trainer_id' => $form->trainer_id,
+                    'datetime' => $date,
+                    'student_id' => $form->user_id,
+                ]);
+
+                $oldLesson = $oldLesson[0] ?? null;
+
+                if(!empty($oldLesson)){
+                    $payed = $entityManager->getRepository(Payment::class)->findBy([
+                        'lesson_id' => $oldLesson->getId(),
+                        'payment_status' => '1'
+                    ]);
+
+                    if (!empty($payed))
+                    {
+                        return new Response('ЭТОТ УРОК УЖЕ ЗАНЯТ');
+                    }
+                }
+                /** @var Teachers $trainer */
+                $trainer = $entityManager->getRepository(Teachers::class)->findOneBy([
+                    'userid' => $form->trainer_id
+                ]);
+
+                $lesson->setStudentId($entityManager->getRepository(User::class)->find($form->user_id));
+                $lesson->setTrainerId($entityManager->getRepository(User::class)->find($form->trainer_id));
+                $lesson->setCost($trainer->getCost());
+                $lesson->setStatus(Lessons::STATUS_NEW);
+                $lesson->setDatetime($date);
+                $lesson->setStudentStatus(0);
+                $lesson->setTrainerStatus(0);
+
+                $entityManager->persist($schledule);
+                $entityManager->flush();
+                $entityManager->persist($lesson);
+                $entityManager->flush();
+
+                $lessonsIds[] = $lesson->getId();
+                $sum += $lesson->getCost();
             }
         }
-        /** @var Teachers $trainer */
-        $trainer = $entityManager->getRepository(Teachers::class)->findOneBy([
-            'userid' => $form->trainer_id
-        ]);
-
-        $lesson->setStudentId($entityManager->getRepository(User::class)->find($form->user_id));
-        $lesson->setTrainerId($entityManager->getRepository(User::class)->find($form->trainer_id));
-        $lesson->setCost($trainer->getComissionCost());
-        $lesson->setStatus(Lessons::STATUS_NEW);
-        $lesson->setDatetime($date);
-        $lesson->setStudentStatus(0);
-        $lesson->setTrainerStatus(0);
-
-        $entityManager->persist($schledule);
-        $entityManager->flush();
-        $entityManager->persist($lesson);
-        $entityManager->flush();
 
         $response = [
-            'id' => $lesson->getId(),
-            'cost' => $lesson->getCost(),
+            'ids' => $lessonsIds,
+            'cost' => $sum,
         ];
 
         return $this->json($response);
+    }
+
+    /**
+     * Lessons /ru/lessons/finished/*
+     *
+     * @Route("/ru/lesson/finished", methods={"GET","POST"}, name="finished.user.lessons")
+     */
+    public function getFinishedUserLessons(Request $request)
+    {
+        $userId = $request->get('student_id', null);
+        $trainerId = $request->get('trainer_id', null);
+
+        $lessons = $this->lessonsService->getEndedLessonsByTrainerAndUser($trainerId, $userId);
+
+        foreach ($lessons as $lesson)
+        {
+            $student = $this->getDoctrine() ->getRepository(User::class)->find($userId);
+            $trainer = $this->getDoctrine() ->getRepository(User::class)->find($trainerId);
+
+            /** @var Review $lessonReview */
+            $lessonReview = $this->getDoctrine()
+                ->getRepository(Review::class)
+                ->findByLessonAndTrainerAndStudent($lesson, $trainer, $student);
+
+            if (empty($lessonReview))
+            {
+                return $this->json($lesson->getId());
+            }
+        }
+        return  $this->json(null);
     }
 }
