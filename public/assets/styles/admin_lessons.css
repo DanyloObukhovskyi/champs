@@ -1,0 +1,716 @@
+/* TIMELIST */
+.lessons{
+  width: 100%;
+  padding: 2vw 0;
+}
+.lessons .header{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.lessons .header .lft{
+  width: 50%;
+  font-size: 1.1vw;
+  font-weight: 500;
+}
+.lessons .header .rgt{
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.lessons .header .rgt .price{
+  font-size: 1.1vw;
+  padding-right: 3vw;
+  display: flex;
+  align-items: center;
+}
+.lessons .header .rgt .price span{
+  padding: 0 1vw;
+}
+.lessons .header .rgt .button{
+  padding: 1vw 2vw;
+  height: 2.5vw;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+  font-size: 0.9vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.lessons .header .rgt .button span{
+  margin-left: 0.5vw;
+}
+.lessons .header .rgt .button.blocked{
+  opacity: 0.4;
+  cursor: default;
+}
+@media screen and (max-width: 1000px) {
+  .lessons{
+    padding: 2vw 0;
+  }
+  .lessons .header .lft{
+    font-size: 2.5vw;
+  }
+  .lessons .header .rgt{
+    flex-shrink: 0;
+  }
+  .lessons .header .rgt .price{
+    font-size: 2.5vw;
+    padding-right: 2vw;
+  }
+  .lessons .header .rgt .price span{
+    padding: 0 2vw;
+  }
+  .lessons .header .rgt .button{
+    padding: 3vw 4vw;
+    background-color: #FF6D1D;
+    color: #FFFFFF;
+    font-size: 2vw;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  .lessons .header .rgt .button span{
+    margin-left: 0.5vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .lessons{
+    padding: 4vw 0;
+  }
+  .lessons .header{
+    flex-direction: column;
+  }
+  .lessons .header .lft{
+    width: 100%;
+    font-size: 4vw;
+  }
+  .lessons .header .rgt{
+    width: 100%;
+    flex-shrink: 0;
+    justify-content: flex-start;
+    padding-top: 2vw;
+  }
+  .lessons .header .rgt .price{
+    font-size: 4vw;
+    padding-right: 4vw;
+    width: 100%;
+  }
+  .lessons .header .rgt .price span{
+    padding: 0 4vw;
+  }
+  .lessons .header .rgt .button{
+    flex-shrink: 0;
+    padding: 4vw 4vw;
+    background-color: #FF6D1D;
+    color: #FFFFFF;
+    font-size: 4vw;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  .lessons .header .rgt .button span{
+    margin-left: 0.5vw;
+  }
+}
+
+/* CALENDAR */
+.lessons .controll .dates{
+  padding-top: 1vw;
+  width: 100%;
+  font-size: 0.9vw;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.lessons .controll .dates span:nth-child(1){
+  padding-right: 0.5vw;
+}
+.lessons .controll .dates span:nth-child(2){
+  padding-left: 0.5vw;
+}
+.lessons .controll .dates .arrow{
+  width: 1.3vw;
+  height: 1.3vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.lessons .controll .dates .arrow:hover{
+  background-color: #CFDCF3;
+}
+.lessons .cont{
+  width: 100%;
+}
+.lessons .calendarblock{
+  width: 100%;
+  background-color: #FFFFFF;
+  border: 0.04vw solid #CFDCF3;
+  margin-top: 1vw;
+  display: flex;
+  flex-direction: column;
+}
+.lessons .calendarblock .days{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+}
+.lessons .calendarblock .days .null{
+  width: 8vw;
+  flex-shrink: 0;
+}
+.lessons .calendarblock .days .day{
+  width: 14.28%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1vw 0;
+}
+.lessons .calendarblock .days .day .title{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 0.7vw;
+  text-transform: uppercase;
+  letter-spacing: 0.05vw;
+}
+.lessons .calendarblock .days .day .date{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 0.7vw;
+  color: #888;
+  padding-top: 0.3vw;
+}
+.lessons .calendarblock .days .day.today .title{
+  color: #FF6D1D;
+  font-weight: 500;
+}
+.lessons .calendarblock .days .day.today .date{
+  color: #000000;
+  font-weight: 500;
+}
+.lessons .calendarblock .days .day:after{
+  content: '';
+  width: 0.08vw;
+  height: 0.5vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #CFDCF3;
+}
+.lessons .calendarblock .times{
+  width: 100%;
+}
+.lessons .calendarblock .times .time{
+  width: 100%;
+  height: 4vw;
+  display: flex;
+  flex-direction: row;
+}
+.lessons .calendarblock .times .time .text{
+  width: 8vw;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lessons .calendarblock .times .time .text:after{
+  content: '';
+  width: 1vw;
+  height: 0.04vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #CFDCF3;
+}
+.lessons .calendarblock .times .time .text span{
+  position: relative;
+  top: -0.6vw;
+  font-size: 0.7vw;
+}
+.lessons .calendarblock .times .time .rows{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.lessons .calendarblock .times .time .rows .rows-row{
+  width: 14.28%;
+  height: 100%;
+  padding: 0.2vw;
+}
+.lessons .calendarblock .times .time .rows .rows-row:after{
+  content: '';
+  width: 0.08vw;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #CFDCF3;
+}
+.lessons .calendarblock .times .time .rows:after{
+  content: '';
+  width: 100%;
+  height: 0.04vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #CFDCF3;
+}
+.lessons .calendarblock .times .time .rows .rows-row .open{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #CFDCF3;
+  color: #6D85AF;
+  font-size: 0.75vw;
+  cursor: pointer;
+}
+.lessons .calendarblock .times .time .rows .rows-row .write{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+  font-size: 0.75vw;
+  cursor: pointer;
+  font-weight: 500;
+}
+.lessons .calendarblock .times .time .rows .rows-row .disabled{
+  display: none;
+}
+.lessons .time_mobile{
+  display: none;
+}
+@media screen and (max-width: 1000px) {
+  .lessons .controll .dates{
+    font-size: 2vw;
+  }
+  .lessons .controll .dates .arrow{
+    margin-left: 3vw;
+  }
+  .lessons .cont{
+    width: calc(100% - 20vw);
+    left: 20vw;
+    margin-top: 4vw;
+  }
+  .lessons .calendarblock{
+    overflow-x: auto;
+  }
+  .lessons .calendarblock .days{
+    width: auto;
+    min-width: 100%;
+  }
+  .lessons .calendarblock .days .null{
+    display: none;
+  }
+  .lessons .calendarblock .days .day{
+    width: 50%;
+    flex-shrink: 0;
+    padding: 2vw 0;
+  }
+  .lessons .calendarblock .days .day .title{
+    font-size: 2vw;
+  }
+  .lessons .calendarblock .days .day .date{
+    font-size: 2vw;
+    padding-top: 2vw;
+  }
+  .lessons .time_mobile{
+    width: 20vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    left: -20vw;
+    top: 0;
+    background-color: #FFFFFF;
+    z-index: 10;
+    padding-top: 9vw;
+    border: 0.04vw solid #CFDCF3;
+    border-right: 0.4vw solid #CFDCF3;
+    border-right: 0;
+  }
+  .lessons .time_mobile .text{
+    width: 100%;
+    height: 15vw;
+    display: flex;
+    justify-content: center;
+  }
+  .lessons .time_mobile span{
+    font-size: 2vw;
+  }
+  .lessons .calendarblock .times .time .text:after{
+    content: '';
+    width: 1vw;
+    height: 2vw;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #CFDCF3;
+  }
+  .lessons .calendarblock .times .time{
+    width: auto;
+    min-width: 100%;
+    flex-shrink: 0;
+    height: 15vw;
+  }
+  .lessons .calendarblock .times .time .text{
+    display: none;
+  }
+  .lessons .calendarblock .times{
+    width: auto;
+    min-width: 100%;
+    flex-shrink: 0;
+  }
+  .lessons .calendarblock .times .time .rows{
+    width: auto;
+    min-width: 100%;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row{
+    flex-shrink: 0;
+    padding: 1vw;
+  }
+  .lessons .calendarblock .times .time .rows:after{
+    height: 0.2vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row:after{
+    width: 0.2vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .open{
+    font-size: 2vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .write{
+    font-size: 2vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row:nth-child(1):after{
+    display: none;
+  }
+  .lessons .calendarblock .days .day:after{
+    display: none;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .disabled{
+    font-size: 2vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .user{
+    font-size: 2vw;
+    padding: 0 3vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .user img{
+    width: 5vw;
+    height: 5vw;
+    margin-right: 3vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .openclose{
+    font-size: 2vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .lessons .calendarblock .days .day{
+    width: 100%;
+  }
+  .lessons .calendarblock{
+    margin-top: 4vw;
+  }
+  .lessons .controll .dates{
+    padding-top: 4vw;
+    font-size: 4vw;
+  }
+  .lessons .controll .dates .dt{
+    width: 100%;
+    display: flex;
+  }
+  .lessons .controll .dates .dt span:nth-child(1){
+    padding-right: 1vw;
+  }
+  .lessons .controll .dates .dt span:nth-child(2){
+    padding-left: 1vw;
+  }
+  .lessons .controll .dates .arrow{
+    flex-shrink: 0;
+    width: 8vw;
+    height: 8vw;
+    margin-left: 4vw;
+  }
+  .lessons .time_mobile{
+    padding-top: 10vw;
+  }
+  .lessons .calendarblock .days .day .title{
+    font-size: 3vw;
+  }
+  .lessons .calendarblock .days .day .date{
+    font-size: 3vw;
+  }
+  .lessons .time_mobile span{
+    font-size: 3vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .openclose{
+    font-size: 3.5vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .open{
+    font-size: 3.5vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .user{
+    font-size: 3.5vw;
+    padding: 0 4vw;
+  }
+  .lessons .calendarblock .times .time .rows .rows-row .user img{
+    width: 6vw;
+    height: 6vw;
+    margin-right: 4vw;
+  }
+  .lessons .calendarblock .times .time{
+    height: 18vw;
+  }
+  .lessons .time_mobile .text{
+    height: 18vw;
+  }
+}
+
+/* PAYMENT */
+.lessons .payments{
+  width: 100%;
+  padding-top: 2vw;
+  display: flex;
+  flex-direction: column;
+}
+.lessons .payments .block{
+  width: 100%;
+  height: 30vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1vw;
+  font-weight: 700;
+}
+.lessons .payments .buttons{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.lessons .payments .buttons .button{
+  margin: 0 auto;
+  padding: 1vw 2vw;
+  height: 2.5vw;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+  font-size: 0.9vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+@media screen and (max-width: 1000px) {
+  .lessons .payments{
+    padding-top: 4vw;
+  }
+  .lessons .payments .block{
+    height: 70vw;
+    font-size: 2.5vw;
+  }
+  .lessons .payments .buttons .button{
+    padding: 3vw 4vw;
+    font-size: 2vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .lessons .payments{
+    padding-top: 4vw;
+  }
+  .lessons .payments .block{
+    height: 80vw;
+    font-size: 4vw;
+  }
+  .lessons .payments .buttons .button{
+    padding: 4vw;
+    font-size: 4vw;
+  }
+}
+
+/* ORDER */
+.lessons .order{
+  width: 100%;
+  padding-top: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.lessons .order .title{
+  font-size: 1.2vw;
+  font-weight: 500;
+  padding: 3vw 0;
+}
+.lessons .order .subtitle{
+  width: 25%;
+  font-size: 0.9vw;
+  text-align: center;
+  padding: 3vw 0;
+}
+.lessons .order .info{
+  width: 30%;
+  margin: 0 auto;
+  display: flex;
+}
+.lessons .order .info img{
+  flex-shrink: 0;
+  width: 30%;
+  background-color: #FF6D1D;
+}
+.lessons .order .info .block{
+  width: 70%;
+  padding-left: 2vw;
+}
+.lessons .order .info .block .name{
+  font-size: 1.3vw;
+  font-weight: 500;
+}
+.lessons .order .info .block .list{
+  width: 100%;
+}
+.lessons .order .info .block .list .tab{
+  width: 100%;
+  margin-top: 1vw;
+  display: flex;
+  align-items: flex-start;
+}
+.lessons .order .info .block .list .tab .round{
+  display: block;
+  width: 0.3vw;
+  height: 0.3vw;
+  top: 0.55vw;
+  border-radius: 50%;
+  background-color: #000000;
+  margin-right: 0.5vw;
+}
+.lessons .order .info .block .list .tab div{
+  display: flex;
+  align-items: flex-start;
+  font-weight: 700;
+  font-size: 0.9vw;
+  flex-direction: column;
+}
+.lessons .order .info .block .list .tab div span{
+  display: block;
+  width: 100%;
+}
+.lessons .order .buttons{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.lessons .order .buttons .button{
+  margin: 0 auto;
+  padding: 1vw 2vw;
+  height: 2.5vw;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+  font-size: 0.9vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+@media screen and (max-width: 1000px) {
+  .lessons .order{
+    padding-top: 4vw;
+  }
+  .lessons .order .title{
+    font-size: 2.5vw;
+    padding: 2vw 0;
+  }
+  .lessons .order .subtitle{
+    width: 60%;
+    font-size: 2vw;
+    padding: 2vw 0;
+  }
+  .lessons .order .info{
+    width: 70%;
+    padding: 2vw 0;
+  }
+  .lessons .order .info img{
+    width: 30%;
+  }
+  .lessons .order .info .block{
+    width: 70%;
+    padding-left: 4vw;
+  }
+  .lessons .order .info .block .name{
+    font-size: 2.5vw;
+  }
+  .lessons .order .info .block .list .tab{
+    margin-top: 2vw;
+  }
+  .lessons .order .info .block .list .tab .round{
+    display: block;
+    width: 0.8vw;
+    height: 0.8vw;
+    top: 1.3vw;
+    border-radius: 50%;
+    background-color: #000000;
+    margin-right: 1vw;
+  }
+  .lessons .order .info .block .list .tab div{
+    font-size: 2vw;
+  }
+  .lessons .order .buttons .button{
+    padding: 3vw 4vw;
+    font-size: 2vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .lessons .order{
+    padding-top: 4vw;
+  }
+  .lessons .order .title{
+    font-size: 5vw;
+    padding: 4vw 0;
+  }
+  .lessons .order .subtitle{
+    width: 100%;
+    font-size: 4vw;
+    padding: 4vw 0;
+  }
+  .lessons .order .info{
+    width: 85%;
+    padding: 4vw 0;
+  }
+  .lessons .order .info img{
+    width: 30%;
+  }
+  .lessons .order .info .block{
+    width: 70%;
+    padding-left: 4vw;
+  }
+  .lessons .order .info .block .name{
+    font-size: 5vw;
+  }
+  .lessons .order .info .block .list .tab{
+    margin-top: 4vw;
+  }
+  .lessons .order .info .block .list .tab .round{
+    display: block;
+    width: 1.4vw;
+    height: 1.4vw;
+    top: 2.5vw;
+    border-radius: 50%;
+    background-color: #000000;
+    margin-right: 2vw;
+  }
+  .lessons .order .info .block .list .tab div{
+    font-size: 4vw;
+  }
+  .lessons .order .buttons .button{
+    padding: 4vw;
+    font-size: 4vw;
+  }
+}

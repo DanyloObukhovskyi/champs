@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+{% block title %}Marketplace{% endblock %}
+{% block router %}marketplace{% endblock %}
+{% block css %}
+  {% for style in styles %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+  {% endfor %}
+{% endblock %}
+{% block body %}
+
+{% if app.user.id is not defined and canEdit == true %}
+    {% set user_id = 0 %}
+{% else %}
+    {% set  user_id = app.user.id %}
+{% endif %}
+<script>
+var U_rmo_id = JSON.parse('{{ user_id|json_encode|raw }}')
+</script>
+
+<script src="{{base_url}}assets/js/jquery351.js"></script>
+<div class="lessons" id="lessons">
+  <div class="container" style="min-height: 40vw">
+    <div class="header">
+      <div class="lft">
+        Запись на занятие к {{nickname}}
+      </div>
+      <div class="rgt" v-if="view === 1">
+     
+
+      </div>
+    </div>
+    <div v-if="view === 1">
+      <timetables :price="price" v-on:setprice="setPrice" v-on:setitem="setItem" :block="block" />
+    </div>
+    <div v-if="view === 2">
+      <payments v-on:setview="setView" />
+    </div>
+    <div v-if="view === 3">
+      <order :items="items" />
+    </div>
+  </div>
+</div>
+
+{% include 'templates/lessons/admin_timetables.html.twig' %}
+{% include 'templates/lessons/payments.html.twig' %}
+{% include 'templates/lessons/order.html.twig' %}
+
+
+<script>
+var all_lesson_items = [];
+  const lessons = new Vue({
+    el: '#lessons',
+    data: function () {
+      return {
+        block: false,
+        price: 0,
+        view: 1,
+        items: null,
+      }
+    },
+    methods: {
+      setPay() {
+      },
+      setPrice(val, flag) {
+      },
+      setView(val) {
+        this.view = val;
+      },
+      setItem(val) {
+
+        if (val.date && val.time) {
+          if (val.add) {
+            let time = '';
+            /*
+            let item = {
+              date: val.date.date,
+              time: '',
+            };
+            */
+            val.date.times.forEach((i) => {
+              const hourin = i.timein.split(':');
+              if (hourin[0] === val.time) {
+                time = i;
+              }
+            })
+
+            //this.items.push(item);
+            const date = new Date(val.date.date);
+            if(all_lesson_items.length > 0)  {
+
+
+             all_lesson_items.push({
+               trainer_id: {{id}},
+               user_id: {{user_id}},
+               date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+               time: time.timein,
+               cost: time.price,
+             });
+             this.items = all_lesson_items;
+
+            } else {
+                 all_lesson_items.push ({
+                    trainer_id: {{id}},
+                    user_id: {{user_id}},
+                    date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+                    time: time.timein,
+                    cost: time.price,
+                 });
+                 this.items = {
+                    trainer_id: {{id}},
+                    user_id: {{user_id}},
+                    date: `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`,
+                    time: time.timein,
+                    cost: time.price,
+                };
+            }
+            console.log(this.items);
+          } else {
+              val.date.times.forEach((i) => {
+                 const hourin = i.timein.split(':');
+                 if (hourin[0] === val.time) {time = i;}
+              });
+              const date = new Date(val.date.date);
+              controle_date = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+
+              all_lesson_items.forEach(function(item, i, arr) {
+                if(item.date == controle_date && item.time == time.timein) {
+                   delete all_lesson_items[i];
+                }
+              });
+
+              console.log(all_lesson_items);
+
+             //this.items = null;
+             // this.block = false;
+            /*
+            this.items = this.items.filter((item) => {
+              if (val.date.date.getFullYear() === item.date.getFullYear() && val.date.date.getMonth() === item.date.getMonth() && val.date.date.getDate() === item.date.getDate()) {
+                const hourin = item.time.timein.split(':');
+                if (hourin[0] !== val.time) {
+                  return item;
+                }
+              } else {
+                return item;
+              }
+            });
+            */
+          }
+        }
+      },
+    },
+  });
+</script>
+<script src="{{base_url}}assets/js/edit_data.js"></script>
+
+{% endblock %}
