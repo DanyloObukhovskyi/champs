@@ -1,3 +1,4 @@
+{% if app.user.id is defined %}
 <script type="text/x-template" id="review-template">
     <div class="component order w-100" id="review"  v-if="lesson !== null" v-show="trainer !== null && lesson !== null">
         <div class="d-flex justify-content-center" v-if="load">
@@ -117,3 +118,4 @@
         }
     })
 </script>
+{% endif %}

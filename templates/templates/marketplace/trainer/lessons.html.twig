@@ -28,7 +28,7 @@
         </div>
     </div>
 </script>
-    {% if app.user.id is not defined and canEdit == true %}
+    {% if app.user.id is not defined %}
         {% set user_id = 0 %}
     {% else %}
         {% set  user_id = app.user.id %}
