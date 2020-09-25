@@ -120,12 +120,22 @@ class MainController extends DefController
 			    $VideoItems[$ij] = $livesItems[$ij];
 		    }
 	    }
-        
-        return $this->render('templates/home.html.twig', [
+	
+	    $last_stream = $repository->findBy(['type'=>array(8)],['date'=>'DESC'],1,0); //8 - stream; 3 - video
+	    if(!empty($last_stream)) {
+		    $last_stream_result = $this->prepare_video($last_stream);
+		    $last_stream_result = $last_stream_result[0];
+	    } else {
+		    $last_stream_result = array();
+	    }
+	
+	
+	    return $this->render('templates/home.html.twig', [
             'events' => $eventItems,
             'router' => 'home',
             'matches' => $matchesItems,
             'results' => $matchResults,
+		    'last_stream' =>$last_stream_result,
 //            'videoNews' => $livesItems,
 	        'videoNews' => $VideoItems,
             'ratingPlayers' => $ratingPlayers,
