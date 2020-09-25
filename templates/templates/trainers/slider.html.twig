@@ -37,7 +37,47 @@
     </div>
   </div>
 
-  <div class="user w-40" v-if="trainer !== null">
+  <div class="user d-block d-lg-none" v-if="trainer !== null">
+    <div class="data">
+      <div class="photo">
+        <img :src="trainer.photo !== null ? '/images/temp/matches/' + trainer.photo : '/images/icons/nophoto.png'" alt="avatar" />
+      </div>
+      <div class="rgt">
+        <div class="nikname">
+          <span v-text="trainer.nickname"></span>
+        </div>
+        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0"></div>
+        <div class="info">
+          <div class="info-row">
+            <div>РЕЙТИНГ</div>
+            <div><span v-text="trainer.ratingTotal"></span> из 5</div>
+          </div>
+          <div class="info-row">
+            <div>ОТЗЫВОВ</div>
+            <div v-text="trainer.reviewCount"></div>
+          </div>
+          <div class="info-row">
+            <div>ЦЕНА</div>
+            <div><span v-text="trainer.trainer.cost"></span> ₽</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="biography">
+      <div class="name">Главное достижение</div>
+      <div class="text" v-text="trainer.trainer.about"></div>
+    </div>
+    <div class="biography">
+      <div class="name">РАНГ</div>
+      <div class="text" v-text="trainer.rank"></div>
+    </div>
+    {% if app.user and false %}
+      <div class="pt-1">
+        <a class="btn-orange text-white pointer" :href="'/ru/lessons/' + trainer.id">Купить тренировку</a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="user w-40 d-none d-lg-block" v-if="trainer !== null">
     <div class="data">
       <div class="photo">
         <img :src="trainer.photo !== null ? '/images/temp/matches/' + trainer.photo : '/images/icons/nophoto.png'" alt="avatar" />

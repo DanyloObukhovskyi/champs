@@ -6,11 +6,23 @@ use App\Entity\PurseHistory;
 use App\Entity\Review;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Service\UserService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TrainerController extends AbstractController
 {
+    use EntityManager;
+
+    public $userService;
+
+    public function __construct()
+    {
+        $this->userService = new UserService($this->getEntityManager());
+    }
+
     /**
       * @Route("/ru/trainer/timelist", name="trainer_index")
       */
@@ -164,8 +176,10 @@ class TrainerController extends AbstractController
     /**
      * @Route("/ru/trainers/slider/{game}", name="get_trainer_info_slider_games")
      */
-    public function setTrainerSliderInfo($game)
+    public function setTrainerSliderInfo(Request $request, $game)
     {
+        $paginate = $_ENV['TRAINERS_ON_PAGE'] ?? 5;
+
         if($game == 'all')
         {
             $game = ['cs', 'lol', 'dota'];
@@ -177,84 +191,12 @@ class TrainerController extends AbstractController
         ]);
 
         if (!$users) {
-
-                return $this->json([]);
+            return $this->json([]);
         }
-        $response = [];
 
-        foreach ($users as $user)
-        {
-            $trainer = $entityManager->getRepository(Teachers::class)
-                ->findOneBy([
-                    'userid' => $user->getId(),
-                ]);
-            if(!$trainer)
-            {
-                $trainer = new Teachers();
-                $trainer->setUser($user->getId());
-                $trainer->setVideoLink("");
-                $trainer->setCost(0);
-                $trainer->setAbout("");
-                $trainer->setShorttitle("");
-                $trainer->setMethod("");
-
-                $entityManager->persist($trainer);
-                $entityManager->flush();
-            }
-
-            $user->setTrainer($trainer);
-
-            $reviews = $this->getDoctrine()
-                ->getRepository(Review::class)
-                ->findRateByTrainerId($user->getId());
-
-            $sum = 0;
-            $count = 0;
-            $keys = [
-                '1' => 0,
-                '2' => 0,
-                '3' => 0,
-                '4' => 0,
-                '5' => 0,
-            ];
-
-
-            foreach ($reviews['entity'] as $review)
-            {
-//                return $this->json($review);
-                /** @var Review $review */
-                $sum += $review['rate'];
-                $keys[$review['rate']]++;
-                $count++;
-            }
-
-            $result = 0;
-            if($sum > 0)
-            {
-                $result = round($sum / $count, 2);
-            }
-
-            $trainer->setCost($trainer->getCost());
-
-            $response[] = [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'istrainer' => $user->getIsTrainer(),
-                'nickname' => $user->getNickname(),
-                'photo' => $user->getPhoto(),
-                'name' => $user->getName(),
-                'game' => $user->getGame(),
-                'rank' => $user->getRank(),
-                'family' => $user->getFamily(),
-                'discord' => $user->getDiscord(),
-                'purse' => $user->getPurse(),
-                'trainer' => $trainer,
-                'ratingTotal' => $result,
-                'rating' => $keys,
-                'reviewCount' => $count,
-                'reviews' => $reviews['entity']
-            ];
-        }
+        $filters = json_decode( $request->getContent(), true);
+        $response = $this->userService->teachersDecorator($users, $filters);
+        $response = array_chunk($response, $paginate);
 
         return $this->json($response);
     }

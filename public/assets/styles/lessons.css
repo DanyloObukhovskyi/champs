@@ -283,7 +283,6 @@
   justify-content: center;
   background-color: #FF6D1D;
   color: #FFFFFF;
-  font-size: 0.75vw;
   cursor: pointer;
   font-weight: 500;
 }
@@ -390,9 +389,6 @@
     width: 0.2vw;
   }
   .lessons .calendarblock .times .time .rows .rows-row .open{
-    font-size: 2vw;
-  }
-  .lessons .calendarblock .times .time .rows .rows-row .write{
     font-size: 2vw;
   }
   .lessons .calendarblock .times .time .rows .rows-row:nth-child(1):after{

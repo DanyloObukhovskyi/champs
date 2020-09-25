@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,7 +13,7 @@ class MarketplaceController extends AbstractController
       */
     public function index()
     {
-        return $this->render('templates/marketplace.html.twig', ['router' => 'marketplace']);
+        return $this->render('templates/marketplace.html.twig', ['router' => 'marketplace', 'filters' => UserService::FILTERS]);
     }
 
 }

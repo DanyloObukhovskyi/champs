@@ -207,6 +207,7 @@
         let date = new Date(this.today);
         date.setDate(date.getDate() + 7);
         this.today = date;
+
         this.getAjax(date);
       },
       getAjax(today) {

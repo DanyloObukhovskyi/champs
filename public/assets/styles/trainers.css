@@ -746,10 +746,27 @@
     padding-top: 3vw;
   }
 }
-
 .btn-orange {
-  padding: 0.6vw 1vw;
+  padding: 0.35vw 1vw;
   background-color: #FF6D1D;
   color: #FFFFFF;
-  font-size: 0.9vw;
+}
+.shadows{
+  box-shadow: rgb(0, 0, 0) 0px 0px 0.4vw;"
+}
+.pagination{
+  width: min-content;
+}
+.pagination a{
+  padding: 0.6vw 1vw;
+  background-color: #232323;
+  color: #FFFFFF;
+}
+.pagination a.active{
+   padding: 0.6vw 1vw;
+   background-color: #FF6D1D;
+   color: #FFFFFF;
+ }
+.pagination a:hover{
+  background-color: #FF6D1D;
 }

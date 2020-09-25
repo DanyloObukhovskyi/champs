@@ -1,0 +1,29 @@
+<script type="text/x-template" id="filters-template">
+    <div class="component d-flex flex-wrap justify-content-center justify-content-lg-end">
+        <div class="col-lg-5 col-12 pl-0 pr-0 d-flex flex-wrap justify-content-center">
+            <div class="input mb-3 p-1 col-6" v-for="filter in filters">
+                <div v-html="filter.label">
+                </div>
+                <input type="number" v-model="filter.value" class="w-100">
+            </div>
+        </div>
+        <div class="mb-3 p-1 d-none d-lg-flex align-items-end">
+            <a class="btn-orange pointer text-white" @click="search">Поиск</a>
+        </div>
+        <div class="mb-3 p-1 d-flex align-items-center col-md-12 d-lg-none">
+            <a class="btn-orange p-2 pointer text-center text-white w-100" @click="search">Поиск</a>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('filters', {
+        template: '#filters-template',
+        props: ['filters'],
+        methods: {
+            search(){
+                this.$emit('search');
+            }
+        }
+    })
+</script>
