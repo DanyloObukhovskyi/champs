@@ -8444,6 +8444,7 @@ a[data-toggle="collapse"] {
     padding: 3px;
     color: #f3f3f3;
     margin: 0 -10px -10px -10px;
+    border-radius: 0 0 3px 3px;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
