@@ -1,15 +1,15 @@
 <script type="text/x-template" id="trainers-template">
     <div class="trainers" id="trainers">
-        <div class="component slider_trainers mb-2" v-for="trainer in trainers" style="animation: bounce 0.5s ease-in-out; box-shadow: 0 0 0.4vw #000000;">
-            <div class="slides_cont">
-                <div class="active w-50" style="box-shadow: 0 0 0.4vw #000000;">
+        <div class="component slider_trainers mb-2 shadows" v-for="trainer in trainers[page]">
+            <div class="slides_cont d-none d-lg-flex">
+                <div class="active w-40" style="box-shadow: 0 0 0.4vw #000000;">
                     <div class="cont w-100 h-100">
-                        <iframe v-if="trainer.streamType !== 1" width="100%" height="100%" :src="'https://www.youtube.com/embed/' + trainer.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
-                        <iframe v-if="trainer.streamType === 1" :src="'https://player.twitch.tv/?channel=' + trainer.twitch + '&parent=champs.pro&muted=true'" height="100%" width="100%" frameborder="0" scrolling="no" allowfullscreen="false"></iframe>
+                        <iframe v-if="trainer.trainer.streamType !== 1" width="100%" height="100%" :src="'https://www.youtube.com/embed/' + trainer.trainer.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
+                        <iframe v-if="trainer.trainer.streamType === 1" :src="'https://player.twitch.tv/?channel=' + trainer.trainer.twitch + '&parent=champs.pro&muted=true'" height="100%" width="100%" frameborder="0" scrolling="no" allowfullscreen="false"></iframe>
                     </div>
                 </div>
             </div>
-            <div class="user w-40" >
+            <div class="user d-block d-lg-none">
                 <div class="data">
                     <div class="photo">
                         <img :src="trainer.photo !== null ? '/images/temp/matches/' + trainer.photo : '/images/icons/nophoto.png'" alt="avatar" />
@@ -45,10 +45,63 @@
                     {% if app.user %}
                         <div class="pt-1">
 {#                            <a class="btn-orange" :href="'/ru/lessons/' + trainer.id">Оформить заказ</a>#}
-                            <a class="btn-orange text-white pointer" @click="choseTrainer(trainer.id)">Оформить заказ</a>
+                            <a class="btn-orange text-white pointer p-2" @click="choseTrainer(trainer.id)">Оформить заказ</a>
                         </div>
                     {% endif %}
                 </div>
+            </div>
+            <div class="user w-40 d-none d-lg-block">
+                <div class="data">
+                    <div class="photo">
+                        <img :src="trainer.photo !== null ? '/images/temp/matches/' + trainer.photo : '/images/icons/nophoto.png'" alt="avatar" />
+                    </div>
+                    <div class="rgt">
+                        <div class="nikname">
+                            <span v-text="trainer.nickname"></span>
+                        </div>
+                        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0"></div>
+                        <div class="info">
+                            <div class="info-row">
+                                <div>РЕЙТИНГ</div>
+                                <div><span v-text="trainer.ratingTotal"></span> из 5</div>
+                            </div>
+                            <div class="info-row">
+                                <div>ОТЗЫВОВ</div>
+                                <div v-text="trainer.reviewCount"></div>
+                            </div>
+                            <div class="info-row">
+                                <div>ЦЕНА</div>
+                                <div><span v-text="trainer.trainer.cost"></span> ₽</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="biography">
+                    <div class="name">Главное достижение</div>
+                    <div class="text" v-text="trainer.trainer.about"></div>
+                </div>
+                <div class="biography">
+                    <div class="name">РАНГ</div>
+                    <div class="text" v-text="trainer.rank"></div>
+                    {% if app.user %}
+                        <div class="pt-1">
+                            {#                            <a class="btn-orange" :href="'/ru/lessons/' + trainer.id">Оформить заказ</a>#}
+                            <a class="btn-orange text-white pointer p-2" @click="choseTrainer(trainer.id)">Оформить заказ</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center" v-if="trainers.length > 1">
+            <div class="pagination shadows mb-2 mb-lg-0">
+                <a href="#trainers" class="text-light pointer p-2" @click="changePage(page - 1)" v-if="page > 0">Previous</a>
+                <a href="#trainers" v-for="(pageTrainers, num) in trainers"
+                   class="text-light pointer p-2"
+                   :class="{active: num === page}"
+                   @click="changePage(num)"
+                   v-html="num + 1">
+                </a>
+                <a href="#trainers" class="text-light pointer p-2" @click="changePage(page + 1)" v-if="page < trainers.length - 1">Next</a>
             </div>
         </div>
     </div>
@@ -57,7 +110,15 @@
     Vue.component('trainers-list', {
         template: '#trainers-template',
         props: ['trainers'],
+        data(){
+            return {
+                page: 0,
+            }
+        },
         methods: {
+            changePage(page) {
+                this.page = page;
+            },
             choseTrainer(id){
                 this.$parent.choseTrainer(id)
             }

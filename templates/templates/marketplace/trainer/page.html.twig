@@ -1,9 +1,9 @@
 <script type="text/x-template" id="trainer-page-template">
-    <div class="trainers" id="trainers" v-show="trainer !== null">
+    <div class="trainers pt-4" id="trainers" v-show="trainer !== null">
         {% include 'templates/trainers/slider.html.twig' %}
         <div class="container" v-if="trainers.length > 0">
             <div class="products">
-                <div class="row w-100">
+                <div class="w-100">
                     {% include 'templates/trainers/order.html.twig' %}
                     {% if app.user is not null %}
                         <review :trainer="trainer" :load="loadReview"/>
@@ -104,7 +104,7 @@
                         this.slideControll = true;
                     }, 500);
                 }
-            }
+            },
         },
         data: function () {
             return {

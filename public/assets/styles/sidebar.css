@@ -8150,8 +8150,8 @@ h1, h2, h3, h4, h5,
     width: 100%; }
 
 #sidebar {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 280px;
+    max-width: 280px;
     background: #232323;
     color: #fff;
     -webkit-transition: all 0.3s;
@@ -8161,9 +8161,7 @@ h1, h2, h3, h4, h5,
 #sidebar .h6 {
     color: #fff; }
 #sidebar.active {
-    margin-left: -300px; }
-#sidebar.active .custom-menu {
-    margin-right: -50px; }
+    margin-left: -280px; }
 #sidebar.active .btn.btn-primary:before {
     content: "\f054";
     font-family: "FontAwesome";
@@ -8218,11 +8216,10 @@ h1, h2, h3, h4, h5,
     border-bottom: 1px solid #FF6D1D; }
 @media (max-width: 991.98px) {
     #sidebar {
-        margin-left: -300px; }
+        margin-left: -280px; }
     #sidebar.active {
         margin-left: 0; }
     #sidebar .custom-menu {
-        margin-right: -60px !important;
         top: 10px !important; } }
 #sidebar .custom-menu {
     display: inline-block;

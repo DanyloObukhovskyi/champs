@@ -18,20 +18,22 @@
         <market-header :selected-game="sidebarActiveItem"></market-header>
         <div class="wrapper d-flex align-items-stretch">
            <sidebar :active="sidebarActiveItem" :items="gammelist"></sidebar>
-            <div id="content" class="p-4 p-md-5 pt-5">
+            <div id="content" class="pl-md-5 pr-md-5 pb-md-5 mt-4">
+                <filters :filters="filters" @search="search" v-if="trainer === null"></filters>
                 <div class="load w-100 h-100 d-flex justify-content-center align-items-center" v-if="load">
                     <div>
                         <img src="/images/load.gif">
                     </div>
                 </div>
                 <trainers-list v-if="!load && trainer == null" :trainers="trainers"></trainers-list>
-                <trainer-page v-if="trainer != null" :trainer="trainer" :trainers="trainers"></trainer-page>
+                <trainer-page v-if="trainer != null" :trainer="trainer" :trainers="trainersAll"></trainer-page>
             </div>
         </div>
     </div>
 
 {% endblock %}
 {% block js %}
+    {% include 'templates/marketplace/filters.html.twig' %}
     {% include 'templates/marketplace/trainer/timetable.html.twig' %}
     {% include 'templates/lessons/payments.html.twig' %}
     {% include 'templates/lessons/order.html.twig' %}
@@ -61,6 +63,7 @@
                         logo: '/images/lol.jpg'
                     }
                 ],
+                filters: JSON.parse('{{ filters|json_encode|raw }}'),
                 trainers: [],
                 trainer: null,
                 load: false,
@@ -75,7 +78,7 @@
                     this.load = true;
                     this.trainers = [];
 
-                    axios.get('/ru/trainers/slider/' + this.sidebarActiveItem)
+                    axios.post('/ru/trainers/slider/' + this.sidebarActiveItem, {...this.filters})
                         .then((res) => {
                             this.trainers = res.data;
                             this.trainer = null;
@@ -88,16 +91,29 @@
 
                             this.load = false;
                         });
-                    if (document.getElementById('slide_clone')) {
-                        this.slideWidth = document.getElementById('slide_clone').clientWidth;
+                    if (document.getElementById('.slide_clone')) {
+                        this.slideWidth = document.getElementById('.slide_clone').clientWidth;
                     }
                 },
                 choseTrainer(id){
-
-                    this.trainer = this.trainers.find(el => {
+                    this.trainer = this.trainersAll.find(el => {
                         return el.id === id
                     })
-                    console.log(this.trainer)
+                },
+                search(){
+                   this.getGameTrainersList();
+                }
+            },
+            computed:{
+                trainersAll() {
+                    const trainers = [];
+
+                    for (let page of this.trainers){
+                        for (let trainer of page){
+                            trainers.push(trainer)
+                        }
+                    }
+                    return trainers;
                 }
             },
             mounted() {
