@@ -4,13 +4,13 @@
             Стоимость занятия
         </div>
         <ul class="col-12 d-flex">
-            <li class="w-100 m-1">
-                <input type="text" class="text-light" v-model="filters.studyCostFrom.value">
-                <span >От</span>
+            <li class="w-100 m-1 d-flex">
+                <span class="align-items-center d-flex">От</span>
+                <input type="text" class="text-light ml-3" v-model="filters.studyCostFrom.value">
             </li>
-            <li class="w-100 m-1">
-                <input type="text" class="text-light" v-model="filters.studyCostTo.value">
-                <span >До</span>
+            <li class="w-100 m-1 d-flex">
+                <span class="align-items-center d-flex">До</span>
+                <input type="text" class="text-light ml-3" v-model="filters.studyCostTo.value">
             </li>
         </ul>
         <div class="col-12 mt-4 p-1">
