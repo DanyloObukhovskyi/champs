@@ -393,7 +393,7 @@ class UserController extends AbstractController
         $request = json_decode($request->getContent());
         $trainer = $this->getDoctrine()->getRepository(User::class)->find($id);
 
-        $videos = $trainer->getVideosUrls();
+        $videos = $this->trainerVideoService->getByTrainer($trainer);
         if ($action === self::ACTION_ADD and isset($trainer) and count($videos) < 10){
             $this->trainerVideoService->create($trainer, $request->video);
         }
