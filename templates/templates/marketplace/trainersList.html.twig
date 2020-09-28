@@ -2,9 +2,9 @@
     <div class="trainers" id="trainers" style="animation: bounce 0.5s ease-in-out;">
         <div class="component slider_trainers mb-2 shadows" v-for="trainer in trainers[page]">
             <div class="slides_cont d-none d-lg-flex">
-                <div class="active w-40" style="box-shadow: 0 0 0.4vw #000000;">
+                <div class="active w-40" style="box-shadow: 0 0 0.4vw #000000;" v-if="(trainer.trainer.streamType !== 1 && trainer.videos.length > 0) || trainer.trainer.streamType === 1">
                     <div class="cont w-100 h-100">
-                        <iframe v-if="trainer.trainer.streamType !== 1" width="100%" height="100%" :src="'https://www.youtube.com/embed/' + trainer.trainer.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
+                        <iframe v-if="trainer.trainer.streamType !== 1 && trainer.videos.length > 0" width="100%" height="100%" :src="'https://www.youtube.com/embed/' + trainer.videos[0]" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
                         <iframe v-if="trainer.trainer.streamType === 1" :src="'https://player.twitch.tv/?channel=' + trainer.trainer.twitch + '&parent=champs.pro&muted=true'" height="100%" width="100%" frameborder="0" scrolling="no" allowfullscreen="false"></iframe>
                     </div>
                 </div>

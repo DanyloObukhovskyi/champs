@@ -27,11 +27,10 @@
   #}
   <div class="slides_cont" :style="{left: getLeftSlide(), width: ww + 'px'}">
     <div class="slide_clone"></div>
-    <div class="slide" v-for="(item, i) in trainers" :key="i" :class="[(slide + 1) === i ? 'active' : '']" :style="{width: width + 'px'}">
+    <div class="slide" v-for="(item, i) in trainer.videos" :key="i" :class="[(slide + 1) === i ? 'active' : '']" :style="{width: width + 'px'}">
       <div class="cont">
         <div class="lft" @click="prevSlide()" v-if="trainers.length > 1 && slide !== -1"><img src="/images/arrowLftWhite.svg" alt="arrowLftWhite" /></div>
-        <iframe v-if="item.trainer.streamType !== 1" width="100%" height="100%" :src="'https://www.youtube.com/embed/' + item.trainer.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
-        <iframe v-if="item.trainer.streamType === 1" :src="'https://player.twitch.tv/?channel=' + item.trainer.twitch + '&parent=champs.pro&muted=true'" height="100%" width="100%" frameborder="0" scrolling="no" allowfullscreen="false"></iframe>
+        <iframe width="100%" height="100%" :src="'https://www.youtube.com/embed/' + item" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="false"></iframe>
         <div class="rgt" @click="nextSlide()" v-if="trainers.length > 1"><img src="/images/arrowRgtWhite.svg" alt="arrowRgtWhite" /></div>
       </div>
     </div>

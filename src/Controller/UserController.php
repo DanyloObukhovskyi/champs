@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Teachers;
+use App\Entity\TrainerVideo;
 use App\Entity\User;
+use App\Service\TrainerVideoService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,12 +17,20 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 class UserController extends AbstractController
 {
+    use EntityManager;
+
+    private const ACTION_ADD = 'add';
+
+    private const ACTION_DELETE = 'delete';
 
     private $passwordEncoder;
+
+    private $trainerVideoService;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->trainerVideoService = new TrainerVideoService($this->getEntityManager());
     }
 
     /**
@@ -374,4 +385,30 @@ class UserController extends AbstractController
         return $this->json($user);
     }
 
+    /**
+     * @Route("/ru/{action}/user/video/{id}", methods={"POST"}, name="add_trainer_video")
+     */
+    public function addVideo(Request $request, $action, $id)
+    {
+        $request = json_decode($request->getContent());
+        $trainer = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        $videos = $trainer->getVideosUrls();
+        if ($action === self::ACTION_ADD and isset($trainer) and count($videos) < 10){
+            $this->trainerVideoService->create($trainer, $request->video);
+        }
+        if ($action === self::ACTION_DELETE and isset($trainer)){
+            $this->trainerVideoService->deleteVideo($trainer, $request->video);
+        }
+        $trainerVideos = $this->trainerVideoService->getByTrainer($trainer);
+
+        $videos = [];
+        /** @var TrainerVideo $trainerVideo */
+        foreach ($trainerVideos as $trainerVideo)
+        {
+            $videos[] = $trainerVideo->getVideoUrl();
+        }
+
+        return $this->json($videos);
+    }
 }

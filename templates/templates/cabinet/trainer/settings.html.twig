@@ -103,7 +103,18 @@
         </div>
         <div class="full-input">
           <div>Видео о вас/методике/достижениях (Youtube)<span>*</span></div>
-          <input type="text" v-model="required.videolink" />
+          <div class="d-flex mb-1" v-for="(video, index) in this.videos">
+            <input type="text" class="mt-0" disabled v-model="video"/>
+            <a class="btn-orange text-light pointer align-items-center d-flex ml-1" @click="deleteVideo(video)">
+              <i class="fas fa-minus"></i>
+            </a>
+          </div>
+          <div class="d-flex" v-if="videos.length < 10">
+            <input type="text" class="mt-0" v-model="videoLink"/>
+            <a class="btn-orange text-light pointer align-items-center d-flex ml-1" @click="addVideo">
+              <i class="fas fa-plus"></i>
+            </a>
+          </div>
         </div>
         <div class="full-input">
           <div>Стрим игры (Twitch)</div>
@@ -219,6 +230,27 @@
             };
           }
         }
+      },
+      addVideo(){
+        axios.post('{{ url('add_trainer_video', {id: app.user.id, action: 'add'}) }}', {
+          video: this.videoLink
+        }).then(({data}) => {
+          this.videos = data;
+        })
+        this.videoLink = '';
+      },
+      deleteVideo(video){
+        axios.post('{{ url('add_trainer_video', {id: app.user.id, action: 'delete'}) }}', {
+          video
+        }).then(({data}) => {
+          this.videos = data;
+        })
+      },
+      getVideos() {
+        axios.post('{{ url('add_trainer_video', {id: app.user.id, action: 'all'}) }}')
+          .then(({data}) => {
+            this.videos = data;
+          })
       }
     },
     watch: {
@@ -258,6 +290,8 @@
           streamtype: 1,
           videolink: '',
         },
+        videos: [],
+        videoLink: '',
         password: '',
         password_confirm: '',
         twitch: '',
@@ -292,6 +326,8 @@
           }
         })
       })
+
+      this.getVideos()
     }
   });
 </script>
