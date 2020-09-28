@@ -120,7 +120,7 @@
       <div class="text">Live</div>
     </div>
     {% if router == 'marketplace' %}
-    <div class="games">
+    <div class="games d-md-flex d-lg-none">
       <div class="select-block" :class="[show ? 'shadow' : '']">
         <div class="select" @click="show=show?false:true">
           <img :src="`/images/${icon}`" class="logo" />
