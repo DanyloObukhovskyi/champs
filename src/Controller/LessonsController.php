@@ -11,17 +11,20 @@ use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\LessonService;
 use App\Traits\EntityManager;
+use App\Traits\Mail;
 use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LessonsController extends AbstractController
 {
     use EntityManager;
+    use Mail;
 
     public $lessonsService;
 
@@ -323,7 +326,7 @@ class LessonsController extends AbstractController
      *
      * @Route("/ru/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
      */
-    public function createNewLesson(Request $request)
+    public function createNewLesson(Request $request, MailerInterface $mailer)
     {
         $data = json_decode($request->getContent());
 
@@ -332,9 +335,18 @@ class LessonsController extends AbstractController
         $lessonsIds = [];
         $sum = 0;
 
+        $user = null;
+        /** @var User $trainer */
+        $trainer = null;
+
+        $bookedTime = [];
+
         if (isset($data->data)){
             foreach ($data->data as $form)
             {
+                $user = $entityManager->getRepository(User::class)->find($form->user_id);
+                $trainer = $entityManager->getRepository(User::class)->find($form->trainer_id);
+
                 $lesson = new Lessons();
                 $date = DateTime::createFromFormat('j.n.Y H:i:s',$form->date . ' ' . $form->time . ':00');
 
@@ -393,13 +405,13 @@ class LessonsController extends AbstractController
                     }
                 }
                 /** @var Teachers $trainer */
-                $trainer = $entityManager->getRepository(Teachers::class)->findOneBy([
+                $trainerTeacher = $entityManager->getRepository(Teachers::class)->findOneBy([
                     'userid' => $form->trainer_id
                 ]);
 
-                $lesson->setStudentId($entityManager->getRepository(User::class)->find($form->user_id));
-                $lesson->setTrainerId($entityManager->getRepository(User::class)->find($form->trainer_id));
-                $lesson->setCost($trainer->getCost());
+                $lesson->setStudentId($user);
+                $lesson->setTrainerId($trainer);
+                $lesson->setCost($trainerTeacher->getCost());
                 $lesson->setStatus(Lessons::STATUS_NEW);
                 $lesson->setDatetime($date);
                 $lesson->setStudentStatus(0);
@@ -411,10 +423,48 @@ class LessonsController extends AbstractController
                 $entityManager->flush();
 
                 $lessonsIds[] = $lesson->getId();
+
+                $lessonHourStart = $lesson->getDatetime()->format('H');
+                $bookedTime[] = [
+                    'day' => $lesson->getDatetime()->format('Y-m-d'),
+                    'from' => (int)$lessonHourStart,
+                    'to' => (int)$lessonHourStart + 1,
+                ];
                 $sum += $lesson->getCost();
             }
         }
+        /** @var Teachers $trainer */
+        $trainerTeacher = $entityManager->getRepository(Teachers::class)->findOneBy([
+            'userid' => $trainer->getId()
+        ]);
 
+        // Send trainer mail
+        $trainerMail = $this->makeMail()
+            ->to($trainer->getEmail())
+            ->subject('Бронирование урока')
+            ->htmlTemplate('templates/mails/booked.lesson.html.twig')
+            ->context([
+                'user' => $user,
+                'bookedTime' => $bookedTime,
+                'trainer' => $trainerTeacher,
+                'isTrainer' => true,
+            ]);
+        $mailer->send($trainerMail);
+
+        // Send user mail
+        if (!empty($user->getEmail())){
+            $userMail = $this->makeMail()
+                ->to($user->getEmail())
+                ->subject('Бронирование урока')
+                ->htmlTemplate('templates/mails/booked.lesson.html.twig')
+                ->context([
+                    'user' => $trainer,
+                    'bookedTime' => $bookedTime,
+                    'trainer' => $trainerTeacher,
+                    'isTrainer' => false,
+                ]);
+            $mailer->send($userMail);
+        }
         $response = [
             'ids' => $lessonsIds,
             'cost' => $sum,
