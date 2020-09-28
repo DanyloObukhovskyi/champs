@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Review;
 use App\Entity\Teachers;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserService  extends EntityService
 {
@@ -22,6 +23,15 @@ class UserService  extends EntityService
     ];
 
     protected $entity = User::class;
+
+    protected $trainerVideosService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->trainerVideosService = new TrainerVideoService($entityManager);
+    }
 
     public function teachersDecorator($users, $filters)
     {
@@ -51,7 +61,7 @@ class UserService  extends EntityService
 
             $user->setTrainer($trainer);
 
-            $reviews =$this->entityManager
+            $reviews = $this->entityManager
                 ->getRepository(Review::class)
                 ->findRateByTrainerId($user->getId());
 
@@ -93,6 +103,8 @@ class UserService  extends EntityService
                     continue;
                 }
             }
+            $videos = $this->trainerVideosService->getByTrainer($user);
+            $videos = $this->trainerVideosService->decorator($videos);
 
             $response[] = [
                 'id' => $user->getId(),
@@ -110,7 +122,8 @@ class UserService  extends EntityService
                 'ratingTotal' => $result,
                 'rating' => $keys,
                 'reviewCount' => $count,
-                'reviews' => $reviews['entity']
+                'reviews' => $reviews['entity'],
+                'videos' => $videos
             ];
         }
 

@@ -39,11 +39,9 @@
             },
             prevSlide() {
                 this.slide = this.slide > -1 ? this.slide - 1 : this.slide;
-                this.trainer = this.trainers[this.slide + 1];
             },
             nextSlide() {
-                this.slide = this.slide < this.trainers.length ? this.slide + 1 : this.slide;
-                this.trainer = this.trainers[this.slide + 1];
+                this.slide = this.slide < this.trainer.videos.length ? this.slide + 1 : this.slide;
             },
             getLeftSlide() {
                 if (window.innerWidth > 1000) {
