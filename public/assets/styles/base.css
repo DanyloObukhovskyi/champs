@@ -295,9 +295,6 @@ label {
 .header_nav .nav .select-block.shadow {
   box-shadow: 0 0.2vw 0.3vw #111111;
 }
-.header_nav .nav .select-block .select {
-  margin-top: 0.7vw;
-}
 .header_nav .nav .login {
   position: absolute;
   right: 3vw;

@@ -1,6 +1,6 @@
 <script type="text/x-template" id="sidebar-template">
     <nav id="sidebar">
-        <div class="custom-menu">
+        <div class="custom-menu d-none d-lg-flex">
             <button class="btn btn-orange" @click="collapse">
             </button>
         </div>
@@ -47,7 +47,7 @@
         ],
         watch: {
             active(){
-                this.$parent.sidebarActiveItem = this.active;
+                header.game = this.active
                 this.$parent.trainer = null;
             }
         },
