@@ -24,7 +24,7 @@
                         <img src="/images/load.gif">
                     </div>
                 </div>
-                <trainers-list v-if="!load && trainer == null" :trainers="trainers"></trainers-list>
+                <trainers-list v-if="!load && trainer == null" :trainers="trainers" :games="gammelist"></trainers-list>
                 <trainer-page v-if="trainer != null" :trainer="trainer" :trainers="trainersAll"></trainer-page>
             </div>
         </div>
@@ -45,23 +45,7 @@
             el: '#marketplace',
             data: {
                 game: header.game,
-                gammelist: [
-                    {
-                        name: 'cs',
-                        title: 'CS GO',
-                        logo: '/images/cs.png'
-                    },
-                    {
-                        name: 'dota',
-                        title: 'DOTA 2',
-                        logo: '/images/dota.png'
-                    },
-                    {
-                        name: 'lol',
-                        title: 'LOL',
-                        logo: '/images/lol.jpg'
-                    }
-                ],
+                gammelist: JSON.parse('{{ games|json_encode|raw }}'),
                 filters: JSON.parse('{{ filters|json_encode|raw }}'),
                 trainers: [],
                 trainer: null,

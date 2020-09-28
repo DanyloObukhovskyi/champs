@@ -22,6 +22,24 @@ class UserService  extends EntityService
         ]
     ];
 
+    public const GAMES = [
+        [
+            'name' =>  'cs',
+            'title' =>  'CS:GO',
+            'logo' =>  '/images/cs.png'
+        ],
+        [
+            'name' =>  'dota',
+            'title' =>  'DOTA 2',
+            'logo' =>  '/images/dota.png'
+        ],
+        [
+            'name' =>  'lol',
+            'title' =>  'LOL',
+            'logo' =>  '/images/lol.jpg'
+        ],
+    ];
+
     protected $entity = User::class;
 
     protected $trainerVideosService;
@@ -106,6 +124,13 @@ class UserService  extends EntityService
             $videos = $this->trainerVideosService->getByTrainer($user);
             $videos = $this->trainerVideosService->decorator($videos);
 
+            $trainerGame = null;
+            foreach ( self::GAMES as $game){
+                if ($game['name'] === $user->getGame()){
+                    $trainerGame = $game;
+                }
+            }
+
             $response[] = [
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
@@ -113,7 +138,7 @@ class UserService  extends EntityService
                 'nickname' => $user->getNickname(),
                 'photo' => $user->getPhoto(),
                 'name' => $user->getName(),
-                'game' => $user->getGame(),
+                'game' => $trainerGame,
                 'rank' => $user->getRank(),
                 'family' => $user->getFamily(),
                 'discord' => $user->getDiscord(),

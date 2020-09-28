@@ -18,7 +18,13 @@
                         <div class="nikname">
                             <span v-text="trainer.nickname"></span>
                         </div>
-                        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0"></div>
+{#                        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0">#}
+{#                            #}
+{#                        </div>#}
+                        <div class="online">
+                            <img :src="trainer.game.logo"  class="logo mr-2 w-10">
+                            <span v-html="trainer.game.title"></span>
+                        </div>
                         <div class="info">
                             <div class="info-row">
                                 <div>РЕЙТИНГ</div>
@@ -59,7 +65,11 @@
                         <div class="nikname">
                             <span v-text="trainer.nickname"></span>
                         </div>
-                        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0"></div>
+{#                        <div class="online" v-text="trainer.isTrainer ? 'Сейчас в сети' : 'Сейчас не в сети'" style="opacity: 0"></div>#}
+                        <div class="online">
+                            <img :src="trainer.game.logo" class="logo mr-2 w-10">
+                            <span v-html="trainer.game.title"></span>
+                        </div>
                         <div class="info">
                             <div class="info-row">
                                 <div>РЕЙТИНГ</div>
@@ -109,7 +119,7 @@
 <script>
     Vue.component('trainers-list', {
         template: '#trainers-template',
-        props: ['trainers'],
+        props: ['trainers', 'games'],
         data(){
             return {
                 page: 0,

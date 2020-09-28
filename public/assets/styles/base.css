@@ -1884,3 +1884,6 @@ label {
   background-color: #fff;
   content: "";
 }
+.w-10{
+  width: 10% !important;
+}

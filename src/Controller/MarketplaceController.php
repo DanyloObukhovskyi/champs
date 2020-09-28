@@ -13,7 +13,11 @@ class MarketplaceController extends AbstractController
       */
     public function index()
     {
-        return $this->render('templates/marketplace.html.twig', ['router' => 'marketplace', 'filters' => UserService::FILTERS]);
+        return $this->render('templates/marketplace.html.twig', [
+            'router' => 'marketplace',
+            'filters' => UserService::FILTERS,
+            'games' => UserService::GAMES
+        ]);
     }
 
 }
