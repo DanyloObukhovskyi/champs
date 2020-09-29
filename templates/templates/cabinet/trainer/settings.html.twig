@@ -5,6 +5,7 @@
   {% for style in styles %}
     <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
   {% endfor %}
+  <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
 {% endblock %}
 {% block body %}
 <div class="cabinet" id="cabinet">
@@ -97,6 +98,19 @@
             <input type="number" v-model="required.cost" />
           </div>
         </div>
+        <div class="input mt-3">
+          <div style="font-size: 0.85vw;">Часовой пояс</div>
+          <vue-multiselect
+                  v-model="required.timezone"
+                  :options="timezones"
+                  group-values="zones"
+                  group-label="gmt"
+                  :group-select="true"
+                  :searchable="true"
+                  :close-on-select="true"
+                  :show-labels="false">
+          </vue-multiselect>
+        </div>
         <div class="full-input">
           <div>Ссылка discord</div>
           <input type="text" v-model="discord" />
@@ -121,7 +135,7 @@
           <input type="text" v-model="twitch" />
         </div>
         <div class="full-input small">
-          <div>Выбор потока трасляции<span>*</span></div>
+          <div>Выбор потока трасляции</div>
           <select v-model="required.streamtype">
             <option value="default">По умолчанию</option>
             <option value="0">Видео (Youtube)</option>
@@ -153,6 +167,8 @@
   </div>
 </div>
 <script>
+  Vue.component('vue-multiselect', window.VueMultiselect.default)
+
   const cabinet = new Vue({
     el: '#cabinet',
     methods: {
@@ -248,6 +264,7 @@
     },
     data: function () {
       return {
+        timezones: [],
         success: false,
         error: false,
         start: false,
@@ -264,6 +281,7 @@
           shorttitle: '',
           method: '',
           streamtype: 'default',
+          timezone: '',
         },
         videos: [],
         videoLink: '',
@@ -294,12 +312,18 @@
         th.twitch = res.data.trainer[0].twitch ? res.data.trainer[0].twitch : '';
         th.required.streamtype = res.data.trainer[0].streamType !== null ? res.data.trainer[0].streamType : 'default';
         th.discord = res.data.discord ? res.data.discord : '';
+        th.required.timezone = res.data.trainer[0].timeZone ? res.data.trainer[0].timeZone : 'Europe/Moscow';
 
         Object.keys(th.required).forEach((key) => {
           if (String(th.required[key]).length === 0) {
             th.send = false;
           }
         })
+
+        axios.post('{{ path('helper.timezones') }}')
+          .then(({data}) => {
+            this.timezones = data;
+          })
       })
 
       this.getVideos()

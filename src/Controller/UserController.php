@@ -196,21 +196,11 @@ class UserController extends AbstractController
                 $entityManager->persist($trainer);
                 $entityManager->flush();
             }
-
 //            $trainer->setUser(null);
             $user->setTrainer($trainer);
 
             $userTrainer = $user->getTrainer();
             $result['trainer'] = $trainer;
-//                [
-//                'videolink' => $user->getVideoLink(),
-//                'cost' => $trainer->getCost(),
-//                'about' => $trainer->getAbout(),
-//                'shorttitle' => $trainer->getShorttitle(),
-//                'method' => $trainer->getMethod(),
-//                'streamtype' => $trainer->getStreamType(),
-//                'twitch' => $trainer->getTwitch(),
-//            ];
         }
 
         return $this->json($result);
@@ -293,6 +283,7 @@ class UserController extends AbstractController
                 $trainer->setUser($user->getId());
             }
 
+            $trainer->setTimeZone($request->request->get('timezone', null));
             $trainer->setVideoLink($request->request->get('videolink'));
             $trainer->setCost($request->request->get('cost'));
             $trainer->setAbout($request->request->get('about'));

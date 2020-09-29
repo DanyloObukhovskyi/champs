@@ -121,7 +121,8 @@ class TrainerController extends AbstractController
             'router' => 'cabinet',
             'styles' => [
               'cabinet/cabinet.css',
-              'cabinet/trainer/settings.css'
+              'cabinet/trainer/settings.css',
+              'multiselect.css'
             ],
           ]
         );
