@@ -123,7 +123,7 @@
         <div class="full-input small">
           <div>Выбор потока трасляции<span>*</span></div>
           <select v-model="required.streamtype">
-            <option value="">По умолчанию</option>
+            <option value="default">По умолчанию</option>
             <option value="0">Видео (Youtube)</option>
             <option value="1">Стрим (Twitch)</option>
           </select>
@@ -162,7 +162,7 @@
 
           for (let key in this.required){
             if (key === 'streamtype'){
-              if (this.required[key] !== ''){
+              if (this.required[key] !== 'default'){
                 form.append(key, Number(this.required[key]));
               }
             } else {
@@ -263,7 +263,7 @@
           about: '',
           shorttitle: '',
           method: '',
-          streamtype: '',
+          streamtype: 'default',
         },
         videos: [],
         videoLink: '',
@@ -292,7 +292,7 @@
         th.required.shorttitle = res.data.trainer[0].shorttitle ? res.data.trainer[0].shorttitle : '';
         th.required.method = res.data.trainer[0].method ? res.data.trainer[0].method : '';
         th.twitch = res.data.trainer[0].twitch ? res.data.trainer[0].twitch : '';
-        th.required.streamtype = res.data.trainer[0].streamType ? res.data.trainer[0].streamType : '';
+        th.required.streamtype = res.data.trainer[0].streamType !== null ? res.data.trainer[0].streamType : '';
         th.discord = res.data.discord ? res.data.discord : '';
 
         Object.keys(th.required).forEach((key) => {
