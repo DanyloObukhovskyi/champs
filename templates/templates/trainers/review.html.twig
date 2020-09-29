@@ -17,7 +17,13 @@
                 <div class="rate">
                     <div class="title">ОЦЕНИТЕ ЗАНЯТИЕ</div>
                     <div class="stars">
-                        <img class="star" alt="Star" :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`" v-for="i in 5" @mouseover="star = i" @mouseout="star = 0" @click="starSel = i" />
+                        <img class="star"
+                             alt="Star"
+                             :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
+                             v-for="i in 10"
+                             @mouseover="star = i"
+                             @mouseout="star = 0"
+                             @click="starSel = i" />
                     </div>
                 </div>
                 <div class="tags">

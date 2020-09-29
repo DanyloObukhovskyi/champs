@@ -85,14 +85,11 @@ class UserService  extends EntityService
 
             $sum = 0;
             $count = 0;
-            $keys = [
-                '1' => 0,
-                '2' => 0,
-                '3' => 0,
-                '4' => 0,
-                '5' => 0,
-            ];
 
+            $keys = [];
+            for ($i = 1; $i <= 10; $i++){
+                $keys[$i] = 0;
+            }
             foreach ($reviews['entity'] as $review)
             {
                 /** @var Review $review */
