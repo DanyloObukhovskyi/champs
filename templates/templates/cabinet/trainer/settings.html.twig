@@ -292,7 +292,7 @@
         th.required.shorttitle = res.data.trainer[0].shorttitle ? res.data.trainer[0].shorttitle : '';
         th.required.method = res.data.trainer[0].method ? res.data.trainer[0].method : '';
         th.twitch = res.data.trainer[0].twitch ? res.data.trainer[0].twitch : '';
-        th.required.streamtype = res.data.trainer[0].streamType !== null ? res.data.trainer[0].streamType : '';
+        th.required.streamtype = res.data.trainer[0].streamType !== null ? res.data.trainer[0].streamType : 'default';
         th.discord = res.data.discord ? res.data.discord : '';
 
         Object.keys(th.required).forEach((key) => {

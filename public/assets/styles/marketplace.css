@@ -93,7 +93,7 @@
   border-radius: 50%;
 }
 .marketplace .component.slides .slide{
-  width: 100%;
+  width: 40%;
   padding: 2vw 3vw;
   padding-top: 0;
   animation: bounce 0.5s ease-in-out;
