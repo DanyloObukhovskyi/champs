@@ -39,8 +39,23 @@
               <div class="accordion">
                 <div class="rate">
                   <div class="title">ОЦЕНИТЕ ЗАНЯТИЕ</div>
-                  <div class="stars">
-                    <img alt="Star" :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`" v-for="i in 5" @mouseover="star = i" @mouseout="star = 0" @click="starSel = i" />
+                  <div class="stars d-block">
+                    <div class="d-flex justify-content-center">
+                      <img alt="Star"
+                           :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
+                           v-for="i in 5"
+                           @mouseover="star = i"
+                           @mouseout="star = 0"
+                           @click="starSel = i" />
+                    </div>
+                    <div class="d-flex justify-content-center mt-2">
+                      <img alt="Star"
+                           :src="`/images/${i + 5 <= star || i + 5 <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
+                           v-for="i in 5"
+                           @mouseover="star = i + 5"
+                           @mouseout="star = 0"
+                           @click="starSel = i + 5" />
+                    </div>
                   </div>
                 </div>
                 <div class="tags">
