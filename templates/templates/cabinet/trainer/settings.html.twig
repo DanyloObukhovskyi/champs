@@ -123,7 +123,8 @@
         <div class="full-input small">
           <div>Выбор потока трасляции<span>*</span></div>
           <select v-model="required.streamtype">
-            <option value="0" default>Видео (Youtube)</option>
+            <option value="" default>По умолчанию</option>
+            <option value="0">Видео (Youtube)</option>
             <option value="1">Стрим (Twitch)</option>
           </select>
         </div>
@@ -158,24 +159,21 @@
       save() {
         if (this.send) {
           const form = new FormData();
+
+          for (let key in this.required){
+            if (key === 'streamtype'){
+              form.append(key, Number(this.required[key]));
+            } else {
+              form.append(key, this.required[key]);
+            }
+          }
           form.append('id', {{app.user.id}});
-          form.append('name', this.required.name);
-          form.append('email', this.required.email);
-          form.append('nickname', this.required.nickname);
-          form.append('family', this.required.family);
-          form.append('game', this.required.game);
-          form.append('rank', this.required.rank);
-          form.append('cost', this.required.cost);
-          form.append('about', this.required.about);
-          form.append('shorttitle', this.required.shorttitle);
-          form.append('method', this.required.method);
-          form.append('videolink', this.required.videolink);
           form.append('channellink', this.twitch);
           form.append('discord', this.discord);
-          form.append('streamtype', Number(this.required.streamtype));
           form.append('password', this.password);
           form.append('password_repeat', this.password_confirm);
           form.append('photo', this.photo);
+
           this.start = true;
           axios.post('/ru/user/set-info/', form)
           .then((res) => {
@@ -188,31 +186,6 @@
           .catch(() => {
             this.error = true;
           });
-/*
-          this.start = true;
-
-          axios.get(`/ru/user/set-info/{
-            "id":"{{app.user.id}}",
-            "name":"${this.required.name}",
-            "email":"${this.required.email}",
-            "nickname":"${this.required.nickname}",
-            "family":"${this.required.family}",
-            "game":"${this.required.game}",
-            "rank":"${this.required.rank}",
-            "cost":"${this.required.cost}",
-            "about":"${this.required.about}",
-            "shorttitle":"${this.required.shorttitle}",
-            "method":"${this.required.method}",
-            "videolink":"${this.required.videolink}",
-            "password":"${this.password}",
-            "password_repeat":"${this.password_confirm}"}`)
-          .then((res) => {
-            this.success = true;
-          })
-          .catch(() => {
-            this.error = true;
-          });
-          */
         }
       },
       setPhoto(event) {
@@ -261,9 +234,9 @@
           this.start = false;
           this.success = false;
           this.error = false;
-          console.log(1)
           Object.keys(this.required).forEach((key) => {
             if (this.required[key].length === 0) {
+              if (key !== 'streamtype')
               this.send = false;
             }
           })
@@ -287,8 +260,7 @@
           about: '',
           shorttitle: '',
           method: '',
-          streamtype: 1,
-          videolink: '',
+          streamtype: '',
         },
         videos: [],
         videoLink: '',
@@ -305,7 +277,7 @@
       const th = this;
       axios.get('/ru/user/info/{{app.user.id}}')
       .then((res) => {
-        console.log(res)
+
         th.required.name = res.data.name ? res.data.name : '';
         th.required.family = res.data.family ? res.data.family : '';
         th.required.nickname = res.data.nickname ? res.data.nickname : '';
@@ -316,10 +288,10 @@
         th.required.about = res.data.trainer[0].about ? res.data.trainer[0].about : '';
         th.required.shorttitle = res.data.trainer[0].shorttitle ? res.data.trainer[0].shorttitle : '';
         th.required.method = res.data.trainer[0].method ? res.data.trainer[0].method : '';
-        th.required.videolink = res.data.trainer[0].videolink ? res.data.trainer[0].videolink : '';
         th.twitch = res.data.trainer[0].twitch ? res.data.trainer[0].twitch : '';
         th.required.streamtype = res.data.trainer[0].streamType ? res.data.trainer[0].streamType : '';
         th.discord = res.data.discord ? res.data.discord : '';
+
         Object.keys(th.required).forEach((key) => {
           if (String(th.required[key]).length === 0) {
             th.send = false;
