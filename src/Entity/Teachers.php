@@ -61,6 +61,11 @@ class Teachers
 
     private $comissionCost;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $timeZone;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -173,5 +178,21 @@ class Teachers
     public function getComissionCost()
     {
         return ($this->cost) * self::SERVICE_COST_MULTIPLIER;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeZone()
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param mixed $timeZone
+     */
+    public function setTimeZone($timeZone): void
+    {
+        $this->timeZone = $timeZone;
     }
 }
