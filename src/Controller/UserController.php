@@ -221,16 +221,6 @@ class UserController extends AbstractController
      */
     public function setUserInfo(Request $request)
     {
-//        /** @var User $client */
-//        $client = $this->get('security.token_storage')->getToken()->getUser();
-//
-//
-//        if($client->getId() != $userId)
-//        {
-//            $this->json("U have not access to update this user");
-//        }
-////        $newInfo = json_decode($form);
-
         // retrieves POST variables respectively\
         $userId = $request->request->get('id');
         $entityManager = $this->getDoctrine()->getManager();
@@ -264,34 +254,6 @@ class UserController extends AbstractController
                 }
 
             }
-            // split the string on commas
-            // $data[ 0 ] == "data:image/png;base64"
-            // $data[ 1 ] == <actual base64 string>
-//            $data = explode( ',', $request->request->get('photo') );
-//            switch ($data[0])
-//            {
-//                case "data:image/png;base64":
-//                    $phototype = "png";
-//                    break;
-//                case "data:image/jpeg;base64":
-//                    $phototype = "jpeg";
-//                    break;
-//                case "data:image/jpg;base64":
-//                    $phototype = "jpg";
-//                    break;
-//                default:
-//                    $phototype = "jpeg";
-//                    break;
-//            }
-////            $phototype = $request->request->get('phototype');
-//            $filename = $user->getId() . "-" . $user->getName() . $user->getNickname() . "." . $phototype;
-//            $output = $data[1];
-//            $output_file_name = "\images\\temp\matches\\" . $filename;
-//            $ifp = fopen( $output_file_name, 'wb');// stream_get_contents(fopen( $output_file_name, 'wb'));//open( $output_file, 'wb' );
-//
-//            $image = base64_decode($output);
-//            fwrite( $ifp, $image );
-//            fclose( $ifp );
 
             $data = $request->request->get('photo');
 
@@ -336,7 +298,7 @@ class UserController extends AbstractController
             $trainer->setAbout($request->request->get('about'));
             $trainer->setShorttitle($request->request->get('shorttitle'));
             $trainer->setMethod($request->request->get('method'));
-            $trainer->setStreamType($request->request->get('streamtype'));
+            $trainer->setStreamType($request->request->get('streamtype', null));
             $trainer->setTwitch($request->request->get('channellink'));
 
             $entityManager->persist($trainer);
