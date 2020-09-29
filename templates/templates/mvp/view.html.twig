@@ -16,7 +16,7 @@
                     <div class="grid col-10 d-flex justify-content-center h-100" style="background-image: url('{{ tournament.image }}')">
                         <div>
                             <div class="d-flex justify-content-center">
-                                    <img :src="tournament.logo" class="width-100px">
+                                <img :src="tournament.logo" class="width-100px">
                             </div>
                             <h2 class="d-block title" v-html="tournament.name">
                             </h2>
@@ -86,14 +86,14 @@
                                         <div class="r w-100">
                                             <div class="w-100">
                                                 <div class="col-12 d-flex justify-content-center">
-                                                    <button
+                                                    <a
                                                         {% if app.user is null %} disabled {% endif %}
                                                         data-toggle="modal"
                                                         data-target="#steamModal"
-                                                        class="btn btn-info w-100">
+                                                        class="btn-orange w-100 text-light p-2 text-center pointer">
                                                         <i class="fas fa-trophy"></i>
                                                         Участвовать в турнире
-                                                    </button>
+                                                    </a>
                                                 </div>
                                                 {% if app.user is null %}
                                                     <div class="col-12 pt-3">
@@ -114,8 +114,8 @@
     <!-- Modal -->
     <div class="modal fade" id="steamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                {% if app.user is not null and app.user.getSteamId() is empty %}
+            <div class="modal-content border-radius-0">
+                {% if app.user is not null and app.user.steamId is empty %}
                     <div class="modal-header">
                         <h5 class="modal-title text-center w-100">Подключи Steam и вперед!</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -125,7 +125,7 @@
                     <div class="modal-body">
                         <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"
                            target="_blank"
-                           class="btn btn-secondary w-100">
+                           class="btn btn-secondary w-100 border-radius-0">
                             <i class="fab fa-steam"></i>
                             Подключи Steam
                         </a>
@@ -144,8 +144,8 @@
                         Создай свою тиму или присоединись к уже существующей
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <a href="{{ path('specifications_index') }}" class="btn btn-info" >Создать команду</a>
-                        <button data-dismiss="modal" aria-label="Close" class="btn btn-default">Отменить</button>
+                        <a href="{{ path('specifications_index') }}" class="btn-orange text-light p-2 text-center pointer w-100" >Создать команду</a>
+                        <a data-dismiss="modal" aria-label="Close" class="btn-grey pointer text-center text-light border-radius-0 p-2 w-75">Отменить</a>
                     </div>
                 {% endif %}
             </div>
@@ -156,7 +156,7 @@
             el: '#tournament',
             data: {
                 tournament: {{ tournament|json_encode|raw }},
-            }
+            },
         })
     </script>
 {% endblock %}

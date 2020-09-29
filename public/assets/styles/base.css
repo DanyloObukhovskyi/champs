@@ -1888,3 +1888,22 @@ label {
   background-color: #fff;
   content: "";
 }
+.btn-orange {
+  padding: 0.35vw 1vw;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+}
+.btn-orange:hover{
+  opacity: 0.7;
+}
+.btn-grey{
+  padding: 0.35vw 1vw;
+  background-color: gray;
+  color: #FFFFFF;
+}
+.btn-grey:hover{
+  opacity: 0.7;
+}
+.border-radius-0{
+  border-radius: 0;
+}

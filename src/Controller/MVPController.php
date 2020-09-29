@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Service\Mvp\MvpTeamService;
 use App\Service\TournamentService;
 use App\Traits\AuthUser;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MVPController extends AbstractController
@@ -15,9 +18,12 @@ class MVPController extends AbstractController
 
     protected $tournamentService;
 
+    protected $mvpTeamService;
+
     public function __construct()
     {
         $this->tournamentService = new TournamentService($this->getEntityManager());
+        $this->mvpTeamService = new MvpTeamService($this->getEntityManager());
     }
 
     /**
@@ -48,7 +54,7 @@ class MVPController extends AbstractController
     }
 
     /**
-     * @Route("/ru/user/tournaments/teams", name="mvp.cabinet.tournaments.teams")
+     * @Route("/ru/user/mvp/", name="mvp.cabinet.tournaments")
      */
     public function tournamentTeams()
     {
@@ -58,11 +64,31 @@ class MVPController extends AbstractController
             return $this->redirectToRoute('main');
         }
 
-        return $this->render('templates/cabinet/tournament/teams.html.twig', [
+        return $this->render('templates/cabinet/user/mvp.html.twig', [
             'router' => 'tournamentTeams',
             'styles' => [
                 'cabinet/cabinet.css'
                 ]
         ]);
+    }
+
+    /**
+     * @Route("/ru/user/mvp/create/team/{userId}", name="mvp.cabinet.create.team")
+     */
+    public function createUserTeam(Request $request, $userId)
+    {
+        $request = $request->getContent();
+        $data = json_decode($request, false);
+
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+
+        $mvpTeam = $this->mvpTeamService->getByTag($data->tag);
+
+        if (empty($mvpTeam))
+        {
+            $this->mvpTeamService->create($user, $data);
+        }
+
+        dd($mvpTeam);
     }
 }

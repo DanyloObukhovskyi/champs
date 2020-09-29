@@ -406,7 +406,10 @@
   });
 </script>
 
-{% block body %}{% endblock %} {% block javascripts %}{% endblock %}
+{% block body %}{% endblock %}
+{% block javascripts %}
+  {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 <div class="cookie" id="cookie">
   <div class="footer">
