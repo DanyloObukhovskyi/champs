@@ -253,7 +253,7 @@
 }
 .trainers .component.slider_trainers .user .data .rgt .info .info-row div:nth-child(2){
   color: #FFFFFF;
-  font-size: 1.3vw;
+  font-size: 1vw;
   letter-spacing: 0.05vw;
   font-weight: 500;
   padding-top: 0.7vw;
@@ -766,10 +766,10 @@
   color: #FFFFFF;
 }
 .pagination a.active{
-   padding: 0.6vw 1vw;
-   background-color: #FF6D1D;
-   color: #FFFFFF;
- }
+  padding: 0.6vw 1vw;
+  background-color: #FF6D1D;
+  color: #FFFFFF;
+}
 .pagination a:hover{
   background-color: #FF6D1D;
 }
