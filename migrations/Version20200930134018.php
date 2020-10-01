@@ -28,7 +28,6 @@ final class Version20200930134018 extends AbstractMigration
         $this->addSql('ALTER TABLE lessons CHANGE trainer_id_id trainer_id INTEGER;');
         $this->addSql('ALTER TABLE lessons CHANGE student_id_id student_id INTEGER;');
         $this->addSql('ALTER TABLE lessons ADD CONSTRAINT FK_3F4218D9CB944F1A FOREIGN KEY (student_id) REFERENCES user (id)');
-        $this->addSql('ALTER TABLE lessons ADD CONSTRAINT FK_3F4218D9FB08EDF6 FOREIGN KEY (trainer_id) REFERENCES user (id)');
         $this->addSql('CREATE INDEX IDX_3F4218D9CB944F1A ON lessons (student_id)');
         $this->addSql('CREATE INDEX IDX_3F4218D9FB08EDF6 ON lessons (trainer_id)');
     }

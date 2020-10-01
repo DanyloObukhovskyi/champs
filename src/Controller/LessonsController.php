@@ -289,7 +289,7 @@ class LessonsController extends AbstractController
         $this->sendPayedMail($mailer, $trainer, $bookedTime, $trainerTeacher, true);
         // Send user mail
         if (!empty($user->getEmail())) {
-            $this->sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, true);
+            $this->sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher);
         }
         return $this->json(['ids' => $lessonIds]);
     }
