@@ -62,7 +62,7 @@ class TrainersController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         /** @var Lessons $lesson */
         $lesson = $entityManager->getRepository(Lessons::class)->find($id);
-        $trainer = $lesson->getTrainerId();
+        $trainer = $lesson->getTrainer();
 
         return $this->render('templates/lessons/lessons.order.html.twig', [
           'router' => 'marketplace',
@@ -84,16 +84,16 @@ class TrainersController extends AbstractController
         $lesson = $entityManager->getRepository(Lessons::class)->find($id);
 
 
-        $trainer = $lesson->getTrainerId();
+        $trainer = $lesson->getTrainer();
 
         return $this->json([
-            'trainer' => $lesson->getTrainerId(),
+            'trainer' => $lesson->getTrainer(),
             'trainerLessonsCount' => $this->getDoctrine()
                 ->getRepository(Lessons::class)
                 ->findCountByTrainerId($trainer->getId()),
             'lessonsTogetheCount' => $this->getDoctrine()
                 ->getRepository(Lessons::class)
-                ->findCountByTrainerAndStudent($trainer->getId(), $lesson->getStudentId()->getId()),
+                ->findCountByTrainerAndStudent($trainer->getId(), $lesson->getStudent()->getId()),
             'cost' => $lesson->getCost()
         ]);
     }

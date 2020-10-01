@@ -42,15 +42,31 @@ class UserService  extends EntityService
 
     protected $entity = User::class;
 
+    /**
+     * @var TrainerVideoService
+     */
     protected $trainerVideosService;
+
+    /**
+     * @var TimeZoneService
+     */
+    protected $timeZoneService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->trainerVideosService = new TrainerVideoService($entityManager);
+        $this->timeZoneService = new TimeZoneService();
     }
 
+    /**
+     * @param $users
+     * @param $filters
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function teachersDecorator($users, $filters)
     {
         $response = [];
@@ -127,6 +143,14 @@ class UserService  extends EntityService
                     $trainerGame = $game;
                 }
             }
+            if (!empty($trainer->getTimeZone())){
+                [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                    ->getGmtTimezoneString($trainer->getTimeZone());
+            } else {
+                [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                    ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+            }
+            $timeZone = "$timeZone ($gmt)";
 
             $response[] = [
                 'id' => $user->getId(),
@@ -145,7 +169,8 @@ class UserService  extends EntityService
                 'rating' => $keys,
                 'reviewCount' => $count,
                 'reviews' => $reviews['entity'],
-                'videos' => $videos
+                'videos' => $videos,
+                'timeZone' => $timeZone
             ];
         }
 

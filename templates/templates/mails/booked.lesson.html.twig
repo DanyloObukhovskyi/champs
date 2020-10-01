@@ -9,7 +9,6 @@
 
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,300,400,500,600,700" rel="stylesheet">
     <style>
-
         /* What it does: Remove spaces around the email design added by some email clients. */
         /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
         html,
@@ -345,19 +344,19 @@
                         <th width="80%" style="text-align:left; padding: 0 2.5em; color: #000; padding-bottom: 20px">Время</th>
                         <th width="20%" style="text-align:right; padding: 0 2.5em; color: #000; padding-bottom: 20px">Цена</th>
                     </tr>
-                    {% for time in bookedTime %}
+                    {% for lesson in bookedTime %}
                     <tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
                         <td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
                             <div class="product-entry">
                                 <div>
-                                    <h3>{{ time.day }}</h3>
+                                    <h3>{{ lesson.day }}</h3>
                                     <span></span>
-                                    <p>C {{ time.from }}:00 до {{ time.to }}:00</p>
+                                    <p>C {{ lesson.from }}:00 до {{ lesson.to }}:00</p>
                                 </div>
                             </div>
                         </td>
                         <td valign="middle" style="text-align:center;">
-                            <span class="price" style="color: #000; font-size: 20px;">{{ trainer.cost }} руб</span>
+                            <span class="price" style="color: #000; font-size: 20px;">{{ lesson.cost }} руб</span>
                         </td>
                     </tr>
                     {% endfor %}

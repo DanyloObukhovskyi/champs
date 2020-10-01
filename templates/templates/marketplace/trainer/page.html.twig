@@ -60,14 +60,24 @@
                     }
                 }
             },
-            getDateReview(val) {
-                const parse = new Date(val);
-                const today = new Date();
-                let result = `${parse.getDate() < 10 ? '0' + parse.getDate() : parse.getDate()}.${(parse.getMonth() + 1) < 10 ? '0' + (parse.getMonth() + 1) : parse.getMonth() + 1}.${parse.getFullYear()}`;
-                if (parse.getMonth() === today.getMonth()) {
-                    result = 'В этом месяце';
+            getDateReview(review) {
+                let date;
+                if (review.createdAt !== null) {
+                    date = review.createdAt;
+                } else if (review.dateTimeTo !== null) {
+                    date = review.dateTimeTo;
+                } else {
+                    date = review.dateTimeFrom;
                 }
-                return result;
+                if (date !== null) {
+                    const parse = new Date(date);
+                    const today = new Date();
+                    let result = `${parse.getDate() < 10 ? '0' + parse.getDate() : parse.getDate()}.${(parse.getMonth() + 1) < 10 ? '0' + (parse.getMonth() + 1) : parse.getMonth() + 1}.${parse.getFullYear()}`;
+                    if (parse.getMonth() === today.getMonth()) {
+                        result = 'В этом месяце';
+                    }
+                    return result;
+                }
             },
             getRateReview(val) {
                 if (this.trainer.rating[val]) {
@@ -85,7 +95,7 @@
                     return 0;
                 }
             },
-            sliderPrev(){
+            sliderPrev() {
                 if (this.slideControll && this.slideView > 0) {
                     this.slideControll = false;
                     this.slideView = this.slideView - 1;
@@ -94,7 +104,7 @@
                     }, 500);
                 }
             },
-            sliderNext(){
+            sliderNext() {
                 if (this.slideControll && this.slideView < this.slides.length - 1) {
                     this.slideControll = false;
                     this.slideView = this.slideView + 1;
@@ -118,9 +128,9 @@
                 paymentView: false,
                 payment: 1,
                 payments: [
-                    { id: 1, icon: 'ym.svg', name: 'Яндекс.Деньги' },
-                    { id: 2, icon: 'wm.svg', name: 'Webmoney' },
-                    { id: 3, icon: 'visa.svg', name: 'Visa' }
+                    {id: 1, icon: 'ym.svg', name: 'Яндекс.Деньги'},
+                    {id: 2, icon: 'wm.svg', name: 'Webmoney'},
+                    {id: 3, icon: 'visa.svg', name: 'Visa'}
                 ],
                 isLastLessonFinished: false,
                 reviews: [],
@@ -131,9 +141,9 @@
         },
         mounted() {
             this.slide += this.trainers.indexOf(this.trainer)
-            if(window.innerWidth > 1000){
+            if (window.innerWidth > 1000) {
                 this.width = (window.innerWidth / 2) - ((window.innerWidth / 2) / 5) - 100;
-            }else{
+            } else {
                 this.width = (window.innerWidth / 2) + ((window.innerWidth / 2) / 2) - 100;
             }
             this.ww = this.trainers.length * this.width;

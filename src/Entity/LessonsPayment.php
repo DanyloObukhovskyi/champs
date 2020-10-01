@@ -35,7 +35,7 @@ class LessonsPayment
     /**
      * @return mixed
      */
-    public function getPayment()
+    public function getPayment(): ?Payment
     {
         return $this->payment;
     }

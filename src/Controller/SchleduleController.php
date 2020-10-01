@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
@@ -17,6 +18,9 @@ class SchleduleController extends AbstractController
 {
     use EntityManager;
 
+    /**
+     * @var ScheduleService
+     */
     public $scheduleService;
 
     public function __construct()
@@ -100,58 +104,29 @@ class SchleduleController extends AbstractController
      */
     public function changeTimeStatus(Request $request)
     {
-//        $form = json_decode($form);
-//        $user_id = ;
-//        $date = new \DateTime($form->date);
-        $entityManager = $this->getDoctrine()->getManager();
-        $schledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->find($request->request->get('id'));
+        $trainer = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($request->request->get('user_id'));
 
-        switch ($request->request->get('time'))
-        {
-            case "10:00":
-                $schledule->setTime1011($request->request->get('status'));
-                break;
-            case "11:00":
-                $schledule->setTime1112($request->request->get('status'));
-                break;
-            case "12:00":
-                $schledule->setTime1213($request->request->get('status'));
-                break;
-            case "13:00":
-                $schledule->setTime1314($request->request->get('status'));
-                break;
-            case "14:00":
-                $schledule->setTime1415($request->request->get('status'));
-                break;
-            case "15:00":
-                $schledule->setTime1516($request->request->get('status'));
-                break;
-            case "16:00":
-                $schledule->setTime1617($request->request->get('status'));
-                break;
-            case "17:00":
-                $schledule->setTime1718($request->request->get('status'));
-                break;
-            default:
-                return new Response("404");
-        }
-        $entityManager->persist($schledule);
-        $entityManager->flush();
+        $date = new \DateTime($request->request->get('date'));
 
-        return $this->json($schledule);
+        $time = $request->request->get('time');
+        $status = $request->request->get('status');
+
+        /** @var Schedule $schedule */
+        $schedule = $this->scheduleService->update($trainer, $date, $time, $status);
+
+        return $this->json('ok');
     }
 
-
     /**
-     * Schledule /ru/calendar/*
+     * Schedule /ru/calendar/*
      *
-     * @Route("/ru/calendar/user/date/week/{form}", name="user_schledule_date_week_test")
+     * @Route("/ru/calendar/trainer/date/week", methods={"GET","POST"}, name="user_schedule_date_week")
      */
-    public function viewSchleduleWeek($form)
+    public function viewSchleduleWeek(Request $request)
     {
-        $form = json_decode($form);
+        $form = json_decode($request->getContent());
 
         $user_id = $form->user_id;
         $dateFrom = new \DateTime($form->date);

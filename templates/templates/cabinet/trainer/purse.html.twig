@@ -2,165 +2,178 @@
 {% block title %}Кошелек{% endblock %}
 {% block router %}cabinet{% endblock %}
 {% block css %}
-  {% for style in styles %}
-    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
-  {% endfor %}
+    {% for style in styles %}
+        <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}"/>
+    {% endfor %}
 {% endblock %}
 {% block body %}
-<div class="cabinet" id="cabinet" style="min-height: 40vw">
-  <div class="container">
-    <div class="header">
-      <div class="lft">
-        <a href="{{ path('trainer_index') }}">РАСПИСАНИЕ</a>
-        <a href="{{ path('timetable_index') }}">КАЛЕНДАРЬ</a>
-        <a class="active">КОШЕЛЕК</a>
-        <a href="{{ path('trainer_settings_index') }}">НАСТРОЙКИ</a>
-      </div>
-      <div class="rgt">
-        <a href="{{ path('app_logout') }}">Выйти</a>
-      </div>
+    <div class="cabinet" id="cabinet" style="min-height: 40vw">
+        <div class="container">
+            <div class="header">
+                <div class="lft">
+                    <a href="{{ path('trainer_index') }}">РАСПИСАНИЕ</a>
+                    <a href="{{ path('timetable_index') }}">КАЛЕНДАРЬ</a>
+                    <a class="active">КОШЕЛЕК</a>
+                    <a href="{{ path('trainer_settings_index') }}">НАСТРОЙКИ</a>
+                </div>
+                <div class="rgt">
+                    <a href="{{ path('app_logout') }}">Выйти</a>
+                </div>
+            </div>
+            <div class="list">
+                <div class="lft">
+                    <div class="list-table" v-for="(item, i) in items" :key="i">
+                        <div class="date">
+                            <div v-text="item.parse"></div>
+                            <div v-text="item.price + ' ₽'"></div>
+                        </div>
+                        <div class="item" v-for="(child, i2) in item.items" :key="i2">
+                            <div class="time" v-text="child.time"></div>
+                            <div class="user">
+                                <img :src="child.icon"/>
+                                <span v-text="child.nik"/>
+                            </div>
+                            <div class="stars" v-if="child.rate">
+                                <img :src="'/images/' + (s <= child.rate ? 'StarOrange.svg' : 'StarGray.svg')"
+                                     v-for="s in 5" :key="s"/>
+                            </div>
+                            <div class="closed">Занятие окончено</div>
+                            <div class="price" v-text="child.price + ' ₽'"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rgt no-p">
+                    <div class="title">Ваш баланс</div>
+                    <div class="top">
+                        <img src="/images/temp/matches/{{ photo }}"/>
+                        <div class="data">
+                            <div class="name">{{ nickname }}</div>
+                            <div class="date">БАЛАНС</div>
+                            <div class="time">{{ app.user.purse }} ₽</div>
+                        </div>
+                    </div>
+                    <div class="cont">
+                        <div class="button payment" style="display: none">
+                            Вывести деньги
+                        </div>
+                        <div class="rows-info">
+                            <div class="r">
+                                <div class="name">ВСЕГО ЗА ЭТОТ МЕСЯЦ</div>
+                                <div class="text">{{ lastmonth.sum ? lastmonth.sum : '0' }} ₽</div>
+                            </div>
+                            <div class="r">
+                                <div class="name">ВСЕГО ЗА ПРОШЛЫЙ МЕСЯЦ</div>
+                                <div class="text">{{ prelastmonth.sum ? prelastmonth.sum : '0' }} ₽</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title bt">История</div>
+                    <div class="cont historys">
+                        {% for item in history %}
+                            <div class="history">
+                                <div>{{ item.datetime.date|date("d.m.Y H:s") }}</div>
+                                <div>{{ item.operation }} ₽</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="list">
-      <div class="lft">
-        <div class="list-table" v-for="(item, i) in items" :key="i">
-          <div class="date">
-            <div v-text="item.parse"></div>
-            <div v-text="item.price + ' ₽'"></div>
-          </div>
-          <div class="item" v-for="(child, i2) in item.items" :key="i2">
-            <div class="time" v-text="child.time"></div>
-            <div class="user">
-              <img :src="child.icon" />
-              <span v-text="child.nik" />
-            </div>
-            <div class="stars" v-if="child.rate">
-              <img :src="'/images/' + (s <= child.rate ? 'StarOrange.svg' : 'StarGray.svg')" v-for="s in 5" :key="s"  />
-            </div>
-            <div class="closed">Занятие окончено</div>
-            <div class="price" v-text="child.price + ' ₽'"></div>
-          </div>
-        </div>
-      </div>
-      <div class="rgt no-p">
-        <div class="title">Ваш баланс</div>
-        <div class="top">
-          <img src="/images/temp/matches/{{photo}}" />
-          <div class="data">
-            <div class="name">{{nickname}}</div>
-            <div class="date">БАЛАНС</div>
-            <div class="time">{{app.user.purse}} ₽</div>
-          </div>
-        </div>
-        <div class="cont">
-          <div class="button payment" style="display: none">
-            Вывести деньги
-          </div>
-          <div class="rows-info">
-            <div class="r">
-              <div class="name">ВСЕГО ЗА ЭТОТ МЕСЯЦ</div>
-              <div class="text">{{lastmonth.sum ? lastmonth.sum : '0'}} ₽</div>
-            </div>
-            <div class="r">
-              <div class="name">ВСЕГО ЗА ПРОШЛЫЙ МЕСЯЦ</div>
-              <div class="text">{{prelastmonth.sum ? prelastmonth.sum : '0'}} ₽</div>
-            </div>
-          </div>
-        </div>
-        <div class="title bt">История</div>
-        <div class="cont historys">
-          {% for item in history %}
-            <div class="history">
-              <div>{{item.datetime.date|date("d.m.Y H:s")}}</div>
-              <div>{{item.operation}} ₽</div>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<script>
-  const cabinet = new Vue({
-    el: '#cabinet',
-    methods: {
-      setParse() {
-        const th = this;
-        axios.get('/ru/lessons/trainer/{{app.user.id}}')
-        .then((res) => {
-          if (res.data !== null) {
-            let items = [];
-            let bool = true;
-            res.data.forEach((item, i) => {
-              if (item.status === 1) {
-                const date = new Date(item.datetime);
-                const dateHour = new Date(item.datetime);
-                dateHour.setHours(dateHour.getHours() + 1);
-                bool = true;
-                let newitem = {
-                  id: item.id,
-                  time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
-                  nik: item.student.nickname,
-                  icon: item.student.photo ? '/images/temp/matches/' + item.student.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
-                  status: item.status,
-                  date: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                  price: item.cost,
-                  rate: item.rate
-                };
-                items.forEach((item2, i2) => {
-                  const date2 = new Date(item2.date);
-                  if (date.getDate() === date2.getDate() && date.getMonth() === date2.getMonth() && date.getFullYear() === date2.getFullYear()) {
-                    bool = false;
-                    newitem = {
-                      id: item.id,
-                      time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
-                      nik: item.student.nickname,
-                      icon: item.student.photo ? '/images/temp/matches/' + item.student.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
-                      status: item.status,
-                      date: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                      price: item.cost,
-                    };
-                    items[i2].items.push(newitem);
-                  }
-                })
-                if (bool) {
-                  const nitem = {
-                    parse: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                    date: item.datetime,
-                    price: 0,
-                    items: [newitem],
-                  };
-                  items.push(nitem);
+    <script>
+        const cabinet = new Vue({
+            el: '#cabinet',
+            methods: {
+                setParse() {
+                    const th = this;
+                    axios.get('/ru/lessons/trainer/{{ app.user.id }}')
+                        .then((res) => {
+                            if (res.data !== null) {
+                                let items = [];
+                                let bool = true;
+                                res.data.forEach((item, i) => {
+                                    if (item.status === 1) {
+                                        const date = new Date(item.datetime);
+                                        const dateHour = new Date(item.datetime);
+                                        dateHour.setHours(dateHour.getHours() + 1);
+                                        bool = true;
+                                        let newitem = {
+                                            id: item.id,
+                                            time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
+                                            nik: item.student.nickname,
+                                            icon: item.student.photo ? '/images/temp/matches/' + item.student.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
+                                            status: item.status,
+                                            date: date.toLocaleString("ru", {
+                                                weekday: 'long',
+                                                day: 'numeric',
+                                                month: 'long'
+                                            }),
+                                            price: item.cost,
+                                            rate: item.rate
+                                        };
+                                        items.forEach((item2, i2) => {
+                                            const date2 = new Date(item2.date);
+                                            if (date.getDate() === date2.getDate() && date.getMonth() === date2.getMonth() && date.getFullYear() === date2.getFullYear()) {
+                                                bool = false;
+                                                newitem = {
+                                                    id: item.id,
+                                                    time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
+                                                    nik: item.student.nickname,
+                                                    icon: item.student.photo ? '/images/temp/matches/' + item.student.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
+                                                    status: item.status,
+                                                    date: date.toLocaleString("ru", {
+                                                        weekday: 'long',
+                                                        day: 'numeric',
+                                                        month: 'long'
+                                                    }),
+                                                    price: item.cost,
+                                                };
+                                                items[i2].items.push(newitem);
+                                            }
+                                        })
+                                        if (bool) {
+                                            const nitem = {
+                                                parse: date.toLocaleString("ru", {
+                                                    weekday: 'long',
+                                                    day: 'numeric',
+                                                    month: 'long'
+                                                }),
+                                                date: item.datetime,
+                                                price: 0,
+                                                items: [newitem],
+                                            };
+                                            items.push(nitem);
+                                        }
+                                    }
+                                });
+                                th.items = items;
+                                th.items.forEach((item, i) => {
+                                    item.price = 0;
+                                    item.items.forEach((item2, i2) => {
+                                        item.price = item.price + item2.price;
+                                    })
+                                })
+                            }
+                        })
+                },
+                setHistory() {
+                    axios.get('/ru/purse/history/by-user/{{ app.user.id }}')
+                        .then((res) => {
+                            console.log(res.data)
+                        })
                 }
-              }
-            });
-            th.items = items;
-            th.items.forEach((item, i) => {
-              item.price = 0;
-              item.items.forEach((item2, i2) => {
-                item.price = item.price + item2.price;
-              })
-            })
-          }
-        })
-      },
-      setHistory() {
-        axios.get('/ru/purse/history/by-user/{{app.user.id}}')
-        .then((res) => {
-          console.log(res.data)
-        })
-      }
-    },
-    data: function () {
-      return {
-        items: [],
-      }
-    },
-    mounted() {
-      this.setParse();
-      this.setHistory();
-    }
-  });
-</script>
+            },
+            data: function () {
+                return {
+                    items: [],
+                }
+            },
+            mounted() {
+                this.setParse();
+                this.setHistory();
+            }
+        });
+    </script>
 
 {% endblock %}

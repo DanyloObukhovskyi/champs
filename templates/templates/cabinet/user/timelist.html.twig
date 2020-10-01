@@ -2,300 +2,245 @@
 {% block title %}Расписание{% endblock %}
 {% block router %}cabinet{% endblock %}
 {% block css %}
-  {% for style in styles %}
-    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
-  {% endfor %}
+    {% for style in styles %}
+        <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}"/>
+    {% endfor %}
 {% endblock %}
 {% block body %}
-<div class="cabinet" id="cabinet" style="min-height: 40vw">
-  <div class="container">
-    <div class="header">
-      <div class="lft">
-        <a class="active">РАСПИСАНИЕ</a>
-        <a href="{{ path('specifications_index') }}">ХАРАКТЕРИСТИКИ</a>
-        <a href="{{ path('history_index') }}">ИСТОРИЯ</a>
-        <a href="{{ path('settings_index') }}">НАСТРОЙКИ</a>
-      </div>
-      <div class="rgt">
-        <a href="{{ path('app_logout') }}">Выйти</a>
-      </div>
-    </div>
-    <div class="list">
-      <div class="lft">
-        <div class="list-table" v-for="(item, i) in items" :key="i">
-          <div class="date" v-text="item.parse"></div>
-          <div class="item" v-for="(child, i2) in item.items" :key="i2">
-            <div class="r" :class="[select === child.id ? 'active' : '']">
-              <div class="time" v-text="child.time"></div>
-              <div class="user">
-                <img :src="child.icon" />
-                <span v-text="child.nik" />
-              </div>
-              <div class="button h s" @click="setSelect(child, $event)">Подробнее</div>
-              <div class="button h" @click="setStatus(child)" v-if="!child.studentStatus">Занятие окончено</div>
-              <div class="button w" v-if="child.studentStatus">ожидаем подтверждения тренером</div>
+    <div class="cabinet" id="cabinet" style="min-height: 40vw">
+        <div class="container">
+            <div class="header">
+                <div class="lft">
+                    <a class="active">РАСПИСАНИЕ</a>
+                    <a href="{{ path('specifications_index') }}">ХАРАКТЕРИСТИКИ</a>
+                    <a href="{{ path('history_index') }}">ИСТОРИЯ</a>
+                    <a href="{{ path('settings_index') }}">НАСТРОЙКИ</a>
+                </div>
+                <div class="rgt">
+                    <a href="{{ path('app_logout') }}">Выйти</a>
+                </div>
             </div>
-            <div class="b" v-if="!child.reviewIsset" :style="{height: select === child.id ? height + 'px' : 0}">
-              <div class="accordion">
-                <div class="rate">
-                  <div class="title">ОЦЕНИТЕ ЗАНЯТИЕ</div>
-                  <div class="stars d-block">
-                    <div class="d-flex justify-content-center">
-                      <img alt="Star"
-                           :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
-                           v-for="i in 5"
-                           @mouseover="star = i"
-                           @mouseout="star = 0"
-                           @click="starSel = i" />
+            <div class="list">
+                <div class="lft">
+                    <div class="list-table" v-for="(dayLessons, date) in lessons" :key="date">
+                        <div class="date" v-text="getDate(date)"></div>
+                        <div class="item" v-for="(lesson, index) in dayLessons" :key="index">
+                            <div class="r" :class="[select === lesson.id ? 'active' : '']">
+                                <div class="time" v-text="`${lesson.timeFrom}:00 - ${lesson.timeTo}:00`"></div>
+                                <div class="user">
+                                    <img :src="lesson.trainer.photo"/>
+                                    <span v-text="lesson.trainer.nickname"/>
+                                </div>
+                                <div class="button h s" @click="setSelect(lesson, $event)">Подробнее</div>
+                                <div class="button h" @click="setStatus(lesson)" v-if="!lesson.studentStatus">Занятие
+                                    окончено
+                                </div>
+                                <div class="button w" v-if="lesson.studentStatus">ожидаем подтверждения тренером</div>
+                            </div>
+                            <div class="b" v-if="!lesson.reviewIsset"
+                                 :style="{height: select === lesson.id ? height + 'px' : 0}">
+                                <div class="accordion">
+                                    <div class="rate">
+                                        <div class="title">ОЦЕНИТЕ ЗАНЯТИЕ</div>
+                                        <div class="stars d-block">
+                                            <div class="d-flex justify-content-center">
+                                                <img alt="Star"
+                                                     :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
+                                                     v-for="i in 5"
+                                                     @mouseover="star = i"
+                                                     @mouseout="star = 0"
+                                                     @click="starSel = i"/>
+                                            </div>
+                                            <div class="d-flex justify-content-center mt-2">
+                                                <img alt="Star"
+                                                     :src="`/images/${i + 5 <= star || i + 5 <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
+                                                     v-for="i in 5"
+                                                     @mouseover="star = i + 5"
+                                                     @mouseout="star = 0"
+                                                     @click="starSel = i + 5"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tags">
+                                        <div class="title">ОСОБЕННОСТИ<span>&nbsp;<label
+                                                        v-text="methods.length"></label>/2</span></div>
+                                        <div class="list">
+                                            <div :class="[methods.indexOf('tactics') !== -1 ? 'active' : '']"
+                                                 @click="setMethod('tactics')">ТАКТИКА
+                                            </div>
+                                            <div :class="[methods.indexOf('scatter') !== -1 ? 'active' : '']"
+                                                 @click="setMethod('scatter')">РАСКИДКА
+                                            </div>
+                                            <div :class="[methods.indexOf('aim') !== -1 ? 'active' : '']"
+                                                 @click="setMethod('aim')">AIM
+                                            </div>
+                                            <div :class="[methods.indexOf('mentor') !== -1 ? 'active' : '']"
+                                                 @click="setMethod('mentor')">НАСТАВНИК
+                                            </div>
+                                            <div :class="[methods.indexOf('duel') !== -1 ? 'active' : '']"
+                                                 @click="setMethod('duel')">ДУЭЛЬ
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input">
+                                        <textarea v-model="comment" placeholder="Оставьте отзыв"
+                                                  maxlength="100"></textarea>
+                                    </div>
+                                    <div class="send">
+                                        <div class="button-send" @click="setComment(lesson)">Отправить</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-center mt-2">
-                      <img alt="Star"
-                           :src="`/images/${i + 5 <= star || i + 5 <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
-                           v-for="i in 5"
-                           @mouseover="star = i + 5"
-                           @mouseout="star = 0"
-                           @click="starSel = i + 5" />
+                </div>
+                <transition name="slide-fade">
+                    <div class="rgt" v-if="data !== null">
+                        <div class="top">
+                            <img style="background-color: white" :src="data.trainer.photo"/>
+                            <div class="data">
+                                <div class="name" v-text="data.nik"></div>
+                                <div class="online" v-text="data.online"></div>
+                                <div class="date" v-text="data.date"></div>
+                                <div class="time" v-text="data.time"></div>
+                            </div>
+                        </div>
+                        <a :href="data.discord" class="button discord" v-if="data.discord" target="_blank">
+                            <img src="/images/discord.svg" alt="discord"/>Перейти в Discord
+                        </a>
+                        <div class="button steam" style="display: none">
+                            <img src="/images/steam.svg" alt="steam"/>Перейти в Steam
+                        </div>
+                        <div class="rows-info">
+                            <div class="r">
+                                <div class="name">ИМЯ</div>
+                                <div class="text" v-text="`${data.trainer.name} ${data.trainer.family}`"></div>
+                            </div>
+                            <div class="r">
+                                <div class="name">РАНГ ТРЕНЕРА</div>
+                                <div class="text" v-text="data.trainer.rank"></div>
+                            </div>
+                            <div class="r">
+                                <div class="name">ТРЕНИРОВОК ВСЕГО</div>
+                                <div class="text" v-text="data.trainer.trainingAll"></div>
+                            </div>
+                            <div class="r">
+                                <div class="name">ТРЕНИРОВОК СО МНОЙ</div>
+                                <div class="text" v-text="data.trainer.training"></div>
+                            </div>
+                        </div>
+                        <div class="payment" style="display: none">
+                            <div>Оплата произведена</div>
+                            <div>20.05 15:41</div>
+                            <div>1000 ₽</div>
+                        </div>
+                        <div class="price">
+                            <div>Стоимость занятия</div>
+                            <div><span v-text="data.cost"></span>₽</div>
+                        </div>
+                        <div class="price">
+                            <div>Стоимость часа</div>
+                            <div><span v-text="data.trainer.cost"></span>₽</div>
+                        </div>
+                        <div class="end closed" v-if="data.status === 1">Занятие окончено</div>
                     </div>
-                  </div>
-                </div>
-                <div class="tags">
-                  <div class="title">ОСОБЕННОСТИ<span>&nbsp;<label v-text="methods.length"></label>/2</span></div>
-                  <div class="list">
-                    <div :class="[methods.indexOf('tactics') !== -1 ? 'active' : '']" @click="setMethod('tactics')">ТАКТИКА</div>
-                    <div :class="[methods.indexOf('scatter') !== -1 ? 'active' : '']" @click="setMethod('scatter')">РАСКИДКА</div>
-                    <div :class="[methods.indexOf('aim') !== -1 ? 'active' : '']" @click="setMethod('aim')">AIM</div>
-                    <div :class="[methods.indexOf('mentor') !== -1 ? 'active' : '']" @click="setMethod('mentor')">НАСТАВНИК</div>
-                    <div :class="[methods.indexOf('duel') !== -1 ? 'active' : '']" @click="setMethod('duel')">ДУЭЛЬ</div>
-                  </div>
-                </div>
-                <div class="input">
-                  <textarea v-model="comment" placeholder="Оставьте отзыв" maxlength="100"></textarea>
-                </div>
-                <div class="send">
-                  <div class="button-send" @click="setComment(child)">Отправить</div>
-                </div>
-              </div>
+                </transition>
             </div>
-          </div>
         </div>
-      </div>
-      <transition name="slide-fade">
-        <div class="rgt" v-if="data !== null">
-          <div class="top">
-            <img :src="data.icon" />
-            <div class="data">
-              <div class="name" v-text="data.nik"></div>
-              <div class="online" v-text="data.online"></div>
-              <div class="date" v-text="data.date"></div>
-              <div class="time" v-text="data.time"></div>
-            </div>
-          </div>
-          <a :href="data.discord" class="button discord" v-if="data.discord" target="_blank">
-            <img src="/images/discord.svg" alt="discord" />Перейти в Discord
-          </a>
-          <div class="button steam" style="display: none">
-            <img src="/images/steam.svg" alt="steam" />Перейти в Steam
-          </div>
-          <div class="rows-info">
-            <div class="r">
-              <div class="name">ИМЯ</div>
-              <div class="text" v-text="data.fullname"></div>
-            </div>
-            <div class="r">
-              <div class="name">РАНГ ТРЕНЕРА</div>
-              <div class="text" v-text="data.rank"></div>
-            </div>
-            <div class="r">
-              <div class="name">ТРЕНИРОВОК ВСЕГО</div>
-              <div class="text" v-text="data.trainingAll"></div>
-            </div>
-            <div class="r">
-              <div class="name">ТРЕНИРОВОК СО МНОЙ</div>
-              <div class="text" v-text="data.training"></div>
-            </div>
-          </div>
-          <div class="payment" style="display: none">
-            <div>Оплата произведена</div>
-            <div>20.05 15:41</div>
-            <div>1000 ₽</div>
-          </div>
-          <div class="price">
-            <div>Стоимость</div>
-            <div><span v-text="data.price">1000</span>₽</div>
-          </div>
-          <div class="end closed" v-if="data.status === 1">Занятие окончено</div>
-        </div>
-      </transition>
     </div>
-  </div>
-</div>
 
-<script>
-  const cabinet = new Vue({
-    el: '#cabinet',
-    methods: {
-      setMethod(val) {
-        if (this.methods.indexOf(val) !== -1) {
-          this.methods = this.methods.filter((item) => {
-            if (item !== val) {
-              return item;
-            }
-          })
-        } else {
-          if (this.methods.length < 2) {
-            this.methods.push(val);
-          }
-        }
-      },
-      setComment(item) {
-        const form = new FormData();
-        if (item.trainerId && item.id && this.starSel !== 0 && this.comment.length > 0) {
-          form.append('student_id', {{app.user.id}});
-          form.append('trainer_id', item.trainerId);
-          form.append('lesson_id', item.id);
-          form.append('rate', this.starSel);
-          form.append('tactics', this.methods.indexOf('tactics') !== -1 ? true : false);
-          form.append('scatter', this.methods.indexOf('scatter') !== -1 ? true : false);
-          form.append('aim', this.methods.indexOf('aim') !== -1 ? true : false);
-          form.append('mentor', this.methods.indexOf('mentor') !== -1 ? true : false);
-          form.append('duel', this.methods.indexOf('duel') !== -1 ? true : false);
-          form.append('comment', this.comment);
-          axios.post('/ru/lesson/review/', form)
-          .then((res) => {
-            item.reviewIsset = true;
-          })
-        }
-      },
-      setSelect(item, e) {
-        const th = this;
-        this.data = null;
-        if (this.select === item.id) {
-          this.height = 0;
-          this.select = null;
-        } else {
-          this.data = item;
-          if (!item.reviewIsset) {
-            this.height = e.target.closest('.item').querySelector('.b').querySelector('.accordion').offsetHeight;
-          }
-          this.select = item.id;
-        }
-        this.starSel = 0;
-        axios.get(`/ru/lessons/count/{"student_id":"${item.studentId}","trainer_id":"${item.trainerId}"}`)
-        .then((res) => {
-          if (res.data.trainer && res.data.together) {
-            th.data.trainingAll = res.data.trainer;
-            th.data.training = res.data.together;
-          }
-        })
-      },
-      setStatus(item) {
-        const th = this;
-        const form = new FormData();
-        form.append('user_id', {{ app.user.id }});
-        form.append('lesson_id', item.id);
-        axios.get(`/ru/lessons/set-status-ended/{"user_id":"{{ app.user.id }}","lesson_id":"${item.id}","istrainer":false}`)
-        .then((res) => {
-          if (res.data.id) {
-            th.setParse();
-          }
-        })
-      },
-      setParse() {
-        const th = this;
-        axios.get('/ru/lessons/student/{{app.user.id}}')
-        .then((res) => {
-          if (res.data !== null) {
-            let items = [];
-            let bool = true;
-            res.data.forEach((item, i) => {
-              console.log(res.data)
-              if (item.status === 0) {
-                const date = new Date(item.datetime);
-                const dateHour = new Date(item.datetime);
-                dateHour.setHours(dateHour.getHours() + 1);
-                bool = true;
-                let newitem = {
-                  id: item.id,
-                  time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
-                  nik: item.trainer_id.nickname,
-                  icon: item.trainer_id.photo ? '/images/temp/matches/' + item.trainer_id.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
-                  status: item.status,
-                  price: item.cost,
-                  online: '',
-                  discord: item.trainer_id.discord,
-                  steam: '',
-                  trainingAll: '-',
-                  training: '-',
-                  tags: [],
-                  date: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                  rank: item.trainer_id.rank,
-                  fullname: `${item.trainer_id.name} ${item.trainer_id.family}`,
-                  price: item.cost,
-                  studentId: item.student_id.id,
-                  trainerId: item.trainer_id.id,
-                  studentStatus: item.student_status,
-                  reviewIsset: item.reviewIsset,
-                };
-                items.forEach((item2, i2) => {
-                  const date2 = new Date(item2.date);
-                  if (date.getDate() === date2.getDate() && date.getMonth() === date2.getMonth() && date.getFullYear() === date2.getFullYear()) {
-                    bool = false;
-                    newitem = {
-                      id: item.id,
-                      time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
-                      nik: item.trainer_id.nickname,
-                      icon: item.trainer_id.photo ? '/images/temp/matches/' + item.trainer_id.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
-                      status: item.status,
-                      price: item.cost,
-                      online: '',
-                      discord: item.trainer_id.discord,
-                      steam: '',
-                      trainingAll: '-',
-                      training: '-',
-                      tags: [],
-                      date: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                      rank: item.trainer_id.rank,
-                      fullname: `${item.trainer_id.name} ${item.trainer_id.family}`,
-                      price: item.cost,
-                      studentId: item.student_id.id,
-                      trainerId: item.trainer_id.id,
-                      studentStatus: item.student_status,
-                      reviewIsset: item.reviewIsset,
-                    };
-                    items[i2].items.push(newitem);
-                  }
-                })
-                if (bool) {
-                  const nitem = {
-                    parse: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                    date: item.datetime,
-                    items: [newitem],
-                  };
-                  items.push(nitem);
+    <script>
+        const cabinet = new Vue({
+            el: '#cabinet',
+            methods: {
+                setMethod(val) {
+                    if (this.methods.indexOf(val) !== -1) {
+                        this.methods = this.methods.filter((item) => {
+                            if (item !== val) {
+                                return item;
+                            }
+                        })
+                    } else {
+                        if (this.methods.length < 2) {
+                            this.methods.push(val);
+                        }
+                    }
+                },
+                setComment(lesson) {
+                    const form = new FormData();
+                    if (lesson.trainer.id && lesson.id && this.starSel !== 0 && this.comment.length > 0) {
+
+                        form.append('student_id', {{ app.user.id }});
+                        form.append('trainer_id', lesson.trainer.id);
+                        form.append('lesson_id', lesson.id);
+                        form.append('rate', this.starSel);
+                        form.append('tactics', this.methods.indexOf('tactics') !== -1 ? true : false);
+                        form.append('scatter', this.methods.indexOf('scatter') !== -1 ? true : false);
+                        form.append('aim', this.methods.indexOf('aim') !== -1 ? true : false);
+                        form.append('mentor', this.methods.indexOf('mentor') !== -1 ? true : false);
+                        form.append('duel', this.methods.indexOf('duel') !== -1 ? true : false);
+                        form.append('comment', this.comment);
+                        axios.post('/ru/lesson/review/', form)
+                            .then((res) => {
+                                lesson.reviewIsset = true;
+                            })
+                    }
+                },
+                setSelect(lesson, e) {
+                    this.data = lesson.trainer;
+
+                    if (this.select === lesson.id) {
+                        this.height = 0;
+                        this.select = null;
+                    } else {
+                        this.data = lesson;
+                        if (!lesson.reviewIsset) {
+                            this.height = e.target.closest('.item').querySelector('.b').querySelector('.accordion').offsetHeight;
+                        }
+                        this.select = lesson.id;
+                    }
+                    this.starSel = 0;
+                },
+                setStatus(item) {
+                    const form = new FormData();
+                    form.append('user_id', {{ app.user.id }});
+                    form.append('lesson_id', item.id);
+                    axios.get(`/ru/lessons/set-status-ended/{"user_id":"{{ app.user.id }}","lesson_id":"${item.id}","istrainer":false}`)
+                        .then((res) => {
+                            if (res.data.id) {
+                                this.getStudentLessons();
+                            }
+                        })
+                },
+                getStudentLessons() {
+                    const th = this;
+                    axios.get('/ru/lessons/student/{{ app.user.id }}')
+                        .then((res) => {
+                            this.lessons = res.data
+                        })
+                },
+                getDate(dateTime){
+                    const date = new Date(dateTime);
+
+                    return date.toLocaleString('ru', {weekday: 'long', day: 'numeric', month: 'long'});
                 }
-              }
-            });
-            th.items = items;
-          }
-        })
-      }
-    },
-    data: function () {
-      return {
-        data: null,
-        starSel: 0,
-        star: 0,
-        height: 0,
-        select: null,
-        items: [],
-        comment: '',
-        methods: [],
-      }
-    },
-    mounted() {
-      this.setParse();
-    },
-  });
-</script>
+            },
+            data: function () {
+                return {
+                    data: null,
+                    starSel: 0,
+                    star: 0,
+                    height: 0,
+                    select: null,
+                    comment: '',
+                    methods: [],
+                    lessons: []
+                }
+            },
+            mounted() {
+                this.getStudentLessons();
+            },
+        });
+    </script>
 
 {% endblock %}

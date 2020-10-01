@@ -33,7 +33,8 @@ class ReviewRepository extends ServiceEntityRepository
             "l.id",
             "l.rate",
             "IDENTITY(l.student)",
-            "l.comment"
+            "l.comment",
+            "l.createdAt"
         ];
 
         $query = $this->createQueryBuilder('l')
@@ -41,14 +42,10 @@ class ReviewRepository extends ServiceEntityRepository
             ->andWhere('l.trainer = :val')
             ->setParameter('val', $value)
             ->leftJoin("l.student", "p")
-            ->addSelect("p.photo",
-                "p.name",
-                "p.family"
-                )
+            ->addSelect("p.photo", "p.name", "p.family")
             ->leftJoin("l.lesson", "o")
-            ->addSelect("o.datetime")
-            ->getQuery()
-            ;
+            ->addSelect("o.dateTimeFrom", "o.dateTimeTo")
+            ->getQuery();
 
         return [
             'entity' => $query->getResult(),
@@ -91,6 +88,13 @@ class ReviewRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @param $lesson
+     * @param $trainer
+     * @param $student
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findByLessonAndTrainerAndStudent($lesson, $trainer, $student)
     {
         $query = $this->createQueryBuilder('l')
