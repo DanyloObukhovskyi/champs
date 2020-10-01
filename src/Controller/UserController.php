@@ -176,6 +176,7 @@ class UserController extends AbstractController
             'family' => $user->getFamily(),
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
+            'vk' => $user->getVk(),
         ];
 
         if ($user->getIsTrainer()) {
