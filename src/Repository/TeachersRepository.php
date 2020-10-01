@@ -26,6 +26,7 @@ class TeachersRepository extends ServiceEntityRepository
     /**
      * @param $value
      * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByUserId($value)
     {
@@ -33,7 +34,7 @@ class TeachersRepository extends ServiceEntityRepository
             ->andWhere('l.userid = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     /**

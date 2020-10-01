@@ -4,14 +4,14 @@
 namespace App\Service;
 
 
-use App\Entity\Schledule;
-use App\Repository\SchleduleRepository;
+use App\Entity\Schedule;
+use App\Repository\ScheduleRepository;
 
 class ScheduleService extends EntityService
 {
-    protected $entity = Schledule::class;
+    protected $entity = Schedule::class;
 
-    /** @var SchleduleRepository */
+    /** @var ScheduleRepository */
     protected $repository;
 
     /**
@@ -25,51 +25,11 @@ class ScheduleService extends EntityService
     }
 
     /**
-     * @param Schledule $schedule
-     * @param $time
-     * @param int $value
-     * @return Schledule|null
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @param $userId
+     * @param $dateFrom
+     * @return array
+     * @throws \Exception
      */
-    public function setTime(Schledule $schedule, $time, int $value)
-    {
-        switch ((int)$time)
-        {
-            case 10:
-                $schedule->setTime1011($value);
-                break;
-            case 11:
-                $schedule->setTime1112($value);
-                break;
-            case 12:
-                $schedule->setTime1213($value);
-                break;
-            case 13:
-                $schedule->setTime1314($value);
-                break;
-            case 14:
-                $schedule->setTime1415($value);
-                break;
-            case 15:
-                $schedule->setTime1516($value);
-                break;
-            case 16:
-                $schedule->setTime1617($value);
-                break;
-            case 17:
-                $schedule->setTime1718($value);
-                break;
-            default:
-                return null;
-        }
-
-        $this->entityManager->persist($schedule);
-        $this->entityManager->flush();
-
-        return $schedule;
-    }
-
     public function createWeek($userId, $dateFrom)
     {
         $from = new \DateTime($dateFrom->format("Y-m-d"));
@@ -77,26 +37,78 @@ class ScheduleService extends EntityService
         $schedules = [];
         for ($i = 0; $i < 7; $i++)
         {
-            $schedule = $this->repository->findByTrainerAndDate($userId, $from->format("Y-m-d"));
+            $schedulesEntities = $this->repository->findByTrainerAndDate($userId, $from->format("Y-m-d"));
 
-            if (empty($schedule)){
-                $schedule = new Schledule();
-                $schedule->setDate($from);
-                $schedule->setTime1011(0);
-                $schedule->setTime1112(0);
-                $schedule->setTime1213(0);
-                $schedule->setTime1314(0);
-                $schedule->setTime1415(0);
-                $schedule->setTime1516(0);
-                $schedule->setTime1617(0);
-                $schedule->setTime1718(0);
-                $schedule->setTrainerId($userId);
+            $scheduleCollect = [];
+            for ($k = 0; $k < 24; $k++)
+            {
+                $timeFrom = $k < 10 ? "0$k" : $k;
+                $timeTo = $k + 1 < 10 ? "0".($k + 1) : $k + 1;
+                $time = "time". $timeFrom. "_". $timeTo;
 
-                $this->save($schedule);
+                $scheduleCollect[$time] = 0;
+
+                /** @var Schedule $schedule */
+                foreach ($schedulesEntities as $schedule)
+                {
+                    if ($schedule->getTime() === $k){
+                        $scheduleCollect[$time] = $schedule->getStatus();
+                    }
+                }
             }
-            $schedules[] = $schedule;
+            $scheduleCollect['date'] = $from->format("Y-m-d");
+
+            $schedules[] = $scheduleCollect;
             $from = $from->modify('+1 day');
         }
         return $schedules;
+    }
+
+    /**
+     * @param $trainer
+     * @param $date
+     * @param $time
+     * @param $status
+     * @return mixed
+     */
+    public function update($trainer, $date, $time, $status)
+    {
+        $schedule = $this->getByTrainerDateAndTime($trainer, $date, $time);
+
+        if (empty($schedule))
+        {
+            /** @var Schedule $schedule */
+            $schedule = new $this->entity;
+            $schedule->setTrainer($trainer);
+            $schedule->setDate($date);
+            $schedule->setTime($time);
+        }
+        $schedule->setStatus($status);
+
+        return $this->save($schedule);
+    }
+
+    /**
+     * @param $trainer
+     * @param $date
+     * @param $time
+     * @return mixed
+     */
+    public function getByTrainerDateAndTime($trainer, $date, $time)
+    {
+        return $this->repository->getByTrainerDateAndTime($trainer, $date, $time);
+    }
+
+    /**
+     * @param Schedule $schedule
+     * @param $status
+     * @return mixed
+     */
+    public function setScheduleStatus(Schedule $schedule, $status)
+    {
+        /** @var Schedule $schedule */
+        $schedule->setStatus($status);
+
+        return $this->save($schedule);
     }
 }

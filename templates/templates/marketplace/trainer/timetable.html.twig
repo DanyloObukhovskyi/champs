@@ -2,9 +2,10 @@
     <div class="timetables" :style="{opacity: block ? '0.8' : '1'}">
         <div class="controll">
             <div class="dates">
-                <div class="dt"><span v-text="getDate('datein')"></span> - <span v-text="getDate('dateout')"></span></div>
-                <div class="arrow" @click="prevWeek"><img src="/images/arrowL.svg" alt="arrowL" /></div>
-                <div class="arrow" @click="nextWeek"><img src="/images/arrowR.svg" alt="arrowR" /></div>
+                <div class="dt"><span v-text="getDate('datein')"></span> - <span v-text="getDate('dateout')"></span>
+                </div>
+                <div class="arrow" @click="prevWeek"><img src="/images/arrowL.svg" alt="arrowL"/></div>
+                <div class="arrow" @click="nextWeek"><img src="/images/arrowR.svg" alt="arrowR"/></div>
             </div>
         </div>
         <div class="cont" id="calendar">
@@ -33,8 +34,7 @@
                                  :attr-row-time="t"
                                  :attr-row-date="i.date"
                                  :attr-row-userid="trainer.id"
-                                 attr-row-table="schledule"
-                                 onclick="setOpenDate(this)">
+                                 attr-row-table="schledule">
                                 <div class="open"
                                      v-if="checkTime(t, i, 1)"
                                      @click="addTime(t, i, 3)"
@@ -65,12 +65,12 @@
             trainer: Object
         },
         watch: {
-          trainer(){
-              if(this.today === null){
-                  this.today = new Date();
-              }
-              this.getAjax(this.today);
-          }
+            trainer() {
+                if (this.today === null) {
+                    this.today = new Date();
+                }
+                this.getAjax(this.today);
+            }
         },
         computed: {
             getTimes() {
@@ -89,7 +89,7 @@
             }
         },
         methods: {
-            addTime(t, i, status){
+            addTime(t, i, status) {
                 let bool = false;
                 this.items[0].week.forEach((item) => {
                     if (item.date === i.date) {
@@ -122,7 +122,7 @@
                 arr.times.forEach((item) => {
                     const hourin = item.timein.split(':');
                     if (hourin[0] === i) {
-                        time = `${item.timein} - ${item.timeout}`;
+                        time = `${item.timein.replaceAll('_', '')} - ${item.timeout.replaceAll('_', '')}`;
                     }
                 });
                 return time;
@@ -234,7 +234,15 @@
                 }
                 let enddate = new Date(today);
                 enddate.setDate(enddate.getDate() + 6);
-                axios.get(`/ru/calendar/user/date/week/{"user_id":"${th.trainer.id}","date":"${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}.${today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : today.getMonth() + 1}.${today.getFullYear()}"}`)
+
+                const date = today.toISOString().split('T')[0];
+
+                const data = {
+                    user_id: this.trainer.id,
+                    date: date
+                }
+
+                axios.post('{{ path('user_schedule_date_week') }}', data)
                     .then(function (response) {
                         const items = {
                             datein: today,
@@ -273,7 +281,7 @@
                                 }
                             });
                             if (newitem.times.length === 0) {
-                                for(a = 0; a < 8; a++) {
+                                for (a = 0; a < 8; a++) {
                                     const times = {
                                         timein: (10 + a) + ':00',
                                         timeout: (11 + a) + ':00',
@@ -305,14 +313,14 @@
         mounted() {
             if (window.innerWidth > 1000) {
                 this.rowsWidth = 'auto';
-                this.rowWidth =  'auto';
+                this.rowWidth = 'auto';
             } else {
                 if (window.innerWidth > 600) {
                     this.rowsWidth = (document.getElementById('calendar').clientWidth / 2) * 7;
-                    this.rowWidth =  document.getElementById('calendar').clientWidth / 2;
+                    this.rowWidth = document.getElementById('calendar').clientWidth / 2;
                 } else {
                     this.rowsWidth = document.getElementById('calendar').clientWidth * 7;
-                    this.rowWidth =  document.getElementById('calendar').clientWidth;
+                    this.rowWidth = document.getElementById('calendar').clientWidth;
                 }
             }
             this.today = new Date();

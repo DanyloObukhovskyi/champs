@@ -10,8 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Teachers
 {
-    private const SERVICE_COMMISION = 0, //percents
-                SERVICE_COST_MULTIPLIER = 1;
+    private const SERVICE_COMMISION = 0; //percents
+
+    private const SERVICE_COST_MULTIPLIER = 1;
+
+    public const DEFAULT_TIMEZONE = 'Europe/Moscow';
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -106,6 +109,11 @@ class Teachers
             $cost = ($this->cost / 100)  * ($percentageMarkup + 100);
         }
         return $cost;
+    }
+
+    public function getCostWithNoPercentage()
+    {
+        return $this->cost;
     }
 
     public function setCost(?int $cost): self

@@ -16,6 +16,9 @@ class TrainerController extends AbstractController
 {
     use EntityManager;
 
+    /**
+     * @var UserService
+     */
     public $userService;
 
     public function __construct()
@@ -24,109 +27,108 @@ class TrainerController extends AbstractController
     }
 
     /**
-      * @Route("/ru/trainer/timelist", name="trainer_index")
-      */
+     * @Route("/ru/trainer/timelist", name="trainer_index")
+     */
     public function index()
     {
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/trainer/timelist.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/timelist.css'
-            ],
-          ]
-        );
-      }
+        if (empty($this->getUser()) or !$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            return $this->render('templates/cabinet/trainer/timelist.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/timelist.css'
+                    ],
+                ]
+            );
+        }
     }
 
     /**
-      * @Route("/ru/trainer/timetable", name="timetable_index")
-      */
+     * @Route("/ru/trainer/timetable", name="timetable_index")
+     */
     public function timetable()
     {
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/trainer/timetable.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/timetable.css'
-            ]
-          ]
-        );
-      }
+        if (empty($this->getUser()) or !$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            return $this->render('templates/cabinet/trainer/timetable.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/timetable.css'
+                    ]
+                ]
+            );
+        }
     }
 
     /**
-      * @Route("/ru/trainer/purse", name="purse_index")
-      */
+     * @Route("/ru/trainer/purse", name="purse_index")
+     */
     public function purse()
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
 
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-          $history = $this->getDoctrine()
-              ->getRepository(PurseHistory::class)
-              ->findBy([
-                  'user' => $user->getId()
-              ]);
-          foreach ($history as $value)
-          {
-              /** @var PurseHistory $value */
-              $value->setOperation($value->getWorkPay());
-          }
+        if (!$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            $history = $this->getDoctrine()
+                ->getRepository(PurseHistory::class)
+                ->findBy([
+                    'user' => $user->getId()
+                ]);
+            foreach ($history as $value) {
+                /** @var PurseHistory $value */
+                $value->setOperation($value->getWorkPay());
+            }
 
-        return $this->render('templates/cabinet/trainer/purse.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/purse.css'
-            ],
-            'nickname' => $user->getNickname(),
-              'photo' => $user->getPhoto(),
-              'lastmonth' => $this->getDoctrine()
-                  ->getRepository(PurseHistory::class)
-                  ->sumByLastMonth($user->getId()),
-              'prelastmonth' => $this->getDoctrine()
-                  ->getRepository(PurseHistory::class)
-                  ->sumByPreLastMonth($user->getId()),
-              'history' => $history
+            return $this->render('templates/cabinet/trainer/purse.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/purse.css'
+                    ],
+                    'nickname' => $user->getNickname(),
+                    'photo' => $user->getPhoto(),
+                    'lastmonth' => $this->getDoctrine()
+                        ->getRepository(PurseHistory::class)
+                        ->sumByLastMonth($user->getId()),
+                    'prelastmonth' => $this->getDoctrine()
+                        ->getRepository(PurseHistory::class)
+                        ->sumByPreLastMonth($user->getId()),
+                    'history' => $history
 
-          ]
-        );
-      }
+                ]
+            );
+        }
     }
 
     /**
-      * @Route("/ru/trainer/settings", name="trainer_settings_index")
-      */
+     * @Route("/ru/trainer/settings", name="trainer_settings_index")
+     */
     public function trainer_settings()
     {
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/trainer/settings.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/settings.css',
-              'multiselect.css'
-            ],
-          ]
-        );
-      }
+        if (!$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            return $this->render('templates/cabinet/trainer/settings.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/settings.css',
+                        'multiselect.css'
+                    ],
+                ]
+            );
+        }
     }
 
 
@@ -143,7 +145,7 @@ class TrainerController extends AbstractController
 
         if (!$user) {
             throw $this->createNotFoundException(
-                'No trainer found for id '.$id
+                'No trainer found for id ' . $id
             );
         }
 
@@ -181,8 +183,7 @@ class TrainerController extends AbstractController
     {
         $paginate = $_ENV['TRAINERS_ON_PAGE'] ?? 5;
 
-        if($game == 'all')
-        {
+        if ($game == 'all') {
             $game = ['cs', 'lol', 'dota'];
         }
         $entityManager = $this->getDoctrine()->getManager();
@@ -195,7 +196,7 @@ class TrainerController extends AbstractController
             return $this->json([]);
         }
 
-        $filters = json_decode( $request->getContent(), true);
+        $filters = json_decode($request->getContent(), true);
         $response = $this->userService->teachersDecorator($users, $filters);
         $response = array_chunk($response, $paginate);
 

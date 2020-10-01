@@ -3,16 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\Lessons;
+use App\Entity\LessonTime;
 use App\Entity\Payment;
 use App\Entity\PurseHistory;
 use App\Entity\Review;
+use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\LessonService;
+use App\Service\ScheduleService;
+use App\Traits\AuthUser;
 use App\Traits\EntityManager;
 use App\Traits\Mail;
+use Carbon\Carbon;
 use DateTime;
+use Doctrine\DBAL\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -25,12 +31,22 @@ class LessonsController extends AbstractController
 {
     use EntityManager;
     use Mail;
+    use AuthUser;
 
+    /**
+     * @var LessonService
+     */
     public $lessonsService;
+
+    /**
+     * @var ScheduleService
+     */
+    public $scheduleService;
 
     public function __construct()
     {
         $this->lessonsService = new LessonService($this->getEntityManager());
+        $this->scheduleService = new ScheduleService($this->getEntityManager());
     }
 
     /**
@@ -91,44 +107,18 @@ class LessonsController extends AbstractController
             ->getRepository(Lessons::class)
             ->findByTrainerId($id);
 
-        $result = [];
+
+
+        $lessons = $this->lessonsService->lessonsDecoratorForCabinet($lessons);
+
+        $lessonsOrderedByDate = [];
         foreach ($lessons as $lesson)
         {
-            /** @var Lessons $lesson */
-            $result[] = [
-                'id' => $lesson->getId(),
-                'datetime' => $lesson->getDatetime(),
-                'cost' => $lesson->getCost(),
-                'student' => [
-                    'id' => $lesson->getStudentId()->getId(),
-                    'email' => $lesson->getStudentId()->getEmail(),
-                    'istrainer' => $lesson->getStudentId()->getIsTrainer(),
-                    'nickname' => $lesson->getStudentId()->getNickname(),
-                    'name' => $lesson->getStudentId()->getName(),
-                    'game' => $lesson->getStudentId()->getGame(),
-                    'rank' => $lesson->getStudentId()->getRank(),
-                    'family' => $lesson->getStudentId()->getFamily(),
-                    'discord' => $lesson->getStudentId()->getDiscord(),
-                ],
-                'trainer' => [
-                    'id' => $lesson->getTrainerId()->getId(),
-                    'email' => $lesson->getTrainerId()->getEmail(),
-                    'istrainer' => $lesson->getTrainerId()->getIsTrainer(),
-                    'nickname' => $lesson->getTrainerId()->getNickname(),
-                    'name' => $lesson->getTrainerId()->getName(),
-                    'game' => $lesson->getTrainerId()->getGame(),
-                    'rank' => $lesson->getTrainerId()->getRank(),
-                    'family' => $lesson->getTrainerId()->getFamily(),
-                    'discord' => $lesson->getTrainerId()->getDiscord(),
-                ],
-                'studentStatus' => $lesson->getStudentStatus(),
-                'trainerStatus' => $lesson->getTrainerStatus(),
-                'status' => $lesson->getStatus(),
-                'rate' => $lesson->getReview() === null ? null : $lesson->getReview()->getRate()
-            ];
+            $date = $lesson['dateTimeFrom']->format('Y-m-d');
+            $lessonsOrderedByDate[$date][] = $lesson;
         }
 
-        return $this->json($result);
+        return $this->json($lessonsOrderedByDate);
     }
 
     /**
@@ -160,54 +150,35 @@ class LessonsController extends AbstractController
             ->getRepository(Lessons::class)
             ->findByStudentId($id);
 
-        $result =[];
+        $lessonsWithTrainerStatusNotConfirm = [];
+        /** @var Lessons $lesson */
         foreach ($lessons as $lesson)
         {
-            /** @var Lessons $lesson */
-            $result[] = [
-                'id' => $lesson->getId(),
-                'datetime' => $lesson->getDatetime(),
-                'cost' => $lesson->getCost(),
-                'student_id' => [
-                    'id' => $lesson->getStudentId()->getId(),
-                    'email' => $lesson->getStudentId()->getEmail(),
-                    'istrainer' => $lesson->getStudentId()->getIsTrainer(),
-                    'nickname' => $lesson->getStudentId()->getNickname(),
-                    'photo' => $lesson->getStudentId()->getPhoto(),
-                    'name' => $lesson->getStudentId()->getName(),
-                    'family' => $lesson->getStudentId()->getFamily(),
-                    'game' => $lesson->getStudentId()->getGame(),
-                    'rank' => $lesson->getStudentId()->getRank(),
-                    'discord' => $lesson->getStudentId()->getDiscord(),
-                ],
-                'trainer_id' => [
-                    'id' => $lesson->getTrainerId()->getId(),
-                    'email' => $lesson->getTrainerId()->getEmail(),
-                    'istrainer' => $lesson->getTrainerId()->getIsTrainer(),
-                    'nickname' => $lesson->getTrainerId()->getNickname(),
-                    'photo' => $lesson->getTrainerId()->getPhoto(),
-                    'name' => $lesson->getTrainerId()->getName(),
-                    'family' => $lesson->getTrainerId()->getFamily(),
-                    'game' => $lesson->getTrainerId()->getGame(),
-                    'rank' => $lesson->getTrainerId()->getRank(),
-                    'discord' => $lesson->getTrainerId()->getDiscord(),
-                ],
-                'student_status' => $lesson->getStudentStatus(),
-                'trainer_status' => $lesson->getTrainerStatus(),
-                'status' => $lesson->getStatus(),
-                'reviewIsset' => $lesson->getReview() === null ? false : true,
-            ];
+            if (!$lesson->getTrainerStatus() or !$lesson->getStudentStatus()) {
+                $lessonsWithTrainerStatusNotConfirm[] = $lesson;
+            }
         }
 
+        $lessons = $this->lessonsService
+            ->lessonsDecoratorForCabinet($lessonsWithTrainerStatusNotConfirm);
 
+        $lessonsOrderedByDate = [];
 
-        return $this->json($result);
+        foreach ($lessons as $lesson)
+        {
+            $date = $lesson['dateTimeFrom']->format('Y-m-d');
+            $lessonsOrderedByDate[$date][] = $lesson;
+        }
+
+        return $this->json($lessonsOrderedByDate);
     }
 
     /**
      * Lessons /ru/lessons/*
      *
      * @Route("/ru/lessons/count/{form}", name="student_trainer_lessons_count")
+     * @param $form
+     * @return JsonResponse
      */
     public function getLessonsCountByTrainer($form)
     {
@@ -235,7 +206,7 @@ class LessonsController extends AbstractController
      */
     public function setLessonEnd($form)
     {
-        $form = json_decode($form);
+        $form = json_decode($form, false);
 
         $lesson_id = $form->lesson_id;
         $entityManager = $this->getDoctrine()->getManager();
@@ -248,35 +219,34 @@ class LessonsController extends AbstractController
             );
         }
 
-        $user_id = $form->user_id;
-        if(($lesson->getTrainerId()->getId() == $user_id)||($lesson->getStudentId()->getId() == $user_id))
+        $userId = (int)$form->user_id;
+
+        if(($lesson->getTrainer()->getId() === $userId) || ($lesson->getStudent()->getId() === $userId))
         {
-            if($form->istrainer == "true"){
+            if($form->istrainer === true){
                 $lesson->setTrainerStatus(Lessons::STATUS_ENDED);
             }else{
                 $lesson->setStudentStatus(Lessons::STATUS_ENDED);
             }
 
-            if(($lesson->getTrainerStatus())&&($lesson->getStudentStatus()))
+            if(($lesson->getTrainerStatus()) && ($lesson->getStudentStatus()))
             {
                 $lesson->setStatus(Lessons::STATUS_ENDED);
                 /** @var User $user */
                 $user = $this->getDoctrine()
                     ->getRepository(User::class)
-                    ->find(intval($user_id));
+                    ->find(intval($userId));
+
                 /** @var PurseHistory $purse */
                 $purse = new PurseHistory();
                 $purse->setUser($user);
                 $purse->setOperation($lesson->getCost()/2);
-                $purse->setDatetime($lesson->getDatetime());
-
-                $entityManager->persist($purse);
-                $entityManager->flush();
+                $purse->setDatetime($lesson->getDateTimeFrom());
 
                 $user->setPurse($user->getPurse() + $purse->getOperation());
 
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $entityManager->persist($purse, $user, $lesson);
+
             }
         }else{
             return new JsonResponse('У вас нет прав на закрытие тренировки');
@@ -285,40 +255,7 @@ class LessonsController extends AbstractController
         $entityManager->persist($lesson);
         $entityManager->flush();
 
-        $response = [
-            'id' => $lesson->getId(),
-            'datetime' => $lesson->getDatetime(),
-            'cost' => $lesson->getCost(),
-            'student_id' => [
-                'id' => $lesson->getStudentId()->getId(),
-                'email' => $lesson->getStudentId()->getEmail(),
-                'istrainer' => $lesson->getStudentId()->getIsTrainer(),
-                'nickname' => $lesson->getStudentId()->getNickname(),
-                'photo' => $lesson->getStudentId()->getPhoto(),
-                'name' => $lesson->getStudentId()->getName(),
-                'family' => $lesson->getStudentId()->getFamily(),
-                'game' => $lesson->getStudentId()->getGame(),
-                'rank' => $lesson->getStudentId()->getRank(),
-                'discord' => $lesson->getStudentId()->getDiscord(),
-            ],
-            'trainer_id' => [
-                'id' => $lesson->getTrainerId()->getId(),
-                'email' => $lesson->getTrainerId()->getEmail(),
-                'istrainer' => $lesson->getTrainerId()->getIsTrainer(),
-                'nickname' => $lesson->getTrainerId()->getNickname(),
-                'photo' => $lesson->getTrainerId()->getPhoto(),
-                'name' => $lesson->getTrainerId()->getName(),
-                'family' => $lesson->getTrainerId()->getFamily(),
-                'game' => $lesson->getTrainerId()->getGame(),
-                'rank' => $lesson->getTrainerId()->getRank(),
-                'discord' => $lesson->getTrainerId()->getDiscord(),
-            ],
-            'student_status' => $lesson->getStudentStatus(),
-            'trainer_status' => $lesson->getTrainerStatus(),
-            'status' => $lesson->getStatus()
-        ];
-
-        return $this->json($response);
+        return $this->json($this->lessonsService->lessonDecorator($lesson));
     }
 
     /**
@@ -328,149 +265,33 @@ class LessonsController extends AbstractController
      */
     public function createNewLesson(Request $request, MailerInterface $mailer)
     {
-        $data = json_decode($request->getContent());
-
         $entityManager = $this->getDoctrine()->getManager();
+        $data = json_decode($request->getContent(), false);
 
-        $lessonsIds = [];
-        $sum = 0;
-
-        $user = null;
         /** @var User $trainer */
-        $trainer = null;
+        $trainer = $entityManager->getRepository(User::class)->find($data->trainer_id);
 
-        $bookedTime = [];
+        /** @var User $user */
+        $user = $this->authUser();
+        $lessons = $data->lessons ?? [];
 
-        if (isset($data->data)){
-            foreach ($data->data as $form)
-            {
-                $user = $entityManager->getRepository(User::class)->find($form->user_id);
-                $trainer = $entityManager->getRepository(User::class)->find($form->trainer_id);
+        $lessons = $this->lessonsService
+            ->decorationLessonsForPayed($lessons);
 
-                $lesson = new Lessons();
-                $date = DateTime::createFromFormat('j.n.Y H:i:s',$form->date . ' ' . $form->time . ':00');
+        [$lessonIds, $bookedTime] = $this->lessonsService->createLessons($lessons, $trainer, $user);
+        $trainerTeacher = $this->getDoctrine()
+            ->getRepository(Teachers::class)
+            ->findBy(['userid' => $trainer->getId()]);
 
-                $date->format('Y-m-d H:i:s');
-                /** @var Schledule $schledule */
-                $schledule = $entityManager->getRepository(Schledule::class)->findOneBy([
-                    'trainer_id' => $form->trainer_id,
-                    'date' => $date,
-                ]);
-                switch ($form->time) {
-                    case "10:00":
-                        $schledule->setTime1011(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "11:00":
-                        $schledule->setTime1112(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "12:00":
-                        $schledule->setTime1213(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "13:00":
-                        $schledule->setTime1314(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "14:00":
-                        $schledule->setTime1415(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "15:00":
-                        $schledule->setTime1516(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "16:00":
-                        $schledule->setTime1617(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                    case "17:00":
-                        $schledule->setTime1718(Schledule::TIME_STATUS_RESERVED);
-                        break;
-                }
-
-
-                /** @var Lessons $oldLesson */
-                $oldLesson = $entityManager->getRepository(Lessons::class)->findBy([
-                    'trainer_id' => $form->trainer_id,
-                    'datetime' => $date,
-                    'student_id' => $form->user_id,
-                ]);
-
-                $oldLesson = $oldLesson[0] ?? null;
-
-                if(!empty($oldLesson)){
-                    $payed = $entityManager->getRepository(Payment::class)->findBy([
-                        'lesson_id' => $oldLesson->getId(),
-                        'payment_status' => '1'
-                    ]);
-
-                    if (!empty($payed))
-                    {
-                        return new Response('ЭТОТ УРОК УЖЕ ЗАНЯТ');
-                    }
-                }
-                /** @var Teachers $trainer */
-                $trainerTeacher = $entityManager->getRepository(Teachers::class)->findOneBy([
-                    'userid' => $form->trainer_id
-                ]);
-
-                $lesson->setStudentId($user);
-                $lesson->setTrainerId($trainer);
-                $lesson->setCost($trainerTeacher->getCost());
-                $lesson->setStatus(Lessons::STATUS_NEW);
-                $lesson->setDatetime($date);
-                $lesson->setStudentStatus(0);
-                $lesson->setTrainerStatus(0);
-
-                $entityManager->persist($schledule);
-                $entityManager->flush();
-                $entityManager->persist($lesson);
-                $entityManager->flush();
-
-                $lessonsIds[] = $lesson->getId();
-
-                $lessonHourStart = $lesson->getDatetime()->format('H');
-                $bookedTime[] = [
-                    'day' => $lesson->getDatetime()->format('Y-m-d'),
-                    'from' => (int)$lessonHourStart,
-                    'to' => (int)$lessonHourStart + 1,
-                ];
-                $sum += $lesson->getCost();
-            }
-        }
-        /** @var Teachers $trainer */
-        $trainerTeacher = $entityManager->getRepository(Teachers::class)->findOneBy([
-            'userid' => $trainer->getId()
-        ]);
+        $trainerTeacher = $trainerTeacher[0] ?? null;
 
         // Send trainer mail
-        $trainerMail = $this->makeMail()
-            ->to($trainer->getEmail())
-            ->subject('Бронирование урока')
-            ->htmlTemplate('templates/mails/booked.lesson.html.twig')
-            ->context([
-                'user' => $user,
-                'bookedTime' => $bookedTime,
-                'trainer' => $trainerTeacher,
-                'isTrainer' => true,
-            ]);
-        $mailer->send($trainerMail);
-
+        $this->sendPayedMail($mailer, $trainer, $bookedTime, $trainerTeacher, true);
         // Send user mail
-        if (!empty($user->getEmail())){
-            $userMail = $this->makeMail()
-                ->to($user->getEmail())
-                ->subject('Бронирование урока')
-                ->htmlTemplate('templates/mails/booked.lesson.html.twig')
-                ->context([
-                    'user' => $trainer,
-                    'bookedTime' => $bookedTime,
-                    'trainer' => $trainerTeacher,
-                    'isTrainer' => false,
-                ]);
-            $mailer->send($userMail);
+        if (!empty($user->getEmail())) {
+            $this->sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, true);
         }
-        $response = [
-            'ids' => $lessonsIds,
-            'cost' => $sum,
-        ];
-
-        return $this->json($response);
+        return $this->json(['ids' => $lessonIds]);
     }
 
     /**
@@ -501,5 +322,27 @@ class LessonsController extends AbstractController
             }
         }
         return  $this->json(null);
+    }
+
+    /**
+     * @param $mailer
+     * @param $user
+     * @param $bookedTime
+     * @param $trainerTeacher
+     * @param bool $isTrainer
+     */
+    public function sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, $isTrainer = false)
+    {
+        $trainerMail = $this->makeMail()
+            ->to($user->getEmail())
+            ->subject('Бронирование урока')
+            ->htmlTemplate('templates/mails/booked.lesson.html.twig')
+            ->context([
+                'user' => $user,
+                'bookedTime' => $bookedTime,
+                'trainer' => $trainerTeacher,
+                'isTrainer' => $isTrainer,
+            ]);
+        $mailer->send($trainerMail);
     }
 }

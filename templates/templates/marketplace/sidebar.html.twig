@@ -5,14 +5,16 @@
             </button>
         </div>
         <ul class="list-unstyled components mb-5">
-            <li class="pointer" v-for="item in items" :class="{active: active === item.name}" @click="active = item.name">
+            <li class="pointer" v-for="item in items" :class="{active: active === item.name}"
+                @click="active = item.name">
                 <a class="d-flex align-items-center">
                     <img :src="item.logo" class="mr-2 w-15"/>
                     <span v-html="item.title"></span>
                 </a>
             </li>
             <li class="pointer">
-                <a class="d-flex align-items-center" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                <a class="d-flex align-items-center" data-toggle="collapse" data-target="#collapseOne"
+                   aria-expanded="false" aria-controls="collapseOne">
                     <i class="fas fa-cog"></i>&nbsp;&nbsp;Фильтры
                 </a>
                 <div class="card bg-dark">
@@ -29,24 +31,24 @@
 <script>
     Vue.component('sidebar', {
         template: '#sidebar-template',
-        data(){
-           return {
-               active: null,
-           }
+        data() {
+            return {
+                active: null,
+            }
         },
         methods: {
-            collapse(){
+            collapse() {
                 $('#sidebar').toggleClass('active');
             },
-            search(){
+            search() {
                 this.$emit('search');
             }
         },
         props: [
-          'items', 'filters'
+            'items', 'filters'
         ],
         watch: {
-            active(){
+            active() {
                 header.game = this.active
                 this.$parent.trainer = null;
             }
@@ -56,7 +58,7 @@
 
             $('.js-fullheight').css('height', $(window).height());
 
-            $(window).resize(function(){
+            $(window).resize(function () {
                 $('.js-fullheight').css('height', $(window).height());
             });
         },
