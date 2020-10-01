@@ -325,6 +325,7 @@
                         th.required.streamtype = res.data.trainer.streamType !== null ? res.data.trainer.streamType : 'default';
                         th.discord = res.data.discord ? res.data.discord : '';
                         th.required.timezone = res.data.trainer.timeZone ? res.data.trainer.timeZone : 'Europe/Moscow';
+                        th.vk = res.data.vk ? res.data.vk : '';
 
                         Object.keys(th.required).forEach((key) => {
                             if (String(th.required[key]).length === 0) {
