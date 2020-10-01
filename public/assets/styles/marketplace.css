@@ -232,6 +232,7 @@
   }
   .marketplace .component.slides .slide{
     padding: 4vw 4vw;
+    width: 100%;
   }
   .marketplace .component.slides .slide .title{
     font-size: 5vw;
@@ -1510,7 +1511,7 @@
 .fadeslide-enter-active, .fadeslide-leave-active {
   transition: opacity .5s;
 }
-.fadeslide-enter, .fadeslide-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+.fadeslide-enter, .fadeslide-leave-to /* .fade-leave-active Ð´Ð¾ Ð²ÐµÑ€ÑÐ¸Ð¸ 2.1.8 */ {
   opacity: 0;
 }
 .methods .method{

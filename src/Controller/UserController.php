@@ -226,7 +226,7 @@ class UserController extends AbstractController
                 'status' => 404
             ]);
         }
-
+        $user->setVk($request->request->get('vk'));
         $user->setName($request->request->get('name'));
         $user->setEmail($request->request->get('email'));
         $user->setNickname($request->request->get('nickname'));
@@ -301,7 +301,7 @@ class UserController extends AbstractController
                 $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
             }
         }
-
+        
         $entityManager->persist($user);
         $entityManager->flush();
 
@@ -309,8 +309,6 @@ class UserController extends AbstractController
             'status' => 200,
             'photo' => $user->getPhoto()
         ]);
-
-//        return $this->json($user);
     }
 
     /**

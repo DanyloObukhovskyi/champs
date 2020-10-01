@@ -104,6 +104,10 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=TrainerVideo::class, mappedBy="user")
      */
     private $videosUrls;
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $vk;
 
     public function __construct()
     {
@@ -487,5 +491,21 @@ class User implements UserInterface
     public function setVideosUrls($videosUrls): void
     {
         $this->videosUrls = $videosUrls;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVk()
+    {
+        return $this->vk;
+    }
+
+    /**
+     * @param mixed $vk
+     */
+    public function setVk($vk): void
+    {
+        $this->vk = $vk;
     }
 }
