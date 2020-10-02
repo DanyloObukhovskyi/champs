@@ -1887,3 +1887,8 @@ label {
 .w-10{
   width: 10% !important;
 }
+
+.nick-name-hover:hover{
+  transition: color .4s ease;
+  color: #ff5627;
+}
