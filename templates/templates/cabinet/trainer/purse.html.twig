@@ -43,6 +43,20 @@
                     </div>
                 </div>
                 <div class="rgt no-p">
+                    <div class="title">Аккаунт Paypal</div>
+                    <div class="top">
+                        <div class="w-100">
+                            <input type="email" class="form-input" v-model="payPal">
+                            <small class="form-text" :class="{'text-danger': payPalMessage.type === 'error', 'text-success': payPalMessage.type === 'success'}" v-if="payPalMessage !== null" v-html="payPalMessage.text"></small>
+                        </div>
+                        <div class="ml-1">
+                            <a @click="getOrSetTrainerPayPall('set')"
+                                class="btn btn-orange text-light pointer"
+                                style="border-radius: unset;border: none;border-bottom: 1px solid #FF6D1D;">
+                                <i class="fas fa-save"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="title">Ваш баланс</div>
                     <div class="top">
                         <img src="/images/temp/matches/{{ photo }}"/>
@@ -71,7 +85,7 @@
                     <div class="cont historys">
                         {% for item in history %}
                             <div class="history">
-                                <div>{{ item.datetime.date|date("d.m.Y H:s") }}</div>
+                                <div>{{ item.datetime|date("d.m.Y H:s") }}</div>
                                 <div>{{ item.operation }} ₽</div>
                             </div>
                         {% endfor %}
@@ -158,20 +172,36 @@
                         })
                 },
                 setHistory() {
-                    axios.get('/ru/purse/history/by-user/{{ app.user.id }}')
+                    axios.post('/ru/purse/history/by-user/{{ app.user.id }}')
                         .then((res) => {
                             console.log(res.data)
                         })
-                }
+                },
+                getOrSetTrainerPayPall(method = 'get') {
+                    axios.post(`/ru/trainer/paypall/${method}/{{ app.user.id }}`, {payPal: this.payPal})
+                        .then(({data}) => {
+                            this.payPal = data.paypal;
+                            this.payPalMessage = data.message ?? null;
+                        })
+                        .catch(() => {
+                            this.payPalMessage = {
+                                type: 'error',
+                                text: 'Ошибка'
+                            }
+                        })
+                },
             },
             data: function () {
                 return {
                     items: [],
+                    payPal: null,
+                    payPalMessage: null
                 }
             },
             mounted() {
                 this.setParse();
                 this.setHistory();
+                this.getOrSetTrainerPayPall()
             }
         });
     </script>

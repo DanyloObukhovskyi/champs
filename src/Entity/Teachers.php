@@ -67,6 +67,11 @@ class Teachers
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    private $payPal;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     private $timeZone;
 
     public function getId(): ?int
@@ -202,5 +207,21 @@ class Teachers
     public function setTimeZone($timeZone): void
     {
         $this->timeZone = $timeZone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayPal()
+    {
+        return $this->payPal;
+    }
+
+    /**
+     * @param mixed $payPal
+     */
+    public function setPayPal($payPal): void
+    {
+        $this->payPal = $payPal;
     }
 }
