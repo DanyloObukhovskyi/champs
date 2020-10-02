@@ -80,18 +80,26 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('main');
         }
         /** @var Payment $lesson */
-        $paymentLesson = $this->getDoctrine()->getRepository(Payment::class)->findByLessonId($id);
+        $paymentLesson = $this->getDoctrine()
+            ->getRepository(Payment::class)
+            ->findByLessonId($id);
+
         $message = 'Ваша покупка успешно отменена!';
         $messageClass = 'text-danger';
+
+        $isPayed = false;
 
         if (isset($paymentLesson) and $paymentLesson->getPaymentStatus() !== 0)
         {
             $message = 'Спасибо за покупку!';
             $messageClass = 'text-success';
+
+            $isPayed = true;
         }
 
         return $this->render('templates/message.view.html.twig', [
             'router' => 'payed',
+            'isPayed' => $isPayed,
             'message' => $message,
             'messageClass' => $messageClass
         ]);
