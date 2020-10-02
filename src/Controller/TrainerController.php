@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\PurseHistory;
-use App\Entity\Review;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\UserService;
@@ -11,6 +13,7 @@ use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TrainerController extends AbstractController
 {
@@ -104,7 +107,6 @@ class TrainerController extends AbstractController
                         ->getRepository(PurseHistory::class)
                         ->sumByPreLastMonth($user->getId()),
                     'history' => $history
-
                 ]
             );
         }
@@ -203,4 +205,51 @@ class TrainerController extends AbstractController
         return $this->json($response);
     }
 
+    /**
+     * @Route("/ru/trainer/paypall/{method}/{userId}", methods={"POST"}, name="trainer_paypall")
+     */
+    public function trainerPayPall(Request $request, ValidatorInterface $validator, $method, $userId)
+    {
+        $request = json_decode($request->getContent(), true);
+
+        /** @var Teachers $trainer */
+        $trainer = $this->getDoctrine()->getRepository(Teachers::class)->findOneBy([
+            'userid' => $userId
+        ]);
+
+        $payPal = null;
+
+        if (isset($trainer)){
+            if ($method === 'set'){
+                $constraints = new Assert\Collection([
+                    'payPal' => [new Assert\Email()],
+                ]);
+                $violations = $validator->validate($request, $constraints);
+
+                $data = [];
+
+                if ($violations->count() === 0)
+                {
+                    $data['message'] = [
+                        'type' => 'success',
+                        'text' => 'Paypal был успешно сохранен'
+                    ];
+
+                    $trainer->setPayPal($request['payPal'] ?? null);
+
+                    $this->getEntityManager()->persist($trainer);
+                    $this->getEntityManager()->flush($trainer);
+                } else {
+                    $data['message'] = [
+                        'type' => 'error',
+                        'text' => 'Paypal был указан в неверном формате'
+                    ];
+                }
+            }
+            $payPal = $trainer->getPayPal();
+        }
+        $data['paypal'] = $payPal;
+
+        return $this->json($data);
+    }
 }
