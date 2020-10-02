@@ -1892,3 +1892,6 @@ label {
   transition: color .4s ease;
   color: #ff5627;
 }
+.font-size-7{
+  font-size: .7vw;
+}
