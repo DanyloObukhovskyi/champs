@@ -40,15 +40,14 @@
                             <div v-text="getDateReview(review)"></div>
                             <div v-text="review.name"></div>
                         </div>
-                        <div class="rates">
-                            <div>
-                                <img :src="`/images/${s <= Math.floor(review.rate) ? 'StarOrange.svg' : 'StarGray.svg'}`"
-                                     v-for="s in 5" :key="s" alt="star"/>
+                        <div class="rates text-center">
+                            <div class="font-size-7">
+                                Оценка
                             </div>
-                            <div>
-                                <img :src="`/images/${s + 5 <= Math.floor(review.rate) ? 'StarOrange.svg' : 'StarGray.svg'}`"
-                                     v-for="s in 5" :key="s + 5" alt="star"/>
-                            </div>
+                            <strong class="d-flex justify-content-center align-items-baseline">
+                                <img class="mr-1" src="/images/StarOrange.svg" alt="star">
+                                <span v-html="review.rate"></span>&nbsp;/&nbsp;10
+                            </strong>
                         </div>
                     </div>
                     <div v-text="review.comment"></div>

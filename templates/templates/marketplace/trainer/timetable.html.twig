@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/x-template" id="timetables-template">
     <div class="timetables" :style="{opacity: block ? '0.8' : '1'}">
         <div class="controll">
@@ -90,6 +91,16 @@
         },
         methods: {
             addTime(t, i, status) {
+                console.log()
+
+                if (Boolean({{ app.user is null }})) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Для покупки необходимо зарегестрироватся!',
+                    })
+                    return;
+                }
                 let bool = false;
                 this.items[0].week.forEach((item) => {
                     if (item.date === i.date) {

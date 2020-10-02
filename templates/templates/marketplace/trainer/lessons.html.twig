@@ -10,14 +10,16 @@
                     <div v-html="`Часовой пояс ${trainer.timeZone}`">
                     </div>
                 </div>
-                <div class="rgt" v-if="view === 1">
-                    <div class="price">
-                        Итого: <span v-text="getPrice()"></span> ₽
+                {% if app.user is not null %}
+                    <div class="rgt" v-if="view === 1">
+                        <div class="price">
+                            Итого: <span v-text="getPrice()"></span> ₽
+                        </div>
+                        <div @click="setPay" class="button" :class="[items.length > 0 ? '' : 'blocked']">
+                            Далее
+                        </div>
                     </div>
-                    <div @click="setPay" class="button" :class="[items.length > 0 ? '' : 'blocked']">
-                        Далее
-                    </div>
-                </div>
+                {% endif %}
             </div>
             <div>
                 <timetables :trainer="trainer" v-on:setprice="setPrice" v-on:setitem="setItem" :block="block"/>
