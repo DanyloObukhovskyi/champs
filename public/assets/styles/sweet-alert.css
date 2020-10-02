@@ -5,3 +5,9 @@
     border-radius: unset !important;
     background-color: #FF6D1D !important;
 }
+.text-orange{
+    color: #FF6D1D;
+}
+.text-orange:hover{
+    color: #ff7e2d;
+}

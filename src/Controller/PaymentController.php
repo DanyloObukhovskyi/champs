@@ -73,12 +73,9 @@ class PaymentController extends AbstractController
      */
     public function paymentPage($id)
     {
-        /** @var User $authUser */
-        $authUser = $this->get('security.token_storage')
-            ->getToken()
-            ->getUser();
+        $user = $this->getUser();
 
-        if (!($authUser instanceof User))
+        if (empty($user))
         {
             return $this->redirectToRoute('main');
         }
