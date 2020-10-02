@@ -1,0 +1,7 @@
+.swal2-popup{
+    border-radius: unset !important;
+}
+.swal2-styled.swal2-confirm {
+    border-radius: unset !important;
+    background-color: #FF6D1D !important;
+}
