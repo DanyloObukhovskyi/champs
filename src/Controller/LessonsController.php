@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Swift_Mailer;
 
 class LessonsController extends AbstractController
 {
@@ -263,7 +264,7 @@ class LessonsController extends AbstractController
      *
      * @Route("/ru/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
      */
-    public function createNewLesson(Request $request, MailerInterface $mailer)
+    public function createNewLesson(Request $request, Swift_Mailer $mailer)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent(), false);
@@ -330,19 +331,23 @@ class LessonsController extends AbstractController
      * @param $bookedTime
      * @param $trainerTeacher
      * @param bool $isTrainer
+     * @return mixed
      */
     public function sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, $isTrainer = false)
     {
+        $params = [
+            'user' => $user,
+            'bookedTime' => $bookedTime,
+            'trainer' => $trainerTeacher,
+            'isTrainer' => $isTrainer,
+        ];
+
+        $html = $this->renderView('templates/mails/booked.lesson.html.twig', $params);
+
         $trainerMail = $this->makeMail()
-            ->to($user->getEmail())
-            ->subject('Бронирование урока')
-            ->htmlTemplate('templates/mails/booked.lesson.html.twig')
-            ->context([
-                'user' => $user,
-                'bookedTime' => $bookedTime,
-                'trainer' => $trainerTeacher,
-                'isTrainer' => $isTrainer,
-            ]);
-        $mailer->send($trainerMail);
+            ->setTo($user->getEmail())
+            ->setBody($html, 'text/html');
+
+        return $mailer->send($trainerMail);
     }
 }
