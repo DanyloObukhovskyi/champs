@@ -68,14 +68,14 @@
                             this.trainers = res.data;
                             this.trainer = null;
 
-                            if (trainerId !== null) {
-                                for (let trainersList of this.trainers){
-                                    if (this.trainer === null){
-                                        this.trainer = trainersList.find(e => e.id === trainerId) ?? null;
-                                    }
-                                }
-                            }
                             this.load = false;
+
+                            if (trainerId !== null){
+                                axios.post('/ru/marketplace/trainer/' + trainerId)
+                                    .then(({data}) => {
+                                        this.trainer = data
+                                    })
+                            }
                         })
                         .catch(() => {
                             this.trainers = [];

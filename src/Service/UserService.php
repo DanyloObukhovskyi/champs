@@ -73,107 +73,124 @@ class UserService  extends EntityService
 
         foreach ($users as $user)
         {
-            /** @var Teachers $trainer */
-            $trainer = $this->entityManager->getRepository(Teachers::class)
-                ->findOneBy([
-                    'userid' => $user->getId(),
-                ]);
+           $teacher = $this->decorator($user, $filters);
 
-            if(!$trainer)
-            {
-                $trainer = new Teachers();
-                $trainer->setUser($user->getId());
-                $trainer->setVideoLink("");
-                $trainer->setCost(0);
-                $trainer->setAbout("");
-                $trainer->setShorttitle("");
-                $trainer->setMethod("");
+           if (isset($teacher))
+           {
+               $response[] = $teacher;
+           }
+        }
+        return $response;
+    }
 
-                $this->entityManager->persist($trainer);
-                $this->entityManager->flush();
-            }
+    public function decorator($user, $filters = null)
+    {
+        /** @var Teachers $trainer */
+        $trainer = $this->entityManager->getRepository(Teachers::class)
+            ->findOneBy([
+                'userid' => $user->getId(),
+            ]);
 
-            $user->setTrainer($trainer);
+        if(!$trainer)
+        {
+            $trainer = new Teachers();
+            $trainer->setUser($user->getId());
+            $trainer->setVideoLink("");
+            $trainer->setCost(0);
+            $trainer->setAbout("");
+            $trainer->setShorttitle("");
+            $trainer->setMethod("");
 
-            $reviews = $this->entityManager
-                ->getRepository(Review::class)
-                ->findRateByTrainerId($user->getId());
+            $this->entityManager->persist($trainer);
+            $this->entityManager->flush();
+        }
 
-            $sum = 0;
-            $count = 0;
+        $user->setTrainer($trainer);
 
-            $keys = [];
-            for ($i = 1; $i <= 10; $i++){
-                $keys[$i] = 0;
-            }
-            foreach ($reviews['entity'] as $review)
-            {
-                /** @var Review $review */
-                $sum += $review['rate'];
-                $keys[$review['rate']]++;
-                $count++;
-            }
+        $reviews = $this->entityManager
+            ->getRepository(Review::class)
+            ->findRateByTrainerId($user->getId());
 
-            $result = 0;
-            if($sum > 0)
-            {
-                $result = round($sum / $count, 2);
-            }
+        $sum = 0;
+        $count = 0;
 
+        $keys = [];
+        for ($i = 1; $i <= 10; $i++){
+            $keys[$i] = 0;
+        }
+        foreach ($reviews['entity'] as $review)
+        {
+            /** @var Review $review */
+            $sum += $review['rate'];
+            $keys[$review['rate']]++;
+            $count++;
+        }
+
+        $result = 0;
+        if($sum > 0)
+        {
+            $result = round($sum / $count, 2);
+        }
+
+        if (isset($filters))
+        {
             if (!empty($filters['studyCostFrom']['value']))
             {
                 if ((int)$filters['studyCostFrom']['value'] > $trainer->getCost())
                 {
-                    continue;
+                    return null;
                 }
             }
             if (!empty($filters['studyCostTo']['value']))
             {
                 if ((int)$filters['studyCostTo']['value'] < $trainer->getCost())
                 {
-                    continue;
+                    return null;
                 }
             }
-            $videos = $this->trainerVideosService->getByTrainer($user);
-            $videos = $this->trainerVideosService->decorator($videos);
-
-            $trainerGame = null;
-            foreach ( self::GAMES as $game){
-                if ($game['name'] === $user->getGame()){
-                    $trainerGame = $game;
-                }
-            }
-            if (!empty($trainer->getTimeZone())){
-                [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
-                    ->getGmtTimezoneString($trainer->getTimeZone());
-            } else {
-                [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
-                    ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
-            }
-            $timeZone = "$timeZone ($gmt)";
-
-            $response[] = [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'istrainer' => $user->getIsTrainer(),
-                'nickname' => $user->getNickname(),
-                'photo' => $user->getPhoto(),
-                'name' => $user->getName(),
-                'game' => $trainerGame,
-                'rank' => $user->getRank(),
-                'family' => $user->getFamily(),
-                'discord' => $user->getDiscord(),
-                'purse' => $user->getPurse(),
-                'trainer' => $trainer,
-                'ratingTotal' => $result,
-                'rating' => $keys,
-                'reviewCount' => $count,
-                'reviews' => $reviews['entity'],
-                'videos' => $videos,
-                'timeZone' => $timeZone
-            ];
         }
+        $videos = $this->trainerVideosService->getByTrainer($user);
+        $videos = $this->trainerVideosService->decorator($videos);
 
-        return $response;
+        $trainerGame = null;
+        foreach ( self::GAMES as $game){
+            if ($game['name'] === $user->getGame()){
+                $trainerGame = $game;
+            }
+        }
+        if (!empty($trainer->getTimeZone())){
+            [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                ->getGmtTimezoneString($trainer->getTimeZone());
+        } else {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        }
+        $timeZone = "$timeZone ($gmt)";
+
+        return [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'istrainer' => $user->getIsTrainer(),
+            'nickname' => $user->getNickname(),
+            'photo' => $user->getPhoto(),
+            'name' => $user->getName(),
+            'game' => $trainerGame,
+            'rank' => $user->getRank(),
+            'family' => $user->getFamily(),
+            'discord' => $user->getDiscord(),
+            'purse' => $user->getPurse(),
+            'trainer' => $trainer,
+            'ratingTotal' => $result,
+            'rating' => $keys,
+            'reviewCount' => $count,
+            'reviews' => $reviews['entity'],
+            'videos' => $videos,
+            'timeZone' => $timeZone
+        ];
+    }
+
+    public function find($userId)
+    {
+        return $this->repository->find($userId);
     }
 }
