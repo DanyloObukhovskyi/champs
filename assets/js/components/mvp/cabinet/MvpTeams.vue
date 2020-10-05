@@ -58,6 +58,14 @@
                                 <input v-model="command.tag" type="text" class="form-control border-radius-0 w-50">
                                 <small class="form-text text-muted">Максимум 6 символов</small>
                             </div>
+                            <div class="text">
+                                <p class="text-danger" v-if="messages.error !== null">
+                                    {{messages.error}}
+                                </p>
+                                <p class="text-success" v-if="messages.success !== null">
+                                    {{messages.success}}
+                                </p>
+                            </div>
                         </div>
                         <div class="modal-footer justify-content-center">
                             <a @click="createTeam" class="btn-orange text-light p-2 text-center pointer w-100" >Создать команду</a>
@@ -71,23 +79,40 @@
 </template>
 
 <script>
+    import MvpService from '../services/MvpService.js'
+    const http = new MvpService();
+
     export default {
         name: "MvpTeams",
-        props: [
-          'createRoute'
-        ],
         data(){
             return {
+                teams: [],
                 command: {
                     capacity: null,
                     name: null,
                     tag: null
+                },
+                messages: {
+                    success: null,
+                    error: null,
                 }
             }
         },
         methods: {
             createTeam(){
-                axios.post(this.createRoute, this.command)
+                const {capacity, name, tag} = this.command
+
+                this.messages.success = null;
+                this.messages.error = null;
+
+                http.createMvpTeam(capacity, name, tag)
+                    .then(({data}) => {
+                        this.messages.success = data.message;
+                        this.teams.push(data.team)
+                    })
+                    .catch(({response}) => {
+                        this.messages.error = response.data.message;
+                    })
             }
         }
     }

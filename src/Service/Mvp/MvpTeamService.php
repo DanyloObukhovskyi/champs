@@ -29,6 +29,22 @@ class MvpTeamService extends EntityService
         $mvpTeam->setName($data->name);
         $mvpTeam->setTag($data->tag);
 
-        $this->save($mvpTeam);
+        return $this->save($mvpTeam);
+    }
+
+    public function decorator(MvpTeam $team)
+    {
+        /** @var User $creator */
+        $creator = $team->getCreator();
+
+        return [
+            'name' => $team->getName(),
+            'tag' => $team->getTag(),
+            'capacity' => $team->getCapacity(),
+            'creator' => [
+                'name' => $creator->getName(),
+                'id' => $creator->getId()
+            ]
+        ];
     }
 }

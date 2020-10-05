@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\MvpTeam;
 use App\Entity\User;
+use App\Request\Mvp\CreateTeamRequestValidator;
 use App\Service\Mvp\MvpTeamService;
 use App\Service\TournamentService;
 use App\Traits\AuthUser;
@@ -73,22 +75,22 @@ class MVPController extends AbstractController
     }
 
     /**
-     * @Route("/ru/user/mvp/create/team/{userId}", name="mvp.cabinet.create.team")
+     * @Route("/ru/user/mvp/create/team", name="mvp.cabinet.create.team")
      */
-    public function createUserTeam(Request $request, $userId)
+    public function createUserTeam(Request $request)
     {
-        $request = $request->getContent();
-        $data = json_decode($request, false);
+        $requestValidator = new CreateTeamRequestValidator($request);
+        $data = json_decode($request->getContent(), false);
 
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $user = $this->getUser();
 
-        $mvpTeam = $this->mvpTeamService->getByTag($data->tag);
+        if ($requestValidator->getContent())
+        $mvpTeam = $this->mvpTeamService->create($user, $data);
+        $team = $this->mvpTeamService->decorator($mvpTeam);
 
-        if (empty($mvpTeam))
-        {
-            $this->mvpTeamService->create($user, $data);
-        }
-
-        dd($mvpTeam);
+        return $this->json([
+            'message' => 'Команда успешно создана!',
+            'team' => $team
+        ]);
     }
 }

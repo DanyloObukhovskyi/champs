@@ -7,7 +7,7 @@
                 <a :class="{active: active === 'matches'}" @click=" active = 'matches'">МАТЧИ</a>
             </div>
         </div>
-       <MvpTeams :create-route="routeCreateTeam"></MvpTeams>
+       <MvpTeams></MvpTeams>
     </div>
 </template>
 
@@ -16,9 +16,6 @@
 
     export default {
         name: "MvpPage",
-        props: [
-            'routeCreateTeam',
-        ],
         components: {
             MvpTeams
         },

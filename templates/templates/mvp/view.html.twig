@@ -83,9 +83,9 @@
                             <div class="component statistics">
                                 <div class="grid-block statistics-maps">
                                     <div class="grid-header">
-                                        <div class="r w-100">
-                                            <div class="w-100">
-                                                <div class="col-12 d-flex justify-content-center">
+                                        <div class="p-2 r w-100">
+                                            <div class="p-0 w-100">
+                                                <div class="p-0 col-12 d-flex justify-content-center">
                                                     <a
                                                         {% if app.user is null %} disabled {% endif %}
                                                         data-toggle="modal"
@@ -144,7 +144,7 @@
                         Создай свою тиму или присоединись к уже существующей
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <a href="{{ path('specifications_index') }}" class="btn-orange text-light p-2 text-center pointer w-100" >Создать команду</a>
+                        <a href="{{ path('mvp.cabinet.tournaments') }}" class="btn-orange text-light p-2 text-center pointer w-100" >Создать команду</a>
                         <a data-dismiss="modal" aria-label="Close" class="btn-grey pointer text-center text-light border-radius-0 p-2 w-75">Отменить</a>
                     </div>
                 {% endif %}

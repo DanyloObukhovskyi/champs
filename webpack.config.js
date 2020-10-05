@@ -53,6 +53,14 @@ Encore
         config.corejs = 3;
     })
 
+    // babel plugins
+    .configureBabel((config) => {
+        config.presets.push("@vue/babel-preset-app");
+        config.plugins.push('@babel/plugin-proposal-class-properties');
+    }, {
+        useBuiltIns: "entry"
+    })
+
     // enables Sass/SCSS support
     //.enableSassLoader()
 
