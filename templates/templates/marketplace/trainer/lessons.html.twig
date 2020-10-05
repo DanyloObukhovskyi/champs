@@ -1,37 +1,50 @@
 <link type="text/css" rel="stylesheet" href="/assets/styles/lessons.css"/>
 <script src="{{ base_url }}assets/js/jquery351.js"></script>
 <script type="text/x-template" id="lessons-template">
-    <div class="lessons" id="lessons">
-        <div class="container" style="min-height: 40vw">
+    <div class="w-100" id="lessons">
+        <div class="component order w-100">
             <div class="header">
-                <div class="lft">
-                    <div v-html="`Запись на занятие к ${trainer.nickname}`">
-                    </div>
-                    <div v-html="`Часовой пояс ${trainer.timeZone}`">
+                <div class="round">
+                    <div>
+                        <img src="/images/lamp.svg" alt="lamp">
                     </div>
                 </div>
-                {% if app.user is not null %}
-                    <div class="rgt" v-if="view === 1">
-                        <div class="price">
-                            Итого: <span v-text="getPrice()"></span> ₽
+                <div class="title" v-html="`Запись на занятие к ${trainer.nickname}`">
+                    Запись на занятие к Cooper2h
+                </div>
+            </div>
+            <div class="table">
+                <div class="lessons">
+                    <div class="container" style="min-height: 40vw">
+                        <div class="header lesson">
+                            <div class="lft">
+                                <div v-html="`Часовой пояс ${trainer.timeZone}`">
+                                </div>
+                            </div>
+                            {% if app.user is not null %}
+                                <div class="rgt" v-if="view === 1">
+                                    <div class="price">
+                                        Итого: <span v-text="getPrice()"></span> ₽
+                                    </div>
+                                    <div @click="setPay" class="button" :class="[items.length > 0 ? '' : 'blocked']">
+                                        Далее
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
-                        <div @click="setPay" class="button" :class="[items.length > 0 ? '' : 'blocked']">
-                            Далее
+                        <div>
+                            <timetables :trainer="trainer" v-on:setprice="setPrice" v-on:setitem="setItem" :block="block"/>
+                        </div>
+                        <div v-if="view === 2">
+                            <payments v-on:setview="setView"/>
+                        </div>
+                        <div v-if="view === 3">
+                            <order :items="items"/>
                         </div>
                     </div>
-                {% endif %}
-            </div>
-            <div>
-                <timetables :trainer="trainer" v-on:setprice="setPrice" v-on:setitem="setItem" :block="block"/>
-            </div>
-            <div v-if="view === 2">
-                <payments v-on:setview="setView"/>
-            </div>
-            <div v-if="view === 3">
-                <order :items="items"/>
+                </div>
             </div>
         </div>
-    </div>
 </script>
 {% if app.user.id is not defined %}
     {% set user_id = 0 %}
