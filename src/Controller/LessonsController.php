@@ -287,10 +287,10 @@ class LessonsController extends AbstractController
         $trainerTeacher = $trainerTeacher[0] ?? null;
 
         // Send trainer mail
-        $this->sendPayedMail($mailer, $trainer, $bookedTime, $trainerTeacher, true);
+        $this->sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, true);
         // Send user mail
         if (!empty($user->getEmail())) {
-            $this->sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher);
+            $this->sendPayedMail($mailer, $trainer, $bookedTime, $trainerTeacher);
         }
         return $this->json(['ids' => $lessonIds]);
     }
@@ -323,31 +323,5 @@ class LessonsController extends AbstractController
             }
         }
         return  $this->json(null);
-    }
-
-    /**
-     * @param $mailer
-     * @param $user
-     * @param $bookedTime
-     * @param $trainerTeacher
-     * @param bool $isTrainer
-     * @return mixed
-     */
-    public function sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, $isTrainer = false)
-    {
-        $params = [
-            'user' => $user,
-            'bookedTime' => $bookedTime,
-            'trainer' => $trainerTeacher,
-            'isTrainer' => $isTrainer,
-        ];
-
-        $html = $this->renderView('templates/mails/booked.lesson.html.twig', $params);
-
-        $trainerMail = $this->makeMail()
-            ->setTo($user->getEmail())
-            ->setBody($html, 'text/html');
-
-        return $mailer->send($trainerMail);
     }
 }
