@@ -244,6 +244,7 @@ class LessonService extends EntityService
             'trainerStatus' => $lesson->getTrainerStatus(),
             'status' => $lesson->getStatus(),
             'reviewIsset' => $lesson->getReview() === null ? false : true,
+            'trainerDiscord' => $lesson->getTrainer()->getDiscord()
         ];
     }
 
