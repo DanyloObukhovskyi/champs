@@ -140,12 +140,20 @@ class LessonService extends EntityService
 
 
                     $lesson = new Lessons();
+                    /** @var Teachers $trainerEntity */
                     $trainerEntity = $this->entityManager->getRepository(Teachers::class)
                         ->findByUserId($trainer->getId());
 
+                    $lessonsCount = count($lessonTimes);
+
+                    if ($trainerEntity->getIsLessonCost())
+                    {
+                        $lessonsCount = (int)$lessonsCount / Lessons::LESSON_HOURS;
+                    }
+
                     $lesson->setStudent($user);
                     $lesson->setTrainer($trainer);
-                    $lesson->setCost($trainerEntity->getCost() * (int)count($lessonTimes));
+                    $lesson->setCost($trainerEntity->getCost() * $lessonsCount);
                     $lesson->setStatus(Lessons::STATUS_NEW);
                     $lesson->setDateTimeFrom($dateFrom);
                     $lesson->setDateTimeTo($dateTo);

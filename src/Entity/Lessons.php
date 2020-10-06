@@ -14,6 +14,8 @@ class Lessons
         STATUS_NEW = 0,
         STATUS_ENDED = 1;
 
+    const LESSON_HOURS = 3;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

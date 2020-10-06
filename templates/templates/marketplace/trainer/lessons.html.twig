@@ -67,9 +67,25 @@
             getPrice() {
                 let cost = 0;
 
-                this.items.map(i => {
-                    cost += this.trainer.trainer.cost
-                })
+                console.log(this.trainer.trainer.isLessonCost)
+                if (this.trainer.trainer.isLessonCost){
+                    if (this.items.length > 0) {
+                        let result = this.items.reduce((p,c)=>{
+                            if(p[p.length-1].length == 3){
+                                p.push([]);
+                            }
+                            p[p.length-1].push(c);
+                            return p;
+                        }, [[]]);
+
+                        result = result.filter((times) => times.length === 3)
+                        cost = result.length * this.trainer.trainer.cost;
+                    }
+                } else {
+                    this.items.map(i => {
+                        cost += this.trainer.trainer.cost
+                    })
+                }
                 return cost;
             },
             setPay() {
@@ -79,7 +95,7 @@
                             return this.showLessonsChoseInvalidPopup();
                         }
                     }
-                    return
+
                     this.block = true;
                     const data = {
                         lessons: this.items,
