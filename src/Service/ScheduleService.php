@@ -31,11 +31,10 @@ class ScheduleService extends EntityService
      * @return array
      * @throws \Exception
      */
-    public function createWeek($userId, $dateFrom, $isLessonCost = false)
+    public function createWeek($userId, $dateFrom)
     {
         $from = new \DateTime($dateFrom->format("Y-m-d"));
-
-        $hours = $isLessonCost ? 22: 24;
+        $hours = 24;
 
         $schedules = [];
         for ($i = 0; $i < 7; $i++)
