@@ -182,7 +182,7 @@ class LessonService extends EntityService
 
                     $lessonIds[] = $lesson->getId();
 
-                    $bookedTime[] = [
+                    $bookedTime[$lesson->getDateTimeTo()->format('Y-m-d')][] = [
                         'day' => $lesson->getDateTimeTo()->format('Y-m-d'),
                         'from' => $timeFrom,
                         'to' => $timeTo,
@@ -191,7 +191,6 @@ class LessonService extends EntityService
                 }
             }
         }
-
         return [$lessonIds, $bookedTime];
     }
 
@@ -333,5 +332,14 @@ class LessonService extends EntityService
             }
         }
         return $isPayment;
+    }
+
+    /**
+     * @param $ids
+     * @return mixed
+     */
+    public function getLessonsByIds($ids)
+    {
+        return $this->repository->findByIds($ids);
     }
 }

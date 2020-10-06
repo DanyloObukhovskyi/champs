@@ -271,6 +271,7 @@ class LessonsController extends AbstractController
 
         /** @var User $trainer */
         $trainer = $entityManager->getRepository(User::class)->find($data->trainer_id);
+
         /** @var Teachers $trainerEntity */
         $trainerEntity = $entityManager->getRepository(Teachers::class)->findOneBy([
             'userid' => $trainer->getId()
@@ -281,8 +282,6 @@ class LessonsController extends AbstractController
             return $this->json(['message' => 'Неверные данные!']);
         }
 
-
-
         /** @var User $user */
         $user = $this->authUser();
         $lessons = $data->lessons ?? [];
@@ -290,18 +289,16 @@ class LessonsController extends AbstractController
         $lessons = $this->lessonsService
             ->decorationLessonsForPayed($lessons);
 
-        [$lessonIds, $bookedTime] = $this->lessonsService->createLessons($lessons, $trainer, $user);
-        $trainerTeacher = $this->getDoctrine()
-            ->getRepository(Teachers::class)
-            ->findBy(['userid' => $trainer->getId()]);
+        [$lessonIds] = $this->lessonsService->createLessons($lessons, $trainer, $user);
 
-        $trainerTeacher = $trainerTeacher[0] ?? null;
+        $lessons = $this->lessonsService->getLessonsByIds($lessonIds);
 
-        // Send trainer mail
-        $this->sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, true);
-        // Send user mail
-        if (!empty($user->getEmail())) {
-            $this->sendPayedMail($mailer, $trainer, $bookedTime, $trainerTeacher);
+        foreach ($lessons as $lesson)
+        {
+            // Send user mail
+            $this->sendPayedMail($mailer, $lesson, $user, $trainer);
+            // Send trainer mail
+            $this->sendPayedMail($mailer, $lesson, $user, $trainer, true);
         }
         return $this->json(['ids' => $lessonIds]);
     }

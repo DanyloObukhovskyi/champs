@@ -3,6 +3,9 @@
 
 namespace App\Traits;
 
+use App\Entity\Teachers;
+use App\Entity\User;
+use App\Service\UserService;
 use Swift_Message;
 
 
@@ -16,25 +19,38 @@ trait Mail
 
     /**
      * @param $mailer
+     * @param $lesson
      * @param $user
-     * @param $bookedTime
-     * @param $trainerTeacher
-     * @param bool $isTrainer
+     * @param $trainer
      * @return mixed
      */
-    public function sendPayedMail($mailer, $user, $bookedTime, $trainerTeacher, $isTrainer = false)
+    public function sendPayedMail($mailer, $lesson, $user, $trainer, $isTrainer = false)
     {
+        $choseGame = $trainer->getGame();
+
+        foreach (UserService::GAMES as $game)
+        {
+            if ($game['name'] === $trainer->getGame())
+            {
+                $choseGame = $game['title'];
+            }
+        }
         $params = [
             'user' => $user,
-            'bookedTime' => $bookedTime,
-            'trainer' => $trainerTeacher,
-            'isTrainer' => $isTrainer,
+            'trainer' => $trainer,
+            'lesson' => $lesson,
+            'game' => $choseGame,
+            'isTrainer' => $isTrainer
         ];
-
         $html = $this->renderView('templates/mails/booked.lesson.html.twig', $params);
 
+        if ($isTrainer){
+            $email = $trainer->getEmail();
+        } else {
+            $email = $user->getEmail();
+        }
         $trainerMail = $this->makeMail()
-            ->setTo($user->getEmail())
+            ->setTo($email)
             ->setBody($html, 'text/html');
 
         return $mailer->send($trainerMail);
