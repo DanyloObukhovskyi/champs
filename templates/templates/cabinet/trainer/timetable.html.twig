@@ -24,7 +24,6 @@
         </div>
         <timetables/>
     </div>
-
     <script type="text/x-template" id="timetables-template">
         <div class="timetables" :style="{opacity: block ? '0.8' : '1'}">
             <div class="controll">
@@ -35,52 +34,23 @@
                     <div class="arrow" @click="nextWeek"><img src="/images/arrowR.svg" alt="arrowR"/></div>
                 </div>
             </div>
-            <div class="cont" id="calendar" v-if="!isLesson">
+            <div class="cont" id="calendar">
                 <div class="time_mobile">
                     <div class="text" v-for="t in getTimes">
                         <span v-text="`${t}:00`"></span>
                     </div>
                 </div>
                 <div class="calendarblock" v-for="(parent, p_i) in items" :key="p_i">
-                    <div class="days">
-                        <div class="null"></div>
-                        <div class="day" v-for="(item, i) in parent.week" :class="[getToday(item) ? 'today' : '']">
-                            <div class="title" v-text="week[i]"></div>
-                            <div class="date" v-text="getDateD(item.date)"></div>
-                        </div>
-                    </div>
-                    <div class="times" :style="{width: rowsWidth + 'px'}">
-                        <div class="time" v-for="t in getTimes">
-                            <div class="text">
-                                <span v-text="`${t}:00`"></span>
-                            </div>
-                            <div class="rows" style="user-select: none">
-                                <div class="rows-row" v-for="i in parent.week" :style="{width: rowWidth + 'px'}">
-                                    <div class="open" v-if="checkTime(t, i, 0)" @click="setTime(t, i, 1)"
-                                         :class="[checkDisabled(t, i) ? 'disabled' : '']">
-                                        Открыть
-                                    </div>
-                                    <div class="openclose" v-if="checkTime(t, i, 1)" @click="setTime(t, i, 0)"
-                                         :class="[checkDisabled(t, i) ? 'disabled' : '']">
-                                        Запись открыта
-                                    </div>
-                                    <div class="user" v-if="checkTime(t, i, 10)"
-                                         :class="[checkDisabled(t, i) ? 'disabled' : '']">
-                                        <img src="/images/temp/Rectangle506.png"/> Damenik
-                                    </div>
-                                </div>
+                    {% if trainer.isLessonCost %}
+                        <div class="days">
+                            <div class="day w-100 ml-4">
+                                <span>
+                                    Вы выбрали в настройках оплату за урок (3 часа),
+                                    по этому подбирайте свое время так что бы совпадало подряд 3 часа <span class="text-danger">*</span>
+                                </span>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="cont" id="calendar" v-if="isLesson">
-                <div class="time_mobile">
-                    <div class="text" v-for="t in getTimes">
-                        <span v-text="`${t}:00`"></span>
-                    </div>
-                </div>
-                <div class="calendarblock" v-for="(parent, p_i) in items" :key="p_i">
+                    {% endif %}
                     <div class="days">
                         <div class="null"></div>
                         <div class="day" v-for="(item, i) in parent.week" :class="[getToday(item) ? 'today' : '']">
@@ -284,9 +254,8 @@
                                 dateout: enddate,
                                 week: [],
                             };
-                            this.isLesson = response.data.isLesson;
 
-                            const data = response.data.schedule;
+                            const data = response.data;
                             data.sort(function (a, b) {
                                 return new Date(a.date) - new Date(b.date);
                             });
