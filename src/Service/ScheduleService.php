@@ -27,12 +27,15 @@ class ScheduleService extends EntityService
     /**
      * @param $userId
      * @param $dateFrom
+     * @param bool $isLessonCost
      * @return array
      * @throws \Exception
      */
-    public function createWeek($userId, $dateFrom)
+    public function createWeek($userId, $dateFrom, $isLessonCost = false)
     {
         $from = new \DateTime($dateFrom->format("Y-m-d"));
+
+        $hours = $isLessonCost ? 22: 24;
 
         $schedules = [];
         for ($i = 0; $i < 7; $i++)
@@ -40,7 +43,7 @@ class ScheduleService extends EntityService
             $schedulesEntities = $this->repository->findByTrainerAndDate($userId, $from->format("Y-m-d"));
 
             $scheduleCollect = [];
-            for ($k = 0; $k < 24; $k++)
+            for ($k = 0; $k < $hours; $k++)
             {
                 $timeFrom = $k < 10 ? "0$k" : $k;
                 $timeTo = $k + 1 < 10 ? "0".($k + 1) : $k + 1;

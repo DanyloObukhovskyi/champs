@@ -29,7 +29,6 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 {% block js %}
     {% include 'templates/marketplace/filters.html.twig' %}
@@ -46,7 +45,6 @@
         const marketplace = new Vue({
             el: '#marketplace',
             data: {
-                state: 'created',
                 game: header.game,
                 gammelist: JSON.parse('{{ games|json_encode|raw }}'),
                 filters: JSON.parse('{{ filters|json_encode|raw }}'),
@@ -70,14 +68,6 @@
                             this.trainer = null;
 
                             this.load = false;
-
-                            if (trainerId !== null && this.state === 'created'){
-                                axios.post('/ru/marketplace/trainer/' + trainerId)
-                                    .then(({data}) => {
-                                        this.trainer = data
-                                        this.state = 'mounted'
-                                    })
-                            }
                         })
                         .catch(() => {
                             this.trainers = [];
@@ -97,7 +87,18 @@
                 },
                 search(){
                    this.getGameTrainersList();
-                }
+                },
+                getTrainer(){
+                    this.load = true;
+
+                    axios.post('/ru/marketplace/trainer/' + trainerId)
+                        .then(({data}) => {
+                            this.trainer = data
+                            this.state = 'mounted'
+
+                            this.load = false;
+                        })
+                },
             },
             computed:{
                 trainersAll() {
@@ -118,7 +119,11 @@
                 }
             },
             mounted() {
-                this.getGameTrainersList()
+                if (trainerId !== null){
+                    this.getTrainer()
+                } else {
+                    this.getGameTrainersList()
+                }
             }
         })
     </script>

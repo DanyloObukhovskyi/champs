@@ -128,12 +128,16 @@ class SchleduleController extends AbstractController
     {
         $form = json_decode($request->getContent());
 
-        $user_id = $form->user_id;
+        $userId = $form->user_id;
         $dateFrom = new \DateTime($form->date);
 
-        $scheledule = $this->scheduleService->createWeek($user_id, $dateFrom);
+        /** @var Teachers $trainer */
+        $trainer = $this->getDoctrine()->getRepository(Teachers::class)
+            ->findOneBy(['userid' =>  $userId]);
 
-        return $this->json($scheledule);
+        $schedule = $this->scheduleService->createWeek($userId, $dateFrom, $trainer->getIsLessonCost());
+
+        return $this->json(['schedule' => $schedule, 'isLesson' => $trainer->getIsLessonCost()]);
     }
 
     /**

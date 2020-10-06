@@ -38,6 +38,11 @@ class Teachers
     private $cost;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isLessonCost;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $about;
@@ -223,5 +228,21 @@ class Teachers
     public function setPayPal($payPal): void
     {
         $this->payPal = $payPal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsLessonCost()
+    {
+        return $this->isLessonCost;
+    }
+
+    /**
+     * @param mixed $isLessonCost
+     */
+    public function setIsLessonCost($isLessonCost): void
+    {
+        $this->isLessonCost = $isLessonCost;
     }
 }
