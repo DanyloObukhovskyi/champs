@@ -49,8 +49,10 @@ class TrainerVideoService extends EntityService
         foreach ($videos as $video)
         {
             $video = explode('/', $video->getVideoUrl());
-
-            $videosUrls[] = end($video);
+            $video = end($video);
+            
+            $video = str_replace('watch?v=', '', $video);
+            $videosUrls[] = $video;
         }
         return $videosUrls;
     }
