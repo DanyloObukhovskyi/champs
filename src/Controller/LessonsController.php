@@ -271,6 +271,17 @@ class LessonsController extends AbstractController
 
         /** @var User $trainer */
         $trainer = $entityManager->getRepository(User::class)->find($data->trainer_id);
+        /** @var Teachers $trainerEntity */
+        $trainerEntity = $entityManager->getRepository(Teachers::class)->findOneBy([
+            'userid' => $trainer->getId()
+        ]);
+
+        if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS !== 0)
+        {
+            return $this->json(['message' => 'Неверные данные!']);
+        }
+
+
 
         /** @var User $user */
         $user = $this->authUser();

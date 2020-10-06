@@ -363,7 +363,7 @@
                         this.required.timezone = res.data.trainer.timeZone ? res.data.trainer.timeZone : 'Europe/Moscow';
                         this.vk = res.data.vk ? res.data.vk : '';
 
-                        this.required.isLessonCost = res.data.trainer.isLessonCost ? res.data.trainer.isLessonCost: false;
+                        this.required.isLessonCost = res.data.trainer.isLessonCost;
 
                         Object.keys(th.required).forEach((key) => {
                             if (String(th.required[key]).length === 0) {
