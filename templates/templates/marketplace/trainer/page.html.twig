@@ -12,9 +12,11 @@
                 {% include 'templates/trainers/reviews.html.twig' %}
             </div>
         </div>
-        <div class="products">
-            <trainer-lessons :trainer="trainer"></trainer-lessons>
-        </div>
+        {% if app.user is not null %}
+            <div class="products" >
+                <trainer-lessons :trainer="trainer"></trainer-lessons>
+            </div>
+        {% endif %}
     </div>
 </script>
 {% include 'templates/trainers/review.html.twig' %}
