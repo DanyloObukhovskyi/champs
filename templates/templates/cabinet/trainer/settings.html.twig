@@ -5,6 +5,7 @@
     {% for style in styles %}
         <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}"/>
     {% endfor %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/radio.css"/>
     <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
 {% endblock %}
 {% block body %}
@@ -94,8 +95,39 @@
                 <div class="rgt">
                     <div class="title">Настройки тренера</div>
                     <div class="inputs">
+                        <div style="font-size: 0.85vw;">Выбор типа оплаты<span class="text-danger">*</span></div>
+                        <div class="radio container p-0">
+                            <input type="radio" value="true" v-model="required.isLessonCost"/>
+                            <label class="ml-0" @click="required.isLessonCost = true">
+                                <svg class="check" viewbox="0 0 40 40">
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="100%">
+                                            <stop offset="0%" stop-color="#FF6D1D"></stop>
+                                            <stop offset="100%" stop-color="#FF6D1D"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle id="border" r="18px" cx="20px" cy="20px"></circle>
+                                    <circle id="dot" r="8px" cx="20px" cy="20px"></circle>
+                                </svg>За урок (3 часа)
+                            </label>
+                            <input type="radio" value="false" v-model="required.isLessonCost"/>
+                            <label class="ml-0" @click="required.isLessonCost = false">
+                                <svg class="check" viewbox="0 0 40 40">
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="100%">
+                                            <stop offset="0%" stop-color="#FF6D1D"></stop>
+                                            <stop offset="100%" stop-color="#FF6D1D"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle id="border" r="18px" cx="20px" cy="20px"></circle>
+                                    <circle id="dot" r="8px" cx="20px" cy="20px"></circle>
+                                </svg>За один час
+                            </label>
+                        </div>
+                    </div>
+                    <div class="inputs">
                         <div class="input">
-                            <div>Стоимость обучения за 1 час<span>*</span></div>
+                            <div>Стоимость обучения<span>*</span></div>
                             <input type="number" v-model="required.cost"/>
                         </div>
                     </div>
@@ -293,6 +325,7 @@
                         method: '',
                         streamtype: 'default',
                         timezone: '',
+                        isLessonCost: null,
                     },
                     vk: '',
                     videos: [],
@@ -310,22 +343,27 @@
                 const th = this;
                 axios.get('/ru/user/info/{{ app.user.id }}')
                     .then((res) => {
+                        this.required.name = res.data.name ? res.data.name : '';
+                        this.required.family = res.data.family ? res.data.family : '';
+                        this.required.nickname = res.data.nickname ? res.data.nickname : '';
 
-                        th.required.name = res.data.name ? res.data.name : '';
-                        th.required.family = res.data.family ? res.data.family : '';
-                        th.required.nickname = res.data.nickname ? res.data.nickname : '';
-                        th.required.email = res.data.email ? res.data.email : '';
-                        th.required.rank = res.data.rank ? res.data.rank : '';
-                        th.required.game = res.data.game ? res.data.game : '';
-                        th.required.cost = res.data.trainer.costWithNoPercentage ? res.data.trainer.costWithNoPercentage : '';
-                        th.required.about = res.data.trainer.about ? res.data.trainer.about : '';
-                        th.required.shorttitle = res.data.trainer.shorttitle ? res.data.trainer.shorttitle : '';
-                        th.required.method = res.data.trainer.method ? res.data.trainer.method : '';
-                        th.twitch = res.data.trainer.twitch ? res.data.trainer.twitch : '';
-                        th.required.streamtype = res.data.trainer.streamType !== null ? res.data.trainer.streamType : 'default';
-                        th.discord = res.data.discord ? res.data.discord : '';
-                        th.required.timezone = res.data.trainer.timeZone ? res.data.trainer.timeZone : 'Europe/Moscow';
-                        th.vk = res.data.vk ? res.data.vk : '';
+                        this.required.email = res.data.email ? res.data.email : '';
+                        this.required.rank = res.data.rank ? res.data.rank : '';
+                        this.required.game = res.data.game ? res.data.game : '';
+
+                        this.required.cost = res.data.trainer.costWithNoPercentage ? res.data.trainer.costWithNoPercentage : '';
+                        this.required.about = res.data.trainer.about ? res.data.trainer.about : '';
+                        this.required.shorttitle = res.data.trainer.shorttitle ? res.data.trainer.shorttitle : '';
+
+                        this.required.method = res.data.trainer.method ? res.data.trainer.method : '';
+                        this.twitch = res.data.trainer.twitch ? res.data.trainer.twitch : '';
+                        this.required.streamtype = res.data.trainer.streamType !== null ? res.data.trainer.streamType : 'default';
+
+                        this.discord = res.data.discord ? res.data.discord : '';
+                        this.required.timezone = res.data.trainer.timeZone ? res.data.trainer.timeZone : 'Europe/Moscow';
+                        this.vk = res.data.vk ? res.data.vk : '';
+
+                        this.required.isLessonCost = res.data.trainer.isLessonCost ? res.data.trainer.isLessonCost: false;
 
                         Object.keys(th.required).forEach((key) => {
                             if (String(th.required[key]).length === 0) {

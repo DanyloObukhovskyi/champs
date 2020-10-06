@@ -1,7 +1,7 @@
 <script type="text/x-template" id="trainer-page-template">
     <div class="trainers pt-4" id="trainers" v-show="trainer !== null">
         {% include 'templates/trainers/slider.html.twig' %}
-        <div class="container" v-if="trainers.length > 0">
+        <div class="container">
             <div class="products">
                 <div class="w-100">
                     {% include 'templates/trainers/order.html.twig' %}
@@ -12,7 +12,7 @@
                 {% include 'templates/trainers/reviews.html.twig' %}
             </div>
         </div>
-        <div class="products" v-if="trainers.length > 0">
+        <div class="products">
             <trainer-lessons :trainer="trainer"></trainer-lessons>
         </div>
     </div>

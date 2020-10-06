@@ -291,6 +291,7 @@ class UserController extends AbstractController
             $trainer->setMethod($request->request->get('method'));
             $trainer->setStreamType($request->request->get('streamtype', null));
             $trainer->setTwitch($request->request->get('channellink'));
+            $trainer->setIsLessonCost($request->request->get('isLessonCost', false));
 
             $entityManager->persist($trainer);
             $entityManager->flush();
