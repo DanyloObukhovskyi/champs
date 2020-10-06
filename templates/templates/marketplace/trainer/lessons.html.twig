@@ -74,8 +74,13 @@
             },
             setPay() {
                 if (!this.block && this.items !== null) {
+                    if (this.trainer.trainer.isLessonCost) {
+                        if (!this.checkIsThreeLessonsInARow()){
+                            return this.showLessonsChoseInvalidPopup();
+                        }
+                    }
+                    return
                     this.block = true;
-
                     const data = {
                         lessons: this.items,
                         trainer_id: this.trainer.id,
@@ -99,6 +104,43 @@
             },
             setView(val) {
                 this.view = val;
+            },
+            checkIsThreeLessonsInARow() {
+                let lessonDates = {};
+                for(let lesson of this.items) {
+                    if (lessonDates[lesson.date] === undefined){
+                        lessonDates[lesson.date] = [];
+                    }
+                    lessonDates[lesson.date].push(Number(lesson.time.split(':')[0]))
+                }
+                for (let date in lessonDates) {
+                    lessonDates[date] = lessonDates[date].sort((a, b) => a - b)
+                }
+                for (let date in lessonDates) {
+                    const result = lessonDates[date].reduce((p,c)=>{
+                        if(p[p.length-1].length == 3){
+                            p.push([]);
+                        }
+                        p[p.length-1].push(c);
+                        return p;
+                    }, [[]]);
+
+                    for (let lesson of result) {
+                        if (lesson.length < 3){
+                            return false;
+                        } else if(lesson[0] !== lesson[1] - 1 || lesson[1] !== lesson[2] - 1){
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            },
+            showLessonsChoseInvalidPopup(){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Упс...',
+                    html: 'У этого тренера указана цена за один урок (3 часа), необходимо выбрать 3 часа подряд для оформления заказа!',
+                })
             },
             setItem(val) {
                 if (val.date && val.time) {

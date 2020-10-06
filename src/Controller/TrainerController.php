@@ -57,9 +57,14 @@ class TrainerController extends AbstractController
         if (empty($this->getUser()) or !$this->getUser()->getistrainer()) {
             return $this->redirectToRoute('main');
         } else {
+            /** @var Teachers $trainer */
+            $trainer = $this->getDoctrine()->getRepository(Teachers::class)
+                ->findOneBy(['userid' => $this->getUser()->getId()]);
+
             return $this->render('templates/cabinet/trainer/timetable.html.twig',
                 [
                     'router' => 'cabinet',
+                    'trainer' => $trainer,
                     'styles' => [
                         'cabinet/cabinet.css',
                         'cabinet/trainer/timetable.css'
