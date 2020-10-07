@@ -96,16 +96,14 @@ class ReviewController extends AbstractController
             '4' => 0,
             '5' => 0,
         ];
-        foreach ($reviews['entity'] as $review)
-        {
+        foreach ($reviews['entity'] as $review) {
             $sum += $review['rate'];
             $keys[$review['rate']]++;
             $count++;
         }
 
         $result = 0;
-        if($sum > 0)
-        {
+        if ($sum > 0) {
             $result = round($sum / $count, 2);
         }
 
@@ -139,12 +137,10 @@ class ReviewController extends AbstractController
         $rating = $request->get('rating');
         $review = $request->get('review');
 
-        if (isset($lesson) and isset($rating) and isset($review))
-        {
+        if (isset($lesson) and isset($rating) and isset($review)) {
             $reviewEntity = $this->reviewService->findByLesson($lesson);
 
-            if (empty($reviewEntity))
-            {
+            if (empty($reviewEntity)) {
                 $this->reviewService->create($lesson, $rating, $review);
             }
         }
