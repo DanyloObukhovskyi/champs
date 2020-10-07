@@ -91,8 +91,6 @@
         },
         methods: {
             addTime(t, i, status) {
-                console.log()
-
                 if (Boolean({{ app.user is null }})) {
                     Swal.fire({
                         icon: 'error',
@@ -275,7 +273,11 @@
                             };
                             data.forEach((item) => {
                                 const newDate = new Date(item.date);
-                                if (newDate.getDate() === empty.getDate() && newDate.getMonth() === empty.getMonth() && newDate.getFullYear() === empty.getFullYear()) {
+
+                                if (newDate.getDate() === empty.getDate() &&
+                                    newDate.getMonth() === empty.getMonth() &&
+                                    newDate.getFullYear() === empty.getFullYear()) {
+
                                     Object.keys(item).forEach((key) => {
                                         if (key.match(/time+/i)) {
                                             let parse = key.split('time');

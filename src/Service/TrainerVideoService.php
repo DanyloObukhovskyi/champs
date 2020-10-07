@@ -9,14 +9,23 @@ use App\Entity\User;
 
 class TrainerVideoService extends EntityService
 {
-    protected const YOUTUBE_TYPES = [
-
+    public const YOUTUBE_TYPES = [
+        'youtube',
+        'youtu',
+        'youtu.be',
     ];
+
+    public const MAX_COUNT = 10;
+
 
     protected $entity = TrainerVideo::class;
 
     protected $repository;
 
+    /**
+     * @param User $trainer
+     * @param $video
+     */
     public function create(User $trainer, $video)
     {
         /** @var TrainerVideo $trainerVideo */
@@ -27,6 +36,10 @@ class TrainerVideoService extends EntityService
         $this->save($trainerVideo);
     }
 
+    /**
+     * @param User $trainer
+     * @param $video
+     */
     public function deleteVideo(User $trainer, $video)
     {
         $trainerVideo = $this->repository->getByTrainerAndVideo($trainer, $video);
@@ -36,11 +49,19 @@ class TrainerVideoService extends EntityService
         }
     }
 
+    /**
+     * @param User $trainer
+     * @return mixed
+     */
     public function getByTrainer(User $trainer)
     {
         return $this->repository->getByTrainer($trainer);
     }
 
+    /**
+     * @param $videos
+     * @return array
+     */
     public function decorator($videos)
     {
         $videosUrls = [];
@@ -55,5 +76,21 @@ class TrainerVideoService extends EntityService
             $videosUrls[] = $video;
         }
         return $videosUrls;
+    }
+
+    /**
+     * @param $video
+     * @return bool
+     */
+    public function isYouTubeVideo($video)
+    {
+        foreach (self::YOUTUBE_TYPES as $type)
+        {
+            if (strpos($video, $type) !== false)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

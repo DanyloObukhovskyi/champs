@@ -23,6 +23,8 @@ class UserController extends AbstractController
 
     private const ACTION_DELETE = 'delete';
 
+    private const ACTION_ALL = 'all';
+
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -303,7 +305,7 @@ class UserController extends AbstractController
                 $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
             }
         }
-        
+
         $entityManager->persist($user);
         $entityManager->flush();
 
@@ -342,10 +344,18 @@ class UserController extends AbstractController
     {
         $request = json_decode($request->getContent());
         $trainer = $this->getDoctrine()->getRepository(User::class)->find($id);
-
         $videos = $this->trainerVideoService->getByTrainer($trainer);
-        if ($action === self::ACTION_ADD and isset($trainer) and count($videos) < 10) {
-            $this->trainerVideoService->create($trainer, $request->video);
+
+        if ($action === self::ACTION_ADD and isset($trainer) and count($videos) < TrainerVideoService::MAX_COUNT) {
+            $isYouTube = $this->trainerVideoService->isYouTubeVideo($request->video);
+
+            if ($isYouTube) {
+                $this->trainerVideoService->create($trainer, $request->video);
+            } else {
+                return $this->json([
+                    'video' => 'Ссылка на видео должны быть с Youtube! В формате https://www.youtube.com/qwda2fg'
+                ], 422);
+            }
         }
         if ($action === self::ACTION_DELETE and isset($trainer)) {
             $this->trainerVideoService->deleteVideo($trainer, $request->video);
@@ -357,7 +367,6 @@ class UserController extends AbstractController
         foreach ($trainerVideos as $trainerVideo) {
             $videos[] = $trainerVideo->getVideoUrl();
         }
-
         return $this->json($videos);
     }
 }
