@@ -43,8 +43,9 @@ class LessonService extends EntityService
     {
         parent::__construct($entityManager);
 
-        $this->scheduleService = new ScheduleService($entityManager);
         $this->imageService = new ImageService();
+
+        $this->scheduleService = new ScheduleService($entityManager);
         $this->teacherService = new TeacherService($entityManager);
     }
 
@@ -342,5 +343,14 @@ class LessonService extends EntityService
     public function getLessonsByIds($ids)
     {
         return $this->repository->findByIds($ids);
+    }
+
+    /**
+     * @param $id
+     * @return Lessons|null
+     */
+    public function find($id)
+    {
+        return $this->repository->find($id);
     }
 }

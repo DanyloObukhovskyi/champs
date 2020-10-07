@@ -55,4 +55,21 @@ trait Mail
 
         return $mailer->send($trainerMail);
     }
+
+    public function sendTeacherFinishLesson($mailer, $lesson, $user, $trainer)
+    {
+        $params = [
+            'user' => $user,
+            'trainer' => $trainer,
+            'lesson' => $lesson,
+        ];
+
+        $html = $this->renderView('templates/mails/finish.lesson.html.twig', $params);
+
+        $trainerMail = $this->makeMail()
+            ->setTo($user->getEmail())
+            ->setBody($html, 'text/html');
+
+        return $mailer->send($trainerMail);
+    }
 }

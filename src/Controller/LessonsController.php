@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Lessons;
-use App\Entity\LessonTime;
-use App\Entity\Payment;
 use App\Entity\PurseHistory;
 use App\Entity\Review;
-use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
@@ -16,15 +13,9 @@ use App\Service\ScheduleService;
 use App\Traits\AuthUser;
 use App\Traits\EntityManager;
 use App\Traits\Mail;
-use Carbon\Carbon;
-use DateTime;
-use Doctrine\DBAL\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Swift_Mailer;
 
@@ -205,7 +196,7 @@ class LessonsController extends AbstractController
      *
      * @Route("/ru/lessons/set-status-ended/{form}", name="student_trainer_lesson_end")
      */
-    public function setLessonEnd($form)
+    public function setLessonEnd($form, Swift_Mailer $mailer)
     {
         $form = json_decode($form, false);
 
@@ -226,6 +217,8 @@ class LessonsController extends AbstractController
         {
             if($form->istrainer === true){
                 $lesson->setTrainerStatus(Lessons::STATUS_ENDED);
+
+                $this->sendTeacherFinishLesson($mailer, $lesson, $lesson->getStudent(), $lesson->getTrainer());
             }else{
                 $lesson->setStudentStatus(Lessons::STATUS_ENDED);
             }
