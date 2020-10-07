@@ -5,12 +5,27 @@ namespace App\Controller;
 use App\Entity\Lessons;
 use App\Entity\Review;
 use App\Entity\User;
+use App\Service\LessonService;
+use App\Service\ReviewService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ReviewController extends AbstractController
 {
+    use EntityManager;
+
+    public $lessonService;
+
+    public $reviewService;
+
+    public function __construct()
+    {
+        $this->lessonService = new LessonService($this->getEntityManager());
+        $this->reviewService = new ReviewService($this->getEntityManager());
+    }
+
     /**
      * @Route("/review", name="review")
      */
@@ -110,5 +125,29 @@ class ReviewController extends AbstractController
             ->findRateByTrainerId($trainerId);
 
         return $this->json($reviews['entity']);
+    }
+
+    /**
+     * Lessons /ru/send/review/lesson/*
+     *
+     * @Route("/ru/review/lesson/{lessonId}", name="review.lesson.post")
+     */
+    public function lessonReview(Request $request, $lessonId)
+    {
+        $lesson = $this->lessonService->find($lessonId);
+
+        $rating = $request->get('rating');
+        $review = $request->get('review');
+
+        if (isset($lesson) and isset($rating) and isset($review))
+        {
+            $reviewEntity = $this->reviewService->findByLesson($lesson);
+
+            if (empty($reviewEntity))
+            {
+                $this->reviewService->create($lesson, $rating, $review);
+            }
+        }
+        return $this->redirectToRoute('main');
     }
 }

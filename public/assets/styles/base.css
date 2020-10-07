@@ -1902,3 +1902,9 @@ label {
   border: 0.04vw solid #CFDCF3;
   outline: none;
 }
+.text-gray {
+  color: gray;
+}
+.hover-orange:hover{
+  color: #FF6D1D;
+}
