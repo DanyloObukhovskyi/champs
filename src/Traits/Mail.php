@@ -3,6 +3,7 @@
 
 namespace App\Traits;
 
+use App\Entity\Lessons;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\UserService;
@@ -17,14 +18,7 @@ trait Mail
             ->setFrom($_ENV['MAILER_FROM'] ?? 'champs@mail.com');
     }
 
-    /**
-     * @param $mailer
-     * @param $lesson
-     * @param $user
-     * @param $trainer
-     * @return mixed
-     */
-    public function sendPayedMail($mailer, $lesson, $user, $trainer, $isTrainer = false)
+    public function getTrainerGame($trainer)
     {
         $choseGame = $trainer->getGame();
 
@@ -35,12 +29,40 @@ trait Mail
                 $choseGame = $game['title'];
             }
         }
+        return $choseGame;
+    }
+
+    public function sendTeacherFinishLesson($mailer, $lesson, $user, $trainer, $isTrainer = false)
+    {
+        $params = [
+            'user' => $user,
+            'game' => $this->getTrainerGame($trainer),
+            'trainer' => $trainer,
+            'lesson' => $lesson,
+            'isTrainer' => $isTrainer,
+        ];
+        $email = $isTrainer ? $trainer->getEmail(): $user->getEmail();
+
+        $html = $this->renderView('templates/mails/finish.lesson.html.twig', $params);
+
+        $trainerMail = $this->makeMail()
+            ->setTo($email)
+            ->setBody($html, 'text/html');
+
+        return $mailer->send($trainerMail);
+    }
+
+    public function makePaymentMail($mailer, Lessons $lesson, $user, $trainer, $isTrainer = false)
+    {
+        $lessonDuration = $lesson->getDateTimeTo()->diffInHours($lesson->getDateTimeFrom());
+
         $params = [
             'user' => $user,
             'trainer' => $trainer,
             'lesson' => $lesson,
-            'game' => $choseGame,
-            'isTrainer' => $isTrainer
+            'game' => $this->getTrainerGame($trainer),
+            'isTrainer' => $isTrainer,
+            'lessonDuration' => $lessonDuration
         ];
         $html = $this->renderView('templates/mails/booked.lesson.html.twig', $params);
 
@@ -53,23 +75,11 @@ trait Mail
             ->setTo($email)
             ->setBody($html, 'text/html');
 
-        return $mailer->send($trainerMail);
+        return $trainerMail;
     }
 
-    public function sendTeacherFinishLesson($mailer, $lesson, $user, $trainer)
+    public function sendStudentTeacherCancelMail()
     {
-        $params = [
-            'user' => $user,
-            'trainer' => $trainer,
-            'lesson' => $lesson,
-        ];
 
-        $html = $this->renderView('templates/mails/finish.lesson.html.twig', $params);
-
-        $trainerMail = $this->makeMail()
-            ->setTo($user->getEmail())
-            ->setBody($html, 'text/html');
-
-        return $mailer->send($trainerMail);
     }
 }

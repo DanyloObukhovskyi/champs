@@ -301,6 +301,11 @@
         .mt-2{
             margin-top: 2px;
         }
+        .btn-orange{
+            background-color: #FF6D1D;
+            color: white;
+            padding: 10px;
+        }
     </style>
 </head>
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #f1f1f1;">
@@ -334,11 +339,26 @@
                                         Добрый день, {{ trainer.name is not null ? trainer.name: trainer.email }}!
                                     </h2>
                                     <p class="mt-2">
-                                        На нашем сайте было совершено бронирование обучения по игре <strong>{{ game }}</strong>
+                                        На нашем сайте champs.pro пользователем {{ user.name is not null ? user.name: user.email }} было совершено бронирование урока по игре <strong>{{ game }}</strong>
                                     </p>
                                     <p class="mt-2">
-                                        Теперь вы должны с учеником перейти на наш <a href="https://discord.gg/rakSKuE">канал</a>
+                                        Дата проведения урока - <strong>{{ lesson.dateTimeFrom|date('Y.m.d') }}</strong>
+                                        в <strong>{{ lesson.dateTimeFrom|date('H') }}:00</strong>, продолжительность {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}.
                                     </p>
+                                    <p>
+                                        Ссылка на профиль <a href="{{ user.discord }}">Дискорда ученика</a>
+                                    </p>
+                                    <p class="mt-2">
+                                        После установления контакта c учеником в Discord вам нужно будет перейти на наш
+                                        <a href="https://discord.gg/rakSKuE">канал</a>,
+                                        создать новый приватный голосовой чат и провести игру в нем.
+                                    </p>
+                                    <p class="mt-2">
+                                        Если вам нужно отменить или перенести тренировку, просьба связаться с учеником в Дискорд.
+                                    </p>
+                                </div>
+                                <div class="buttons">
+                                    <a target="_blank" href="{{ url('lesson.cancel', {lessonId: lesson.id}) }}" class="btn-orange">Отменить занятие</a>
                                 </div>
                             </td>
                         </tr>
@@ -353,7 +373,7 @@
                                     </h2>
                                     <p class="mt-2">
                                         Вы успешно забронировали и оплатили урок игры в <strong>{{ game }}</strong> c <strong>{{ trainer.name }}</strong>
-                                        на сайте Сhamps.pro!
+                                        на сайте Сhamps.pro продолжительностью {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}!
                                     </p>
                                     <p class="mt-2">
                                         Ваш урок состоится <strong>{{ lesson.dateTimeFrom|date('Y.m.d') }}</strong>

@@ -353,4 +353,31 @@ class LessonService extends EntityService
     {
         return $this->repository->find($id);
     }
+
+    /**
+     * @param Lessons $lesson
+     * @return mixed
+     */
+    public function setCanceled(Lessons $lesson)
+    {
+        $lesson->setStatus(1);
+        $lesson->setIsCanceled(true);
+
+        return $this->save($lesson);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotNoticedLessons()
+    {
+        return $this->repository->getNotNoticedLessons();
+    }
+
+    public function setNoticed(Lessons $lesson)
+    {
+        $lesson->setIsNotice(true);
+
+        return $this->save($lesson);
+    }
 }

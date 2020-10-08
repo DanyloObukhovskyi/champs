@@ -95,6 +95,7 @@ class ScheduleService extends EntityService
      * @param $date
      * @param $time
      * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getByTrainerDateAndTime($trainer, $date, $time)
     {
