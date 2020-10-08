@@ -271,4 +271,17 @@ class LessonsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getNotNoticedLessons()
+    {
+        $date = new \DateTime();
+        $date->modify('+5 minutes');
+
+        return $this->createQueryBuilder('l')
+            ->where('l.dateTimeTo >= :date')
+            ->andWhere('l.isNoticed != 1')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
 }

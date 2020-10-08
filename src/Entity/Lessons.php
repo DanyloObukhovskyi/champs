@@ -64,6 +64,16 @@ class Lessons
     private $trainer_status;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isCanceled;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isNotice;
+
+    /**
      * @ORM\OneToOne(targetEntity=Review::class, mappedBy="lesson", cascade={"persist", "remove"})
      */
     private $review;
@@ -191,5 +201,37 @@ class Lessons
     public function setDateTimeFrom($dateTimeFrom): void
     {
         $this->dateTimeFrom = $dateTimeFrom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsCanceled()
+    {
+        return $this->isCanceled;
+    }
+
+    /**
+     * @param mixed $isCanceled
+     */
+    public function setIsCanceled($isCanceled): void
+    {
+        $this->isCanceled = $isCanceled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsNotice()
+    {
+        return $this->isNotice;
+    }
+
+    /**
+     * @param mixed $isNotice
+     */
+    public function setIsNotice($isNotice): void
+    {
+        $this->isNotice = $isNotice;
     }
 }

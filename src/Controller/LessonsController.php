@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Lessons;
 use App\Entity\PurseHistory;
 use App\Entity\Review;
+use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Message\PaymentLessonMail;
 use App\Service\LessonService;
+use App\Service\LessonTimeService;
 use App\Service\ScheduleService;
-use App\Traits\AuthUser;
 use App\Traits\EntityManager;
 use App\Traits\Mail;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,11 +21,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Swift_Mailer;
 
+/**
+ * Class LessonsController
+ * @package App\Controller
+ */
 class LessonsController extends AbstractController
 {
     use EntityManager;
     use Mail;
-    use AuthUser;
 
     /**
      * @var LessonService
@@ -35,10 +40,19 @@ class LessonsController extends AbstractController
      */
     public $scheduleService;
 
+    /**
+     * @var LessonTimeService
+     */
+    public $lessonTimeService;
+
+    /**
+     * LessonsController constructor.
+     */
     public function __construct()
     {
         $this->lessonsService = new LessonService($this->getEntityManager());
         $this->scheduleService = new ScheduleService($this->getEntityManager());
+        $this->lessonTimeService = new LessonTimeService($this->getEntityManager());
     }
 
     /**
@@ -94,12 +108,9 @@ class LessonsController extends AbstractController
      */
     public function viewTrainerLessonsWithoutDate($id)
     {
-
         $lessons = $this->getDoctrine()
             ->getRepository(Lessons::class)
             ->findByTrainerId($id);
-
-
 
         $lessons = $this->lessonsService->lessonsDecoratorForCabinet($lessons);
 
@@ -109,7 +120,6 @@ class LessonsController extends AbstractController
             $date = $lesson['dateTimeFrom']->format('Y-m-d');
             $lessonsOrderedByDate[$date][] = $lesson;
         }
-
         return $this->json($lessonsOrderedByDate);
     }
 
@@ -150,7 +160,6 @@ class LessonsController extends AbstractController
                 $lessonsWithTrainerStatusNotConfirm[] = $lesson;
             }
         }
-
         $lessons = $this->lessonsService
             ->lessonsDecoratorForCabinet($lessonsWithTrainerStatusNotConfirm);
 
@@ -188,6 +197,7 @@ class LessonsController extends AbstractController
         $count = [];
         $count['trainer'] = $trainerLessons;
         $count['together'] = $lessons;
+
         return $this->json($count);
     }
 
@@ -218,8 +228,7 @@ class LessonsController extends AbstractController
             if($form->istrainer === true){
                 $lesson->setTrainerStatus(Lessons::STATUS_ENDED);
 
-                $this->sendTeacherFinishLesson($mailer, $lesson, $lesson->getStudent(), $lesson->getTrainer());
-            }else{
+            } else {
                 $lesson->setStudentStatus(Lessons::STATUS_ENDED);
             }
 
@@ -276,7 +285,7 @@ class LessonsController extends AbstractController
         }
 
         /** @var User $user */
-        $user = $this->authUser();
+        $user = $this->getUser();
         $lessons = $data->lessons ?? [];
 
         $lessons = $this->lessonsService
@@ -288,10 +297,8 @@ class LessonsController extends AbstractController
 
         foreach ($lessons as $lesson)
         {
-            // Send user mail
-            $this->sendPayedMail($mailer, $lesson, $user, $trainer);
-            // Send trainer mail
-            $this->sendPayedMail($mailer, $lesson, $user, $trainer, true);
+            // Dispatch payment mail
+            $this->dispatchMessage(new PaymentLessonMail($mailer, $lesson));
         }
         return $this->json(['ids' => $lessonIds]);
     }
@@ -310,8 +317,8 @@ class LessonsController extends AbstractController
 
         foreach ($lessons as $lesson)
         {
-            $student = $this->getDoctrine() ->getRepository(User::class)->find($userId);
-            $trainer = $this->getDoctrine() ->getRepository(User::class)->find($trainerId);
+            $student = $this->getDoctrine()->getRepository(User::class)->find($userId);
+            $trainer = $this->getDoctrine()->getRepository(User::class)->find($trainerId);
 
             /** @var Review $lessonReview */
             $lessonReview = $this->getDoctrine()
@@ -324,5 +331,39 @@ class LessonsController extends AbstractController
             }
         }
         return  $this->json(null);
+    }
+
+    /**
+     * Lessons /ru/lessons/cancel/*
+     *
+     * @Route("/ru/lesson/cancel/{lessonId}", methods={"GET","POST"}, name="lesson.cancel")
+     */
+    public function cancelLesson($lessonId)
+    {
+        $trainer = $this->getUser();
+        $lesson = $this->lessonsService->find($lessonId);
+
+        if (isset($lesson))
+        {
+            if (empty($trainer))
+            {
+                return $this->render('templates/login.html.twig', [
+                    'router' => 'login'
+                ]);
+            }
+            if ($trainer->getId() === $lesson->getTrainer()->getId())
+            {
+                $lesson = $this->lessonsService->setCanceled($lesson);
+                $lessonTimes = $this->lessonTimeService->getTimesByLesson($lesson);
+
+                /** @var Schedule $time */
+                foreach ($lessonTimes as $time)
+                {
+                    $this->scheduleService->setScheduleStatus($time, Schedule::TIME_STATUS_BLOCK);
+                }
+                $this->addFlash('notice', 'Урок был отменен!');
+            }
+        }
+        return $this->redirectToRoute('timetable_index');
     }
 }
