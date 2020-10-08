@@ -99,6 +99,10 @@
 						<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
 						<div class="info_txt">Формат поля - числовой</div>
 					</div>
+                    <label class="label" for="">Дискорд</label>
+                    <div class="input" id="input">
+                        <input type="text" class="fw-600 input2_txt" name="discord" value="<?php print $user_info[0]['discord']; ?>" title="введите правильный">
+                    </div>
 				</div>
 				<div class="col-item">
 					<label class="label" for="">Video URLs</label>
@@ -165,7 +169,7 @@
 						<input required type="text" class="fw-600 input2_txt" name="shorttitle" id="shorttitle" placeholder=""  title="введите правильный" value="<?php print $user_info[0]['shorttitle']; ?>">
 					</div>
 					<label class="label" for="">Игра</label>
-					<div class="input mb-5" id="input">
+					<div class="input mb-20"" id="input">
 						<input required type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""  value="<?php print $user_info[0]['game']; ?>" title="введите правильный">
 					</div>
 				</div>
