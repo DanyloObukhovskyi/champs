@@ -21,3 +21,8 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> Codeigniter admin
+/public/admin_panel/vendor/
+###< Codeigniter admin
+
