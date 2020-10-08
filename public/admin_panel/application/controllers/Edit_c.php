@@ -362,7 +362,8 @@
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
 					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
-					
+					$discord = (isset($_POST["discord"]) && !empty($_POST["discord"])) ? trim($_POST["discord"]) : '';
+
 					$delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
 
 					$videos = (isset($_POST["videos"]) && !empty($_POST["videos"])) ? $_POST["videos"] : [];
@@ -397,7 +398,8 @@
 							$update_data['istrainer'] = 0;
 							$this->delete_m->delete_trainer_as_teacher($id);
 						}
-						
+						$update_data['discord'] = $discord;
+
 						$update_data['roles'] = json_encode($user_capabilities);
 						$this->edit_m->updateUser($id, $update_data);
 						if(empty($delete_trainer)) {
