@@ -16,10 +16,10 @@
 		public function get_all_payments($where = array(), $is_count = false, $sort = array(), $limit = array(), $nickname=false, $user=false)
 		{
 			
-			$this->db->select('payment.id, user.nickname, payment.created_at, payment.yandex_kassa_id, lessons.student_id_id, payment.yandex_data, lessons.datetime');
+			$this->db->select('payment.id, user.nickname, payment.created_at, payment.yandex_kassa_id, lessons.student_id, payment.yandex_data, lessons.date_time_from');
 			$this->db->from("payment");
 			$this->db->join("lessons", "payment.lesson_id = lessons.id");
-			$this->db->join("teachers", "lessons.trainer_id_id = teachers.id");
+			$this->db->join("teachers", "lessons.trainer_id = teachers.id");
 			$this->db->join("user", "teachers.userid = user.id");
 			
 			if (!empty($where['id'])) {

@@ -76,7 +76,7 @@
 							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['id']; ?></td>
 							<td data-id="<?php echo $rmo_i; ?>"> <?php echo $val['nickname']; ?></td>
 							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['created_at']; ?></td>
-							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['datetime']; ?></td>
+							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['date_time_from']; ?></td>
 							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val["student"][0]["nickname"]; ?></td>
 							
 							<td data-id="<?php echo $rmo_i; ?>">

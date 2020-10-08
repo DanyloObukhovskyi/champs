@@ -408,7 +408,7 @@
 				$data['payments'] = $this->selectData->get_all_payments($where, false, $sort, array($offset, $this->post_per_page), true);
 				foreach($data['payments'] as $key =>&$value) {
 					$value['refund'] = $this->selectData->checkRefund((int)$value["id"]);
-					$value['student'] = $this->selectData->getStudent((int)$value["student_id_id"]);
+					$value['student'] = $this->selectData->getStudent((int)$value["student_id"]);
 				}
 			
 				$data['output'] = $this->load->view('home/payments', $data, true);
