@@ -419,9 +419,9 @@
 						if(isset($_FILES["userfile"])) {
 							if(!empty($_FILES["userfile"]["name"])) {
 								$config['upload_path']          =  $this->config->item('upload_trainers-pic');
-								$config['allowed_types']        = 'jpeg|jpg|png';
-								$config['max_size']             = 2048;
-								$config['max_width']            = 1920;
+								$config['allowed_types']        = 'jpeg|jpg|png|svg';
+								$config['max_size']             = 5120;
+								$config['max_width']            = 1080;
 								$config['max_height']           = 1080;
 								
 								$this->load->library('upload', $config);
