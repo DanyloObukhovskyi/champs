@@ -336,7 +336,7 @@
                             <td style="padding: 0 2.5em; text-align: left;">
                                 <div class="text">
                                     <h2>
-                                        Добрый день, {{ trainer.name is not null ? trainer.name: trainer.email }}!
+                                        Добрый день, {{ trainer.nickname is not null ? trainer.nickname: trainer.email }}!
                                     </h2>
                                     <p class="mt-2">
                                         На нашем сайте champs.pro пользователем {{ user.name is not null ? user.name: user.email }} было совершено бронирование урока по игре <strong>{{ game }}</strong>
@@ -372,7 +372,7 @@
                                         Добрый день, {{ user.name is not null ? user.name: user.email }}!
                                     </h2>
                                     <p class="mt-2">
-                                        Вы успешно забронировали и оплатили урок игры в <strong>{{ game }}</strong> c <strong>{{ trainer.name }}</strong>
+                                        Вы успешно забронировали и оплатили урок игры в <strong>{{ game }}</strong> c <strong>{{ trainer.nickname }}</strong>
                                         на сайте Сhamps.pro продолжительностью {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}!
                                     </p>
                                     <p class="mt-2">
