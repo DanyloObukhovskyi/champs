@@ -7,6 +7,7 @@ namespace App\MessageHandler;
 use App\Entity\Lessons;
 use App\Service\UserService;
 use App\Traits\RenderView;
+use Carbon\Carbon;
 use Swift_Message;
 
 trait LessonMailHandler
@@ -47,7 +48,8 @@ trait LessonMailHandler
      */
     public function makeEmail(Lessons $lesson, $isTrainer = false)
     {
-        $lessonDuration = $lesson->getDateTimeTo()->diffInHours($lesson->getDateTimeFrom());
+        $lessonDuration = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
+            ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
 
         $params = [
             'user' => $lesson->getStudent(),

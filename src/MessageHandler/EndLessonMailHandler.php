@@ -11,10 +11,17 @@ class EndLessonMailHandler implements MessageHandlerInterface
 {
     use LessonMailHandler;
 
-    protected $template = 'templates/mails/finish.lesson.html.twig';
+    public $template = 'templates/mails/finish.lesson.html.twig';
+
+    public $subject = 'Окончание времени занятия champs.pro';
 
     public function __invoke(EndLessonMail $endLessonMail)
     {
+        $lesson = $endLessonMail->getLesson();
 
+        //Send user mail
+        $endLessonMail->getMailer()->send($this->makeEmail($lesson));
+        //Send trainer mail
+        $endLessonMail->getMailer()->send($this->makeEmail($lesson, true));
     }
 }

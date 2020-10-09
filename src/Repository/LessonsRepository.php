@@ -279,7 +279,7 @@ class LessonsRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('l')
             ->where('l.dateTimeTo >= :date')
-            ->andWhere('l.isNoticed != 1')
+            ->andWhere('l.isNotice is null')
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
