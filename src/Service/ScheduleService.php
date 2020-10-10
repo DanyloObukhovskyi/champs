@@ -27,11 +27,11 @@ class ScheduleService extends EntityService
     /**
      * @param $userId
      * @param $dateFrom
-     * @param bool $isLessonCost
+     * @param bool $isStudent
      * @return array
      * @throws \Exception
      */
-    public function createWeek($userId, $dateFrom)
+    public function createWeek($userId, $dateFrom, $isStudent = false)
     {
         $from = new \DateTime($dateFrom->format("Y-m-d"));
         $hours = 24;
@@ -53,8 +53,14 @@ class ScheduleService extends EntityService
                 /** @var Schedule $schedule */
                 foreach ($schedulesEntities as $schedule)
                 {
-                    if ($schedule->getTime() === $k){
-                        $scheduleCollect[$time] = $schedule->getStatus();
+                    $isNotToday = $schedule->getDate()->format('Y.m.d') === ( new \DateTime())->format('Y.m.d');
+                    if ($schedule->getTime() === $k)
+                    {
+                        if ($isNotToday and $isStudent) {
+                            $scheduleCollect[$time] = 10;
+                        } else {
+                            $scheduleCollect[$time] = $schedule->getStatus();
+                        }
                     }
                 }
             }

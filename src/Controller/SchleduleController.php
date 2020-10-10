@@ -122,7 +122,7 @@ class SchleduleController extends AbstractController
     /**
      * Schedule /ru/calendar/*
      *
-     * @Route("/ru/calendar/trainer/date/week", methods={"GET","POST"}, name="user_schedule_date_week")
+     * @Route("/ru/calendar/trainer/date/week/", methods={"GET","POST"}, name="user_schedule_date_week")
      */
     public function viewSchleduleWeek(Request $request)
     {
@@ -131,8 +131,10 @@ class SchleduleController extends AbstractController
         $userId = $form->user_id;
         $dateFrom = new \DateTime($form->date);
 
+        $isStudent = (int)$this->getUser()->getId() !== (int)$userId;
+
         $schedule = $this->scheduleService
-            ->createWeek($userId, $dateFrom);
+            ->createWeek($userId, $dateFrom, $isStudent);
 
         return $this->json($schedule);
     }
