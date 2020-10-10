@@ -9,6 +9,7 @@ use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Message\EndLessonMail;
 use App\Message\PaymentLessonMail;
 use App\Service\LessonService;
 use App\Service\LessonTimeService;
@@ -226,6 +227,8 @@ class LessonsController extends AbstractController
         if(($lesson->getTrainer()->getId() === $userId) || ($lesson->getStudent()->getId() === $userId))
         {
             if($form->istrainer === true){
+                $this->dispatchMessage(new EndLessonMail($mailer, $lesson, true));
+
                 $lesson->setTrainerStatus(Lessons::STATUS_ENDED);
 
             } else {

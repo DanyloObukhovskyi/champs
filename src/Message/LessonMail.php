@@ -23,15 +23,19 @@ class LessonMail
      */
     protected $lesson;
 
+    protected $onlyStudent;
+
     /**
      * LessonMail constructor.
      * @param Swift_Mailer $mailer
      * @param Lessons $lesson
+     * @param $onlyStudent
      */
-    public function __construct(Swift_Mailer $mailer, Lessons $lesson)
+    public function __construct(Swift_Mailer $mailer, Lessons $lesson, $onlyStudent = false)
     {
         $this->mailer = $mailer;
         $this->lesson = $lesson;
+        $this->onlyStudent = $onlyStudent;
     }
 
     /**
@@ -48,5 +52,13 @@ class LessonMail
     public function getLesson()
     {
         return $this->lesson;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnlyStudent(): bool
+    {
+        return $this->onlyStudent;
     }
 }
