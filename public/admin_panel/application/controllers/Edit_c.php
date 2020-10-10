@@ -425,7 +425,6 @@
 								$config['max_height']           = 1080;
 								
 								$this->load->library('upload', $config);
-								
 								$bytes = random_bytes(11);
 								
 								$ext = explode(".", $_FILES["userfile"]["name"] );
@@ -433,7 +432,7 @@
 								$fileName = bin2hex($bytes).".".$ext;
 								$_FILES["userfile"]["name"] = $fileName;
 								if ( ! $this->upload->do_upload('userfile'))
-								{
+                                {
 									$error = array('error' => $this->upload->display_errors());
 								}
 								else
@@ -442,6 +441,16 @@
 									$this->load->model("edit_m");
 									$this->edit_m->change_user_img($id, $data["upload_data"]["orig_name"]);
 								}
+								if ($ext === 'svg')
+								{
+								    $path = $this->config->item('upload_trainers-pic') . $fileName;
+                                    move_uploaded_file($_FILES['userfile']['tmp_name'], $path);
+
+                                    $data = array('upload_data' => $this->upload->data());
+                                    $this->load->model("edit_m");
+
+                                    $this->edit_m->change_user_img($id, $fileName);
+                                }
 							}
 						} else {
 							$this->load->model("edit_m");
