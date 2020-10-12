@@ -11,9 +11,9 @@
 .component .header:not(.lesson){
   width: 100%;
   display: flex;
+  height: 35px;
   flex-direction: row;
   background-color: #35393E;
-  height: 2.5vw;
   align-items: center;
   z-index: 2;
 }
@@ -65,7 +65,6 @@
 }
 .component .table{
   width: 100%;
-  font-size: .85vw;
   font-style: normal;
   font-weight: normal;
   border-left: 0.04vw solid #CFDCF3;
@@ -675,7 +674,7 @@
   text-align: start;
 }
 .events_view .component.event .grid_header .grid_title .title_grey{
-color: #718088;
+  color: #718088;
   margin-bottom: 0.5vw;
 }
 .events_view .component.event .grid_header .grid_title .title_black{
