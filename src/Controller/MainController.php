@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Traits\Mail;
-use Symfony\Component\Mime\Email;
 use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\News;
@@ -16,14 +14,11 @@ use App\Service\MatchService;
 use App\Service\RatingPersonService;
 use App\Service\RatingTeamService;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class MainController extends DefController
 {
-    use Mail;
-
     /**
      * @Route("/ru/", name="main")
      */

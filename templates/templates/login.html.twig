@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Welcome to Champs Admin Pannel</title>
+        <link rel="stylesheet" type="text/css" href="/admin_panel/assets/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:100,300,400, 500, 600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400, 500, 600,700,900" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/admin_panel/assets/popup.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/admin_panel/assets/intro/main.css">
+        <link rel="stylesheet" href="/admin_panel/assets/css/auth.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:100,300,400, 500, 600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,500,600,700,900" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    </head>
+    <body>
+        <header class="a-i-c j-c-s-b" style="background: #35393e">
+            <a href="{{ url('main') }}" class="logo" style="margin-top: 0px"><img src="https://champs.pro/images/logo.svg" style="width: 200px; max-height: 50px; border-radius: 10px;"></a>
+        </header>
+        <main id="login" style='min-height: calc(100% - 270px);  z-index:10;'>
+            <div class="main-container" style='float: left; margin-left: 150px;'>
+                <h1 class="main-container__title">Nice to see You!</h1>
+                <form role="login" class="login-form" method="post" accept-charset="utf-8">
+                    <label class="label" for="">Login</label>
+                    <div class="input mb-10" id="input">
+                        <input type="email"
+                               name="identity"
+                               id="identity"
+                               placeholder="Email"
+                               v-model="email"
+                               class="input-group-field"/>
+                    </div>
+                    <label class="label" for="">Password</label>
+                    <div class="input mb-10" id="input">
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               placeholder="Password"
+                               v-model="password"
+                               class="input-group-field"/>
+                    </div>
+                    <button type="button"
+                            class="btn btn-orange mt-10"
+                            @click="login"
+                            style="width: 335px; z-index:10;">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </main>
+        <footer class="flex j-c-s-b a-i-c" style="background: #45484b;">
+            <div class="copyright"> © Champs.pro, 2020</div>
+            <div class="flex footer-center a-i-c">
+                <div class="help-and-supp">Поддержка:</div>
+                <img class="ml-10 mr-5" src="/admin_panel/assets/img/Message.svg" alt="">
+                <a class="footer-link" href="mailto:support@serp.farm">support@champs.pro</a>
+            </div>
+        </footer>
+        <script>
+            const login = new Vue({
+                el: '#login',
+                data: {
+                    email: null,
+                    password: null,
+                    csrfToken: '{{ csrf_token('authenticate') }}',
+                },
+                methods: {
+                    login(){
+                        const th = this;
+                        let formData = new FormData();
+
+                        formData.append('email', this.email);
+                        formData.append('password', this.password);
+                        formData.append('_csrf_token', this.csrfToken);
+
+                        axios.post("{{ url('app_login') }}", formData)
+                            .then((res) => {
+                                th.blockAuth = false;
+                                if (!res.data.error) {
+                                    location.reload();
+                                }
+                            })
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
