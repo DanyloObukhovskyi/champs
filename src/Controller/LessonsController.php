@@ -15,7 +15,6 @@ use App\Service\LessonService;
 use App\Service\LessonTimeService;
 use App\Service\ScheduleService;
 use App\Traits\EntityManager;
-use App\Traits\Mail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +28,6 @@ use Swift_Mailer;
 class LessonsController extends AbstractController
 {
     use EntityManager;
-    use Mail;
 
     /**
      * @var LessonService
