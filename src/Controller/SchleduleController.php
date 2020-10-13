@@ -131,7 +131,7 @@ class SchleduleController extends AbstractController
         $userId = $form->user_id;
         $dateFrom = new \DateTime($form->date);
 
-        $isStudent = (int)$this->getUser()->getId() !== (int)$userId;
+        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId: true;
 
         $schedule = $this->scheduleService
             ->createWeek($userId, $dateFrom, $isStudent);
