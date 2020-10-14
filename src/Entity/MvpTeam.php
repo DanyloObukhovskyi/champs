@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MvpTeamRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +37,19 @@ class MvpTeam
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $creator;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class)
+     */
+    private $members;
+
+    /**
+     * MvpTeam constructor.
+     */
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -92,5 +106,37 @@ class MvpTeam
     public function setCreator($creator): void
     {
         $this->creator = $creator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMembers()
+    {
+        return $this->members;
+    }
+
+    /**
+     * @param User $member
+     * @return $this
+     */
+    public function addMember(User $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+        }
+        return $this;
+    }
+
+    /**
+     * @param User $member
+     * @return $this
+     */
+    public function removeMember(User $member): self
+    {
+        if ($this->members->contains($member)) {
+            $this->members->removeElement($member);
+        }
+        return $this;
     }
 }

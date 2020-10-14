@@ -2,10 +2,10 @@
   font-family: "ALS Hauss";
   src: url("fonts/ALSHauss-Black.eot");
   src: local("ALS Hauss Black"), local("ALSHauss-Black"),
-    url("fonts/ALSHauss-Black.eot?#iefix") format("embedded-opentype"),
-    url("fonts/ALSHauss-Black.woff2") format("woff2"),
-    url("fonts/ALSHauss-Black.woff") format("woff"),
-    url("fonts/ALSHauss-Black.ttf") format("truetype");
+  url("fonts/ALSHauss-Black.eot?#iefix") format("embedded-opentype"),
+  url("fonts/ALSHauss-Black.woff2") format("woff2"),
+  url("fonts/ALSHauss-Black.woff") format("woff"),
+  url("fonts/ALSHauss-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
 }
@@ -1890,7 +1890,7 @@ label {
 }
 .btn-orange {
   padding: 0.35vw 1vw;
-  background-color: #FF6D1D;
+  background-color: #FF6D1D !important;
   color: #FFFFFF;
 }
 .btn-orange:hover{

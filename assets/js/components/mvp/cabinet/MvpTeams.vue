@@ -1,37 +1,23 @@
 <template>
     <div class="cont">
         <div class="container commands p-0 mt-3">
-            <div class=" w-75 d-flex">
-                <div class="card w-50 mr-2 border-radius-0">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex justify-content-between">
-                            Настроен играть серьезно?
-                            <span class="badge badge-warning border-radius-0">5x5</span>
-                        </h5>
-                        <p class="card-text">Создай свою команду для туриков 5v5 и врывайся в киберспорт</p>
-                        <a class="btn-orange text-light p-2 pointer"
-                           data-toggle="modal"
-                           @click="command.capacity = 5"
-                           data-target="#makeComandModal">
-                            Создать команду 5х5
-                        </a>
-                    </div>
-                </div>
-                <div class="card w-50 border-radius-0">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex justify-content-between">
-                            Напарники
-                            <span class="badge badge-warning border-radius-0">2x2</span>
-                        </h5>
-                        <p class="card-text">Нет постоянной команды? Позови друга и выносите соперников вместе</p>
-                        <a class="btn-orange text-light p-2 pointer"
-                           data-toggle="modal"
-                           @click="command.capacity = 2"
-                           data-target="#makeComandModal">
-                            Создать команду 2х2
-                        </a>
-                    </div>
-                </div>
+            <div class="w-75 d-flex">
+                <mvp-team
+                    title="Настроен играть серьезно?"
+                    description="Создай свою команду для туриков 5v5 и врывайся в киберспорт"
+                    type="5x5"
+                    capacity="5"
+                    @setCapacity="setCapacity"
+                    :teams="teams"
+                />
+                <mvp-team
+                    title="Напарники"
+                    description="Нет постоянной команды? Позови друга и выносите соперников вместе"
+                    type="2x2"
+                    capacity="2"
+                    @setCapacity="setCapacity"
+                    :teams="teams"
+                />
             </div>
             <div class="modal fade" id="makeComandModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -51,19 +37,26 @@
                             <div class="form-group">
                                 <label>Название команды</label>
                                 <input v-model="command.name" type="text" class="form-control border-radius-0">
-                                <small class="form-text text-muted">Можно латинские буквы и цифры</small>
+                                <small class="form-text text-muted" v-if="!messages.error.hasOwnProperty('name')">
+                                    Можно латинские буквы и цифры
+                                </small>
+                                <small class="form-text text-danger" v-if="messages.error.hasOwnProperty('name')">
+                                    {{ messages.error.name[0] }}
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label>Тег команды</label>
                                 <input v-model="command.tag" type="text" class="form-control border-radius-0 w-50">
-                                <small class="form-text text-muted">Максимум 6 символов</small>
+                                <small class="form-text text-muted" v-if="!messages.error.hasOwnProperty('tag')">
+                                    Максимум 6 символов
+                                </small>
+                                <small class="form-text text-danger" v-if="messages.error.hasOwnProperty('tag')">
+                                    {{ messages.error.tag[0] }}
+                                </small>
                             </div>
                             <div class="text">
-                                <p class="text-danger" v-if="messages.error !== null">
-                                    {{messages.error}}
-                                </p>
                                 <p class="text-success" v-if="messages.success !== null">
-                                    {{messages.success}}
+                                    {{ messages.success }}
                                 </p>
                             </div>
                         </div>
@@ -79,11 +72,14 @@
 </template>
 
 <script>
-    import MvpService from '../services/MvpService.js'
-    const http = new MvpService();
+    import MvpTeam from "./MvpTeam";
 
     export default {
         name: "MvpTeams",
+        components: {
+            'mvp-team': MvpTeam
+        },
+        inject: ['http'],
         data(){
             return {
                 teams: [],
@@ -94,30 +90,38 @@
                 },
                 messages: {
                     success: null,
-                    error: null,
+                    error: {},
                 }
             }
         },
         methods: {
-            createTeam(){
-                const {capacity, name, tag} = this.command
+            createTeam() {
+                const {capacity, name, tag} = this.command;
 
                 this.messages.success = null;
-                this.messages.error = null;
+                this.messages.error = {};
 
-                http.createMvpTeam(capacity, name, tag)
+                this.http.createMvpTeam(capacity, name, tag)
                     .then(({data}) => {
                         this.messages.success = data.message;
-                        this.teams.push(data.team)
+                        this.teams.push(data.team);
                     })
                     .catch(({response}) => {
-                        this.messages.error = response.data.message;
+                        this.messages.error = response.data;
                     })
+            },
+            getUserTeams() {
+                this.http.getUserTeams()
+                    .then(({data}) => {
+                        this.teams = data;
+                    })
+            },
+            setCapacity(capacity) {
+                this.command.capacity = capacity;
             }
+        },
+        mounted() {
+            this.getUserTeams()
         }
     }
 </script>
-
-<style scoped>
-
-</style>

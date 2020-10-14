@@ -86,14 +86,15 @@
                                         <div class="p-2 r w-100">
                                             <div class="p-0 w-100">
                                                 <div class="p-0 col-12 d-flex justify-content-center">
-                                                    <a
-                                                        {% if app.user is null %} disabled {% endif %}
-                                                        data-toggle="modal"
-                                                        data-target="#steamModal"
-                                                        class="btn-orange w-100 text-light p-2 text-center pointer">
-                                                        <i class="fas fa-trophy"></i>
-                                                        Участвовать в турнире
-                                                    </a>
+                                                    {% if app.user is not null %}
+                                                        <a
+                                                            data-toggle="modal"
+                                                            data-target="#steamModal"
+                                                            class="btn-orange w-100 text-light p-2 text-center pointer">
+                                                            <i class="fas fa-trophy"></i>
+                                                            Участвовать в турнире
+                                                        </a>
+                                                    {% endif %}
                                                 </div>
                                                 {% if app.user is null %}
                                                     <div class="col-12 pt-3">
