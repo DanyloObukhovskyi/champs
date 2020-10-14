@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Charactristics;
 use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
@@ -69,13 +70,18 @@ class UserController extends AbstractController
         if ($this->getUser()->getistrainer()) {
             return $this->redirectToRoute('trainer_index');
         } else {
+            $gameRoles['Counter Strike: GO'] = Charactristics::CS_ROLES;
+            $gameRoles['DOTA']               = Charactristics::DOTA_ROLES;
+            $gameRoles['League of Legends']  = Charactristics::LOL_ROLES;
+
             return $this->render('templates/cabinet/user/specifications.html.twig',
                 [
                     'router' => 'cabinet',
                     'styles' => [
                         'cabinet/cabinet.css',
                         'cabinet/user/specifications.css'
-                    ]
+                    ],
+                    'gameRoles' => $gameRoles
                 ]
             );
         }
