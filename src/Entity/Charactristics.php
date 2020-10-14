@@ -10,6 +10,30 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Charactristics
 {
+    public const CS_ROLES = [
+        'Капитан',
+        'Танк',
+        'Прикрывающий',
+        'Снайпер',
+        'Тихий игрок'
+    ];
+
+    public const LOL_ROLES = [
+        'ADC',
+        'MID',
+        'TOP',
+        'Jungle',
+        'Support'
+    ];
+
+    public const DOTA_ROLES = [
+        'Carry',
+        'Midlaner',
+        'Hardlaner',
+        'Semi-support',
+        'Full-support'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
