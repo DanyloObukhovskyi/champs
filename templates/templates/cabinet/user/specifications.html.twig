@@ -48,6 +48,7 @@
                         <div class="subtitle">3. На какой командной ролью вы хотите работать больше?</div>
                         <div class="selectBlock">
                             <select v-model="role">
+                                <option value="" selected disabled hidden>Выберете роль</option>
                                 <option :value="role" v-html="role" v-for="role in gameRoles[game]"></option>
                             </select>
                         </div>
