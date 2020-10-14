@@ -30,7 +30,7 @@
                     <div class="tab">
                         <div class="subtitle">1. Обучение в какой игре для вас является приоритетным?</div>
                         <div class="selectBlock">
-                            <select v-model="game">
+                            <select v-model="game" @change="role = ''">
                                 <option value="" selected disabled hidden>Выберите игру</option>
                                 <option value="Counter Strike: GO">Counter Strike: GO</option>
                                 <option value="DOTA">DOTA</option>
