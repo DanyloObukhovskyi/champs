@@ -102,6 +102,19 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $purse;
+    /**
+     * @ORM\ManyToMany(targetEntity=MvpTeam::class)
+     * @ORM\JoinTable(
+     *  name="mvp_team_user",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="mvp_team_id", referencedColumnName="id")
+     *  }
+     * )
+     */
+    private $mvpTeams;
 
     public function __construct()
     {
@@ -109,6 +122,7 @@ class User implements UserInterface
         $this->reviews        = new ArrayCollection();
         $this->trainerReviews = new ArrayCollection();
         $this->purseHistories = new ArrayCollection();
+        $this->mvpTeams       = new ArrayCollection();
     }
 
     /**
@@ -468,5 +482,13 @@ class User implements UserInterface
         $this->purse = $purse;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMvpTeams()
+    {
+        return $this->mvpTeams;
     }
 }

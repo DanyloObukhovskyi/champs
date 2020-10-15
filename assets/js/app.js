@@ -8,9 +8,21 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
 import MvpService from "./components/mvp/services/MvpService.js";
+import config from "./config";
 import MvpPage from "./components/mvp/cabinet/MvpPage";
 import MvpTeamPage from "./components/mvp/cabinet/MvpTeamPage";
 import MvpInviteTeamPage from "./components/mvp/invite/MvpInviteTeamPage";
+
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+let token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    window.axios._csrf_token = token.content;
+} else {
+    console.error('CSRF token not found');
+}
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
@@ -22,6 +34,8 @@ Vue.component('mvp-invite-page', MvpInviteTeamPage)
 new Vue({
     el: '#app',
     provide: {
-        http: new MvpService()
+        http: new MvpService(axios),
+        axios,
+        config
     }
 })

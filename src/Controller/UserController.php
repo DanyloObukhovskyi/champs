@@ -29,19 +29,19 @@ class UserController extends AbstractController
      */
     public function index()
     {
-      if ($this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/user/timelist.html.twig',
-            [
-                'router' => 'cabinet',
-                'styles' => [
-                    'cabinet/cabinet.css',
-                    'cabinet/user/timelist.css'
+        if ($this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            return $this->render('templates/cabinet/user/timelist.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/user/timelist.css'
+                    ]
                 ]
-            ]
-        );
-      }
+            );
+        }
     }
 
     /**
@@ -49,19 +49,19 @@ class UserController extends AbstractController
      */
     public function specifications()
     {
-      if ($this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('trainer_index');
-      } else {
-        return $this->render('templates/cabinet/user/specifications.html.twig',
-            [
-                'router' => 'cabinet',
-                'styles' => [
-                    'cabinet/cabinet.css',
-                    'cabinet/user/specifications.css'
+        if ($this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('trainer_index');
+        } else {
+            return $this->render('templates/cabinet/user/specifications.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/user/specifications.css'
+                    ]
                 ]
-            ]
-        );
-      }
+            );
+        }
     }
 
     /**
@@ -69,44 +69,44 @@ class UserController extends AbstractController
      */
     public function history()
     {
-      if ($this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        $data = [
-            [
-                'date' => 'Сегодня, 25 июня',
-                'items' => [
-                    [
-                        'time' => '13:00-14:00',
-                        'image' => '/images/temp/Rectangle506.png',
-                        'name' => 'Rafaeeela',
-                        'rating' => 3,
-                        'price' => 3000,
-                        'closed' => true,
-                    ],
-                    [
-                        'time' => '13:00-14:00',
-                        'image' => '/images/temp/Rectangle506.png',
-                        'name' => 'Rafaeeela',
-                        'rating' => 3,
-                        'price' => 3000,
-                        'closed' => true,
+        if ($this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            $data = [
+                [
+                    'date' => 'Сегодня, 25 июня',
+                    'items' => [
+                        [
+                            'time' => '13:00-14:00',
+                            'image' => '/images/temp/Rectangle506.png',
+                            'name' => 'Rafaeeela',
+                            'rating' => 3,
+                            'price' => 3000,
+                            'closed' => true,
+                        ],
+                        [
+                            'time' => '13:00-14:00',
+                            'image' => '/images/temp/Rectangle506.png',
+                            'name' => 'Rafaeeela',
+                            'rating' => 3,
+                            'price' => 3000,
+                            'closed' => true,
+                        ]
                     ]
                 ]
-            ]
-        ];
+            ];
 
-        return $this->render('templates/cabinet/user/history.html.twig',
-            [
-                'router' => 'cabinet',
-                'styles' => [
-                    'cabinet/cabinet.css',
-                    'cabinet/user/history.css'
-                ],
-                'data' => $data,
-            ]
-        );
-      }
+            return $this->render('templates/cabinet/user/history.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/user/history.css'
+                    ],
+                    'data' => $data,
+                ]
+            );
+        }
     }
 
     /**
@@ -115,17 +115,17 @@ class UserController extends AbstractController
     public function settings()
     {
         if ($this->getUser()->getistrainer()) {
-          return $this->redirectToRoute('main');
+            return $this->redirectToRoute('main');
         } else {
-          return $this->render('templates/cabinet/user/settings.html.twig',
-              [
-                  'router' => 'cabinet',
-                  'styles' => [
-                      'cabinet/cabinet.css',
-                      'cabinet/user/settings.css'
-                  ]
-              ]
-          );
+            return $this->render('templates/cabinet/user/settings.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/user/settings.css'
+                    ]
+                ]
+            );
         }
     }
 
@@ -145,7 +145,7 @@ class UserController extends AbstractController
 
         if (!$user) {
             throw $this->createNotFoundException(
-                'No user found for id '.$id
+                'No user found for id ' . $id
             );
         }
 
@@ -163,14 +163,12 @@ class UserController extends AbstractController
             'purse' => $user->getPurse(),
         ];
 
-        if($user->getIsTrainer())
-        {
+        if ($user->getIsTrainer()) {
             $trainer = $this->getDoctrine()
                 ->getRepository(Teachers::class)
                 ->findByUserId(intval($id));
 
-            if(!$trainer)
-            {
+            if (!$trainer) {
                 $entityManager = $this->getDoctrine()->getManager();
                 /** @var Teachers $trainer */
                 $trainer = new Teachers();
@@ -243,14 +241,11 @@ class UserController extends AbstractController
         $user->setRank($request->request->get('rank'));
         $user->setDiscord($request->request->get('discord'));
 //
-        if($request->request->get('photo') && ($request->request->get('photo') != ''))
-        {
-            if ($user->getPhoto() !== null)
-            {
-                if(($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".jpg" )||
-                ($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".png" )||
-                ($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".jpeg" ))
-                {
+        if ($request->request->get('photo') && ($request->request->get('photo') != '')) {
+            if ($user->getPhoto() !== null) {
+                if (($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".jpg") ||
+                    ($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".png") ||
+                    ($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".jpeg")) {
                     unlink("images/temp/matches/" . $user->getPhoto());
                 }
 
@@ -290,7 +285,7 @@ class UserController extends AbstractController
                 $data = substr($data, strpos($data, ',') + 1);
                 $type = strtolower($type[1]); // jpg, png, gif
 
-                if (!in_array($type, [ 'jpg', 'jpeg', 'png' ])) {
+                if (!in_array($type, ['jpg', 'jpeg', 'png'])) {
                     throw new \Exception('invalid image type');
                 }
 
@@ -306,18 +301,16 @@ class UserController extends AbstractController
             $filename = $user->getId() . "-" . $user->getName() . $user->getNickname() . "." . $type;
             file_put_contents("images/temp/matches/{$filename}", $data);
 
-            $user->setPhoto( $filename);
+            $user->setPhoto($filename);
         }
 
 
-        if($user->getIsTrainer())
-        {
+        if ($user->getIsTrainer()) {
             $trainer = $entityManager->getRepository(Teachers::class)
                 ->findOneBy([
                     'userid' => $userId
-                    ]);
-            if(!$trainer)
-            {
+                ]);
+            if (!$trainer) {
                 $trainer = new Teachers();
                 $trainer->setUser($user->getId());
             }
@@ -335,10 +328,8 @@ class UserController extends AbstractController
         }
         $password = $request->request->get('password');
 
-        if ($password == $request->request->get('password_repeat'))
-        {
-            if($password != '')
-            {
+        if ($password == $request->request->get('password_repeat')) {
+            if ($password != '') {
                 $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
             }
         }
@@ -371,6 +362,28 @@ class UserController extends AbstractController
             throw $this->createNotFoundException(
                 'No user found for mail ' . $mail
             );
+        }
+
+        return $this->json($user);
+    }
+
+    /**
+     *
+     * @Route("/ru/get/auth", name="get.auth.user")
+     */
+    public function getAuthUser()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (isset($user))
+        {
+            $user = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'steam' => $user->getSteamId(),
+                'nickname' => $user->getNickname(),
+            ];
         }
 
         return $this->json($user);

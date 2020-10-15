@@ -26,12 +26,17 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="lft">
+                        <div class="lft" v-if="isCreator">
                             <a @click="deleteTeam">
                                 Удалить команду
                             </a>
                             <a class="btn-orange text-light pointer" @click="showAddModal">
                                 <i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить учасников
+                            </a>
+                        </div>
+                        <div class="lft" v-else>
+                            <a class="btn-orange text-light pointer" :href="http.userLeaveTeamLink(teamId)">
+                                Покинуть команду
                             </a>
                         </div>
                     </div>
@@ -54,12 +59,18 @@
             'teamId'
         ],
         components: {
-            'mvp-team-member': MvpTeamMember
+            'mvp-team-member': MvpTeamMember,
         },
         data(){
             return {
                 team: {},
-                inviteToken: null
+                inviteToken: null,
+                user: null,
+            }
+        },
+        computed: {
+            isCreator(){
+                return this.user !== null && this.user.id === this.team.creator.id;
             }
         },
         methods: {
@@ -106,9 +117,16 @@
                         window.location = this.http.getMvpLink()
                     })
             },
+            getUser(){
+                this.http.getAuthUser()
+                    .then(({data}) => {
+                        this.user = data
+                    })
+            },
         },
         mounted() {
             this.getTeam();
+            this.getUser();
         }
     }
 </script>

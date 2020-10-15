@@ -141,4 +141,28 @@ class MvpTeamService extends EntityService
     {
         return $this->repository;
     }
+
+    /**
+     * @param MvpTeam $team
+     * @param User $member
+     * @return mixed
+     */
+    public function addTeamMember(MvpTeam $team, User $member)
+    {
+        $team->addMember($member);
+
+        return $this->save($team);
+    }
+
+    /**
+     * @param MvpTeam $team
+     * @param User $member
+     * @return mixed
+     */
+    public function removeMember(MvpTeam $team, User $member)
+    {
+        $team->removeMember($member);
+
+        return $this->save($team);
+    }
 }

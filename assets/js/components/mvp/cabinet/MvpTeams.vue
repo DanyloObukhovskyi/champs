@@ -67,17 +67,22 @@
                     </div>
                 </div>
             </div>
+            <div class="123">
+                <mvp-joined-teams/>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
     import MvpTeam from "./MvpTeam";
+    import MvpJoinedTeams from "./MvpJoinedTeams";
 
     export default {
         name: "MvpTeams",
         components: {
-            'mvp-team': MvpTeam
+            'mvp-team': MvpTeam,
+            'mvp-joined-teams': MvpJoinedTeams
         },
         inject: ['http'],
         data(){

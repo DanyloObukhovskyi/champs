@@ -185,7 +185,7 @@ class MVPController extends AbstractController
     }
 
     /**
-     * @Route("/ru/mvp/invite/{teamId}/{token}", name="mvp.cabinet.delete.team")
+     * @Route("/ru/mvp/invite/{teamId}/{token}")
      */
     public function invite($teamId, $token)
     {
@@ -207,5 +207,63 @@ class MVPController extends AbstractController
             'teamId' => $teamId,
             'router' => 'invite'
         ]);
+    }
+
+    /**
+     * @Route("/ru/mvp/join/to/team/{teamId}")
+     */
+    public function joinToTeam($teamId)
+    {
+        $user = $this->getUser();
+        /** @var MvpTeam $mvpTeam */
+        $mvpTeam = $this->mvpTeamService->getRepository()->find($teamId);
+
+        $teamMembers = $mvpTeam->getMembers();
+
+        if (count($teamMembers) < $mvpTeam->getCapacity()) {
+            if (isset($mvpTeam))
+            {
+                $this->mvpTeamService->addTeamMember($mvpTeam, $user);
+            }
+            return $this->json('ok');
+        } else {
+            return $this->json('В команде больше нет свободных мест!', 422);
+        }
+    }
+
+    /**
+     * @Route("/ru/user/mvp/get/joined/teams/")
+     */
+    public function getUserJoineTeams()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $mvpTeams = [];
+
+        if (isset($user)){
+            /** @var MvpTeam $mvpTeam */
+            foreach ($user->getMvpTeams() as $mvpTeam)
+            {
+                if ($mvpTeam->getCreator()->getId() !== $user->getId()){
+                    $mvpTeams[] = $this->mvpTeamService->decorator($mvpTeam);
+                }
+            }
+        }
+        return $this->json($mvpTeams);
+    }
+
+    /**
+     * @Route("/ru/user/mvp/leave/team/{teamId}")
+     */
+    public function userLeaveMvpTeam($teamId)
+    {
+        $user = $this->getUser();
+
+        /** @var MvpTeam $mvpTeam */
+        $mvpTeam = $this->mvpTeamService->getRepository()->find($teamId);
+        $this->mvpTeamService->removeMember($mvpTeam, $user);
+
+        return $this->redirectToRoute('mvp.cabinet.tournaments');
     }
 }

@@ -1,19 +1,25 @@
+import config from "../../../config";
+
 class MvpService {
 
-    baseUrl = 'http://champs/ru/';
+    baseUrl = config.APP_URL;
+
+    constructor(axios) {
+        this.axios = axios
+    }
 
     url = path => {
-        return `${this.baseUrl}${path}`;
+        return `${this.baseUrl}ru/${path}`;
     }
 
     createMvpTeam = async (capacity, name, tag) => {
-        return await axios.post(this.url('user/mvp/create/team'), {
+        return await this.axios.post(this.url('user/mvp/create/team'), {
             capacity, name, tag
         })
     }
 
     getUserTeams = async () => {
-        return await axios.post(this.url('user/mvp/get/teams'))
+        return await this.axios.post(this.url('user/mvp/get/teams'))
     }
 
     getTeamLink = (id) => {
@@ -25,23 +31,39 @@ class MvpService {
     }
 
     getMvpTeam = async id => {
-        return await axios.post(this.url(`get/user/mvp/team/${id}`))
+        return await this.axios.post(this.url(`get/user/mvp/team/${id}`))
     }
 
     deleteMvpTeam = async id => {
-        return await axios.post(this.url(`delete/user/mvp/team/${id}`))
+        return await this.axios.post(this.url(`delete/user/mvp/team/${id}`))
     }
 
     getTeamInviteToken = async id => {
-        return await axios.post(this.url(`mvp/team/get/invite/${id}`))
+        return await this.axios.post(this.url(`mvp/team/get/invite/${id}`))
     }
 
     reloadTeamInviteToken = async id => {
-        return await axios.post(this.url(`mvp/team/reload/invite/${id}`))
+        return await this.axios.post(this.url(`mvp/team/reload/invite/${id}`))
     }
 
     getInviteToTeamLink = (id, token) => {
         return this.url(`mvp/invite/${id}/${token}`)
+    }
+
+    getAuthUser = async () => {
+        return await this.axios.post(this.url('get/auth'))
+    }
+
+    joinMemberToTeam = async id => {
+        return await this.axios.post(this.url(`mvp/join/to/team/${id}`))
+    }
+
+    getUserJoinedTeams = async () => {
+        return await this.axios.post(this.url(`user/mvp/get/joined/teams/`))
+    }
+
+    userLeaveTeamLink = id => {
+        return this.url(`user/mvp/leave/team/${id}`)
     }
 }
 
