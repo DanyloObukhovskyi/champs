@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Charactristics
 {
     public const CS_ROLES = [
+        'Капитан',
         'Entry Fragger',
         'Support',
         'Снайпер',
