@@ -155,7 +155,7 @@
                 {% if app.user.istrainer %}
                     <a href="/ru/trainer/timelist" class="ln">кабинет</a>
                 {% else %}
-                    <a href="/ru/user/specifications" class="ln">кабинет</a>
+                    <a href="/ru/user/timelist" class="ln">кабинет</a>
                 {% endif %}
             {% else %}
                 <span>Войти</span>
@@ -377,7 +377,7 @@
                                 th.error = true;
                             } else {
                                 th.view = null;
-                                window.location.assign('/ru/user/specifications');
+                                window.location.assign('/ru/user/timelist');
                             }
                         })
                 }
