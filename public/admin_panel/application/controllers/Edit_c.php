@@ -18,7 +18,9 @@
 				redirect ('login/auth');
 				die();
 			}
-			$this->load->model(array('users_model', 'edit_m','trainers_model', 'delete_m', 'add_m', 'trainer_video'));
+
+            $this->load->library('session');
+            $this->load->model(array('users_model', 'edit_m','trainers_model', 'delete_m', 'add_m', 'trainer_video'));
 		}
 		
 		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
@@ -260,6 +262,7 @@
 				die();
 			}
 			if(isset($_POST['edit'])) {
+                $this->session->set_flashdata('success_message', 'Данные сохранены!');
 				if(trim($_POST['edit']) == true && (int)$user_id == $this->UserID) {
 					$nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
 					$Email = (isset($_POST["Email"]) && !empty($_POST["Email"])) ? trim($_POST["Email"]) : '';
@@ -303,6 +306,7 @@
 					$update_data['roles'] = json_encode($user_capabilities);
 					$this->edit_m->updateUser($id, $update_data);
 					if(!empty($add_trainer)) {
+                        $this->session->set_flashdata('success_message', 'Данные сохранены!');
 						redirect (base_url("c-admin/trainer/edit/$id/$user_id"));
 						die();
 					}
@@ -345,6 +349,7 @@
 				die();
 			}
 			if(isset($_POST['edit'])) {
+                $this->session->set_flashdata('success_message', 'Данные сохранены!');
 				if(trim($_POST['edit']) == true  && (int)$user_id == $this->UserID) {
 					$nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
 					$Email = (isset($_POST["Email"]) && !empty($_POST["Email"])) ? trim($_POST["Email"]) : '';
@@ -539,7 +544,9 @@
 					
 					$update_data['roles'] = json_encode($user_capabilities);
 					$this->edit_m->updateAdmin($id, $update_data);
-					redirect ($_SERVER["HTTP_REFERER"]);
+
+                    $this->session->set_flashdata('success_message', 'Данные сохранены!');
+                    redirect ($_SERVER["HTTP_REFERER"]);
 					die();
 				}
 			}
