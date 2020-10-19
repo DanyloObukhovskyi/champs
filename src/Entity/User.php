@@ -21,7 +21,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 
@@ -100,6 +100,10 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $purse;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $discordId;
 
     public function __construct()
     {
@@ -466,5 +470,21 @@ class User implements UserInterface
         $this->purse = $purse;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordId()
+    {
+        return $this->discordId;
+    }
+
+    /**
+     * @param mixed $discordId
+     */
+    public function setDiscordId($discordId): void
+    {
+        $this->discordId = $discordId;
     }
 }
