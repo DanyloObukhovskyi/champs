@@ -52,8 +52,7 @@
         props: ['team'],
         inject: [
             'http'
-        ],
-
+        ]
     }
 </script>
 

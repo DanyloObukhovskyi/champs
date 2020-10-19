@@ -63,7 +63,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
           integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="/assets/styles/sweet-alert.css" />
-    {% block css %}{% endblock %}
+    {% block css %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -103,13 +105,11 @@
             <a href="{{ path('main') }}" {% if router == 'home' %}class="active"{% endif %}>Главная</a>
             <a href="{{ path('news_index') }}" {% if router == 'news' %}class="active"{% endif %}>Новости</a>
             <a href="{{ path('matches_index_page') }}" {% if router == 'matches' %}class="active"{% endif %}>Матчи</a>
-            <a href="{{ path('results_index_page') }}"
-               {% if router == 'results' %}class="active"{% endif %}>Результаты</a>
+            <a href="{{ path('results_index_page') }}" {% if router == 'results' %}class="active"{% endif %}>Результаты</a>
             <a href="{{ path('events.index') }}" {% if router == 'events' %}class="active"{% endif %}>События</a>
-            <a href="{{ path('statistics_index') }}"
-               {% if router == 'statistics' %}class="active"{% endif %}>Cтатистика</a>
-            <a href="{{ path('marketplace_index') }}"
-               {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
+            <a href="{{ path('statistics_index') }}" {% if router == 'statistics' %}class="active"{% endif %}>Cтатистика</a>
+            <a href="{{ path('marketplace_index') }}" {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
+            <a href="{{ path('mvp.index') }}" {% if router == 'mvp' %}class="active"{% endif %}>MVP</a>
         </div>
 
         <script>
@@ -129,26 +129,49 @@
         </div>
         <div class="games">
             <div class="select-block" :class="[show ? 'shadow' : '']">
-                <div class="select" @click="show=show?false:true">
-                    <img :src="`/images/${icon}`" class="logo"/>
-                    <div class="text" v-text="game"></div>
-                    <img src="/images/arrowBtn.svg" class="arrow"/>
-                </div>
-                <div class="select" @click="game='DOTA',icon='dota.png',show=false"
-                     v-if="(game === 'CS:GO' || game === 'LOL') && show" title="Dota">
-                    <img src="/images/dota.png" class="logo"/>
-                    <div class="text">DOTA</div>
-                </div>
-                <div class="select" @click="game='CS:GO',icon='cs.png',show=false"
-                     v-if="(game === 'DOTA' || game === 'LOL') && show" title="Counter Strike">
-                    <img src="/images/cs.png" class="logo"/>
-                    <div class="text">CS:GO</div>
-                </div>
-                <div class="select" @click="game='LOL',icon='lol.jpg',show=false"
-                     v-if="(game === 'DOTA' || game === 'CS:GO') && show" title="Lol">
-                    <img src="/images/lol.jpg" class="logo"/>
-                    <div class="text">LOL</div>
-                </div>
+                {% if router == 'mvp' %}
+                    <div class="select" @click="show=show?false:true">
+                        <img :src="`/images/${icon}`" class="logo"/>
+                        <div class="text" v-text="game"></div>
+                        <img src="/images/arrowBtn.svg" class="arrow"/>
+                    </div>
+                    <div class="select" @click="game='DOTA',icon='dota.png',show=false"
+                         v-if="(game === 'CS:GO' || game === 'Valorant') && show" title="Dota">
+                        <img src="/images/dota.png" class="logo"/>
+                        <div class="text">DOTA</div>
+                    </div>
+                    <div class="select" @click="game='CS:GO',icon='cs.png',show=false"
+                         v-if="(game === 'DOTA' || game === 'Valorant') && show" title="Counter Strike">
+                        <img src="/images/cs.png" class="logo"/>
+                        <div class="text">CS:GO</div>
+                    </div>
+                    <div class="select" @click="game='Valorant',icon='valorant.png',show=false"
+                         v-if="(game === 'DOTA' || game === 'CS:GO') && show" title="Lol">
+                        <img src="/images/valorant.png" class="logo"/>
+                        <div class="text">Valorant</div>
+                    </div>
+                {% else %}
+                    <div class="select" @click="show=show?false:true">
+                        <img :src="`/images/${icon}`" class="logo"/>
+                        <div class="text" v-text="game"></div>
+                        <img src="/images/arrowBtn.svg" class="arrow"/>
+                    </div>
+                    <div class="select" @click="game='DOTA',icon='dota.png',show=false"
+                         v-if="(game === 'CS:GO' || game === 'LOL') && show" title="Dota">
+                        <img src="/images/dota.png" class="logo"/>
+                        <div class="text">DOTA</div>
+                    </div>
+                    <div class="select" @click="game='CS:GO',icon='cs.png',show=false"
+                         v-if="(game === 'DOTA' || game === 'LOL') && show" title="Counter Strike">
+                        <img src="/images/cs.png" class="logo"/>
+                        <div class="text">CS:GO</div>
+                    </div>
+                    <div class="select" @click="game='LOL',icon='lol.jpg',show=false"
+                         v-if="(game === 'DOTA' || game === 'CS:GO') && show" title="Lol">
+                        <img src="/images/lol.jpg" class="logo"/>
+                        <div class="text">LOL</div>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="login" {% if is_granted('IS_AUTHENTICATED_FULLY') == false %} @click="view = 1"{% endif %}>

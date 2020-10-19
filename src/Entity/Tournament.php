@@ -10,6 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tournament
 {
+    public const CS_GO = 'cs';
+
+    public const DOTA = 'dota';
+
+    public const VALORANT = 'valorant';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -51,6 +57,16 @@ class Tournament
      * @ORM\Column(type="string", length=255)
      */
     private $image;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $game;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $server;
 
     public function getId(): ?int
     {
@@ -151,5 +167,37 @@ class Tournament
     public function setPrizeDescription($prizeDescription): void
     {
         $this->prizeDescription = $prizeDescription;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param mixed $game
+     */
+    public function setGame($game): void
+    {
+        $this->game = $game;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServer()
+    {
+        return $this->server;
+    }
+
+    /**
+     * @param mixed $server
+     */
+    public function setServer($server): void
+    {
+        $this->server = $server;
     }
 }

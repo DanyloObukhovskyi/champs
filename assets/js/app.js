@@ -12,6 +12,10 @@ import config from "./config";
 import MvpPage from "./components/mvp/cabinet/MvpPage";
 import MvpTeamPage from "./components/mvp/cabinet/MvpTeamPage";
 import MvpInviteTeamPage from "./components/mvp/invite/MvpInviteTeamPage";
+import MvpPageHeader from "./components/mvp/tournaments/MvpPageHeader";
+import LoginModal from "./components/LoginModal";
+import MvpMain from "./components/mvp/tournaments/MvpMain";
+import MvpTournamentsList from "./components/mvp/tournaments/MvpTournamentsList";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -27,15 +31,21 @@ if (token) {
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
+Vue.component('mvp-main', MvpMain)
 Vue.component('mvp-page', MvpPage)
 Vue.component('mvp-team-page', MvpTeamPage)
 Vue.component('mvp-invite-page', MvpInviteTeamPage)
+Vue.component('mvp-header', MvpPageHeader)
+Vue.component('mvp-tournaments-list', MvpTournamentsList)
+
+Vue.component('login-form', LoginModal)
 
 new Vue({
     el: '#app',
     provide: {
         http: new MvpService(axios),
         axios,
-        config
+        config,
+        header
     }
 })

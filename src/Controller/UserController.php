@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\ConfirmCode;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Message\ConfirmCodeMail;
+use App\Service\ConfirmCodeService;
 use App\Traits\AuthUser;
+use App\Traits\EntityManager;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,13 +20,19 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 class UserController extends AbstractController
 {
-    use AuthUser;
+    use EntityManager;
 
     private $passwordEncoder;
+
+    /**
+     * @var ConfirmCodeService
+     */
+    private $confirmCodeService;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->confirmCodeService = new ConfirmCodeService($this->getEntityManager());
     }
 
     /**
@@ -389,4 +400,73 @@ class UserController extends AbstractController
         return $this->json($user);
     }
 
+    /**
+     * @Route("/ru/generate/confirm/code")
+     */
+    public function generateEmailConfirmCode(Request $request, Swift_Mailer $mailer)
+    {
+        $email = $request->get('email');
+        $confirmCode = $this->confirmCodeService->create($email);
+
+        $this->dispatchMessage(new ConfirmCodeMail($confirmCode, $mailer));
+
+        return $this->json('ok');
+    }
+
+    /**
+     * @Route("/ru/check/confirm/code")
+     */
+    public function checkConfirmCode(Request $request)
+    {
+        $user = $request->get('user');
+        /** @var ConfirmCode $confirmCode */
+        $confirmCode = $this->confirmCodeService->getCode($user['email'] ?? '');
+
+        if (isset($confirmCode)) {
+            if ((string)$confirmCode->getCode() === (string)$user['code'])
+            {
+                return $this->json('Код подтвержден!');
+            }
+        }
+        return $this->json('Код не совпадает!', 422);
+    }
+
+    /**
+     * @Route("/ru/user/set/nickname")
+     */
+    public function setNickName(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        /** @var User|null $user */
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
+           'email' => $request->email
+        ]);
+
+        if (!empty($request->nickname) and isset($user)){
+
+            $user->setNickname($request->nickname);
+
+            $this->getEntityManager()->persist($user);
+            $this->getEntityManager()->flush();
+
+            return $this->json('ok');
+        }
+        return $this->json('Никнейм не может быть пустым!', 422);
+    }
+
+    /**
+     * @Route("/ru/user/check/email")
+     */
+    public function checkIsEmailValid(Request $request)
+    {
+        $email = $request->get('email');
+
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
+           'email' => $email
+        ]);
+        return isset($user) ?
+            $this->json('Этот эмейл уже занят!',422):
+            $this->json('ok');
+    }
 }

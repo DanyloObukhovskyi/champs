@@ -27,6 +27,18 @@ class TournamentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getNumber(Tournament $tournament)
+    {
+        $name = $tournament->getName();
+
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.name like :name')
+            ->setParameter('name', "%$name%")
+            ->select('count(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return Tournament[] Returns an array of Tournament objects
     //  */

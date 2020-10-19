@@ -2,7 +2,7 @@ import config from "../../../config";
 
 class MvpService {
 
-    baseUrl = config.APP_URL;
+    baseUrl = `http://${window.location.hostname}/`;
 
     constructor(axios) {
         this.axios = axios
@@ -64,6 +64,14 @@ class MvpService {
 
     userLeaveTeamLink = id => {
         return this.url(`user/mvp/leave/team/${id}`)
+    }
+
+    getTournamentsByGame = async game => {
+        return await this.axios.post(this.url(`mvp/ajax/tournaments/${game}`))
+    }
+
+    getProfileLink = () => {
+        return this.url(`user/settings`)
     }
 }
 

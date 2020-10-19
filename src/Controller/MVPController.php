@@ -46,12 +46,32 @@ class MVPController extends AbstractController
      */
     public function index()
     {
-        $tournaments = $this->tournamentService->getAll();
+        return $this->render('templates/mvp.html.twig', [
+            'router' => 'mvp'
+        ]);
+    }
+
+    /**
+     * @Route("/ru/mvp/tournaments/{game}", name="mvp.tournaments")
+     */
+    public function tournaments($game)
+    {
+        $tournaments = $this->tournamentService->getAllByGame($game);
 
         return $this->render('templates/mvp/list.html.twig', [
             'router' => 'mvp',
             'tournaments' => $tournaments
         ]);
+    }
+
+    /**
+     * @Route("/ru/mvp/ajax/tournaments/{game}", name="mvp.ajax.tournaments")
+     */
+    public function tournamentsAjax($game)
+    {
+        $tournaments = $this->tournamentService->getAllByGame($game);
+
+        return $this->json($tournaments);
     }
 
     /**
@@ -63,7 +83,7 @@ class MVPController extends AbstractController
         $tournament = $this->tournamentService->tournamentDecorator($tournamentEntity);
 
         return $this->render('templates/mvp/view.html.twig', [
-            'router' => 'mvp.tournament',
+            'router' => 'mvp',
             'tournament' => $tournament
         ]);
     }
