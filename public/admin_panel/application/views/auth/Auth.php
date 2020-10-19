@@ -11,7 +11,7 @@
 		<?php echo form_open("auth/login", array('role' => 'login', 'class' => 'login-form'));?>
 		<label class="label" for="">Login</label>
 		<div class="input mb-10" id="input">
-			<?php echo form_input($identity, $this->input->post['identity'], array('class' => 'input-group-field'));?>
+			<?php echo form_input($identity, $this->input->post['identity'] ?? null, array('class' => 'input-group-field'));?>
 		</div>
 		<label class="label" for="">Password</label>
 		<div class="input mb-10" id="input">

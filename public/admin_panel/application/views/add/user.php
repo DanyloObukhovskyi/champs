@@ -40,6 +40,11 @@
 	?>
 	<!--- ---->
 	<div class="main-content">
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div class="alert alert-success" role="alert" style="">
+                <?php echo $_SESSION['success_message']; ?>
+            </div>
+        <?php endif; ?>
 		<h1 class="main-title">Создать профиль</h1>
 		
 		

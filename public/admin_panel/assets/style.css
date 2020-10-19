@@ -3535,6 +3535,15 @@ Denis. styles. 4 september start
   max-height: 198px;
   display: block;
 }
+.alert-success{
+  position: relative;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  color: #155724;
+  background-color: #d4edda;
+}
 /*
 Denis. styles. 4 september finish
 */
