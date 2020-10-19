@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Schedule;
 use App\Repository\ScheduleRepository;
+use Carbon\Carbon;
 
 class ScheduleService extends EntityService
 {
@@ -36,6 +37,9 @@ class ScheduleService extends EntityService
         $from = new \DateTime($dateFrom->format("Y-m-d"));
         $hours = 24;
 
+        $carbonNow = Carbon::now();
+        $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
+
         $schedules = [];
         for ($i = 0; $i < 7; $i++)
         {
@@ -53,10 +57,15 @@ class ScheduleService extends EntityService
                 /** @var Schedule $schedule */
                 foreach ($schedulesEntities as $schedule)
                 {
-                    $isNotToday = $schedule->getDate()->format('Y.m.d') === ( new \DateTime())->format('Y.m.d');
                     if ($schedule->getTime() === $k)
                     {
-                        if ($isNotToday and $isStudent) {
+                        $carbon = Carbon::create(
+                            $schedule->getDate()->format('Y'),
+                            $schedule->getDate()->format('m'),
+                            $schedule->getDate()->format('d'),
+                            $k
+                        );
+                        if (((int)$carbonNow->timestamp - (int)$carbon->timestamp) > 0 and $isStudent){
                             $scheduleCollect[$time] = 10;
                         } else {
                             $scheduleCollect[$time] = $schedule->getStatus();
