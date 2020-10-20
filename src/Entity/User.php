@@ -104,6 +104,18 @@ class User implements UserInterface
      * @ORM\Column(type="string", nullable=true)
      */
     private $discordId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $faceBookId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $twichId;
 
     public function __construct()
     {
@@ -486,5 +498,53 @@ class User implements UserInterface
     public function setDiscordId($discordId): void
     {
         $this->discordId = $discordId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFaceBookId()
+    {
+        return $this->faceBookId;
+    }
+
+    /**
+     * @param mixed $faceBookId
+     */
+    public function setFaceBookId($faceBookId): void
+    {
+        $this->faceBookId = $faceBookId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param mixed $googleId
+     */
+    public function setGoogleId($googleId): void
+    {
+        $this->googleId = $googleId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwichId()
+    {
+        return $this->twichId;
+    }
+
+    /**
+     * @param mixed $twichId
+     */
+    public function setTwichId($twichId): void
+    {
+        $this->twichId = $twichId;
     }
 }

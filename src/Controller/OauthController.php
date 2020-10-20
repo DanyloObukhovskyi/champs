@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Auth\DiscordAuthService;
+use App\Service\Auth\FaceBookAuthService;
+use App\Service\Auth\GoogleAuthService;
+use App\Service\UserService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,8 +15,14 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * Class OauthController
+ * @package App\Controller
+ */
 class OauthController extends AbstractController
 {
+    use EntityManager;
+
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -23,53 +33,80 @@ class OauthController extends AbstractController
      */
     public $discordAuthService;
 
+    /**
+     * @var FaceBookAuthService
+     */
+    public $faceBookAuthService;
+
+    /**
+     * @var GoogleAuthService
+     */
+    public $googleAuthService;
+
+    /**
+     * @var TwichAuthService
+     */
+    public $twichAuthService;
+
+    /**
+     * @var UserService
+     */
+    public $userService;
+
+    /**
+     * OauthController constructor.
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->discordAuthService = new DiscordAuthService();
+        $this->faceBookAuthService = new FaceBookAuthService();
+        $this->googleAuthService = new GoogleAuthService();
+        $this->twichAuthService = new TwichAuthService();
+
+        $this->userService = new UserService($this->getEntityManager());
+    }
+
+    /**
+     * @param User $user
+     */
+    public function loginUser(User $user)
+    {
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+
+        $this->container->get('security.token_storage')->setToken($token);
+        $this->container->get('session')->set('_security_main', serialize($token));
     }
 
     /**
      * @Route("/ru/oauth/steam", name="oauth_steam")
      */
-    public function steam(AuthenticationUtils $authenticationUtils)
+    public function steam(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        if (isset($_GET["state"]) and @$_GET["state"] == "steam")
+        if (!empty($request->get('state')) and $request->get('state') == 'steam')
         {
-            preg_match("/^https:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/", $_GET["openid_identity"], $key); // Вытаскиваем id юзера
+            // Вытаскиваем id юзера
+            preg_match(
+                "/^https:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/",
+                $request->get('openid_identity'),
+                $key
+            );
 
             if(count($key) > 0)
             {
-                $steam_id = $key[1];
+                $steamId = $key[1];
 
                 /** @var User $user */
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
-                    'steam_id' => $steam_id
+                    'steam_id' => $steamId
                 ]);
 
-                if(!$user)
+                if(empty($user))
                 {
-                    $user = new User();
-
-                    $user->setEmail('steam-email-' . $steam_id . '@champs.pro');
-                    $user->setSteamId($steam_id);
-                    $user->setPassword($this->passwordEncoder->encodePassword($user, sha1($steam_id)));
-
-                    $user->setRoles(['ROLE_USER']);
-
-                    $user->setIsTrainer(0);
-                    $user->setPurse(0);
-
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($user);
-                    $em->flush();
+                    $user = $this->userService->createUserFromSteamData($steamId, $this->passwordEncoder);
                 }
-
-
-                $user = //Handle getting or creating the user entity likely with a posted form
-                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-                $this->container->get('security.token_storage')->setToken($token);
-                $this->container->get('session')->set('_security_main', serialize($token));
+                $this->loginUser($user);
             }
         }
 
@@ -92,27 +129,123 @@ class OauthController extends AbstractController
         $discordUser = $this->discordAuthService->getUserByToken($request->get('code'));
 
         if (isset($discordUser)){
+            /** @var User $user */
             $user = $this->getDoctrine()->getManager()->getRepository(User::class)
                 ->findOneBy(['discordId' => $discordUser->id]);
 
             if (empty($user)){
-                $user = new User();
-                $user->setDiscordId($discordUser->id);
-                $user->setRoles(['ROLE_USER']);
-
-                $user->setIsTrainer(false);
-                $user->setPurse(false);
-
-                $user->setNickname($discordUser->username);
-                $user->setPassword($this->passwordEncoder->encodePassword($user, sha1($discordUser->id)));
-
-                $this->getDoctrine()->getManager()->persist($user);
-                $this->getDoctrine()->getManager()->flush();
+                $user = $this->userService->createUserFromDiscord($discordUser, $this->passwordEncoder);
             }
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $this->loginUser($user);
+        }
+        return $this->redirectToRoute('main');
+    }
 
-            $this->container->get('security.token_storage')->setToken($token);
-            $this->container->get('session')->set('_security_main', serialize($token));
+    /**
+     * @Route("/ru/auth/facebook/", name="faceBook.auth")
+     */
+    public function loginWithFaceBook()
+    {
+        return $this->redirect($this->faceBookAuthService->authLink());
+    }
+
+    /**
+     * @Route("/ru/auth/facebook/hook", name="discord.auth.hook")
+     */
+    public function facebookLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
+    {
+        $faceBookAccount = $this->faceBookAuthService->getAccountInfo($request->get('code'));
+
+        if (isset($faceBookAccount)){
+            /** @var User $user */
+            $user = $this->getDoctrine()
+                ->getManager()
+                ->getRepository(User::class)
+                ->findOneBy(['faceBookId' => $faceBookAccount->id]);
+
+            if (empty($user)){
+                $user = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository(User::class)
+                    ->findOneBy(['email' => $faceBookAccount->email]);
+
+                if (empty($user)){
+                    $user = $this->userService->createUserFromFaceBookData($faceBookAccount, $this->passwordEncoder);
+                }
+            }
+            $this->userService->setFacebookId($user, $faceBookAccount->id);
+            $this->loginUser($user);
+        }
+        return $this->redirectToRoute('main');
+    }
+
+    /**
+     * @Route("/ru/auth/google/", name="google.auth")
+     */
+    public function loginWithGoogle()
+    {
+        $redirectUrl = $this->googleAuthService->authLink();
+
+        return $this->redirect($redirectUrl);
+    }
+
+    /**
+     * @Route("/ru/auth/google/hook", name="google.auth.hook")
+     */
+    public function googleLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
+    {
+        $googleAccount = $this->googleAuthService->getAccountInfo($request->get('code'));
+
+        if (isset($googleAccount)){
+            /** @var User $user */
+            $user = $this->getDoctrine()
+                ->getManager()
+                ->getRepository(User::class)
+                ->findOneBy(['googleId' => $googleAccount->id]);
+
+            if (empty($user)){
+                $user = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository(User::class)
+                    ->findOneBy(['email' => $googleAccount->email]);
+
+                if (empty($user)){
+                    $user = $this->userService->createUserFromGoogleData($googleAccount, $this->passwordEncoder);
+                }
+            }
+            $this->userService->setGoogleId($user, $googleAccount->id);
+            $this->loginUser($user);
+        }
+        return $this->redirectToRoute('main');
+    }
+
+    /**
+     * @Route("/ru/auth/twich/", name="twich.auth")
+     */
+    public function loginWithTwich()
+    {
+        $redirectUrl = $this->twichAuthService->authLink();
+
+        return $this->redirect($redirectUrl);
+    }
+
+    /**
+     * @Route("/ru/auth/twich/hook", name="twich.auth.hook")
+     */
+    public function twichLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
+    {
+        $twichAccount = $this->twichAuthService->getAccountInfo($request->get('code'));
+
+        if (isset($twichAccount)){
+            $user = $this->getDoctrine()
+                ->getManager()
+                ->getRepository(User::class)
+                ->findOneBy(['twichId' => $twichAccount->sub]);
+
+            if (empty($user)){
+                $user = $this->userService->createUserFromTwichData($twichAccount, $this->passwordEncoder);
+            }
+            $this->loginUser($user);
         }
         return $this->redirectToRoute('main');
     }
