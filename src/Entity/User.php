@@ -116,6 +116,10 @@ class User implements UserInterface
      * @ORM\Column(type="string", nullable=true)
      */
     private $twichId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $vkId;
 
     public function __construct()
     {
@@ -546,5 +550,21 @@ class User implements UserInterface
     public function setTwichId($twichId): void
     {
         $this->twichId = $twichId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVkId()
+    {
+        return $this->vkId;
+    }
+
+    /**
+     * @param mixed $vkId
+     */
+    public function setVkId($vkId): void
+    {
+        $this->vkId = $vkId;
     }
 }

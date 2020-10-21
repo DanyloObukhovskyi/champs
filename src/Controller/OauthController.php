@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Service\Auth\DiscordAuthService;
 use App\Service\Auth\FaceBookAuthService;
 use App\Service\Auth\GoogleAuthService;
+use App\Service\Auth\TwichAuthService;
+use App\Service\Auth\VkAuthService;
 use App\Service\UserService;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,6 +51,11 @@ class OauthController extends AbstractController
     public $twichAuthService;
 
     /**
+     * @var VkAuthService
+     */
+    public $vkAuthService;
+
+    /**
      * @var UserService
      */
     public $userService;
@@ -60,10 +67,12 @@ class OauthController extends AbstractController
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
+
         $this->discordAuthService = new DiscordAuthService();
         $this->faceBookAuthService = new FaceBookAuthService();
         $this->googleAuthService = new GoogleAuthService();
         $this->twichAuthService = new TwichAuthService();
+        $this->vkAuthService = new VkAuthService();
 
         $this->userService = new UserService($this->getEntityManager());
     }
@@ -244,6 +253,37 @@ class OauthController extends AbstractController
 
             if (empty($user)){
                 $user = $this->userService->createUserFromTwichData($twichAccount, $this->passwordEncoder);
+            }
+            $this->loginUser($user);
+        }
+        return $this->redirectToRoute('main');
+    }
+
+    /**
+     * @Route("/ru/auth/vk/", name="vk.auth")
+     */
+    public function loginWithVk()
+    {
+        $redirectUrl = $this->vkAuthService->authLink();
+
+        return $this->redirect($redirectUrl);
+    }
+
+    /**
+     * @Route("/ru/auth/vk/hook", name="twich.auth.hook")
+     */
+    public function vkLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
+    {
+        $vkAccount = $this->vkAuthService->getAccountInfo($request->get('code'));
+
+        if (isset($vkAccount)){
+            $user = $this->getDoctrine()
+                ->getManager()
+                ->getRepository(User::class)
+                ->findOneBy(['vkId' => $vkAccount->id]);
+
+            if (empty($user)){
+                $user = $this->userService->createUserFromVkData($vkAccount, $this->passwordEncoder);
             }
             $this->loginUser($user);
         }

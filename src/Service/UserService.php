@@ -202,16 +202,16 @@ class UserService  extends EntityService
      * @param $userId
      * @return object|null
      */
-    public function find($userId)
+    public function find($userId): ?User
     {
         return $this->repository->find($userId);
     }
 
     /**
      * @param $discordData
-     * @return mixed
+     * @return object|null
      */
-    public function createUserFromDiscord($discordData, $passwordEncoder)
+    public function createUserFromDiscord($discordData, $passwordEncoder): ?User
     {
         $user = new User();
         $user->setDiscordId($discordData->id);
@@ -234,7 +234,7 @@ class UserService  extends EntityService
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function createUserFromFaceBookData($faceBookData, $passwordEncoder)
+    public function createUserFromFaceBookData($faceBookData, $passwordEncoder): ?User
     {
         $user = new User();
         $user->setFaceBookId($faceBookData->id);
@@ -263,9 +263,9 @@ class UserService  extends EntityService
     /**
      * @param User $user
      * @param $faceBookId
-     * @return mixed
+     * @return User|null
      */
-    public function setFacebookId(User $user, $faceBookId)
+    public function setFacebookId(User $user, $faceBookId): ?User
     {
         $user->setFaceBookId($faceBookId);
 
@@ -275,13 +275,13 @@ class UserService  extends EntityService
     /**
      * @param $googleData
      * @param $passwordEncoder
-     * @return mixed
+     * @return User|null
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function createUserFromGoogleData($googleData, $passwordEncoder)
+    public function createUserFromGoogleData($googleData, $passwordEncoder): ?User
     {
         $user = new User();
         $user->setGoogleId($googleData->id);
@@ -295,24 +295,18 @@ class UserService  extends EntityService
         $user->setFamily($googleData->familyName);
         $user->setPassword($passwordEncoder->encodePassword($user, sha1($googleData->id)));
 
-        try {
-            $image = DownloadFile::getImage($googleData->picture, self::USER_PHOTO_PATH);
+        $photo = $this->downloadUserPhoto($googleData->picture);
+        $user->setPhoto($photo);
 
-            if (isset($image)){
-                $user->setPhoto($image);
-            }
-        } catch (\Exception $e){
-
-        }
         return $this->save($user);
     }
 
     /**
      * @param User $user
      * @param $googleId
-     * @return mixed
+     * @return User|null
      */
-    public function setGoogleId(User $user, $googleId)
+    public function setGoogleId(User $user, $googleId): ?User
     {
         $user->setGoogleId($googleId);
 
@@ -322,9 +316,9 @@ class UserService  extends EntityService
     /**
      * @param $twichData
      * @param $passwordEncoder
-     * @return mixed
+     * @return User|null
      */
-    public function createUserFromTwichData($twichData, $passwordEncoder)
+    public function createUserFromTwichData($twichData, $passwordEncoder): ?User
     {
         $user = new User();
         $user->setRoles(['ROLE_USER']);
@@ -338,7 +332,12 @@ class UserService  extends EntityService
         return $this->save($user);
     }
 
-    public function createUserFromSteamData($steamId, $passwordEncoder)
+    /**
+     * @param $steamId
+     * @param $passwordEncoder
+     * @return User|null
+     */
+    public function createUserFromSteamData($steamId, $passwordEncoder): ?User
     {
         $user = new User();
         $user->setEmail('steam-email-' . $steamId . '@champs.pro');
@@ -352,5 +351,52 @@ class UserService  extends EntityService
         $user->setPurse(false);
 
         return $this->save($user);
+    }
+
+    /**
+     * @param object $vkData
+     * @param $passwordEncoder
+     * @return User|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function createUserFromVkData(object $vkData, $passwordEncoder): ?User
+    {
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
+
+        $user->setIsTrainer(false);
+        $user->setPurse(false);
+
+        $user->setVkId($vkData->id);
+        $user->setName($vkData->first_name);
+        $user->setFamily($vkData->last_name);
+
+        $photo = $this->downloadUserPhoto($vkData->photo);
+        $user->setPhoto($photo);
+
+        $user->setPassword($passwordEncoder->encodePassword($user, sha1($vkData->id)));
+
+        return $this->save($user);
+    }
+
+    /**
+     * @param $photoUrl
+     * @return string|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function downloadUserPhoto($photoUrl): ?string
+    {
+        try {
+            return DownloadFile::getImage($photoUrl, self::USER_PHOTO_PATH);
+        } catch (\Exception $e) {
+
+            return null;
+        }
     }
 }
