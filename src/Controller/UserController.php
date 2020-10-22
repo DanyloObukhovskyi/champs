@@ -440,7 +440,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/ru/user/set/nickname")
+     * @Route("/ru/ajax/user/set/nickname")
      */
     public function setNickName(Request $request)
     {

@@ -51,7 +51,7 @@
                     email: this.email,
                     nickname: this.nickname
                 }
-                this.axios.post('/ru/user/set/nickname', data)
+                this.axios.post('/ru/ajax/user/set/nickname', data)
                     .then(({data}) => {
                         this.$emit('setStep', 'congratulation')
                     }).catch(({response}) => {
