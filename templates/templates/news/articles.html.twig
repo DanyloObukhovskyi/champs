@@ -1,234 +1,246 @@
 <div class="articles__content" id="articles">
-  <div class="types">
-    <div v-for="t in types" v-text="t.name" :class="[type === t.type ? 'active' : '']" @click="type = t.type">1</div>
-  </div>
-  <div class="dates">
-    <div class="date">
-      <span @click="dateFromView = dateFromView ? false : true, dateToView = false">От <label v-text="dateFrom">21.04.2020</label></span>
-      <img src="/images/calendar.svg" class="ico" @click="dateFromView = dateFromView ? false : true, dateToView = false"/>
-      <calendar v-on:date="setFromDate" v-if="dateFromView" :date="dateFrom" />
+    <div class="types">
+        <div v-for="t in types" v-text="t.name" :class="[type === t.type ? 'active' : '']" @click="type = t.type">1
+        </div>
     </div>
-    <div class="date">
-      <span @click="dateToView = dateToView ? false : true, dateFromView = false">До <label v-text="dateTo">21.04.2020</label></span>
-      <img src="/images/calendar.svg" class="ico"  @click="dateToView = dateToView ? false : true, dateFromView = false"/>
-      <calendar v-on:date="setToDate" v-if="dateToView" :date="dateTo" />
+    <div class="full-input types mt-3">
+        <input type="text" class="w-75" style="border: 0.04vw solid #CFDCF3;outline: none;">
+        <div class="active pointer">
+            Поиск
+        </div>
     </div>
-  </div>
-
-  <div class="component lenta">
-    <div class="header">
-      <div class="round">
-        <div><img src="/images/lamp.svg" /></div>
-      </div>
-      <div class="title">
-        Лента новостей
-      </div>
-    </div>
-    <div class="search">
-      <div class="name">
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M11.7214 6.28571C11.7214 7.78698 11.1139 9.14474 10.1293 10.1293C9.14474 11.1139 7.78698 11.7214 6.28571 11.7214C3.28365 11.7214 0.85 9.28778 0.85 6.28571C0.85 3.28365 3.28365 0.85 6.28571 0.85C9.28778 0.85 11.7214 3.28365 11.7214 6.28571Z" stroke="#718088" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M14.8289 16.0296C15.1609 16.3615 15.6991 16.3615 16.031 16.0296C16.363 15.6977 16.363 15.1595 16.031 14.8275L14.8289 16.0296ZM9.68607 10.8867L14.8289 16.0296L16.031 14.8275L10.8882 9.68466L9.68607 10.8867Z" fill="#718088"/>
-        </svg>
-      </div>
-      <input type="text" placeholder="Поиск" v-model="search" @change="getAxios()"/>
+    <div class="dates">
+        <div class="date">
+            <span @click="dateFromView = dateFromView ? false : true, dateToView = false">От <label v-text="dateFrom">21.04.2020</label></span>
+            <img src="/images/calendar.svg" class="ico"
+                 @click="dateFromView = dateFromView ? false : true, dateToView = false"/>
+            <calendar v-on:date="setFromDate" v-if="dateFromView" :date="dateFrom"/>
+        </div>
+        <div class="date">
+            <span @click="dateToView = dateToView ? false : true, dateFromView = false">До <label v-text="dateTo">21.04.2020</label></span>
+            <img src="/images/calendar.svg" class="ico"
+                 @click="dateToView = dateToView ? false : true, dateFromView = false"/>
+            <calendar v-on:date="setToDate" v-if="dateToView" :date="dateTo"/>
+        </div>
     </div>
 
-    <div class="table" v-if="start">
-      {% for item in items %}
-        <a href="/ru/news/{{item.id}}-{{item.url}}" class="table-row">
-          <div class="title">
-            <div class="time">{{item.date|date("m-d H:i")}}</div>
-            <div class="name">
-              <div></div>
-              {% if item.type == 1 %}Трансфер{% endif %}
-              {% if item.type == 2 %}Матч{% endif %}
-              {% if item.type == 3 %}Видео{% endif %}
-              {% if item.type == 4 %}Интервью{% endif %}
-              {% if item.type == 5 %}Статья{% endif %}
-              {% if item.type == 6 %}Обновления{% endif %}
-              {% if item.type == 7 %}Текст{% endif %}
+    <div class="component lenta">
+        <div class="header">
+            <div class="round">
+                <div><img src="/images/lamp.svg"/></div>
             </div>
-          </div>
-          <div class="text">{{item.title}}</div>
-        </a>
-      {% endfor %}
-    </div>
+            <div class="title">
+                Лента новостей
+            </div>
+        </div>
+        <div class="search">
+            <div class="name">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.7214 6.28571C11.7214 7.78698 11.1139 9.14474 10.1293 10.1293C9.14474 11.1139 7.78698 11.7214 6.28571 11.7214C3.28365 11.7214 0.85 9.28778 0.85 6.28571C0.85 3.28365 3.28365 0.85 6.28571 0.85C9.28778 0.85 11.7214 3.28365 11.7214 6.28571Z"
+                          stroke="#718088" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14.8289 16.0296C15.1609 16.3615 15.6991 16.3615 16.031 16.0296C16.363 15.6977 16.363 15.1595 16.031 14.8275L14.8289 16.0296ZM9.68607 10.8867L14.8289 16.0296L16.031 14.8275L10.8882 9.68466L9.68607 10.8867Z"
+                          fill="#718088"/>
+                </svg>
+            </div>
+            <input type="text" placeholder="Поиск" v-model="search" @change="getAxios()"/>
+        </div>
 
-    <div class="table" v-if="!start">
-      <article-item v-for="item in items" :item="item" :types="types" />
+        <div class="table" v-if="start">
+            {% for item in items %}
+                <a href="/ru/news/{{ item.id }}-{{ item.url }}" class="table-row">
+                    <div class="title">
+                        <div class="time">{{ item.date|date("m-d H:i") }}</div>
+                        <div class="name">
+                            <div></div>
+                            {% if item.type == 1 %}Трансфер{% endif %}
+                            {% if item.type == 2 %}Матч{% endif %}
+                            {% if item.type == 3 %}Видео{% endif %}
+                            {% if item.type == 4 %}Интервью{% endif %}
+                            {% if item.type == 5 %}Статья{% endif %}
+                            {% if item.type == 6 %}Обновления{% endif %}
+                            {% if item.type == 7 %}Текст{% endif %}
+                        </div>
+                    </div>
+                    <div class="text">{{ item.title }}</div>
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="table" v-if="!start">
+            <article-item v-for="item in items" :item="item" :types="types"/>
+        </div>
     </div>
-  </div>
 </div>
 
 <script type="text/x-template" id="article-item">
-  <a :href="`/news/${item.id}-${item.url}`" class="table-row">
-    <div class="title">
-      <div class="time" v-text="item.date"></div>
-      <div class="name">
-        <div></div>
-        <span v-text="getType(item.type)"></span>
-      </div>
-    </div>
-    <div class="text" v-text="item.title"></div>
-  </a>
+    <a :href="`/news/${item.id}-${item.url}`" class="table-row">
+        <div class="title">
+            <div class="time" v-text="item.date"></div>
+            <div class="name">
+                <div></div>
+                <span v-text="getType(item.type)"></span>
+            </div>
+        </div>
+        <div class="text" v-text="item.title"></div>
+    </a>
 </script>
 
 <script type="text/x-template" id="calendar">
-	<div class="calendar">
-		<div class="title">
-			<div class="lft">
-				<div class="month" @click="monthView = monthView ? false : true">
-					<span v-text="months[month]"></span><img src="/images/arrowCalBtn.svg" />
-				</div>
-				<div class="months" v-if="monthView">
-					<div v-for="(m, i) in months" v-text="m" @click="month = i, monthView = false"></div>
-				</div>
-			</div>
-			<div class="rgt">
-				<div class="year">
-          <span @click="year = Number(year) - 1"><img src="/images/arrowCalLft.svg" /></span>
-					<label v-text="year"></label>
-          <span @click="year = Number(year) + 1"><img src="/images/arrowCalRgt.svg" /></span>
-				</div>
-			</div>
-		</div>
-		<div class="weeks">
-			<div class="week" v-for="week in weeks" v-text="week"></div>
-		</div>
-		<div class="days">
-			<div class="day" v-for="i in getWeekDay"></div>
-			<div class="day sel" v-for="d in getDays" v-text="d" @click="setDay(d)" :class="[day === d ? 'active' : '']"></div>
-		</div>
-	</div>
+    <div class="calendar">
+        <div class="title">
+            <div class="lft">
+                <div class="month" @click="monthView = monthView ? false : true">
+                    <span v-text="months[month]"></span><img src="/images/arrowCalBtn.svg"/>
+                </div>
+                <div class="months" v-if="monthView">
+                    <div v-for="(m, i) in months" v-text="m" @click="month = i, monthView = false"></div>
+                </div>
+            </div>
+            <div class="rgt">
+                <div class="year">
+                    <span @click="year = Number(year) - 1"><img src="/images/arrowCalLft.svg"/></span>
+                    <label v-text="year"></label>
+                    <span @click="year = Number(year) + 1"><img src="/images/arrowCalRgt.svg"/></span>
+                </div>
+            </div>
+        </div>
+        <div class="weeks">
+            <div class="week" v-for="week in weeks" v-text="week"></div>
+        </div>
+        <div class="days">
+            <div class="day" v-for="i in getWeekDay"></div>
+            <div class="day sel" v-for="d in getDays" v-text="d" @click="setDay(d)"
+                 :class="[day === d ? 'active' : '']"></div>
+        </div>
+    </div>
 </script>
 
 <script>
-Vue.component('calendar', {
-  template: '#calendar',
-  props: {
-    date: String,
-  },
-	computed: {
-		getDays() {
-			const date = new Date(this.year, this.month, 32);
-			return 32 - date.getDate();
-		},
-		getWeekDay() {
-			const date = new Date(this.year, this.month, 1);
-			let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
-			return day < 0 ? 0 : day;
-		}
-	},
-	data: function () {
-    return {
-			month: 0,
-			monthView: false,
-			year: 2020,
-			months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октрябрь', 'Ноябрь', 'Декабрь'],
-			days: 0,
-      day: 0,
-			weeks: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-    };
-  },
-  methods: {
-    setDay(day) {
-      this.$emit('date', `${day  < 10 ? '0' + day : day}.${this.month  < 10 ? '0' + (this.month + 1) : this.month + 1}.${this.year}`)
-    }
-  },
-  mounted() {
-    const date = this.date.split('.');
-    this.day = Math.abs(date[0]);
-    this.month = Math.abs(date[1]) - 1;
-    this.year = date[2];
-  }
-})
-Vue.component('article-item', {
-  template: '#article-item',
-  props: {
-    item: Object,
-    types: Array,
-  },
-  methods: {
-    getType(type) {
-      let result = '';
-      this.types.forEach((item) => {
-        if (Number(item.type) === Number(type)) {
-          result = item.name;
+    Vue.component('calendar', {
+        template: '#calendar',
+        props: {
+            date: String,
+        },
+        computed: {
+            getDays() {
+                const date = new Date(this.year, this.month, 32);
+                return 32 - date.getDate();
+            },
+            getWeekDay() {
+                const date = new Date(this.year, this.month, 1);
+                let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
+                return day < 0 ? 0 : day;
+            }
+        },
+        data: function () {
+            return {
+                month: 0,
+                monthView: false,
+                year: 2020,
+                months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октрябрь', 'Ноябрь', 'Декабрь'],
+                days: 0,
+                day: 0,
+                weeks: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            };
+        },
+        methods: {
+            setDay(day) {
+                this.$emit('date', `${day < 10 ? '0' + day : day}.${this.month < 10 ? '0' + (this.month + 1) : this.month + 1}.${this.year}`)
+            }
+        },
+        mounted() {
+            const date = this.date.split('.');
+            this.day = Math.abs(date[0]);
+            this.month = Math.abs(date[1]) - 1;
+            this.year = date[2];
         }
-      });
-      return result;
-    },
-  }
-})
-var app = new Vue({
-  el: '#articles',
-  data: function () {
-    return {
-      start: true,
-      dateFrom: '21.02.2020',
-      dateFromView: false,
-      dateTo: '21.02.2020',
-      dateToView: false,
-      type: 0,
-      search: '',
-      types: [
-        { name: 'Все', type: 0 },
-        { name: 'Трансфер', type: 1 },
-        { name: 'Матч', type: 2 },
-        { name: 'Видео', type: 3 },
-        { name: 'Интервью', type: 4 },
-        { name: 'Статья', type: 5 },
-        { name: 'Обновления', type: 6 },
-        { name: 'Текст', type: 7 },
-      ],
-      items: [],
-    };
-  },
-  watch: {
-    type() {
-      this.getAxios();
-    },
-  },
-  methods: {
-    setFromDate(date) {
-      this.dateToView = false;
-      this.dateFromView = false;
-      this.dateFrom = date;
-      this.getAxios();
-    },
-    setToDate(date) {
-      this.dateFromView = false;
-      this.dateToView = false;
-      this.dateTo = date;
-      this.getAxios();
-    },
-    getAxios() {
-      const th = this;
-      this.start = false;
-      axios.get(`/ru/news/search/{"type":"${this.type}","datefrom":"${this.dateFrom}","dateto":"${this.dateTo}","search":"${this.search}"}`)
-      .then(function (response) {
-        if (response.data !== null) {
-          th.items = response.data.map((item) => {
-            const t = item.createdAt.split('T')[1].split('+')[0].split(':');
-            item.date = `${t[0]}:${t[1]}`;
-            return item;
-          });
+    })
+    Vue.component('article-item', {
+        template: '#article-item',
+        props: {
+            item: Object,
+            types: Array,
+        },
+        methods: {
+            getType(type) {
+                let result = '';
+                this.types.forEach((item) => {
+                    if (Number(item.type) === Number(type)) {
+                        result = item.name;
+                    }
+                });
+                return result;
+            },
         }
-      })
-    },
-  },
-  mounted() {
-    const dateFrom = new Date();
-    dateFrom.setDate(dateFrom.getDate() - (32 - dateFrom.getDate()));
-    this.dateFrom = `${dateFrom.getDate() < 10 ? '0' + dateFrom.getDate() : dateFrom.getDate()}.${(dateFrom.getMonth() + 1) < 10 ? '0' + (dateFrom.getMonth() + 1) : getMonth() + 1}.${dateFrom.getFullYear()}`;
-    const dateTo = new Date();
-    this.dateTo = `${dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()}.${(dateTo.getMonth() + 1) < 10 ? '0' + (dateTo.getMonth() + 1) : getMonth() + 1}.${dateTo.getFullYear()}`;
-    window.addEventListener('click', (e) => {
-      if (e.target.closest('.calendar') || e.target.closest('.date') || e.target.closest('.months')) return false;
-      this.dateFromView = false;
-      this.dateToView = false;
+    })
+    var app = new Vue({
+        el: '#articles',
+        data: function () {
+            return {
+                start: true,
+                dateFrom: '21.02.2020',
+                dateFromView: false,
+                dateTo: '21.02.2020',
+                dateToView: false,
+                type: 0,
+                search: '',
+                types: [
+                    {name: 'Все', type: 0},
+                    {name: 'Трансфер', type: 1},
+                    {name: 'Матч', type: 2},
+                    {name: 'Видео', type: 3},
+                    {name: 'Интервью', type: 4},
+                    {name: 'Статья', type: 5},
+                    {name: 'Обновления', type: 6},
+                    {name: 'Текст', type: 7},
+                ],
+                items: [],
+            };
+        },
+        watch: {
+            type() {
+                this.getAxios();
+            },
+        },
+        methods: {
+            setFromDate(date) {
+                this.dateToView = false;
+                this.dateFromView = false;
+                this.dateFrom = date;
+                this.getAxios();
+            },
+            setToDate(date) {
+                this.dateFromView = false;
+                this.dateToView = false;
+                this.dateTo = date;
+                this.getAxios();
+            },
+            getAxios() {
+                const th = this;
+                this.start = false;
+                axios.get(`/ru/news/search/{"type":"${this.type}","datefrom":"${this.dateFrom}","dateto":"${this.dateTo}","search":"${this.search}"}`)
+                    .then(function (response) {
+                        if (response.data !== null) {
+                            th.items = response.data.map((item) => {
+                                const t = item.createdAt.split('T')[1].split('+')[0].split(':');
+                                item.date = `${t[0]}:${t[1]}`;
+                                return item;
+                            });
+                        }
+                    })
+            },
+        },
+        mounted() {
+            const dateFrom = new Date();
+            dateFrom.setDate(dateFrom.getDate() - (32 - dateFrom.getDate()));
+            this.dateFrom = `${dateFrom.getDate() < 10 ? '0' + dateFrom.getDate() : dateFrom.getDate()}.${(dateFrom.getMonth() + 1) < 10 ? '0' + (dateFrom.getMonth() + 1) : getMonth() + 1}.${dateFrom.getFullYear()}`;
+            const dateTo = new Date();
+            this.dateTo = `${dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()}.${(dateTo.getMonth() + 1) < 10 ? '0' + (dateTo.getMonth() + 1) : getMonth() + 1}.${dateTo.getFullYear()}`;
+            window.addEventListener('click', (e) => {
+                if (e.target.closest('.calendar') || e.target.closest('.date') || e.target.closest('.months')) return false;
+                this.dateFromView = false;
+                this.dateToView = false;
+            });
+        },
     });
-  },
-});
 </script>

@@ -4,22 +4,57 @@ namespace App\Controller;
 
 use App\Entity\Match;
 use App\Entity\News;
+use App\Service\NewsService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NewsController extends AbstractController
 {
+    use EntityManager;
+
+    public $newsService;
+
+    public function __construct()
+    {
+        $this->newsService = new NewsService($this->getEntityManager());
+    }
+
     /**
-     * @Route("/ru/news", name="news_index")
+     * @Route("/ru/news/", name="news_index")
      */
     public function index()
     {
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $entityManager->getRepository(News::class);
 
-        $items = $repository->findBy(array(),array('id'=>'DESC'),10,0);
+        $newsEntities = $repository->findBy(array(),array('id'=>'DESC'),10,0);
 
-        return $this->render('templates/news.html.twig', ['items' => $items, 'counts' => ceil(count($items) / 5) - 1, 'router' => 'news']);
+        return $this->render('templates/news.html.twig', [
+            'items' => $newsEntities,
+            'counts' => ceil(count($newsEntities) / 5) - 1,
+            'router' => 'news'
+        ]);
+    }
+
+    /**
+     * @Route("/ru/ajax/news/{offset}", name="news.ajax", defaults={"offset" = null})
+     */
+    public function getNews(Request $request, $offset = 0)
+    {
+        $request = json_decode($request->getContent(), false);
+        
+        $newsEntities = $this->newsService
+            ->getRepository()
+            ->findBy([] ,['id'=>'DESC'], 10, $offset);
+
+        $news = [];
+        foreach ($newsEntities as $newsEntity)
+        {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        return $this->json($news);
     }
     /**
      * Matches /ru/news/*
