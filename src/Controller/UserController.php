@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Charactristics;
+use App\Entity\ConfirmCode;
 use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
 use App\Service\TrainerVideoService;
 use App\Traits\EntityManager;
+use App\Message\ConfirmCodeMail;
+use App\Service\ConfirmCodeService;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,10 +40,16 @@ class UserController extends AbstractController
      */
     private $trainerVideoService;
 
+    /**
+     * @var ConfirmCodeService
+     */
+    private $confirmCodeService;
+
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->trainerVideoService = new TrainerVideoService($this->getEntityManager());
+        $this->confirmCodeService = new ConfirmCodeService($this->getEntityManager());
     }
 
     /**
@@ -374,5 +384,97 @@ class UserController extends AbstractController
             $videos[] = $trainerVideo->getVideoUrl();
         }
         return $this->json($videos);
+    }
+
+
+     /**
+     * @Route("/ru/get/auth", name="get.auth.user")
+     */
+    public function getAuthUser()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (isset($user))
+        {
+            $user = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'steam' => $user->getSteamId(),
+                'nickname' => $user->getNickname(),
+            ];
+        }
+
+        return $this->json($user);
+    }
+
+    /**
+     * @Route("/ru/generate/confirm/code")
+     */
+    public function generateEmailConfirmCode(Request $request, Swift_Mailer $mailer)
+    {
+        $email = $request->get('email');
+        $confirmCode = $this->confirmCodeService->create($email);
+
+        $this->dispatchMessage(new ConfirmCodeMail($confirmCode, $mailer));
+
+        return $this->json('ok');
+    }
+
+    /**
+     * @Route("/ru/check/confirm/code")
+     */
+    public function checkConfirmCode(Request $request)
+    {
+        $user = $request->get('user');
+        /** @var ConfirmCode $confirmCode */
+        $confirmCode = $this->confirmCodeService->getCode($user['email'] ?? '');
+
+        if (isset($confirmCode)) {
+            if ((string)$confirmCode->getCode() === (string)$user['code'])
+            {
+                return $this->json('Код подтвержден!');
+            }
+        }
+        return $this->json('Код не совпадает!', 422);
+    }
+
+    /**
+     * @Route("/ru/user/set/nickname")
+     */
+    public function setNickName(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        /** @var User|null $user */
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
+           'email' => $request->email
+        ]);
+
+        if (!empty($request->nickname) and isset($user)){
+
+            $user->setNickname($request->nickname);
+
+            $this->getEntityManager()->persist($user);
+            $this->getEntityManager()->flush();
+
+            return $this->json('ok');
+        }
+        return $this->json('Никнейм не может быть пустым!', 422);
+    }
+
+    /**
+     * @Route("/ru/user/check/email")
+     */
+    public function checkIsEmailValid(Request $request)
+    {
+        $email = $request->get('email');
+
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
+           'email' => $email
+        ]);
+        return isset($user) ?
+            $this->json('Этот эмейл уже занят!',422):
+            $this->json('ok');
     }
 }

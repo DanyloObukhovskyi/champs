@@ -1,0 +1,33 @@
+{% extends 'templates/mails/template.html.twig' %}
+{% block css %}
+    <style>
+        .text-center{
+            text-align: center;
+        }
+        .d-flex{
+            display: flex;
+        }
+        .justify-content-center{
+            justify-content: center;
+        }
+        .input-code{
+            font-size: 35px;
+            text-align: center;
+            border-radius: unset;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <table class="d-flex justify-content-center">
+        <tr>
+            <td class="text-center">
+                <smal>Код подтверждения</smal>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input disabled type="text" value="{{ code }}" class="input-code">
+            </td>
+        </tr>
+    </table>
+{% endblock %}

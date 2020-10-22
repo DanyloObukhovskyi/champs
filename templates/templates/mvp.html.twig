@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Турнирная площадка{% endblock %}
+{% block router %}mvp{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/mvp.css" />
+{% endblock %}
+{% block body %}
+    <div id="app">
+        <mvp-header
+            :is-authorize="{{ app.user is not null ? 'true': 'false' }}">
+        </mvp-header>
+        <h1 style="display: none; position: absolute; left: 0; top: 0">
+            Турнирная площадка
+        </h1>
+        <div class="home">
+            <div class="background-mvp">
+                <div class="background-mvp-wrapper">
+                </div>
+            </div>
+            <mvp-main
+                :is-authorize="{{ app.user is not null ? 'true': 'false' }}"
+                login-redirect="{{ url('mvp.tournaments', {game: 'cs'}) }}">
+            </mvp-main>
+        </div>
+
+    </div>
+{% endblock %}

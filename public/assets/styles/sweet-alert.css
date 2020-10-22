@@ -3,11 +3,16 @@
 }
 .swal2-styled.swal2-confirm {
     border-radius: unset !important;
+}
+.swal2-styled{
+    border-radius: unset !important;
+}
+.swal2-styled.swal2-confirm {
     background-color: #FF6D1D !important;
 }
 .text-orange{
     color: #FF6D1D;
 }
-.text-orange:hover{
+.text-orange:hover {
     color: #ff7e2d;
 }

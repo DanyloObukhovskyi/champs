@@ -19,6 +19,7 @@
     {% block description %}{% endblock %}
     {% block keywords %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/ico">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
@@ -59,7 +60,12 @@
             crossorigin="anonymous"></script>
     <script src="/assets/js/jquery.bracket.min.js"></script>
     <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
-    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
+          integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="/assets/styles/sweet-alert.css" />
+    {% block css %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -85,7 +91,6 @@
         </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
-
 </head>
 <body>
 <nav class="header_nav" id="header">
@@ -100,13 +105,11 @@
             <a href="{{ path('main') }}" {% if router == 'home' %}class="active"{% endif %}>Главная</a>
             <a href="{{ path('news_index') }}" {% if router == 'news' %}class="active"{% endif %}>Новости</a>
             <a href="{{ path('matches_index_page') }}" {% if router == 'matches' %}class="active"{% endif %}>Матчи</a>
-            <a href="{{ path('results_index_page') }}"
-               {% if router == 'results' %}class="active"{% endif %}>Результаты</a>
+            <a href="{{ path('results_index_page') }}" {% if router == 'results' %}class="active"{% endif %}>Результаты</a>
             <a href="{{ path('events.index') }}" {% if router == 'events' %}class="active"{% endif %}>События</a>
-            <a href="{{ path('statistics_index') }}"
-               {% if router == 'statistics' %}class="active"{% endif %}>Cтатистика</a>
-            <a href="{{ path('marketplace_index') }}"
-               {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
+            <a href="{{ path('statistics_index') }}" {% if router == 'statistics' %}class="active"{% endif %}>Cтатистика</a>
+            <a href="{{ path('marketplace_index') }}" {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
+            <a href="{{ path('mvp.index') }}" {% if router == 'mvp' %}class="active"{% endif %}>MVP</a>
         </div>
 
         <script>
@@ -124,29 +127,52 @@
             <div class="round"></div>
             <div class="text">Live</div>
         </div>
-        {% if router == 'marketplace' %}
-            <div class="games d-md-flex d-lg-none">
+        {% if router == 'marketplace' or router == 'mvp'%}
+            <div class="games d-md-flex mt-lg-2 {% if router == 'marketplace' %} d-lg-none {% endif %}">
                 <div class="select-block" :class="[show ? 'shadow' : '']">
-                    <div class="select" @click="show=show?false:true">
-                        <img :src="`/images/${icon}`" class="logo"/>
-                        <div class="text" v-text="game"></div>
-                        <img src="/images/arrowBtn.svg" class="arrow"/>
-                    </div>
-                    <div class="select" @click="game='dota',icon='dota.png',show=false"
-                         v-if="(game === 'cs' || game === 'lol') && show" title="Dota">
-                        <img src="/images/dota.png" class="logo"/>
-                        <div class="text">DOTA</div>
-                    </div>
-                    <div class="select" @click="game='cs',icon='cs.png',show=false"
-                         v-if="(game === 'dota' || game === 'lol') && show" title="Counter Strike">
-                        <img src="/images/cs.png" class="logo"/>
-                        <div class="text">CS:GO</div>
-                    </div>
-                    <div class="select" @click="game='lol',icon='lol.jpg',show=false"
-                         v-if="(game === 'dota' || game === 'cs') && show" title="Lol">
-                        <img src="/images/lol.jpg" class="logo"/>
-                        <div class="text">LOL</div>
-                    </div>
+                    {% if router == 'mvp' %}
+                        <div class="select" @click="show=show?false:true">
+                            <img :src="`/images/${icon}`" class="logo"/>
+                            <div class="text" v-text="game"></div>
+                            <img src="/images/arrowBtn.svg" class="arrow"/>
+                        </div>
+                        <div class="select pt-2" @click="game='dota',icon='dota.png',show=false"
+                             v-if="(game === 'cs' || game === 'Valorant') && show" title="Dota">
+                            <img src="/images/dota.png" class="logo"/>
+                            <div class="text">DOTA</div>
+                        </div>
+                        <div class="select pt-2" @click="game='cs',icon='cs.png',show=false"
+                             v-if="(game === 'dota' || game === 'Valorant') && show" title="Counter Strike">
+                            <img src="/images/cs.png" class="logo"/>
+                            <div class="text">CS:GO</div>
+                        </div>
+                        <div class="select pt-2" @click="game='valorant',icon='valorant.png',show=false"
+                             v-if="(game === 'dota' || game === 'cs') && show" title="Lol">
+                            <img src="/images/valorant.png" class="logo"/>
+                            <div class="text">Valorant</div>
+                        </div>
+                    {% else %}
+                        <div class="select" @click="show=show?false:true">
+                            <img :src="`/images/${icon}`" class="logo"/>
+                            <div class="text" v-text="game"></div>
+                            <img src="/images/arrowBtn.svg" class="arrow"/>
+                        </div>
+                        <div class="select" @click="game='DOTA',icon='dota.png',show=false"
+                             v-if="(game === 'CS:GO' || game === 'LOL') && show" title="Dota">
+                            <img src="/images/dota.png" class="logo"/>
+                            <div class="text">DOTA</div>
+                        </div>
+                        <div class="select" @click="game='CS:GO',icon='cs.png',show=false"
+                             v-if="(game === 'DOTA' || game === 'LOL') && show" title="Counter Strike">
+                            <img src="/images/cs.png" class="logo"/>
+                            <div class="text">CS:GO</div>
+                        </div>
+                        <div class="select" @click="game='LOL',icon='lol.jpg',show=false"
+                             v-if="(game === 'DOTA' || game === 'CS:GO') && show" title="Lol">
+                            <img src="/images/lol.jpg" class="logo"/>
+                            <div class="text">LOL</div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
@@ -444,7 +470,11 @@
         </div>
     </div>
 {% endif %}
-{% block body %}{% endblock %} {% block javascripts %}{% endblock %}
+
+{% block body %}{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 <div class="cookie" id="cookie">
     <div class="footer">
@@ -546,23 +576,22 @@
     });
 </script>
 <script>
-    function addLink() {
-        const body_element = document.getElementsByTagName('body')[0];
-        const selection = window.getSelection();
-        const pagelink = "<br /><br /> Источник: <a href='" + document.location.href + "'>Champs.pro</a><br />";
-        const copytext = selection + pagelink;
-        const newdiv = document.createElement('div');
-        newdiv.style.position = 'absolute';
-        newdiv.style.left = '-99999px';
-        body_element.appendChild(newdiv);
-        newdiv.innerHTML = copytext;
-        selection.selectAllChildren(newdiv);
-        window.setTimeout(function () {
-            body_element.removeChild(newdiv);
-        }, 0);
-    }
-
-    document.oncopy = addLink;
+    // function addLink() {
+    //     const body_element = document.getElementsByTagName('body')[0];
+    //     const selection = window.getSelection();
+    //     const pagelink = "<br /><br /> Источник: <a href='" + document.location.href + "'>Champs.pro</a><br />";
+    //     const copytext = selection + pagelink;
+    //     const newdiv = document.createElement('div');
+    //     newdiv.style.position = 'absolute';
+    //     newdiv.style.left = '-99999px';
+    //     body_element.appendChild(newdiv);
+    //     newdiv.innerHTML = copytext;
+    //     selection.selectAllChildren(newdiv);
+    //     window.setTimeout(function () {
+    //         body_element.removeChild(newdiv);
+    //     }, 0);
+    // }
+    // document.oncopy = addLink;
 </script>
 
 {% if router == 'home' %}

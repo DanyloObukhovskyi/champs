@@ -75,6 +75,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $steam_id;
+
+
     private $trainer = null;
     /**
      * @ORM\OneToMany(targetEntity=Charactristics::class, mappedBy="user")
@@ -108,6 +110,19 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $vk;
+    /**
+     * @ORM\ManyToMany(targetEntity=MvpTeam::class)
+     * @ORM\JoinTable(
+     *  name="mvp_team_user",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="mvp_team_id", referencedColumnName="id")
+     *  }
+     * )
+     */
+    private $mvpTeams;
 
     public function __construct()
     {
@@ -116,6 +131,7 @@ class User implements UserInterface
         $this->trainerReviews = new ArrayCollection();
         $this->purseHistories = new ArrayCollection();
         $this->videosUrls     = new ArrayCollection();
+        $this->mvpTeams       = new ArrayCollection();
     }
 
     /**
@@ -507,5 +523,10 @@ class User implements UserInterface
     public function setVk($vk): void
     {
         $this->vk = $vk;
+    }
+
+    public function getMvpTeams()
+    {
+        return $this->mvpTeams;
     }
 }

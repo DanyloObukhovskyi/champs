@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Traits\AuthUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
@@ -12,6 +13,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class OauthController extends AbstractController
 {
+    use AuthUser;
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -42,9 +44,13 @@ class OauthController extends AbstractController
 
                 if(!$user)
                 {
-                    $user = new User();
+                    $user = $this->authUser();
+                    if (empty($user))
+                    {
+                        $user = new User();
+                        $user->setEmail('steam-email-' . $steam_id . '@champs.pro');
+                    }
 
-                    $user->setEmail('steam-email-' . $steam_id . '@champs.pro');
                     $user->setSteamId($steam_id);
                     $user->setPassword($this->passwordEncoder->encodePassword($user, sha1($steam_id)));
 

@@ -1,0 +1,36 @@
+{
+  "name": "champspro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://antonzaika1993@github.com/champspro/champsprowebsite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/champspro/champsprowebsite/issues"
+  },
+  "homepage": "https://github.com/champspro/champsprowebsite#readme",
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-syntax-class-properties": "^7.10.4",
+    "@vue/babel-preset-app": "^4.5.6",
+    "axios": "^0.20.0",
+    "sweetalert2": "^10.5.1"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.31.0",
+    "vue": "^2.5",
+    "vue-loader": "^15",
+    "vue-template-compiler": "^2.6.12",
+    "webpack-notifier": "^1.6.0"
+  }
+}

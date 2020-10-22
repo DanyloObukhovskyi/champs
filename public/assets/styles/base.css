@@ -2,10 +2,10 @@
   font-family: "ALS Hauss";
   src: url("fonts/ALSHauss-Black.eot");
   src: local("ALS Hauss Black"), local("ALSHauss-Black"),
-    url("fonts/ALSHauss-Black.eot?#iefix") format("embedded-opentype"),
-    url("fonts/ALSHauss-Black.woff2") format("woff2"),
-    url("fonts/ALSHauss-Black.woff") format("woff"),
-    url("fonts/ALSHauss-Black.ttf") format("truetype");
+  url("fonts/ALSHauss-Black.eot?#iefix") format("embedded-opentype"),
+  url("fonts/ALSHauss-Black.woff2") format("woff2"),
+  url("fonts/ALSHauss-Black.woff") format("woff"),
+  url("fonts/ALSHauss-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
 }
@@ -254,7 +254,7 @@ label {
   color: #ffffff;
 }
 .header_nav .nav .games {
-  width: 6vw;
+  width: 9vw;
   height: 100%;
   display: flex;
   align-items: center;
@@ -606,8 +606,15 @@ label {
   text-decoration: underline;
   cursor: pointer;
 }
+.login_form .login_block .links span.disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
 .login_form .login_block .links span:hover {
   text-decoration: none;
+}
+.login_form .login_block .links span.disabled:hover {
+  text-decoration: underline;
 }
 .login_form .login_block .closed {
   position: absolute;
@@ -1592,7 +1599,7 @@ label {
 .cookie__modal .component .table {
   width: 100%;
   background-color: #ffffff;
-  border: 0.04vw solid solid #cfdcf3;
+  border: 0.04vw solid #cfdcf3;
   padding: 2vw 3vw;
   font-size: 0.9vw;
 }
@@ -1905,6 +1912,31 @@ label {
 .text-gray {
   color: gray;
 }
-.hover-orange:hover{
+.hover-orange:hover {
   color: #FF6D1D;
+}
+.btn-orange {
+  padding: 0.35vw 1vw;
+  background-color: #FF6D1D !important;
+  color: #FFFFFF;
+}
+.btn-orange:hover{
+  opacity: 0.7;
+}
+.btn-grey{
+  padding: 0.35vw 1vw;
+  background-color: gray;
+  color: #FFFFFF;
+}
+.btn-grey:hover{
+  opacity: 0.7;
+}
+.border-radius-0{
+  border-radius: 0;
+}
+.navbar-mvp li{
+  transition: 150ms ease-in;
+}
+.navbar-mvp li a:hover{
+  color: #ff6d1d !important;
 }
