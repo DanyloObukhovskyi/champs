@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Request\Mvp;
+namespace App\RequestValidator\Mvp;
 
 
 use App\Entity\MvpTeam;

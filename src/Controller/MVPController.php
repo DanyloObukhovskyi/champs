@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Invite;
 use App\Entity\MvpTeam;
 use App\Entity\User;
-use App\Request\Mvp\CreateTeamRequestValidator;
+use App\RequestValidator\Mvp\CreateTeamRequestValidator;
 use App\Service\Mvp\InviteService;
 use App\Service\Mvp\MvpTeamService;
 use App\Service\TournamentService;
