@@ -10,6 +10,7 @@
                 :error="error"
                 :email="email"
                 :check="password">
+            <slot></slot>
         </login>
         <registration
                 v-show="checkStep('registration')"
@@ -22,6 +23,7 @@
                 :email="email"
                 :password="password"
                 :check="check">
+            <slot></slot>
         </registration>
         <confirm-code
                 v-show="checkStep('confirmCode')"
@@ -66,7 +68,7 @@
             },
             showFirst: {
                 default: 'login'
-            }
+            },
         },
         data(){
             return {
@@ -142,6 +144,7 @@
                     })
             },
             close(){
+                this.$parent.show = false;
                 this.show = false;
             },
             checkStep(step){
@@ -153,6 +156,9 @@
 
                 this.axios.post('/ru/generate/confirm/code', formData)
             }
+        },
+        mounted() {
+            console.log(this.content)
         }
     }
 </script>

@@ -23,23 +23,12 @@
         <div class="row d-flex justify-content-center align-items-center w-100 h-100">
             <a class="btn-orange text-light p-2 pl-3 pr-3 pointer" @click="showLoginModal">Join the Game</a>
         </div>
-        <login-modal
-                ref="loginModal"
-                :redirect="loginRedirect"
-                :show="show"
-                show-first="registration">
-        </login-modal>
     </div>
 </template>
 
 <script>
-    import LoginModal from "../../LoginModal";
-
     export default {
         name: "MvpMain",
-        components: {
-            'login-modal': LoginModal
-        },
         props: [
             'loginRedirect',
             'isAuthorize'
@@ -54,7 +43,7 @@
                 if (this.isAuthorize){
                     window.location = this.loginRedirect
                 } else {
-                    this.$refs.loginModal.show = true
+                    login.show = true
                 }
             }
         },

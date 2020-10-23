@@ -6,9 +6,6 @@
 {% endblock %}
 {% block body %}
     <div id="app">
-        <mvp-header
-            :is-authorize="{{ app.user is not null ? 'true': 'false' }}">
-        </mvp-header>
         <h1 style="display: none; position: absolute; left: 0; top: 0">
             Турнирная площадка
         </h1>
@@ -22,6 +19,5 @@
                 login-redirect="{{ url('mvp.tournaments', {game: 'cs'}) }}">
             </mvp-main>
         </div>
-
     </div>
 {% endblock %}

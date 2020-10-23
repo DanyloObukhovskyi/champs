@@ -16,7 +16,7 @@
                     {{ errorMessage }}
                 </div>
                 <div class="send" @click="setNickname">
-                    Finish Registration
+                    Завершить регестрацию
                 </div>
                 <div class="closed" @click="close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

@@ -42,9 +42,7 @@
                     </div>
                     <div class="subtext">Или войдите с помощью</div>
                     <div class="alternate">
-                        <a :href="steamLoginLink">
-                            <img src="/images/login_steam.svg"/>
-                        </a>
+                        <slot></slot>
                     </div>
                     <div class="links">
                         <div>
