@@ -26,14 +26,10 @@ class NewsController extends AbstractController
      */
     public function index()
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(News::class);
-
-        $newsEntities = $repository->findBy(array(),array('id'=>'DESC'),10,0);
+        $newsEntities = $this->newsService->getHotNews();
 
         return $this->render('templates/news.html.twig', [
             'items' => $newsEntities,
-            'counts' => ceil(count($newsEntities) / 5) - 1,
             'router' => 'news'
         ]);
     }
@@ -44,11 +40,13 @@ class NewsController extends AbstractController
     public function getNews(Request $request, $offset = 0)
     {
         $request = json_decode($request->getContent(), false);
-        
-        $newsEntities = $this->newsService
-            ->getRepository()
-            ->findBy([] ,['id'=>'DESC'], 10, $offset);
-
+        if (isset($request->tag)){
+            $newsEntities = $this->newsService->getByTag($request->tag, 10, $offset);
+        } else {
+            $newsEntities = $this->newsService
+                ->getRepository()
+                ->findBy([] ,['id'=>'DESC'], 10, $offset);
+        }
         $news = [];
         foreach ($newsEntities as $newsEntity)
         {
@@ -77,6 +75,7 @@ class NewsController extends AbstractController
                 'No product found for id '.$id
             );
         }
+        $this->newsService->incrementingViews($news);
 
         $news->link = '';
         $date = $news->unix = $news->getCreatedAt()->format(("d F Y H:i"));

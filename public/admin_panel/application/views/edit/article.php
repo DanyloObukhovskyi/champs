@@ -165,9 +165,28 @@
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
-			
-			
-				<div class="change-editor-edit-ban">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value="<?php echo $tags;?>"
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                        <option value="">По умолчанию</option>
+                        <?php foreach ($games as $key => $game): ?>
+                            <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
+                                <?php echo $game;?>
+                            </option>
+                        <?php endforeach; ?>
+                </select>
+
+                <div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
 							<div class="changePassBTN change-img-edit-btn" style="margin-top: -18px !important;">Загрузить заставку</div>
@@ -481,6 +500,5 @@
 				}
 			});
 		});
-		
 	});
 </script>

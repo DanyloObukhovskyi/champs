@@ -46,4 +46,34 @@ class NewsService extends EntityService
     {
         return $this->repository;
     }
+
+    /**
+     * @param $tag
+     * @param $limit
+     * @param $offset
+     * @return mixed
+     */
+    public function getByTag($tag, $limit, $offset)
+    {
+        return $this->repository->getByTag($tag, $limit, $offset);
+    }
+
+    /**
+     * @param News $news
+     * @return mixed
+     */
+    public function incrementingViews(News $news)
+    {
+        $news->setViews((int)$news->getViews() + 1);
+
+        return $this->save($news);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHotNews()
+    {
+        return $this->repository->getHotNews(10);
+    }
 }

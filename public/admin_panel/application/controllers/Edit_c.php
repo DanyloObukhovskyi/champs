@@ -18,7 +18,15 @@
 				redirect ('login/auth');
 				die();
 			}
-			$this->load->model(array('users_model', 'edit_m','trainers_model', 'delete_m', 'add_m'));
+			$this->load->model(array(
+			    'users_model',
+                'edit_m',
+                'trainers_model',
+                'delete_m',
+                'add_m',
+                'post_tags_model',
+                'posts_model'
+            ));
 		}
 		
 		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
@@ -108,13 +116,20 @@
 			}
 			if(isset($_POST['edit'])) {
 				if(trim($_POST['edit']) == true  && (int)$user_id == $this->UserID) {
-					
 					$post_title = (isset($_POST["post_title"])) ? trim($_POST["post_title"]): '';
 					$post_content = (isset($_POST["post_content"])) ? trim($_POST["post_content"]): '';
 					$post_type = (isset($_POST["post_type"])) ? trim($_POST["post_type"]): '';
 					$post_url = (isset($_POST["post_url"])) ? trim($_POST["post_url"]): '';
 					$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
-					
+					$post_tags = (!empty($_POST["tags"])) ? explode(',',trim($_POST["tags"])): [];
+                    $post_game = (isset($_POST["game"])) ? trim($_POST["game"]): '';
+
+
+					$this->post_tags_model->delete_by_post_id($post_id);
+
+                    foreach ($post_tags as $tag){
+                        $this->post_tags_model->create_tag($post_id, $tag);
+                    }
 					if($post_type == 9) {
 						if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
 							if ($post_type == 9) {
@@ -213,6 +228,7 @@
 						$update_data['updated_at'] = date("Y-m-d H:i:s");
 						$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 						$update_data['type'] = $post_type;
+                        $update_data['game'] = $post_game;
 						
 						$this->edit_m->update_news($post_id, $update_data);
 						redirect (base_url('c-admin/post/edit/'.$post_id."/".$this->UserID));
@@ -233,10 +249,16 @@
 			
 			$data['UserID']  = $this->UserID;
 			$data['user']  = $this->ion_auth->user()->row();
-			
+
+            $tags = $this->post_tags_model->get_by_post_id($post_id);
+            $data['tags'] = $this->post_tags_model->tags_to_string($tags);
+
+            $data['games'] = $this->posts_model->games;
 			$this->load->model(array('posts_model'));
 			$where = array("id" => $post_id);
-			$data['post_fields'] = $this->posts_model->get_all($where, $is_count = false, $sort = array(), $limit = array());
+			$data['post_fields'] = $this->posts_model->get_all(
+			    $where, $is_count = false, $sort = [], $limit = []
+            );
 			if(isset($data['post_fields'][0])) {
 				$data['post_fields'] = $data['post_fields'][0];
 			} else {

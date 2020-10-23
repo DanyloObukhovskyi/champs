@@ -9,11 +9,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		$url =  base_url();
 		$url =  str_replace("[::1]", "localhost", $url);
 	?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/style.css'; ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/css/bootstrap-tagsinput.css'; ?>">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:100,300,400, 500, 600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400, 500, 600,700,900" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/popup.css'; ?>">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="<?php echo $url.'assets/js/bootstrap-tagsinput.min.js';?>"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>

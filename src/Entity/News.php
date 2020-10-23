@@ -69,10 +69,19 @@ class News
     private $type;
 
     /**
-     *
      * @ORM\OneToMany(targetEntity=NewsTag::class, mappedBy="news")
      */
     private $newsTags;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $views;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $game;
 
     public function __construct()
     {
@@ -186,5 +195,37 @@ class News
     public function getTags()
     {
         return $this->newsTags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * @param mixed $views
+     */
+    public function setViews($views): void
+    {
+        $this->views = $views;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param mixed $game
+     */
+    public function setGame($game): void
+    {
+        $this->game = $game;
     }
 }

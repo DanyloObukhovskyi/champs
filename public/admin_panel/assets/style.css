@@ -3535,6 +3535,12 @@ Denis. styles. 4 september start
   max-height: 198px;
   display: block;
 }
+.tag.label.label-info{
+  margin-bottom: 0px;
+}
+.bootstrap-tagsinput{
+  display: flex !important;
+}
 /*
 Denis. styles. 4 september finish
 */

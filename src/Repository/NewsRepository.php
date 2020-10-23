@@ -51,9 +51,38 @@ class NewsRepository extends ServiceEntityRepository
                 ->setParameter('search', '%'.$search.'%');
         }
 
-        $result = $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult();
+    }
 
-        return $result;
+    /**
+     * @param $tag
+     * @param $limit
+     * @param $offset
+     * @return mixed
+     */
+    public function getByTag(string $tag, int $limit, int $offset)
+    {
+        return $this->createQueryBuilder("n")
+            ->innerJoin('n.newsTags', 'nt')
+            ->orderBy('n.id', 'DESC')
+            ->where('nt.title like :tagTitle')
+            ->setParameter('tagTitle', "%$tag%")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 
+    /**
+     * @param $limit
+     * @return mixed
+     */
+    public function getHotNews(int $limit)
+    {
+        return $this->createQueryBuilder("n")
+            ->orderBy('n.views', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

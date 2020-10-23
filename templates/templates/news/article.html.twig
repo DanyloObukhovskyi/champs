@@ -30,10 +30,11 @@
                     <div class="background"></div>
                     <div class="title">
                         <span
-                            class="badge badge-pill badge-danger"
+                            class="badge badge-pill badge-danger mr-1"
                             :style="{background: `#${tag.color}`}"
                             v-html="`#${tag.title}`"
-                            v-for="tag in item.tags">
+                            @click="showByTag(tag.title)"
+                            v-for="tag in article.tags">
                         </span>
                         <span class="text" v-text="getTitle(article.title)">
                         </span>
