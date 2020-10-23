@@ -159,7 +159,7 @@ class OauthController extends AbstractController
     }
 
     /**
-     * @Route("/ru/auth/facebook/hook", name="discord.auth.hook")
+     * @Route("/ru/auth/facebook/hook", name="facebook.auth.hook")
      */
     public function facebookLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
     {
