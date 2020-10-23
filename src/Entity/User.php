@@ -21,7 +21,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 
@@ -123,6 +123,26 @@ class User implements UserInterface
      * )
      */
     private $mvpTeams;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $discordId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $faceBookId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $twichId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $vkId;
 
     public function __construct()
     {
@@ -528,5 +548,79 @@ class User implements UserInterface
     public function getMvpTeams()
     {
         return $this->mvpTeams;
+    }
+
+     public function getDiscordId()
+    {
+        return $this->discordId;
+    }
+
+    /**
+     * @param mixed $discordId
+     */
+    public function setDiscordId($discordId): void
+    {
+        $this->discordId = $discordId;
+    }
+
+    public function getFaceBookId()
+    {
+        return $this->faceBookId;
+    }
+
+    /**
+     * @param mixed $faceBookId
+     */
+    public function setFaceBookId($faceBookId): void
+    {
+        $this->faceBookId = $faceBookId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param mixed $googleId
+     */
+    public function setGoogleId($googleId): void
+    {
+        $this->googleId = $googleId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwichId()
+    {
+        return $this->twichId;
+    }
+
+    /**
+     * @param mixed $twichId
+     */
+    public function setTwichId($twichId): void
+    {
+        $this->twichId = $twichId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVkId()
+    {
+        return $this->vkId;
+    }
+
+    /**
+     * @param mixed $vkId
+     */
+    public function setVkId($vkId): void
+    {
+        $this->vkId = $vkId;
     }
 }

@@ -27,8 +27,14 @@ class DownloadFile
 
     /**
      * @param string $url
+     * @param null $uploadDir
+     * @return string|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public static function getImage($url)
+    public static function getImage($url, $uploadDir = null)
     {
         ini_set('max_execution_time', 0);
         global $kernel;
@@ -59,7 +65,12 @@ class DownloadFile
         }
 
         $filename = $fileResponse['name'] . '.' . $ext;
-        $uploadDir = $kernel->getProjectDir() . '/public/uploads/images';
+
+        if (empty($uploadDir)){
+            $uploadDir = $kernel->getProjectDir() . '/public/uploads/images';
+        } else {
+            $uploadDir = $kernel->getProjectDir() . $uploadDir;
+        }
 
         $result = static::saveFile($uploadDir . '/' . $filename, $filename, $fileResponse['content']);
         return $result ? $filename : null;
