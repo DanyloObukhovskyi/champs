@@ -8,12 +8,25 @@
                 <div class="login_title">
                     Подтверждение почты
                 </div>
-                <div class="login_input">
+                <div class="login_input d-flex">
                     <input type="text" required v-model="confirmCode"/>
                     <span>Код подтверждения</span>
+                    <button type="button"
+                            class="question pt-2"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="Не пришел код? Проверьте папку Спам или попытайтесь отправить еще раз.">
+                            <i class="fas fa-question"></i>
+                    </button>
                 </div>
                 <div class="send" @click="sendRegistrationConfirm">
                     Отправить
+                </div>
+                <div class="send resend"
+                     v-if="successMessage == null"
+                     @click="resendConfirmCode"
+                     v-html="'Отправить код повторно ' + timerMessage"
+                     :class="{disabled: timer > 0}">
                 </div>
                 <div class="error" v-if="errorMessage !== null">
                     {{ errorMessage }}
@@ -56,10 +69,24 @@
                 confirmCode: null,
                 errorMessage: null,
                 successMessage: null,
+                timer: 0,
+            }
+        },
+        computed: {
+            timerMessage() {
+                let message = '';
+
+                if (this.timer > 0){
+                    message = `через <strong>${this.timer}</strong> сек`;
+                }
+                return message
             }
         },
         methods: {
             sendRegistrationConfirm(){
+                this.errorMessage = null;
+                this.successMessage = null;
+
                 const formData = new FormData();
 
                 formData.append('user[code]', this.confirmCode);
@@ -67,13 +94,14 @@
 
                 this.axios.post('/ru/check/confirm/code', formData)
                     .then(({data}) => {
-                        this.errorMessage = null;
                         this.successMessage = data;
-
                         this.codeConfirmed = true;
+
                         this.$emit('registration')
+                        this.$emit('setStep', 'nickname')
                     }).catch(({response}) => {
                         this.errorMessage = response.data;
+                        this.codeConfirmed = false;
                     })
             },
             showNickname(){
@@ -83,8 +111,60 @@
             },
             close(){
                 this.$emit('close')
-            }
-        }
+            },
+            resendConfirmCode(){
+                if (this.timer === 0){
+                    this.timer = 30;
+                    this.runTimer()
 
+                    this.$emit('sendConfirmCode')
+                }
+            },
+            runTimer(){
+                const self = this;
+
+                if (self.timer > 0){
+                    setTimeout(() => {
+                        self.timer -= 1;
+                        self.runTimer()
+                    }, 1000)
+                }
+            }
+        },
+        mounted() {
+            $('[data-toggle="tooltip"]').tooltip()
+        }
     }
 </script>
+
+<style scoped>
+    .question{
+        opacity: .5;
+        cursor: pointer;
+        background: transparent;
+        border: 0 solid;
+        outline: none;
+    }
+    .question:hover{
+        opacity: 1;
+    }
+    .login_form .login_block .resend{
+        margin-top: 0.5vw;
+        margin-top: 0.5vw;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5vw 0;
+        color: #000000;
+        border: 0.04vw solid #CFDCF3;
+        background-color: #FFFFFF;
+        font-size: 0.7vw;
+        letter-spacing: 0.05vw;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .login_form .login_block .resend.disabled{
+        opacity: .5;
+        cursor: not-allowed;
+    }
+</style>

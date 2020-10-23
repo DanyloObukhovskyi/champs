@@ -9,7 +9,7 @@
                     Поздравляем с успешной регестрацией!
                 </div>
                 <div class="send" @click="$emit('setStep', 'finish')">
-                    Play
+                    Играть
                 </div>
                 <div class="closed"  @click="$emit('close')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

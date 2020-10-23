@@ -550,7 +550,7 @@ class User implements UserInterface
         return $this->mvpTeams;
     }
 
-     public function getDiscordId()
+    public function getDiscordId()
     {
         return $this->discordId;
     }

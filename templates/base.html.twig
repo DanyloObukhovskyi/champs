@@ -13,7 +13,6 @@
         gtag('js', new Date());
         gtag('config', 'UA-177285165-1');
     </script>
-
     <meta charset="UTF-8"/>
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block description %}{% endblock %}
@@ -63,8 +62,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
           integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="/assets/styles/sweet-alert.css" />
+    {{ encore_entry_link_tags('app') }}
     {% block css %}
-        {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
     <!-- Yandex.Metrika counter -->
@@ -111,17 +110,6 @@
             <a href="{{ path('marketplace_index') }}" {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
             <a href="{{ path('mvp.index') }}" {% if router == 'mvp' %}class="active"{% endif %}>MVP</a>
         </div>
-
-        <script>
-            var search = new Vue({
-                el: '#search',
-                data: function () {
-                    return {
-                        show: false,
-                    };
-                }
-            });
-        </script>
         {% include 'social.html.twig' %}
         <div class="live" v-if="false">
             <div class="round"></div>
@@ -176,7 +164,7 @@
                 </div>
             </div>
         {% endif %}
-        <div class="login" {% if is_granted('IS_AUTHENTICATED_FULLY') == false %} @click="view = 1"{% endif %}>
+        <div class="login" {% if is_granted('IS_AUTHENTICATED_FULLY') == false %} @click="showLogin"{% endif %}>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 {% if app.user.istrainer %}
                     <a href="/ru/trainer/timelist" class="ln">кабинет</a>
@@ -199,156 +187,9 @@
             </div>
         </div>
     </div>
-    <transition name="slide-fades">
-        <div class="login_form" v-if="view === 1" v-show="view === 1" style="display: none">
-            <div class="login_block">
-                <div class="logotype">
-                    <img src="/images/Champs_logotype.svg" class="logotype"/>
-                </div>
-                <div class="login_title">
-                    Вход в личный кабинет
-                </div>
-                <div class="login_input">
-                    <input type="text" name="email" required v-model="email"/>
-                    <span>Адрес электронной почты</span>
-                </div>
-                <div class="login_input">
-                    <input type="password" required name="password" v-model="password"/>
-                    <span>Пароль</span>
-                </div>
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" v-model="csrf_token"/>
-                <div class="send" @click="authLogin" :style="{opacity: blockAuth ? '0.5' : '1'}">
-                    Войти
-                </div>
-                <div class="error" v-if="error">
-                    Неправильный логин или пароль
-                </div>
-                <div class="subtext">Или войдите с помощью</div>
-                <div class="alternate">
-                    <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"><img
-                                src="/images/login_steam.svg"/></a>
-                    <a href="{{ path('discord.auth') }}"><img src="/images/login_discord.svg" /></a>
-                    <a href="{{ path('faceBook.auth') }}"><img src="/images/facebook.png"/></a>
-                    <a href="{{ path('google.auth') }}"><img src="/images/google.png"/></a>
-                    <a href="{{ path('twich.auth') }}"><img src="/images/twich.png"/></a>
-                    <a href="{{ path('vk.auth') }}"><img src="/images/vk.svg"/></a>
-                </div>
-                <div class="links">
-                    <div><span @click="view = 3" style="display: none;">Восстановление пароля</span></div>
-                    <div><span @click="view = 2">Регистрация</span></div>
-                </div>
-                <div class="closed" @click="view = null">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                              fill="#86888A"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </transition>
-    <transition name="slide-fades">
-        <div class="login_form" v-if="view === 2" v-show="view === 2" style="display: none">
-            <div class="login_req">
-                <div class="login_block">
-                    <div class="logotype">
-                        <img src="/images/Champs_logotype.svg" class="logotype"/>
-                    </div>
-                    <div class="login_title">
-                        Регистрация
-                    </div>
-                    <div class="login_input">
-                        <input type="text" required value="" v-model="email"/>
-                        <span>Адрес электронной почты</span>
-                    </div>
-                    <div class="login_input">
-                        <input type="password" required value="" v-model="password"/>
-                        <span>Пароль</span>
-                    </div>
-                    <div class="login_check">
-                        <label><input type="checkbox" required v-model="check"/></label>
-                        <span><a href="/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a></span>
-                    </div>
-                    <div class="send" @click="authRegistration" :style="{opacity: block ? '0.5' : '1'}">
-                        Зарегистрироваться
-                    </div>
-                    <div class="error" v-if="error">
-                        Произошла ошибка
-                    </div>
-                    <div class="subtext">Или войдите с помощью</div>
-                    <div class="alternate">
-                        <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"><img
-                                    src="/images/login_steam.svg"/></a>
-                        <a><img src="/images/login_discord.svg" style="display: none;"/></a>
-                        <a><img src="/images/login_epic.svg" style="display: none;"/></a>
-                    </div>
-                    <div class="links">
-                        <div><span @click="view = 3" style="display: none;">Восстановление пароля</span></div>
-                        <div><span @click="view = 1">Вход в личный кабинет</span></div>
-                    </div>
-                    <div class="closed" @click="view = null">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                                  fill="#86888A"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="login_req_block">
-                    <div class="item">
-                        <div></div>
-                        <div>Тренеруйтесь вместе с лучшими игроками в ваших любимых играх</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Последние новости и события</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Великолепное сообщество</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Трансляции и результаты матчей</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Аналитика от профессионалов</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <transition name="slide-fades">
-            <div class="login_form" v-if="view === 3" v-show="view === 3" style="display: none">
-                <div class="login_block">
-                    <div class="logotype">
-                        <img src="/images/Champs_logotype.svg" class="logotype"/>
-                    </div>
-                    <div class="login_title">
-                        Восстановление пароля
-                    </div>
-                    <div class="login_input">
-                        <input type="text" required value=""/>
-                        <span>Адрес электронной почты</span>
-                    </div>
-                    <div class="send">
-                        Отправить письмо на почту
-                    </div>
-                    <div class="links">
-                        <div><span @click="view = 1">Авторизация</span></div>
-                        <div><span @click="view = 2">Регистрация</span></div>
-                    </div>
-                    <div class="closed" @click="view = null">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                                  fill="#86888A"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </transition>
 </nav>
-
 <script>
-    var header = new Vue({
+    const header = new Vue({
         el: '#header',
         data: function () {
             return {
@@ -361,7 +202,6 @@
                 block: true,
                 check: false,
                 blockAuth: true,
-                csrf_token: '{{ csrf_token('authenticate') }}',
                 email: '',
                 password: '',
                 password_confirm: '',
@@ -391,62 +231,9 @@
             }
         },
         methods: {
-            authLogin() {
-                const th = this;
-                let formData = new FormData();
-                formData.append('email', this.email);
-                formData.append('password', this.password);
-                formData.append('_csrf_token', this.csrf_token);
-                if (!this.blockAuth) {
-                    th.blockAuth = true;
-                    axios.post("{{ path('app_login') }}", formData)
-                        .then((res) => {
-                            th.blockAuth = false;
-                            if (res.data.error) {
-                                th.error = true;
-                            } else {
-                                th.view = null;
-                                window.location.assign('/ru/user/timelist');
-                            }
-                        })
-                }
+            showLogin(){
+                window.login.show = true
             },
-            authRegistration() {
-                const th = this;
-                let formData = new FormData();
-                formData.append('user[email]', this.email);
-                formData.append('user[password][first]', this.password);
-                formData.append('user[password][second]', this.password);
-                if (!this.block) {
-                    th.block = true;
-                    axios.post('/ru/registration', formData)
-                        .then((res) => {
-                            th.block = false;
-                            if (res.data.error) {
-                                th.error = true;
-                            } else {
-                                th.authLogin();
-                            }
-                        })
-                        .catch(() => {
-                            th.error = true;
-                        })
-                }
-            },
-            valid() {
-                const re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-                if (re.test(this.email) && this.password.length > 5) {
-                    this.blockAuth = false;
-                    if (this.check) {
-                        this.block = false;
-                    } else {
-                        this.block = true;
-                    }
-                } else {
-                    this.blockAuth = true;
-                    this.block = true;
-                }
-            }
         },
         created() {
             window.addEventListener('click', (e) => {
@@ -474,6 +261,26 @@
     </div>
 {% endif %}
 
+<div id="login">
+    <login-form show-first="{{ router == 'mvp' ? 'registration': 'login' }}" :show="show" redirect="/ru/user/timelist" show-first="login">
+        <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"><img src="/images/login_steam.svg" /></a>
+        <a href="{{ path('discord.auth') }}">
+            <img src="/images/login_discord.svg"/>
+        </a>
+        <a href="{{ path('faceBook.auth') }}">
+            <img src="/images/facebook.png"/>
+        </a>
+        <a href="{{ path('google.auth') }}">
+            <img src="/images/google.png"/>
+        </a>
+        <a href="{{ path('twich.auth') }}">
+            <img src="/images/twich.png"/>
+        </a>
+        <a href="{{ path('vk.auth') }}">
+            <img src="/images/vk.svg"/>
+        </a>
+    </login-form>
+</div>
 {% block body %}{% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
@@ -578,24 +385,6 @@
         },
     });
 </script>
-<script>
-    // function addLink() {
-    //     const body_element = document.getElementsByTagName('body')[0];
-    //     const selection = window.getSelection();
-    //     const pagelink = "<br /><br /> Источник: <a href='" + document.location.href + "'>Champs.pro</a><br />";
-    //     const copytext = selection + pagelink;
-    //     const newdiv = document.createElement('div');
-    //     newdiv.style.position = 'absolute';
-    //     newdiv.style.left = '-99999px';
-    //     body_element.appendChild(newdiv);
-    //     newdiv.innerHTML = copytext;
-    //     selection.selectAllChildren(newdiv);
-    //     window.setTimeout(function () {
-    //         body_element.removeChild(newdiv);
-    //     }, 0);
-    // }
-    // document.oncopy = addLink;
-</script>
 
 {% if router == 'home' %}
     <div class="stream" id="stream" style="display: none">
@@ -617,9 +406,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                              id="Capa_1" x="0px" y="0px" viewBox="0 0 448.075 448.075"
                              style="enable-background:new 0 0 448.075 448.075;" xml:space="preserve">
-            <path d="M352.021,16.075c0-6.08-3.52-11.84-8.96-14.4c-5.76-2.88-12.16-1.92-16.96,1.92l-141.76,112.96l167.68,167.68V16.075z"/>
+                            <path d="M352.021,16.075c0-6.08-3.52-11.84-8.96-14.4c-5.76-2.88-12.16-1.92-16.96,1.92l-141.76,112.96l167.68,167.68V16.075z"/>
                             <path d="M443.349,420.747l-416-416c-6.24-6.24-16.384-6.24-22.624,0s-6.24,16.384,0,22.624l100.672,100.704h-9.376  c-9.92,0-18.56,4.48-24.32,11.52c-4.8,5.44-7.68,12.8-7.68,20.48v128c0,17.6,14.4,32,32,32h74.24l155.84,124.48  c2.88,2.24,6.4,3.52,9.92,3.52c2.24,0,4.8-0.64,7.04-1.6c5.44-2.56,8.96-8.32,8.96-14.4v-57.376l68.672,68.672  c3.136,3.136,7.232,4.704,11.328,4.704s8.192-1.568,11.328-4.672C449.589,437.131,449.589,427.019,443.349,420.747z"/>
-          </svg>
+                        </svg>
                     </div>
                 </div>
                 <div class="button" id="streamPopupStart">
@@ -628,10 +417,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                              id="Capa_1" x="0px" y="0px" viewBox="0 0 480 480"
                              style="enable-background:new 0 0 480 480;" xml:space="preserve">
-            <path d="M278.944,17.577c-5.568-2.656-12.128-1.952-16.928,1.92L106.368,144.009H32c-17.632,0-32,14.368-32,32v128  c0,17.664,14.368,32,32,32h74.368l155.616,124.512c2.912,2.304,6.464,3.488,10.016,3.488c2.368,0,4.736-0.544,6.944-1.6  c5.536-2.656,9.056-8.256,9.056-14.4v-416C288,25.865,284.48,20.265,278.944,17.577z"/>
+                            <path d="M278.944,17.577c-5.568-2.656-12.128-1.952-16.928,1.92L106.368,144.009H32c-17.632,0-32,14.368-32,32v128  c0,17.664,14.368,32,32,32h74.368l155.616,124.512c2.912,2.304,6.464,3.488,10.016,3.488c2.368,0,4.736-0.544,6.944-1.6  c5.536-2.656,9.056-8.256,9.056-14.4v-416C288,25.865,284.48,20.265,278.944,17.577z"/>
                             <path d="M368.992,126.857c-6.304-6.208-16.416-6.112-22.624,0.128c-6.208,6.304-6.144,16.416,0.128,22.656  C370.688,173.513,384,205.609,384,240.009s-13.312,66.496-37.504,90.368c-6.272,6.176-6.336,16.32-0.128,22.624  c3.136,3.168,7.264,4.736,11.36,4.736c4.064,0,8.128-1.536,11.264-4.64C399.328,323.241,416,283.049,416,240.009  S399.328,156.777,368.992,126.857z"/>
                             <path d="M414.144,81.769c-6.304-6.24-16.416-6.176-22.656,0.096c-6.208,6.272-6.144,16.416,0.096,22.624  C427.968,140.553,448,188.681,448,240.009s-20.032,99.424-56.416,135.488c-6.24,6.24-6.304,16.384-0.096,22.656  c3.168,3.136,7.264,4.704,11.36,4.704c4.064,0,8.16-1.536,11.296-4.64C456.64,356.137,480,299.945,480,240.009  S456.64,123.881,414.144,81.769z"/>
-          </svg>
+                        </svg>
                     </div>
                 </div>
                 <div class="button" id="streamPopupLink">
@@ -640,11 +429,11 @@
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                              id="Capa_1" x="0px" y="0px" viewBox="0 0 480 480"
                              style="enable-background:new 0 0 480 480;" xml:space="preserve">
-            <path d="M0,176h48V48h128V0H0V176z M16,16h144v16H32v128H16V16z"/>
+                            <path d="M0,176h48V48h128V0H0V176z M16,16h144v16H32v128H16V16z"/>
                             <path d="M304,0v48h128v128h48V0H304z M464,160h-16V32H320V16h144V160z"/>
                             <path d="M48,304H0v176h176v-48H48V304z M160,448v16H16V320h16v128H160z"/>
                             <path d="M432,432H304v48h176V304h-48V432z M448,320h16v144H320v-16h128V320z"/>
-          </svg>
+                        </svg>
                     </div>
                 </div>
             </div>

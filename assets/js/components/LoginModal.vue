@@ -10,6 +10,7 @@
                 :error="error"
                 :email="email"
                 :check="password">
+            <slot></slot>
         </login>
         <registration
                 v-show="checkStep('registration')"
@@ -17,15 +18,19 @@
                 @close="close"
                 @inputEmail="(value) => {email = value}"
                 @inputPassword="(value) => {password = value}"
+                @input="(value) => {check = value}"
+                @sendConfirmCode="sendConfirmCode"
                 :email="email"
-                :check="check"
-                v-model="check">
+                :password="password"
+                :check="check">
+            <slot></slot>
         </registration>
         <confirm-code
                 v-show="checkStep('confirmCode')"
                 @setStep="setStep"
                 @close="close"
                 @registration="registration"
+                @sendConfirmCode="sendConfirmCode"
                 :codeConfirmed="codeConfirmed"
                 :email="email">
         </confirm-code>
@@ -63,7 +68,7 @@
             },
             showFirst: {
                 default: 'login'
-            }
+            },
         },
         data(){
             return {
@@ -139,11 +144,21 @@
                     })
             },
             close(){
+                this.$parent.show = false;
                 this.show = false;
             },
             checkStep(step){
                 return this.show && this.step === step;
+            },
+            sendConfirmCode(){
+                const formData = new FormData();
+                formData.append('email', this.email);
+
+                this.axios.post('/ru/generate/confirm/code', formData)
             }
+        },
+        mounted() {
+            console.log(this.content)
         }
     }
 </script>

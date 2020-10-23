@@ -1,8 +1,6 @@
-import config from "../../../config";
-
 class MvpService {
 
-    baseUrl = `https://${window.location.hostname}/`;
+    baseUrl = `${window.location.protocol}//${window.location.hostname}/`;
 
     constructor(axios) {
         this.axios = axios

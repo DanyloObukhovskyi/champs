@@ -28,11 +28,13 @@
                             <input
                                 type="checkbox"
                                 :checked="check"
-                                @change="update($event.target.checked)"/>
+                                @change="$emit('input', $event.target.value)"/>
                         </label>
-                        <span><a href="/ru/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a></span>
+                        <span>
+                            <a href="/ru/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a>
+                        </span>
                     </div>
-                    <div class="send" @click="checkIsEmailValid" :style="{opacity: check ? '1': '.5'}">
+                    <div class="send" @click="checkIsEmailValid" :style="{opacity: $parent.check ? '1': '.5'}">
                         Зарегистрироваться
                     </div>
                     <div class="error" v-if="errorMessage !== null">
@@ -40,9 +42,7 @@
                     </div>
                     <div class="subtext">Или войдите с помощью</div>
                     <div class="alternate">
-                        <a :href="steamLoginLink">
-                            <img src="/images/login_steam.svg"/>
-                        </a>
+                        <slot></slot>
                     </div>
                     <div class="links">
                         <div>
@@ -90,6 +90,7 @@
         ],
         name: "RegistrationForm",
         props: [
+            'password',
             'email',
             'check'
         ],
@@ -112,8 +113,7 @@
         methods: {
             generateConfirmCode(){
                 if (this.check) {
-                    this.axios.post('/ru/generate/confirm/code', this.emailForm)
-
+                    this.$emit('sendConfirmCode')
                     this.$emit('setStep', 'confirmCode')
                 }
             },
@@ -124,9 +124,6 @@
                     }).catch(({response}) => {
                         this.errorMessage = response.data;
                     })
-            },
-            update(value){
-                this.$emit('input', value);
             },
             close(){
                 this.$emit('close')
