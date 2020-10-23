@@ -28,11 +28,13 @@
                             <input
                                 type="checkbox"
                                 :checked="check"
-                                @change="update($event.target.checked)"/>
+                                @change="$emit('input', $event.target.value)"/>
                         </label>
-                        <span><a href="/ru/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a></span>
+                        <span>
+                            <a href="/ru/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a>
+                        </span>
                     </div>
-                    <div class="send" @click="checkIsEmailValid" :style="{opacity: check ? '1': '.5'}">
+                    <div class="send" @click="checkIsEmailValid" :style="{opacity: $parent.check ? '1': '.5'}">
                         Зарегистрироваться
                     </div>
                     <div class="error" v-if="errorMessage !== null">
@@ -90,6 +92,7 @@
         ],
         name: "RegistrationForm",
         props: [
+            'password',
             'email',
             'check'
         ],
@@ -124,9 +127,6 @@
                     }).catch(({response}) => {
                         this.errorMessage = response.data;
                     })
-            },
-            update(value){
-                this.$emit('input', value);
             },
             close(){
                 this.$emit('close')

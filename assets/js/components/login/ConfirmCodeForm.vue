@@ -8,12 +8,22 @@
                 <div class="login_title">
                     Подтверждение почты
                 </div>
-                <div class="login_input">
+                <div class="login_input d-flex">
                     <input type="text" required v-model="confirmCode"/>
                     <span>Код подтверждения</span>
+                    <button type="button"
+                            class="question pt-2"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="Не пришел код? Проверьте папку Спам или попытайтесь отправить еще раз.">
+                            <i class="fas fa-question"></i>
+                    </button>
                 </div>
                 <div class="send" @click="sendRegistrationConfirm">
                     Отправить
+                </div>
+                <div class="send resend" @click="sendRegistrationConfirm">
+                    Отправить код повторно
                 </div>
                 <div class="error" v-if="errorMessage !== null">
                     {{ errorMessage }}
@@ -84,7 +94,37 @@
             close(){
                 this.$emit('close')
             }
+        },
+        mounted() {
+            $('[data-toggle="tooltip"]').tooltip()
         }
-
     }
 </script>
+
+<style scoped>
+    .question{
+        opacity: .5;
+        cursor: pointer;
+        background: transparent;
+        border: 0 solid;
+        outline: none;
+    }
+    .question:hover{
+        opacity: 1;
+    }
+    .resend{
+        margin-top: 0.5vw;
+        margin-top: 0.5vw;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5vw 0;
+        color: #000000;
+        border: 0.04vw solid #CFDCF3;
+        background-color: #FFFFFF;
+        font-size: 0.7vw;
+        letter-spacing: 0.05vw;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+</style>

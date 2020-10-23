@@ -17,9 +17,10 @@
                 @close="close"
                 @inputEmail="(value) => {email = value}"
                 @inputPassword="(value) => {password = value}"
+                @input="(value) => {check = value}"
                 :email="email"
-                :check="check"
-                v-model="check">
+                :password="password"
+                :check="check">
         </registration>
         <confirm-code
                 v-show="checkStep('confirmCode')"
