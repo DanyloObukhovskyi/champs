@@ -18,6 +18,7 @@
                 @inputEmail="(value) => {email = value}"
                 @inputPassword="(value) => {password = value}"
                 @input="(value) => {check = value}"
+                @sendConfirmCode="sendConfirmCode"
                 :email="email"
                 :password="password"
                 :check="check">
@@ -27,6 +28,7 @@
                 @setStep="setStep"
                 @close="close"
                 @registration="registration"
+                @sendConfirmCode="sendConfirmCode"
                 :codeConfirmed="codeConfirmed"
                 :email="email">
         </confirm-code>
@@ -144,6 +146,12 @@
             },
             checkStep(step){
                 return this.show && this.step === step;
+            },
+            sendConfirmCode(){
+                const formData = new FormData();
+                formData.append('email', this.email);
+
+                this.axios.post('/ru/generate/confirm/code', formData)
             }
         }
     }

@@ -22,8 +22,11 @@
                 <div class="send" @click="sendRegistrationConfirm">
                     Отправить
                 </div>
-                <div class="send resend" @click="sendRegistrationConfirm">
-                    Отправить код повторно
+                <div class="send resend"
+                     v-if="successMessage == null"
+                     @click="resendConfirmCode"
+                     v-html="'Отправить код повторно ' + timerMessage"
+                     :class="{disabled: timer > 0}">
                 </div>
                 <div class="error" v-if="errorMessage !== null">
                     {{ errorMessage }}
@@ -66,10 +69,24 @@
                 confirmCode: null,
                 errorMessage: null,
                 successMessage: null,
+                timer: 0,
+            }
+        },
+        computed: {
+            timerMessage() {
+                let message = '';
+
+                if (this.timer > 0){
+                    message = `через <strong>${this.timer}</strong> сек`;
+                }
+                return message
             }
         },
         methods: {
             sendRegistrationConfirm(){
+                this.errorMessage = null;
+                this.successMessage = null;
+
                 const formData = new FormData();
 
                 formData.append('user[code]', this.confirmCode);
@@ -77,13 +94,14 @@
 
                 this.axios.post('/ru/check/confirm/code', formData)
                     .then(({data}) => {
-                        this.errorMessage = null;
                         this.successMessage = data;
-
                         this.codeConfirmed = true;
+
                         this.$emit('registration')
+                        this.$emit('setStep', 'nickname')
                     }).catch(({response}) => {
                         this.errorMessage = response.data;
+                        this.codeConfirmed = false;
                     })
             },
             showNickname(){
@@ -93,6 +111,24 @@
             },
             close(){
                 this.$emit('close')
+            },
+            resendConfirmCode(){
+                if (this.timer === 0){
+                    this.timer = 30;
+                    this.runTimer()
+
+                    this.$emit('sendConfirmCode')
+                }
+            },
+            runTimer(){
+                const self = this;
+
+                if (self.timer > 0){
+                    setTimeout(() => {
+                        self.timer -= 1;
+                        self.runTimer()
+                    }, 1000)
+                }
             }
         },
         mounted() {
@@ -112,7 +148,7 @@
     .question:hover{
         opacity: 1;
     }
-    .resend{
+    .login_form .login_block .resend{
         margin-top: 0.5vw;
         margin-top: 0.5vw;
         justify-content: center;
@@ -126,5 +162,9 @@
         font-weight: 500;
         cursor: pointer;
         transition: 0.3s;
+    }
+    .login_form .login_block .resend.disabled{
+        opacity: .5;
+        cursor: not-allowed;
     }
 </style>

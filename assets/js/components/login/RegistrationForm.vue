@@ -115,8 +115,7 @@
         methods: {
             generateConfirmCode(){
                 if (this.check) {
-                    this.axios.post('/ru/generate/confirm/code', this.emailForm)
-
+                    this.$emit('sendConfirmCode')
                     this.$emit('setStep', 'confirmCode')
                 }
             },
