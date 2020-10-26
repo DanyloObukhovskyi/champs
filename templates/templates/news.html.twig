@@ -9,12 +9,13 @@
 {% endblock %}
 {% block css %}
     <link type="text/css" rel="stylesheet" href="/assets/styles/load.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/styles/news-animation.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
 {% endblock %}
 {% block body %}
     <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
         Новости
     </h1>
-
     <div class="home" id="home">
         <div class="container">
             <div class="row">
@@ -22,17 +23,65 @@
                     {% include 'templates/news/article.html.twig' %}
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-                    {% include 'templates/news/articles.html.twig' %}
+                    <div class="articles__content">
+                        <news-filters :filters="filters" @reload="reload"/>
+                    </div>
+                     <div class="articles__content">
+                         <div class="component lenta">
+                             <div class="header">
+                                 <div class="round">
+                                     <div><img src="/images/lamp.svg"/></div>
+                                 </div>
+                                 <div class="title">
+                                     Горячие новости
+                                 </div>
+                             </div>
+                             <div class="table">
+                                 {% for item in items %}
+                                     <a href="/ru/news/{{ item.id }}-{{ item.url }}" class="table-row">
+                                         <div class="title">
+                                             <div class="time">{{ item.date|date("m-d H:i") }}</div>
+                                             <div class="name">
+                                                 <div></div>
+                                                 {% if item.type == 1 %}Трансфер{% endif %}
+                                                 {% if item.type == 2 %}Матч{% endif %}
+                                                 {% if item.type == 3 %}Видео{% endif %}
+                                                 {% if item.type == 4 %}Интервью{% endif %}
+                                                 {% if item.type == 5 %}Статья{% endif %}
+                                                 {% if item.type == 6 %}Обновления{% endif %}
+                                                 {% if item.type == 7 %}Текст{% endif %}
+                                             </div>
+                                             <div class="d-flex justify-content-end">
+                                                 <div class="w-10">
+                                                     <img :src="'/images/' + getGameImage('{{ item.game }}')" alt="" class="w-100">
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="text">{{ item.title }}</div>
+                                     </a>
+                                 {% endfor %}
+                             </div>
+                         </div>
+                     </div>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
 {% block javascripts %}
+    {% include 'templates/news/calendar.html.twig' %}
+    {% include 'templates/news/filters.html.twig' %}
     <script>
         const newsArticle = new Vue({
-            el: '#news-article',
+            delimiters: ['${', '}'],
+            el: '#home',
             data: {
+                gamesIcons: {
+                    dota: 'dota.png',
+                    cs: 'cs.png',
+                    lol: 'lol.jpg',
+                    valorant: 'valorant.png'
+                },
                 news: [],
                 load: false,
                 isLoadAll: false,
@@ -46,10 +95,26 @@
                     'Текст'
                 ],
                 filters: {
-                    tag: null,
+                    dateFrom: null,
+                    dateTo: null,
+                    tags: [],
+                    words: [],
                 },
                 pageEnd: false,
-                offset: 0,
+            },
+            watch: {
+                "filters.tags": function () {
+                    this.reload()
+                },
+                "filters.words": function () {
+                    this.reload()
+                },
+                "filters.dateFrom": function () {
+                    this.reload()
+                },
+                "filters.dateTo": function () {
+                    this.reload()
+                },
             },
             computed: {
                 newsOrdered() {
@@ -78,6 +143,25 @@
                 },
             },
             methods: {
+                getGameImage(game){
+                    if(this.gamesIcons.hasOwnProperty(game)){
+                        return this.gamesIcons[game];
+                    }
+                    return null;
+                },
+                pageUp(){
+                    let t;
+                    const top = Math.max(
+                        document.body.scrollTop,
+                        document.documentElement.scrollTop
+                    );
+                    if(top > 0) {
+                        window.scrollBy(0, -100);
+                        t = setTimeout(this.pageUp, 20);
+                    } else {
+                        clearTimeout(t);
+                    }
+                },
                 loadImage(e) {
                     let w_t = 0;
                     let h_t = 0;
@@ -142,7 +226,6 @@
                 getNews() {
                     if (!this.isLoadAll){
                         this.load = true;
-                        this.offset = this.news.length
 
                         axios.post('{{ url('news.ajax') }}/' + this.news.length, this.filters)
                             .then(({data}) => {
@@ -161,7 +244,6 @@
                 },
                 scrollEventTrigger(){
                     const self = this;
-
                     window.onscroll = () => {
                         const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
 
@@ -170,13 +252,38 @@
                         }
                     }
                 },
-                showByTag(tagTitle){
-                    this.filters.tag = tagTitle;
+                addTag(tag){
+                    event.preventDefault()
+
+                    const findTags = this.filters.tags.find(t => t.title === tag.title)
+                    if (!findTags) {
+                        this.filters.tags.push(tag);
+                    }
+                },
+                getGameImage(game){
+                    if(this.gamesIcons.hasOwnProperty(game)){
+                        return this.gamesIcons[game];
+                    }
+                    return null;
+                },
+                setFromDate(date) {
+                    this.dateToView = false;
+                    this.dateFromView = false;
+                    this.dateFrom = date;
+                    this.getAxios();
+                },
+                setToDate(date) {
+                    this.dateFromView = false;
+                    this.dateToView = false;
+                    this.dateTo = date;
+                    this.getAxios();
+                },
+                reload(){
                     this.news = [];
                     this.isLoadAll = false;
 
+                    this.pageUp();
                     this.getNews();
-                    event.preventDefault()
                 }
             },
             mounted() {

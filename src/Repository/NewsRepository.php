@@ -55,19 +55,47 @@ class NewsRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $tag
-     * @param $limit
-     * @param $offset
+     * @param array $tags
+     * @param array $words
+     * @param string|null $dateFrom
+     * @param string|null $dateTo
+     * @param int $limit
+     * @param int $offset
      * @return mixed
+     * @throws \Exception
      */
-    public function getByTag(string $tag, int $limit, int $offset)
+    public function getByFilters(
+        array $tags = [],
+        array $words = [],
+        string $dateFrom = null,
+        string $dateTo = null,
+        int $limit,
+        int $offset
+    )
     {
-        return $this->createQueryBuilder("n")
-            ->innerJoin('n.newsTags', 'nt')
-            ->orderBy('n.id', 'DESC')
-            ->where('nt.title like :tagTitle')
-            ->setParameter('tagTitle', "%$tag%")
-            ->setFirstResult($offset)
+        $query = $this->createQueryBuilder("n")
+            ->orderBy('n.id', 'DESC');
+
+        if (!empty($tags)){
+            $query->innerJoin('n.newsTags', 'nt')
+                ->where('nt.title IN(:tags)')
+                ->setParameter('tags', $tags);
+        }
+        if (!empty($dateFrom)){
+            $from = new \DateTime("$dateFrom 00:00:00");
+            $query->andWhere('n.created_at >= :dateFrom')
+                ->setParameter('dateFrom', $from);
+        }
+        if (!empty($dateTo)){
+            $to   = new \DateTime("$dateTo 23:59:59");
+            $query->andWhere('n.created_at <= :dateTo')
+                ->setParameter('dateTo', $to);
+        }
+        foreach ($words as $word){
+            $query->andWhere("n.title LIKE '%$word%'");
+            $query->orWhere("n.text LIKE '%$word%'");
+        }
+        return $query->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();

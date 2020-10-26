@@ -1,21 +1,24 @@
 <div class="article__content" id="news-article">
     <div class="article-row" v-for="newsItems in newsOrdered">
         <template v-for="(item, index) in newsItems">
-            <a :href="`/ru/news/${item.id}-${item.url}`" class="article" v-if="!Array.isArray(item)">
+            <a :href="`/ru/news/${item.id}-${item.url}`" class="article animation-target" v-if="!Array.isArray(item)">
                 <img :src="`/images/temp/news/${item.logo}`" :alt="item.logo"
                      :class="getClass()"
                      onload="newsArticle.loadImage(this)" style="opacity: 0"/>
                 <div class="background"></div>
                 <div class="tags">
                     <span
-                        @click="showByTag(tag.title)"
-                        class="badge badge-pill badge-danger"
+                        @click="addTag(tag)"
+                        class="badge badge-pill badge-danger mr-1"
                         :style="{background: `#${tag.color}`}"
                         v-html="`#${tag.title}`"
                         v-for="tag in item.tags">
                     </span>
                 </div>
-                <div class="title">
+                <div class="title d-flex align-items-center">
+                    <div class="w-10 mr-2">
+                        <img :src="'/images/' + getGameImage(item.game)" alt="" class="w-100">
+                    </div>
                     <span class="text" v-text="getTitle(item.title)">
                     </span>
                 </div>
@@ -23,7 +26,7 @@
                 </div>
             </a>
             <div class="article-col" v-if="Array.isArray(item)">
-                <a :href="`/ru/news/${article.id}-${article.url}`" class="article" v-for="(article, index) in item">
+                <a :href="`/ru/news/${article.id}-${article.url}`" class="article animation-target" v-for="(article, index) in item">
                     <img :src="`/images/temp/news/${article.logo}`" :alt="article.logo"
                          :class="getClass()"
                          onload="newsArticle.loadImage(this)" style="opacity: 0"/>
@@ -33,13 +36,18 @@
                             class="badge badge-pill badge-danger mr-1"
                             :style="{background: `#${tag.color}`}"
                             v-html="`#${tag.title}`"
-                            @click="showByTag(tag.title)"
+                            @click="addTag(tag)"
                             v-for="tag in article.tags">
                         </span>
                         <span class="text" v-text="getTitle(article.title)">
                         </span>
                     </div>
-                    <div class="ticket" v-if="types[article.type]" v-text="types[article.type]">
+                    <div class="ticket game" v-if="getGameImage(article.game)">
+                        <div class="d-flex justify-content-end">
+                            <img :src="'/images/' + getGameImage(article.game)" alt="" class="w-10 game">
+                        </div>
+                    </div>
+                    <div class="ticket" v-if="getGameImage(article.game) === null && types[article.type]" v-text="types[article.type]">
                     </div>
                 </a>
             </div>

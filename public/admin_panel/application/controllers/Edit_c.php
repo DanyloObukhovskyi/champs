@@ -29,7 +29,7 @@
             ));
 		}
 		
-		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
+		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="", $post_game="", $post_id=0) {
 			if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
 				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
@@ -47,6 +47,7 @@
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
 				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
+                $update_data['game'] = $post_game;
 				
 				$this->edit_m->update_news($post_id, $update_data);
 				redirect (base_url('c-admin/post/edit/'.$post_id."/".$this->UserID));
@@ -57,7 +58,7 @@
 			}
 		}
 		
-		public function stream($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
+		public function stream($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_game='',$post_id=0) {
 			if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
 				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
@@ -71,6 +72,7 @@
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
 				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
+                $update_data['game'] = $post_game;
 				
 				$created_id = $this->edit_m->update_news($post_id,$update_data);
 				redirect (base_url('c-admin/post/edit/'.$post_id."/".$this->UserID));
@@ -81,7 +83,7 @@
 			}
 		}
 		
-		public function video($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
+		public function video($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="", $post_game="", $post_id=0) {
 			if(!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
 				$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
 				$update_data = array();
@@ -95,6 +97,7 @@
 				$update_data['updated_at'] = date("Y-m-d H:i:s");
 				$update_data['date'] = (!empty($post_date))? $post_date : date("Y-m-d H:i:s");
 				$update_data['type'] = $post_type;
+                $update_data['game'] = $post_game;
 				
 				$this->edit_m->update_news($post_id,$update_data);
 				redirect (base_url('c-admin/post/edit/'.$post_id."/".$this->UserID));
@@ -173,7 +176,7 @@
 								}
 								
 								
-								$this->gallery ($post_title, $post_content, $post_type, $post_url, $article_img,$post_id);
+								$this->gallery ($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id);
 								redirect ($_SERVER["HTTP_REFERER"]);
 								die();
 							}
@@ -212,12 +215,12 @@
 						}
 	
 						if($post_type == 8) {
-							$this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_id);
+							$this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id);
 							redirect ($_SERVER["HTTP_REFERER"]);
 							die();
 						}
 						if($post_type == 3) {
-							$this->video($post_title, $post_content, $post_type, $post_url, $article_img,$post_id);
+							$this->video($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id);
 							redirect ($_SERVER["HTTP_REFERER"]);
 							die();
 						}

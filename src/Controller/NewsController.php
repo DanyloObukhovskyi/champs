@@ -40,13 +40,9 @@ class NewsController extends AbstractController
     public function getNews(Request $request, $offset = 0)
     {
         $request = json_decode($request->getContent(), false);
-        if (isset($request->tag)){
-            $newsEntities = $this->newsService->getByTag($request->tag, 10, $offset);
-        } else {
-            $newsEntities = $this->newsService
-                ->getRepository()
-                ->findBy([] ,['id'=>'DESC'], 10, $offset);
-        }
+
+        $newsEntities = $this->newsService->getByFilters($request, 10, $offset);
+
         $news = [];
         foreach ($newsEntities as $newsEntity)
         {
@@ -62,41 +58,32 @@ class NewsController extends AbstractController
     public function view($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $newsUrl = substr(stristr($id, '-'), 1);
+        $newsId = explode('-', $id)[0];
+
         /** @var News $news */
         $news = $this->getDoctrine()
             ->getRepository(News::class)
             ->findOneBy([
-                'url' => $newsUrl
+                'id' => $newsId
             ]);
 
         if (!$news) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+            return $this->redirectToRoute('news_index');
         }
         $this->newsService->incrementingViews($news);
 
         $news->link = '';
-        $date = $news->unix = $news->getCreatedAt()->format(("d F Y H:i"));
-        str_replace("January", "Января", $date);
-        str_replace("February", "Февраля", $date);
-        str_replace("March", "Марта", $date);
-        str_replace("April", "Апреля", $date);
-        str_replace("May", "Мая", $date);
-        str_replace("June", "Июня", $date);
-        str_replace("Jule", "Июля", $date);
-        str_replace("August", "Августа", $date);
-        str_replace("September", "Сентября", $date);
-        str_replace("October", "Октября", $date);
-        str_replace("November", "Ноября", $date);
-        str_replace("December", "Декабря", $date);
+        $date = $news->unix = $news->getCreatedAt()
+            ->format(("d F Y H:i"));
+
+        $this->newsService->replaceMonth($date);
         $news->unixdate =
         $news->link_name = '';
 
         $tournaments = [];
 
-        $matches = $entityManager->getRepository(Match::class)->findMatchesByDay(new \DateTime());
+        $matches = $entityManager->getRepository(Match::class)
+            ->findMatchesByDay(new \DateTime());
 
         $items    = [];
         $currDate = null;

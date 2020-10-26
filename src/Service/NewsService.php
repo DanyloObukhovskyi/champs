@@ -27,15 +27,16 @@ class NewsService extends EntityService
             ];
         }
         return [
-            'id' => $news->getId(),
-            'title' => $news->getTitle(),
-            'text' => $news->getText(),
+            'id'         => $news->getId(),
+            'title'      => $news->getTitle(),
+            'text'       => $news->getText(),
             'created_at' => $news->getCreatedAt(),
-            'logo' => $news->getLogo(),
-            'date' => $news->getDate(),
-            'url' => $news->getUrl(),
-            'type' => $news->getType(),
-            'tags' => $tags
+            'logo'       => $news->getLogo(),
+            'date'       => $news->getDate(),
+            'url'        => $news->getUrl(),
+            'type'       => $news->getType(),
+            'tags'       => $tags,
+            'game'       => $news->getGame()
         ];
     }
 
@@ -48,14 +49,29 @@ class NewsService extends EntityService
     }
 
     /**
-     * @param $tag
+     * @param $request
      * @param $limit
      * @param $offset
      * @return mixed
      */
-    public function getByTag($tag, $limit, $offset)
+    public function getByFilters($request,  $limit, $offset)
     {
-        return $this->repository->getByTag($tag, $limit, $offset);
+        $tagsNames = [];
+
+        foreach ($request->tags as $tag){
+            $tagsNames[] = $tag->title;
+        }
+
+
+
+        return $this->repository->getByFilters(
+            $tagsNames,
+            $request->words,
+            $this->parseDate($request->dateFrom),
+            $this->parseDate($request->dateTo),
+            $limit,
+            $offset
+        );
     }
 
     /**
@@ -75,5 +91,42 @@ class NewsService extends EntityService
     public function getHotNews()
     {
         return $this->repository->getHotNews(10);
+    }
+
+    /**
+     * @param string $date
+     * @return string
+     */
+    public function parseDate(?string $date = null): ?string
+    {
+        $parseDate= null;
+
+        if (is_string($date) and !empty($date)){
+            [$day, $month, $year] = explode('.', $date);
+            $day = trim($day);
+            $month = trim($month);
+            $year = trim($year);
+
+            $parseDate = "$day-$month-$year";
+        }
+        return $parseDate;
+    }
+
+    public function replaceMonth($date)
+    {
+        str_replace("January", "Января", $date);
+        str_replace("February", "Февраля", $date);
+        str_replace("March", "Марта", $date);
+        str_replace("April", "Апреля", $date);
+        str_replace("May", "Мая", $date);
+        str_replace("June", "Июня", $date);
+        str_replace("Jule", "Июля", $date);
+        str_replace("August", "Августа", $date);
+        str_replace("September", "Сентября", $date);
+        str_replace("October", "Октября", $date);
+        str_replace("November", "Ноября", $date);
+        str_replace("December", "Декабря", $date);
+
+        return $date;
     }
 }
