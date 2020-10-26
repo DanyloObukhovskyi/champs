@@ -4,11 +4,28 @@ namespace App\Controller;
 
 use App\Entity\Match;
 use App\Entity\News;
+use App\Service\MatchService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NewsController extends AbstractController
 {
+    use EntityManager;
+
+    /**
+     * @var MatchService
+     */
+    protected $matchService;
+
+    /**
+     * NewsController constructor.
+     */
+    public function __construct()
+    {
+        $this->matchService = new MatchService($this->getEntityManager());
+    }
+
     /**
      * @Route("/ru/news", name="news_index")
      */
@@ -62,54 +79,15 @@ class NewsController extends AbstractController
 
         $tournaments = [];
 
-        $matches = $entityManager->getRepository(Match::class)->findMatchesByDay(new \DateTime());
-
-        $items    = [];
-        $currDate = null;
-
-        foreach ($matches as $match)
-        {
-            /** @var Match $match */
-
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
-                $items[date("d", $match->getStartAt()->getTimestamp())] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $items[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "startedAt" => $match->getStartAt()->getTimestamp(),
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => str_replace("'", "", $match->getTeam1()->getName()),
-                        "logo" => "/uploads/images/" . $match->getTeam1()->getLogo(),
-                        "score" => $match->getScore1()
-                    ],
-                    "teamB" => [
-                        "title" => str_replace("'", "", $match->getTeam2()->getName()),
-                        "logo" => "/uploads/images/" . $match->getTeam2()->getLogo(),
-                        "score" => $match->getScore2()
-                    ],
-                    "event" => [
-                        "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
-                        "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                        "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                        "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
-                    ],
-                ];
-        }
+        $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
+        $matches = $this->matchService->matchesDecorator($matches);
 
         return $this->render('templates/news.view.html.twig', [
             'item' => $news,
             'date' => $date,
             'tournaments' => $tournaments,
             'router' => 'news',
-            'matches' => $items
+            'matches' => $matches
         ]);
     }
 
