@@ -65,21 +65,15 @@ class WeaponRatingService extends EntityService
 		foreach ($weapons as $weapon) {
 			$weaponsRatingSum += (int)$weapon->getRating();
 		}
-		$tmp = array();
 		foreach ($weapons as $weapon) {
-			
 			$ratingInPercentage = ((int)$weapon->getRating() / $weaponsRatingSum) * 100;
 			$ratingInPercentage = round($ratingInPercentage, 1);
-			
-			$weaponNameWithRatingPercentage = $weapon->getName() . " - $ratingInPercentage%";
-			//$ratingWeapons[$weaponNameWithRatingPercentage] = $weapon->getRating();
-			
-			$tmp[0] = $weapon->getRating();
-			$tmp[1] = $weapon->getId();
-			// $tmp[2] = $ratingInPercentage;
-			$ratingWeapons[$weaponNameWithRatingPercentage] = $tmp;
+
+            $ratingWeapons[] = [
+                'name' => $weapon->getName(),
+                'y' => $ratingInPercentage,
+            ];
 		}
-		
 		return $ratingWeapons;
 	}
 }
