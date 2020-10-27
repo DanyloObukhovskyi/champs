@@ -5,12 +5,27 @@ namespace App\Controller;
 use App\Entity\Lessons;
 use App\Entity\Review;
 use App\Entity\User;
+use App\Service\LessonService;
+use App\Service\ReviewService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ReviewController extends AbstractController
 {
+    use EntityManager;
+
+    public $lessonService;
+
+    public $reviewService;
+
+    public function __construct()
+    {
+        $this->lessonService = new LessonService($this->getEntityManager());
+        $this->reviewService = new ReviewService($this->getEntityManager());
+    }
+
     /**
      * @Route("/review", name="review")
      */
@@ -37,6 +52,7 @@ class ReviewController extends AbstractController
         $lesson = $this->getDoctrine()
             ->getRepository(Lessons::class)
             ->find(intval($request->request->get('lesson_id')));
+
         /** @var Review $review */
         $review = new Review();
         $review->setLesson($lesson);
@@ -80,20 +96,54 @@ class ReviewController extends AbstractController
             '4' => 0,
             '5' => 0,
         ];
-        foreach ($reviews['entity'] as $review)
-        {
+        foreach ($reviews['entity'] as $review) {
             $sum += $review['rate'];
             $keys[$review['rate']]++;
             $count++;
         }
 
         $result = 0;
-        if($sum > 0)
-        {
+        if ($sum > 0) {
             $result = round($sum / $count, 2);
         }
 
 
         return $this->json($result);
+    }
+
+    /**
+     * Characteristic /ru/review/*
+     *
+     * @Route("/ru/trainer/reviews/{trainerId}", methods={"POST"}, name="get_user_rate")
+     */
+    public function getTrainerReviews($trainerId)
+    {
+        $reviews = $this->getDoctrine()
+            ->getRepository(Review::class)
+            ->findRateByTrainerId($trainerId);
+
+        return $this->json($reviews['entity']);
+    }
+
+    /**
+     * Lessons /ru/send/review/lesson/*
+     *
+     * @Route("/ru/review/lesson/{lessonId}", name="review.lesson.post")
+     */
+    public function lessonReview(Request $request, $lessonId)
+    {
+        $lesson = $this->lessonService->find($lessonId);
+
+        $rating = $request->get('rating');
+        $review = $request->get('review');
+
+        if (isset($lesson) and isset($rating) and isset($review)) {
+            $reviewEntity = $this->reviewService->findByLesson($lesson);
+
+            if (empty($reviewEntity)) {
+                $this->reviewService->create($lesson, $rating, $review);
+            }
+        }
+        return $this->redirectToRoute('main');
     }
 }

@@ -10,8 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Teachers
 {
-    private const SERVICE_COMMISION = 0, //percents
-                SERVICE_COST_MULTIPLIER = 1;
+    private const SERVICE_COMMISION = 0; //percents
+
+    private const SERVICE_COST_MULTIPLIER = 1;
+
+    public const DEFAULT_TIMEZONE = 'Europe/Moscow';
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -33,6 +36,11 @@ class Teachers
      * @ORM\Column(type="integer", nullable=true)
      */
     private $cost;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isLessonCost;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -60,6 +68,16 @@ class Teachers
     private $streamType;
 
     private $comissionCost;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $payPal;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $timeZone;
 
     public function getId(): ?int
     {
@@ -101,6 +119,11 @@ class Teachers
             $cost = ($this->cost / 100)  * ($percentageMarkup + 100);
         }
         return $cost;
+    }
+
+    public function getCostWithNoPercentage()
+    {
+        return $this->cost;
     }
 
     public function setCost(?int $cost): self
@@ -172,6 +195,54 @@ class Teachers
 
     public function getComissionCost()
     {
-        return ($this->getCost()) * self::SERVICE_COST_MULTIPLIER;
+        return ($this->cost) * self::SERVICE_COST_MULTIPLIER;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeZone()
+    {
+        return $this->timeZone;
+    }
+
+    /**
+     * @param mixed $timeZone
+     */
+    public function setTimeZone($timeZone): void
+    {
+        $this->timeZone = $timeZone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayPal()
+    {
+        return $this->payPal;
+    }
+
+    /**
+     * @param mixed $payPal
+     */
+    public function setPayPal($payPal): void
+    {
+        $this->payPal = $payPal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsLessonCost()
+    {
+        return $this->isLessonCost;
+    }
+
+    /**
+     * @param mixed $isLessonCost
+     */
+    public function setIsLessonCost($isLessonCost): void
+    {
+        $this->isLessonCost = $isLessonCost;
     }
 }

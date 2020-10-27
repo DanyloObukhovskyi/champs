@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Lessons;
+use App\Entity\LessonsPayment;
+use App\Entity\Payment;
+use App\Service\LessonService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,7 +34,7 @@ class LessonsRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder("e");
         $qb
-            ->andWhere('e.datetime BETWEEN :from AND :to')
+            ->andWhere('e.dateTimeFrom BETWEEN :from AND :to')
             ->setParameter('from', $from )
             ->setParameter('to', $to)
         ;
@@ -46,12 +49,26 @@ class LessonsRepository extends ServiceEntityRepository
      */
     public function findByStudentId($value)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.student_id = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.datetime', 'DESC')
+        $lessons = $this->createQueryBuilder('l')
+            ->andWhere('l.student = :student')
+            ->setParameter('student', $value)
+            ->orderBy('l.dateTimeFrom', 'DESC')
             ->getQuery()
             ->getResult();
+
+        $paymentLessons = [];
+
+        $lessonService = new LessonService($this->getEntityManager());
+
+        /** @var Lessons $lesson */
+        foreach ($lessons as $lesson)
+        {
+            $isPayed = $lessonService->checkIsLessonPayed($lesson);
+            if ($isPayed){
+                $paymentLessons[] = $lesson;
+            }
+        }
+        return $paymentLessons;
     }
 
     /**
@@ -60,13 +77,26 @@ class LessonsRepository extends ServiceEntityRepository
      */
     public function findByTrainerId($value)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.trainer_id = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.datetime', 'DESC')
+        $lessons = $this->createQueryBuilder('l')
+            ->andWhere('l.trainer = :trainer')
+            ->setParameter('trainer', $value)
+            ->orderBy('l.dateTimeFrom', 'DESC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
+
+        $paymentLessons = [];
+
+        $lessonService = new LessonService($this->getEntityManager());
+
+        /** @var Lessons $lesson */
+        foreach ($lessons as $lesson)
+        {
+            $isPayed = $lessonService->checkIsLessonPayed($lesson);
+            if ($isPayed){
+                $paymentLessons[] = $lesson;
+            }
+        }
+        return $paymentLessons;
     }
 
     /**
@@ -82,10 +112,10 @@ class LessonsRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder("e");
         $qb
-            ->andWhere('e.datetime BETWEEN :from AND :to')
+            ->andWhere('e.dateTimeFrom BETWEEN :from AND :to')
             ->setParameter('from', $from )
             ->setParameter('to', $to)
-            ->andWhere('e.student_id = :val')
+            ->andWhere('e.student = :val')
             ->setParameter('val', $student_id)
         ;
         $result = $qb->getQuery()->getResult();
@@ -106,10 +136,10 @@ class LessonsRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder("e");
         $qb
-            ->andWhere('e.datetime BETWEEN :from AND :to')
+            ->andWhere('e.dateTimeFrom BETWEEN :from AND :to')
             ->setParameter('from', $from )
             ->setParameter('to', $to)
-            ->andWhere('e.trainer_id = :val')
+            ->andWhere('e.trainer = :val')
             ->setParameter('val', $trainer_id)
         ;
         $result = $qb->getQuery()->getResult();
@@ -132,10 +162,10 @@ class LessonsRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder("e");
         $qb
-            ->andWhere('e.datetime BETWEEN :from AND :to')
+            ->andWhere('e.dateTimeFrom BETWEEN :from AND :to')
             ->setParameter('from', $from )
             ->setParameter('to', $to)
-            ->andWhere('e.trainer_id = :val')
+            ->andWhere('e.trainer = :val')
             ->setParameter('val', $trainer_id)
         ;
         $result = $qb->getQuery()->getResult();
@@ -154,37 +184,56 @@ class LessonsRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('l')
             ->select('count(l.id)')
-            ->andWhere('l.trainer_id = :val')
+            ->andWhere('l.trainer = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getSingleScalarResult()
-            ;
+            ->getSingleScalarResult();
     }
 
     /**
      * @param $value
-     * @param $val
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findCountByTrainerAndStudent($value, $val)
+    public function findCountByStudentId($value)
     {
         return $this->createQueryBuilder('l')
             ->select('count(l.id)')
-            ->andWhere('l.trainer_id = :value')
-            ->setParameter('value', $value)
-            ->andWhere('l.student_id = :val')
-            ->setParameter('val', $val)
+            ->andWhere('l.student = :val')
+            ->setParameter('val', $value)
             ->getQuery()
-            ->getSingleScalarResult()
-            ;
+            ->getSingleScalarResult();
     }
 
+    /**
+     * @param $trainer
+     * @param $student
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCountByTrainerAndStudent($trainer, $student)
+    {
+        return $this->createQueryBuilder('l')
+            ->select('count(l.id)')
+            ->andWhere('l.trainer = :trainer')
+            ->andWhere('l.student  = :student')
+            ->setParameter('trainer', $trainer)
+            ->setParameter('student', $student)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param $teacher
+     * @param $datetime
+     * @return mixed
+     */
     public function getByTeacherAndDate($teacher, $datetime)
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.trainer_id = :teacher')
+            ->andWhere('l.trainer = :teacher')
             ->andWhere('l.datetime = :datetime')
             ->setParameter('teacher', $teacher)
             ->setParameter('datetime', $datetime)
@@ -192,4 +241,47 @@ class LessonsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @param $ids
+     * @return mixed
+     */
+    public function findByIds($ids)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.id in (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $trainer
+     * @param $user
+     * @return mixed
+     */
+    public function getEndedLessonsByTrainerAndUser($trainer, $user)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.trainer = :teacher')
+            ->andWhere('l.student = :user')
+            ->andWhere('l.student_status = 1')
+            ->andWhere('l.trainer_status = 1')
+            ->setParameter('teacher', $trainer)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getNotNoticedLessons()
+    {
+        $date = new \DateTime();
+        $date->modify('+5 minutes');
+
+        return $this->createQueryBuilder('l')
+            ->where('l.dateTimeTo >= :date')
+            ->andWhere('l.isNotice is null')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Service\ScheduleService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +16,18 @@ use Symfony\Component\Validator\Constraints\Date;
 
 class SchleduleController extends AbstractController
 {
+    use EntityManager;
+
+    /**
+     * @var ScheduleService
+     */
+    public $scheduleService;
+
+    public function __construct()
+    {
+        $this->scheduleService = new ScheduleService($this->getEntityManager());
+    }
+
     /**
      * @Route("/schledule", name="schledule")
      */
@@ -89,157 +104,38 @@ class SchleduleController extends AbstractController
      */
     public function changeTimeStatus(Request $request)
     {
-//        $form = json_decode($form);
-//        $user_id = ;
-//        $date = new \DateTime($form->date);
-        $entityManager = $this->getDoctrine()->getManager();
-        $schledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->find($request->request->get('id'));
-
-        switch ($request->request->get('time'))
-        {
-            case "10:00":
-                $schledule->setTime1011($request->request->get('status'));
-                break;
-            case "11:00":
-                $schledule->setTime1112($request->request->get('status'));
-                break;
-            case "12:00":
-                $schledule->setTime1213($request->request->get('status'));
-                break;
-            case "13:00":
-                $schledule->setTime1314($request->request->get('status'));
-                break;
-            case "14:00":
-                $schledule->setTime1415($request->request->get('status'));
-                break;
-            case "15:00":
-                $schledule->setTime1516($request->request->get('status'));
-                break;
-            case "16:00":
-                $schledule->setTime1617($request->request->get('status'));
-                break;
-            case "17:00":
-                $schledule->setTime1718($request->request->get('status'));
-                break;
-            default:
-                return new Response("404");
-        }
-        $entityManager->persist($schledule);
-        $entityManager->flush();
-
-        return $this->json($schledule);
-    }
-
-
-    /**
-     * Schledule /ru/calendar/*
-     *
-     * @Route("/ru/calendar/user/date/week/{form}", name="user_schledule_date_week_test")
-     */
-    public function viewSchleduleWeek($form)
-    {
-        $form = json_decode($form);
-        $user_id = $form->user_id;
-        $date = new \DateTime($form->date);
-
-        $scheledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->findByTrainerAndDateWeek($user_id, $date);
-
-        return $this->json($scheledule);
-    }
-
-    /**
-     * Schledule /ru/schledule/*
-     *
-     * @Route("/ru/schledule/create", name="crate_schledule_date_week")
-     */
-    public function createTeacherSchledule()
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $teachers = $this->getDoctrine()
+        $trainer = $this->getDoctrine()
             ->getRepository(User::class)
-            ->findBy([
-               'istrainer' => 1,
-            ]);
+            ->find($request->request->get('user_id'));
 
-        $dates = [
-            (new \DateTime())->modify('-7 day'),
-            (new \DateTime())->modify('-6 day'),
-            (new \DateTime())->modify('-5 day'),
-            (new \DateTime())->modify('-4 day'),
-            (new \DateTime())->modify('-2 day'),
-            (new \DateTime())->modify('-2 day'),
-            (new \DateTime())->modify('-1 day'),
-            new \DateTime(),
-            (new \DateTime())->modify('+1 day'),
-            (new \DateTime())->modify('+2 day'),
-            (new \DateTime())->modify('+3 day'),
-            (new \DateTime())->modify('+4 day'),
-            (new \DateTime())->modify('+5 day'),
-            (new \DateTime())->modify('+6 day'),
-            (new \DateTime())->modify('+7 day'),
-            (new \DateTime())->modify('+8 day'),
-            (new \DateTime())->modify('+9 day'),
-            (new \DateTime())->modify('+10 day'),
-            (new \DateTime())->modify('+11 day'),
-            (new \DateTime())->modify('+12 day'),
-            (new \DateTime())->modify('+13 day'),
-            (new \DateTime())->modify('+14 day'),
-            (new \DateTime())->modify('+15 day'),
-            (new \DateTime())->modify('+16 day'),
-            (new \DateTime())->modify('+17 day'),
-            (new \DateTime())->modify('+18 day'),
-            (new \DateTime())->modify('+19 day'),
-            (new \DateTime())->modify('+20 day'),
-            (new \DateTime())->modify('+21 day'),
-            (new \DateTime())->modify('+22 day'),
-            (new \DateTime())->modify('+23 day'),
-            (new \DateTime())->modify('+24 day'),
-            (new \DateTime())->modify('+25 day'),
-            (new \DateTime())->modify('+26 day'),
-            (new \DateTime())->modify('+27 day'),
-            (new \DateTime())->modify('+28 day'),
+        $date = new \DateTime($request->request->get('date'));
 
-        ];
-        /** @var Teachers $teacher */
-        foreach ($teachers as $teacher)
-        {
-            /** @var \DateTime $date */
-            foreach ($dates as $date)
-            {
-                $scheledule = $this->getDoctrine()
-                    ->getRepository(Schledule::class)
-                    ->findBy([
-                        'trainer_id' => $teacher->getId(),
-                        'date' => $date,
-                    ]);
-                if(!$scheledule)
-                {
-                    $newSchledule = new Schledule();
-                    $newSchledule->setTrainerId($teacher->getId());
-                    $newSchledule->setDate($date);
-                    $newSchledule->setTime1011(0);
-                    $newSchledule->setTime1112(0);
-                    $newSchledule->setTime1213(0);
-                    $newSchledule->setTime1314(0);
-                    $newSchledule->setTime1415(0);
-                    $newSchledule->setTime1516(0);
-                    $newSchledule->setTime1617(0);
-                    $newSchledule->setTime1718(0);
+        $time = $request->request->get('time');
+        $status = $request->request->get('status');
 
-                    $entityManager->persist($newSchledule);
-                    $entityManager->flush();
-                }
-            }
-        }
+        /** @var Schedule $schedule */
+        $schedule = $this->scheduleService->update($trainer, $date, $time, $status);
 
-        return $this->json([
-           'status' => 200,
-        ]);
+        return $this->json('ok');
     }
 
+    /**
+     * Schedule /ru/calendar/*
+     *
+     * @Route("/ru/calendar/trainer/date/week/", methods={"GET","POST"}, name="user_schedule_date_week")
+     */
+    public function viewSchleduleWeek(Request $request)
+    {
+        $form = json_decode($request->getContent());
+
+        $userId = $form->user_id;
+        $dateFrom = new \DateTime($form->date);
+
+        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId: true;
+
+        $schedule = $this->scheduleService
+            ->createWeek($userId, $dateFrom, $isStudent);
+
+        return $this->json($schedule);
+    }
 }

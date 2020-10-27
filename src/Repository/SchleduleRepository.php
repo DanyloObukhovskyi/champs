@@ -103,7 +103,6 @@ class SchleduleRepository extends ServiceEntityRepository
         $result = $qb->getQuery()->getResult();
 
         return $result;
-
     }
 
     /**

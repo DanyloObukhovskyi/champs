@@ -1,0 +1,99 @@
+{% extends 'templates/mails/template.html.twig' %}
+{% block body %}
+{% if isTrainer %}
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding: 0 2.5em; text-align: left;">
+                <div>
+                    <h2>
+                        Добрый день, <strong class="text-orange">{{ trainer.nickname is not null ? trainer.nickname: trainer.email }}</strong>!
+                    </h2>
+                    <table class="mt-2">
+                        <tr>
+                            <td style="color: rgba(0,0,0,.3)">
+                                На нашем сайте <a class="text-orange" href="https://champs.pro/ru/">Champs.pro</a>
+                                пользователем {{ user.name is not null ? user.name: user.email }} было совершено бронирование
+                                урока по игре <strong>{{ game }}</strong>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="mt-2">
+                        <tr>
+                            <td style="color: rgba(0,0,0,.3)">
+                                Дата проведения урока - <strong>{{ lesson.dateTimeFrom|date('Y.m.d') }}</strong>
+                                в <strong>{{ lesson.dateTimeFrom|date('H') }}:00</strong>,
+                                продолжительность {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}.
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="mt-2">
+                        <tr>
+                            <td style="color: rgba(0,0,0,.3)">
+                                Ссылка на профиль <a class="text-orange" href="{{ user.discord }}">Дискорда ученика</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="mt-2">
+                        <tr>
+                            <td style="color: rgba(0,0,0,.3)">
+                                После установления контакта c учеником в Discord вам нужно будет перейти на наш
+                                <a class="text-orange" href="https://discord.gg/rakSKuE">канал</a>,
+                                создать новый приватный голосовой чат и провести игру в нем.
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="mt-2">
+                        <tr>
+                            <td style="color: rgba(0,0,0,.3)">
+                                Если вам нужно отменить или перенести тренировку, просьба связаться с учеником в Дискорд.
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="mt-2" style="display: flex">
+                        <tr>
+                            <td>
+                                <a target="_blank" href="{{ url('lesson.cancel', {lessonId: lesson.id}) }}" class="btn-orange text-light">Отменить занятие</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+{% else %}
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding: 0 2.5em; text-align: left;">
+                <div class="text">
+                    <h2>
+                        Добрый день, <strong
+                                class="text-orange">{{ user.name is not null ? user.name: user.email }}</strong>!
+                    </h2>
+                    <p class="mt-2">
+                        Вы успешно забронировали и оплатили урок игры в <strong>{{ game }}</strong> c
+                        <strong>{{ trainer.nickname }}</strong>
+                        на сайте <a class="text-orange" href="https://champs.pro/ru/">Сhamps.pro</a>
+                        продолжительностью {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}!
+                    </p>
+                    <p class="mt-2">
+                        Ваш урок состоится <strong>{{ lesson.dateTimeFrom|date('Y.m.d') }}</strong>
+                        в <strong>{{ lesson.dateTimeFrom|date('H') }}:00</strong>.
+                    </p>
+                    <p class="mt-2">
+                        Теперь вы можете пообщаться с вашим тренером в
+                        <a class="text-orange" href="{{ trainer.discord }}">Discord</a>
+                    </p>
+                    <p class="mt-2">
+                        Если у вас возникли вопросы, пишите нам на почту - <a class="text-orange"
+                                                                              href="mailto:mailer@champs.pro">mailer@champs.pro</a>
+                    </p>
+                    <p class="mt-2">
+                        Приглашаем обсудить игру и последние новости игропрома и киберспорта в наших
+                        социальных сетях:
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+{% endif %}
+{% endblock body %}

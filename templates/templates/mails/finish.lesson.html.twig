@@ -1,0 +1,107 @@
+{% extends 'templates/mails/template.html.twig' %}
+{% block css %}
+    <style>
+        label {
+            position: relative;
+            color: #C8C8C8;
+        }
+
+        label:before {
+            content: "★";
+            display: inline-block;
+            font-size: 1.5em;
+            color: #ccc;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        input:checked ~ label:before {
+            color: #FF6D1D;
+        }
+
+        input:checked ~ {
+            color: #FF6D1D;
+        }
+
+        label:hover ~ label:before {
+            color: #ff8300;
+        }
+
+        label:hover:before {
+            color: #FF6D1D;;
+        }
+
+        .stars {
+            unicode-bidi: bidi-override;
+            direction: rtl;
+        }
+
+        .stars input {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding: 0 2.5em; text-align: left;">
+                {% if isTrainer %}
+                    <div class="text">
+                        <h2>
+                            Добрый день, <strong>{{ trainer.name }}</strong>!
+                        </h2>
+                        <p class="mt-2">
+                            Спасибо за проведенное занятие.
+                        </p>
+                        <p class="mt-2">
+                            Просьба финализировать занятие с учеником
+                            <strong>{{ user.name is not null ? user.name: user.email }}</strong>
+                            в своем личном кабинете.
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="text">
+                        <h2>
+                            Добрый день, {{ user.name is not null ? user.name: user.email }}!
+                        </h2>
+                        <p>
+                            Как прошло ваше занятие по {{ game }} с {{ trainer.name }}?
+                        </p>
+                        <p>
+                        <form target="_blank" method="GET"
+                              action="{{ url('review.lesson.post', { lessonId: lesson.id }) }}" class="row__name">
+                            <div class="rate">
+                                <div class="title">Просьба оценить работу тренера</div>
+                                <div class="stars">
+                                    {% for i in [10,9,8,7,6,5,4,3,2,1] %}
+                                        <input type="radio" name="rating" id="st{{ i }}" value="{{ i }}"/>
+                                        <label for="st{{ i }}">
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="input">
+                                <textarea name="review"
+                                          placeholder="Оставьте отзыв"
+                                          maxlength="100"
+                                          rows="10"
+                                          style="width: 80%"
+                                          class="w-80 h-50"></textarea>
+                            </div>
+                            <div class="send">
+                                <button type="submit" class="btn-orange text-light">Отправить</button>
+                            </div>
+                        </form>
+                        </p>
+                        <p class="mt-2">
+                            Приглашаем обсудить игру и последние новости игропрома и киберспорта в наших
+                            социальных сетях:
+                        </p>
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+{% endblock %}

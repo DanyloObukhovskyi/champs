@@ -1,0 +1,66 @@
+<script type="text/x-template" id="sidebar-template">
+    <nav id="sidebar">
+        <div class="custom-menu d-none d-lg-flex">
+            <button class="btn btn-orange" @click="collapse">
+            </button>
+        </div>
+        <ul class="list-unstyled components mb-5">
+            <li class="pointer" v-for="item in items" :class="{active: active === item.name}"
+                @click="active = item.name">
+                <a class="d-flex align-items-center">
+                    <img :src="item.logo" class="mr-2 w-15"/>
+                    <span v-html="item.title"></span>
+                </a>
+            </li>
+            <li class="pointer">
+                <a class="d-flex align-items-center" data-toggle="collapse" data-target="#collapseOne"
+                   aria-expanded="false" aria-controls="collapseOne">
+                    <i class="fas fa-cog"></i>&nbsp;&nbsp;Фильтры
+                </a>
+                <div class="card bg-dark">
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                            <filters @search="search" :filters="filters"></filters>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</script>
+<script>
+    Vue.component('sidebar', {
+        template: '#sidebar-template',
+        data() {
+            return {
+                active: null,
+            }
+        },
+        methods: {
+            collapse() {
+                $('#sidebar').toggleClass('active');
+            },
+            search() {
+                this.$emit('search');
+            }
+        },
+        props: [
+            'items', 'filters'
+        ],
+        watch: {
+            active() {
+                header.game = this.active
+                this.$parent.trainer = null;
+            }
+        },
+        created() {
+            this.active = this.$parent.sidebarActiveItem;
+
+            $('.js-fullheight').css('height', $(window).height());
+
+            $(window).resize(function () {
+                $('.js-fullheight').css('height', $(window).height());
+            });
+        },
+    })
+</script>

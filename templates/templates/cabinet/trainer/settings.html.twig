@@ -2,297 +2,400 @@
 {% block title %}Настройки{% endblock %}
 {% block router %}cabinet{% endblock %}
 {% block css %}
-  {% for style in styles %}
-    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
-  {% endfor %}
+    {% for style in styles %}
+        <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}"/>
+    {% endfor %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/radio.css"/>
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
 {% endblock %}
 {% block body %}
-<div class="cabinet" id="cabinet">
-  <div class="container">
-    <div class="header">
-      <div class="lft">
-        <a href="{{ path('trainer_index') }}">РАСПИСАНИЕ</a>
-        <a href="{{ path('timetable_index') }}">КАЛЕНДАРЬ</a>
-        <a href="{{ path('purse_index') }}">КОШЕЛЕК</a>
-        <a class="active">НАСТРОЙКИ</a>
-      </div>
-      <div class="rgt">
-        <a href="{{ path('app_logout') }}">Выйти</a>
-      </div>
-    </div>
-    <div class="cont">
-      <div class="lft">
-        <div class="title">Общие настройки</div>
-        <div class="inputs">
-          <div class="input">
-            <div>Имя<span>*</span></div>
-            <input type="text" v-model="required.name" />
-          </div>
-          <div class="input">
-            <div>Фамилия</div>
-            <input type="text" v-model="required.family" />
-          </div>
-          <div class="input">
-            <div>Никнейм<span>*</span></div>
-            <input type="text" v-model="required.nickname" />
-          </div>
-          <div class="input">
-            <div>Емейл<span>*</span></div>
-            <input type="text" v-model="required.email" />
-          </div>
-          <div class="input">
-            <div>Ваша основная игра<span>*</span></div>
-            <select v-model="required.game">
-              <option value="cs">CS:GO</option>
-              <option value="dota">DOTA</option>
-              <option value="lol">LOL</option>
-            </select>
-          </div>
-          <div class="input">
-            <div>Ранг/звание/MMR<span>*</span><span class="pos"><label v-text="required.rank.length"></label>/20 символов</span></div>
-            <input type="text" v-model="required.rank" maxlength="20" />
-          </div>
-        </div>
-        <div class="b-r top" style="display: none">
-          <div class="button discord">
-            <img src="/images/discord.svg" alt="discord" />Подключить Discord
-          </div>
-        </div>
-        <div class="b-r" style="display: none">
-          <div class="button steam">
-            <img src="/images/steam.svg" alt="steam" />Подключить Steam
-          </div>
-        </div>
-        <div class="title t">Изменение пароля</div>
-        <div class="inputs">
-          <div class="input">
-            <div>Изменить пароль</div>
-            <input type="password" v-model="password" />
-          </div>
-          <div class="input">
-            <div>Пароль повторно</div>
-            <input type="password" v-model="password_confirm" />
-          </div>
-        </div>
-        <div class="title t">Фото</div>
-        <div class="photos">
-          <div class="image">
-            <img :src="photoPath" />
-            <div class="blocked" v-if="blocked">
-              <img src="/images/Eclipse-1s-200px.gif" />
+    <div class="cabinet" id="cabinet">
+        <div class="container">
+            <div class="header">
+                <div class="lft">
+                    <a href="{{ path('trainer_index') }}">РАСПИСАНИЕ</a>
+                    <a href="{{ path('timetable_index') }}">КАЛЕНДАРЬ</a>
+                    <a href="{{ path('purse_index') }}">КОШЕЛЕК</a>
+                    <a class="active">НАСТРОЙКИ</a>
+                </div>
+                <div class="rgt">
+                    <a href="{{ path('app_logout') }}">Выйти</a>
+                </div>
             </div>
-          </div>
-          <div class="file">
-            <div class="blocked" v-if="blocked"></div>
-            <input type="file" @change="setPhoto($event)" accept=".jpg,.png" />
-            <div class="btn-file">Выбрать файл</div>
-          </div>
+            <div class="cont">
+                <div class="lft">
+                    <div class="title">Общие настройки</div>
+                    <div class="inputs">
+                        <div class="input">
+                            <div>Имя<span>*</span></div>
+                            <input type="text" v-model="required.name"/>
+                        </div>
+                        <div class="input">
+                            <div>Фамилия</div>
+                            <input type="text" v-model="required.family"/>
+                        </div>
+                        <div class="input">
+                            <div>Никнейм<span>*</span></div>
+                            <input type="text" v-model="required.nickname"/>
+                        </div>
+                        <div class="input">
+                            <div>Емейл<span>*</span></div>
+                            <input type="text" v-model="required.email"/>
+                        </div>
+                        <div class="input">
+                            <div>Ваша основная игра<span>*</span></div>
+                            <select v-model="required.game">
+                                <option value="cs">CS:GO</option>
+                                <option value="dota">DOTA</option>
+                                <option value="lol">LOL</option>
+                            </select>
+                        </div>
+                        <div class="input">
+                            <div>Ранг/звание/MMR<span>*</span><span class="pos"><label
+                                            v-text="required.rank.length"></label>/20 символов</span></div>
+                            <input type="text" v-model="required.rank" maxlength="20"/>
+                        </div>
+                    </div>
+                    <div class="b-r top" style="display: none">
+                        <div class="button discord">
+                            <img src="/images/discord.svg" alt="discord"/>Подключить Discord
+                        </div>
+                    </div>
+                    <div class="b-r" style="display: none">
+                        <div class="button steam">
+                            <img src="/images/steam.svg" alt="steam"/>Подключить Steam
+                        </div>
+                    </div>
+                    <div class="title t">Изменение пароля</div>
+                    <div class="inputs">
+                        <div class="input">
+                            <div>Изменить пароль</div>
+                            <input type="password" v-model="password"/>
+                        </div>
+                        <div class="input">
+                            <div>Пароль повторно</div>
+                            <input type="password" v-model="password_confirm"/>
+                        </div>
+                    </div>
+                    <div class="title t">Фото</div>
+                    <div class="photos">
+                        <div class="image">
+                            <img :src="photoPath"/>
+                            <div class="blocked" v-if="blocked">
+                                <img src="/images/Eclipse-1s-200px.gif"/>
+                            </div>
+                        </div>
+                        <div class="file">
+                            <div class="blocked" v-if="blocked"></div>
+                            <input type="file" @change="setPhoto($event)" accept=".jpg,.png"/>
+                            <div class="btn-file">Выбрать файл</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rgt">
+                    <div class="title">Настройки тренера</div>
+                    <div class="inputs">
+                        <div style="font-size: 0.85vw;">Выбор типа оплаты<span class="text-danger">*</span></div>
+                        <div class="radio container p-0">
+                            <input type="radio" value="true" v-model="required.isLessonCost"/>
+                            <label class="ml-0" @click="required.isLessonCost = true">
+                                <svg class="check" viewbox="0 0 40 40">
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="100%">
+                                            <stop offset="0%" stop-color="#FF6D1D"></stop>
+                                            <stop offset="100%" stop-color="#FF6D1D"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle id="border" r="18px" cx="20px" cy="20px"></circle>
+                                    <circle id="dot" r="8px" cx="20px" cy="20px"></circle>
+                                </svg>За урок (3 часа)
+                            </label>
+                            <input type="radio" value="false" v-model="required.isLessonCost"/>
+                            <label class="ml-0" @click="required.isLessonCost = false">
+                                <svg class="check" viewbox="0 0 40 40">
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="100%">
+                                            <stop offset="0%" stop-color="#FF6D1D"></stop>
+                                            <stop offset="100%" stop-color="#FF6D1D"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle id="border" r="18px" cx="20px" cy="20px"></circle>
+                                    <circle id="dot" r="8px" cx="20px" cy="20px"></circle>
+                                </svg>За один час
+                            </label>
+                        </div>
+                    </div>
+                    <div class="inputs">
+                        <div class="input">
+                            <div>Стоимость обучения<span>*</span></div>
+                            <input type="number" v-model="required.cost"/>
+                        </div>
+                    </div>
+                    <div class="input mt-3">
+                        <div style="font-size: 0.85vw;">Часовой пояс</div>
+                        <vue-multiselect
+                                v-model="required.timezone"
+                                :options="timezones"
+                                group-values="zones"
+                                group-label="gmt"
+                                :group-select="true"
+                                :searchable="true"
+                                :close-on-select="true"
+                                :show-labels="false">
+                        </vue-multiselect>
+                    </div>
+                    <div class="full-input">
+                        <div>Ссылка discord</div>
+                        <input type="text" v-model="discord"/>
+                    </div>
+                    <div class="full-input">
+                        <div>Ссылка Вконтакте</div>
+                        <input type="text" v-model="vk"/>
+                    </div>
+                    <div class="full-input">
+                        <div>Видео о вас/методике/достижениях (Youtube)<span>*</span></div>
+                        <div class="d-flex mb-1" v-for="(video, index) in this.videos">
+                            <input type="text" class="mt-0" disabled v-model="video"/>
+                            <a class="btn-orange text-light pointer align-items-center d-flex ml-1"
+                               @click="deleteVideo(video)">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                        <div v-if="videos.length < 10">
+                            <div class="d-flex">
+                                <input type="text" class="mt-0" v-model="videoLink"/>
+                                <a class="btn-orange text-light pointer align-items-center d-flex ml-1" @click="addVideo">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                            <div>
+                                <smal class="text-gray">
+                                    Ссылка на видео должны быть с Youtube! В формате
+                                    <i>https://www.youtube.com/qwda2fg</i>
+                                </smal>
+                                <span>*</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="full-input">
+                        <div>Стрим игры (Twitch)</div>
+                        <input type="text" v-model="twitch"/>
+                    </div>
+                    <div class="full-input small">
+                        <div>Выбор потока трасляции</div>
+                        <select v-model="required.streamtype">
+                            <option value="default">По умолчанию</option>
+                            <option value="0">Видео (Youtube)</option>
+                            <option value="1">Стрим (Twitch)</option>
+                        </select>
+                    </div>
+                    <div class="full-input sm">
+                        <div>Главное достижение (1-2 самых главных тезиса: опыт, карьера, достижения)<span>*</span><span
+                                    class="pos"><label v-text="required.about.length"></label>/74 символов</span></div>
+                        <textarea v-model="required.about" maxlength="74"></textarea>
+                    </div>
+                    <div class="full-input sm">
+                        <div>Короткое описание услуги (Например: Обучение CS:GO...)<span>*</span><span
+                                    class="pos"><label v-text="required.shorttitle.length"></label>/160 символов</span>
+                        </div>
+                        <textarea v-model="required.shorttitle" maxlength="160"></textarea>
+                    </div>
+                    <div class="full-input">
+                        <div>Методика обучения (подробная информация про услуги)<span>*</span><span class="pos"><label
+                                        v-text="required.method.length"></label>/1400 символов</span></div>
+                        <textarea v-model="required.method" maxlength="1400"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="save">
+                <div class="result" v-if="start">
+                    <span v-if="!error && !success">Сохранение</span>
+                    <span class="green" v-if="success && error === false">Сохранено</span>
+                    <span class="red" v-if="error && success === false">Произошла ошибка</span>
+                </div>
+                <div class="button" @click="save" :class="[send ? '' : 'disabled']">Сохранить изменения</div>
+            </div>
         </div>
-      </div>
-      <div class="rgt">
-        <div class="title">Настройки тренера</div>
-        <div class="inputs">
-          <div class="input">
-            <div>Стоимость обучения за 1 час<span>*</span></div>
-            <input type="number" v-model="required.cost" />
-          </div>
-        </div>
-        <div class="full-input">
-          <div>Ссылка discord</div>
-          <input type="text" v-model="discord" />
-        </div>
-        <div class="full-input">
-          <div>Видео о вас/методике/достижениях (Youtube)<span>*</span></div>
-          <input type="text" v-model="required.videolink" />
-        </div>
-        <div class="full-input">
-          <div>Стрим игры (Twitch)</div>
-          <input type="text" v-model="twitch" />
-        </div>
-        <div class="full-input small">
-          <div>Выбор потока трасляции<span>*</span></div>
-          <select v-model="required.streamtype">
-            <option value="0" default>Видео (Youtube)</option>
-            <option value="1">Стрим (Twitch)</option>
-          </select>
-        </div>
-        <div class="full-input sm">
-          <div>Главное достижение (1-2 самых главных тезиса: опыт, карьера, достижения)<span>*</span><span class="pos"><label v-text="required.about.length"></label>/74 символов</span></div>
-          <textarea v-model="required.about" maxlength="74"></textarea>
-        </div>
-        <div class="full-input sm">
-          <div>Короткое описание услуги (Например: Обучение CS:GO...)<span>*</span><span class="pos"><label v-text="required.shorttitle.length"></label>/160 символов</span></div>
-          <textarea v-model="required.shorttitle" maxlength="160"></textarea>
-        </div>
-        <div class="full-input">
-          <div>Методика обучения (подробная информация про услуги)<span>*</span><span class="pos"><label v-text="required.method.length"></label>/1400 символов</span></div>
-          <textarea v-model="required.method" maxlength="1400"></textarea>
-        </div>
-      </div>
     </div>
-    <div class="save">
-      <div class="result" v-if="start">
-        <span v-if="!error && !success">Сохранение</span>
-        <span class="green" v-if="success && error === false">Сохранено</span>
-        <span class="red" v-if="error && success === false">Произошла ошибка</span>
-      </div>
-      <div class="button" @click="save" :class="[send ? '' : 'disabled']">Сохранить изменения</div>
-    </div>
-  </div>
-</div>
-<script>
-  const cabinet = new Vue({
-    el: '#cabinet',
-    methods: {
-      save() {
-        if (this.send) {
-          const form = new FormData();
-          form.append('id', {{app.user.id}});
-          form.append('name', this.required.name);
-          form.append('email', this.required.email);
-          form.append('nickname', this.required.nickname);
-          form.append('family', this.required.family);
-          form.append('game', this.required.game);
-          form.append('rank', this.required.rank);
-          form.append('cost', this.required.cost);
-          form.append('about', this.required.about);
-          form.append('shorttitle', this.required.shorttitle);
-          form.append('method', this.required.method);
-          form.append('videolink', this.required.videolink);
-          form.append('channellink', this.twitch);
-          form.append('discord', this.discord);
-          form.append('streamtype', Number(this.required.streamtype));
-          form.append('password', this.password);
-          form.append('password_repeat', this.password_confirm);
-          form.append('photo', this.photo);
-          this.start = true;
-          axios.post('/ru/user/set-info/', form)
-          .then((res) => {
-            this.success = true;
-            if (res.data.photo) {
-              this.photo = '';
-              this.photoPath = '/images/temp/matches/' + res.data.photo;
-            }
-          })
-          .catch(() => {
-            this.error = true;
-          });
-/*
-          this.start = true;
+{% endblock %}
+{% block js %}
+    <script>
+        Vue.component('vue-multiselect', window.VueMultiselect.default)
 
-          axios.get(`/ru/user/set-info/{
-            "id":"{{app.user.id}}",
-            "name":"${this.required.name}",
-            "email":"${this.required.email}",
-            "nickname":"${this.required.nickname}",
-            "family":"${this.required.family}",
-            "game":"${this.required.game}",
-            "rank":"${this.required.rank}",
-            "cost":"${this.required.cost}",
-            "about":"${this.required.about}",
-            "shorttitle":"${this.required.shorttitle}",
-            "method":"${this.required.method}",
-            "videolink":"${this.required.videolink}",
-            "password":"${this.password}",
-            "password_repeat":"${this.password_confirm}"}`)
-          .then((res) => {
-            this.success = true;
-          })
-          .catch(() => {
-            this.error = true;
-          });
-          */
-        }
-      },
-      setPhoto(event) {
-        const th = this;
-        const file = event.target.files[0]
-        if (file.type) {
-          const type = file.type.split('/')
-          if (type[1]) {
-            th.blocked = true;
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-              th.blocked = false;
-              th.photo = reader.result;
-            };
-          }
-        }
-      }
-    },
-    watch: {
-      required: {
-        deep: true,
-        handler() {
-          this.send = true;
-          this.start = false;
-          this.success = false;
-          this.error = false;
-          console.log(1)
-          Object.keys(this.required).forEach((key) => {
-            if (this.required[key].length === 0) {
-              this.send = false;
+        const cabinet = new Vue({
+            el: '#cabinet',
+            methods: {
+                save() {
+                    if (this.send) {
+                        const form = new FormData();
+
+                        for (let key in this.required) {
+                            if (key === 'streamtype') {
+                                if (this.required[key] !== 'default') {
+                                    form.append(key, Number(this.required[key]));
+                                }
+                            } else {
+                                form.append(key, this.required[key]);
+                            }
+                        }
+                        form.append('id', {{ app.user.id }});
+                        form.append('channellink', this.twitch);
+                        form.append('discord', this.discord);
+                        form.append('password', this.password);
+                        form.append('password_repeat', this.password_confirm);
+                        form.append('photo', this.photo);
+                        form.append('vk', this.vk);
+
+                        this.start = true;
+                        axios.post('/ru/user/set-info/', form)
+                            .then((res) => {
+                                this.success = true;
+                                if (res.data.photo) {
+                                    this.photo = '';
+                                    this.photoPath = '/images/temp/matches/' + res.data.photo;
+                                }
+                            })
+                            .catch(() => {
+                                this.error = true;
+                            });
+                    }
+                },
+                setPhoto(event) {
+                    const th = this;
+                    const file = event.target.files[0]
+                    if (file.type) {
+                        const type = file.type.split('/')
+                        if (type[1]) {
+                            th.blocked = true;
+                            const reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = function () {
+                                th.blocked = false;
+                                th.photo = reader.result;
+                            };
+                        }
+                    }
+                },
+                addVideo() {
+                    axios.post('{{ url('add_trainer_video', {id: app.user.id, action: 'add'}) }}', {
+                        video: this.videoLink
+                    }).then(({data}) => {
+                        this.videos = data;
+                    }).catch(({response}) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: response.data.video,
+                        })
+                    })
+                    this.videoLink = '';
+                },
+                deleteVideo(video) {
+                    axios.post('{{ url('add_trainer_video', {id: app.user.id, action: 'delete'}) }}', {
+                        video
+                    }).then(({data}) => {
+                        this.videos = data;
+                    })
+                },
+                getVideos() {
+                    axios.post('{{ url('add_trainer_video', {id: app.user.id, action: 'all'}) }}')
+                        .then(({data}) => {
+                            this.videos = data;
+                        })
+                }
+            },
+            watch: {
+                required: {
+                    deep: true,
+                    handler() {
+                        this.send = true;
+                        this.start = false;
+                        this.success = false;
+                        this.error = false;
+                        Object.keys(this.required).forEach((key) => {
+                            if (this.required[key] === null || this.required[key].length === 0) {
+                                if (key !== 'streamtype') {
+                                    this.send = false;
+                                }
+                            }
+                        })
+                    }
+                }
+            },
+            data: function () {
+                return {
+                    timezones: [],
+                    success: false,
+                    error: false,
+                    start: false,
+                    send: true,
+                    required: {
+                        name: '{{ app.user.name }}',
+                        family: '{{ app.user.family }}',
+                        nickname: '{{ app.user.nickname }}',
+                        email: '{{ app.user.email }}',
+                        rank: '{{ app.user.rank }}',
+                        game: '{{ app.user.game }}',
+                        cost: '',
+                        about: '',
+                        shorttitle: '',
+                        method: '',
+                        streamtype: 'default',
+                        timezone: '',
+                        isLessonCost: null,
+                    },
+                    vk: '',
+                    videos: [],
+                    videoLink: '',
+                    password: '',
+                    password_confirm: '',
+                    twitch: '',
+                    discord: '',
+                    blocked: false,
+                    photo: '',
+                    photoPath: '{{ app.user.photo ? '/images/temp/matches/' : '/uploads/images/' }}{{ app.user.photo ? app.user.photo : '830f223afcf85dd280790e27079814b4.jpg' }}',
+                }
+            },
+            mounted() {
+                const th = this;
+                axios.get('/ru/user/info/{{ app.user.id }}')
+                    .then((res) => {
+                        this.required.name = res.data.name ? res.data.name : '';
+                        this.required.family = res.data.family ? res.data.family : '';
+                        this.required.nickname = res.data.nickname ? res.data.nickname : '';
+
+                        this.required.email = res.data.email ? res.data.email : '';
+                        this.required.rank = res.data.rank ? res.data.rank : '';
+                        this.required.game = res.data.game ? res.data.game : '';
+
+                        this.required.cost = res.data.trainer.costWithNoPercentage ? res.data.trainer.costWithNoPercentage : '';
+                        this.required.about = res.data.trainer.about ? res.data.trainer.about : '';
+                        this.required.shorttitle = res.data.trainer.shorttitle ? res.data.trainer.shorttitle : '';
+
+                        this.required.method = res.data.trainer.method ? res.data.trainer.method : '';
+                        this.twitch = res.data.trainer.twitch ? res.data.trainer.twitch : '';
+                        this.required.streamtype = res.data.trainer.streamType !== null ? res.data.trainer.streamType : 'default';
+
+                        this.discord = res.data.discord ? res.data.discord : '';
+                        this.required.timezone = res.data.trainer.timeZone ? res.data.trainer.timeZone : 'Europe/Moscow';
+                        this.vk = res.data.vk ? res.data.vk : '';
+
+                        this.required.isLessonCost = res.data.trainer.isLessonCost;
+
+                        Object.keys(th.required).forEach((key) => {
+                            if (String(th.required[key]).length === 0) {
+                                th.send = false;
+                            }
+                        })
+
+                        axios.post('{{ path('helper.timezones') }}')
+                            .then(({data}) => {
+                                this.timezones = data;
+                            })
+                    })
+
+                this.getVideos()
             }
-          })
-        }
-      }
-    },
-    data: function () {
-      return {
-        success: false,
-        error: false,
-        start: false,
-        send: true,
-        required: {
-          name: '{{ app.user.name }}',
-          family: '{{ app.user.family }}',
-          nickname: '{{ app.user.nickname }}',
-          email: '{{ app.user.email }}',
-          rank: '{{ app.user.rank }}',
-          game: '{{ app.user.game }}',
-          cost: '',
-          about: '',
-          shorttitle: '',
-          method: '',
-          streamtype: 1,
-          videolink: '',
-        },
-        password: '',
-        password_confirm: '',
-        twitch: '',
-        discord: '',
-        blocked: false,
-        photo: '',
-        photoPath: '{{app.user.photo ? '/images/temp/matches/' : '/uploads/images/'}}{{app.user.photo ? app.user.photo : '830f223afcf85dd280790e27079814b4.jpg'}}',
-      }
-    },
-    mounted() {
-      const th = this;
-      axios.get('/ru/user/info/{{app.user.id}}')
-      .then((res) => {
-        console.log(res)
-        th.required.name = res.data.name ? res.data.name : '';
-        th.required.family = res.data.family ? res.data.family : '';
-        th.required.nickname = res.data.nickname ? res.data.nickname : '';
-        th.required.email = res.data.email ? res.data.email : '';
-        th.required.rank = res.data.rank ? res.data.rank : '';
-        th.required.game = res.data.game ? res.data.game : '';
-        th.required.cost = res.data.trainer[0].cost ? res.data.trainer[0].cost : '';
-        th.required.about = res.data.trainer[0].about ? res.data.trainer[0].about : '';
-        th.required.shorttitle = res.data.trainer[0].shorttitle ? res.data.trainer[0].shorttitle : '';
-        th.required.method = res.data.trainer[0].method ? res.data.trainer[0].method : '';
-        th.required.videolink = res.data.trainer[0].videolink ? res.data.trainer[0].videolink : '';
-        th.twitch = res.data.trainer[0].twitch ? res.data.trainer[0].twitch : '';
-        th.required.streamtype = res.data.trainer[0].streamType ? res.data.trainer[0].streamType : '';
-        th.discord = res.data.discord ? res.data.discord : '';
-        Object.keys(th.required).forEach((key) => {
-          if (String(th.required[key]).length === 0) {
-            th.send = false;
-          }
-        })
-      })
-    }
-  });
-</script>
+        });
+    </script>
 {% endblock %}

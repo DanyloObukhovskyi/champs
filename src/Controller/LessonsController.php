@@ -3,20 +3,57 @@
 namespace App\Controller;
 
 use App\Entity\Lessons;
-use App\Entity\Payment;
 use App\Entity\PurseHistory;
+use App\Entity\Review;
+use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
-use DateTime;
+use App\Message\EndLessonMail;
+use App\Message\PaymentLessonMail;
+use App\Service\LessonService;
+use App\Service\LessonTimeService;
+use App\Service\ScheduleService;
+use App\Traits\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Swift_Mailer;
 
+/**
+ * Class LessonsController
+ * @package App\Controller
+ */
 class LessonsController extends AbstractController
 {
+    use EntityManager;
+
+    /**
+     * @var LessonService
+     */
+    public $lessonsService;
+
+    /**
+     * @var ScheduleService
+     */
+    public $scheduleService;
+
+    /**
+     * @var LessonTimeService
+     */
+    public $lessonTimeService;
+
+    /**
+     * LessonsController constructor.
+     */
+    public function __construct()
+    {
+        $this->lessonsService = new LessonService($this->getEntityManager());
+        $this->scheduleService = new ScheduleService($this->getEntityManager());
+        $this->lessonTimeService = new LessonTimeService($this->getEntityManager());
+    }
+
     /**
      * @Route("/lessons", name="lessons")
      */
@@ -70,49 +107,19 @@ class LessonsController extends AbstractController
      */
     public function viewTrainerLessonsWithoutDate($id)
     {
-
         $lessons = $this->getDoctrine()
             ->getRepository(Lessons::class)
             ->findByTrainerId($id);
 
-        $result = [];
+        $lessons = $this->lessonsService->lessonsDecoratorForCabinet($lessons);
+
+        $lessonsOrderedByDate = [];
         foreach ($lessons as $lesson)
         {
-            /** @var Lessons $lesson */
-            $result[] = [
-                'id' => $lesson->getId(),
-                'datetime' => $lesson->getDatetime(),
-                'cost' => $lesson->getCost(),
-                'student' => [
-                    'id' => $lesson->getStudentId()->getId(),
-                    'email' => $lesson->getStudentId()->getEmail(),
-                    'istrainer' => $lesson->getStudentId()->getIsTrainer(),
-                    'nickname' => $lesson->getStudentId()->getNickname(),
-                    'name' => $lesson->getStudentId()->getName(),
-                    'game' => $lesson->getStudentId()->getGame(),
-                    'rank' => $lesson->getStudentId()->getRank(),
-                    'family' => $lesson->getStudentId()->getFamily(),
-                    'discord' => $lesson->getStudentId()->getDiscord(),
-                ],
-                'trainer' => [
-                    'id' => $lesson->getTrainerId()->getId(),
-                    'email' => $lesson->getTrainerId()->getEmail(),
-                    'istrainer' => $lesson->getTrainerId()->getIsTrainer(),
-                    'nickname' => $lesson->getTrainerId()->getNickname(),
-                    'name' => $lesson->getTrainerId()->getName(),
-                    'game' => $lesson->getTrainerId()->getGame(),
-                    'rank' => $lesson->getTrainerId()->getRank(),
-                    'family' => $lesson->getTrainerId()->getFamily(),
-                    'discord' => $lesson->getTrainerId()->getDiscord(),
-                ],
-                'studentStatus' => $lesson->getStudentStatus(),
-                'trainerStatus' => $lesson->getTrainerStatus(),
-                'status' => $lesson->getStatus(),
-                'rate' => $lesson->getReview() === null ? null : $lesson->getReview()->getRate()
-            ];
+            $date = $lesson['dateTimeFrom']->format('Y-m-d');
+            $lessonsOrderedByDate[$date][] = $lesson;
         }
-
-        return $this->json($result);
+        return $this->json($lessonsOrderedByDate);
     }
 
     /**
@@ -144,54 +151,34 @@ class LessonsController extends AbstractController
             ->getRepository(Lessons::class)
             ->findByStudentId($id);
 
-        $result =[];
+        $lessonsWithTrainerStatusNotConfirm = [];
+        /** @var Lessons $lesson */
         foreach ($lessons as $lesson)
         {
-            /** @var Lessons $lesson */
-            $result[] = [
-                'id' => $lesson->getId(),
-                'datetime' => $lesson->getDatetime(),
-                'cost' => $lesson->getCost(),
-                'student_id' => [
-                    'id' => $lesson->getStudentId()->getId(),
-                    'email' => $lesson->getStudentId()->getEmail(),
-                    'istrainer' => $lesson->getStudentId()->getIsTrainer(),
-                    'nickname' => $lesson->getStudentId()->getNickname(),
-                    'photo' => $lesson->getStudentId()->getPhoto(),
-                    'name' => $lesson->getStudentId()->getName(),
-                    'family' => $lesson->getStudentId()->getFamily(),
-                    'game' => $lesson->getStudentId()->getGame(),
-                    'rank' => $lesson->getStudentId()->getRank(),
-                    'discord' => $lesson->getStudentId()->getDiscord(),
-                ],
-                'trainer_id' => [
-                    'id' => $lesson->getTrainerId()->getId(),
-                    'email' => $lesson->getTrainerId()->getEmail(),
-                    'istrainer' => $lesson->getTrainerId()->getIsTrainer(),
-                    'nickname' => $lesson->getTrainerId()->getNickname(),
-                    'photo' => $lesson->getTrainerId()->getPhoto(),
-                    'name' => $lesson->getTrainerId()->getName(),
-                    'family' => $lesson->getTrainerId()->getFamily(),
-                    'game' => $lesson->getTrainerId()->getGame(),
-                    'rank' => $lesson->getTrainerId()->getRank(),
-                    'discord' => $lesson->getTrainerId()->getDiscord(),
-                ],
-                'student_status' => $lesson->getStudentStatus(),
-                'trainer_status' => $lesson->getTrainerStatus(),
-                'status' => $lesson->getStatus(),
-                'reviewIsset' => $lesson->getReview() === null ? false : true,
-            ];
+            if (!$lesson->getTrainerStatus() or !$lesson->getStudentStatus()) {
+                $lessonsWithTrainerStatusNotConfirm[] = $lesson;
+            }
+        }
+        $lessons = $this->lessonsService
+            ->lessonsDecoratorForCabinet($lessonsWithTrainerStatusNotConfirm);
+
+        $lessonsOrderedByDate = [];
+
+        foreach ($lessons as $lesson)
+        {
+            $date = $lesson['dateTimeFrom']->format('Y-m-d');
+            $lessonsOrderedByDate[$date][] = $lesson;
         }
 
-
-
-        return $this->json($result);
+        return $this->json($lessonsOrderedByDate);
     }
 
     /**
      * Lessons /ru/lessons/*
      *
      * @Route("/ru/lessons/count/{form}", name="student_trainer_lessons_count")
+     * @param $form
+     * @return JsonResponse
      */
     public function getLessonsCountByTrainer($form)
     {
@@ -209,6 +196,7 @@ class LessonsController extends AbstractController
         $count = [];
         $count['trainer'] = $trainerLessons;
         $count['together'] = $lessons;
+
         return $this->json($count);
     }
 
@@ -217,9 +205,9 @@ class LessonsController extends AbstractController
      *
      * @Route("/ru/lessons/set-status-ended/{form}", name="student_trainer_lesson_end")
      */
-    public function setLessonEnd($form)
+    public function setLessonEnd($form, Swift_Mailer $mailer)
     {
-        $form = json_decode($form);
+        $form = json_decode($form, false);
 
         $lesson_id = $form->lesson_id;
         $entityManager = $this->getDoctrine()->getManager();
@@ -232,35 +220,37 @@ class LessonsController extends AbstractController
             );
         }
 
-        $user_id = $form->user_id;
-        if(($lesson->getTrainerId()->getId() == $user_id)||($lesson->getStudentId()->getId() == $user_id))
+        $userId = (int)$form->user_id;
+
+        if(($lesson->getTrainer()->getId() === $userId) || ($lesson->getStudent()->getId() === $userId))
         {
-            if($form->istrainer == "true"){
+            if($form->istrainer === true){
+                $this->dispatchMessage(new EndLessonMail($mailer, $lesson, true));
+
                 $lesson->setTrainerStatus(Lessons::STATUS_ENDED);
-            }else{
+
+            } else {
                 $lesson->setStudentStatus(Lessons::STATUS_ENDED);
             }
 
-            if(($lesson->getTrainerStatus())&&($lesson->getStudentStatus()))
+            if(($lesson->getTrainerStatus()) && ($lesson->getStudentStatus()))
             {
                 $lesson->setStatus(Lessons::STATUS_ENDED);
                 /** @var User $user */
                 $user = $this->getDoctrine()
                     ->getRepository(User::class)
-                    ->find(intval($user_id));
+                    ->find(intval($userId));
+
                 /** @var PurseHistory $purse */
                 $purse = new PurseHistory();
                 $purse->setUser($user);
                 $purse->setOperation($lesson->getCost()/2);
-                $purse->setDatetime($lesson->getDatetime());
-
-                $entityManager->persist($purse);
-                $entityManager->flush();
+                $purse->setDatetime($lesson->getDateTimeFrom());
 
                 $user->setPurse($user->getPurse() + $purse->getOperation());
 
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $entityManager->persist($purse, $user, $lesson);
+
             }
         }else{
             return new JsonResponse('У вас нет прав на закрытие тренировки');
@@ -269,132 +259,112 @@ class LessonsController extends AbstractController
         $entityManager->persist($lesson);
         $entityManager->flush();
 
-        $response = [
-            'id' => $lesson->getId(),
-            'datetime' => $lesson->getDatetime(),
-            'cost' => $lesson->getCost(),
-            'student_id' => [
-                'id' => $lesson->getStudentId()->getId(),
-                'email' => $lesson->getStudentId()->getEmail(),
-                'istrainer' => $lesson->getStudentId()->getIsTrainer(),
-                'nickname' => $lesson->getStudentId()->getNickname(),
-                'photo' => $lesson->getStudentId()->getPhoto(),
-                'name' => $lesson->getStudentId()->getName(),
-                'family' => $lesson->getStudentId()->getFamily(),
-                'game' => $lesson->getStudentId()->getGame(),
-                'rank' => $lesson->getStudentId()->getRank(),
-                'discord' => $lesson->getStudentId()->getDiscord(),
-            ],
-            'trainer_id' => [
-                'id' => $lesson->getTrainerId()->getId(),
-                'email' => $lesson->getTrainerId()->getEmail(),
-                'istrainer' => $lesson->getTrainerId()->getIsTrainer(),
-                'nickname' => $lesson->getTrainerId()->getNickname(),
-                'photo' => $lesson->getTrainerId()->getPhoto(),
-                'name' => $lesson->getTrainerId()->getName(),
-                'family' => $lesson->getTrainerId()->getFamily(),
-                'game' => $lesson->getTrainerId()->getGame(),
-                'rank' => $lesson->getTrainerId()->getRank(),
-                'discord' => $lesson->getTrainerId()->getDiscord(),
-            ],
-            'student_status' => $lesson->getStudentStatus(),
-            'trainer_status' => $lesson->getTrainerStatus(),
-            'status' => $lesson->getStatus()
-        ];
-
-        return $this->json($response);
+        return $this->json($this->lessonsService->lessonDecorator($lesson));
     }
 
     /**
      * Lessons /ru/lessons/*
      *
-     * @Route("/ru/lessons/create/{form}", methods={"GET","POST"}, name="create_student_trainer_lesson")
+     * @Route("/ru/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
      */
-    public function createNewLesson($form)
+    public function createNewLesson(Request $request, Swift_Mailer $mailer)
     {
-        $form = json_decode($form);
         $entityManager = $this->getDoctrine()->getManager();
+        $data = json_decode($request->getContent(), false);
 
-        $lesson = new Lessons();
+        /** @var User $trainer */
+        $trainer = $entityManager->getRepository(User::class)->find($data->trainer_id);
 
-        $date = DateTime::createFromFormat('j.n.Y H:i:s',$form->date . ' ' . $form->time . ':00');
-
-        $date->format('Y-m-d H:i:s');
-        /** @var Schledule $schledule */
-        $schledule = $entityManager->getRepository(Schledule::class)->findOneBy([
-            'trainer_id' => $form->trainer_id,
-            'date' => $date,
+        /** @var Teachers $trainerEntity */
+        $trainerEntity = $entityManager->getRepository(Teachers::class)->findOneBy([
+            'userid' => $trainer->getId()
         ]);
-        switch ($form->time){
-            case "10:00":
-                $schledule->setTime1011(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "11:00":
-                $schledule->setTime1112(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "12:00":
-                $schledule->setTime1213(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "13:00":
-                $schledule->setTime1314(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "14:00":
-                $schledule->setTime1415(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "15:00":
-                $schledule->setTime1516(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "16:00":
-                $schledule->setTime1617(Schledule::TIME_STATUS_RESERVED);
-                break;
-            case "17:00":
-                $schledule->setTime1718(Schledule::TIME_STATUS_RESERVED);
-                break;
+
+        if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS !== 0)
+        {
+            return $this->json(['message' => 'Неверные данные!']);
         }
 
-        /** @var Lessons $oldLesson */
-        $oldLesson = $entityManager->getRepository(Lessons::class)->findBy([
-            'trainer_id' => $form->trainer_id,
-            'datetime' => $date,
-            'student_id' => $form->user_id,
-        ]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $lessons = $data->lessons ?? [];
 
-        $oldLesson = $oldLesson[0] ?? null;
+        $lessons = $this->lessonsService
+            ->decorationLessonsForPayed($lessons);
 
-        if(!empty($oldLesson)){
-            $payed = $entityManager->getRepository(Payment::class)->findBy([
-                'lesson_id' => $oldLesson->getId(),
-                'payment_status' => '1'
-            ]);
+        [$lessonIds] = $this->lessonsService->createLessons($lessons, $trainer, $user);
 
-            if (!empty($payed))
+        $lessons = $this->lessonsService->getLessonsByIds($lessonIds);
+
+        foreach ($lessons as $lesson)
+        {
+            // Dispatch payment mail
+            $this->dispatchMessage(new PaymentLessonMail($mailer, $lesson));
+        }
+        return $this->json(['ids' => $lessonIds]);
+    }
+
+    /**
+     * Lessons /ru/lessons/finished/*
+     *
+     * @Route("/ru/lesson/finished", methods={"GET","POST"}, name="finished.user.lessons")
+     */
+    public function getFinishedUserLessons(Request $request)
+    {
+        $userId = $request->get('student_id', null);
+        $trainerId = $request->get('trainer_id', null);
+
+        $lessons = $this->lessonsService->getEndedLessonsByTrainerAndUser($trainerId, $userId);
+
+        foreach ($lessons as $lesson)
+        {
+            $student = $this->getDoctrine()->getRepository(User::class)->find($userId);
+            $trainer = $this->getDoctrine()->getRepository(User::class)->find($trainerId);
+
+            /** @var Review $lessonReview */
+            $lessonReview = $this->getDoctrine()
+                ->getRepository(Review::class)
+                ->findByLessonAndTrainerAndStudent($lesson, $trainer, $student);
+
+            if (empty($lessonReview))
             {
-                return new Response('ЭТОТ УРОК УЖЕ ЗАНЯТ');
+                return $this->json($lesson->getId());
             }
         }
-        /** @var Teachers $trainer */
-        $trainer = $entityManager->getRepository(Teachers::class)->findOneBy([
-            'userid' => $form->trainer_id
-        ]);
+        return  $this->json(null);
+    }
 
-        $lesson->setStudentId($entityManager->getRepository(User::class)->find($form->user_id));
-        $lesson->setTrainerId($entityManager->getRepository(User::class)->find($form->trainer_id));
-        $lesson->setCost($trainer->getComissionCost());
-        $lesson->setStatus(Lessons::STATUS_NEW);
-        $lesson->setDatetime($date);
-        $lesson->setStudentStatus(0);
-        $lesson->setTrainerStatus(0);
+    /**
+     * Lessons /ru/lessons/cancel/*
+     *
+     * @Route("/ru/lesson/cancel/{lessonId}", methods={"GET","POST"}, name="lesson.cancel")
+     */
+    public function cancelLesson($lessonId)
+    {
+        $trainer = $this->getUser();
+        $lesson = $this->lessonsService->find($lessonId);
 
-        $entityManager->persist($schledule);
-        $entityManager->flush();
-        $entityManager->persist($lesson);
-        $entityManager->flush();
+        if (isset($lesson))
+        {
+            if (empty($trainer))
+            {
+                return $this->render('templates/login.html.twig', [
+                    'router' => 'login'
+                ]);
+            }
+            if ($trainer->getId() === $lesson->getTrainer()->getId())
+            {
+                $lesson = $this->lessonsService->setCanceled($lesson);
+                $lessonTimes = $this->lessonTimeService->getTimesByLesson($lesson);
 
-        $response = [
-            'id' => $lesson->getId(),
-            'cost' => $lesson->getCost(),
-        ];
-
-        return $this->json($response);
+                /** @var Schedule $time */
+                foreach ($lessonTimes as $time)
+                {
+                    $this->scheduleService->setScheduleStatus($time, Schedule::TIME_STATUS_BLOCK);
+                }
+                $this->addFlash('notice', 'Урок был отменен!');
+            }
+        }
+        return $this->redirectToRoute('timetable_index');
     }
 }

@@ -121,25 +121,25 @@
     mounted() {
       const th = this;
       axios.get('/ru/trainers/slider/{{game}}')
-      .then((res) => {
-        th.trainers = res.data;
-        console.log(res.data)
-        res.data.forEach((item, i) => {
-          if (item.id === {{id}}) {
-            th.slide = i - 1;
-          }
-        });
-        th.trainer = this.trainers[this.slide + 1];
-        if(window.innerWidth > 1000){
-          th.width = (window.innerWidth / 2) - ((window.innerWidth / 2) / 5);
-        }else{
-          th.width = (window.innerWidth / 2) + ((window.innerWidth / 2) / 2);
-        }
-        th.ww = th.trainers.length * th.width;
-      })
-      .catch(() => {
-        th.trainers = [];
-      });
+              .then((res) => {
+                th.trainers = res.data;
+                console.log(res.data)
+                res.data.forEach((item, i) => {
+                  if (item.id === {{id}}) {
+                    th.slide = i - 1;
+                  }
+                });
+                th.trainer = this.trainers[this.slide + 1];
+                if(window.innerWidth > 1000){
+                  th.width = (window.innerWidth / 2) - ((window.innerWidth / 2) / 5);
+                }else{
+                  th.width = (window.innerWidth / 2) + ((window.innerWidth / 2) / 2);
+                }
+                th.ww = th.trainers.length * th.width;
+              })
+              .catch(() => {
+                th.trainers = [];
+              });
       if (document.getElementById('slide_clone')) {
         this.slideWidth = document.getElementById('slide_clone').clientWidth;
       }

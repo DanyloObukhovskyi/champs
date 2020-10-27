@@ -100,6 +100,14 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $purse;
+    /**
+     * @ORM\OneToMany(targetEntity=TrainerVideo::class, mappedBy="user")
+     */
+    private $videosUrls;
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $vk;
 
     public function __construct()
     {
@@ -107,6 +115,7 @@ class User implements UserInterface
         $this->reviews        = new ArrayCollection();
         $this->trainerReviews = new ArrayCollection();
         $this->purseHistories = new ArrayCollection();
+        $this->videosUrls     = new ArrayCollection();
     }
 
     /**
@@ -466,5 +475,37 @@ class User implements UserInterface
         $this->purse = $purse;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVideosUrls()
+    {
+        return $this->videosUrls;
+    }
+
+    /**
+     * @param mixed $videosUrls
+     */
+    public function setVideosUrls($videosUrls): void
+    {
+        $this->videosUrls = $videosUrls;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVk()
+    {
+        return $this->vk;
+    }
+
+    /**
+     * @param mixed $vk
+     */
+    public function setVk($vk): void
+    {
+        $this->vk = $vk;
     }
 }

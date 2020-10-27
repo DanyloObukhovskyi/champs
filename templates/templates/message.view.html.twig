@@ -16,7 +16,11 @@
         </div>
         <img src="/images/Champs_Logo.png" class="back" alt="backend" />
     </div>
+    {% if isPayed %}
+        <div class="text-center">
+            <a class="btn-orange text-light" href="{{ path('timelist_index') }}">Посмотреть расписание</a>
+        </div>
+    {% endif %}
     <div style="height: 400px;">
-
     </div>
 {% endblock %}

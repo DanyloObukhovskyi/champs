@@ -26,26 +26,15 @@ class TeachersRepository extends ServiceEntityRepository
     /**
      * @param $value
      * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByUserId($value)
     {
-        $fields = [
-            "l.cost",
-            "l.about",
-            "l.videolink",
-            "l.shorttitle",
-            "l.method",
-            "l.streamType",
-            "l.twitch"
-        ];
-
         return $this->createQueryBuilder('l')
-            ->select($fields)
             ->andWhere('l.userid = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**

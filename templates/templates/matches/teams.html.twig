@@ -83,8 +83,10 @@
             {% if match.team2 is not null and match.team2.logo is not null%}
                 {% set firstPlayerTeam2 = match.team2.players|first %}
                 <img src="/uploads/images/{{ match.team2.logo }}" class="logo_team" alt="Rectangle6"/>
-                <img src="/uploads/images/{{ firstPlayerTeam2.person.photo }}" class="logo"
-                     alt="{{ firstPlayerTeam2.person.nick }}"/>
+                {% if firstPlayerTeam2.person is defined %}
+                    <img src="/uploads/images/{{ firstPlayerTeam2.person.photo }}" class="logo"
+                         alt="{{ firstPlayerTeam2.person.nick }}"/>
+                {% endif %}
             {% endif %}
         </div>
     </div>

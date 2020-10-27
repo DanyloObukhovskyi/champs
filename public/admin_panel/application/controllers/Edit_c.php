@@ -19,7 +19,7 @@
 				die();
 			}
             $this->load->library('session');
-			$this->load->model(array('users_model', 'edit_m','trainers_model', 'delete_m', 'add_m'));
+            $this->load->model(array('users_model', 'edit_m','trainers_model', 'delete_m', 'add_m', 'trainer_video'));
 		}
 		
 		public function gallery($post_title="", $post_content="", $post_type=0, $post_url="", $article_img="",$post_id=0) {
@@ -366,9 +366,17 @@
 					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
 					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
 					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
-					
+					$discord = (isset($_POST["discord"]) && !empty($_POST["discord"])) ? trim($_POST["discord"]) : '';
+
 					$delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
-					
+
+					$videos = (isset($_POST["videos"]) && !empty($_POST["videos"])) ? $_POST["videos"] : [];
+
+					$this->trainer_video->deleteRecords($id);
+					foreach ($videos as $video)
+                    {
+                        $this->trainer_video->create($id, $video);
+                    }
 					if(!empty($nickname) && !empty($Email) && !empty($price)) {
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
@@ -394,7 +402,8 @@
 							$update_data['istrainer'] = 0;
 							$this->delete_m->delete_trainer_as_teacher($id);
 						}
-						
+						$update_data['discord'] = $discord;
+
 						$update_data['roles'] = json_encode($user_capabilities);
 						$this->edit_m->updateUser($id, $update_data);
 						if(empty($delete_trainer)) {
@@ -424,10 +433,10 @@
                                 $ext = explode(".", $_FILES["userfile"]["name"] );
                                 $ext = array_pop($ext);
                                 $fileName = bin2hex($bytes).".".$ext;
-								
+
 								$_FILES["userfile"]["name"] = $fileName;
 								if ( ! $this->upload->do_upload('userfile'))
-								{
+                                {
 									$error = array('error' => $this->upload->display_errors());
 								}
 								else
@@ -449,7 +458,6 @@
 							$this->load->model("edit_m");
 							$this->edit_m->change_user_img($id, "prof-pic.svg");
 						}
-						
 					} else {
 						redirect($_SERVER["HTTP_REFERER"]);
 						die();
@@ -473,6 +481,7 @@
 			$offset = 0;
 			$where = array("id" =>$id );
 			$data['user_info'] = $this->trainers_model->get_all_trainers($where, false, $sort, array($offset, 1), true, true);
+
 			if(empty($data["user_info"])){
 				redirect ($_SERVER["HTTP_REFERER"]);
 				die();
@@ -480,6 +489,7 @@
 			$roles = $data['user_info'][0]['roles'];
 			$roles = json_decode($roles);
 			$data['user_info'][0]['roles'] = $roles[0];
+            $data['videos'] = $this->trainer_video->get_all_for_user($data['user_info'][0]['id']);
 			$data['imgs_url'] = $this->config->item('display_trainers-pic');
 			$data['upload_url'] = $this->config->item('upload_trainers-pic');
 			$data['current_u_can'] = $current_u_can;

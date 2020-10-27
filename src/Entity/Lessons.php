@@ -14,6 +14,8 @@ class Lessons
         STATUS_NEW = 0,
         STATUS_ENDED = 1;
 
+    const LESSON_HOURS = 3;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -24,17 +26,22 @@ class Lessons
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id")
      */
-    private $student_id;
+    private $student;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id")
      */
-    private $trainer_id;
+    private $trainer;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $datetime;
+    private $dateTimeFrom;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateTimeTo;
 
     /**
      * @ORM\Column(type="integer")
@@ -57,6 +64,16 @@ class Lessons
     private $trainer_status;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isCanceled;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isNotice;
+
+    /**
      * @ORM\OneToOne(targetEntity=Review::class, mappedBy="lesson", cascade={"persist", "remove"})
      */
     private $review;
@@ -66,38 +83,26 @@ class Lessons
         return $this->id;
     }
 
-    public function getStudentId(): ?User
+    public function getStudent(): ?User
     {
-        return $this->student_id;
+        return $this->student;
     }
 
-    public function setStudentId(User $student_id): self
+    public function setStudent(User $student_id): self
     {
-        $this->student_id = $student_id;
+        $this->student = $student_id;
 
         return $this;
     }
 
-    public function getTrainerId(): ?User
+    public function getTrainer(): ?User
     {
-        return $this->trainer_id;
+        return $this->trainer;
     }
 
-    public function setTrainerId(User $trainer_id): self
+    public function setTrainer(User $trainer): self
     {
-        $this->trainer_id = $trainer_id;
-
-        return $this;
-    }
-
-    public function getDatetime(): ?\DateTimeInterface
-    {
-        return $this->datetime;
-    }
-
-    public function setDatetime(\DateTimeInterface $datetime): self
-    {
-        $this->datetime = $datetime;
+        $this->trainer = $trainer;
 
         return $this;
     }
@@ -165,5 +170,68 @@ class Lessons
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTimeTo()
+    {
+        return $this->dateTimeTo;
+    }
+
+    public function setDateTimeTo($dateTimeTo)
+    {
+        $this->dateTimeTo = $dateTimeTo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTimeFrom()
+    {
+        return $this->dateTimeFrom;
+    }
+
+    /**
+     * @param mixed $dateTimeFrom
+     */
+    public function setDateTimeFrom($dateTimeFrom): void
+    {
+        $this->dateTimeFrom = $dateTimeFrom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsCanceled()
+    {
+        return $this->isCanceled;
+    }
+
+    /**
+     * @param mixed $isCanceled
+     */
+    public function setIsCanceled($isCanceled): void
+    {
+        $this->isCanceled = $isCanceled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsNotice()
+    {
+        return $this->isNotice;
+    }
+
+    /**
+     * @param mixed $isNotice
+     */
+    public function setIsNotice($isNotice): void
+    {
+        $this->isNotice = $isNotice;
     }
 }

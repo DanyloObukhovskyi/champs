@@ -1,0 +1,127 @@
+{% if app.user.id is defined %}
+<script type="text/x-template" id="review-template">
+    <div class="component order w-100" id="review"  v-if="lesson !== null" v-show="trainer !== null && lesson !== null">
+        <div class="d-flex justify-content-center" v-if="load">
+            <img style="width: 45px;" src="/images/load2.gif" alt="">
+        </div>
+        <div class="header" v-if="!load || lesson !== null">
+            <div class="round">
+                <div><img src="/images/lamp.svg" alt="lamp" /></div>
+            </div>
+            <div class="title">
+                Оставить отзыв
+            </div>
+        </div>
+        <div class="table" v-if="!load">
+            <div class="row__name">
+                <div class="rate">
+                    <div class="title">ОЦЕНИТЕ ЗАНЯТИЕ</div>
+                    <div class="stars">
+                        <img class="star"
+                             alt="Star"
+                             :src="`/images/${i <= star || i <= starSel ? 'StarOrange.svg' : 'StarGray.svg'}`"
+                             v-for="i in 10"
+                             @mouseover="star = i"
+                             @mouseout="star = 0"
+                             @click="starSel = i" />
+                    </div>
+                </div>
+                <div class="tags">
+                    <div class="title">ОСОБЕННОСТИ<span>&nbsp;<label v-text="methods.length"></label>/2</span></div>
+                    <div class="list methods d-flex">
+                        <div class="method" :class="[methods.indexOf('tactics') !== -1 ? 'active' : '']" @click="setMethod('tactics')">ТАКТИКА</div>
+                        <div class="method" :class="[methods.indexOf('scatter') !== -1 ? 'active' : '']" @click="setMethod('scatter')">РАСКИДКА</div>
+                        <div class="method" :class="[methods.indexOf('aim') !== -1 ? 'active' : '']" @click="setMethod('aim')">AIM</div>
+                        <div class="method" :class="[methods.indexOf('mentor') !== -1 ? 'active' : '']" @click="setMethod('mentor')">НАСТАВНИК</div>
+                        <div class="method" :class="[methods.indexOf('duel') !== -1 ? 'active' : '']" @click="setMethod('duel')">ДУЭЛЬ</div>
+                    </div>
+                </div>
+                <div class="input">
+                    <textarea class="w-80 h-50" v-model="comment" placeholder="Оставьте отзыв" maxlength="100" rows="6"></textarea>
+                </div>
+                <div class="send">
+                    <div class="button-send" @click="setComment()">Отправить</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('review', {
+        template: '#review-template',
+        data(){
+            return {
+                methods: [],
+                starSel: 0,
+                star: 0,
+                comment: '',
+                lesson: null
+            }
+        },
+        props: ['trainer', 'load'],
+        methods: {
+            setMethod(val) {
+                if (this.methods.indexOf(val) !== -1) {
+                    this.methods = this.methods.filter((item) => {
+                        if (item !== val) {
+                            return item;
+                        }
+                    })
+                } else {
+                    if (this.methods.length < 2) {
+                        this.methods.push(val);
+                    }
+                }
+            },
+            setComment() {
+                const form = new FormData();
+
+                this.load = true
+                console.log(this.lesson)
+                if (this.lesson && this.starSel !== 0 && this.comment.length > 0) {
+                    form.append('student_id', {{app.user.id}});
+                    form.append('trainer_id', this.trainer.id);
+                    form.append('lesson_id', this.lesson);
+                    form.append('rate', this.starSel);
+                    form.append('tactics', this.methods.indexOf('tactics') !== -1 ? true : false);
+                    form.append('scatter', this.methods.indexOf('scatter') !== -1 ? true : false);
+                    form.append('aim', this.methods.indexOf('aim') !== -1 ? true : false);
+                    form.append('mentor', this.methods.indexOf('mentor') !== -1 ? true : false);
+                    form.append('duel', this.methods.indexOf('duel') !== -1 ? true : false);
+                    form.append('comment', this.comment);
+                    axios.post('/ru/lesson/review/', form)
+                        .then((res) => {
+                            this.getTrainerReviews()
+                        })
+                }
+            },
+            getTrainerReviews(){
+                axios.post('/ru/trainer/reviews/' + this.trainer.id)
+                    .then(({data}) => {
+                        this.trainer.reviews = data;
+
+                        this.getFirstLessonWithNoComment()
+                        this.load = false
+                    })
+            },
+            getFirstLessonWithNoComment()
+            {
+                const form = new FormData();
+
+                form.append('student_id', {{app.user.id}});
+                form.append('trainer_id', this.trainer.id);
+
+                console.log()
+                axios.post('/ru/lesson/finished', form)
+                    .then(({data}) => {
+                        this.lesson = data;
+                    })
+            }
+        },
+        mounted(){
+            this.getFirstLessonWithNoComment()
+        }
+    })
+</script>
+{% endif %}

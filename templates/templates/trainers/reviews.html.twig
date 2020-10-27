@@ -1,78 +1,58 @@
 <div class="component ratings">
-  <div class="header">
-    <div class="round">
-      <div><img src="/images/lamp.svg" alt="lamp" /></div>
+    <div class="header">
+        <div class="round">
+            <div><img src="/images/lamp.svg" alt="lamp"/></div>
+        </div>
+        <div class="title">
+            РЕЙТИНГ ТРЕНЕРА
+        </div>
     </div>
-    <div class="title">
-      РЕЙТИНГ ТРЕНЕРА
-    </div>
-  </div>
-  <div class="table">
-    <div class="info">
-      <div class="rate">
-        <div class="rate__num">
-          <span v-text="trainer.ratingTotal"></span> из 5
-        </div>
-        <div class="rate__reviews">
-          отзывов <span v-text="trainer.reviewCount"></span> за все время
-        </div>
-      </div>
-      <div class="rates">
-        <div class="line">
-          <div class="stars">
-            <img src="/images/StarOrange.svg" v-for="i in 5" :key="i" alt="star" />
-          </div>
-          <div class="bar"><div :style="{width: getBarReview(5)}"></div></div>
-          <div class="result" v-text="getRateReview(5)" :class="[getRateReview(5) === 0 ? 'null' : '']"></div>
-        </div>
-        <div class="line">
-          <div class="stars">
-            <img src="/images/StarOrange.svg" v-for="i in 4" :key="i" alt="star" />
-          </div>
-          <div class="bar"><div :style="{width: getBarReview(4)}"></div></div>
-          <div class="result" v-text="getRateReview(4)" :class="[getRateReview(4) === 0 ? 'null' : '']"></div>
-        </div>
-        <div class="line">
-          <div class="stars">
-            <img src="/images/StarOrange.svg" v-for="i in 3" :key="i" alt="star" />
-          </div>
-          <div class="bar"><div :style="{width: getBarReview(3)}"></div></div>
-          <div class="result" v-text="getRateReview(3)" :class="[getRateReview(3) === 0 ? 'null' : '']"></div>
-        </div>
-        <div class="line">
-          <div class="stars">
-            <img src="/images/StarOrange.svg" v-for="i in 2" :key="i" alt="star" />
-          </div>
-          <div class="bar"><div :style="{width: getBarReview(2)}"></div></div>
-          <div class="result" v-text="getRateReview(2)" :class="[getRateReview(2) === 0 ? 'null' : '']"></div>
-        </div>
-        <div class="line">
-          <div class="stars">
-            <img src="/images/StarOrange.svg" alt="star" />
-          </div>
-          <div class="bar"><div :style="{width: getBarReview(1)}"></div></div>
-          <div class="result" v-text="getRateReview(1)" :class="[getRateReview(1) === 0 ? 'null' : '']"></div>
-        </div>
-      </div>
-    </div>
-    <div class="reviews" v-if="trainer.id">
-      <div class="review" v-for="(r, i) in trainer.reviews" :key="i">
-        <div class="img">
-          <img :src="r.photo ? '/images/temp/' + r.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg'" />
-        </div>
-        <div class="data">
-          <div class="title__block">
-            <div class="title">
-              <div v-text="getDateReview(r.datetime)"></div>
-              <div v-text="r.name"></div>
+    <div class="table">
+        <div class="info">
+            <div class="rate">
+                <div class="rate__num">
+                    <span v-text="trainer.ratingTotal"></span> из 10
+                </div>
+                <div class="rate__reviews">
+                    отзывов <span v-text="trainer.reviewCount"></span> за все время
+                </div>
             </div>
             <div class="rates">
-              <img :src="`/images/${s <= Math.floor(r.rate) ? 'StarOrange.svg' : 'StarGray.svg'}`" v-for="s in 5" :key="s" alt="star" />
+                <div class="line" v-for="i in [10,9,8,7,6,5,4,3,2,1]">
+                    <div class="stars">
+                        <img src="/images/StarOrange.svg" v-for="k in i" :key="k" alt="star"/>
+                    </div>
+                    <div class="bar">
+                        <div :style="{width: getBarReview(i)}"></div>
+                    </div>
+                    <div class="result" v-text="getRateReview(i)" :class="[getRateReview(i) === 0 ? 'null' : '']"></div>
+                </div>
             </div>
-          </div>
-          <div v-text="r.comment"></div>
         </div>
-      </div>
+        <div class="reviews" v-if="trainer.id">
+            <div class="review" v-for="(review, i) in trainer.reviews" :key="i">
+                <div class="img">
+                    <img :src="review.photo ? '/images/temp/' + review.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg'"/>
+                </div>
+                <div class="data">
+                    <div class="title__block">
+                        <div class="title">
+                            <div v-text="getDateReview(review)"></div>
+                            <div v-text="review.name"></div>
+                        </div>
+                        <div class="rates text-center">
+                            <div class="font-size-7">
+                                Оценка
+                            </div>
+                            <strong class="d-flex justify-content-center align-items-baseline">
+                                <img class="mr-1" src="/images/StarOrange.svg" alt="star">
+                                <span v-html="review.rate"></span>&nbsp;/&nbsp;10
+                            </strong>
+                        </div>
+                    </div>
+                    <div v-text="review.comment"></div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

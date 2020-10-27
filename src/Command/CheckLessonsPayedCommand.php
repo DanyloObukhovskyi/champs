@@ -3,8 +3,11 @@
 namespace App\Command;
 
 use App\Entity\Lessons;
+use App\Entity\LessonsPayment;
 use App\Entity\Payment;
+use App\Entity\Schedule;
 use App\Service\LessonService;
+use App\Service\LessonTimeService;
 use App\Service\LoggerService;
 use App\Service\Payment\PaymentService;
 use App\Service\ScheduleService;
@@ -58,19 +61,10 @@ class CheckLessonsPayedCommand extends Command
 
         /** @var Payment $pay */
         foreach ($payments as $pay) {
-            LoggerService::info("get lesson");
 
-            /** @var Lessons $lesson */
-            $lesson = $pay->getLesson();
+            $paymentLessonsSchedules = $this->paymentService->getPaymentLessonsShedules($pay);
 
-            $trainerId = $lesson->getTrainerId()->getId();
-            $date = $lesson->getDatetime()->format('Y-m-d');
-
-            LoggerService::info("get schedule");
-            $schedule = $this->scheduleService
-                ->findByTrainerAndDate($trainerId, $date);
-
-            if (empty($schedule)) {
+            if (empty($paymentLessonsSchedules)) {
                 continue;
             }
 
@@ -78,21 +72,21 @@ class CheckLessonsPayedCommand extends Command
             if ($pay->getPaymentStatus() === 1) {
                 LoggerService::info("set confirm");
 
-                $this->scheduleService->setTime(
-                    $schedule,
-                    $lesson->getDatetime()->format('H'),
-                    10
-                );
+                $this->setSchedulesStatus($paymentLessonsSchedules, Schedule::TIME_STATUS_RESERVED);
             } else {
                 LoggerService::info("set cancel");
 
-                $this->scheduleService->setTime(
-                    $schedule,
-                    $lesson->getDatetime()->format('H'),
-                    1
-                );
+                $this->setSchedulesStatus($paymentLessonsSchedules, Schedule::TIME_STATUS_OPEN);
             }
         }
         return 0;
+    }
+
+    public function setSchedulesStatus($schedules, $status)
+    {
+        foreach ($schedules as $schedule)
+        {
+            $this->scheduleService->setScheduleStatus($schedule, $status);
+        }
     }
 }

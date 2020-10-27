@@ -2,118 +2,140 @@
 
 namespace App\Controller;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\PurseHistory;
-use App\Entity\Review;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Service\UserService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TrainerController extends AbstractController
 {
+    use EntityManager;
+
     /**
-      * @Route("/ru/trainer/timelist", name="trainer_index")
-      */
+     * @var UserService
+     */
+    public $userService;
+
+    public function __construct()
+    {
+        $this->userService = new UserService($this->getEntityManager());
+    }
+
+    /**
+     * @Route("/ru/trainer/timelist", name="trainer_index")
+     */
     public function index()
     {
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/trainer/timelist.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/timelist.css'
-            ],
-          ]
-        );
-      }
+        if (empty($this->getUser()) or !$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            return $this->render('templates/cabinet/trainer/timelist.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/timelist.css'
+                    ],
+                ]
+            );
+        }
     }
 
     /**
-      * @Route("/ru/trainer/timetable", name="timetable_index")
-      */
+     * @Route("/ru/trainer/timetable", name="timetable_index")
+     */
     public function timetable()
     {
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/trainer/timetable.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/timetable.css'
-            ]
-          ]
-        );
-      }
+        if (empty($this->getUser()) or !$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            /** @var Teachers $trainer */
+            $trainer = $this->getDoctrine()->getRepository(Teachers::class)
+                ->findOneBy(['userid' => $this->getUser()->getId()]);
+
+            return $this->render('templates/cabinet/trainer/timetable.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'trainer' => $trainer,
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/timetable.css'
+                    ]
+                ]
+            );
+        }
     }
 
     /**
-      * @Route("/ru/trainer/purse", name="purse_index")
-      */
+     * @Route("/ru/trainer/purse", name="purse_index")
+     */
     public function purse()
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
 
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-          $history = $this->getDoctrine()
-              ->getRepository(PurseHistory::class)
-              ->findBy([
-                  'user' => $user->getId()
-              ]);
-          foreach ($history as $value)
-          {
-              /** @var PurseHistory $value */
-              $value->setOperation($value->getWorkPay());
-          }
+        if (!$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            $history = $this->getDoctrine()
+                ->getRepository(PurseHistory::class)
+                ->findBy([
+                    'user' => $user->getId()
+                ]);
+            foreach ($history as $value) {
+                /** @var PurseHistory $value */
+                $value->setOperation($value->getWorkPay());
+            }
 
-        return $this->render('templates/cabinet/trainer/purse.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/purse.css'
-            ],
-            'nickname' => $user->getNickname(),
-              'photo' => $user->getPhoto(),
-              'lastmonth' => $this->getDoctrine()
-                  ->getRepository(PurseHistory::class)
-                  ->sumByLastMonth($user->getId()),
-              'prelastmonth' => $this->getDoctrine()
-                  ->getRepository(PurseHistory::class)
-                  ->sumByPreLastMonth($user->getId()),
-              'history' => $history
-
-          ]
-        );
-      }
+            return $this->render('templates/cabinet/trainer/purse.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/purse.css'
+                    ],
+                    'nickname' => $user->getNickname(),
+                    'photo' => $user->getPhoto(),
+                    'lastmonth' => $this->getDoctrine()
+                        ->getRepository(PurseHistory::class)
+                        ->sumByLastMonth($user->getId()),
+                    'prelastmonth' => $this->getDoctrine()
+                        ->getRepository(PurseHistory::class)
+                        ->sumByPreLastMonth($user->getId()),
+                    'history' => $history
+                ]
+            );
+        }
     }
 
     /**
-      * @Route("/ru/trainer/settings", name="trainer_settings_index")
-      */
+     * @Route("/ru/trainer/settings", name="trainer_settings_index")
+     */
     public function trainer_settings()
     {
-      if (!$this->getUser()->getistrainer()) {
-        return $this->redirectToRoute('main');
-      } else {
-        return $this->render('templates/cabinet/trainer/settings.html.twig',
-          [
-            'router' => 'cabinet',
-            'styles' => [
-              'cabinet/cabinet.css',
-              'cabinet/trainer/settings.css'
-            ],
-          ]
-        );
-      }
+        if (!$this->getUser()->getistrainer()) {
+            return $this->redirectToRoute('main');
+        } else {
+            return $this->render('templates/cabinet/trainer/settings.html.twig',
+                [
+                    'router' => 'cabinet',
+                    'styles' => [
+                        'cabinet/cabinet.css',
+                        'cabinet/trainer/settings.css',
+                        'multiselect.css'
+                    ],
+                ]
+            );
+        }
     }
 
 
@@ -130,7 +152,7 @@ class TrainerController extends AbstractController
 
         if (!$user) {
             throw $this->createNotFoundException(
-                'No trainer found for id '.$id
+                'No trainer found for id ' . $id
             );
         }
 
@@ -164,10 +186,11 @@ class TrainerController extends AbstractController
     /**
      * @Route("/ru/trainers/slider/{game}", name="get_trainer_info_slider_games")
      */
-    public function setTrainerSliderInfo($game)
+    public function setTrainerSliderInfo(Request $request, $game)
     {
-        if($game == 'all')
-        {
+        $paginate = $_ENV['TRAINERS_ON_PAGE'] ?? 5;
+
+        if ($game == 'all') {
             $game = ['cs', 'lol', 'dota'];
         }
         $entityManager = $this->getDoctrine()->getManager();
@@ -177,87 +200,61 @@ class TrainerController extends AbstractController
         ]);
 
         if (!$users) {
-
-                return $this->json([]);
+            return $this->json([]);
         }
-        $response = [];
 
-        foreach ($users as $user)
-        {
-            $trainer = $entityManager->getRepository(Teachers::class)
-                ->findOneBy([
-                    'userid' => $user->getId(),
-                ]);
-            if(!$trainer)
-            {
-                $trainer = new Teachers();
-                $trainer->setUser($user->getId());
-                $trainer->setVideoLink("");
-                $trainer->setCost(0);
-                $trainer->setAbout("");
-                $trainer->setShorttitle("");
-                $trainer->setMethod("");
-
-                $entityManager->persist($trainer);
-                $entityManager->flush();
-            }
-
-            $user->setTrainer($trainer);
-
-            $reviews = $this->getDoctrine()
-                ->getRepository(Review::class)
-                ->findRateByTrainerId($user->getId());
-
-            $sum = 0;
-            $count = 0;
-            $keys = [
-                '1' => 0,
-                '2' => 0,
-                '3' => 0,
-                '4' => 0,
-                '5' => 0,
-            ];
-
-
-            foreach ($reviews['entity'] as $review)
-            {
-//                return $this->json($review);
-                /** @var Review $review */
-                $sum += $review['rate'];
-                $keys[$review['rate']]++;
-                $count++;
-            }
-
-            $result = 0;
-            if($sum > 0)
-            {
-                $result = round($sum / $count, 2);
-            }
-
-            $trainer->setCost($trainer->getComissionCost());
-
-
-            $response[] = [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'istrainer' => $user->getIsTrainer(),
-                'nickname' => $user->getNickname(),
-                'photo' => $user->getPhoto(),
-                'name' => $user->getName(),
-                'game' => $user->getGame(),
-                'rank' => $user->getRank(),
-                'family' => $user->getFamily(),
-                'discord' => $user->getDiscord(),
-                'purse' => $user->getPurse(),
-                'trainer' => $trainer,
-                'ratingTotal' => $result,
-                'rating' => $keys,
-                'reviewCount' => $count,
-                'reviews' => $reviews['entity']
-            ];
-        }
+        $filters = json_decode($request->getContent(), true);
+        $response = $this->userService->teachersDecorator($users, $filters);
+        $response = array_chunk($response, $paginate);
 
         return $this->json($response);
     }
 
+    /**
+     * @Route("/ru/trainer/paypall/{method}/{userId}", methods={"POST"}, name="trainer_paypall")
+     */
+    public function trainerPayPall(Request $request, ValidatorInterface $validator, $method, $userId)
+    {
+        $request = json_decode($request->getContent(), true);
+
+        /** @var Teachers $trainer */
+        $trainer = $this->getDoctrine()->getRepository(Teachers::class)->findOneBy([
+            'userid' => $userId
+        ]);
+
+        $payPal = null;
+
+        if (isset($trainer)){
+            if ($method === 'set'){
+                $constraints = new Assert\Collection([
+                    'payPal' => [new Assert\Email()],
+                ]);
+                $violations = $validator->validate($request, $constraints);
+
+                $data = [];
+
+                if ($violations->count() === 0)
+                {
+                    $data['message'] = [
+                        'type' => 'success',
+                        'text' => 'Paypal был успешно сохранен'
+                    ];
+
+                    $trainer->setPayPal($request['payPal'] ?? null);
+
+                    $this->getEntityManager()->persist($trainer);
+                    $this->getEntityManager()->flush($trainer);
+                } else {
+                    $data['message'] = [
+                        'type' => 'error',
+                        'text' => 'Paypal был указан в неверном формате'
+                    ];
+                }
+            }
+            $payPal = $trainer->getPayPal();
+        }
+        $data['paypal'] = $payPal;
+
+        return $this->json($data);
+    }
 }

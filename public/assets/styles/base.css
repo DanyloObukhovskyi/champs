@@ -114,7 +114,6 @@ label {
 .container {
   max-width: 100%;
   padding: 0 2.7vw;
-  font-size: 1vw;
 }
 @media screen and (max-width: 600px) {
   .container {
@@ -295,9 +294,6 @@ label {
 }
 .header_nav .nav .select-block.shadow {
   box-shadow: 0 0.2vw 0.3vw #111111;
-}
-.header_nav .nav .select-block .select {
-  margin-top: 0.7vw;
 }
 .header_nav .nav .login {
   position: absolute;
@@ -1887,4 +1883,28 @@ label {
 .toggler.active::before{
   background-color: #fff;
   content: "";
+}
+.w-10{
+  width: 10% !important;
+}
+
+.nick-name-hover:hover{
+  transition: color .4s ease;
+  color: #ff5627;
+}
+.font-size-7{
+  font-size: .7vw;
+}
+.form-input{
+  width: 100%;
+  height: 2.4vw;
+  font-size: 0.9vw;
+  border: 0.04vw solid #CFDCF3;
+  outline: none;
+}
+.text-gray {
+  color: gray;
+}
+.hover-orange:hover{
+  color: #FF6D1D;
 }

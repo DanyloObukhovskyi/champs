@@ -5,6 +5,7 @@ namespace App\Service\Payment\YandexKassa;
 
 
 use App\Entity\Lessons;
+use App\Entity\LessonsPayment;
 use App\Entity\Payment;
 use App\Entity\Team;
 use App\Repository\LessonsRepository;
@@ -48,13 +49,15 @@ class YandexKassaPaymentService extends EntityService
         parent::__construct($entityManager);
     }
 
-    public function createPayment(Lessons $lesson, float $amount, string $redirect, string $description = 'Оплата за урок'): ?CreatePaymentResponse
+    public function createPayment($lessons, float $amount, string $redirect, string $description = 'Оплата за урок'): ?CreatePaymentResponse
     {
         $client = new Client();
         $client->setAuth($this->merchant_id, $this->secret);
 
         try
         {
+            $lessonsId = $lessons[0]->getId();
+
             $payment = $client->createPayment(
                 [
                     'amount' => [
@@ -63,7 +66,7 @@ class YandexKassaPaymentService extends EntityService
                     ],
                     'confirmation' => [
                         'type' => 'redirect',
-                        'return_url' => $redirect,
+                        'return_url' => $redirect . $lessonsId,
                     ],
                     'capture' => true,
                     'description' => $description,
@@ -71,15 +74,17 @@ class YandexKassaPaymentService extends EntityService
                 uniqid('', true)
             );
 
-            if($payment)
+            if($payment and !empty($lessons))
             {
                 $payment_e = new Payment();
                 $payment_e->setPaymentStatus(Payment::STATUS_NEW);
-                $payment_e->setLesson($lesson);
                 $payment_e->setYandexData(json_decode(json_encode($payment), true));
+                $payment_e->setLesson($lessons[0]);
                 $payment_e->setYandexKassaId($payment->getId());
 
                 $this->save($payment_e);
+
+                $this->createPaymentLessons($payment_e, $lessons);
             }
 
             return $payment;
@@ -141,6 +146,18 @@ class YandexKassaPaymentService extends EntityService
         }
 
         return true;
+    }
+
+    public function createPaymentLessons($payment, $lessons)
+    {
+        foreach ($lessons as $lesson)
+        {
+            $paymentLesson = new LessonsPayment();
+            $paymentLesson->setLesson($lesson);
+            $paymentLesson->setPayment($payment);
+
+            $this->save($paymentLesson);
+        }
     }
 
 }

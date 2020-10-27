@@ -10,7 +10,6 @@
 /public/uploads/images/
 /var/
 /vendor/
-/public/admin_panel/vendor/
 /node_modules/
 ###< symfony/framework-bundle ###
 
@@ -23,3 +22,8 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> Codeigniter admin
+/public/admin_panel/vendor/
+###< Codeigniter admin
+
