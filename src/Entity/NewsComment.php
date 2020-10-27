@@ -23,6 +23,11 @@ class NewsComment
     private $news;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="text")
      */
     private $comment;
@@ -31,6 +36,16 @@ class NewsComment
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+
+    /**
+     * NewsComment constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * @return int|null
@@ -86,5 +101,21 @@ class NewsComment
     public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\News;
 
 
 use App\Entity\News;
 use App\Entity\NewsTag;
+use App\Service\EntityService;
 
 class NewsService extends EntityService
 {
@@ -13,7 +14,11 @@ class NewsService extends EntityService
 
     protected $repository;
 
-    public function decorator(News $news)
+    /**
+     * @param News $news
+     * @return array
+     */
+    public function decorator(News $news): array
     {
         $tagsEntities = $news->getTags();
         $tags = [];
@@ -61,8 +66,6 @@ class NewsService extends EntityService
         foreach ($request->tags as $tag){
             $tagsNames[] = $tag->title;
         }
-
-
 
         return $this->repository->getByFilters(
             $tagsNames,
@@ -112,6 +115,10 @@ class NewsService extends EntityService
         return $parseDate;
     }
 
+    /**
+     * @param $date
+     * @return mixed
+     */
     public function replaceMonth($date)
     {
         str_replace("January", "Января", $date);

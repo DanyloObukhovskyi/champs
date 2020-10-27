@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Match;
 use App\Entity\News;
-use App\Service\NewsService;
+use App\Service\News\NewsCommentService;
+use App\Service\News\NewsService;
 use App\Service\MatchService;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +23,8 @@ class NewsController extends AbstractController
      */
     protected $matchService;
 
+    protected $newsCommentService;
+
     /**
      * NewsController constructor.
      */
@@ -29,6 +32,7 @@ class NewsController extends AbstractController
     {
         $this->newsService = new NewsService($this->getEntityManager());
         $this->matchService = new MatchService($this->getEntityManager());
+        $this->newsCommentService = new NewsCommentService($this->getEntityManager());
     }
 
     /**
@@ -60,8 +64,9 @@ class NewsController extends AbstractController
         }
         return $this->json($news);
     }
+
     /**
-     * Matches /ru/news/*
+     * News /ru/news/*
      *
      * @Route("/ru/news/{id}", name="news_view_single")
      */
@@ -96,6 +101,7 @@ class NewsController extends AbstractController
         $matches = $this->matchService->matchesDecorator($matches);
 
         return $this->render('templates/news.view.html.twig', [
+            'newsId' => $newsId,
             'item' => $news,
             'date' => $date,
             'tournaments' => $tournaments,
@@ -105,7 +111,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * Lessons /ru/news/*
+     * News /ru/news/*
      *
      * @Route("/ru/last/news", name="last_news_info")
      */
@@ -119,23 +125,44 @@ class NewsController extends AbstractController
     }
 
     /**
-     * Lessons /ru/news/*
+     * News /ru/news/*
      *
-     * @Route("/ru/news/search/{form}", name="search_news_info")
+     * @Route("/ru/news/add/comment", name="news.add.comment")
      */
-    public function getSearchedNews($form)
+    public function addComment(Request $request)
     {
-        $form = json_decode($form);
-        $type = $form->type;
-        $dateFrom = new \DateTime($form->datefrom);
-        $dateTo = new \DateTime($form->dateto);
-        $search = $form->search;
+        $request = json_decode($request->getContent(), false);
+        $news = $this->newsService->getRepository()->find($request->id);
 
-//        return $this->json($form);
-        $items = $this->getDoctrine()
-            ->getRepository(News::class)
-            ->findBySearchForm($type, $dateFrom, $dateTo, $search);
+        if (!empty($this->getUser()) and isset($news))
+        {
+            $this->newsCommentService->create(
+                $this->getUser(),
+                $news,
+                $request->comment
+            );
 
-        return $this->json($items);
+            return $this->json('ok');
+        }
+        return $this->json('unauthorized', 401);
+    }
+
+    /**
+     * News /ru/news/*
+     *
+     * @Route("/ru/news/{newsId}/comments", name="news.get.comments")
+     */
+    public function getComments(int $newsId)
+    {
+        /** @var News $news */
+        $news = $this->newsService
+            ->getRepository()
+            ->find($newsId);
+
+        $newsComments = $this->newsCommentService->getRepository()->findBy([
+            'news' => $news
+        ]);
+        $newsComments = $this->newsCommentService->decorateComments($newsComments);
+        return $this->json($newsComments);
     }
 }
