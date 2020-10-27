@@ -9,11 +9,11 @@
                     Вход в личный кабинет
                 </div>
                 <div class="login_input">
-                    <input type="email" :value="email"  @input="$emit('inputEmail', $event.target.value)"/>
+                    <input type="email" @input="$emit('inputEmail', $event.target.value)"/>
                     <span>Адрес электронной почты</span>
                 </div>
                 <div class="login_input">
-                    <input type="password" :value="password"  @input="$emit('inputPassword', $event.target.value)"/>
+                    <input type="password" @input="$emit('inputPassword', $event.target.value)"/>
                     <span>Пароль</span>
                 </div>
                 <div class="send" @click="$emit('authLogin')">

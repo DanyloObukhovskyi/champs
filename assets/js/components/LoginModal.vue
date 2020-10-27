@@ -5,11 +5,11 @@
                 @setStep="setStep"
                 @authLogin="authLogin"
                 @close="close"
-                @inputEmail="(value) => {email = value}"
-                @inputPassword="(value) => {password = value}"
+                @inputEmail="(value) => {email = value;}"
+                @inputPassword="(value) => {password = value;}"
                 :error="error"
                 :email="email"
-                :check="password">
+                :password="password">
             <slot></slot>
         </login>
         <registration
@@ -72,6 +72,7 @@
         },
         data(){
             return {
+                console: console,
                 error: false,
                 step: 'registration',
                 email: null,
