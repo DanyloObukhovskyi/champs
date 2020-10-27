@@ -9,6 +9,14 @@
 	class Posts_model extends CI_Model
 	{
 		private $table = "news";
+
+		public $games = [
+            'dota'     => 'Dota 2',
+            'cs'       => 'CS:GO',
+            'lol'      => 'LOL',
+            'valorant' => 'Valorant'
+        ];
+
 		public function __construct ()
 		{
 			$this->load->database();
@@ -133,4 +141,4 @@
 				return $result->result_array();
 			}
 		}
-	}
+    }

@@ -19,7 +19,6 @@
 				redirect ('login/auth');
 				die();
 			}
-            $this->load->library('session');
 			$this->load->model(array ('add_m', 'users_model', 'edit_m', 'trainers_model'));
 			$this->user_capabilities = $this->config->item('user_capabilities');
 		}
@@ -318,8 +317,7 @@
 						$this->load->model("edit_m");
 						$this->edit_m->change_user_img($created_id, "prof-pic.svg");
 					}
-
-                    $this->session->set_flashdata('success_message', 'Новый юзер успешно добавлен!');
+					
 					redirect (base_url("c-admin/user/edit/$created_id/$this->UserID"));
 					die();
 				}
@@ -465,7 +463,6 @@
 						die();
 					}
 				}
-                $this->session->set_flashdata('success_message', 'Новый тренер успешно добавлен!');
 				redirect (base_url("c-admin/trainer/edit/$created_id/$this->UserID"));
 				die();
 			}
@@ -532,7 +529,6 @@
 								
 								$update_data['roles'] = json_encode($user_capabilities);
 								$this->edit_m->updateAdmin($check_user['id'], $update_data);
-                                $this->session->set_flashdata('success_message', 'Новый админ успешно добавлен!');
 								redirect (base_url("c-admin/admin/edit/".$check_user['id']."/$this->UserID"));
 								die();
 							}
@@ -568,8 +564,7 @@
 					
 					$this->load->model("edit_m");
 					$this->edit_m->change_user_img($created_id, "prof-pic.svg");
-
-                    $this->session->set_flashdata('success_message', 'Новый админ успешно добавлен!');
+					
 					redirect (base_url("c-admin/admin/edit/$created_id/$this->UserID"));
 					die();
 				} else {

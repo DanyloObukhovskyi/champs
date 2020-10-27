@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\NewsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class News
 {
-    const
+    public const
         NEWS_TYPE_ALL = 0,
         NEWS_TYPE_TRANSFER = 1,
         NEWS_TYPE_MATCH = 2,
@@ -66,6 +67,26 @@ class News
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $type;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NewsTag::class, mappedBy="news")
+     */
+    private $newsTags;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $views;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $game;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -168,8 +189,43 @@ class News
         return $this;
     }
 
-    public static function getNewsTypes()
+    /**
+     * @return mixed
+     */
+    public function getTags()
     {
+        return $this->newsTags;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * @param mixed $views
+     */
+    public function setViews($views): void
+    {
+        $this->views = $views;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param mixed $game
+     */
+    public function setGame($game): void
+    {
+        $this->game = $game;
     }
 }

@@ -1,4 +1,3 @@
-/* INDEX INDEX */
 .article__content{
   width: 100%;
   display: flex;
@@ -22,7 +21,7 @@
   flex-wrap: nowrap;
   color: #FFFFFF;
 }
-.article__content .article-row .article .ticket{
+.article__content .article-row .article .ticket:not(.game){
   position: absolute;
   right: 0.7vw;
   bottom: 0.7vw;
@@ -37,9 +36,11 @@
   letter-spacing: 0.06vw;
   border-radius: 0.8vw;
 }
+.article__content .article-row .article img:not(.game){
+  margin: 0 auto;
+}
 .article__content .article-row .article img{
   transition: 0.3s;
-  margin: 0 auto;
   position: relative;
   display: block;
 }
@@ -1131,4 +1132,52 @@
   .news__view .component.results .table-row  span{
     font-size: 4vw;
   }
+}
+.article-row .tags{
+  font-size: 1.49vw;
+  font-weight: 400;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  padding: 1vw 1.5vw;
+  font-size: 0.9vw;
+}
+.ticket:hover, .badge:hover {
+  opacity: .5;
+}
+.articles__content .full-input.types .search{
+  border: 0.04vw solid rgb(207, 220, 243);
+  border-left: none;
+}
+.articles__content .full-input.types input.search-input{
+  outline: none;
+  border: 0.04vw solid rgb(207, 220, 243);
+  border-right: none;
+}
+.w-10{
+  width: 10%;
+}
+.article__content .article-row .article .ticket.game {
+  position: absolute;
+  right: 0.7vw;
+  bottom: 0.7vw;
+  padding-top: 0.15vw;
+  background: transparent;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  z-index: 4;
+  font-size: 0.75vw;
+  font-weight: 500;
+  letter-spacing: 0.06vw;
+  border-radius: 0.8vw;
+}
+.filters .title, .tags .title{
+  font-size: 20px;
+  font-family: 'Oswald', sans-serif;
+  color: #6F8089;
+}
+.filters .title .iso{
+  width: 18px;
 }

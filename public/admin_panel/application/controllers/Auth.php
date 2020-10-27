@@ -32,7 +32,7 @@
 					
 					$this->data['identity'] = array('name' => 'identity',
 						'id' => 'identity',
-						'type' => 'text',
+						'type' => 'email',
 						'placeholder' => 'Email',
 					);
 					$this->data['password'] = array('name' => 'password',
@@ -68,6 +68,7 @@
 			if ($this->form_validation->run() == true) {
 				// check to see if the user is logging in
 				// check for "remember me"
+				$remember = (bool) $this->input->post('remember');
 				$remember = true;
 				if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
 					//if the login is successful
@@ -92,32 +93,6 @@
 					
 					
 				} else {
-                    $user = $this->users_model->get_by_nickname($this->input->post('identity'))[0] ?? null;
-
-                    if (isset($user)){
-                        $result = $this->ion_auth->login($user['email'], $this->input->post('password'), $remember);
-
-                        if ($result){
-                            //redirect them back to the home page
-                            $this->session->set_flashdata('message', $this->ion_auth->messages());
-
-                            $current_u_can = $this->users_model->get_capabilities($this->ion_auth->get_user_id());
-                            if(isset($current_u_can[0]["roles"])) {
-                                $current_u_can = json_decode($current_u_can[0]["roles"]);
-                                $current_u_can = $current_u_can[0];
-                            }
-                            if($current_u_can[0] == "1") {
-                                redirect($this->config->item('admin_login'), 'refresh');
-                            } elseif($current_u_can[1] == "1") {
-                                redirect($this->config->item('0100'), 'refresh');
-                            } elseif($current_u_can[2] == "1") {
-                                redirect($this->config->item('0010'), 'refresh');
-                            } elseif($current_u_can[3] == "1") {
-                                redirect($this->config->item('0001'), 'refresh');
-                            }
-                            redirect($this->config->item('admin_login'), 'refresh');
-                        }
-                    }
 					// if the login was un-successful
 					// redirect them back to the login page
 					$this->session->set_flashdata('message', $this->ion_auth->errors());
@@ -130,7 +105,7 @@
 				
 				$this->data['identity'] = array('name' => 'identity',
 					'id' => 'identity',
-					'type' => 'text',
+					'type' => 'email',
 					'placeholder' => 'Email',
 				);
 				$this->data['password'] = array('name' => 'password',
@@ -138,7 +113,7 @@
 					'type' => 'password',
 					'placeholder' => "Password",
 				);
-
+				
 				$output = $this->load->view("auth/Auth", $this->data, true);
 				$this->load->view('layout/auth', array(
 						'output' => $output,
