@@ -251,7 +251,12 @@
 			if (this.files && this.files[0]) {
 				
 				var url = URL.createObjectURL(this.files[0]);
-				if (this.files[0].type != "image/jpg" && this.files[0].type != "image/jpeg" && this.files[0].type != "image/png") {
+
+				console.log(this.files[0].type)
+				if (this.files[0].type != "image/jpg"
+                    && this.files[0].type != "image/jpeg"
+                    && this.files[0].type != "image/svg+xml"
+                    && this.files[0].type != "image/png") {
 					return;
 				}
 				
