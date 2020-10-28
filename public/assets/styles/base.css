@@ -221,8 +221,16 @@ label {
   width: 0.7vw;
   height: 0.7vw;
 }
+.social a i{
+  font-size: 12px;
+  line-height: initial;
+  color: #636871;
+}
+.social a i:hover{
+  color: #ffffff;
+}
 .header_nav .nav .social span svg:hover,
-.header_nav .nav .social a svg:hover {
+.header_nav .nav .social a svg:hover, .header_nav .nav .social a i:hover {
   stroke: #ffffff;
   fill: #ffffff;
 }

@@ -65,9 +65,9 @@ class MatchService extends EntityService
            $match->setDetailInfo($values['is_detail_info']);
         }
 
-        if (!empty($values['is_live']))
+        if (!empty($values['statistics']['live']))
         {
-           $match->setLive($values['is_live']);
+           $match->setLive($values['statistics']['live']);
         }
 
         $this->save($match);
