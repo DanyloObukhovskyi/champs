@@ -37,29 +37,32 @@
                                  </div>
                              </div>
                              <div class="table">
-                                 {% for item in items %}
-                                     <a href="/ru/news/{{ item.id }}-{{ item.url }}" class="table-row">
-                                         <div class="title">
-                                             <div class="time">{{ item.date|date("m-d H:i") }}</div>
-                                             <div class="name">
-                                                 <div></div>
-                                                 {% if item.type == 1 %}Трансфер{% endif %}
-                                                 {% if item.type == 2 %}Матч{% endif %}
-                                                 {% if item.type == 3 %}Видео{% endif %}
-                                                 {% if item.type == 4 %}Интервью{% endif %}
-                                                 {% if item.type == 5 %}Статья{% endif %}
-                                                 {% if item.type == 6 %}Обновления{% endif %}
-                                                 {% if item.type == 7 %}Текст{% endif %}
-                                             </div>
-                                             <div class="d-flex justify-content-end">
-                                                 <div class="w-10">
-                                                     <img :src="'/images/' + getGameImage('{{ item.game }}')" alt="" class="w-100">
-                                                 </div>
+                                 <a :href="`/ru/news/${ news.id }-${ news.url }`" class="table-row" v-for="news in hotNews">
+                                     <div class="tags w-100">
+                                         <div class="tags">
+                                            <span
+                                                @click="addTag(tag)"
+                                                class="badge badge-pill badge-danger mr-1"
+                                                :style="{background: `#${tag.color}`}"
+                                                v-html="`#${tag.title}`"
+                                                v-for="tag in news.tags">
+                                            </span>
+                                         </div>
+                                     </div>
+                                     <div class="title">
+                                         <div class="time">${news.date}</div>
+                                         <div class="name">
+                                             <div></div>
+                                             ${types[+news.type]}
+                                         </div>
+                                         <div class="d-flex justify-content-end">
+                                             <div class="w-10" v-if="news.game">
+                                                 <img :src="'/images/' + getGameImage(news.game)" class="w-100">
                                              </div>
                                          </div>
-                                         <div class="text">{{ item.title }}</div>
-                                     </a>
-                                 {% endfor %}
+                                     </div>
+                                     <div class="text">${ news.title }</div>
+                                 </a>
                              </div>
                          </div>
                      </div>
@@ -76,6 +79,7 @@
             delimiters: ['${', '}'],
             el: '#home',
             data: {
+                hotNews: [],
                 gamesIcons: {
                     dota: 'dota.png',
                     cs: 'cs.png',
@@ -85,15 +89,15 @@
                 news: [],
                 load: false,
                 isLoadAll: false,
-                types: [
-                    'Трансфер',
-                    'Матч',
-                    'Видео',
-                    'Интервью',
-                    'Статья',
-                    'Обновления',
-                    'Текст'
-                ],
+                types: {
+                    1: 'Трансфер',
+                    2: 'Матч',
+                    3: 'Видео',
+                    4: 'Интервью',
+                    5: 'Статья',
+                    6: 'Обновления',
+                    7: 'Текст'
+                },
                 filters: {
                     dateFrom: null,
                     dateTo: null,
@@ -284,9 +288,16 @@
 
                     this.pageUp();
                     this.getNews();
+                },
+                getHotNews(){
+                    axios.post('{{ path('get.hot.news') }}')
+                        .then(({data}) => {
+                            this.hotNews = data;
+                        })
                 }
             },
             mounted() {
+                this.getHotNews();
                 this.getNews();
                 this.scrollEventTrigger();
             }
