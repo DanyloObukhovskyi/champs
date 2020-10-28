@@ -1144,7 +1144,7 @@
   padding: 1vw 1.5vw;
   font-size: 0.9vw;
 }
-.ticket:hover, .badge:hover {
+.articles__content .badge:hover , .article__content .badge:hover{
   opacity: .5;
 }
 .articles__content .full-input.types .search{
