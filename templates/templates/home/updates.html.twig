@@ -1,30 +1,37 @@
 <div class="component updates" id="updates">
-  <div class="header">
-    <div class="round">
-      <div><img src="/images/lamp.svg" alt="lamp" /></div>
-    </div>
-    <div class="title">
-      Новости
-    </div>
-  </div>
-  <div class="table" v-if="start">
-    {% for new in news %}
-      <a href="/ru/news/{{new.id}}-{{new.url}}" class="table-row">
-        <div class="title">
-          <div class="time">{{new.date|date("m-d H:i")}}</div>
-          <div class="name">
-            <div></div>
-            {% if new.type == 1 %}Трансфер{% endif %}
-            {% if new.type == 2 %}Матч{% endif %}
-            {% if new.type == 3 %}Видео{% endif %}
-            {% if new.type == 4 %}Интервью{% endif %}
-            {% if new.type == 5 %}Статья{% endif %}
-            {% if new.type == 6 %}Обновления{% endif %}
-            {% if new.type == 7 %}Текст{% endif %}
-          </div>
+    <div class="header">
+        <div class="round">
+            <div><img src="/images/lamp.svg" alt="lamp"/></div>
         </div>
-        <div class="text">{{new.title}}</div>
-      </a>
-    {% endfor %}
-  </div>
+        <div class="title">
+            Новости
+        </div>
+    </div>
+    <div class="table" v-if="start">
+        {% for new in news %}
+            <a href="/ru/news/{{ new.id }}-{{ new.url }}" class="table-row">
+                <div class="tags w-100 mt-2">
+                    {% for tag in new.tags %}
+                        <span class="badge badge-pill badge-danger mr-1" style="background: #{{tag.color}}">
+                            {{ tag.title }}
+                        </span>
+                    {% endfor %}
+                </div>
+                <div class="title pt-0">
+                    <div class="time">{{ new.date|date("m-d H:i") }}</div>
+                    <div class="name">
+                        <div></div>
+                        {% if new.type == 1 %}Трансфер{% endif %}
+                        {% if new.type == 2 %}Матч{% endif %}
+                        {% if new.type == 3 %}Видео{% endif %}
+                        {% if new.type == 4 %}Интервью{% endif %}
+                        {% if new.type == 5 %}Статья{% endif %}
+                        {% if new.type == 6 %}Обновления{% endif %}
+                        {% if new.type == 7 %}Текст{% endif %}
+                    </div>
+                </div>
+                <div class="text">{{ new.title }}</div>
+            </a>
+        {% endfor %}
+    </div>
 </div>

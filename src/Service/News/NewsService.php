@@ -37,7 +37,7 @@ class NewsService extends EntityService
             'text'       => $news->getText(),
             'created_at' => $news->getCreatedAt(),
             'logo'       => $news->getLogo(),
-            'date'       => $news->getDate(),
+            'date'       => $news->getDate()->format('m-d H:i'),
             'url'        => $news->getUrl(),
             'type'       => $news->getType(),
             'tags'       => $tags,
