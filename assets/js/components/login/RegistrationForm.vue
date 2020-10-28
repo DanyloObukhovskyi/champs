@@ -42,7 +42,24 @@
                     </div>
                     <div class="subtext">Или войдите с помощью</div>
                     <div class="alternate">
-                        <slot></slot>
+                        <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&amp;openid.mode=checkid_setup&amp;openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&amp;openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&amp;openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&amp;openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&amp;openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select">
+                            <img src="/images/login_steam.svg">
+                        </a>
+                        <a href="/ru/auth/discord/">
+                            <img src="/images/login_discord.svg">
+                        </a>
+                        <a href="/ru/auth/facebook/">
+                            <img src="/images/facebook.png">
+                        </a>
+                        <a href="/ru/auth/google/">
+                            <img src="/images/google.png">
+                        </a>
+                        <a href="/ru/auth/twich/">
+                            <img src="/images/twich.png">
+                        </a>
+                        <a href="/ru/auth/vk/">
+                            <img src="/images/vk.svg">
+                        </a>
                     </div>
                     <div class="links">
                         <div>
