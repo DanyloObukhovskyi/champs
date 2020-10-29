@@ -297,15 +297,14 @@
                 }
             },
             mounted() {
-                this.getHotNews();
-                this.getNews();
-                this.scrollEventTrigger();
-
-
                 window.history.pushState('page2', '', '{{ path('news_index') }}');
                 {% if tag is not null %}
                     this.filters.tags.push({{ tag|json_encode|raw }});
                 {% endif %}
+
+                this.getHotNews();
+                this.getNews();
+                this.scrollEventTrigger();
             }
         })
     </script>
