@@ -24,9 +24,11 @@
                     </div>
                     <div class="tags w-100 mb-3">
                         {% for tag in item.tags %}
-                            <span class="badge badge-pill badge-danger mr-1" style="background: #{{tag.color}}">
-                            {{ tag.title }}
-                        </span>
+                            <a href="{{ path('news_index') }}?tag={{ tag.title }}">
+                                 <span class="badge badge-pill badge-danger mr-1" style="background: #{{tag.color}}">
+                                    {{ tag.title }}
+                                </span>
+                            </a>
                         {% endfor %}
                     </div>
                     <div class="title_article">

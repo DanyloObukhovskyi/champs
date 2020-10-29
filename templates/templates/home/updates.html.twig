@@ -12,9 +12,13 @@
             <a href="/ru/news/{{ new.id }}-{{ new.url }}" class="table-row">
                 <div class="tags w-100 mt-2">
                     {% for tag in new.tags %}
-                        <span class="badge badge-pill badge-danger mr-1" style="background: #{{tag.color}}">
-                            {{ tag.title }}
-                        </span>
+                        <object type="owo/uwu">
+                            <a href="{{ url('news_index') }}?tag={{ tag.title }}">
+                                 <span class="badge badge-pill badge-danger mr-1" style="background: #{{tag.color}}">
+                               {{ tag.title }}
+                            </span>
+                            </a>
+                        </object>
                     {% endfor %}
                 </div>
                 <div class="title pt-0">
