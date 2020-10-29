@@ -1905,6 +1905,9 @@ label {
 .text-gray {
   color: gray;
 }
-.hover-orange:hover{
+.hover-orange:hover {
   color: #FF6D1D;
+}
+.outline-none {
+  outline: none;
 }

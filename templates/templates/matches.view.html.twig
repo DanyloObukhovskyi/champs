@@ -2,38 +2,66 @@
 {% block title %}Матч по CS:GO{% endblock %}
 {% block router %}matches{% endblock %}
 {% block description %}
-  <meta name="description" content="Матч по League of Legends, Dota и Cs:Go">
+    <meta name="description" content="Матч по League of Legends, Dota и Cs:Go">
 {% endblock %}
 {% block keywords %}
-  <meta name="Keywords" content="League of Legends, Dota, CS:GO">
+    <meta name="Keywords" content="League of Legends, Dota, CS:GO">
 {% endblock %}
 {% block body %}
-<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-  Матч по CS:GO
-</h1>
-<div class="match__view home">
-  <script src="{{base_url}}assets/js/jquery351.js"></script>
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/matches/result.html.twig' with {'match': match} %}
-        {% include 'templates/matches/statistics.html.twig' with {'match': match}%}
-        {% include 'templates/matches/teams.html.twig' %}
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% if matchStats|length > 0 %}
-          {% include 'templates/matches/mapStats.html.twig' %}
-        {% endif %}
-        {% include 'templates/matches/maps.html.twig' %}
-        {% if pastMatches|length > 0 %}
-          {% include 'templates/matches/pastTeamsMatches.html.twig' %}
-        {% endif %}
-        {% include 'templates/matches/headToHead.html.twig' %}
-      </div>
-      <div>
-      </div>
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Матч по CS:GO
+    </h1>
+    <div class="match__view home">
+        <script src="{{ base_url }}assets/js/jquery351.js"></script>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    {% include 'templates/matches/result.html.twig' with {'match': match} %}
+                    {% include 'templates/matches/statistics.html.twig' with {'match': match} %}
+                    {% include 'templates/matches/teams.html.twig' %}
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    {% if match.streams|length > 0 %}
+                    {% include 'templates/matches/streams.html.twig' %}
+                    {% endif %}
+                    {% if matchStats|length > 0 %}
+                        {% include 'templates/matches/mapStats.html.twig' %}
+                    {% endif %}
+                    {% include 'templates/matches/maps.html.twig' %}
+                    {% if pastMatches|length > 0 %}
+                        {% include 'templates/matches/pastTeamsMatches.html.twig' %}
+                    {% endif %}
+                    {% include 'templates/matches/headToHead.html.twig' %}
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+        <script src="{{ base_url }}assets/js/edit_data.js"></script>
     </div>
-  </div>
-  <script src="{{base_url}}assets/js/edit_data.js"></script>
-</div>
+{% endblock %}
+
+{% block js %}
+
+    <script>
+        const streams = new Vue({
+            el: '#streams',
+            data: {
+                streams: {
+                    active: null,
+                    show: false
+                }
+            },
+            methods: {
+                choseStream(streamUrl){
+                    this.streams.active = streamUrl
+                    this.streams.show = true
+                },
+                closePlayer(){
+                    this.streams.active = null
+                    this.streams.show = false
+                }
+            }
+        })
+    </script>
 {% endblock %}

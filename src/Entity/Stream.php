@@ -6,7 +6,7 @@ use App\Repository\StreamRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=StreamRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\StreamRepository", repositoryClass=StreamRepository::class)
  */
 class Stream
 {
@@ -38,16 +38,26 @@ class Stream
      */
     private $language;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return Match|null
+     */
     public function getMatch(): ?Match
     {
         return $this->game_match;
     }
 
+    /**
+     * @param Match|null $game_match
+     * @return $this
+     */
     public function setMatch(?Match $game_match): self
     {
         $this->game_match = $game_match;
@@ -55,11 +65,18 @@ class Stream
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -67,11 +84,20 @@ class Stream
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUrl(): ?string
     {
+        $this->url = str_replace('www.hltv.org', $_ENV['SITE_DOMAIN'] ?? $_SERVER['SERVER_NAME'], $this->url);
+
         return $this->url;
     }
 
+    /**
+     * @param string $url
+     * @return $this
+     */
     public function setUrl(string $url): self
     {
         $this->url = $url;
@@ -79,15 +105,35 @@ class Stream
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLanguage(): ?string
     {
         return $this->language;
     }
 
+    /**
+     * @param string|null $language
+     * @return $this
+     */
     public function setLanguage(?string $language): self
     {
         $this->language = $language;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        $type = 'youtube';
+        if (strripos($this->getUrl(), 'youtube') === false)
+        {
+            $type = 'twich';
+        }
+        return $type;
     }
 }

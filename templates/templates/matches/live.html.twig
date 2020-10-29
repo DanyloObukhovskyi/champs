@@ -1,55 +1,121 @@
-<div class="component live">
-  <div class="header">
-    <div class="round">
-      <div><img src="/images/lamp.svg" alt="lamp.svg" /></div>
-    </div>
-    <div class="title">
-      Live
-    </div>
-  </div>
-  <div class="table">
-    {% for item in lives %}
-      {% if item.matchStatistics|length > 0 %}
-      <div class="table-row" href="/matches/live/{{ item.id }}">
-{#        <div class="title">#}
-{#          <img src="/images/temp/Rectangle4.png" alt="Rectangle4.png" />Home Sweet Home Cup 8 Closed Qalifier#}
-{#        </div>#}
-        <div class="cont">
-          <div class="titles">
-            {% for stat in item.matchStatistics %}
-              <div>{{ stat.map.shortCode }}</div>
-            {% endfor %}
-            <div>Карты</div>
-          </div>
-          <div class="row-d">
-            <div>
-              {% if item.team1.logo is not null %}
-                <img src="/uploads/images/{{ item.team1.logo }}" alt="{{ item.team1.name }}" />{{ item.team1.name }}
-              {% else %}
-                <img src="/images/noLogo.png" alt="{{ item.team1.name }}" />{{ item.team1.name }}
-              {% endif %}
+<script type="text/x-template" id="lives-matches-template">
+    <div class="component live">
+        <div class="header">
+            <div class="round">
+                <div><img src="/images/lamp.svg" alt="lamp.svg"/></div>
             </div>
-            {% for stat in item.matchStatistics %}
-              <div>{{ stat.score1 }}</div>
-            {% endfor %}
-            {{ item.score1 }}
-          </div>
-          <div class="row-d">
-            <div>
-              {% if item.team2.logo is not null %}
-                  <img src="/uploads/images/{{ item.team2.logo }}" alt="{{ item.team2.name }}" />{{ item.team2.name }}
-              {% else %}
-                <img src="/images/noLogo.png" alt="{{ item.team2.name }}" />{{ item.team2.name }}
-              {% endif %}
+            <div class="title">
+                Live
             </div>
-            {% for stat in item.matchStatistics %}
-              <div>{{ stat.score2 }}</div>
-            {% endfor %}
-            {{ item.score2 }}
-          </div>
         </div>
-      </div>
-      {% endif %}
-    {% endfor %}
-  </div>
-</div>
+        <div class="table">
+            <div class="table-row" :href="`/matches/live/${liveMatch.id}`" v-for="liveMatch in liveMatches">
+                <div class="title" v-if="liveMatch.streams.length > 0" style="cursor: pointer" @click="choseMatch(liveMatch)">
+                    <img class="pointer" src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDU4IDQwIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnIGlkPSIwMjUtLS1MaXZlLVJlY29yZGluZyIgZmlsbD0ibm9uZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAtMSkiPjxwYXRoIGlkPSJTaGFwZSIgZD0ibTQwLjc2OSAyMi45MjVjLjI5NjQ2ODQtLjA2ODA1NTYuNjA3ODEwNS4wMDE2ODM5Ljg0NjkxODEuMTg5NzA2OS4yMzkxMDc3LjE4ODAyMjkuMzgwMzAzLjQ3NDEzNzIuMzg0MDgxOS43NzgyOTMxdjEyLjEwN2MtLjAxOTM3MTIgMS42MzMyODI2LTEuMDE2NTY5NSAzLjA5NTU3NzMtMi41MyAzLjcxLS45NTIuNDE3LjY4My4yOS0zNS40Ny4yOS0yLjIwMzIzNzM4LS4wMTQxODMyLTMuOTg1ODE2OC0xLjc5Njc2MjYtNC00di0xNWMwLTIuMjA5MTM5IDEuNzkwODYxLTQgNC00aDMxLjEwN2MuMzA0MTU1OS4wMDM3Nzg5LjU5MDI3MDIuMTQ0OTc0Mi43NzgyOTMxLjM4NDA4MTkuMTg4MDIzLjIzOTEwNzYuMjU3NzYyNS41NTA0NDk3LjE4OTcwNjkuODQ2OTE4MS0uMjYyNzA4NiAxLjMwODA4MDYuMTQ2Mjg5MiAyLjY2MDg2NjUgMS4wODk3MTEzIDMuNjA0Mjg4Ny45NDM0MjIyLjk0MzQyMjEgMi4yOTYyMDgxIDEuMzUyNDE5OSAzLjYwNDI4ODcgMS4wODk3MTEzeiIgZmlsbD0iI2U2NGMzYyIvPjxnIGZpbGw9IiNmZmYiPjxwYXRoIGlkPSJTaGFwZSIgZD0ibTE0IDM2Yy0uNTUyMjg0NyAwLTEtLjQ0NzcxNTMtMS0xdi0xM2MwLS41NTIyODQ3LjQ0NzcxNTMtMSAxLTFzMSAuNDQ3NzE1MyAxIDF2MTNjMCAuNTUyMjg0Ny0uNDQ3NzE1MyAxLTEgMXoiLz48cGF0aCBpZD0iU2hhcGUiIGQ9Im0yMiAzNmgtMWMtLjQ2NTg0MTguMDAwMjk4Ny0uODcwMTg1Ny0uMzIxMTAyOC0uOTc1LS43NzVsLTMtMTNjLS4xMjQyNjQxLS41Mzg0Nzc2LjIxMTUyMjQtMS4wNzU3MzU5Ljc1LTEuMnMxLjA3NTczNTkuMjExNTIyNCAxLjIuNzVsMi41MjUgMTAuOTQ0IDIuNTI1LTEwLjk0NGMuMDgwMzg0OC0uMzQ4MzM0LjM0MDQ5NzMtLjYyNzMyMy42ODIzNTU3LS43MzE4NzQ4LjM0MTg1ODQtLjEwNDU1MTcuNzEzNTI2My0uMDE4NzgyMi45NzUuMjI1cy4zNzMwMjkxLjYwODU0MDguMjkyNjQ0My45NTY4NzQ4bC0zIDEzYy0uMTA0ODE0My40NTM4OTcyLS41MDkxNTgyLjc3NTI5ODctLjk3NS43NzV6Ii8+PHBhdGggaWQ9IlNoYXBlIiBkPSJtMzQgMzZoLTVjLS41NTIyODQ3IDAtMS0uNDQ3NzE1My0xLTF2LTEzYzAtLjU1MjI4NDcuNDQ3NzE1My0xIDEtMXMxIC40NDc3MTUzIDEgMXYxMmg0Yy41NTIyODQ3IDAgMSAuNDQ3NzE1MyAxIDFzLS40NDc3MTUzIDEtMSAxeiIvPjxwYXRoIGlkPSJTaGFwZSIgZD0ibTEwIDM2aC01Yy0uNTUyMjg0NzUgMC0xLS40NDc3MTUzLTEtMXYtMTNjMC0uNTUyMjg0Ny40NDc3MTUyNS0xIDEtMXMxIC40NDc3MTUzIDEgMXYxMmg0Yy41NTIyODQ3IDAgMSAuNDQ3NzE1MyAxIDFzLS40NDc3MTUzIDEtMSAxeiIvPjxwYXRoIGlkPSJTaGFwZSIgZD0ibTM0IDMwaC01Yy0uNTUyMjg0NyAwLTEtLjQ0NzcxNTMtMS0xcy40NDc3MTUzLTEgMS0xaDVjLjU1MjI4NDcgMCAxIC40NDc3MTUzIDEgMXMtLjQ0NzcxNTMgMS0xIDF6Ii8+PHBhdGggaWQ9IlNoYXBlIiBkPSJtMzQgMjNoLTVjLS41NTIyODQ3IDAtMS0uNDQ3NzE1My0xLTFzLjQ0NzcxNTMtMSAxLTFoNWMuNTUyMjg0NyAwIDEgLjQ0NzcxNTMgMSAxcy0uNDQ3NzE1MyAxLTEgMXoiLz48L2c+PHBhdGggaWQ9IlNoYXBlIiBkPSJtMjkuMzM3IDkuOTRjMy4zNzgwOTM0LTMuOTg5MDI0IDguNjk3OTAwMi01Ljc2MjYwNTI2IDEzLjc5MzkxMjMtNC41OTg3ODA1NSA1LjA5NjAxMjEgMS4xNjM4MjQ3IDkuMTE4NDU0MiA1LjA3MDk4NDE1IDEwLjQyOTkzMDEgMTAuMTMxMDA5NjUgMS4zMTE0NzYgNS4wNjAwMjU1LS4zMDY3MDY4IDEwLjQyOTE0MjctNC4xOTU4NDI0IDEzLjkyMTc3MDktLjU3OTE5NDIuNDYxNzE1OC0uODU1Nzc4MSAxLjIwNTczMTgtLjcxODgzMDggMS45MzM2Njkycy42NjQ5OTcgMS4zMjA1NzczIDEuMzcyMzgwOSAxLjU0MDI0ODRjLjcwNzM4NC4yMTk2NzEgMS40NzgyNDk0LjAzMDM5NjQgMi4wMDM0NDk5LS40OTE5MTc2IDUuMDAzMDAxNC00LjQ4ODE0NjUgNy4wODY1NDg5LTExLjM5MTA2MDcgNS40MDIxNjg3LTE3Ljg5NzY5OTItMS42ODQzODAzLTYuNTA2NjM4NTctNi44NTU2NzkxLTExLjUzMTQ4MzE4LTEzLjQwODAxMTItMTMuMDI4Mjg4NTItNi41NTIzMzIxLTEuNDk2ODA1MzUtMTMuMzkyNTU2Ljc4NDE0NDI0LTE3LjczNTE1NzUgNS45MTM5ODc3Mi0uNDk0NTM2NC41NDE2MjQ0LS42NTI5NDIzIDEuMzEwNDg3NjktLjQxMjc2OTUgMi4wMDM0ODEzNy4yNDAxNzI4LjY5Mjk5MzYzLjg0MDM5MjQgMS4xOTg5Mzc5MyAxLjU2NDAzNDYgMS4zMTgzNzQ3My43MjM2NDIzLjExOTQzNjggMS40NTQ2MTAyLS4xNjY3OTU3IDEuOTA0NzM0OS0uNzQ1ODU2MXoiIGZpbGw9IiM4NGI1Y2IiLz48cGF0aCBpZD0iU2hhcGUiIGQ9Im0zNi40OTQgMTQuMTI5YzIuMzk2OTY4OC0xLjcxODQ0NjEgNS42ODc0MjY5LTEuNDQwMDE1IDcuNzYxNTU5OC42NTY3NjU3IDIuMDc0MTMzIDIuMDk2NzgwNyAyLjMxNjgxNDkgNS4zOTAwNjgzLjU3MjQ0MDIgNy43NjgyMzQzLS40NTUwMjY1LjYzMzA5MDQtLjQ5MDM5NDEgMS40NzYwMTc4LS4wOSAyLjE0NS4zMzQ2ODY3LjU3OTEyOTMuOTM2NzI3Mi45NTI2MDg4IDEuNjA0MjUzNC45OTUyMDgzLjY2NzUyNjMuMDQyNTk5NSAxLjMxMjE1ODItLjI1MTMyMTEgMS43MTc3NDY2LS43ODMyMDgzIDIuOTExNjA5Ny0zLjk2MTkzMzkgMi41MDkzMjMyLTkuNDUzMDMzOS0uOTQ4NjE0My0xMi45NDgzMjQ5LTMuNDU3OTM3NS0zLjQ5NTI5MDk5LTguOTQ0Mzk4NC0zLjk1NjU1MDEtMTIuOTM3Mzg1Ny0xLjA4NzY3NTEtLjU1MTMwNzEuNDE2Mzg4NC0uODQ3MDQ5MiAxLjA4OTAzNi0uNzgxMTkxMiAxLjc3Njc3MjUuMDY1ODU4LjY4NzczNjYuNDgzODgwOCAxLjI5MjAzMzcgMS4xMDQxOTEyIDEuNTk2MjI3NS42MzYzMjA0LjMzMzMwMjcgMS40MDQ3NjQ3LjI4NzUxMTYgMS45OTctLjExOXoiIGZpbGw9IiMzYjk3ZDMiLz48Y2lyY2xlIGlkPSJPdmFsIiBjeD0iNDAiIGN5PSIxOSIgZmlsbD0iIzI5ODBiYSIgcj0iMiIvPjwvZz48L3N2Zz4="/>
+                    Трансляции
+                </div>
+                <div class="cont">
+                    <div class="titles">
+                        <div v-for="stat in liveMatch.statistics" v-html="stat.mapShortCode"></div>
+                        <div>Карты</div>
+                    </div>
+                    <div class="row-d">
+                        <div>
+                            <img :src="liveMatch.teamA ?liveMatch.teamA.logo: '/images/noLogo.png'" :alt="liveMatch.teamA.name" />
+                            ${liveMatch.teamA.title}
+                        </div>
+                        <div v-for="stat in liveMatch.statistics" v-html="stat.score1"></div>
+                        ${liveMatch.teamA.score}
+                    </div>
+                    <div class="row-d">
+                        <div>
+                            <img :src="liveMatch.teamB ? liveMatch.teamB.logo: '/images/noLogo.png'" :alt="liveMatch.teamB.name"/>
+                            ${liveMatch.teamB.title}
+                        </div>
+                        <div v-for="stat in liveMatch.statistics" v-html="stat.score2"></div>
+                        ${liveMatch.teamB.score}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="news__view">
+            <transition name="fade">
+                <div class="wrapper news-wrap" v-if="player.zoom">
+                    <div class="player">
+                        <div class="d-flex justify-content-between stream-languages w-100 ">
+                            <button class="w-100 outline-none"
+                                    style="outline: none"
+                                    @click="player.activeStream = stream"
+                                    :class="{active: player.activeStream === stream}"
+                                    v-for="stream in player.match.streams"
+                                    v-html="stream.lang">
+                            </button>
+                        </div>
+                        <iframe
+                                :src="player.activeStream.url"
+                                frameborder="0"
+                                class=""
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="title_wrap"  @click="clearPlayer">Нажмите чтобы закрыть стрим</div>
+                </div>
+            </transition>
+        </div>
+    </div>
+</script>
+<script>
+   Vue.component('lives-matches', {
+       template: '#lives-matches-template',
+       delimiters: ['${', '}'],
+       data(){
+           return {
+               matches: [],
+               img: 'test.png',
+               pos: {w: 0, h: 0, l: 0, t: 0},
+               tmp: null,
+               block: false,
+               player: {
+                   match: null,
+                   zoom: false,
+                   activeStream: null,
+               }
+           }
+       },
+       computed: {
+            liveMatches(){
+                const matches = [];
+
+                for (let key in this.matches){
+                    for (let match of this.matches[key].items){
+                        if (match.statistics.length > 0){
+                            matches.push(match)
+                        }
+                    }
+                }
+                return matches
+            },
+       },
+       methods: {
+           getMatches(){
+                axios.post('{{ path('get.live.matches') }}')
+                    .then(({data}) => {
+                        this.matches = data;
+                    })
+           },
+           choseMatch(match){
+               this.player.match = match
+               this.player.zoom = true
+               this.player.activeStream = match.streams[0]
+           },
+           clearPlayer(){
+               this.player.match = null
+               this.player.zoom = false
+           }
+       },
+       mounted(){
+            this.getMatches();
+       }
+   })
+</script>
