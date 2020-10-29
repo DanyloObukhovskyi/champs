@@ -33,6 +33,13 @@
                         {% if new.type == 6 %}Обновления{% endif %}
                         {% if new.type == 7 %}Текст{% endif %}
                     </div>
+                    {% if new.game is not null %}
+                        <div class="d-flex justify-content-end">
+                            <div>
+                                <img style="height: 2vw" src="/images/{{ new.gameIcon }}">
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="text">{{ new.title }}</div>
             </a>
