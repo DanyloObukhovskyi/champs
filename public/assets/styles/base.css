@@ -1945,6 +1945,9 @@ label {
 .navbar-mvp li{
   transition: 150ms ease-in;
 }
-.navbar-mvp li a:hover{
+.navbar-mvp li a:hover {
   color: #ff6d1d !important;
+}
+.outline-none {
+  outline: none;
 }

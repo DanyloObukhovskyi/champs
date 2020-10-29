@@ -12,6 +12,7 @@ use App\Service\MatchService;
 use App\Service\ImageService;
 use App\Entity\MatchMapTeamStatistic;
 use App\Service\PlayerStatisticsService;
+use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -19,21 +20,41 @@ use Symfony\Component\Translation\Translator;
 
 class MatchesController extends AbstractController
 {
+    use EntityManager;
+
+    public $matchService;
+
+    public function __construct()
+    {
+        $this->matchService = new MatchService($this->getEntityManager());
+    }
+
     /**
      * @Route("/ru/matches", name="matches_index_page")
      */
     public function index()
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $matchService = new MatchService($entityManager);
+        $matches = $this->getEntityManager()
+            ->getRepository(Match::class)
+            ->findMatchesNotEnded();
 
-        $matches = $entityManager->getRepository(Match::class)->findMatchesNotEnded();
-        $matchesItems = $matchService->matchesDecorator($matches);
+        return $this->render('templates/matches.html.twig', [
+                'router' => 'matches',
+                'matches' => $matches,
+                "items" => $this->matchService->matchesDecorator($matches),
+            ]);
+    }
 
-        $lives = $entityManager->getRepository(Match::class)->findLive();
+    /**
+     * @Route("/ru/lives/matches", name="get.live.matches")
+     */
+    public function getLivesMatches()
+    {
+        $lives = $this->getEntityManager()
+            ->getRepository(Match::class)
+            ->findLive();
 
-        return $this->render('templates/matches.html.twig',
-            ['router' => 'matches', 'matches' => $matches, "items" => $matchesItems, "lives" => $lives]);
+        return $this->json($this->matchService->matchesDecorator($lives));
     }
 
     /**

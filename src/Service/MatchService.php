@@ -9,17 +9,33 @@ namespace App\Service;
 
 use App\Entity\Event;
 use App\Entity\Match;
+use App\Entity\MatchStatistics;
+use App\Entity\Stream;
+use App\Entity\Team;
 use App\Repository\MatchRepository;
 
+/**
+ * Class MatchService
+ * @package App\Service
+ */
 class MatchService extends EntityService
 {
     protected $entity = Match::class;
 
-    /** @var MatchRepository */
+    /**
+     * @var MatchRepository
+     */
     protected $repository;
 
+    /**
+     * @var ImageService
+     */
     protected $imageService;
 
+    /**
+     * MatchService constructor.
+     * @param $entityManager
+     */
     public function __construct($entityManager)
     {
         parent::__construct($entityManager);
@@ -27,6 +43,13 @@ class MatchService extends EntityService
         $this->imageService = new ImageService();
     }
 
+    /**
+     * @param $values
+     * @param $teams
+     * @param Event|null $event
+     * @return Match|mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function create($values, $teams, Event $event = null)
     {
         /** @var Match $match */
@@ -75,6 +98,11 @@ class MatchService extends EntityService
         return $match;
     }
 
+    /**
+     * @param Match $match
+     * @param $values
+     * @return mixed
+     */
     public function updateStatistic(Match $match, $values)
     {
         if (isset($values['score1']))
@@ -86,7 +114,7 @@ class MatchService extends EntityService
             $match->setScore2($values['score2']);
         }
 
-        $this->save($match);
+        return $this->save($match);
     }
 
     /**
@@ -121,6 +149,9 @@ class MatchService extends EntityService
         return $match;
     }
 
+    /**
+     * @return Match[]|array
+     */
     public function getLiveMatches()
     {
         return $this->repository->findLiveForParse();
@@ -212,49 +243,98 @@ class MatchService extends EntityService
 
         $matchFields = [
             "match_id" => $match->getId(),
-            "startAt" =>  $match->getStartAt(),
-            "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-            "title" => "",
-            "logo" => "",
-            "teamA" => null,
-            "teamB" => null,
-            "event" => [
-                "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
+            "startAt"  =>  $match->getStartAt(),
+            "time"     => date("H:i", $match->getStartAt()->getTimestamp()),
+            "title"    => "",
+            "logo"     => "",
+            "teamA"    => null,
+            "teamB"    => null,
+            "event"    => [
+                "name"      => $match->getEvent() === null ? null : $match->getEvent()->getName(),
                 "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                "image" => $this->imageService->getImagePath()
+                "endedAt"   => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
+                "image"     => $this->imageService->getImagePath()
             ],
+            "streams"  => $this->getMatchStrams($match)
         ];
+        $matchFields['statistics'] = $this->getMatchStatistics($match);
+
         $team1 = $match->getTeam1();
         if(isset($team1)){
-            $flag = empty($match->getTeam1()->getFlagIcon()) ? null: $match->getTeam1()->getFlagIcon()->getName();
-
-            $this->imageService->setImage($flag);
-            $flag = $this->imageService->getImagePath();
-
-            $this->imageService->setImage($match->getTeam1()->getLogo());
-            $matchFields['teamA'] = [
-                "title" => str_replace("'", "", $match->getTeam1()->getName()),
-                "logo" => $this->imageService->getImagePath(),
-                "score" => $match->getScore1(),
-                "flag" => $flag
-            ];
+            $matchFields['teamA'] = $this->getMatchTeam(
+                $match->getTeam1(),
+                $match->getScore1()
+            );
         }
-        $team2 = $match->getTeam2();
-        if(isset($team2)){
-            $flag = empty($match->getTeam2()->getFlagIcon()) ? null: $match->getTeam2()->getFlagIcon()->getName();
-
-            $this->imageService->setImage($flag);
-            $flag = $this->imageService->getImagePath();
-
-            $this->imageService->setImage($match->getTeam2()->getLogo());
-            $matchFields['teamB'] = [
-                "title" => str_replace("'", "", $match->getTeam2()->getName()),
-                "logo" => $this->imageService->getImagePath(),
-                "score" => $match->getScore2(),
-                "flag" => $flag
-            ];
+        if(!empty($match->getTeam2())){
+            $matchFields['teamB'] = $this->getMatchTeam(
+                $match->getTeam2(),
+                $match->getScore2()
+            );
         }
         return $matchFields;
+    }
+
+    /**
+     * @param Match $match
+     * @return array
+     */
+    public function getMatchStatistics(Match $match): array
+    {
+        $result = [];
+
+        /** @var MatchStatistics[] $matchStatistics */
+        $matchStatistics = $match->getMatchStatistics();
+
+        foreach ($matchStatistics as $matchStatistic){
+            $result[] = [
+                'mapShortCode' => $matchStatistic->getMap()->getShortCode(),
+                'score1' => $matchStatistic->getScore1(),
+                'score2' => $matchStatistic->getScore2(),
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * @param Match $match
+     * @return array
+     */
+    public function getMatchStrams(Match $match): array
+    {
+        $streams = [];
+
+        /** @var Stream $stream */
+        foreach ($match->getStreams() as $stream){
+            $streams[] = [
+                'name' => $stream->getName(),
+                'url'  => $stream->getUrl(),
+                'lang' => $stream->getLanguage(),
+                'type' => $stream->getType()
+            ];
+        }
+        return $streams;
+    }
+
+    /**
+     * @param Team $team
+     * @param $score
+     * @return array
+     */
+    public function getMatchTeam(Team $team, $score): array
+    {
+        $flag = empty($team->getFlagIcon()) ? null: $team->getFlagIcon()->getName();
+
+        $this->imageService->setImage($flag);
+        $flag = $this->imageService->getImagePath();
+
+        $this->imageService->setImage($team->getLogo());
+
+        return [
+            "title" => str_replace("'", "", $team->getName()),
+            "logo"  => $this->imageService->getImagePath(),
+            "score" => $score,
+            "flag"  => $flag
+        ];
     }
 }
