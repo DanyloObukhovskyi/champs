@@ -38,13 +38,14 @@ class NewsController extends AbstractController
     /**
      * @Route("/ru/news/", name="news_index")
      */
-    public function index()
+    public function index(Request $request)
     {
-        $newsEntities = $this->newsService->getHotNews();
-
+        if (!empty($request->get('tag'))) {
+            $tag = $this->makeTag($request->get('tag'));
+        }
         return $this->render('templates/news.html.twig', [
-            'items' => $newsEntities,
-            'router' => 'news'
+            'router' => 'news',
+            'tag' => $tag ?? null,
         ]);
     }
 
@@ -179,5 +180,16 @@ class NewsController extends AbstractController
         ]);
         $newsComments = $this->newsCommentService->decorateComments($newsComments);
         return $this->json($newsComments);
+    }
+
+    public function makeTag(string $title)
+    {
+        $code = dechex(crc32($title));
+        $code = substr($code, 0, 6);
+
+        return [
+            'title' => $title,
+            'color' => $code
+        ];
     }
 }

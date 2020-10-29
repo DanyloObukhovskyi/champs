@@ -1144,7 +1144,9 @@
   padding: 1vw 1.5vw;
   font-size: 0.9vw;
 }
-.articles__content .badge:hover , .article__content .badge:hover{
+.articles__content .badge:hover,
+.article__content .badge:hover,
+.updates .badge:hover{
   opacity: .5;
 }
 .articles__content .full-input.types .search{
@@ -1180,4 +1182,7 @@
 }
 .filters .title .iso{
   width: 18px;
+}
+.articles__content .game_logo{
+  height: 2vw
 }
