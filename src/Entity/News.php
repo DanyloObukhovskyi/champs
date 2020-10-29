@@ -21,6 +21,13 @@ class News
         NEWS_TYPE_NEWS = 6,
         NEWS_TYPE_TEXT = 7;
 
+    public const GAME_ICONS = [
+        'dota' => 'dota.png',
+        'cs' => 'cs.png',
+        'lol' =>  'lol.jpg',
+        'valorant' =>  'valorant.png'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -227,5 +234,19 @@ class News
     public function setGame($game): void
     {
         $this->game = $game;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getGameIcon()
+    {
+        $iconName = null;
+
+        if (isset($this->game))
+        {
+            $iconName = self::GAME_ICONS[$this->game] ?? null;
+        }
+        return $iconName;
     }
 }
