@@ -184,6 +184,7 @@
   border-bottom: 0.02vw solid #CFDCF3;
 }
 .home .component.matches .table .table-row{
+  font-size: 0.9vw;
   flex-wrap: wrap;
   height: auto;
   padding: 0;
