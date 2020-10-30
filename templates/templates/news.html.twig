@@ -102,7 +102,8 @@
                     dateFrom: null,
                     dateTo: null,
                     tags: [],
-                    words: [],
+                    titles: [],
+                    texts: [],
                 },
                 pageEnd: false,
             },
@@ -110,7 +111,10 @@
                 "filters.tags": function () {
                     this.reload()
                 },
-                "filters.words": function () {
+                "filters.titles": function () {
+                    this.reload()
+                },
+                "filters.texts": function () {
                     this.reload()
                 },
                 "filters.dateFrom": function () {
