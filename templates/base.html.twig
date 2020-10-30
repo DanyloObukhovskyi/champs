@@ -250,7 +250,10 @@
     });
 </script>
 <div id="login">
-    <login-form show-first="{{ router == 'mvp' ? 'registration': 'login' }}" :show="show" redirect="/ru/user/timelist" show-first="login">
+    <login-form show-first="{{ router == 'mvp' ? 'registration': 'login' }}"
+                :show="show"
+                redirect="{{ router == 'mvp' ? url('mvp.cabinet.tournaments'): url('timelist_index') }}"
+                show-first="login">
     </login-form>
 </div>
 {% block body %}{% endblock %}
