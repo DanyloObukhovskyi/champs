@@ -35,7 +35,7 @@
                     {{ successMessage }}
                 </div>
                 <div class="links d-flex">
-                    <div class="mt-1" @click="$emit('setStep', 'registration')">
+                    <div class="mt-1" @click="goToRegistration">
                         <span>Back</span>
                     </div>
                     <div class="mt-1"  @click="showNickname">
@@ -114,6 +114,10 @@
             },
             resendConfirmCode(){
                 if (this.timer === 0){
+                    this.confirmCode = null;
+                    this.errorMessage = null;
+                    this.successMessage = null;
+
                     this.timer = 30;
                     this.runTimer()
 
@@ -129,6 +133,14 @@
                         self.runTimer()
                     }, 1000)
                 }
+            },
+            goToRegistration(){
+                this.$emit('setStep', 'registration');
+                this.timer = 0;
+                this.confirmCode = null;
+
+                this.errorMessage = null;
+                this.successMessage = null;
             }
         },
         mounted() {

@@ -106,7 +106,6 @@
                 this.step = step;
             },
             authLogin(){
-                console.log('123')
                 let formData = new FormData();
 
                 formData.append('email', this.email);
