@@ -373,7 +373,7 @@
     });
 </script>
 
-{% if router == 'home' %}
+{% if router != 'mvp' and router != 'marketplace' %}
     <div class="stream" id="stream" style="display: none">
         <div class="title">
             LIVE
@@ -429,10 +429,12 @@
     <script src="https://player.twitch.tv/js/embed/v1.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        {% set video = setting.get('main_video')%}
         let mute = false;
         let play = false;
         let playerYT = null;
-        let links = "{{ last_stream['video_id'] ?? null }}";
+
+        let links = "{{ video is not null ? video.videoId : null }}";
         let typeYT = "{{ last_stream['video_type'] ?? null }}";
         let full = false;
 

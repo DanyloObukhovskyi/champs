@@ -94,5 +94,7 @@ $route['c-admin/ajax/update'] = 'handle_a_request';
 $route['c-admin/ajax/check'] = 'handle_a_request/check';
 $route['c-admin/refund/(:num)'] = 'refund_c/index/$1';
 
+//setting
+$route['c-admin/settings'] = 'home/setting';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
