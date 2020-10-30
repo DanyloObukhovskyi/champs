@@ -2,11 +2,18 @@
 <script type="text/x-template" id="timetables-template">
     <div class="timetables" :style="{opacity: block ? '0.8' : '1'}">
         <div class="controll mt-3">
-            <div class="dates">
-                <div class="dt"><span v-text="getDate('datein')"></span> - <span v-text="getDate('dateout')"></span>
+            <div class="col-12 d-flex dates flex-column flex-md-row justify-content-between pl-0">
+                <div class="col-12 col-md-6 dt pl-0">
+                    <span v-text="getDate('datein')"></span> - <span v-text="getDate('dateout')"></span>
                 </div>
-                <div class="arrow" @click="prevWeek"><img src="/images/arrowL.svg" alt="arrowL"/></div>
-                <div class="arrow" @click="nextWeek"><img src="/images/arrowR.svg" alt="arrowR"/></div>
+                <div class="col-12 col-md-1 d-flex pl-0 pr-0">
+                    <div class="arrow" @click="prevWeek">
+                        <img src="/images/arrowL.svg" alt="arrowL"/>
+                    </div>
+                    <div class="arrow" @click="nextWeek">
+                        <img src="/images/arrowR.svg" alt="arrowR"/>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="cont" id="calendar">

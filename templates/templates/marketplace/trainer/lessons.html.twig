@@ -18,7 +18,11 @@
                     <div class="container" style="min-height: 40vw">
                         <div class="header lesson">
                             <div class="lft">
-                                <div v-html="`Часовой пояс ${trainer.timeZone}`">
+                                <div class="d-none d-md-block">
+                                    Часовой пояс Тренера ${trainer.timeZone}
+                                </div>
+                                <div class="d-sm-block d-md-none font-size-12px">
+                                    Часовой пояс Тренера ${trainer.timeZone}
                                 </div>
                             </div>
                             {% if app.user is not null %}
@@ -54,6 +58,7 @@
 
 <script>
     Vue.component('trainer-lessons', {
+        delimiters: ['${', '}'],
         template: '#lessons-template',
         data: function () {
             return {
