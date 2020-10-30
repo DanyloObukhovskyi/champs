@@ -1157,6 +1157,19 @@
   outline: none;
   border: 0.04vw solid rgb(207, 220, 243);
   border-right: none;
+  border-left: none;
+}
+.articles__content .full-input .search-tooltip{
+  border: 0.04vw solid rgb(207, 220, 243);
+  border-right: none;
+  border-left: none;
+  width: auto;
+  color: #6F8089;
+}
+.articles__content .dropdown-menu{
+  border: 0.02vw solid #CFDCF3;
+  border-radius: unset;
+  transform: translate3d(0px, 30px, 0px) !important;
 }
 .w-10{
   width: 10%;
@@ -1186,3 +1199,33 @@
 .articles__content .game_logo{
   height: 2vw
 }
+.filters .selectBlock{
+  border: 0;
+  font-size: 0.9vw;
+  width: 15vw;
+  position: absolute;
+  top: 100%;
+  right: -0.02vw;
+  background-color: #FFFFFF;
+  border: 0.02vw solid #FF6D1D;
+  z-index: 10;
+  padding: 1vw;
+  border-radius: 0;
+}
+.filters .selectBlock select{
+  height: 2.3vw;
+  border: 0;
+  font-size: 0.9vw;
+  outline: none;
+  border-bottom: 0.04vw solid #CFDCF3;
+}
+button.dropdown-item{
+  outline: none;
+}
+.dropdown-item:active{
+  background: #FF6D1D;
+}
+.dropdown-item.active{
+  background: #FF6D1D;
+}
+

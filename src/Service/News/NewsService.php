@@ -59,19 +59,26 @@ class NewsService extends EntityService
      * @param $offset
      * @return mixed
      */
-    public function getByFilters($request,  $limit, $offset)
+    public function getByFilters($request, $limit, $offset)
     {
-        $tagsNames = [];
-
+        $tags = [];
         foreach ($request->tags as $tag){
-            $tagsNames[] = $tag->title;
+            $tags[] = $tag->title;
         }
-
+        $titles = [];
+        foreach ($request->titles as $title){
+            $titles[] = $title->title;
+        }
+        $texts = [];
+        foreach ($request->texts as $text){
+            $texts[] = $text->title;
+        }
         return $this->repository->getByFilters(
-            $tagsNames,
-            $request->words,
-            $this->parseDate($request->dateFrom),
-            $this->parseDate($request->dateTo),
+            $tags,
+            $titles,
+            $texts,
+            $this->parseDate($request->dateFrom ?? null),
+            $this->parseDate($request->dateTo ?? null),
             $limit,
             $offset
         );
