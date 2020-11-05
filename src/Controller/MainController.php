@@ -13,12 +13,22 @@ use App\Service\Event\EventService;
 use App\Service\MatchService;
 use App\Service\RatingPersonService;
 use App\Service\RatingTeamService;
+use App\Traits\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class MainController extends DefController
 {
+    use EntityManager;
+
+    public $matchService;
+
+    public function __construct()
+    {
+        $this->matchService = new MatchService($this->getEntityManager());
+    }
+
     /**
      * @Route("/ru/", name="main")
      */
@@ -171,11 +181,95 @@ class MainController extends DefController
 				}
 				$tmp['logo'] = $v_value->getLogo();
 				$tmp['title'] = $v_value->getTitle();
+				$date = $v_value->getDate()->format('d F Y');
+
+				foreach (MatchService::MOHTHS as $month => $lang){
+                    $date = str_replace($month, $lang, $date);
+                }
+                $tmp['date'] = $date;
 				$VideoItems[$v_key] = $tmp;
 			}
 		}
 		return $VideoItems;
 	}
+
+    /**
+     * @Route("/ru/main/matches")
+     */
+	public function getMainMatches()
+    {
+        $matches = $this->getEntityManager()
+            ->getRepository(Match::class)
+            ->findMatchesByDate(new \DateTime());
+        $matchesItems = $this->matchService->matchesDecorator($matches);
+
+        return $this->json($matchesItems);
+    }
+
+    /**
+     * @Route("/ru/main/news")
+     */
+    public function getMainNews()
+    {
+        $repository = $this->getEntityManager()->getRepository(News::class);
+        $news = $repository->findBy([], ['date' => 'DESC'], 6, 0);
+
+        return $this->json($news);
+    }
+
+    /**
+     * @Route("/ru/main/video/news")
+     */
+    public function getVideoNews()
+    {
+        $livesItems = [
+            [
+                'id' => 1,
+                'video_id' => "Nz3_Vg5GBio",
+                'video_type' => 0,
+                'logo' => "",
+                'title' => "ТОП 5 мобильных игр | Champs | Hino",
+            ],
+            [
+                'id' => 2,
+                'video_id' => "1NnA3hbwqRY",
+                'video_type' => 0,
+                'logo' => "",
+                'title' => "ММОшим / Champs / ModirDred",
+            ],
+            [
+                'id' => 3,
+                'video_id' => "Lmz9itL7sqs",
+                'video_type' => 0,
+                'logo' => "",
+                'title' => "Новости недели / Hino x ModirDred / Champs",
+            ],
+            [
+                'id' => 4,
+                'video_id' => "cwd6zSjKEW4",
+                'video_type' => 0,
+                'logo' => "",
+                'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
+            ],
+        ];
+       /*
+       * stream - news type - 8
+       * video - news type - 3
+       */
+        $VideoData = $this->getEntityManager()
+            ->getRepository(News::class)
+            ->findBy([ 'type'=> [8, 3] ],[ 'date' => 'DESC' ], 10 , 0); //8 - stream; 3 - video
+
+        $VideoItems = $this->prepare_video($VideoData);
+
+        if(count($VideoItems) < 4) {
+            $ij =  4 - (4 - count($VideoItems));
+            for($ij; $ij < 4; $ij++) {
+                $VideoItems[$ij] = $livesItems[$ij];
+            }
+        }
+        return $this->json($VideoItems);
+    }
 	
     /**
      * @Route("/ru/404", name="notFound")

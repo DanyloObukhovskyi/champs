@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #8298ac;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="Иконка" class="cls-1" d="M116,1256a2,2,0,1,0,1.909,2A1.96,1.96,0,0,0,116,1256Zm0-3a5.286,5.286,0,1,0,7,5A7.538,7.538,0,0,0,116,1253Zm0,8.33a3.333,3.333,0,1,1,3.182-3.33A3.258,3.258,0,0,1,116,1261.33Z" transform="translate(-109 -1253)"/>
+</svg>

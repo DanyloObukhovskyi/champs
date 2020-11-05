@@ -1,0 +1,23 @@
+body {
+    font-family: 'Exo 2', sans-serif;
+}
+
+.dark body {
+    background: #2a2d30;
+}
+
+.home {
+    background: url(/images/home/background.png) no-repeat center 0;
+    background-size: 100%;
+    padding-top: 6vw;
+    height: 100vw;
+    width: 100%;
+}
+
+.ml-8 {
+    margin-left: 8vw;
+}
+
+.mr-8 {
+    margin-right: 8vw;
+}

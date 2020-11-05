@@ -13,11 +13,31 @@ use App\Repository\MatchRepository;
 
 class MatchService extends EntityService
 {
+    public const MOHTHS = [
+        'January' => 'Января',
+        'February' => 'Февраля',
+        'March' => 'Марта',
+        'April' => 'Апреля',
+        'May' => 'Мая',
+        'June' => 'Июня',
+        'Jule' => 'Июля',
+        'August' => 'Августа',
+        'September' => 'Сентября',
+        'October' => 'Октября',
+        'November' => 'Ноября',
+        'December' => 'Декабря'
+    ];
+
     protected $entity = Match::class;
 
-    /** @var MatchRepository */
+    /**
+     * @var MatchRepository
+     */
     protected $repository;
 
+    /**
+     * @var ImageService
+     */
     protected $imageService;
 
     public function __construct($entityManager)
@@ -182,12 +202,18 @@ class MatchService extends EntityService
 
         foreach ($matches as $match)
         {
-            $startDay = date("md", $match->getStartAt()->getTimestamp());
+            $startDay = date("mdY", $match->getStartAt()->getTimestamp());
 
             if (!array_key_exists($startDay, $items))
             {
+                $date = date("d F", $match->getStartAt()->getTimestamp());
+
+                foreach (self::MOHTHS as $month => $lang)
+                {
+                    $date = str_replace($month, $lang, $date);
+                }
                 $items[$startDay] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
+                    "date" => $date,
                     "items" => [],
                 ];
             }

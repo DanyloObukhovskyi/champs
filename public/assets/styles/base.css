@@ -154,10 +154,6 @@ label {
   letter-spacing: 0.05vw;
   z-index: 3;
 }
-.header_nav .nav .logo {
-  height: 1.9vw;
-  flex-shrink: 0;
-}
 .header_nav .nav .menu {
   width: 100%;
   height: 100%;
@@ -165,51 +161,8 @@ label {
   flex-direction: row;
   padding: 0 2vw;
 }
-.header_nav .nav .menu a,
-.header_nav .nav .menu span {
-  display: block;
-  height: 100%;
-  padding: 0 1vw;
-  text-transform: uppercase;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-}
-.header_nav .nav .menu a:hover,
-.header_nav .nav .menu span:hover {
-  color: #ff6d1d;
-}
-.header_nav .nav .menu a.active,
-.header_nav .nav .menu span.active {
-  color: #ffffff;
-  cursor: default;
-}
-.header_nav .nav .menu a.active:after,
-.header_nav .nav .menu span.active:after {
-  content: "";
-  width: 100%;
-  height: 0.2vw;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  border-radius: 0.2vw 0.2vw 0 0;
-  background-color: #ff6d1d;
-}
 .header_nav .nav .menu .search {
   display: none;
-}
-.header_nav .nav .social {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  position: absolute;
-  top: 0;
-  right: 28vw;
-}
-.header_nav .nav .social span,
-.header_nav .nav .social a {
-  margin: 0 0.5vw;
 }
 .header_nav .nav .social span img,
 .header_nav .nav .social a img {
@@ -267,8 +220,9 @@ label {
   display: flex;
   align-items: center;
   position: absolute;
-  right: 13vw;
+  right: 9vw;
   top: 0;
+  bottom: auto;
 }
 .header_nav .nav .select {
   display: flex;
@@ -303,45 +257,17 @@ label {
 .header_nav .nav .select-block.shadow {
   box-shadow: 0 0.2vw 0.3vw #111111;
 }
-.header_nav .nav .login {
-  position: absolute;
-  right: 3vw;
-  top: 18%;
-  flex-shrink: 0;
-  height: 64%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  border: 0.1vw solid #ff6d1d;
-  border-radius: 0.3vw;
-  overflow: hidden;
-  transition: 0.2s;
-  cursor: pointer;
-}
-.header_nav .nav .login:hover {
-  right: 3.5vw;
-}
 .header_nav .nav .login span,
 .header_nav .nav .login a {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
-  color: #fff;
   padding: 0 1vw;
   justify-content: center;
 }
 .header_nav .nav .login a.icon {
   padding: 0;
-}
-.header_nav .nav .login div {
-  width: 2vw;
-  flex-shrink: 0;
-  height: 100%;
-  align-items: center;
-  display: flex;
-  background-color: #ff6d1d;
-  justify-content: center;
 }
 .header_nav .nav .login div img {
   width: 0.7vw;
@@ -1895,7 +1821,6 @@ label {
 .w-10{
   width: 10% !important;
 }
-
 .nick-name-hover:hover{
   transition: color .4s ease;
   color: #ff5627;

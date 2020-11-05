@@ -9,12 +9,12 @@
         function gtag() {
             dataLayer.push(arguments);
         }
-
         gtag('js', new Date());
         gtag('config', 'UA-177285165-1');
     </script>
-
     <meta charset="UTF-8"/>
+    <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
+    <meta name="color-scheme" content="dark light">
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block description %}{% endblock %}
     {% block keywords %}{% endblock %}
@@ -24,6 +24,7 @@
           rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
@@ -59,6 +60,7 @@
             crossorigin="anonymous"></script>
     <script src="/assets/js/jquery.bracket.min.js"></script>
     <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
+    {{ encore_entry_link_tags('app') }}
     {% block css %}{% endblock %}
 
     <!-- Yandex.Metrika counter -->
@@ -85,352 +87,25 @@
         </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
-
 </head>
 <body>
-<nav class="header_nav" id="header">
-    <div class="container nav">
-        <a href="/">
-            <img src="/images/logo.svg" class="logo"/>
-        </a>
-        <div class="menu-btn-cont">
-            <img src="/images/menu.png" class="menu-btn" @click="menu = menu ? false : true"/>
-        </div>
-        <div class="menu" :class="[menu ? 'open' : '']">
-            <a href="{{ path('main') }}" {% if router == 'home' %}class="active"{% endif %}>Главная</a>
-            <a href="{{ path('news_index') }}" {% if router == 'news' %}class="active"{% endif %}>Новости</a>
-            <a href="{{ path('matches_index_page') }}" {% if router == 'matches' %}class="active"{% endif %}>Матчи</a>
-            <a href="{{ path('results_index_page') }}"
-               {% if router == 'results' %}class="active"{% endif %}>Результаты</a>
-            <a href="{{ path('events.index') }}" {% if router == 'events' %}class="active"{% endif %}>События</a>
-            <a href="{{ path('statistics_index') }}"
-               {% if router == 'statistics' %}class="active"{% endif %}>Cтатистика</a>
-            <a href="{{ path('marketplace_index') }}"
-               {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
-        </div>
-
-        <script>
-            var search = new Vue({
-                el: '#search',
-                data: function () {
-                    return {
-                        show: false,
-                    };
-                }
-            });
-        </script>
-        {% include 'social.html.twig' %}
-        <div class="live" v-if="false">
-            <div class="round"></div>
-            <div class="text">Live</div>
-        </div>
-        {% if router == 'marketplace' %}
-            <div class="games d-md-flex d-lg-none">
-                <div class="select-block" :class="[show ? 'shadow' : '']">
-                    <div class="select" @click="show=show?false:true">
-                        <img :src="`/images/${icon}`" class="logo"/>
-                        <div class="text" v-text="game"></div>
-                        <img src="/images/arrowBtn.svg" class="arrow"/>
-                    </div>
-                    <div class="select" @click="game='dota',icon='dota.png',show=false"
-                         v-if="(game === 'cs' || game === 'lol') && show" title="Dota">
-                        <img src="/images/dota.png" class="logo"/>
-                        <div class="text">DOTA</div>
-                    </div>
-                    <div class="select" @click="game='cs',icon='cs.png',show=false"
-                         v-if="(game === 'dota' || game === 'lol') && show" title="Counter Strike">
-                        <img src="/images/cs.png" class="logo"/>
-                        <div class="text">CS:GO</div>
-                    </div>
-                    <div class="select" @click="game='lol',icon='lol.jpg',show=false"
-                         v-if="(game === 'dota' || game === 'cs') && show" title="Lol">
-                        <img src="/images/lol.jpg" class="logo"/>
-                        <div class="text">LOL</div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <div class="login" {% if is_granted('IS_AUTHENTICATED_FULLY') == false %} @click="view = 1"{% endif %}>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {% if app.user.istrainer %}
-                    <a href="/ru/trainer/timelist" class="ln">кабинет</a>
-                {% else %}
-                    <a href="/ru/user/timelist" class="ln">кабинет</a>
-                {% endif %}
-            {% else %}
-                <span>Войти</span>
-            {% endif %}
-            <div>
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    {% if app.user.istrainer %}
-                        <a href="/ru/trainer/timelist" class="icon"><img src="/images/arrowLogin.svg"/></a>
-                    {% else %}
-                        <a href="/ru/user/specifications" class="icon"><img src="/images/arrowLogin.svg"/></a>
-                    {% endif %}
-                {% else %}
-                    <img src="/images/arrowLogin.svg"/>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <transition name="slide-fades">
-        <div class="login_form" v-if="view === 1" v-show="view === 1" style="display: none">
-            <div class="login_block">
-                <div class="logotype">
-                    <img src="/images/Champs_logotype.svg" class="logotype"/>
-                </div>
-                <div class="login_title">
-                    Вход в личный кабинет
-                </div>
-                <div class="login_input">
-                    <input type="text" name="email" required v-model="email"/>
-                    <span>Адрес электронной почты</span>
-                </div>
-                <div class="login_input">
-                    <input type="password" required name="password" v-model="password"/>
-                    <span>Пароль</span>
-                </div>
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" v-model="csrf_token"/>
-                <div class="send" @click="authLogin" :style="{opacity: blockAuth ? '0.5' : '1'}">
-                    Войти
-                </div>
-                <div class="error" v-if="error">
-                    Неправильный логин или пароль
-                </div>
-                <div class="subtext">Или войдите с помощью</div>
-                <div class="alternate">
-                    <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"><img
-                                src="/images/login_steam.svg"/></a>
-                    <a><img src="/images/login_discord.svg" style="display: none;"/></a>
-                    <a><img src="/images/login_epic.svg" style="display: none;"/></a>
-                </div>
-                <div class="links">
-                    <div><span @click="view = 3" style="display: none;">Восстановление пароля</span></div>
-                    <div><span @click="view = 2">Регистрация</span></div>
-                </div>
-                <div class="closed" @click="view = null">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                              fill="#86888A"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </transition>
-    <transition name="slide-fades">
-        <div class="login_form" v-if="view === 2" v-show="view === 2" style="display: none">
-            <div class="login_req">
-                <div class="login_block">
-                    <div class="logotype">
-                        <img src="/images/Champs_logotype.svg" class="logotype"/>
-                    </div>
-                    <div class="login_title">
-                        Регистрация
-                    </div>
-                    <div class="login_input">
-                        <input type="text" required value="" v-model="email"/>
-                        <span>Адрес электронной почты</span>
-                    </div>
-                    <div class="login_input">
-                        <input type="password" required value="" v-model="password"/>
-                        <span>Пароль</span>
-                    </div>
-                    <div class="login_check">
-                        <label><input type="checkbox" required v-model="check"/></label>
-                        <span><a href="/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a></span>
-                    </div>
-                    <div class="send" @click="authRegistration" :style="{opacity: block ? '0.5' : '1'}">
-                        Зарегистрироваться
-                    </div>
-                    <div class="error" v-if="error">
-                        Произошла ошибка
-                    </div>
-                    <div class="subtext">Или войдите с помощью</div>
-                    <div class="alternate">
-                        <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"><img
-                                    src="/images/login_steam.svg"/></a>
-                        <a><img src="/images/login_discord.svg" style="display: none;"/></a>
-                        <a><img src="/images/login_epic.svg" style="display: none;"/></a>
-                    </div>
-                    <div class="links">
-                        <div><span @click="view = 3" style="display: none;">Восстановление пароля</span></div>
-                        <div><span @click="view = 1">Вход в личный кабинет</span></div>
-                    </div>
-                    <div class="closed" @click="view = null">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                                  fill="#86888A"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="login_req_block">
-                    <div class="item">
-                        <div></div>
-                        <div>Тренеруйтесь вместе с лучшими игроками в ваших любимых играх</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Последние новости и события</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Великолепное сообщество</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Трансляции и результаты матчей</div>
-                    </div>
-                    <div class="item">
-                        <div></div>
-                        <div>Аналитика от профессионалов</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <transition name="slide-fades">
-            <div class="login_form" v-if="view === 3" v-show="view === 3" style="display: none">
-                <div class="login_block">
-                    <div class="logotype">
-                        <img src="/images/Champs_logotype.svg" class="logotype"/>
-                    </div>
-                    <div class="login_title">
-                        Восстановление пароля
-                    </div>
-                    <div class="login_input">
-                        <input type="text" required value=""/>
-                        <span>Адрес электронной почты</span>
-                    </div>
-                    <div class="send">
-                        Отправить письмо на почту
-                    </div>
-                    <div class="links">
-                        <div><span @click="view = 1">Авторизация</span></div>
-                        <div><span @click="view = 2">Регистрация</span></div>
-                    </div>
-                    <div class="closed" @click="view = null">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                                  fill="#86888A"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </transition>
-</nav>
-
-<script>
-    var header = new Vue({
-        el: '#header',
-        data: function () {
-            return {
-                icon: 'cs.png',
-                game: 'cs',
-                show: false,
-                menu: false,
-                view: null,
-                start: false,
-                block: true,
-                check: false,
-                blockAuth: true,
-                csrf_token: '{{ csrf_token('authenticate') }}',
-                email: '',
-                password: '',
-                password_confirm: '',
-                error: false,
-            };
-        },
-        watch: {
-            email() {
-                this.valid()
-            },
-            password() {
-                this.valid()
-            },
-            check() {
-                this.valid()
-            },
-            game() {
-                if (this.game === 'cs') {
-                    this.icon = 'cs.png'
-                }
-                if (this.game === 'dota') {
-                    this.icon = 'dota.png'
-                }
-                if (this.game === 'lol') {
-                    this.icon = 'lol.jpg'
-                }
-            }
-        },
-        methods: {
-            authLogin() {
-                const th = this;
-                let formData = new FormData();
-                formData.append('email', this.email);
-                formData.append('password', this.password);
-                formData.append('_csrf_token', this.csrf_token);
-                if (!this.blockAuth) {
-                    th.blockAuth = true;
-                    axios.post("{{ path('app_login') }}", formData)
-                        .then((res) => {
-                            th.blockAuth = false;
-                            if (res.data.error) {
-                                th.error = true;
-                            } else {
-                                th.view = null;
-                                window.location.assign('/ru/user/timelist');
-                            }
-                        })
-                }
-            },
-            authRegistration() {
-                const th = this;
-                let formData = new FormData();
-                formData.append('user[email]', this.email);
-                formData.append('user[password][first]', this.password);
-                formData.append('user[password][second]', this.password);
-                if (!this.block) {
-                    th.block = true;
-                    axios.post('/ru/registration', formData)
-                        .then((res) => {
-                            th.block = false;
-                            if (res.data.error) {
-                                th.error = true;
-                            } else {
-                                th.authLogin();
-                            }
-                        })
-                        .catch(() => {
-                            th.error = true;
-                        })
-                }
-            },
-            valid() {
-                const re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-                if (re.test(this.email) && this.password.length > 5) {
-                    this.blockAuth = false;
-                    if (this.check) {
-                        this.block = false;
-                    } else {
-                        this.block = true;
-                    }
-                } else {
-                    this.blockAuth = true;
-                    this.block = true;
-                }
-            }
-        },
-        created() {
-            window.addEventListener('click', (e) => {
-                if (e.target.classList.contains('menu-btn') || e.target.classList.contains('search-input')
-                    || e.target.classList.contains('icon') || e.target.classList.contains('icon-svg')) return false;
-                this.menu = false;
-            });
-            window.addEventListener('load', () => {
-                this.start = true;
-            });
-        }
-    });
-</script>
+<header id="header">
+    <nav-bar
+            :isPageStart="isPageStart"
+            @show="showLoginModal"
+            router="{{ router }}"
+            :is-trainer="{{ is_granted('IS_AUTHENTICATED_FULLY') and app.user.istrainer ? 'true': 'false' }}"
+            :is-authorize="{{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true': 'false'}}">
+    </nav-bar>
+    <sub-nav-bar @setgame="setGame">
+    </sub-nav-bar>
+    <login-modal
+            show-first="{{ router == 'mvp' ? 'registration': 'login' }}"
+            :show="show"
+            redirect="{{ router == 'mvp' ? url('mvp.cabinet.tournaments'): url('timelist_index') }}"
+            show-first="login">
+    </login-modal>
+</header>
 {% set messages = app.flashes('notice') %}
 {% if messages|length > 0 %}
     <div class="messages">
@@ -444,7 +119,10 @@
         </div>
     </div>
 {% endif %}
-{% block body %}{% endblock %} {% block javascripts %}{% endblock %}
+{% block body %}{% endblock %}
+{{ encore_entry_script_tags('app') }}
+{% block javascripts %}
+{% endblock %}
 
 <div class="cookie" id="cookie">
     <div class="footer">

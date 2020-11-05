@@ -1,0 +1,15 @@
+<svg id="Активный_триггер" data-name="Активный триггер" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #ff6d1d;
+      }
+
+      .cls-1 {
+        opacity: 0.25;
+      }
+    </style>
+  </defs>
+  <circle id="Эллипс_1_копия" data-name="Эллипс 1 копия" class="cls-1" cx="7.5" cy="7.5" r="7.5"/>
+  <circle id="Эллипс_1" data-name="Эллипс 1" class="cls-2" cx="7.5" cy="7.5" r="3.5"/>
+</svg>
