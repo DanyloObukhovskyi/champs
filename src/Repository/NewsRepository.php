@@ -51,9 +51,72 @@ class NewsRepository extends ServiceEntityRepository
                 ->setParameter('search', '%'.$search.'%');
         }
 
-        $result = $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult();
+    }
 
-        return $result;
+    /**
+     * @param array $tags
+     * @param array $titles
+     * @param array $texts
+     * @param string|null $dateFrom
+     * @param string|null $dateTo
+     * @param int $limit
+     * @param int $offset
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getByFilters(
+        array $tags = [],
+        array $titles = [],
+        array $texts = [],
+        string $dateFrom = null,
+        string $dateTo = null,
+        int $limit,
+        int $offset
+    )
+    {
+        $query = $this->createQueryBuilder("n")
+            ->orderBy('n.id', 'DESC');
 
+        if (!empty($tags)){
+            $query->innerJoin('n.newsTags', 'nt')
+                ->andwhere('nt.title IN(:tags)')
+                ->setParameter('tags', $tags);
+        }
+        foreach ($titles as $title){
+            $query->andwhere('n.title like :title')
+                ->setParameter('title', "%$title%");
+        }
+        foreach ($texts as $text){
+            $query->andwhere('n.text like :text')
+                ->setParameter('text', "%$text%");
+        }
+        if (!empty($dateFrom)){
+            $from = new \DateTime("$dateFrom 00:00:00");
+            $query->andWhere('n.created_at >= :dateFrom')
+                ->setParameter('dateFrom', $from);
+        }
+        if (!empty($dateTo)){
+            $to   = new \DateTime("$dateTo 23:59:59");
+            $query->andWhere('n.created_at <= :dateTo')
+                ->setParameter('dateTo', $to);
+        }
+        return $query->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $limit
+     * @return mixed
+     */
+    public function getHotNews(int $limit)
+    {
+        return $this->createQueryBuilder("n")
+            ->orderBy('n.views', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

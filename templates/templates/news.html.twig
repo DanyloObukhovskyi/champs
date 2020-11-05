@@ -2,25 +2,314 @@
 {% block title %}Новости{% endblock %}
 {% block router %}news{% endblock %}
 {% block description %}
-  <meta name="description" content="Новости, статьи, матчи и трансферы по League of Legends, Dota, Cs:go">
+    <meta name="description" content="Новости, статьи, матчи и трансферы по League of Legends, Dota, Cs:go">
 {% endblock %}
 {% block keywords %}
-  <meta name="Keywords" content="Игровые матчи, Игровые новости, События, Видео, Интервью">
+    <meta name="Keywords" content="Игровые матчи, Игровые новости, События, Видео, Интервью">
+{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/load.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/styles/news-animation.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
 {% endblock %}
 {% block body %}
-<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-  Новости
-</h1>
-<div class="home">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-        {% include 'templates/news/article.html.twig' %}
-      </div>
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-        {% include 'templates/news/articles.html.twig' %}
-      </div>
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Новости
+    </h1>
+    <div class="home" id="home">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                    {% include 'templates/news/article.html.twig' %}
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                    <div class="articles__content">
+                        <news-filters :filters="filters" @reload="reload"/>
+                    </div>
+                     <div class="articles__content">
+                         <div class="component lenta">
+                             <div class="header">
+                                 <div class="round">
+                                     <div><img src="/images/lamp.svg"/></div>
+                                 </div>
+                                 <div class="title">
+                                     Горячие новости
+                                 </div>
+                             </div>
+                             <div class="table">
+                                 <a :href="`/ru/news/${ news.id }-${ news.url }`" class="table-row" v-for="news in hotNews">
+                                     <div class="tags w-100">
+                                         <div class="tags">
+                                            <span
+                                                @click="addTag(tag)"
+                                                class="badge badge-pill badge-danger mr-1"
+                                                :style="{background: `#${tag.color}`}"
+                                                v-html="`#${tag.title}`"
+                                                v-for="tag in news.tags">
+                                            </span>
+                                         </div>
+                                     </div>
+                                     <div class="title">
+                                         <div class="time">${news.date}</div>
+                                         <div class="name">
+                                             <div></div>
+                                             ${types[+news.type]}
+                                         </div>
+                                         <div class="d-flex justify-content-end">
+                                             <div v-if="news.game">
+                                                 <img class="game_logo" :src="'/images/' + getGameImage(news.game)">
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="text">${ news.title }</div>
+                                 </a>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+{% endblock %}
+{% block js %}
+    {% include 'templates/news/calendar.html.twig' %}
+    {% include 'templates/news/filters.html.twig' %}
+    <script>
+        const newsArticle = new Vue({
+            delimiters: ['${', '}'],
+            el: '#home',
+            data: {
+                hotNews: [],
+                gamesIcons: {
+                    dota: 'dota.png',
+                    cs: 'cs.png',
+                    lol: 'lol.jpg',
+                    valorant: 'valorant.png'
+                },
+                news: [],
+                load: false,
+                isLoadAll: false,
+                types: {
+                    1: 'Трансфер',
+                    2: 'Матч',
+                    3: 'Видео',
+                    4: 'Интервью',
+                    5: 'Статья',
+                    6: 'Обновления',
+                    7: 'Текст'
+                },
+                filters: {
+                    dateFrom: null,
+                    dateTo: null,
+                    tags: [],
+                    titles: [],
+                    texts: [],
+                },
+                pageEnd: false,
+            },
+            watch: {
+                "filters.tags": function () {
+                    this.reload()
+                },
+                "filters.titles": function () {
+                    this.reload()
+                },
+                "filters.texts": function () {
+                    this.reload()
+                },
+                "filters.dateFrom": function () {
+                    this.reload()
+                },
+                "filters.dateTo": function () {
+                    this.reload()
+                },
+            },
+            computed: {
+                newsOrdered() {
+                    const newsArray = [];
+
+                    for (let i = 0; i < Math.ceil(this.news.length / 5); i++) {
+                        newsArray[i] = this.news.slice((i * 5), (i * 5) + 5);
+                    }
+                    const newsArrayOrdered = [];
+                    for (let news of newsArray) {
+                        let newsItem = [];
+
+                        for (let i = 0; i < news.length; i++) {
+                            if (i === 2 || i === 3) {
+                                if (!newsItem[2]) {
+                                    newsItem[2] = [];
+                                }
+                                newsItem[2].push(news[i])
+                            } else {
+                                newsItem.push(news[i])
+                            }
+                        }
+                        newsArrayOrdered.push(newsItem)
+                    }
+                    return newsArrayOrdered;
+                },
+            },
+            methods: {
+                getGameImage(game){
+                    if(this.gamesIcons.hasOwnProperty(game)){
+                        return this.gamesIcons[game];
+                    }
+                    return null;
+                },
+                pageUp(){
+                    let t;
+                    const top = Math.max(
+                        document.body.scrollTop,
+                        document.documentElement.scrollTop
+                    );
+                    if(top > 0) {
+                        window.scrollBy(0, -100);
+                        t = setTimeout(this.pageUp, 20);
+                    } else {
+                        clearTimeout(t);
+                    }
+                },
+                loadImage(e) {
+                    let w_t = 0;
+                    let h_t = 0;
+                    let l = 0;
+                    let t = 0;
+                    let ratio = 0;
+                    if (e.clientWidth > e.clientHeight) {
+                        w_t = e.parentNode.clientWidth / e.clientWidth;
+                        h_t = e.parentNode.clientWidth / e.clientHeight;
+                        ratio = Math.min(w_t, h_t);
+                        w_t = Math.ceil(e.clientWidth * ratio);
+                        h_t = Math.ceil(e.clientHeight * ratio);
+                        if (e.parentNode.clientHeight > h_t) {
+                            h_t = e.parentNode.clientHeight / e.clientHeight;
+                            ratio = Math.min(w_t, h_t);
+                            w_t = Math.ceil(e.clientWidth * ratio);
+                            h_t = e.parentNode.clientHeight;
+                            l = '-' + (w_t - e.parentNode.clientWidth) / 2;
+                        }
+                    } else {
+                        w_t = e.parentNode.clientHeight / e.clientWidth;
+                        h_t = e.parentNode.clientHeight / e.clientHeight;
+                        ratio = Math.min(w_t, h_t);
+                        w_t = Math.ceil(e.clientWidth * ratio);
+                        h_t = e.parentNode.clientHeight;
+                        l = 0;
+                        if (e.parentNode.clientWidth > w_t) {
+                            w_t = e.parentNode.clientWidth / e.clientWidth;
+                            h_t = e.parentNode.clientWidth / e.clientHeight;
+                            ratio = Math.min(w_t, h_t);
+                            w_t = e.parentNode.clientWidth;
+                            h_t = Math.ceil(e.clientHeight * ratio);
+                        }
+                    }
+                    if (e.parentNode.clientWidth < w_t) {
+                        l = '-' + (w_t - e.parentNode.clientWidth) / 2;
+                    }
+                    if (e.parentNode.clientHeight < h_t) {
+                        t = '-' + (h_t - e.parentNode.clientHeight) / 2;
+                    }
+                    e.style.left = t + 'px';
+                    e.style.left = l + 'px';
+                    e.style.width = w_t + 'px';
+                    e.style.height = h_t + 'px';
+                    e.style.opacity = '1';
+                },
+                getClass(index) {
+                    let className = 'news__image';
+
+                    if (index === 0) {
+                        className = 'news__image_cub'
+                    }
+                    return className;
+                },
+                getTitle(title) {
+                    if (title.length > 70) {
+                        return `${title.substr(0, 70)}...`
+                    } else {
+                        return title;
+                    }
+                },
+                getNews() {
+                    if (!this.isLoadAll){
+                        this.load = true;
+
+                        axios.post('{{ url('news.ajax') }}/' + this.news.length, this.filters)
+                            .then(({data}) => {
+                                if (data.length === 0){
+                                    this.isLoadAll = true;
+                                }
+                                for (let item of data){
+                                    const news = this.news.find(news => Number(item.id) === Number(news.id))
+                                    if (!news){
+                                        this.news.push(item);
+                                    }
+                                }
+                                this.load = false;
+                            })
+                    }
+                },
+                scrollEventTrigger(){
+                    const self = this;
+                    window.onscroll = () => {
+                        const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+
+                        if (scrollable <= 10) {
+                            self.getNews()
+                        }
+                    }
+                },
+                addTag(tag){
+                    event.preventDefault()
+
+                    const findTags = this.filters.tags.find(t => t.title === tag.title)
+                    if (!findTags) {
+                        this.filters.tags.push(tag);
+                    }
+                },
+                getGameImage(game){
+                    if(this.gamesIcons.hasOwnProperty(game)){
+                        return this.gamesIcons[game];
+                    }
+                    return null;
+                },
+                setFromDate(date) {
+                    this.dateToView = false;
+                    this.dateFromView = false;
+                    this.dateFrom = date;
+                    this.getAxios();
+                },
+                setToDate(date) {
+                    this.dateFromView = false;
+                    this.dateToView = false;
+                    this.dateTo = date;
+                    this.getAxios();
+                },
+                reload(){
+                    this.news = [];
+                    this.isLoadAll = false;
+
+                    this.pageUp();
+                    this.getNews();
+                },
+                getHotNews(){
+                    axios.post('{{ path('get.hot.news') }}')
+                        .then(({data}) => {
+                            this.hotNews = data;
+                        })
+                }
+            },
+            mounted() {
+                window.history.pushState('page2', '', '{{ path('news_index') }}');
+                {% if tag is not null %}
+                    this.filters.tags.push({{ tag|json_encode|raw }});
+                {% endif %}
+
+                this.getHotNews();
+                this.getNews();
+                this.scrollEventTrigger();
+            }
+        })
+    </script>
 {% endblock %}

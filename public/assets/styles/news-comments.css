@@ -1,0 +1,41 @@
+.comments textarea{
+    border: 0.04vw solid #CFDCF3;
+    outline: none;
+}
+.button-send{
+    background: #FF6D1D;
+}
+.button-send:hover{
+    opacity: .5;
+}
+.comment img{
+    height: 3vw;
+    border-radius: 50%;
+    background-color: #AAA;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.comment{
+    width: 100%;
+    border-top: 0.04vw solid #CFDCF3;
+    display: flex;
+    flex-direction: row;
+    padding: 1vw 0;
+}
+.comment .data{
+    width: 100%;
+    padding-left: 1vw;
+}
+.comment .data .title__block{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.comment .data .title__block .title{
+    width: 100%;
+    font-size: 0.7vw;
+}
+
+.comment .data .title__block .title div:nth-child(2) {
+    color: #919191;
+}

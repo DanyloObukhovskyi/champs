@@ -1,0 +1,203 @@
+<script type="text/x-template" id="filters">
+    <div>
+        <div class="align-items-baseline d-flex filters">
+            <div class="title d-flex align-items-center pointer filter"
+                 id="dropdownMenuButton"
+                 data-toggle="dropdown"
+                 aria-haspopup="true"
+                 aria-expanded="false">
+                <div class="d-flex pointer filter">
+                    ФИЛЬТРЫ
+                </div>
+                <div class="filter">
+                    <img src="/images/calendar.svg" class="ico ml-1 mr-1 mb-1 filter"/>
+                </div>
+            </div>
+            <div class="w-100">
+                <div class="full-input types">
+{#                    <div class="search-tooltip pl-2">#}
+{#                        <i class="fas fa-question"#}
+{#                           data-toggle="tooltip"#}
+{#                           data-placement="top"#}
+{#                           title="Нажмите на фильтры для того что-бы задать тип поиска">#}
+{#                        </i>#}
+{#                    </div>#}
+                    <input  @keyup.enter="addWord"
+                            v-model="search"
+                            type="text"
+                            class="col search-input"
+                            @click="showFilters = !showFilters"
+                            :placeholder="`${types[filterType]}: Введите ключевое слово`">
+                    <div class="col-1 d-flex search" @click="addWord">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.7214 6.28571C11.7214 7.78698 11.1139 9.14474 10.1293 10.1293C9.14474 11.1139 7.78698 11.7214 6.28571 11.7214C3.28365 11.7214 0.85 9.28778 0.85 6.28571C0.85 3.28365 3.28365 0.85 6.28571 0.85C9.28778 0.85 11.7214 3.28365 11.7214 6.28571Z"
+                                  stroke="#718088" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14.8289 16.0296C15.1609 16.3615 15.6991 16.3615 16.031 16.0296C16.363 15.6977 16.363 15.1595 16.031 14.8275L14.8289 16.0296ZM9.68607 10.8867L14.8289 16.0296L16.031 14.8275L10.8882 9.68466L9.68607 10.8867Z"
+                                  fill="#718088"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-menu w-100 p-0">
+                    <button class="dropdown-item"
+                            :class="{active: filterType === type}"
+                            @click="filterType = type"
+                            v-for="(label, type) in types"
+                            v-html="label">
+                    </button>
+                </div>
+                <div class="dates">
+                    <div class="date">
+                        <span @click="dateFromView = !dateFromView, dateFromView = false">
+                            От
+                            <label v-text="dateFrom"></label>
+                        </span>
+                        <img src="/images/calendar.svg"
+                             @click="dateFromView = !dateFromView, dateToView = false"
+                             class="ico pointer"/>
+                        <calendar @date="setFromDate" v-if="dateFromView" :date="dateFrom"/>
+                    </div>
+                    <div class="date">
+                        <span @click="dateToView = !dateToView, dateFromView = false">
+                            До
+                            <label v-text="dateTo"></label>
+                        </span>
+                        <img src="/images/calendar.svg" class="ico pointer"
+                             @click="dateToView = !dateToView, dateFromView = false"/>
+                        <calendar @date="setToDate" v-if="dateToView" :date="dateTo"/>
+                    </div>
+                    <div class="date pointer text-light" @click="clear" style="background: #ff6d1d;">
+                        <span>Очистить</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+{#        <div class="tags" v-if="filters.words.length > 0">#}
+{#            <div class="d-flex title">#}
+{#                КЛЮЧЕВЫЕ СЛОВА#}
+{#            </div>#}
+{#            <span#}
+{#                @click="removeWord(word)"#}
+{#                class="badge badge-pill badge-danger mr-1 pointer"#}
+{#                :style="{background: `#${getTextColor(word)}`}"#}
+{#                v-for="word in filters.words">#}
+{#                ${word}#}
+{#                <i class="fas fa-times ml-1"></i>#}
+{#            </span>#}
+{#        </div>#}
+        <div class="tags" v-for="(label, type) in types" v-if="filters[type].length > 0">
+            <div class="d-flex title" v-html="label.toUpperCase()">
+            </div>
+            <span
+                @click="removeWord(word, type)"
+                class="badge badge-pill badge-danger mr-1 pointer"
+                :style="{background: `#${word.color}`}"
+                v-for="word in filters[type]">
+                #${word.title}
+                <i class="fas fa-times ml-1"></i>
+            </span>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('news-filters', {
+        template: '#filters',
+        delimiters: ['${', '}'],
+        props: [
+            'filters',
+        ],
+        data(){
+            return {
+                search: null,
+                dateFromView: false,
+                dateToView: false,
+                showFilters: false,
+                filterType: 'tags',
+                types: {
+                    tags: 'Теги',
+                    titles: 'Названия',
+                    texts: 'Текст'
+                }
+            }
+        },
+        computed: {
+            dateFrom(){
+                if (this.filters.dateFrom){
+                    return this.filters.dateFrom
+                }
+                return '21.02.2015'
+            }  ,
+            dateTo(){
+                if (this.filters.dateTo){
+                    return this.filters.dateTo
+                }
+                return '21.02.2022'
+            }
+        },
+        methods: {
+            makeCRCTable: function(){
+                let c;
+                let crcTable = [];
+                for(let n =0; n < 256; n++){
+                    c = n;
+                    for(let k =0; k < 8; k++){
+                        c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+                    }
+                    crcTable[n] = c;
+                }
+                return crcTable;
+            },
+            crc32(str) {
+                let crcTable = this.makeCRCTable();
+                let crc = 0 ^ (-1);
+
+                for (let i = 0; i < str.length; i++ ) {
+                    crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+                }
+                return ((crc ^ (-1)) >>> 0);
+            },
+            getTextColor(tag){
+                const Tag = this.crc32(tag)
+
+                return Tag.toString(16).substr(0, 6);
+            },
+            addWord(){
+                if (this.search !== null && this.search !== ''){
+                    const findWord = this.filters[this.filterType].find(w => w.title === this.search)
+                    if (!findWord) {
+                        this.filters[this.filterType].push({
+                            title: this.search,
+                            color: this.getTextColor(this.search)
+                        });
+                    }
+                    this.search = null;
+                }
+            },
+            removeWord(word, filterType){
+                this.filters[filterType] = this.filters[filterType].filter(t => t.title !== word.title)
+            },
+            setFromDate(date){
+                this.dateFromView = false;
+                this.filters.dateFrom = date;
+            },
+            setToDate(date){
+                this.dateToView = false;
+                this.filters.dateTo = date;
+            },
+            clear(){
+                this.filters.words = []
+                this.filters.tags = []
+
+                this.filters.dateFrom = null
+                this.filters.dateTo = null
+
+                this.$emit('reload')
+            },
+        },
+        mounted(){
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        }
+    })
+</script>

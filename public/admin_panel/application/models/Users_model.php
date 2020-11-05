@@ -189,7 +189,9 @@
 				return $result->result_array();
 			}
 		}
-
+		
+		
+		
 		public function get_capabilities($id=0) {
 			if($id > 0) {
 				$this->db->select('roles');
@@ -202,13 +204,5 @@
 				return false;
 			}
 		}
-
-		public function get_by_nickname($nickname)
-        {
-            $this->db->select('email');
-            $this->db->from("admins");
-            $this->db->where('nickname', $nickname);
-            $result = $this->db->get();
-            return $result->result_array();
-        }
+		
 	}

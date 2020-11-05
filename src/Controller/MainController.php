@@ -85,7 +85,7 @@ class MainController extends DefController
         }
 
         $repository = $entityManager->getRepository(News::class);
-        $news = $repository->findBy([],['date'=>'DESC'],6,0);
+        $news = $repository->findBy([], ['views'=>'DESC'] ,6,0);
 	
 	    $livesItems = [
 		    [
@@ -136,7 +136,6 @@ class MainController extends DefController
             'router' => 'home',
             'matches' => $matchesItems,
             'results' => $matchResults,
-//            'videoNews' => $livesItems,
 	        'videoNews' => $VideoItems,
             'ratingPlayers' => $ratingPlayers,
             'ratingCommands' => $ratingCommands,
