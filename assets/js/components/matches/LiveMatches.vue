@@ -13,21 +13,10 @@
                     Live матчи
                 </div>
             </div>
-            <div class="date-wrapper d-flex align-items-center" v-if="currentPage && matches.length > 0">
-                <div class="back">
-                    <img src="/images/back.svg" @click="page--" v-if="page !== 0">
-                </div>
-                <div class="date">
-                    {{currentPage.date}}
-                </div>
-                <div class="next">
-                    <img src="/images/next.svg" @click="page++" v-if="page < matches.length - 1">
-                </div>
-            </div>
         </div>
         <div class="match-body" v-if="matches.length > 0">
             <div class="match-row d-flex" v-for="(match, index) in currentPage.items">
-                <div class="match-event col-4 d-flex justify-content-center align-items-center">
+                <div class="match-event col-4 d-flex align-items-center">
                     <div class="event-logo">
                         <img :src="match.event.image" alt="">
                     </div>
@@ -35,7 +24,7 @@
                         {{match.event.name}}
                     </div>
                 </div>
-                <div class="teams col-5 d-flex justify-content-center align-items-center">
+                <div class="teams col-5 d-flex align-items-center">
                     <div class="teamA w-50 d-flex justify-content-end align-items-center">
                         <div class="team-name">
                             {{match.teamA.title}}
@@ -43,9 +32,13 @@
                         <img :src="match.teamA.logo" alt="">
                     </div>
                     <div class="score">
-                        <span>{{match.teamA.score}}</span>
+                        <span :class="getScoreClass(match.teamA.score, match.teamB.score)">
+                            {{match.teamA.score}}
+                        </span>
                         :
-                        <span>{{match.teamB.score}}</span>
+                        <span :class="getScoreClass(match.teamB.score, match.teamA.score)">
+                            {{match.teamB.score}}
+                        </span>
                     </div>
                     <div class="teamB w-50 d-flex align-items-center">
                         <img :src="match.teamB.logo" alt="">
@@ -77,14 +70,23 @@
         },
         methods: {
             getLiveMatches() {
-                axios.post('/ru/main/matches')
+                axios.post('/ru/main/live/matches')
                     .then(({data}) => {
                         for (let timestamp in data) {
                             this.matches.push(data[timestamp]);
                         }
                     })
             },
-            getMatchUrl(id){
+            getScoreClass(scoreA, scoreB) {
+                let className;
+                if (scoreA > scoreB) {
+                    className = 'green';
+                } else if (scoreA < scoreB) {
+                    className = 'red';
+                }
+                return className;
+            },
+            getMatchUrl(id) {
                 return '/ru/matches/' + id;
             },
         },
@@ -106,10 +108,12 @@
         background: -o-linear-gradient(right, rgba(248, 248, 248, 0.0) -25%, rgba(248, 248, 248, 0.25) 125%), #2d3135;
         background: linear-gradient(270deg, rgba(248, 248, 248, 0.0) -25%, rgba(248, 248, 248, 0.25) 125%), #2d3135;
     }
-    .dark .lives .header{
+
+    .dark .lives .header {
         background: #1e2123;
     }
-    .dark .lives .header .title{
+
+    .dark .lives .header .title {
         color: #fe5050;
     }
 
@@ -162,22 +166,6 @@
         background: #fe5050;
     }
 
-    .lives .header .date-wrapper {
-        margin-right: 1vw;
-    }
-    .lives .header .date-wrapper img,
-    .lives .header .date-wrapper .next,
-    .lives .header .date-wrapper .back {
-        width: 1vw;
-        cursor: pointer;
-    }
-
-    .lives .header .date-wrapper .date {
-        color: white;
-        margin-left: .5vw;
-        margin-right: .5vw;
-    }
-
     .lives .match-body .match-row {
         height: 3.5vw;
         border-top: .2vw solid #dadbdc;
@@ -193,15 +181,16 @@
         background: -o-linear-gradient(right, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
         background: linear-gradient(270deg, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
     }
-    .dark .lives .match-body .match-row{
+
+    .dark .lives .match-body .match-row {
         transition: background-color .3s ease-in-out;
         border-top: .2vw solid #1e2123;
-        background: rgb(57,58,59);
-        background: rgb(47,50,52);
-        background: -moz-linear-gradient(90deg, rgba(47,50,52,1) 24%, rgba(36,39,41,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(47,50,52,1) 24%, rgba(36,39,41,1) 100%);
-        background: linear-gradient(90deg, rgba(47,50,52,1) 24%, rgba(36,39,41,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2f3234",endColorstr="#242729",GradientType=1);
+        background: rgb(57, 58, 59);
+        background: rgb(47, 50, 52);
+        background: -moz-linear-gradient(90deg, rgba(47, 50, 52, 1) 24%, rgba(36, 39, 41, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(47, 50, 52, 1) 24%, rgba(36, 39, 41, 1) 100%);
+        background: linear-gradient(90deg, rgba(47, 50, 52, 1) 24%, rgba(36, 39, 41, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2f3234", endColorstr="#242729", GradientType=1);
     }
 
     .lives .match-body .match-row .match-event {
@@ -209,6 +198,7 @@
         font-size: .8vw;
         color: #5c6b79;
     }
+
     .dark .lives .match-body .match-row .match-event {
         color: #95adc1;
     }
@@ -226,41 +216,54 @@
         width: 2.2vw;
         font-size: 1vw;
     }
+
+    .lives .match-body .match-row .teams .score .red {
+        color: darkred;
+    }
+
+    .lives .match-body .match-row .teams .score .green {
+        color: darkgreen;
+    }
+
     .dark .lives .match-body .match-row .teams .score {
-       color: white;
+        color: white;
     }
 
     .lives .match-body .match-row .teams .teamA {
         padding-right: .5vw;
     }
 
-    .lives .match-body .match-row .teams .teamA .team-name{
+    .lives .match-body .match-row .teams .teamA .team-name {
         text-align: end;
         padding-right: .3vw;
         font-size: 1vw;
     }
 
-    .lives .match-body .match-row .teams .teamB .team-name{
+    .lives .match-body .match-row .teams .teamB .team-name {
         padding-right: .3vw;
         font-size: 1vw;
     }
-    .dark .lives .match-body .match-row .teams .team-name{
+
+    .dark .lives .match-body .match-row .teams .team-name {
         color: white;
     }
 
     .lives .match-body .match-row .teams .teamB {
         padding-left: .6vw;
     }
-    .lives .match-body .match-row .watch a{
+
+    .lives .match-body .match-row .watch a {
         color: #ff6d1d;
         font-size: 1vw;
         height: 1.5vw;
     }
-    .lives .match-body .match-row .watch a i{
+
+    .lives .match-body .match-row .watch a i {
         color: black;
         margin-left: .5vw;
     }
-    .dark .lives .match-body .match-row .watch a i{
+
+    .dark .lives .match-body .match-row .watch a i {
         color: white;
     }
 </style>

@@ -113,6 +113,10 @@
 
     .video-slider .slider-body .carousel-item div.title {
         width: 25vw;
+        font-size: 1vw;
+    }
+    .dark .video-slider .slider-body .carousel-item div.title{
+        color: white;
     }
 
     .video-slider .slider-body .carousel-item div.date {
@@ -135,29 +139,33 @@
 </style>
 
 <style>
-    .video-slider .slider-body .slick-list {
+    .slider-body .slick-list {
         padding: 0px !important;
     }
 
-    .video-slider .slick-prev::before {
+    .slick-prev::before {
         content: url('/images/backOrange.svg');
     }
 
-    .video-slider .slick-next::before {
+    .slick-next::before {
         content: url('/images/nextOrange.svg');
     }
 
-    .video-slider .slick-prev, .video-slider .slick-next {
+    .slick-prev, .video-slider .slick-next {
         z-index: 1;
         top: 30%;
     }
 
-    .video-slider .slick-next {
+    .slick-next {
         margin-right: .8vw;
     }
 
-    .video-slider .slick-dots li.slick-active button::before {
+    .slick-dots li.slick-active button::before {
         content: url("/images/videoSliderActive.svg");
         top: .1vw;
     }
+    .slick-dots li button::before {
+        color: #9a9c9f;
+    }
+
 </style>

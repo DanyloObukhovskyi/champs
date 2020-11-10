@@ -7,12 +7,20 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
-import '../css/animations.css';
 
 import Header from './layouts/header';
 import LiveMatches from "./components/matches/LiveMatches";
-import VideoSlider from "./components/video-slider/VideoSlider";
+import VideoSlider from "./components/sliders/VideoSlider";
+import BannerSlider from "./components/sliders/BannerSlider";
 import NewsHome from "./components/news/NewsHome";
+import NewsPage from "./pages/NewsPage";
+import NewsViewPage from "./pages/NewsViewPage";
+import EventsHome from "./components/events/EventsHome";
+import UpcomingMatches from "./components/matches/UpcomingMatches";
+import ResultsMatches from "./components/matches/ResultsMatches";
+import PlayersRating from "./components/ratings/PlayersRating";
+import PlayerWeek from "./components/ratings/PlayerWeek";
+import TeamsRating from "./components/ratings/TeamsRating";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -27,8 +35,17 @@ if (token) {
 window.header = Header;
 
 Vue.component('live-matches', LiveMatches)
+Vue.component('upcoming-matches-home', UpcomingMatches)
+Vue.component('results-matches-home', ResultsMatches)
 Vue.component('video-slider', VideoSlider)
+Vue.component('banner-slider', BannerSlider)
 Vue.component('news-home', NewsHome)
+Vue.component('news-page', NewsPage)
+Vue.component('news-view-page', NewsViewPage)
+Vue.component('events-home', EventsHome)
+Vue.component('players-rating', PlayersRating)
+Vue.component('player-week', PlayerWeek)
+Vue.component('teams-rating', TeamsRating)
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';

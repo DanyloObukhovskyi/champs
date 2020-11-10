@@ -375,4 +375,26 @@ class UserController extends AbstractController
         }
         return $this->json($videos);
     }
+
+    /**
+     * @Route("/ru/get/auth", name="get.auth.user")
+     */
+    public function getAuthUser()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (isset($user))
+        {
+            $user = [
+                'id'       => $user->getId(),
+                'name'     => $user->getName(),
+                'steam'    => $user->getSteamId(),
+                'nickname' => $user->getNickname(),
+                'photo'    => $user->getPhoto()
+            ];
+        }
+
+        return $this->json($user);
+    }
 }

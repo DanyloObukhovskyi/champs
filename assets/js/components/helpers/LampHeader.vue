@@ -11,6 +11,7 @@
             <div class="title">
                 {{title}}
             </div>
+            <slot></slot>
             <a :href="link" class="description" v-if="link">
                 {{linkDescription}}
             </a>
@@ -42,7 +43,11 @@
     .lamp-header{
         border-radius: 2vw 0 0 2vw;
         height: 2.8vw;
-        background: linear-gradient(270deg, rgba(248, 248, 248, 0.0) -25%, rgba(248, 248, 248, 0.25) 125%), #2d3135;
+        background: rgb(66,70,74);
+        background: -moz-linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
+        background: linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#42464a",endColorstr="#373b40",GradientType=1);
     }
     .lamp-header .lamp{
         width: 4.2vw;

@@ -1,17 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177285165-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'UA-177285165-1');
-    </script>
+    {% include 'google.analytics.html.twig' %}
     <meta charset="UTF-8"/>
     <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
     <meta name="color-scheme" content="dark light">
@@ -31,7 +21,6 @@
     <link type="text/css" rel="stylesheet" href="/assets/styles/404.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/base.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/home.css"/>
-    <link type="text/css" rel="stylesheet" href="/assets/styles/news.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/matches.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/results.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/events.css"/>
@@ -62,31 +51,7 @@
     <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
     {{ encore_entry_link_tags('app') }}
     {% block css %}{% endblock %}
-
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function (m, e, t, r, i, k, a) {
-            m[i] = m[i] || function () {
-                (m[i].a = m[i].a || []).push(arguments)
-            };
-            m[i].l = 1 * new Date();
-            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
-        })
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(67020610, "init", {
-            clickmap: true,
-            trackLinks: true,
-            accurateTrackBounce: true,
-            webvisor: true,
-            ecommerce: "dataLayer"
-        });
-    </script>
-    <noscript>
-        <div>
-            <img src="https://mc.yandex.ru/watch/67020610" style="position:absolute; left:-9999px;" alt=""/>
-        </div>
-    </noscript>
-    <!-- /Yandex.Metrika counter -->
+    {% include 'yandex.metric.html.twig' %}
 </head>
 <body>
 <header id="header">
@@ -107,6 +72,7 @@
     </login-modal>
 </header>
 {% set messages = app.flashes('notice') %}
+
 {% if messages|length > 0 %}
     <div class="messages">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -119,129 +85,20 @@
         </div>
     </div>
 {% endif %}
-{% block body %}{% endblock %}
+
+<div id="layout">
+    {% block body %}
+
+    {% endblock %}
+</div>
+
+
 {{ encore_entry_script_tags('app') }}
+
 {% block javascripts %}
 {% endblock %}
 
-<div class="cookie" id="cookie">
-    <div class="footer">
-        <div class="container">
-            <div class="rows">
-                <img src="/images/logo.svg" class="logo"/>
-                <div class="main__menu">
-                    <a href="{{ path('about_index') }}">О нас</a>
-                    <a href="{{ path('competition_index') }}">Положение о конкурсе</a>
-                    <a href="{{ path('contact_index') }}">Контакты</a>
-                </div>
-                <div class="blocks">
-                    <div class="twoblock">
-                        <div>Сотрудничество</div>
-                        <div><a href='mailto:partners@champs.pro'>partners@champs.pro</a></div>
-                    </div>
-                    <div class="twoblock">
-                        <div>Поддержка</div>
-                        <div><a href='mailto:support@champs.pro'>support@champs.pro</a></div>
-                    </div>
-                </div>
-                {% include 'social.bottom.html.twig' %}
-            </div>
-            <div class="rows">
-                <div class="menu">
-                    <span @click="modal = true">Политика cookie</span>
-                    <a href="{{ path('politica_index') }}">Политика конфиденциальности</a>
-                    <a href="{{ path('terms_of_use_index') }}">Правила использования</a>
-                    <a href="{{ path('terms_index') }}">Условия оформления заказа тренировок</a>
-                    <a href="{{ path('offer_index') }}">Оферта на оказание услуг</a>
-                    <a href="{{ path('service_agreement_index') }}">Оферта на оказание услуг тренеру</a>
-                    <a href="{{ path('map_index') }}">Карта сайта</a>
-                </div>
-                <div class="copy">© {{ "now"|date("Y") }}, «Champs»</div>
-            </div>
-        </div>
-    </div>
-    <transition name="slide-fades">
-        <div class="cookie__modal" v-if="modal" v-show="modal" style="display: none">
-            <div class="component">
-                <div class="header">
-                    <div class="round">
-                        <div><img src="/images/lamp.svg"/></div>
-                    </div>
-                    <div class="title">
-                        ПОЛИТИКА COOKIE
-                    </div>
-                    <div class="closed" @click="modal = false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M8.88392 8.00004L15.8169 1.06698C16.061 0.822882 16.061 0.427133 15.8169 0.18307C15.5728 -0.0609922 15.1771 -0.0610234 14.933 0.18307L7.99998 7.11613L1.06697 0.18307C0.82288 -0.0610234 0.427132 -0.0610234 0.18307 0.18307C-0.060992 0.427164 -0.0610233 0.822914 0.18307 1.06698L7.11608 8L0.18307 14.9331C-0.0610233 15.1772 -0.0610233 15.5729 0.18307 15.817C0.305101 15.939 0.465069 16 0.625037 16C0.785005 16 0.944943 15.939 1.067 15.817L7.99998 8.88394L14.933 15.817C15.055 15.939 15.215 16 15.375 16C15.5349 16 15.6949 15.939 15.8169 15.817C16.061 15.5729 16.061 15.1771 15.8169 14.9331L8.88392 8.00004Z"
-                                  fill="#86888A"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="table">
-                    С целью улучшения работы сайта, повышения удобства и эффективности работы посетителей с сайтом,
-                    предоставления решений и услуг, наиболее отвечающих потребностям посетителей сайта, определения
-                    предпочтений посетителей, отображения рекламных объявлений (поведенческой рекламы), а также для
-                    обеспечения технической возможности функционирования сайта (champs.pro) использует файлы «cookies»
-                    (файлы с данными о прошлых посещениях сайта).
-                    <br/><br/>Продолжая использовать данный сайт и нажимая на кнопку «Принять», я подтверждаю, что я
-                    ознакомлен(а) с Политикой использования файлов «cookies» и согласен(на) на обработку моих
-                    персональных данных на изложенных в Согласии на обработку персональных данных условиях. Третьи
-                    стороны, в том числе Facebook, Instagram, ВКонтакте, могут использовать файлы cookie, веб-маяки и
-                    другие технологии хранения данных для сбора или получения информации с данного сайта и любых других
-                    ресурсов сети Интернет и использовать эту информацию для предоставления сервисов измерения и
-                    таргетинга рекламы.
-                    <br/><br/>Вы можете запретить сбор и использование информации для таргетинга рекламы путем запрета
-                    сохранения файлов
-                    «cookies» в настройках своего браузера. <!--Вы также можете получить доступ к механизму осуществления такого выбора на сайтах (название сайта) и
-          (название сайта). Более подробную информацию о cookie-файлах и принципах их работы можно найти на ресурсе (название сайта).-->
-                </div>
-            </div>
-        </div>
-    </transition>
-    {% if app.request.cookies.has('cookie_agree') == false %}
-        <div class="cookie__start" v-if="start">
-            <label>Мы используем cookie на нашем ресурсе. Вы можете <span @click="modal = true">ознакомиться</span> с
-                политикой.</label>
-            <div @click="setCookie">Прекрасно</div>
-        </div>
-    {% endif %}
-</div>
-<script>
-    var cookie = new Vue({
-        el: '#cookie',
-        data: function () {
-            return {
-                start: true,
-                modal: false,
-            };
-        },
-        methods: {
-            setCookie() {
-                this.start = false;
-                axios.get('/ru/setcookies').then();
-            }
-        },
-    });
-</script>
-<script>
-    function addLink() {
-        const body_element = document.getElementsByTagName('body')[0];
-        const selection = window.getSelection();
-        const pagelink = "<br /><br /> Источник: <a href='" + document.location.href + "'>Champs.pro</a><br />";
-        const copytext = selection + pagelink;
-        const newdiv = document.createElement('div');
-        newdiv.style.position = 'absolute';
-        newdiv.style.left = '-99999px';
-        body_element.appendChild(newdiv);
-        newdiv.innerHTML = copytext;
-        selection.selectAllChildren(newdiv);
-        window.setTimeout(function () {
-            body_element.removeChild(newdiv);
-        }, 0);
-    }
-
-    document.oncopy = addLink;
-</script>
+{% include 'footer.html.twig' %}
 
 {% if router == 'home' %}
     <div class="stream" id="stream" style="display: none">

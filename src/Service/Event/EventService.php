@@ -14,6 +14,7 @@ use App\Service\FlagIconService;
 use App\Service\ImageService;
 use App\Service\MapService;
 use App\Service\MatchService;
+use App\Service\News\NewsService;
 use App\Service\TeamService;
 use App\Traits\Dispatchable;
 use DateTime;
@@ -163,16 +164,25 @@ class EventService extends EntityService
     {
         $eventItems = [];
 
+        /** @var Event $event */
         foreach ($events as $event)
         {
+            $eventStart = $event->getStartedAt()->format('d F');
+            $eventEnd = $event->getEndedAt()->format('d F');
+
+            $this->imageService->setImage($event->getImage());
+
             /** @var Event $event */
             $eventItems[] = [
-                "id" => $event->getId(),
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $event->getImage(),
-                'imageHeader' => $event->getImageHeader()
+                "id"          => $event->getId(),
+                "name"        => $event->getName(),
+                "startedAt"   => $event->getStartedAt(),
+                "endedAt"     => $event->getEndedAt(),
+                "image"       => $event->getImage(),
+                'imageHeader' => $event->getImageHeader(),
+                'logoWithPath'=> $this->imageService->getImagePath(),
+                'startedAtRu' => NewsService::replaceMonth($eventStart),
+                'endedAtRu'   => NewsService::replaceMonth($eventEnd),
             ];
         }
         return $eventItems;

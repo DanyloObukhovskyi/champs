@@ -11,22 +11,36 @@ use App\Entity\RatingTeam;
 use App\Entity\Result;
 use App\Service\Event\EventService;
 use App\Service\MatchService;
+use App\Service\News\NewsService;
 use App\Service\RatingPersonService;
 use App\Service\RatingTeamService;
 use App\Traits\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class MainController extends DefController
 {
-    use EntityManager;
+    public $entityManager;
 
     public $matchService;
 
-    public function __construct()
+    public $newsService;
+
+    public $eventService;
+
+    public $ratingPersonService;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->matchService = new MatchService($this->getEntityManager());
+        $this->entityManager = $entityManager;
+
+        $this->matchService = new MatchService($entityManager);
+        $this->newsService = new NewsService($entityManager);
+
+        $this->eventService = new EventService($entityManager);
+        $this->ratingPersonService = new RatingPersonService($entityManager);
     }
 
     /**
@@ -197,9 +211,41 @@ class MainController extends DefController
      */
 	public function getMainMatches()
     {
-        $matches = $this->getEntityManager()
+        $matches = $this->entityManager
             ->getRepository(Match::class)
             ->findMatchesByDate(new \DateTime());
+        $matchesItems = $this->matchService->matchesDecorator($matches);
+
+        return $this->json($matchesItems);
+    }
+
+    /**
+     * @Route("/ru/main/results")
+     */
+    public function getMainResults()
+    {
+        $results =  $this->entityManager
+            ->getRepository(Result::class)
+            ->getCurrent();
+
+        $matchResults = [];
+        foreach ($results as $result)
+        {
+            /** @var Match $match */
+            $match = $result->getMatch();
+            $matchResults[] = $this->matchService->matchDecorator($match);
+        }
+        return $this->json($matchResults);
+    }
+
+    /**
+     * @Route("/ru/main/live/matches")
+     */
+    public function getMainLiveMatches()
+    {
+        $matches = $this->entityManager
+            ->getRepository(Match::class)
+            ->findBy(['live' => 1], [ 'id' => 'DESC' ], 6);
         $matchesItems = $this->matchService->matchesDecorator($matches);
 
         return $this->json($matchesItems);
@@ -210,10 +256,13 @@ class MainController extends DefController
      */
     public function getMainNews()
     {
-        $repository = $this->getEntityManager()->getRepository(News::class);
-        $news = $repository->findBy([], ['date' => 'DESC'], 6, 0);
+        $news = $this->newsService->getMainNews();
 
-        return $this->json($news);
+        $newsArray = [];
+        foreach ($news as $new){
+            $newsArray[] = $this->newsService->decorator($new);
+        }
+        return $this->json($newsArray);
     }
 
     /**
@@ -255,7 +304,7 @@ class MainController extends DefController
        * stream - news type - 8
        * video - news type - 3
        */
-        $VideoData = $this->getEntityManager()
+        $VideoData = $this->entityManager
             ->getRepository(News::class)
             ->findBy([ 'type'=> [8, 3] ],[ 'date' => 'DESC' ], 10 , 0); //8 - stream; 3 - video
 
@@ -268,6 +317,17 @@ class MainController extends DefController
             }
         }
         return $this->json($VideoItems);
+    }
+
+    /**
+     * @Route("/ru/main/events")
+     */
+    public function getMainRatingPlayers()
+    {
+        $events = $this->entityManager->getRepository(Event::class)->getCurrentEvents();
+        $events = $this->eventService->eventsDecorator($events);
+
+        return $this->json($events);
     }
 	
     /**
@@ -283,7 +343,7 @@ class MainController extends DefController
      */
     public function setcookies()
     {
-        setcookie("cookie_agree", 'true');
+        setcookie("cookie_agree", true);
         return $this->json(array('status' => true));
     }
 

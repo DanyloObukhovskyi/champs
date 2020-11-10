@@ -90,9 +90,15 @@ class News
      */
     private $game;
 
+    /**
+     * @ORM\OneToMany(targetEntity=NewsComment::class, mappedBy="news")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -248,5 +254,13 @@ class News
             $iconName = self::GAME_ICONS[$this->game] ?? null;
         }
         return $iconName;
+    }
+
+    /**
+     * @return NewsComment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

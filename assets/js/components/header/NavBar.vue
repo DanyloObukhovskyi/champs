@@ -91,14 +91,22 @@
     .header_nav {
         width: 100%;
         height: 3.8vw;
-        background: url(/images/navbar/nav-bar-background.jpg);
+        background: rgb(51,56,61);
+        background: -moz-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
+        background: -webkit-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
+        background: radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d",endColorstr="#2d3135",GradientType=1);
         transition: all .3s ease-in-out;
     }
     .logo-wrapper {
         width: 12vw;
         z-index: 6;
         transition: all .5s ease-in-out;
-        background: url(/images/navbar/nav-bar-background.jpg);
+        background: rgb(51,56,61);
+        background: -moz-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
+        background: -webkit-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
+        background: radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d",endColorstr="#2d3135",GradientType=1);
     }
     .start {
         width: 9vw;

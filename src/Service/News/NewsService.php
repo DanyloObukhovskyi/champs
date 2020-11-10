@@ -7,6 +7,7 @@ namespace App\Service\News;
 use App\Entity\News;
 use App\Entity\NewsTag;
 use App\Service\EntityService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class NewsService extends EntityService
 {
@@ -14,21 +15,28 @@ class NewsService extends EntityService
 
     protected $repository;
 
+    protected $newsCommentService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->newsCommentService = new NewsCommentService($entityManager);
+    }
+
     /**
      * @param News $news
      * @return array
      */
     public function decorator(News $news): array
     {
-        $tagsEntities = $news->getTags();
         $tags = [];
 
         /** @var NewsTag $tagsEntity */
-        foreach ($tagsEntities as $tagsEntity)
+        foreach ($news->getTags() as $tagsEntity)
         {
             $tags[] = [
                 'title' => $tagsEntity->getTitle(),
-                'color' => $tagsEntity->getColor(),
             ];
         }
         return [
@@ -41,7 +49,10 @@ class NewsService extends EntityService
             'url'        => $news->getUrl(),
             'type'       => $news->getType(),
             'tags'       => $tags,
-            'game'       => $news->getGame()
+            'game'       => $news->getGame(),
+            'date_ru'    => self::replaceMonth($news->getDate()->format('d F H:i')),
+            'views'      => $news->getViews() ?? 0,
+            'comments'   => $this->newsCommentService->decorateComments($news->getComments())
         ];
     }
 
@@ -61,22 +72,10 @@ class NewsService extends EntityService
      */
     public function getByFilters($request, $limit, $offset)
     {
-        $tags = [];
-        foreach ($request->tags as $tag){
-            $tags[] = $tag->title;
-        }
-        $titles = [];
-        foreach ($request->titles as $title){
-            $titles[] = $title->title;
-        }
-        $texts = [];
-        foreach ($request->texts as $text){
-            $texts[] = $text->title;
-        }
         return $this->repository->getByFilters(
-            $tags,
-            $titles,
-            $texts,
+            $request->tags,
+            $request->titles,
+            $request->texts,
             $this->parseDate($request->dateFrom ?? null),
             $this->parseDate($request->dateTo ?? null),
             $limit,
@@ -96,11 +95,23 @@ class NewsService extends EntityService
     }
 
     /**
+     * @param object $filters
+     * @param int $limit
+     * @param int $offset
      * @return mixed
      */
-    public function getHotNews()
+    public function getHotNews(object $filters, int $limit = 10, int $offset = 0)
     {
-        return $this->repository->getHotNews(10);
+        return $this->repository->getByFilters(
+            $filters->tags ?? [],
+            $filters->titles ?? [],
+            $filters->texts ?? [],
+            $filters->dateFrom ?? null,
+            $filters->dateTo ?? null,
+            $limit,
+            $offset,
+            'views'
+        );
     }
 
     /**
@@ -126,21 +137,29 @@ class NewsService extends EntityService
      * @param $date
      * @return mixed
      */
-    public function replaceMonth($date)
+    public static function replaceMonth($date)
     {
-        str_replace("January", "Января", $date);
-        str_replace("February", "Февраля", $date);
-        str_replace("March", "Марта", $date);
-        str_replace("April", "Апреля", $date);
-        str_replace("May", "Мая", $date);
-        str_replace("June", "Июня", $date);
-        str_replace("Jule", "Июля", $date);
-        str_replace("August", "Августа", $date);
-        str_replace("September", "Сентября", $date);
-        str_replace("October", "Октября", $date);
-        str_replace("November", "Ноября", $date);
-        str_replace("December", "Декабря", $date);
+        $date = str_replace("January", "Января", $date);
+        $date = str_replace("February", "Февраля", $date);
+        $date = str_replace("March", "Марта", $date);
+        $date = str_replace("April", "Апреля", $date);
+        $date = str_replace("May", "Мая", $date);
+        $date = str_replace("June", "Июня", $date);
+        $date = str_replace("July", "Июля", $date);
+        $date = str_replace("August", "Августа", $date);
+        $date = str_replace("September", "Сентября", $date);
+        $date = str_replace("October", "Октября", $date);
+        $date = str_replace("November", "Ноября", $date);
+        $date = str_replace("December", "Декабря", $date);
 
         return $date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMainNews()
+    {
+        return $this->repository->findBy([], ['date' => 'DESC'], 6, 0);
     }
 }

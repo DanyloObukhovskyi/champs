@@ -1,0 +1,100 @@
+<template>
+    <div class="hot-news-wrapper">
+        <a :href="`/ru/news/${news.id}-${news.url}`" class="hot-news d-block" v-for="news in news">
+            <div class="align-items-center d-flex hot-news-title">
+                <div class="game-logo" v-if="news.game !== null">
+                    <img :src="'/images/news/' + gamesIcons[news.game]">
+                </div>
+                <div class="title">
+                    {{news.title}}
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="date">
+                    {{news.date_ru}}
+                </div>
+                <div class="activity">
+                    <i class="fas fa-eye"></i>
+                    {{news.views}}
+                    <i class="fas fa-comment-dots"></i>
+                    {{news.comments.length}}
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "HotNews",
+        props: [
+            'news'
+        ],
+        data() {
+            return {
+                gamesIcons: {
+                    dota: 'dota.svg',
+                    cs: 'cs.svg',
+                    lol: 'lol.svg',
+                    valorant: 'valorant.png'
+                },
+            }
+        },
+    }
+</script>
+
+<style scoped>
+    .news .hot-news {
+        margin-top: .5vw;
+        padding: .3vw .7vw;
+        background: rgb(206, 207, 209);
+        background: -moz-linear-gradient(90deg, rgba(206, 207, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(206, 207, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+        background: linear-gradient(90deg, rgba(206, 207, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cecfd1", endColorstr="#ffffff", GradientType=1);
+    }
+
+    .dark .hot-news {
+        background: rgb(61, 65, 70);
+        background: -moz-linear-gradient(90deg, rgba(61, 65, 70, 1) 24%, rgba(37, 40, 42, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(61, 65, 70, 1) 24%, rgba(37, 40, 42, 1) 100%);
+        background: linear-gradient(90deg, rgba(61, 65, 70, 1) 24%, rgba(37, 40, 42, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d4146", endColorstr="#25282a", GradientType=1);
+    }
+
+    .hot-news .hot-news-title {
+        margin-bottom: .5vw;
+    }
+
+    .hot-news .game-logo img {
+        width: 1.5vw;
+        margin-right: .7vw;
+    }
+
+    .hot-news .title {
+        color: #1e2123;
+        font-size: 1vw;
+    }
+
+    .dark .hot-news .title, .dark .hot-news .activity {
+        color: white;
+    }
+
+    .hot-news .date {
+        color: #898989;
+        font-size: .9vw;
+    }
+
+    .hot-news i {
+        color: #8298ac;
+    }
+
+    .hot-news .activity {
+        color: #1e2123;
+        font-size: .9vw;
+    }
+
+    .hot-news .activity i:nth-child(2) {
+        margin-left: .4vw;
+    }
+</style>

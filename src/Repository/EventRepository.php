@@ -110,7 +110,7 @@ class EventRepository extends ServiceEntityRepository
         $events = $this->createQueryBuilder('e')
             ->orderBy('e.createdAt', 'DESC')
             ->andWhere(' e.createdAt is not null')
-            ->setMaxResults(5)
+            ->setMaxResults(6)
             ->getQuery()
             ->getResult();
 
