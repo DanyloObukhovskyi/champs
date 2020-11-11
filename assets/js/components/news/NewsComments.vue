@@ -1,5 +1,5 @@
 <template>
-    <div class="comments">
+    <div id="comments">
         <div class="comments-count">
             Коментарии <span>{{comments.length}}</span>
         </div>
@@ -113,18 +113,18 @@
 </script>
 
 <style scoped>
-    .comments .comments-form {
+    #comments .comments-form {
         display: flex;
         align-items: center;
     }
 
-    .comments .comments-form .image .user-photo img {
+    #comments .comments-form .image .user-photo img {
         border-radius: 50%;
         height: 3vw;
         width: 3vw;
     }
 
-    .comments .comments-form .image .user-photo {
+    #comments .comments-form .image .user-photo {
         background: #fc6c1d;
         width: 3.4vw;
         height: 3.4vw;
@@ -134,7 +134,7 @@
         align-items: center;
     }
 
-    .comments .comments-form .image {
+    #comments .comments-form .image {
         background-color: #2d3135;
         width: 4.8vw;
         height: 4.8vw;
@@ -145,12 +145,12 @@
         z-index: 1;
     }
 
-    .comments .comments-form .input {
+    #comments .comments-form .input {
         width: 100%;
         margin-left: -1vw;
     }
 
-    .comments .comments-form .input .input-wrapper {
+    #comments .comments-form .input .input-wrapper {
         padding: .5vw;
         display: flex;
         background: rgb(89, 92, 95);
@@ -160,7 +160,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#595c5f", endColorstr="#33373b", GradientType=1);
     }
 
-    .dark .comments .comments-form .input .input-wrapper {
+    .dark #comments .comments-form .input .input-wrapper {
         background: rgb(47, 50, 51);
         background: -moz-linear-gradient(90deg, rgba(47, 50, 51, 1) 0%, rgba(36, 39, 41, 1) 100%);
         background: -webkit-linear-gradient(90deg, rgba(47, 50, 51, 1) 0%, rgba(36, 39, 41, 1) 100%);
@@ -168,7 +168,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2f3233", endColorstr="#242729", GradientType=1);
     }
 
-    .comments .comments-form .input .input-wrapper textarea {
+    #comments .comments-form .input .input-wrapper textarea {
         outline: unset;
         border: unset;
         font-size: 1vw;
@@ -186,33 +186,33 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f1f1f1", endColorstr="#ffffff", GradientType=1);
     }
 
-    .dark .comments .comments-form .input .input-wrapper textarea {
+    .dark #comments .comments-form .input .input-wrapper textarea {
         background: #35393e;
         color: white;
     }
 
-    .comments .comments-form .input .input-wrapper .smile {
+    #comments .comments-form .input .input-wrapper .smile {
         margin-left: 1.5vw;
         margin-right: 1vw;
         width: 1.5vw;
         cursor: pointer;
     }
 
-    .comments .comments-form .input .input-wrapper .emoji-picker {
+    #comments .comments-form .input .input-wrapper .emoji-picker {
         position: absolute;
         top: 2vw;
         right: -8.5vw;
         z-index: 1;
     }
 
-    .comments .comments-form .send {
+    #comments .comments-form .send {
         display: flex;
         align-items: center;
         padding-left: .5vw;
         padding-right: .6vw;
     }
 
-    .comments .comments-form .send i {
+    #comments .comments-form .send i {
         cursor: pointer;
         background: linear-gradient(90deg, rgba(255, 185, 74, 1) 31%, rgba(254, 121, 36, 1));
         -webkit-text-fill-color: transparent;
@@ -220,32 +220,32 @@
         font-size: 1.5vw;
     }
 
-    .comments .sing-in {
+    #comments .sing-in {
         margin-top: 1vw;
         font-size: 1vw;
         display: flex;
         justify-content: flex-end;
     }
 
-    .comments .sing-in .login {
+    #comments .sing-in .login {
         color: #ff6d1d;
         cursor: pointer;
     }
 
-    .dark .comments .sing-in,
-    .dark .comments .comments-count {
+    .dark #comments .sing-in,
+    .dark #comments .comments-count {
         color: white;
     }
 
-    .comments .comments-count {
+    #comments .comments-count {
         font-size: 1.5vw;
     }
 
-    .comments .comments-count span {
+    #comments .comments-count span {
         color: #8298ac;
     }
 
-    .comments .loader {
+    #comments .loader {
         display: flex;
         justify-content: center;
     }

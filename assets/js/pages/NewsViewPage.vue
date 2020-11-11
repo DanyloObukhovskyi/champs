@@ -66,6 +66,7 @@
                 <div class="title_wrap">Кликните на области чтобы закрыть изображение</div>
             </div>
         </transition>
+        <news-widget :news="news"/>
     </div>
 </template>
 
@@ -75,6 +76,7 @@
     import Loader from "../components/helpers/Loader";
     import ShareButtons from "../components/social/ShareButtons";
     import NewsComments from "../components/news/NewsComments";
+    import NewsWidget from "../components/news/NewsWidget";
 
     export default {
         name: "NewsViewPage",
@@ -86,7 +88,8 @@
             'hot-news': HotNews,
             'loader': Loader,
             'share-buttons': ShareButtons,
-            'news-comments': NewsComments
+            'news-comments': NewsComments,
+            'news-widget': NewsWidget
         },
         data() {
             return {

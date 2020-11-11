@@ -71,7 +71,7 @@
         components: {
             'news-filters': NewsFilters,
             'loader': Loader,
-            'hot-news': HotNews
+            'hot-news': HotNews,
         },
         data() {
             return {

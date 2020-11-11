@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span class="share">
+        <span class="share" v-if="showShareIcon">
             <i class="fas fa-share-alt"></i>
         </span>
         <a :href="'https://vk.com/share.php?url=' + url">
@@ -24,6 +24,11 @@
 <script>
     export default {
         name: "ShareButtons",
+        props: {
+            showShareIcon: {
+                default: true
+            }
+        },
         computed: {
             url() {
                 return location.href
