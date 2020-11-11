@@ -10,10 +10,8 @@
     {% block keywords %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/ico">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
-          rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
@@ -91,15 +89,12 @@
 
     {% endblock %}
 </div>
-
-
 {{ encore_entry_script_tags('app') }}
 
 {% block javascripts %}
 {% endblock %}
 
 {% include 'footer.html.twig' %}
-
 {% if router == 'home' %}
     <div class="stream" id="stream" style="display: none">
         <div class="title">

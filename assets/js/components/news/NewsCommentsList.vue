@@ -17,14 +17,13 @@
                     {{comment.comment}}
                 </div>
             </div>
-            <div v-if="comments.length - commentsOffset > 0" class="more-comments"
+            <div v-if="comments.length - commentsOffset > 0"
+                 class="more-comments"
                  @click="commentsOffset = comments.length">
                 {{moreCommentsTitle}}
             </div>
         </div>
-        <div class="loader">
-            <loader v-if="load"></loader>
-        </div>
+
     </div>
 </template>
 
@@ -33,14 +32,13 @@
 
     export default {
         name: "NewsCommentsList",
-        props: ['newsId'],
+        props: ['newsId', 'comments'],
         components: {
             'loader': Loader
         },
         data() {
             return {
                 load: false,
-                comments: [],
                 commentsOffset: 2
             }
         },
@@ -48,10 +46,14 @@
             sliceComments() {
                 const comments = [];
 
-                for (let num = 0; num < this.commentsOffset; num++) {
-                    comments.push(this.comments[num])
+                if (this.comments.length >= 2){
+                    for (let num = 0; num < this.commentsOffset; num++) {
+                        comments.push(this.comments[num])
+                    }
+                    return comments;
+                } else {
+                    return this.comments;
                 }
-                return comments;
             },
             moreCommentsTitle() {
                 let title;
@@ -68,15 +70,6 @@
             }
         },
         methods: {
-            getComments() {
-                this.load = true;
-
-                axios.post(`/ru/news/${this.newsId}/comments`)
-                    .then(({data}) => {
-                        this.load = false;
-                        this.comments = data;
-                    })
-            },
             getUserName(user) {
                 if (user.name === null || user.surname === null) {
                     return user.nickname;
@@ -84,19 +77,11 @@
                     return `${user.name} ${user.surname}`;
                 }
             }
-        },
-        mounted() {
-            this.getComments()
         }
     }
 </script>
 
 <style scoped>
-    .comments-wrapper .loader {
-        display: flex;
-        justify-content: center;
-    }
-
     .comments-wrapper .comments {
         margin-top: 1vw;
     }

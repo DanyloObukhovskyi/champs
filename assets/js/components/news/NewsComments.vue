@@ -1,6 +1,9 @@
 <template>
     <div class="comments">
-        <div class="comments-form" v-if="user">
+        <div class="comments-count">
+            Коментарии <span>{{comments.length}}</span>
+        </div>
+        <div class="comments-form" v-if="user !== null">
             <div class="image">
                 <div class="user-photo">
                     <img :src="'/images/uploads/' + user.photo" @error="$event.target.src = '/images/noLogo.png'">
@@ -19,7 +22,13 @@
                 </div>
             </div>
         </div>
-        <comments-list ref="commentsList" :news-id="newsId"/>
+        <div class="sing-in" v-else>
+            <span @click="showLogin" class="login">Войдите</span>, чтобы комментировать статью
+        </div>
+        <comments-list ref="commentsList" :news-id="newsId" :comments="comments"/>
+        <div class="loader">
+            <loader v-if="load"></loader>
+        </div>
     </div>
 </template>
 
@@ -27,18 +36,24 @@
     import {VEmojiPicker} from 'v-emoji-picker';
     import NewsCommentsList from "./NewsCommentsList";
     import Swal from 'sweetalert2'
+    import Loader from "../helpers/Loader";
 
     export default {
         name: "NewsComments",
-        props: ['newsId'],
+        props: ['newsId', 'comments'],
+        inject: [
+            'header'
+        ],
         components: {
             'emoji-picker': VEmojiPicker,
-            'comments-list': NewsCommentsList
+            'comments-list': NewsCommentsList,
+            'loader': Loader
         },
         data() {
             return {
                 showEmoji: false,
                 user: null,
+                load: false,
                 comments: [],
                 comment: '',
                 comments: []
@@ -52,7 +67,7 @@
                     })
             },
             sendComment() {
-                if (this.comment === ''){
+                if (this.comment === '') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Упс...',
@@ -67,7 +82,7 @@
 
                     axios.post('/ru/news/add/comment', data)
                         .then(() => {
-                            this.$refs.commentsList.getComments();
+                            this.getComments();
                         })
                 }
             },
@@ -77,11 +92,22 @@
             },
             selectEmoji(emoji) {
                 this.comment += emoji.data
-            }
+            },
+            showLogin() {
+                this.header.show = true;
+            },
+            getComments() {
+                this.load = true;
+                this.comments = [];
+                axios.post(`/ru/news/${this.newsId}/comments`)
+                    .then(({data}) => {
+                        this.load = false;
+                        this.$emit('update', data)
+                    })
+            },
         },
         mounted() {
             this.getAuthUser()
-            this.getComments()
         }
     }
 </script>
@@ -179,14 +205,14 @@
         z-index: 1;
     }
 
-    .send {
+    .comments .comments-form .send {
         display: flex;
         align-items: center;
         padding-left: .5vw;
         padding-right: .6vw;
     }
 
-    .send i {
+    .comments .comments-form .send i {
         cursor: pointer;
         background: linear-gradient(90deg, rgba(255, 185, 74, 1) 31%, rgba(254, 121, 36, 1));
         -webkit-text-fill-color: transparent;
@@ -194,4 +220,33 @@
         font-size: 1.5vw;
     }
 
+    .comments .sing-in {
+        margin-top: 1vw;
+        font-size: 1vw;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .comments .sing-in .login {
+        color: #ff6d1d;
+        cursor: pointer;
+    }
+
+    .dark .comments .sing-in,
+    .dark .comments .comments-count {
+        color: white;
+    }
+
+    .comments .comments-count {
+        font-size: 1.5vw;
+    }
+
+    .comments .comments-count span {
+        color: #8298ac;
+    }
+
+    .comments .loader {
+        display: flex;
+        justify-content: center;
+    }
 </style>

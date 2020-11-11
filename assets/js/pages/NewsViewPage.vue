@@ -40,8 +40,11 @@
                     </div>
                     <share-buttons/>
                 </div>
-                <div class="comments">
-                    <news-comments :news-id="newsId"/>
+                <div class="comments" v-if="news !== null">
+                    <news-comments
+                        :news-id="newsId"
+                        :comments="news.comments"
+                        @update="(comments) => news.comments = comments"/>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -94,7 +97,6 @@
                     titles: [],
                     texts: [],
                 },
-                commentForm: null,
                 img: null,
                 zoom: false,
                 tagsAbsolute: true,

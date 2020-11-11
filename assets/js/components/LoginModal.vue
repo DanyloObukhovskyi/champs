@@ -117,9 +117,9 @@
                             this.error = true;
                         } else {
                             if (this.redirect !== null){
-                               // window.location.assign(this.redirect);
+                                window.location.assign(this.redirect);
                             } else {
-                               // window.location.reload();
+                                window.location.reload();
                             }
                         }
                     })
