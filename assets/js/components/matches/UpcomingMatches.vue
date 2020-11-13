@@ -17,7 +17,7 @@
         </div>
         <div class="upcoming-matches-body" v-if="currentPage !== undefined">
             <div class="upcoming-match-row" v-for="match in currentPage.items">
-                <a :href="'/ru/matches' + match.id" class="upcoming-match-wrapper w-100 d-flex align-items-center">
+                <a :href="'/ru/matches/' + match.match_id" class="upcoming-match-wrapper w-100 d-flex align-items-center">
                     <div class="event d-flex align-items-center">
                         <div class="event-logo">
                             <img :src="match.event.image" alt="">
@@ -43,7 +43,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="time">
+                    <div class="time d-flex justify-content-end">
                         <img src="/images/matches/time.svg" alt="">
                         {{match.time}}
                     </div>

@@ -67,8 +67,13 @@ class Stream
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUrl(): ?string
     {
+        $this->url = str_replace('www.hltv.org', $_ENV['SITE_DOMAIN'] ?? $_SERVER['SERVER_NAME'], $this->url);
+
         return $this->url;
     }
 
@@ -89,5 +94,18 @@ class Stream
         $this->language = $language;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        $type = 'youtube';
+        if (strripos($this->getUrl(), 'youtube') === false)
+        {
+            $type = 'twich';
+        }
+        return $type;
     }
 }

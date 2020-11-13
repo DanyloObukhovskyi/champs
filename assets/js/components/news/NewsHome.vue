@@ -19,7 +19,7 @@
                             <i class="fas fa-comment-dots"></i>
                             {{news.comments.length}}
                         </div>
-                        <div class="date w-100">
+                        <div class="date w-100 d-flex justify-content-end">
                             {{news.date_ru}}
                         </div>
                     </div>

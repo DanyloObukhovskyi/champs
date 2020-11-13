@@ -9,6 +9,9 @@ namespace App\Service;
 
 use App\Entity\Event;
 use App\Entity\Match;
+use App\Entity\MatchPickAndBan;
+use App\Entity\Stream;
+use App\Entity\Team;
 use App\Repository\MatchRepository;
 
 class MatchService extends EntityService
@@ -213,19 +216,20 @@ class MatchService extends EntityService
                     $date = str_replace($month, $lang, $date);
                 }
                 $items[$startDay] = [
-                    "date" => $date,
+                    "date"  => $date,
                     "items" => [],
                 ];
             }
             $items[$startDay]["items"][] = $this->matchDecorator($match);
         }
         ksort($items);
-        
+
         return $items;
     }
 
     /**
      * @param Match $match
+     * @param string $locale
      * @return array
      */
     public function matchDecorator(Match $match)
@@ -238,49 +242,115 @@ class MatchService extends EntityService
 
         $matchFields = [
             "match_id" => $match->getId(),
-            "startAt" =>  $match->getStartAt(),
-            "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-            "title" => "",
-            "logo" => "",
-            "teamA" => null,
-            "teamB" => null,
-            "event" => [
-                "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
+            "startAt"  =>  $match->getStartAt(),
+            "time"     => date("H:i", $match->getStartAt()->getTimestamp()),
+            "title"    => "",
+            "logo"     => "",
+            "teamA"    => null,
+            "teamB"    => null,
+            "event"    => [
+                "name"      => $match->getEvent() === null ? null : $match->getEvent()->getName(),
                 "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                "image" => $this->imageService->getImagePath()
+                "endedAt"   => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
+                "image"     => $this->imageService->getImagePath()
             ],
+            "streams"  => $this->getMatchStreams($match),
         ];
         $team1 = $match->getTeam1();
         if(isset($team1)){
-            $flag = empty($match->getTeam1()->getFlagIcon()) ? null: $match->getTeam1()->getFlagIcon()->getName();
-
-            $this->imageService->setImage($flag);
-            $flag = $this->imageService->getImagePath();
-
-            $this->imageService->setImage($match->getTeam1()->getLogo());
-            $matchFields['teamA'] = [
-                "title" => str_replace("'", "", $match->getTeam1()->getName()),
-                "logo" => $this->imageService->getImagePath(),
-                "score" => $match->getScore1(),
-                "flag" => $flag
-            ];
+            $matchFields['teamA'] = $this->getMatchTeam(
+                $match->getTeam1(),
+                $match->getScore1()
+            );
         }
-        $team2 = $match->getTeam2();
-        if(isset($team2)){
-            $flag = empty($match->getTeam2()->getFlagIcon()) ? null: $match->getTeam2()->getFlagIcon()->getName();
-
-            $this->imageService->setImage($flag);
-            $flag = $this->imageService->getImagePath();
-
-            $this->imageService->setImage($match->getTeam2()->getLogo());
-            $matchFields['teamB'] = [
-                "title" => str_replace("'", "", $match->getTeam2()->getName()),
-                "logo" => $this->imageService->getImagePath(),
-                "score" => $match->getScore2(),
-                "flag" => $flag
-            ];
+        if(!empty($match->getTeam2())){
+            $matchFields['teamB'] = $this->getMatchTeam(
+                $match->getTeam2(),
+                $match->getScore2()
+            );
         }
+        $matchFields['pickAndBans'] = $this->getMatchPickAndBans($match);
+
         return $matchFields;
+    }
+
+    /**
+     * @param Match $match
+     * @return array
+     */
+    public function getMatchStreams(Match $match): array
+    {
+        $streams = [];
+
+        /** @var Stream $stream */
+        foreach ($match->getStreams() as $stream){
+            $streams[] = [
+                'name' => $stream->getName(),
+                'url'  => $stream->getUrl(),
+                'lang' => $stream->getLanguage(),
+                'type' => $stream->getType()
+            ];
+        }
+        return $streams;
+    }
+
+    /**
+     * @param Team $team
+     * @param $score
+     * @return array
+     */
+    public function getMatchTeam(Team $team, $score): array
+    {
+        $flag = empty($team->getFlagIcon()) ? null: $team->getFlagIcon()->getName();
+
+        $this->imageService->setImage($flag);
+        $flag = $this->imageService->getImagePath();
+
+        $this->imageService->setImage($team->getLogo());
+
+        return [
+            "title" => str_replace("'", "", $team->getName()),
+            "logo"  => $this->imageService->getImagePath(),
+            "score" => $score,
+            "flag"  => $flag
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return Match|null
+     */
+    public function find($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * @param Match $match
+     * @return array
+     */
+    public function getMatchPickAndBans(Match $match): array
+    {
+        $matchPickAndBans = [];
+
+        /** @var MatchPickAndBan $matchPickAndBan */
+        foreach ($match->getMatchPickAndBans() as $matchPickAndBan)
+        {
+            $team = $matchPickAndBan->getTeam();
+
+            if (isset($team)){
+                $this->imageService->setImage($team->getLogo());
+
+                $matchPickAndBans[] = [
+                    'team' => [
+                        'logo' => $this->imageService->getImagePath(),
+                        'name' => $team->getName()
+                    ],
+                    'operation' => $matchPickAndBan->getOperationType(),
+                    'map' => $matchPickAndBan->getMap()
+                ];
+            }
+        }
+        return $matchPickAndBans;
     }
 }

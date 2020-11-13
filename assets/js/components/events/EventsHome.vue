@@ -18,7 +18,7 @@
                                 <i class="fas fa-eye"></i>
                                 {{event.views || 0}}
                             </div>
-                            <div class="date w-100">
+                            <div class="date w-100 d-flex justify-content-end">
                                 {{event.startedAtRu}} - {{event.endedAtRu}}
                             </div>
                         </div>

@@ -94,10 +94,17 @@ class MapService extends EntityService
                 $map->setImage($image);
             }
         }
-
         $this->entityManager->persist($map);
         $this->entityManager->flush();
 
         return $map;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAll()
+    {
+        return $this->repository->getAll();
     }
 }

@@ -224,7 +224,7 @@ class MainController extends DefController
      */
     public function getMainResults()
     {
-        $results =  $this->entityManager
+        $results = $this->entityManager
             ->getRepository(Result::class)
             ->getCurrent();
 

@@ -208,4 +208,9 @@ class PersonService extends EntityService
         }
         return $player;
     }
+
+    public function getPersonsByTeam(Team $team)
+    {
+        return $this->repository->getPersonsByTeam($team);
+    }
 }
