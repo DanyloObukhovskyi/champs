@@ -41,48 +41,15 @@
                     :player="activePlayerTeamA">
             </player>
             <div class="characteristics">
-                <div>
-                    <span>
-                        {{getActivePlayerTeamAStatistic !== null ? getActivePlayerTeamAStatistic.rating: '???'}}
+                <div v-for="(statName, stat) in stats">
+                    <span :class="{orange: playerTeamB !== null && playerTeamA[stat] > playerTeamB[stat]}">
+                        {{playerTeamA !== null ? playerTeamA[stat]: '???'}}
                     </span>
                     <span class="characteristic">
-                        Rating
+                        {{statName}}
                     </span>
-                    <span>
-                        {{getActivePlayerTeamBStatistic !== null ? getActivePlayerTeamBStatistic.rating: '???'}}
-                    </span>
-                </div>
-                <div>
-                    <span>
-                         {{getActivePlayerTeamAStatistic !== null ? getActivePlayerTeamAStatistic.kd: '???'}}
-                    </span>
-                    <span class="characteristic">
-                        Kills pre round
-                    </span>
-                    <span>
-                         {{getActivePlayerTeamBStatistic !== null ? getActivePlayerTeamBStatistic.kd: '???'}}
-                    </span>
-                </div>
-                <div>
-                    <span>
-                        {{getActivePlayerTeamAStatistic !== null ? getActivePlayerTeamAStatistic.kast: '???'}}
-                    </span>
-                    <span class="characteristic">
-                        Kast
-                    </span>
-                    <span>
-                        {{getActivePlayerTeamBStatistic !== null ? getActivePlayerTeamBStatistic.kast: '???'}}
-                    </span>
-                </div>
-                <div>
-                    <span>
-                        {{getActivePlayerTeamAStatistic !== null ? getActivePlayerTeamAStatistic.adr: '???'}}
-                    </span>
-                    <span class="characteristic">
-                        Average damage
-                    </span>
-                    <span>
-                        {{getActivePlayerTeamBStatistic !== null ? getActivePlayerTeamBStatistic.adr: '???'}}
+                    <span :class="{orange: playerTeamB !== null && playerTeamA[stat] < playerTeamB[stat]}">
+                        {{playerTeamB !== null ? playerTeamB[stat]: '???'}}
                     </span>
                 </div>
             </div>
@@ -110,6 +77,12 @@
             return {
                 activePlayerTeamA: null,
                 activePlayerTeamB: null,
+                stats: {
+                    rating: 'Rating',
+                    kd: 'Kills pre round',
+                    kast: 'Kast',
+                    adr: 'Average damage'
+                }
             }
         },
         components: {
@@ -117,10 +90,10 @@
             LampHeader
         },
         computed: {
-            getActivePlayerTeamAStatistic() {
+            playerTeamA() {
                 return this.getActivePlayer(this.teamA, this.activePlayerTeamA);
             },
-            getActivePlayerTeamBStatistic() {
+            playerTeamB() {
                 return this.getActivePlayer(this.teamB, this.activePlayerTeamB);
             }
         },
@@ -181,6 +154,24 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c1c6ca", endColorstr="#fbfcfc", GradientType=1);
     }
 
+    .dark .team-composition-body .teamA {
+        color: white;
+        background: rgb(59,63,68);
+        background: -moz-linear-gradient(90deg, rgba(59,63,68,1) 0%, rgba(37,40,42,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(59,63,68,1) 0%, rgba(37,40,42,1) 100%);
+        background: linear-gradient(90deg, rgba(59,63,68,1) 0%, rgba(37,40,42,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3b3f44",endColorstr="#25282a",GradientType=1);
+    }
+
+    .dark .team-composition-body .teamB {
+        color: white;
+        background: rgb(37,40,42);
+        background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 100%);
+        background: linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a",endColorstr="#3b3f44",GradientType=1);
+    }
+
     .team-composition .compare {
         padding: 2vw;
         display: flex;
@@ -190,6 +181,10 @@
 
     .team-composition .compare .characteristics {
         padding-bottom: 2vw;
+    }
+
+    .dark .team-composition .compare .characteristics {
+        color: white;
     }
 
     .team-composition .compare .characteristics span.characteristic {
@@ -207,5 +202,10 @@
     .team-composition .compare .characteristics > div {
         display: flex;
         font-size: 1vw;
+        padding: .2vw 0;
+    }
+
+    .team-composition .compare .characteristics span.orange{
+        color: #f24f13;
     }
 </style>

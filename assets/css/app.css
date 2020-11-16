@@ -12,7 +12,7 @@ body {
     padding-top: 7vw;
 }
 
-.home {
+#app.home , #app.matches{
     background: url(/images/home/background.png) no-repeat center 0;
     background-size: 100%;
 }
@@ -21,12 +21,12 @@ body {
     padding-top: 7vw;
 }
 
-.home .home-end {
+#app.home .home-end {
     background: url(/images/home/background2.svg) no-repeat center 0;
     background-size: 100%;
 }
 
-.dark .home .home-end {
+.dark #app.home .home-end {
     background: url(/images/home/background2Black.svg) no-repeat center 0;
     background-size: 100%;
 }
@@ -37,7 +37,7 @@ body {
     background-size: 35%;
 }
 
-.dark .home {
+.dark #app.home , .dark #app.matches{
     background: url(/images/home/backgroundBlack.svg) no-repeat center 0;
 }
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Match;
+use App\Service\MatchService;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -284,5 +285,111 @@ class MatchRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         return $match;
+    }
+
+    /**
+     * @param $filters
+     * @param string $type
+     * @return \Doctrine\ORM\QueryBuilder
+     * @throws \Exception
+     */
+    public function getMatchesQueryByType(
+        $filters,
+        string $type
+    ){
+        $date = new \DateTime();
+        $date = $date->format("Y-m-d")." 23:59:59";
+
+        $query = $this->createQueryBuilder('m')
+                    ->orderBy('m.start_at', 'DESC');
+
+        if ($type === MatchService::FUTURE_MATCHES){
+            $query->andWhere('m.start_at > :date')
+                ->setParameter('date', $date);
+        }
+        if ($type === MatchService::LIVE_MATCHES){
+            $query->andWhere('m.live = :live')
+                ->setParameter('live', true);
+        }
+        if ($type === MatchService::PAST_MATCHES){
+            $query->andWhere('m.start_at < :date')
+                ->setParameter('date', $date);
+        }
+
+        if (isset($filters->teamA)){
+            $query->andWhere('m.team1 = :teamA')
+                ->setParameter('teamA', $filters->teamA);
+        }
+
+        if (isset($filters->teamB)){
+            $query->andWhere('m.team2 = :teamB')
+                ->setParameter('teamB', $filters->teamB);
+        }
+
+        if (!empty($filters->dateFrom)){
+            $from = new \DateTime("$filters->dateFrom 00:00:00");
+            $query->andWhere('m.start_at >= :dateFrom')
+                ->setParameter('dateFrom', $from);
+        }
+        if (!empty($filters->dateTo)){
+            $to   = new \DateTime("$filters->dateTo 23:59:59");
+            $query->andWhere('m.start_at <= :dateTo')
+                ->setParameter('dateTo', $to);
+        }
+        return $query;
+    }
+
+    /**
+     * @param string $type
+     * @return int|mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getMatchesCountByType($filters, string $type)
+    {
+        $result = 0;
+
+        if (in_array($type, MatchService::MATCH_TYPES, false))
+        {
+            $result = $this->getMatchesQueryByType($dateFrom, $dateTo, $type)
+                ->select('count(m.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+        return $result;
+    }
+
+    /**
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $teamA
+     * @param $teamB
+     * @param string $type
+     * @param int $page
+     * @param int $length
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function getMatchesByType(
+        $filters,
+        string  $type,
+        int $page = 0,
+        int $length = 20
+    )
+    {
+        $result = [];
+
+        if (in_array($type, MatchService::MATCH_TYPES, false))
+        {
+            $query = $this->getMatchesQueryByType(
+                $filters,
+                $type
+                )->setFirstResult($page * $length)
+                ->setMaxResults($length);
+
+            $result = $query->getQuery()
+                ->getResult();
+        }
+        return $result;
     }
 }

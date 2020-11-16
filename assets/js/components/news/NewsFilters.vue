@@ -17,26 +17,12 @@
                            :placeholder="`${types[filterType]}: Введите ключевое слово`">
                 </div>
             </div>
-            <div class="dates d-flex justify-content-between">
-                <div class="date d-flex">
-                    <div class="date-calendar" @click="dateFromView = !dateFromView, dateToView = false">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div>
-                        От {{dateFrom}}
-                    </div>
-                    <calendar @date="setFromDate" v-show="dateFromView" :date="dateFrom"/>
-                </div>
-                <div class="date d-flex">
-                    <div class="date-calendar" @click="dateToView = !dateToView, dateFromView = false">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div>
-                        До {{dateTo}}
-                    </div>
-                    <calendar @date="setToDate" v-show="dateToView" :date="dateTo"/>
-                </div>
-            </div>
+            <calendar-filter
+                @setToDate="setToDate"
+                @setFromDate="setFromDate"
+                :date-from="dateFrom"
+                :date-to="dateTo">
+            </calendar-filter>
             <div class="types d-flex">
                 <div class="icon pointer" @click="show = !show">
                     <img src="/images/news/filter.svg" alt="">
@@ -75,6 +61,7 @@
 <script>
     import Calendar from "../calendar/Calendar";
     import LampHeader from "../helpers/LampHeader";
+    import CalendarFilter from "../calendar/CalendarFilter";
 
     export default {
         name: "NewsFilters",
@@ -82,6 +69,7 @@
             'filters',
         ],
         components: {
+            CalendarFilter,
             'lamp-header': LampHeader,
             'calendar': Calendar,
         },
@@ -89,8 +77,6 @@
             return {
                 show: false,
                 search: null,
-                dateFromView: false,
-                dateToView: false,
                 showFilters: false,
                 filterType: 'tags',
                 types: {
@@ -149,7 +135,8 @@
         height: 3vw;
     }
 
-    .news-filters .filters-body .search-keyword, .dates .date .date-calendar, .types .icon {
+    .news-filters .filters-body .search-keyword,
+    .types .icon {
         width: 4vw;
         height: 3vw;
         background: rgb(255, 183, 73);
@@ -161,27 +148,8 @@
         align-items: center;
     }
 
-    .news-filters .filters-body .dates, .types {
+    .news-filters .filters-body .types{
         margin-top: 1vw;
-    }
-
-    .news-filters .filters-body .dates .date {
-        font-size: .9vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .dark .news-filters .filters-body .dates .date {
-        color: white;
-    }
-
-    .news-filters .filters-body .dates .date .date-calendar {
-        width: 3.35vw;
-        align-items: center;
-        display: flex;
-        margin-right: .3vw;
-        cursor: pointer;
     }
 
     .news-filters .filters-body .types .icon {

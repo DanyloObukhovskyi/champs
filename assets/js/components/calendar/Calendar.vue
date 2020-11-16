@@ -63,6 +63,7 @@
                     ${this.month < 10 ? '0' + (this.month + 1) : this.month + 1}.
                     ${this.year}`
                 )
+                this.day = day < 10 ? '0' + day : day;
             }
         },
         mounted() {

@@ -72,6 +72,15 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
     }
 
+    .dark .map-statistics .map-statistics-body {
+        color: white;
+        background: rgb(37, 40, 42);
+        background: -moz-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+        background: linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#3d4146", GradientType=1);
+    }
+
     .map-statistics-col {
         width: 30%;
         height: 3vw;
@@ -109,5 +118,10 @@
     .maps-row .teamA,
     .maps-row .teamB {
         background-color: white;
+    }
+
+    .dark .maps-row .teamA,
+    .dark .maps-row .teamB {
+        background: #26292c;
     }
 </style>

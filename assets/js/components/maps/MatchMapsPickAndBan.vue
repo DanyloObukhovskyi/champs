@@ -27,7 +27,7 @@
         components: {
             LampHeader
         },
-        data(){
+        data() {
             return {
                 types: {
                     1: {
@@ -49,7 +49,7 @@
 </script>
 
 <style scoped>
-    .map-pool .map-pool-body{
+    .map-pool .map-pool-body {
         margin-top: 1vw;
         padding: 1vw 0;
         background: rgb(251, 252, 252);
@@ -58,7 +58,17 @@
         background: linear-gradient(90deg, rgba(251, 252, 252, 1) 0%, rgba(193, 198, 202, 1) 49%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
     }
-    .map-pool .map-pool-body .pick-row{
+
+    .dark .map-pool .map-pool-body {
+        color: white;
+        background: rgb(61, 65, 70);
+        background: -moz-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 100%);
+        background: linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d4146", endColorstr="#25282a", GradientType=1);
+    }
+
+    .map-pool .map-pool-body .pick-row {
         padding: .9vw;
         font-size: 1.3vw;
     }

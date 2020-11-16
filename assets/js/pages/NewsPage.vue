@@ -280,12 +280,13 @@
         background-position: center;
         height: 100%;
         background-size: 100%;
+        background-position: top;
         transition: all .5s ease-in-out;
     }
 
     .news .news-row .article:hover {
         background-size: 130%;
-        background-position: center;
+        background-position: top;
         transition: all .5s ease-in-out;
     }
 

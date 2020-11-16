@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+{% block title %}Матчи{% endblock %}
+{% block router %}matches{% endblock %}
+{% block description %}
+  <meta name="description" content="Ожидаемые матчи по League of Legends, Dota и Cs:Go">
+{% endblock %}
+{% block keywords %}
+  <meta name="Keywords" content="League of Legends, Dota, Cs:Go, Матчи по League of Legends, Матчи по Dota, Матчи по Cs:Go">
+{% endblock %}
+{% block body %}
+<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+  Матчи
+</h1>
+<div class="matches__view" id="matches">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+        {% include 'templates/matches/live.html.twig' with {'matches': lives} %}
+      </div>
+      <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+
+
+{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
+{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
+{#        <img src="/images/Banner.png"/>#}
+{#    </object>#}
+{#</a>#}
+
+        <div class="component live">
+          <div class="header">
+            <div class="round">
+              <div><img src="/images/lamp.svg" alt="lamp" /></div>
+            </div>
+            <div class="title">
+              Матчи
+            </div>
+          </div>
+          <div class="table">
+            <div class="row-table" v-for="item in items" >
+              <div class="date" v-text="item.date"></div>
+              <div class="row-items">
+                <template v-for="match in item.items">
+                  <a class="row-item" v-if="checkEmptyTeams(match)" :href="`/ru/matches/${match.match_id}`">
+                    <match :match="match"/>
+                  </a>
+                  <a class="row-item" v-if="!checkEmptyTeams(match)" :href="`/ru/matches/${match.match_id}`">
+                    <empty-match :match="match"/>
+                  </a>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
+{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
+{#        <img src="/images/Banner.png"/>#}
+{#    </object>#}
+{#</a>#}
+
+
+      </div>
+      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12" style="display: none;">
+        {% include 'templates/matches/filter.html.twig' %}
+        {% include 'templates/layouts/live.video.html.twig' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/x-template" id="calendar">
+	<div class="calendar">
+		<div class="title">
+			<div class="lft">
+				<div class="month" @click="monthView = monthView ? false : true">
+					<span v-text="months[month]"></span><img src="/images/arrowCalBtn.svg" alt="arrowCalBtn" />
+				</div>
+				<div class="months" v-if="monthView">
+					<div v-for="(m, i) in months" v-text="m" @click="month = i, monthView = false"></div>
+				</div>
+			</div>
+			<div class="rgt">
+				<div class="year">
+                    <span @click="year = Number(year) - 1"><img src="/images/arrowCalLft.svg" alt="arrowCalLft" /></span>
+					<label v-text="year"></label>
+                    <span @click="year = Number(year) + 1"><img src="/images/arrowCalRgt.svg" alt="arrowCalRgt" /></span>
+				</div>
+			</div>
+		</div>
+		<div class="weeks">
+			<div class="week" v-for="week in weeks" v-text="week"></div>
+		</div>
+		<div class="days">
+			<div class="day" v-for="i in getWeekDay"></div>
+			<div class="day sel" v-for="d in getDays" v-text="d" @click="setDay(d)" :class="[day === d ? 'active' : '']"></div>
+		</div>
+	</div>
+</script>
+
+<script type="text/x-template" id="match-template">
+      <div class="w-100">
+        <div class="time" v-text="match.time"></div>
+        <div class="w-100 justify-content-center">
+          <div class="teamA">
+            <span v-text="match.teamA.title ?? null"></span>
+            <img :src="`${match.teamA.logo}`" />
+          </div>
+          <div class="vs">vs</div>
+          <div class="teamB">
+            <img :src="`${match.teamB.logo ?? '#'}`" />
+            <span v-text="match.teamB.title ?? null"></span>
+          </div>
+          <div class="title">
+            <img :src="`${match.logo ?? '#'}`" />
+            <span v-text="match.title ?? null"></span>
+          </div>
+        </div>
+        <div class="time justify-content-end">
+          <img :src="`${match.event.image}`" />
+        </div>
+      </div>
+</script>
+
+<script type="text/x-template" id="empty-match-template">
+  <div class="w-100" :href="`matches/${match.match_id}`" >
+      <div class="time" v-text="match.time"></div>
+      <div class="w-100 d-flex justify-content-center">
+        <div class="vs w-50" v-html="match.event.name">
+        </div>
+        <div class="time"></div>
+        <div class="time"></div>
+      </div>
+      <div class="time justify-content-end">
+        <img :src="`${match.event.image ?? '#'}`" />
+      </div>
+  </div>
+</script>
+
+<script>
+Vue.component('match', {
+  props: {
+      match: Object,
+  },
+  template: '#match-template',
+})
+Vue.component('empty-match', {
+    props: {
+        match: Object,
+    },
+    template: '#empty-match-template',
+})
+Vue.component('calendar', {
+  template: '#calendar',
+  props: {
+    date: String,
+  },
+	computed: {
+		getDays() {
+			const date = new Date(this.year, this.month, 32);
+			return 32 - date.getDate();
+		},
+		getWeekDay() {
+			const date = new Date(this.year, this.month, 1);
+			let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
+			return day < 0 ? 0 : day;
+		}
+	},
+	data: function () {
+    return {
+			month: 0,
+			monthView: false,
+			year: 2020,
+			months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октрябрь', 'Ноябрь', 'Декабрь'],
+			days: 0,
+      day: 0,
+			weeks: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+    };
+  },
+  methods: {
+    setDay(day) {
+      this.$emit('date', `${day  < 10 ? '0' + day : day}.${this.month  < 10 ? '0' + (this.month + 1) : this.month + 1}.${this.year}`)
+    }
+  },
+  mounted() {
+    const date = this.date.split('.');
+    this.day = Math.abs(date[0]);
+    this.month = Math.abs(date[1]) - 1;
+    this.year = date[2];
+  }
+})
+var app = new Vue({
+  el: '#matches',
+  data: function () {
+    return {
+      popup: null,
+      player: '',
+      team: '',
+      overflow: 'hidden',
+      dateFrom: '21.02.2020',
+      dateFromView: false,
+      dateTo: '21.02.2020',
+      dateToView: false,
+      filterHeight: 0,
+      filterId: 0,
+      items: {{ items|json_encode|raw }}
+    };
+  },
+  methods: {
+    setViewFilter(id, e) {
+      const th = this;
+      this.overflow = 'hidden';
+      const height = e.target.closest('.tab').querySelector('.view').clientHeight;
+      if (this.filterId === id) {
+        this.filterHeight = 0;
+        this.filterId = 0;
+      } else {
+        this.filterHeight = height;
+        this.filterId = id;
+        setTimeout(() => {
+          th.overflow = 'visible';
+        }, 400);
+      }
+    },
+    checkEmptyTeams(match) {
+      let result = true;
+
+      if (match.teamA === null)
+          result = false
+      if (match.teamB === null)
+          result = false
+
+      return result
+    },
+    setToDate(date) {
+      this.dateFromView = false;
+      this.dateToView = false;
+      this.dateTo = date;
+    },
+    setFromDate(date) {
+      this.dateFromView = false;
+      this.dateToView = false;
+      this.dateFrom = date;
+    },
+    setViewPopup(id, val) {
+      if (val.length > 0) {
+        this.popup = id;
+      } else {
+        this.popup = null;
+      }
+    }
+  },
+  mounted() {
+    const dateFrom = new Date();
+    dateFrom.setDate(dateFrom.getDate() - (32 - dateFrom.getDate()));
+    this.dateFrom = `${dateFrom.getDate() < 10 ? '0' + dateFrom.getDate() : dateFrom.getDate()}.${(dateFrom.getMonth() + 1) < 10 ? '0' + (dateFrom.getMonth() + 1) : getMonth() + 1}.${dateFrom.getFullYear()}`;
+    const dateTo = new Date();
+    this.dateTo = `${dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()}.${(dateTo.getMonth() + 1) < 10 ? '0' + (dateTo.getMonth() + 1) : getMonth() + 1}.${dateTo.getFullYear()}`;
+    window.addEventListener('click', (e) => {
+      if (e.target.closest('.calendar') || e.target.closest('.date') || e.target.closest('.months') || e.target.closest('.flex_cal')) return false;
+      this.dateFromView = false;
+      this.dateToView = false;
+    });
+  }
+});
+</script>
+
+{% endblock %}

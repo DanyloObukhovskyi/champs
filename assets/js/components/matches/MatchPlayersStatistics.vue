@@ -33,11 +33,9 @@
                                  @error="() => $event.target.src = '/images/noLogo.png'"/>
                             {{ teamA.title ? teamA.title: '???'}}
                         </div>
-                        <div class="r">K-D</div>
-                        <div class="r">+/-</div>
-                        <div class="r">ADR</div>
-                        <div class="r">KAST</div>
-                        <div class="r">Rating</div>
+                        <div class="r" v-for="statName in stats">
+                            {{statName}}
+                        </div>
                     </div>
                     <div class="grid-row" v-for="player in getLeftTeamStatistic">
                         <div class="r">
@@ -45,20 +43,8 @@
                                 {{player.player}}
                             </span>
                         </div>
-                        <div class="r">
-                            {{player.kd}}
-                        </div>
-                        <div class="r">
-                            {{player.plusMinus}}
-                        </div>
-                        <div class="r">
-                            {{player.adr}}
-                        </div>
-                        <div class="r">
-                            {{player.kast}}
-                        </div>
-                        <div class="r">
-                            {{player.rating}}
+                        <div class="r" v-for="(statName, stat) in stats">
+                            {{player[stat]}}
                         </div>
                     </div>
                 </div>
@@ -71,11 +57,9 @@
                                     @error="() => $event.target.src = '/images/noLogo.png'"/>
                             {{ teamB.title ? teamB.title: '???'}}
                         </div>
-                        <div class="r">K-D</div>
-                        <div class="r">+/-</div>
-                        <div class="r">ADR</div>
-                        <div class="r">KAST</div>
-                        <div class="r">Rating</div>
+                        <div class="r" v-for="statName in stats">
+                            {{statName}}
+                        </div>
                     </div>
                     <div class="grid-row" v-for="player in getRightTeamStatistic">
                         <div class="r">
@@ -83,20 +67,8 @@
                                  {{player.player}}
                             </span>
                         </div>
-                        <div class="r">
-                            {{player.kd}}
-                        </div>
-                        <div class="r">
-                            {{player.plusMinus}}
-                        </div>
-                        <div class="r">
-                            {{player.adr}}
-                        </div>
-                        <div class="r">
-                            {{player.kast}}
-                        </div>
-                        <div class="r">
-                            {{player.rating}}
+                        <div class="r" v-for="(statName, stat) in stats">
+                            {{player[stat]}}
                         </div>
                     </div>
                 </div>
@@ -116,6 +88,17 @@
             'map',
             'type'
         ],
+        data(){
+            return {
+                stats: {
+                    kd: 'K-D',
+                    plusMinus: '+/-',
+                    adr: 'ADR',
+                    kast: 'KAST',
+                    rating: 'Rating'
+                }
+            }
+        },
         components: {
             LampHeader
         },
@@ -151,6 +134,15 @@
         background: -webkit-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
         background: radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
+    }
+
+    .dark .player-statistics .player-statistics-body{
+        color: white;
+        background: rgb(37,40,42);
+        background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 50%, rgba(37,40,42,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 50%, rgba(37,40,42,1) 100%);
+        background: linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 50%, rgba(37,40,42,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a",endColorstr="#25282a",GradientType=1);
     }
 
     .grid-select {
@@ -214,6 +206,10 @@
         background: white;
         padding: .7vw 0;
         margin: .1vw .05vw;
+    }
+
+    .dark .grid-row .r{
+        background: #26292c;
     }
 
     .grid-header .r:nth-child(1),

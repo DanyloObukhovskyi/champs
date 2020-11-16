@@ -71,10 +71,11 @@
     .team-matches .score {
         display: flex;
         justify-content: center;
+        text-align: center;
     }
 
     .team-matches .opponent-logo img {
-        width: 4vw;
+        height: 4vw;
     }
 
     .line {

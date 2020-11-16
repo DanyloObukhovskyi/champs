@@ -57,7 +57,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/ru/news/", name="news_index")
+     * @Route("/ru/news", name="news_index")
      */
     public function index(Request $request)
     {

@@ -19,9 +19,6 @@
                 <a href="/ru/matches" class="pointer" :class="{active : '/ru/matches' == currentPath}">
                     Матчи
                 </a>
-                <a href="/ru/results" class="pointer" :class="{active : '/ru/results' == currentPath}">
-                    Результаты
-                </a>
                 <a href="/ru/statistics" class="pointer" :class="{active : '/ru/statistics' == currentPath}">
                     Cтатистика
                 </a>

@@ -168,8 +168,32 @@ class TeamService extends EntityService
         $this->imageService->setImage($team->getLogo());
 
         return [
+            'id'   => $team->getId(),
             'name' => $team->getName(),
             'logo' => $this->imageService->getImagePath()
         ];
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function findByName($name)
+    {
+        return $this->repository->findByName($name);
+    }
+
+    /**
+     * @param $id
+     * @return Team|null
+     */
+    public function find($id)
+    {
+        if (isset($id)){
+            $team = $this->repository->find($id);
+        } else {
+            $team = null;
+        }
+        return $team;
     }
 }

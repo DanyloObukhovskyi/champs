@@ -1,0 +1,37 @@
+.matches-pagination {
+    list-style: none;
+    display: flex;
+    margin: revert;
+    justify-content: center;
+}
+
+.matches-pagination li:first-child a {
+    border-radius: .3vw 0 0 .3vw;
+}
+
+.matches-pagination li:last-child a {
+    border-radius: 0 .3vw .3vw 0;
+}
+
+.matches-pagination li a {
+    outline: unset;
+    color: black;
+    border: .1vw solid #ff6d1d;
+    font-size: 1vw;
+    padding: 0 1.5vw;
+    cursor: pointer;
+    background: transparent;
+    padding: 0.6vw 1vw;
+}
+.dark .matches-pagination li a {
+    color: #FFFFFF;
+}
+.matches-pagination li.active a {
+    background-color: #FF6D1D;
+    color: #FFFFFF;
+}
+
+.matches-pagination li:hover a {
+    background-color: #FF6D1D;
+    color: #FFFFFF;
+}

@@ -16,49 +16,19 @@
             </lamp-header>
         </div>
         <div class="upcoming-matches-body" v-if="currentPage !== undefined">
-            <div class="upcoming-match-row" v-for="match in currentPage.items">
-                <a :href="'/ru/matches/' + match.match_id" class="upcoming-match-wrapper w-100 d-flex align-items-center">
-                    <div class="event d-flex align-items-center">
-                        <div class="event-logo">
-                            <img :src="match.event.image" alt="">
-                        </div>
-                        <div class="event-name">
-                            {{match.event.name}}
-                        </div>
-                    </div>
-                    <div class="teams d-flex align-items-center">
-                        <div class="teamA w-50 d-flex justify-content-end align-items-center">
-                            <div class="team-name">
-                                {{match.teamA.title}}
-                            </div>
-                            <img :src="match.teamA.logo" alt="">
-                        </div>
-                        <div class="vs">
-                            <img src="/images/matches/vs.png" alt="">
-                        </div>
-                        <div class="teamB w-50 d-flex align-items-center">
-                            <img :src="match.teamB.logo" alt="">
-                            <div class="team-name">
-                                {{match.teamB.title}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="time d-flex justify-content-end">
-                        <img src="/images/matches/time.svg" alt="">
-                        {{match.time}}
-                    </div>
-                </a>
-            </div>
+            <match-row :key="index" :match="match" v-for="(match, index) in currentPage.items"/>
         </div>
     </div>
 </template>
 
 <script>
     import LampHeader from "../helpers/LampHeader";
+    import MatchRow from "./MatchRow";
 
     export default {
         name: "UpcomingMatches",
         components: {
+            MatchRow,
             'lamp-header': LampHeader
         },
         data() {
@@ -114,76 +84,5 @@
 
     .upcoming-matches-body {
         padding-top: .8vw;
-    }
-
-    .upcoming-match-row {
-        margin-bottom: .2vw;
-        height: 6vw;
-        background: url(/images/matches/matchBackground.png);
-        background-repeat: round;
-        background-size: 100%;
-    }
-
-    .dark .upcoming-match-row{
-        background: url(/images/matches/matchBackgroundBlack.png);
-        background-repeat: round;
-        background-size: 100%;
-    }
-
-    .upcoming-match-wrapper {
-        height: 6vw;
-    }
-
-    .event {
-        padding-left: .5vw;
-        width: 15vw;
-    }
-
-    .event-logo img {
-        width: 1.5vw;
-        margin-right: .5vw;
-    }
-
-    .event-name {
-        font-size: .9vw;
-        color: #5c6b79;
-    }
-
-    .teams {
-        width: 32vw;
-    }
-
-    .teamA img {
-        margin-left: 1vw;
-    }
-
-    .teamB img {
-        margin-right: 1vw;
-    }
-
-    .teamA img, .teamB img {
-        width: 2vw;
-    }
-
-    .team-name {
-        color: aliceblue;
-        font-size: 1.3vw;
-    }
-
-    .time {
-        color: #5c6b79;
-        width: 11vw;
-        display: flex;
-        justify-content: end;
-        font-size: .8vw;
-    }
-
-    .time img {
-        margin-right: .5vw;
-        width: .8vw;
-    }
-
-    .vs img {
-        height: 4vw;
     }
 </style>

@@ -92,7 +92,6 @@ class PersonRepository extends ServiceEntityRepository
             ->andWhere('pp.team = :team')
             ->setParameter('team', $team)
             ->getQuery()
-            ->setMaxResults(5)
             ->getResult();
     }
 }

@@ -100,14 +100,14 @@ class NewsService extends EntityService
      * @param int $offset
      * @return mixed
      */
-    public function getHotNews(object $filters, int $limit = 10, int $offset = 0)
+    public function getHotNews($filters = null, int $limit = 10, int $offset = 0)
     {
         return $this->repository->getByFilters(
             $filters->tags ?? [],
             $filters->titles ?? [],
             $filters->texts ?? [],
-            $filters->dateFrom ?? null,
-            $filters->dateTo ?? null,
+            $this->parseDate($filters->dateFrom),
+            $this->parseDate($filters->dateTo),
             $limit,
             $offset,
             'views'
@@ -118,10 +118,8 @@ class NewsService extends EntityService
      * @param string $date
      * @return string
      */
-    public function parseDate(?string $date = null): ?string
+    public function parseDate($date = null): ?string
     {
-        $parseDate= null;
-
         if (is_string($date) and !empty($date)){
             [$day, $month, $year] = explode('.', $date);
             $day = trim($day);
@@ -130,7 +128,7 @@ class NewsService extends EntityService
 
             $parseDate = "$day-$month-$year";
         }
-        return $parseDate;
+        return $parseDate ?? null;
     }
 
     /**

@@ -3,21 +3,23 @@
 namespace App\Controller;
 
 use App\Entity\Match;
+use App\Entity\Person;
 use App\Entity\PlayerStatistics;
 use App\Entity\Stream;
-use App\Entity\PastMatch;
 use App\Entity\Team;
+use App\Repository\MatchRepository;
 use App\Service\MapService;
 use App\Service\MatchMapTeamWinRateService;
 use App\Service\MatchService;
-use App\Service\ImageService;
 use App\Entity\MatchMapTeamStatistic;
 use App\Service\PastMatchService;
 use App\Service\PersonService;
 use App\Service\PlayerStatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "en|ru"})
@@ -60,6 +62,11 @@ class MatchesController extends AbstractController
     public $personService;
 
     /**
+     * @var MatchRepository
+     */
+    public $matchRepository;
+
+    /**
      * MatchesController constructor.
      * @param EntityManagerInterface $entityManager
      */
@@ -75,6 +82,8 @@ class MatchesController extends AbstractController
 
         $this->matchMapTeamWinRateService = new MatchMapTeamWinRateService($entityManager);
         $this->personService = new PersonService($entityManager);
+
+        $this->matchRepository = $entityManager->getRepository(Match::class);
     }
 
     /**
@@ -82,22 +91,30 @@ class MatchesController extends AbstractController
      */
     public function index()
     {
-        $matches = $this->entityManager
-            ->getRepository(Match::class)
-            ->findMatchesNotEnded();
+        return $this->render('templates/matches.html.twig', ['router' => 'matches']);
+    }
 
-        $matchesItems = $this->matchService
-            ->matchesDecorator($matches);
+    /**
+     * @Route("/ajax/matches/{type}/{page}", defaults={"page"=1})
+     */
+    public function getMatchesAjax(Request $request, $type, $page)
+    {
+        $filters = $request->getContent();
+        $filters = json_decode($filters, false);
 
-        $lives = $this->entityManager
-            ->getRepository(Match::class)
-            ->findLive();
+        $matches = $this->matchService->getMatchesByType($filters, $type, $page);
+        $matches = $this->matchService->matchesDecorator($matches);
 
-        return $this->render('templates/matches.html.twig', [
-                'router' => 'matches',
-                'matches' => $matches,
-                "items" => $matchesItems,
-                "lives" => $lives
+        $counts = [];
+
+        foreach (MatchService::MATCH_TYPES as $type){
+            $counts[$type] = $this->matchService->getMatchesCountByType($filters, $type);
+        }
+
+        return $this->json([
+            'matches' => $matches,
+            'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
+            'counts' => $counts
         ]);
     }
 
@@ -120,7 +137,7 @@ class MatchesController extends AbstractController
      *
      * @Route("/get/match/{id}")
      */
-    public function getMatch($id)
+    public function getMatch($id, TranslatorInterface $translator)
     {
         /** @var Match $match */
         $match = $this->matchService->find($id);
@@ -135,8 +152,13 @@ class MatchesController extends AbstractController
         $matchDecorate['teamA']['playerStatistics'] = $this->getMatchPlayerStatistics($match, $match->getTeam1());
         $matchDecorate['teamB']['playerStatistics'] = $this->getMatchPlayerStatistics($match, $match->getTeam2());
 
-        $matchDecorate['teamA']['players'] = $this->getTeamPlayers($match->getTeam1());
-        $matchDecorate['teamB']['players'] = $this->getTeamPlayers($match->getTeam2());
+        $matchDecorate['teamA']['players'] = $this->getTeamPlayers($match, $match->getTeam1());
+        $matchDecorate['teamB']['players'] = $this->getTeamPlayers($match, $match->getTeam2());
+
+        $matchDecorate['startedAt']['date'] = $this->matchService->translateMatchDate($match, $translator);
+        $matchDecorate['startedAt']['time'] = $match->getStartAt()->format('H:m');
+        $matchDecorate['startedAt']['timeStamp'] = $match->getStartAt()->getTimestamp();
+
 
         return $this->json([
             'match' => $matchDecorate,
@@ -191,20 +213,34 @@ class MatchesController extends AbstractController
                 $match->getId(),
                 $team
             );
-        return $this->playerStatisticsService->statisticsDecorator($playerStatisticsTeam);
+        $playerStatisticsTeam = $this->playerStatisticsService
+            ->statisticsDecorator($playerStatisticsTeam);
+
+        return empty($playerStatisticsTeam) ? null : $playerStatisticsTeam;
     }
 
     /**
+     * @param Match $match
      * @param Team $team
      * @return array
      */
-    public function getTeamPlayers(Team $team)
+    public function getTeamPlayers(Match $match, Team $team)
     {
-        $persons = $this->personService->getPersonsByTeam($team);
-
         $teamPersons = [];
-        foreach ($persons as $person){
-            $teamPersons[] = $this->personService->personDecorate($person);
+        $playerStatistics = $match->getPlayerStatistics();
+
+        /** @var PlayerStatistics $playerStatistic */
+        foreach ($playerStatistics as $playerStatistic)
+        {
+            $teamId = $playerStatistic->getPlayer()
+                ->getTeam()
+                ->getId();
+
+            if ($teamId === $team->getId()){
+                $teamPerson = $playerStatistic->getPlayer()->getPerson();
+
+                $teamPersons[$teamPerson->getId()] = $this->personService->personDecorate($teamPerson);
+            }
         }
         return $teamPersons;
     }
@@ -222,20 +258,24 @@ class MatchesController extends AbstractController
      *
      * @Route("/matches/live/{id}", name="live_match")
      */
-    public function live_match($id)
+    public function liveMatch($id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $match = $entityManager->getRepository(Match::class)->findOneBy([
+        $match = $this->entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
         ]);
 
-        $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)->findByMatchTeam($match->getId(),
-            $match->getTeam1());
-        $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)->findByMatchTeam($match->getId(),
-            $match->getTeam2());
-
-
+        $playerStatisticsTeam1 = $this->entityManager
+            ->getRepository(PlayerStatistics::class)
+            ->findByMatchTeam(
+                $match->getId(),
+                $match->getTeam1()
+            );
+        $playerStatisticsTeam2 = $this->entityManager
+            ->getRepository(PlayerStatistics::class)
+            ->findByMatchTeam(
+                $match->getId(),
+                $match->getTeam2()
+            );
 
         return $this->render('templates/matches.live.html.twig', [
             'router' => 'matches',

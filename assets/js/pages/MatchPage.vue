@@ -11,7 +11,17 @@
                     </div>
                 </div>
                 <div class="score">
-                    {{match.teamA.score}} : {{match.teamB.score}}
+                    <span class="d-flex justify-content-center">
+                         {{match.teamA.score}} : {{match.teamB.score}}
+                    </span>
+                    <div class="time d-flex justify-content-center">
+                        <strong>
+                            {{match.startedAt.time}}
+                        </strong>
+                    </div>
+                    <div class="date">
+                        {{match.startedAt.date}}
+                    </div>
                 </div>
                 <div class="teamB">
                     <div class="team-logo">
@@ -22,9 +32,12 @@
                     </div>
                 </div>
             </div>
-            <div class="watch-stream">
+            <div class="match-status">
+                {{matchStatus}}
+            </div>
+            <div class="watch-stream" v-if="match.isLive">
                 <div class="play">
-                    <div class="caret" @click="showStreams = true">
+                    <div class="caret" @click="showStreams = !showStreams">
                         <i class="fas fa-caret-right"></i>
                     </div>
                 </div>
@@ -70,7 +83,7 @@
             </div>
         </div>
         <match-statistics
-            v-if="!load && match !== null"
+            v-if="showStatistic"
             :team-a="match.teamA"
             :team-b="match.teamB">
         </match-statistics>
@@ -105,6 +118,23 @@
                 showStreams: false
             }
         },
+        computed: {
+            showStatistic(){
+                return !this.load
+                    && this.match !== null
+                    && this.match.teamA.playerStatistics !== null
+                    && this.match.teamB.playerStatistics !== null;
+            },
+            matchStatus(){
+                let status = 'Матч завершен';
+                if (this.match.isLive){
+                    status = 'Матч идет'
+                } else if(this.match.startedAt.timeStamp > (new Date().getTime() / 1000)){
+                    status = 'Матч скоро начнется'
+                }
+                return status;
+            }
+        },
         methods: {
             getMatch() {
                 this.load = true;
@@ -126,9 +156,22 @@
 <style scoped>
     .match-header {
         margin-top: .5vw;
-        background: white;
         padding-top: 3vw;
         padding-bottom: 5vw;
+        background: rgb(251, 252, 252);
+        background: -moz-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
+        background: -webkit-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
+        background: radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
+    }
+
+    .dark .match-header{
+        color: white;
+        background: rgb(37,40,42);
+        background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 15%, rgba(61,65,70,1) 50%, rgba(37,40,42,1) 85%);
+        background: -webkit-linear-gradient(90deg, rgba(37,40,42,1) 15%, rgba(61,65,70,1) 50%, rgba(37,40,42,1) 85%);
+        background: linear-gradient(90deg, rgba(37,40,42,1) 15%, rgba(61,65,70,1) 50%, rgba(37,40,42,1) 85%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a",endColorstr="#25282a",GradientType=1);
     }
 
     .match-header .teams .teamA,
@@ -161,6 +204,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .dark .match-header .team-logo{
+        background-color: #35393e;
     }
 
     .match-header .score,
@@ -204,10 +251,13 @@
     }
 
     .streams-viewer {
-        background: white;
+        background-color: white;
         margin-top: .5vw;
-        padding: 0 10vw;
-        padding-bottom: 2vw;
+        padding:  0 10vw 2vw 10vw;
+    }
+
+    .dark .streams-viewer{
+        background-color: #3b3f44;
     }
 
     .streams-viewer .select-lang {
@@ -224,6 +274,12 @@
         font-size: 1vw;
         margin: .1vw;
         border-bottom: .2vw solid #EFF0F0;
+    }
+
+    .dark .streams-viewer .select-lang .stream-lang-btn {
+        color: white;
+        background: #26292c;
+        border-bottom: .2vw solid #26292c;
     }
 
     .streams-viewer .select-lang .stream-lang-btn.active {
@@ -256,7 +312,27 @@
         margin: .1vw;
     }
 
+    .dark .streams-viewer .close {
+        color: white;
+        background: #26292c;
+    }
+
     .last-matches, .matches {
         margin-top: 1vw;
+    }
+
+    .score{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .score .date{
+        font-size: .9vw;
+    }
+
+    .match-status{
+        text-align: center;
+        font-size: 1.5vw;
     }
 </style>

@@ -92,7 +92,7 @@
         text-align: center;
     }
 
-    .dark .player-week-footer .player-name {
+    .dark .player-week:not(.active) .player-week-footer .player-name {
         color: white;
     }
 </style>
