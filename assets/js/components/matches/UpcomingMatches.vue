@@ -24,6 +24,7 @@
 <script>
     import LampHeader from "../helpers/LampHeader";
     import MatchRow from "./MatchRow";
+    import matchService from "../../services/MatchService";
 
     export default {
         name: "UpcomingMatches",
@@ -44,8 +45,8 @@
         },
         methods: {
             getUpcomingMatches() {
-                axios.post('/ru/main/matches')
-                    .then(({data}) => {
+                matchService.getUpcomingMatches()
+                    .then(data => {
                         for (let timestamp in data) {
                             this.matches.push(data[timestamp]);
                         }

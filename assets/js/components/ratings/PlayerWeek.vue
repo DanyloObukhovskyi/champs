@@ -1,10 +1,10 @@
 <template>
-    <div class="player-week">
+    <div class="player-week" v-if="player !== null">
         <div class="player-week-header">
             Игрок недели
         </div>
         <div class="player-week-body">
-            <div class="player-week-rating" v-if="player">
+            <div class="player-week-rating">
                 <i class="fas fa-trophy"></i>
                 {{player.rating}}
             </div>

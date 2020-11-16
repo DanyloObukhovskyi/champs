@@ -416,8 +416,8 @@ class MatchService extends EntityService
     public function getMatchesCountByType($filters, $type)
     {
         $filters = (object)[
-            'dateFrom' => $this->parseDate($filters->dateFrom),
-            'dateTo' =>  $this->parseDate($filters->dateTo),
+            'dateFrom' => self::parseDate($filters->dateFrom),
+            'dateTo' =>  self::parseDate($filters->dateTo),
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
         ];
@@ -438,7 +438,7 @@ class MatchService extends EntityService
      * @param string $date
      * @return string
      */
-    public function parseDate($date = null): ?string
+    public static function parseDate($date = null): ?string
     {
         if (is_string($date) and !empty($date)){
             [$day, $month, $year] = explode('.', $date);

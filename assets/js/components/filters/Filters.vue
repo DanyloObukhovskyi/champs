@@ -16,7 +16,7 @@
     import TeamsFilter from "../teams/TeamsFilter";
 
     export default {
-        name: "MatchesFilters",
+        name: "Filters",
         components: {
             CalendarFilter,
             TeamsFilter

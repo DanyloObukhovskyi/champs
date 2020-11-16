@@ -1494,17 +1494,6 @@ label {
 .pointer {
   cursor: pointer;
 }
-.event .grid{
-  background-color: #FFFFFF;
-  border: 0.04vw solid #CFDCF3;
-  font-size: 0.9vw;
-  padding: 1.5vw 2.5vw;
-  flex-direction: column;
-}
-.event .title{
-  -webkit-text-stroke: 1px black;
-  -webkit-text-fill-color: white;
-}
 .width-15px{
   width: 15px;
 }

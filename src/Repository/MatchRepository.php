@@ -293,10 +293,8 @@ class MatchRepository extends ServiceEntityRepository
      * @return \Doctrine\ORM\QueryBuilder
      * @throws \Exception
      */
-    public function getMatchesQueryByType(
-        $filters,
-        string $type
-    ){
+    public function getMatchesQueryByType($filters, string $type)
+    {
         $date = new \DateTime();
         $date = $date->format("Y-m-d")." 23:59:59";
 
@@ -373,8 +371,8 @@ class MatchRepository extends ServiceEntityRepository
     public function getMatchesByType(
         $filters,
         string  $type,
-        int $page = 0,
-        int $length = 20
+        ?int $page = 0,
+        ?int $length = 20
     )
     {
         $result = [];

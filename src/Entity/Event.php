@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventRepository;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -73,6 +74,21 @@ class Event
      * @ORM\ManyToOne(targetEntity=FlagIcon::class)
      */
     private $flagIcon;
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $views;
+
+    /**
+     * @ORM\OneToMany(targetEntity=EventTeamAttending::class, mappedBy="event")
+     */
+    private $teamsAttending;
+
+    public function __construct()
+    {
+        $this->teamsAttending = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -224,5 +240,29 @@ class Event
     public function setFlagIcon($flagIcon): void
     {
         $this->flagIcon = $flagIcon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * @param mixed $views
+     */
+    public function setViews($views): void
+    {
+        $this->views = $views;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTeamsAttending()
+    {
+        return $this->teamsAttending;
     }
 }

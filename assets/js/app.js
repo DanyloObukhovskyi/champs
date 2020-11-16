@@ -22,6 +22,7 @@ import NewsHome from "./components/news/NewsHome";
 import NewsPage from "./pages/NewsPage";
 import MatchPage from "./pages/MatchPage";
 import MatchesPage from "./pages/MatchesPage";
+import EventsPage from "./pages/EventsPage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -49,6 +50,7 @@ Vue.component('player-week', PlayerWeek)
 Vue.component('teams-rating', TeamsRating)
 Vue.component('match-page', MatchPage)
 Vue.component('matches-page', MatchesPage)
+Vue.component('events-page', EventsPage)
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
@@ -56,6 +58,6 @@ Vue.component('matches-page', MatchesPage)
 new Vue({
     el: '#app',
     provide: {
-        header
+        header,
     }
 })

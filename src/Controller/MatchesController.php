@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Match;
-use App\Entity\Person;
 use App\Entity\PlayerStatistics;
 use App\Entity\Stream;
 use App\Entity\Team;
@@ -22,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/{_locale}", requirements={"locale": "en|ru"})
+ * @Route("/{_locale}", requirements={"locale": "ru"})
  */
 class MatchesController extends AbstractController
 {

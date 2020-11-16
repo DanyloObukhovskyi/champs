@@ -45,6 +45,7 @@
 
 <script>
     import LampHeader from "../helpers/LampHeader";
+    import matchService from "../../services/MatchService";
 
     export default {
         name: "ResultsMatches",
@@ -58,8 +59,8 @@
         },
         methods: {
             getResultMatches() {
-                axios.post('/ru/main/results')
-                    .then(({data}) => {
+                matchService.getMainResults()
+                    .then((data) => {
                         this.matches = data;
                     })
             },

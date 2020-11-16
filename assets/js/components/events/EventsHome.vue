@@ -5,7 +5,7 @@
         </div>
         <div class="events-home-body row">
             <div class="col-6 event-home-row" v-for="event in events">
-                <a :href="'/ru/event/' + event.id" class="event-home-wrapper d-block">
+                <a :href="eventUrl(event.id)" class="event-home-wrapper d-block">
                     <div class="title">
                         {{event.name}}
                     </div>
@@ -31,6 +31,7 @@
 
 <script>
     import LampHeader from "../helpers/LampHeader";
+    import eventService from "../../services/EventService";
 
     export default {
         name: "EventsHome",
@@ -44,13 +45,13 @@
         },
         methods: {
             getMainEvents() {
-                axios.post('/ru/main/events')
-                    .then(({data}) => {
+                eventService.getMainEvents()
+                    .then(data => {
                         this.events = data;
                     })
             },
-            getNewsUrl(news) {
-                return `/ru/news/${news.id}-${news.url}`
+            eventUrl(id){
+                return eventService.getEventUrl(id)
             }
         },
         mounted() {

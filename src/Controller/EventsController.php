@@ -18,13 +18,11 @@ use App\Service\Event\EventTeamAttendingService;
 use App\Service\MatchService;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Match;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class EventsController
- * @package App\Controller
+ * @Route("/{_locale}", requirements={"locale": "ru"})
  */
 class EventsController extends AbstractController
 {
@@ -53,6 +51,7 @@ class EventsController extends AbstractController
 
     /** @var EventBracketService */
     public $eventBracketService;
+
     /**
      * EventsController constructor.
      */
@@ -72,37 +71,37 @@ class EventsController extends AbstractController
     }
 
     /**
-      * @Route("/ru/events", name="events.index")
-      */
+     * @Route("/events", name="events.index")
+     */
     public function eventsPage()
     {
-        $matches = $this->entityManager->getRepository(Match::class)->findMatchesByDay(new \DateTime());
-        $matches = $this->matchService->matchesDecorator($matches);
-
-        $events = $this->entityManager->getRepository(Event::class)->findByDate(new \DateTime());
-        $eventItems = $this->eventService->eventsDecorator($events);
-
-        $futureEvents = $this->entityManager->getRepository(Event::class)->findFutureEvents(new \DateTime());
-        $futureEvents = $this->eventService->futureEventsDecorator($futureEvents);
-
-        $finishedEvents = $this->entityManager->getRepository(Event::class)->getOldEvents();
-        $finishedEvents = $this->eventService->futureEventsDecorator($finishedEvents);
-
-        $lives = $this->entityManager->getRepository(Match::class)->findLive();
-
-        return $this->render('templates/events.html.twig',
-            [
-                'router' => 'events',
-                'matches' => $matches,
-                "lives" => $lives,
-                "events" => $eventItems,
-                "futureEvents" => $futureEvents,
-                'finishedEvents' => $finishedEvents
-            ]);
+        return $this->render('templates/events.html.twig', ['router' => 'events']);
     }
 
     /**
-     * @Route("/ru/event/{id}", name="event.page")
+     * @Route("/ajax/events/{type}/{page}")
+     */
+    public function getEvents(Request $request, $type, $page)
+    {
+        $filters = $request->getContent();
+        $filters = json_decode($filters, false);
+
+        $events = $this->eventService->getEventsByType($filters, $type, $page);
+        $events = $this->eventService->eventsDecorator($events);
+
+        $counts = [];
+        foreach (MatchService::MATCH_TYPES as $type){
+            $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
+        }
+        return $this->json([
+            'events' => $events,
+            'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
+            'counts' => $counts,
+        ]);
+    }
+
+    /**
+     * @Route("/event/{id}", name="event.page")
      */
     public function eventPage(int $id)
     {

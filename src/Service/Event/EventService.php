@@ -22,10 +22,23 @@ use App\Entity\Event;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Translation\Translator;
 
 class EventService extends EntityService
 {
     use Dispatchable;
+
+    public const FUTURE = 'future';
+
+    public const LIVE = 'live';
+
+    public const PAST = 'past';
+
+    public const TYPES = [
+        self::FUTURE,
+        self::LIVE,
+        self::PAST,
+    ];
 
     protected $entity = Event::class;
 
@@ -85,11 +98,14 @@ class EventService extends EntityService
         $this->eventBracketService = new EventBracketService($entityManager);
 
         $this->matchService = new MatchService($entityManager);
+        $this->translator = new Translator($GLOBALS['request']->getLocale());
     }
 
     /**
      * @param $values
      * @param DateTime|null $parseDate
+     * @return Event
+     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -167,8 +183,8 @@ class EventService extends EntityService
         /** @var Event $event */
         foreach ($events as $event)
         {
-            $eventStart = $event->getStartedAt()->format('d F');
-            $eventEnd = $event->getEndedAt()->format('d F');
+            $dayStart = $event->getStartedAt()->format('d F');
+            $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
 
             $this->imageService->setImage($event->getImage());
 
@@ -181,8 +197,9 @@ class EventService extends EntityService
                 "image"       => $event->getImage(),
                 'imageHeader' => $event->getImageHeader(),
                 'logoWithPath'=> $this->imageService->getImagePath(),
-                'startedAtRu' => NewsService::replaceMonth($eventStart),
-                'endedAtRu'   => NewsService::replaceMonth($eventEnd),
+                'startedAtRu' => NewsService::replaceMonth($dayStart),
+                'endedAtRu'   => NewsService::replaceMonth($dayEnd),
+                'views'       => $event->getViews()
             ];
         }
         return $eventItems;
@@ -389,6 +406,12 @@ class EventService extends EntityService
         return $this->repository->getFeatureEvents();
     }
 
+    /**
+     * @param $event
+     * @param $teamsAttending
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function createEventTeamsAttending($event, $teamsAttending)
     {
         foreach ($teamsAttending as $teamAttending)
@@ -403,11 +426,19 @@ class EventService extends EntityService
         }
     }
 
+    /**
+     * @param $url
+     * @return mixed
+     */
     public function getByUrl($url)
     {
         return $this->repository->getByUrl($url);
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function getByName($name)
     {
         return $this->repository->getByName($name);
@@ -491,5 +522,57 @@ class EventService extends EntityService
                 }
             }
         }
+    }
+
+    /**
+     * @param $filters
+     * @param $type
+     * @param $page
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function getEventsByType($filters, $type, $page)
+    {
+        $filters = (object)[
+            'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
+            'dateTo' =>  MatchService::parseDate($filters->dateTo ?? null),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+        ];
+
+        return $this->repository->getEventsByType(
+            $filters,
+            $type,
+            $page - 1 ?? null,
+            $_ENV['EVENTS_PAGINATION'] ?? null
+        );
+    }
+
+    /**
+     * @param $filters
+     * @param $type
+     * @return int|mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getEventsCountByType($filters, $type)
+    {
+        $filters = (object)[
+            'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
+            'dateTo' =>  MatchService::parseDate($filters->dateTo ?? null),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+        ];
+
+        $result = 0;
+
+        if (in_array($type, self::TYPES, false))
+        {
+            $result = $this->repository->getEventsQueryByType($filters, $type)
+                ->select('count(e.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+        return $result;
     }
 }

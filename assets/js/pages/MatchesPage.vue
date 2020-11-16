@@ -7,14 +7,12 @@
                         Матчи
                     </h3>
                 </div>
-                <div class="select-matches">
-                    <button
-                            :class="{active: selectMatchesType === index}"
-                            @click="selectMatchesType = index"
-                            v-for="(type, index) in matchTypes">
-                        {{type}} ({{counts[index] ? counts[index]: 0}})
-                    </button>
-                </div>
+                <tense-select
+                    :selected="selectMatchesType"
+                    :types="matchTypes"
+                    :counts="counts"
+                    @selected="(selected) => selectMatchesType = selected">
+                </tense-select>
             </div>
             <div class="matches-body" v-if="!load">
                 <div v-for="day in matches">
@@ -42,7 +40,7 @@
             </paginate>
         </div>
         <div class="col-3 p-0">
-            <matches-filters @setFilter="setFilter" v-bind="filters"/>
+            <filters @setFilter="setFilter" v-bind="filters"/>
         </div>
     </div>
 </template>
@@ -52,12 +50,15 @@
     import Paginate from 'vuejs-paginate'
     import MatchRow from "../components/matches/MatchRow";
     import Loader from "../components/helpers/Loader";
-    import MatchesFilters from "../components/matches/MatchesFilters";
+    import TenseSelect from "../components/helpers/TenseSelect";
+    import matchService from "../services/MatchService";
+    import Filters from "../components/filters/Filters";
 
     export default {
         name: "MatchesPage",
         components: {
-            MatchesFilters,
+            TenseSelect,
+            Filters,
             Loader,
             MatchRow,
             Paginate,
@@ -116,16 +117,15 @@
             getMatches() {
                 this.load = true;
 
-                axios.post(`/ru/ajax/matches/${this.selectMatchesType}/${this.page}`, this.filters)
-                    .then(({data}) => {
-                        this.load = false;
-
+                matchService.getMatches(this.selectMatchesType, this.page, this.filters)
+                    .then(data => {
                         this.matches = data.matches;
                         this.counts  = data.counts;
 
                         if (data.limit !== null){
                             this.perPage = data.limit
                         }
+                        this.load = false;
                     })
             },
             setPage(page){
@@ -155,38 +155,6 @@
 
     .dark .matches .title h3 {
         color: white;
-    }
-
-    .matches .select-matches {
-        display: flex;
-        justify-content: center;
-    }
-
-    .matches .select-matches button {
-        outline: unset;
-        color: black;
-        border: .1vw solid #ff6d1d;
-        font-size: 1vw;
-        padding: 0 1.5vw;
-        cursor: pointer;
-        background: transparent;
-    }
-
-    .dark .matches .select-matches button {
-        color: white;
-    }
-
-    .matches .select-matches button.active {
-        background-color: #ff6d1d;
-        color: white;
-    }
-
-    .matches .select-matches button:first-child {
-        border-radius: .3vw 0 0 .3vw;
-    }
-
-    .matches .select-matches button:last-child {
-        border-radius: 0 .3vw .3vw 0;
     }
 
     .matches .matches-body .date {

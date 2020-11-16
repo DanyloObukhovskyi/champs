@@ -38,6 +38,7 @@
 <script>
     import  '../../../css/teams/vue-multiselect.css'
     import Multiselect from 'vue-multiselect'
+    import teamService from "../../services/TeamService";
 
     export default {
         name: "TeamsFilter",
@@ -57,8 +58,9 @@
             },
             asyncFind(query) {
                 this.load = true
-                axios.post('/ru/ajax/search/teams', query)
-                    .then(({data}) => {
+
+                teamService.searchByName(query)
+                    .then(data => {
                         this.teams = data
                         this.load = false
                     })

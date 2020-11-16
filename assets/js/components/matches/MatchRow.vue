@@ -1,6 +1,6 @@
 <template>
     <div class="match-row">
-        <a :href="'/ru/matches/' + match.match_id" class="match-wrapper w-100 d-flex align-items-center">
+        <a :href="matchUrl" class="match-wrapper w-100 d-flex align-items-center">
             <div class="event d-flex align-items-center">
                 <div class="event-logo">
                     <img :src="match.event.image">
@@ -46,12 +46,19 @@
 </template>
 
 <script>
+    import matchService from "../../services/MatchService";
+
     export default {
         name: "MatchRow",
         props: [
             'match',
             'showScore'
         ],
+        computed: {
+            matchUrl() {
+                return matchService.getMatchUrl(this.match.match_id)
+            }
+        },
         methods: {
             getScoreClass(scoreA, scoreB) {
                 let className;
@@ -62,7 +69,7 @@
                 }
                 return className;
             },
-        }
+        },
     }
 </script>
 
@@ -172,7 +179,7 @@
         color: darkred;
     }
 
-    .teams .score.green{
+    .teams .score.green {
         color: darkgreen;
     }
 </style>

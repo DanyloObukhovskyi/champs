@@ -16,11 +16,14 @@
                 <a href="/ru/news" class="pointer" :class="{active : '/ru/news' == currentPath}">
                     Новости
                 </a>
-                <a href="/ru/matches" class="pointer" :class="{active : '/ru/matches' == currentPath}">
+                <a :href="matchesPage" class="pointer" :class="{active : matchesPage == currentPath}">
                     Матчи
                 </a>
+                <a href="/ru/events" class="pointer" :class="{active : '/ru/events' == currentPath}">
+                    События
+                </a>
                 <a href="/ru/statistics" class="pointer" :class="{active : '/ru/statistics' == currentPath}">
-                    Cтатистика
+                    Статистика
                 </a>
                 <a href="/ru/marketplace" class="pointer" :class="{active : '/ru/marketplace' == currentPath}">
                     Обучение
@@ -55,6 +58,7 @@
     import Social from "./Social";
     import GameSelect from "./GameSelect";
     import ThemeToggler from "./ThemeToggler";
+    import matchService from "../../services/MatchService";
 
     export default {
         name: "NavBar",
@@ -79,6 +83,9 @@
             },
             isPageStart(){
                 return this.$parent.isPageStart;
+            },
+            matchesPage() {
+                return matchService.matchesPage()
             }
         },
     }

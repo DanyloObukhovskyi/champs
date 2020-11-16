@@ -55,6 +55,8 @@
     </div>
 </template>
 <script>
+    import matchService from "../../services/MatchService";
+
     export default {
         name: "LiveMatches",
         data() {
@@ -70,8 +72,8 @@
         },
         methods: {
             getLiveMatches() {
-                axios.post('/ru/main/live/matches')
-                    .then(({data}) => {
+                matchService.getHomeLives()
+                    .then((data) => {
                         for (let timestamp in data) {
                             this.matches.push(data[timestamp]);
                         }
@@ -87,7 +89,7 @@
                 return className;
             },
             getMatchUrl(id) {
-                return '/ru/matches/' + id;
+                return matchService.getMatchUrl(id)
             },
         },
         mounted() {

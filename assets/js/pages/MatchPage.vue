@@ -96,6 +96,7 @@
     import MatchMapsPickAndBan from "../components/maps/MatchMapsPickAndBan";
     import MatchMapsStatistics from "../components/maps/MatchMapsStatistics";
     import MatchStatistics from "../components/matches/MatchStatistics";
+    import matchService from "../services/MatchService";
 
     export default {
         name: "MatchPage",
@@ -138,8 +139,9 @@
         methods: {
             getMatch() {
                 this.load = true;
-                axios.post('/ru/get/match/' + this.matchId)
-                    .then(({data}) => {
+
+                matchService.getMatch(this.matchId)
+                    .then(data => {
                         this.match = data.match;
                         this.maps = data.maps;
 
