@@ -167,11 +167,34 @@ class TeamService extends EntityService
     {
         $this->imageService->setImage($team->getLogo());
 
+        $playersEntities = $this->playerService->getByTeam($team->getId());
+
+        $players = [];
+        /** @var Player $playerEntity */
+        foreach ($playersEntities as $playerEntity){
+            $players[] = $playerEntity->getPerson();
+        }
         return [
-            'id'   => $team->getId(),
-            'name' => $team->getName(),
-            'logo' => $this->imageService->getImagePath()
+            'id'      => $team->getId(),
+            'name'    => $team->getName(),
+            'logo'    => $this->imageService->getImagePath(),
+            'players' => $players
         ];
+    }
+
+    /**
+     * @param array $teams
+     * @return array
+     */
+    public function teamsDecorator($teams): array
+    {
+        $teamsDecorate = [];
+
+        foreach ($teams as $team){
+            $teamsDecorate[] = $this->teamDecorator($team);
+        }
+
+        return $teamsDecorate;
     }
 
     /**

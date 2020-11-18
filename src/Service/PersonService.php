@@ -57,15 +57,7 @@ class PersonService extends EntityService
      */
     public function create($values)
     {
-        if (empty($values['realname']))
-        {
-            /** @var Person $person */
-            $person = $this->repository->getByNick($values['nick']);
-        }
-        else
-        {
-            $person = $this->repository->getByNameAndNick($values['realname'], $values['nick']);
-        }
+        $person = $this->repository->getByNick($values['nick']);
 
         if (empty($person))
         {

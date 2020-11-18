@@ -12,7 +12,10 @@ body {
     padding-top: 7vw;
 }
 
-#app.home , #app.matches,  #app.events{
+#app.home,
+#app.matches,
+#app.events,
+#app.event{
     background: url(/images/home/background.png) no-repeat center 0;
     background-size: 100%;
 }
@@ -37,7 +40,10 @@ body {
     background-size: 35%;
 }
 
-.dark #app.home , .dark #app.matches, .dark  #app.events{
+.dark #app.home,
+.dark #app.matches,
+.dark  #app.events,
+.dark #app.event{
     background: url(/images/home/backgroundBlack.svg) no-repeat center 0;
 }
 

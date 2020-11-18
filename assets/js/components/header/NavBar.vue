@@ -19,7 +19,7 @@
                 <a :href="matchesPage" class="pointer" :class="{active : matchesPage == currentPath}">
                     Матчи
                 </a>
-                <a href="/ru/events" class="pointer" :class="{active : '/ru/events' == currentPath}">
+                <a :href="eventsPage" class="pointer" :class="{active : eventsPage == currentPath}">
                     События
                 </a>
                 <a href="/ru/statistics" class="pointer" :class="{active : '/ru/statistics' == currentPath}">
@@ -57,8 +57,8 @@
 <script>
     import Social from "./Social";
     import GameSelect from "./GameSelect";
-    import ThemeToggler from "./ThemeToggler";
     import matchService from "../../services/MatchService";
+    import eventService from "../../services/EventService";
 
     export default {
         name: "NavBar",
@@ -75,7 +75,6 @@
         components: {
             'social': Social,
             'game-select': GameSelect,
-            'theme-toggler': ThemeToggler
         },
         computed: {
             currentPath() {
@@ -86,6 +85,9 @@
             },
             matchesPage() {
                 return matchService.matchesPage()
+            },
+            eventsPage() {
+                return eventService.eventsPage()
             }
         },
     }

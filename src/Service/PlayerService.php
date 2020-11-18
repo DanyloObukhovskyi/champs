@@ -73,4 +73,14 @@ class PlayerService extends EntityService
 
         return false;
     }
+
+    /**
+     * @param $teamId
+     * @return Player|bool|null
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getByTeam($teamId)
+    {
+        return $this->repository->getByTeam($teamId);
+    }
 }

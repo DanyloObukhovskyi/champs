@@ -1,7 +1,7 @@
 <template>
     <div class="upcoming-matches">
         <div class="upcoming-matches-header">
-            <lamp-header title="Предстоящие матчи" :link="getMatchesUrl" link-description="Все предстоящие матчи">
+            <lamp-header title="Матчи">
                 <div class="controls" v-if="currentPage !== undefined">
                     <div class="back">
                         <img src="/images/back.svg" @click="page--" v-if="page !== 0">
@@ -10,7 +10,7 @@
                         {{currentPage.date}}
                     </div>
                     <div class="next">
-                        <img src="/images/next.svg" @click="page++" v-if="page < matches.length - 1">
+                        <img src="/images/next.svg" @click="page++" v-if="page < eventMatches.length - 1">
                     </div>
                 </div>
             </lamp-header>
@@ -23,41 +23,34 @@
 
 <script>
     import LampHeader from "../helpers/LampHeader";
-    import MatchRow from "./MatchRow";
-    import matchService from "../../services/MatchService";
+    import MatchRow from "../matches/MatchRow";
 
     export default {
-        name: "UpcomingMatches",
+        name: "EventMatches",
+        props: [
+            'matches'
+        ],
         components: {
             MatchRow,
             LampHeader
         },
         data() {
             return {
-                matches: [],
                 page: 0,
             }
         },
         computed: {
             currentPage() {
-                return this.matches[this.page];
+                return this.eventMatches[this.page];
+            },
+            eventMatches() {
+                const eventMatches = [];
+
+                for (let timestamp in this.matches){
+                    eventMatches.push(this.matches[timestamp]);
+                }
+                return eventMatches;
             }
-        },
-        methods: {
-            getUpcomingMatches() {
-                matchService.getUpcomingMatches()
-                    .then(data => {
-                        for (let timestamp in data) {
-                            this.matches.push(data[timestamp]);
-                        }
-                    })
-            },
-            getMatchesUrl() {
-                return '/ru/matches/';
-            },
-        },
-        mounted() {
-            this.getUpcomingMatches()
         }
     }
 </script>

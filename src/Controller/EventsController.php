@@ -3,10 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Entity\EventBracket;
-use App\Entity\EventGroup;
-use App\Entity\EventMapPool;
-use App\Entity\EventPrizeDistribution;
 use App\Entity\EventTeamAttending;
 use App\Entity\RelatedEvent;
 use App\Service\Event\EventBracketService;
@@ -16,6 +12,7 @@ use App\Service\Event\EventPrizeDistributionService;
 use App\Service\Event\EventService;
 use App\Service\Event\EventTeamAttendingService;
 use App\Service\MatchService;
+use App\Service\TeamService;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +49,9 @@ class EventsController extends AbstractController
     /** @var EventBracketService */
     public $eventBracketService;
 
+    /** @var TeamService */
+    public $teamService;
+
     /**
      * EventsController constructor.
      */
@@ -67,7 +67,9 @@ class EventsController extends AbstractController
 
         $this->eventTeamAttendingService = new EventTeamAttendingService($this->entityManager);
         $this->eventMapPoolService = new EventMapPoolService($this->entityManager);
+
         $this->eventBracketService = new EventBracketService($this->entityManager);
+        $this->teamService = new TeamService($this->entityManager);
     }
 
     /**
@@ -105,45 +107,63 @@ class EventsController extends AbstractController
      */
     public function eventPage(int $id)
     {
-        $router = 'events';
-
         /** @var Event $event */
         $event = $this->entityManager->getRepository(Event::class)->find($id);
 
-        $prizeDistribution = $this->entityManager->getRepository(EventPrizeDistribution::class)->findByEvent($event);
-        $prizeDistribution = $this->eventPrizeDistributionService->prizeDecorator($prizeDistribution);
-
-        $groupPlays = $this->entityManager->getRepository(EventGroup::class)->findByEvent($event);
-        $groupPlays = $this->eventGroupsService->groupsDecorator($groupPlays);
-
-        $teamsAttending = $this->entityManager->getRepository(EventTeamAttending::class)->findByEvent($event);
-        $teamsAttending = $this->eventTeamAttendingService->teamsDecorator($teamsAttending);
-
-        $mapsPool =  $this->entityManager->getRepository(EventMapPool::class)->findByEvent($event);
-        $mapsPool = $this->eventMapPoolService->mapsDecorator($mapsPool);
-
-        $relatedEvents = $this->entityManager->getRepository(RelatedEvent::class)->findByEvent($event);
-        $events = [];
-
-        $brackets =  $this->entityManager->getRepository(EventBracket::class)->findByEvent($event);
-        $brackets = $this->eventBracketService->eventBracketDecorator($brackets);
-
-        /** @var RelatedEvent $relatedEvent */
-        foreach ($relatedEvents as $relatedEvent)
-        {
-            $events[] = $relatedEvent->getRelated();
-        }
-        $relatedEvents = $this->eventService->eventsDecorator($events);
+        $router = 'events';
 
         return $this->render('templates/event.view.html.twig', compact(
             'router',
-            'event',
-            'prizeDistribution',
-            'groupPlays',
-            'teamsAttending',
-            'mapsPool',
-            'relatedEvents',
-            'brackets'
+            'event'
         ));
+    }
+
+    /**
+     * @Route("/ajax/event/{id}")
+     */
+    public function getEvent($id)
+    {
+        /** @var Event $event */
+        $event = $this->entityManager->getRepository(Event::class)
+            ->find($id);
+
+        $matches = $this->matchService->findByEvent($event);
+        $matchesByDay = $this->matchService->matchesDecorator($matches);
+
+        $prizeDistribution = $event->getPrizeDistribution();
+        $prizeDistribution = $this->eventPrizeDistributionService
+            ->prizeDecorator($prizeDistribution);
+
+        $groupPlays = $event->getGroupPlays();
+        $groupPlays = $this->eventGroupsService
+            ->groupsDecorator($groupPlays);
+
+        $brackets = $event->getTournamentBrackets();
+        $brackets = $this->eventBracketService
+            ->eventBracketDecorator($brackets);
+
+        $teams = [];
+        /** @var EventTeamAttending $team */
+        foreach ($event->getTeamsAttending() as $team){
+            $teams[] = $team->getTeam();
+        }
+        $teamsLineups = $this->teamService->teamsDecorator($teams);
+
+        $relatedEvents = [];
+        /** @var RelatedEvent $relatedEvent */
+        foreach ($event->getRelatedEvents() as $relatedEvent)
+        {
+            $relatedEvents[] = $relatedEvent->getRelated();
+        }
+        return $this->json([
+            'event' => $event,
+            'prizeDistribution' => $prizeDistribution,
+            'groupPlays' => $groupPlays,
+            'teamsLineups' => $teamsLineups,
+            'mapsPool' => $event->getMapPool(),
+            'brackets' => $brackets,
+            'relatedEvents' => $relatedEvents,
+            'matches' => $matchesByDay,
+        ]);
     }
 }

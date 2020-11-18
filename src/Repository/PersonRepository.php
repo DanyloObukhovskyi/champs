@@ -30,8 +30,8 @@ class PersonRepository extends ServiceEntityRepository
         try
         {
             $query = $this->createQueryBuilder('p')
-                ->andWhere('p.nick = :nick')
-                ->setParameter('nick', $nick)
+                ->andWhere('p.nick like :nick')
+                ->setParameter('nick', "%$nick%")
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getOneOrNullResult();

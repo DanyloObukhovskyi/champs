@@ -16,8 +16,18 @@ class EventService {
         return data
     }
 
-    getEventUrl = id =>  {
+    getEventUrl = id => {
         return `/${this.lang()}/event/${id}`;
+    }
+
+    eventsPage = () => {
+        return `/${this.lang()}/events`;
+    }
+
+    getEvent = async id => {
+        const {data} = await axios.post(`/${this.lang()}/ajax/event/${id}`)
+
+        return data
     }
 }
 

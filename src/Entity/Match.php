@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MatchRepository;
+use App\Service\News\NewsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=MatchRepository::class)
  * @ORM\Table(name="`match`")
  */
-class Match
+class Match implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -435,5 +436,18 @@ class Match
     public function setTeam2WinRate($team2_win_rate): void
     {
         $this->team2_win_rate = $team2_win_rate;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "is"       => $this->getId(),
+            "startAt"  => $this->getStartAt(),
+            "startAtRu"=> NewsService::replaceMonth($this->getStartAt()->format('d F Y')),
+            "time"     => date("H:i", $this->getStartAt()->getTimestamp()),
+            "teamA"    => $this->getTeam1(),
+            "teamB"    => $this->getTeam2(),
+            "isLive"   => $this->getLive() ? true: false,
+        ];
     }
 }

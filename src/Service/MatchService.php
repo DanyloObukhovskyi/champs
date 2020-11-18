@@ -262,7 +262,7 @@ class MatchService extends EntityService
 
         $matchFields = [
             "match_id" => $match->getId(),
-            "startAt"  =>  $match->getStartAt(),
+            "startAt"  => $match->getStartAt(),
             "time"     => date("H:i", $match->getStartAt()->getTimestamp()),
             "title"    => "",
             "logo"     => "",
@@ -449,5 +449,10 @@ class MatchService extends EntityService
             $parseDate = "$day-$month-$year";
         }
         return $parseDate ?? null;
+    }
+
+    public function findByEvent(Event $event)
+    {
+        return $this->repository->findBy(['event' => $event]);
     }
 }

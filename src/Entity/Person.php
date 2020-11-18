@@ -5,11 +5,12 @@ namespace App\Entity;
 use App\Repository\PersonRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
  */
-class Person
+class Person implements JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -202,4 +203,12 @@ class Person
         $this->flagIcon = $flagIcon;
     }
 
+    public function jsonSerialize()
+    {
+       return [
+           'name' => $this->getName(),
+           'photo' => $this->getPhoto(),
+           'nick' => $this->getNick()
+       ];
+    }
 }

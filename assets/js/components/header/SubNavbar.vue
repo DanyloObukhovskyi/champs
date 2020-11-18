@@ -71,7 +71,7 @@
                 document.documentElement.className = themeName;
             },
             toggleTheme() {
-                if (localStorage.getItem('theme') === 'dark') {
+                if (this.theme === 'dark') {
                     this.setTheme('light');
                 } else {
                     this.setTheme('dark');

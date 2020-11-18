@@ -23,7 +23,7 @@
                 </a>
                 <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
                 <span style="">
-                    {{ match.team1.name }} VS {{ match.team2.name }}
+                    {{ match.team1 is not null ? match.team1.name: '' }} VS {{ match.team2 is not null ? match.team2.name: '' }}
                 </span>
             </div>
         </div>

@@ -15,6 +15,7 @@ use App\Service\PastMatchService;
 use App\Service\PersonService;
 use App\Service\PlayerStatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
+use org\bovigo\vfs\example\FailureExample;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -167,27 +168,34 @@ class MatchesController extends AbstractController
 
     /**
      * @param $match
-     * @param $team
+     * @param Team|null $team
      * @return array
      */
     public function getMatchTeamPastMatches($match, $team)
     {
-        $team1PastMatches = $this->pastMatchService->getByMatchAndTeam($match, $team);
+        $team1PastMatches = [];
+
+        if (isset($team)){
+            $team1PastMatches = $this->pastMatchService->getByMatchAndTeam($match, $team);
+        }
 
         return $this->pastMatchService->decorateAll($team1PastMatches);
     }
 
     /**
      * @param Match $match
-     * @param Team $team
+     * @param Team|null $team
      * @return array
      */
-    public function getMatchTeamMapStatistics(Match $match, Team $team)
+    public function getMatchTeamMapStatistics(Match $match, $team)
     {
-        /** @var MatchMapTeamStatistic[] $matchMapStatistics */
-        $matchMapStatistics = $this->matchMapTeamWinRateService->getByMatchAndTeam($match, $team);
         $teamMapStatistics = [];
+        $matchMapStatistics = [];
 
+        if (isset($team)){
+            /** @var MatchMapTeamStatistic[] $matchMapStatistics */
+            $matchMapStatistics = $this->matchMapTeamWinRateService->getByMatchAndTeam($match, $team);
+        }
         /** @var MatchMapTeamStatistic $mapTeamStatistic */
         foreach ($matchMapStatistics as $mapTeamStatistic)
         {
@@ -201,44 +209,51 @@ class MatchesController extends AbstractController
 
     /**
      * @param Match $match
-     * @param Team $team
+     * @param Team|null $team
      * @return array
      */
-    public function getMatchPlayerStatistics(Match $match, Team $team)
+    public function getMatchPlayerStatistics(Match $match, $team)
     {
-        $playerStatisticsTeam = $this->getDoctrine()
-            ->getRepository(PlayerStatistics::class)
-            ->findByMatchTeam(
-                $match->getId(),
-                $team
-            );
-        $playerStatisticsTeam = $this->playerStatisticsService
-            ->statisticsDecorator($playerStatisticsTeam);
+        $matchPlayerStatistics = null;
 
-        return empty($playerStatisticsTeam) ? null : $playerStatisticsTeam;
+        if(isset($team)){
+            $playerStatisticsTeam = $this->getDoctrine()
+                ->getRepository(PlayerStatistics::class)
+                ->findByMatchTeam(
+                    $match->getId(),
+                    $team
+                );
+            $playerStatisticsTeam = $this->playerStatisticsService
+                ->statisticsDecorator($playerStatisticsTeam);
+
+            $matchPlayerStatistics = empty($playerStatisticsTeam) ? null : $playerStatisticsTeam;
+        }
+        return $matchPlayerStatistics;
     }
 
     /**
      * @param Match $match
-     * @param Team $team
+     * @param Team|null $team
      * @return array
      */
-    public function getTeamPlayers(Match $match, Team $team)
+    public function getTeamPlayers(Match $match, $team)
     {
         $teamPersons = [];
         $playerStatistics = $match->getPlayerStatistics();
 
-        /** @var PlayerStatistics $playerStatistic */
-        foreach ($playerStatistics as $playerStatistic)
-        {
-            $teamId = $playerStatistic->getPlayer()
-                ->getTeam()
-                ->getId();
+        if (isset($team)){
+            /** @var PlayerStatistics $playerStatistic */
+            foreach ($playerStatistics as $playerStatistic)
+            {
+                $teamId = $playerStatistic->getPlayer()
+                    ->getTeam()
+                    ->getId();
 
-            if ($teamId === $team->getId()){
-                $teamPerson = $playerStatistic->getPlayer()->getPerson();
+                if ($teamId === $team->getId()){
+                    $teamPerson = $playerStatistic->getPlayer()->getPerson();
 
-                $teamPersons[$teamPerson->getId()] = $this->personService->personDecorate($teamPerson);
+                    $teamPersons[$teamPerson->getId()] = $this->personService->personDecorate($teamPerson);
+                }
             }
         }
         return $teamPersons;

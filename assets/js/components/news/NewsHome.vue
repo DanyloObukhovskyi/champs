@@ -3,8 +3,8 @@
         <div class="news-home-header">
             <lamp-header title="Новости" link="/ru/news" link-description="Все новости"></lamp-header>
         </div>
-        <div class="news-home-body row">
-            <div class="col-6 news-home-row" v-for="news in newsList">
+        <div class="news-home-body" :class="{row: !isOnePerRow}">
+            <div class="news-home-row" :class="{'col-6': !isOnePerRow}" v-for="news in newsList">
                 <a :href="getNewsUrl(news)" class="news-home-wrapper d-block">
                     <div class="title">
                         {{news.title}}
@@ -36,6 +36,11 @@
         name: "NewsHome",
         components: {
             'lamp-header': LampHeader
+        },
+        props: {
+            isOnePerRow: {
+                default: false
+            }
         },
         data() {
             return {

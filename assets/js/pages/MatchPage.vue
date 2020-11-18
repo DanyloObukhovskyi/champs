@@ -46,24 +46,11 @@
                 </div>
             </div>
         </div>
-        <div class="streams-viewer" v-if="!load && match !== null && showStreams">
-            <div class="select-lang">
-                <button
-                        v-for="stream in match.streams"
-                        @click="selectedStream = stream"
-                        :class="{active: selectedStream === stream}"
-                        class="stream-lang-btn">
-                    {{stream.lang}}
-                </button>
-            </div>
-            <div class="stream-block" v-if="selectedStream">
-                <iframe :src="selectedStream.url" frameborder="0">
-                </iframe>
-            </div>
-            <div class="close" @click="showStreams = false">
-                <i class="fas fa-times"></i>
-            </div>
-        </div>
+        <stream-viewer
+                v-if="!load && match !== null && showStreams"
+                @hide="() => showStreams = false"
+                :streams="match.streams">
+        </stream-viewer>
         <div class="d-flex justify-content-center">
             <loader v-if="load"/>
         </div>
@@ -97,6 +84,7 @@
     import MatchMapsStatistics from "../components/maps/MatchMapsStatistics";
     import MatchStatistics from "../components/matches/MatchStatistics";
     import matchService from "../services/MatchService";
+    import StreamViewer from "../components/streams/StreamViewer";
 
     export default {
         name: "MatchPage",
@@ -104,6 +92,7 @@
             'matchId'
         ],
         components: {
+            StreamViewer,
             MatchStatistics,
             MatchMapsStatistics,
             MatchMapsPickAndBan,
@@ -250,73 +239,6 @@
         border-radius: 50%;
         background: rgba(255, 109, 29, .2);
         padding: .5vw;
-    }
-
-    .streams-viewer {
-        background-color: white;
-        margin-top: .5vw;
-        padding:  0 10vw 2vw 10vw;
-    }
-
-    .dark .streams-viewer{
-        background-color: #3b3f44;
-    }
-
-    .streams-viewer .select-lang {
-        display: flex;
-    }
-
-    .streams-viewer .select-lang .stream-lang-btn {
-        width: 100%;
-        outline: none;
-        border: unset;
-        cursor: pointer;
-        background: #EFF0F0;
-        padding: .3vw 1.5vw;
-        font-size: 1vw;
-        margin: .1vw;
-        border-bottom: .2vw solid #EFF0F0;
-    }
-
-    .dark .streams-viewer .select-lang .stream-lang-btn {
-        color: white;
-        background: #26292c;
-        border-bottom: .2vw solid #26292c;
-    }
-
-    .streams-viewer .select-lang .stream-lang-btn.active {
-        border-bottom: .2vw solid #FF6D1D;
-    }
-
-    .stream-block {
-        position: relative;
-        width: 100%;
-        height: 0;
-        padding-bottom: 56.25%;
-    }
-
-    .stream-block iframe {
-        position: relative;
-        width: 100%;
-        height: 0;
-        margin-right: .12vw;
-        margin-left: .1vw;
-        padding-bottom: 56.25%;
-    }
-
-    .streams-viewer .close {
-        right: 0;
-        position: absolute;
-        top: 0;
-        background: #EFF0F0;
-        padding: .2vw .5vw;
-        font-size: 1.5vw;
-        margin: .1vw;
-    }
-
-    .dark .streams-viewer .close {
-        color: white;
-        background: #26292c;
     }
 
     .last-matches, .matches {

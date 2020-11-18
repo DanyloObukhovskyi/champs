@@ -183,69 +183,34 @@ class EventService extends EntityService
         /** @var Event $event */
         foreach ($events as $event)
         {
-            $dayStart = $event->getStartedAt()->format('d F');
-            $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
-
-            $this->imageService->setImage($event->getImage());
-
-            /** @var Event $event */
-            $eventItems[] = [
-                "id"          => $event->getId(),
-                "name"        => $event->getName(),
-                "startedAt"   => $event->getStartedAt(),
-                "endedAt"     => $event->getEndedAt(),
-                "image"       => $event->getImage(),
-                'imageHeader' => $event->getImageHeader(),
-                'logoWithPath'=> $this->imageService->getImagePath(),
-                'startedAtRu' => NewsService::replaceMonth($dayStart),
-                'endedAtRu'   => NewsService::replaceMonth($dayEnd),
-                'views'       => $event->getViews()
-            ];
+            $eventItems[] = $this->decorator($event);
         }
         return $eventItems;
     }
 
     /**
-     * @param $events
+     * @param Event $event
      * @return array
      */
-    public function futureEventsDecorator($events): array
+    public function decorator(Event $event)
     {
-        $futureEventItems = [];
-        foreach ($events as $event)
-        {
+        $dayStart = $event->getStartedAt()->format('d F');
+        $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
 
-            /** @var Event $event */
-            if (!array_key_exists(date("F Y", $event->getStartedAt()->getTimestamp()), $futureEventItems))
-            {
-                $futureEventItems[date("F Y",$event->getStartedAt()->getTimestamp())] = [
-                    "date" => date("F Y", $event->getStartedAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $image = $event->getImage();
-            $this->imageService->setImage($image);
+        $this->imageService->setImage($event->getImage());
 
-            $image = isset($image) ? $this->imageService->getImagePath(): null;
-
-            $headerImage = $event->getImageHeader();
-            $this->imageService->setImage($headerImage);
-
-            $headerImage = $this->imageService->getImagePath();
-
-            $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
-                "id" => $event->getId(),
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $image,
-                "imageHeader" => $headerImage,
-                "teams" => $event->getCommandCount(),
-                "location" => $event->getLocation(),
-                "prize" => $event->getPrize()
-            ];
-        }
-        return $futureEventItems;
+        return [
+            "id"          => $event->getId(),
+            "name"        => $event->getName(),
+            "startedAt"   => $event->getStartedAt(),
+            "endedAt"     => $event->getEndedAt(),
+            "image"       => $event->getImage(),
+            'imageHeader' => $event->getImageHeader(),
+            'logoWithPath'=> $this->imageService->getImagePath(),
+            'startedAtRu' => NewsService::replaceMonth($dayStart),
+            'endedAtRu'   => NewsService::replaceMonth($dayEnd),
+            'views'       => $event->getViews()
+        ];
     }
 
     /**
