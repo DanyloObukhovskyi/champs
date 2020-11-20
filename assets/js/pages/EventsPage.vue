@@ -3,43 +3,32 @@
         <div class="banners">
             <banner-slider/>
         </div>
-        <div class="d-flex">
-            <div class="col-9 p-0">
-                <div class="events-head">
-                    <div class="title">
-                        <h3>
-                            События
-                        </h3>
-                    </div>
-                    <div class="select-matches">
-                        <tense-select
-                                :counts="counts"
-                                :types="eventsTypes"
-                                :selected="selectEventsType"
-                                @selected="(selected) => selectEventsType = selected">
-                        </tense-select>
+        <div class="">
+            <filters @setFilter="setFilter"
+                     v-bind="filters"
+                     :counts="counts"
+                     :types="eventsTypes"
+                     :selected="selectEventsType"
+                     @selected="(selected) => selectEventsType = selected">
+            </filters>
+            <div class="events-body">
+                <div class="events-wrapper d-flex row">
+                    <div class="col-4" v-for="event in events">
+                        <event-row :key="event.id" :event="event"/>
                     </div>
                 </div>
-                <div class="events-body">
-                    <div class="events-wrapper">
-                        <event-row :key="event.id" :event="event" v-for="event in events"/>
-                    </div>
-                </div>
-                <div class="w-100 d-flex justify-content-center">
-                    <loader v-if="load"/>
-                </div>
-                <paginate
-                        v-if="showPaginate"
-                        :page-count="pagesCount"
-                        :click-handler="setPage"
-                        prev-text="Prev"
-                        next-text="Next"
-                        container-class="matches-pagination">
-                </paginate>
             </div>
-            <div class="col-3 p-0">
-                <filters @setFilter="setFilter" v-bind="filters"/>
+            <div class="w-100 d-flex justify-content-center">
+                <loader v-if="load"/>
             </div>
+            <paginate
+                    v-if="showPaginate"
+                    :page-count="pagesCount"
+                    :click-handler="setPage"
+                    prev-text="Prev"
+                    next-text="Next"
+                    container-class="matches-pagination">
+            </paginate>
         </div>
     </div>
 </template>
@@ -86,7 +75,7 @@
             selectEventsType() {
                 this.getEvents()
             },
-            page(){
+            page() {
                 this.getEvents()
             },
             'filters.dateFrom': function () {
@@ -103,10 +92,10 @@
             },
         },
         computed: {
-            pagesCount(){
+            pagesCount() {
                 return Math.ceil(this.counts[this.selectEventsType] / this.perPage)
             },
-            showPaginate(){
+            showPaginate() {
                 return Number(this.counts[this.selectEventsType]) > Number(this.perPage);
             }
         },
@@ -120,16 +109,16 @@
                         this.events = data.events;
                         this.counts = data.counts;
 
-                        if (data.limit !== null){
+                        if (data.limit !== null) {
                             this.perPage = data.limit
                         }
                         this.load = false
                     })
             },
-            setPage(page){
+            setPage(page) {
                 this.page = page;
             },
-            setFilter(data){
+            setFilter(data) {
                 this.filters[data.filter] = data.value;
             },
         },
@@ -144,7 +133,7 @@
         margin-bottom: 1vw;
     }
 
-    .dark .events .title{
+    .dark .events .title {
         color: white;
     }
 

@@ -2,7 +2,7 @@
     <div class="banner-slider slider-body">
         <slick-carousel v-bind="settings" v-if="banners.length > 0">
             <div class="carousel-item d-flex" :class="{active: index === 0}" v-for="(banner, index) in banners">
-                <div class="banner">
+                <div class="banner w-100">
                     <a target="_blank" :href="banner.url" class="">
                         <img :src="'/images/' + banner.img" class="w-100" style="height: 11vw;"/>
                     </a>

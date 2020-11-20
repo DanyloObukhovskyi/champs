@@ -73,7 +73,7 @@ class EventsController extends AbstractController
     }
 
     /**
-     * @Route("/events", name="events.index")
+     * @Route("/events", name="events_index")
      */
     public function eventsPage()
     {
@@ -109,6 +109,7 @@ class EventsController extends AbstractController
     {
         /** @var Event $event */
         $event = $this->entityManager->getRepository(Event::class)->find($id);
+        $this->eventService->addEventView($event);
 
         $router = 'events';
 
@@ -134,10 +135,6 @@ class EventsController extends AbstractController
         $prizeDistribution = $this->eventPrizeDistributionService
             ->prizeDecorator($prizeDistribution);
 
-        $groupPlays = $event->getGroupPlays();
-        $groupPlays = $this->eventGroupsService
-            ->groupsDecorator($groupPlays);
-
         $brackets = $event->getTournamentBrackets();
         $brackets = $this->eventBracketService
             ->eventBracketDecorator($brackets);
@@ -148,21 +145,13 @@ class EventsController extends AbstractController
             $teams[] = $team->getTeam();
         }
         $teamsLineups = $this->teamService->teamsDecorator($teams);
-
-        $relatedEvents = [];
-        /** @var RelatedEvent $relatedEvent */
-        foreach ($event->getRelatedEvents() as $relatedEvent)
-        {
-            $relatedEvents[] = $relatedEvent->getRelated();
-        }
+        
         return $this->json([
             'event' => $event,
             'prizeDistribution' => $prizeDistribution,
-            'groupPlays' => $groupPlays,
             'teamsLineups' => $teamsLineups,
             'mapsPool' => $event->getMapPool(),
             'brackets' => $brackets,
-            'relatedEvents' => $relatedEvents,
             'matches' => $matchesByDay,
         ]);
     }

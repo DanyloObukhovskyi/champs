@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=FlagIconRepository::class)
  */
-class FlagIcon
+class FlagIcon implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -79,5 +79,15 @@ class FlagIcon
     public function setExtension($extension): void
     {
         $this->extension = $extension;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'origName' => $this->getOrigName(),
+            'extension' => $this->getExtension(),
+        ];
     }
 }

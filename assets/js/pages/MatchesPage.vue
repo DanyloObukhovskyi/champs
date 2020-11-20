@@ -1,47 +1,36 @@
 <template>
     <div class="matches">
-        <div class="col-9 p-0">
-            <div class="matches-head">
-                <div class="title">
-                    <h3>
-                        Матчи
-                    </h3>
+        <filters @setFilter="setFilter"
+                 v-bind="filters"
+                 :selected="selectMatchesType"
+                 :types="matchTypes"
+                 :counts="counts"
+                 @selected="(selected) => selectMatchesType = selected">
+        </filters>
+        <div class="matches-body" v-if="!load">
+            <div v-for="day in matches">
+                <div class="date">
+                    {{day.date}}
                 </div>
-                <tense-select
-                    :selected="selectMatchesType"
-                    :types="matchTypes"
-                    :counts="counts"
-                    @selected="(selected) => selectMatchesType = selected">
-                </tense-select>
+                <match-row
+                        :key="index"
+                        :show-score="match.isLive || selectMatchesType === 'past'"
+                        :match="match"
+                        v-for="(match, index) in day.items">
+                </match-row>
             </div>
-            <div class="matches-body" v-if="!load">
-                <div v-for="day in matches">
-                    <div class="date">
-                        {{day.date}}
-                    </div>
-                    <match-row
-                            :key="index"
-                            :show-score="match.isLive || selectMatchesType === 'past'"
-                            :match="match"
-                            v-for="(match, index) in day.items">
-                    </match-row>
-                </div>
-            </div>
-            <div class="w-100 d-flex justify-content-center">
-                <loader v-if="load"/>
-            </div>
-            <paginate
-                    v-if="showPaginate"
-                    :page-count="pagesCount"
-                    :click-handler="setPage"
-                    prev-text="Prev"
-                    next-text="Next"
-                    container-class="matches-pagination">
-            </paginate>
         </div>
-        <div class="col-3 p-0">
-            <filters @setFilter="setFilter" v-bind="filters"/>
+        <div class="w-100 d-flex justify-content-center">
+            <loader v-if="load"/>
         </div>
+        <paginate
+                v-if="showPaginate"
+                :page-count="pagesCount"
+                :click-handler="setPage"
+                prev-text="Prev"
+                next-text="Next"
+                container-class="matches-pagination">
+        </paginate>
     </div>
 </template>
 
@@ -89,7 +78,7 @@
                 this.page = 1;
                 this.getMatches();
             },
-            page(){
+            page() {
                 this.getMatches();
             },
             'filters.dateFrom': function () {
@@ -106,10 +95,10 @@
             },
         },
         computed: {
-            pagesCount(){
+            pagesCount() {
                 return Math.ceil(this.counts[this.selectMatchesType] / this.perPage)
             },
-            showPaginate(){
+            showPaginate() {
                 return Number(this.counts[this.selectMatchesType]) > Number(this.perPage);
             }
         },
@@ -120,18 +109,18 @@
                 matchService.getMatches(this.selectMatchesType, this.page, this.filters)
                     .then(data => {
                         this.matches = data.matches;
-                        this.counts  = data.counts;
+                        this.counts = data.counts;
 
-                        if (data.limit !== null){
+                        if (data.limit !== null) {
                             this.perPage = data.limit
                         }
                         this.load = false;
                     })
             },
-            setPage(page){
+            setPage(page) {
                 this.page = page;
             },
-            setFilter(data){
+            setFilter(data) {
                 this.filters[data.filter] = data.value;
             },
         },
@@ -143,7 +132,6 @@
 
 <style scoped>
     .matches {
-        display: flex;
         margin-bottom: 4vw;
     }
 

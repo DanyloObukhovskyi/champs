@@ -3,14 +3,10 @@
         <div class="event-head" v-if="event !== null && !load">
             <div class="banner">
                 <div class="component d-flex justify-content-center ">
-                    <div class="d-flex grid justify-content-center p-3 w-100"
+                    <div class="d-flex grid justify-content-center w-100 image-header"
                          :style="headerBackGround">
                         <div>
-                            <div class="d-flex justify-content-center">
-                                <img class="event-logo" @error="$event.target.style.display = 'none'"
-                                     :src="`/uploads/images/${event.logo}`">
-                            </div>
-                            <h2 class="d-block title">
+                            <h2 class="d-block title" :style="titleBackGround">
                                 {{event.name}}
                             </h2>
                         </div>
@@ -18,39 +14,48 @@
                 </div>
                 <div class="event-date d-flex justify-content-center ">
                     <div class="d-flex grid justify-content-around row w-100">
-                        <div>
-                            <strong>
-                                Дата
-                            </strong>
-                            <div class="text-center grey">
-                                {{startedAt}} {{endedAt}}
+                        <div class="d-flex align-items-center">
+                            <img src="/images/events/time.svg">
+                            <div>
+                                <strong class="grey">
+                                    Дата
+                                </strong>
+                                <div class="text-center">
+                                    {{startedAt}} {{endedAt}}
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <strong>
-                                Приз
-                            </strong>
-                            <div class="text-center grey">
-                                {{event.prize}}
+                        <div class="d-flex align-items-center">
+                            <img src="/images/events/prize.svg">
+                            <div>
+                                <strong class="grey">
+                                    Приз
+                                </strong>
+                                <div class="text-center">
+                                    {{event.prize}}
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <strong>
-                                Команды
-                            </strong>
-                            <div class="text-center grey">
-                                {{event.commandsCount}}
+                        <div class="d-flex align-items-center">
+                            <img src="/images/events/teams.svg">
+                            <div>
+                                <strong  class="grey">
+                                    Команды
+                                </strong>
+                                <div class="text-center">
+                                    {{event.commandsCount}}
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <strong>
-                                Локация
-                            </strong>
-                            <div class="text-center d-flex align-items-center grey">
-                                <img class="flag-icon"
-                                     :src="`/uploads/images/${event.flag.name}`"
-                                     @error="$event.target.style.display = 'none'">
-                                {{event.location}}
+                        <div class="d-flex align-items-center">
+                            <img src="/images/events/location.svg">
+                            <div>
+                                <strong class="grey">
+                                    Локация
+                                </strong>
+                                <div class="text-center d-flex align-items-center">
+                                    {{event.location}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,19 +63,17 @@
             </div>
         </div>
         <div class="event-body" v-if="event !== null && !load">
-            <div class="d-flex">
-                <div class="col-9 event-matches">
-                    <event-matches :matches="matches" v-if="Object.keys(matches).length > 0"/>
-                </div>
-                <div class="col-3 p-0">
-                    <news-home :isOnePerRow="true"/>
-                </div>
+            <div class="tournament-brackets">
+                <event-tournaments-table :brackets="brackets"/>
             </div>
-            <div class="event-prize-distribution">
-                <event-prize-distribution
-                        :prize-distributions="prizeDistribution"
-                        v-if="Object.keys(prizeDistribution).length > 0">
-                </event-prize-distribution>
+            <event-matches :matches="matches" v-if="Object.keys(matches).length > 0"/>
+            <event-prize-distribution
+                    :is-live="isLive"
+                    :prize-distributions="prizeDistribution"
+                    v-if="Object.keys(prizeDistribution).length > 0">
+            </event-prize-distribution>
+            <div class="event-news">
+                <game-news game="cs"/>
             </div>
             <div class="d-flex teams-lineups">
                 <event-team-lineups :teams="teamsLineups"/>
@@ -88,10 +91,14 @@
     import EventPrizeDistribution from "../components/events/EventPrizeDistribution";
     import EventMatches from "../components/events/EventMatches";
     import EventTeamLineups from "../components/events/EventTeamLineups";
+    import EventTournamentsTable from "../components/events/EventTournamentsTable";
+    import GameNews from "../components/news/GameNews";
 
     export default {
         name: "EventPage",
         components: {
+            GameNews,
+            EventTournamentsTable,
             EventTeamLineups,
             EventMatches,
             EventPrizeDistribution,
@@ -115,36 +122,51 @@
         },
         computed: {
             headerBackGround() {
-                return `background-image: url('/uploads/images/${this.event.imageHeader}')`
+                return {
+                    'background-position': 'center',
+                    'background-size': 'cover',
+                    'background-image': `url('/uploads/images/${this.event.imageHeader}')`
+                }
+            },
+            titleBackGround() {
+                return `background-image: url('/uploads/images/${this.event.logo}')`
             },
             startedAt() {
-                const date = new Date(this.event.startedAt);
+                const {day, month, year} = this.getDate(this.event.startedAt);
 
-                return `${this.event.startedAtRu} ${date.getFullYear()}`;
+                return `${day}.${month}.${year}`;
             },
             endedAt() {
-                const date = new Date(this.event.endedAt);
+                const {day, month, year} = this.getDate(this.event.endedAt);
 
                 let endedAt = null;
                 if (this.event.endedAt) {
-                    endedAt = `- ${this.event.endedAtRu} ${date.getFullYear()}`;
+                    endedAt = `- ${day}.${month}.${year}`;
                 }
                 return endedAt;
             },
-            groupPlaysTransform() {
-                const groupPlays = [];
-                for (let group in this.groupPlays) {
-
-                    const groupPlay = {
-                        name: group,
-                        teams: this.groupPlays[group],
-                    }
-                    groupPlays.push(groupPlay)
+            isLive() {
+                let result = false;
+                if (this.event.endedAt !== null) {
+                    result = new Date(this.event.endedAt) > new Date();
+                } else {
+                    result = new Date(this.event.startedAt) > new Date();
                 }
-                return groupPlays;
             }
         },
         methods: {
+            getDate(date) {
+                const dateFull = new Date(date);
+
+                const day = Number(dateFull.getDate()) < 10 ? `0${dateFull.getDate()}` : dateFull.getDate();
+                const month = Number(dateFull.getMonth()) < 10 ? `0${dateFull.getMonth()}` : dateFull.getMonth();
+
+                return {
+                    day,
+                    month,
+                    year: dateFull.getFullYear()
+                }
+            },
             getEvent() {
                 this.load = true
 
@@ -185,33 +207,38 @@
         background-size: 100%;
     }
 
+    .event .event-head .banner .image-header {
+        background: white;
+    }
+
+    .dark .event .event-head .banner .image-header {
+        background: #1E2123;
+    }
+
     .event .event-head .banner .title {
+        padding: 3.5vw 0;
         font-family: sans-serif;
         font-weight: 600;
         font-size: 3vw;
         color: white;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
         -webkit-text-stroke-width: .1vw;
         -webkit-text-stroke-color: #000000;
-    }
-
-    .event .event-head .banner .event-logo {
-        width: 10vw;
-    }
-
-    .dark .event .event-head .banner .title {
-        color: gray;
-        -webkit-text-stroke-color: #35393e;
     }
 
     .event .event-head .banner .event-date {
         font-size: 1vw;
         color: black;
         padding: 1vw 0;
-        background: rgb(251, 252, 252);
-        background: -moz-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
-        background: -webkit-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
-        background: radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
+        background-color: white;
+    }
+
+    .event .event-head .banner .event-date img {
+        height: 2vw;
+        width: 2vw;
+        margin-right: .5vw;
     }
 
     .dark .event .event-head .banner .event-date {
@@ -251,16 +278,9 @@
         margin-left: .5vw;
     }
 
-    .event .event-matches {
-        padding: 0 1vw 0 0;
-    }
-
-    .event .event-prize-distribution {
-        margin-top: 1vw;
-    }
-
-    .event .teams-lineups {
-        margin-top: 1vw;
+    .event .event-news,
+    .event .teams-lineups{
+        margin-top: 3vw;
     }
 </style>
 

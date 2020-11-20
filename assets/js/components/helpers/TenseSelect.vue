@@ -4,7 +4,7 @@
                 :class="{active: selected === index}"
                 @click="$emit('selected', index)"
                 v-for="(type, index) in types">
-            {{type}} ({{counts[index] ? counts[index]: 0}})
+            {{type}} <span>({{counts[index] ? counts[index]: 0}})</span>
         </button>
     </div>
 </template>
@@ -20,16 +20,28 @@
     .select {
         display: flex;
         justify-content: center;
+        height: 3vw;
+        background-color: white;
+        padding: .5vw;
+    }
+
+    .dark .select{
+        color: white;
+        background-color: #1e2123;
     }
 
     .select button {
         outline: unset;
         color: black;
-        border: .1vw solid #ff6d1d;
+        border: unset;
         font-size: 1vw;
-        padding: 0 1.5vw;
+        padding: .15vw 1vw .3vw 1vw;
         cursor: pointer;
         background: transparent;
+    }
+
+    .select button span {
+        color: #a4a5a6;
     }
 
     .dark .select button {
@@ -39,14 +51,10 @@
     .select button.active {
         background-color: #ff6d1d;
         color: white;
+        clip-path: polygon(5% 0, 100% 0%, 95% 100%, 0% 100%);
     }
 
-    .select button:first-child {
-        border-radius: .3vw 0 0 .3vw;
+    .select button.active span{
+        color: white;
     }
-
-    .select button:last-child {
-        border-radius: 0 .3vw .3vw 0;
-    }
-
 </style>

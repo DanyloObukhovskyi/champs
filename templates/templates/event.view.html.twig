@@ -11,6 +11,21 @@
         Событие
     </h1>
     <div class="event" id="app">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <a href="{{ url('events_index') }}">
+                    События
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span style="">
+                    {{ event.name }}
+                </span>
+            </div>
+        </div>
         <div class="ml-8 mr-8 p-0">
             <event-page :id="{{ event.id }}"/>
         </div>

@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div class="time d-flex justify-content-end" v-if="!match.isLive">
+            <div class="time d-flex" v-if="!match.isLive">
                 <img src="/images/matches/time.svg">
                 {{match.time}}
             </div>
@@ -106,7 +106,7 @@
 
     .event {
         padding-left: .5vw;
-        width: 15vw;
+        width: 24%;
     }
 
     .event-logo img {
@@ -120,7 +120,7 @@
     }
 
     .teams {
-        width: 32vw;
+        width: 50%;
     }
 
     .teams .score {
@@ -154,16 +154,18 @@
 
     .time {
         color: #5c6b79;
-        width: 11vw;
-        display: flex;
-        justify-content: end;
         font-size: .8vw;
+        width: 24%;
+        display: flex;
+        justify-content: center;
+        padding-left: 10%;
     }
 
     .play {
-        width: 11vw;
+        width: 24%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
+        padding-left: 10%;
         font-size: .8vw;
     }
 

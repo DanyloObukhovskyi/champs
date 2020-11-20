@@ -438,10 +438,13 @@ class Match implements \JsonSerializable
         $this->team2_win_rate = $team2_win_rate;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         return [
-            "is"       => $this->getId(),
+            "id"       => $this->getId(),
             "startAt"  => $this->getStartAt(),
             "startAtRu"=> NewsService::replaceMonth($this->getStartAt()->format('d F Y')),
             "time"     => date("H:i", $this->getStartAt()->getTimestamp()),

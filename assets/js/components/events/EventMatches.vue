@@ -1,7 +1,7 @@
 <template>
     <div class="upcoming-matches">
         <div class="upcoming-matches-header">
-            <lamp-header title="Матчи">
+            <lamp-header title="Расписание матчей">
                 <div class="controls" v-if="currentPage !== undefined">
                     <div class="back">
                         <img src="/images/back.svg" @click="page--" v-if="page !== 0">
@@ -46,16 +46,20 @@
             eventMatches() {
                 const eventMatches = [];
 
-                for (let timestamp in this.matches){
+                for (let timestamp in this.matches) {
                     eventMatches.push(this.matches[timestamp]);
                 }
-                return eventMatches;
+                return eventMatches.reverse();
             }
         }
     }
 </script>
 
 <style scoped>
+    .upcoming-matches {
+        margin-top: 3vw;
+    }
+
     .controls {
         margin-right: 20vw;
         display: flex;

@@ -145,7 +145,8 @@ fieldset[disabled] .multiselect {
     padding: .4vw;
     border: 1px solid #e8e8e8;
     background: #fff;
-    font-size: 14px
+    font-size: 14px;
+    width: 11vw;
 }
 
 .multiselect__tag {

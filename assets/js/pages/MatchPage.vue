@@ -1,6 +1,8 @@
 <template>
     <div class="match-view">
         <div class="match-header" v-if="!load && match !== null">
+            <img class="image-header white" :src="imageHeader.white">
+            <img class="image-header dark" :src="imageHeader.dark">
             <div class="teams">
                 <div class="teamA">
                     <div class="team-title">
@@ -11,17 +13,12 @@
                     </div>
                 </div>
                 <div class="score">
-                    <span class="d-flex justify-content-center">
+                    <span class="d-flex justify-content-center" v-if="!match.isLive && isFuture">
+                         <img class="vs" src="/images/matches/vs.png">
+                    </span>
+                    <span class="d-flex justify-content-center" v-else>
                          {{match.teamA.score}} : {{match.teamB.score}}
                     </span>
-                    <div class="time d-flex justify-content-center">
-                        <strong>
-                            {{match.startedAt.time}}
-                        </strong>
-                    </div>
-                    <div class="date">
-                        {{match.startedAt.date}}
-                    </div>
                 </div>
                 <div class="teamB">
                     <div class="team-logo">
@@ -32,9 +29,6 @@
                     </div>
                 </div>
             </div>
-            <div class="match-status">
-                {{matchStatus}}
-            </div>
             <div class="watch-stream" v-if="match.isLive">
                 <div class="play">
                     <div class="caret" @click="showStreams = !showStreams">
@@ -43,6 +37,17 @@
                 </div>
                 <div>
                     Прямая трансляция
+                </div>
+            </div>
+            <div class="d-flex justify-content-center" v-if="!match.isLive">
+                <div class="match-status">
+                    <div class="status" :class="isFuture ? 'future' : 'ended'">
+                        {{ isFuture ? 'Матч скоро начнется' : 'Матч завершился'}}
+                    </div>
+                    <div class="date">
+                        <i class="far fa-clock" aria-hidden="true"></i>
+                        {{match.startedAt.date}} в {{match.startedAt.time}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,16 +68,16 @@
             </div>
             <div class="col-8 pr-0">
                 <match-maps-statistics
-                    :team-a="match.teamA"
-                    :team-b="match.teamB"
-                    :maps="maps">
+                        :team-a="match.teamA"
+                        :team-b="match.teamB"
+                        :maps="maps">
                 </match-maps-statistics>
             </div>
         </div>
         <match-statistics
-            v-if="showStatistic"
-            :team-a="match.teamA"
-            :team-b="match.teamB">
+                v-if="showStatistic"
+                :team-a="match.teamA"
+                :team-b="match.teamB">
         </match-statistics>
     </div>
 </template>
@@ -109,20 +114,27 @@
             }
         },
         computed: {
-            showStatistic(){
+            showStatistic() {
                 return !this.load
                     && this.match !== null
                     && this.match.teamA.playerStatistics !== null
                     && this.match.teamB.playerStatistics !== null;
             },
-            matchStatus(){
-                let status = 'Матч завершен';
-                if (this.match.isLive){
-                    status = 'Матч идет'
-                } else if(this.match.startedAt.timeStamp > (new Date().getTime() / 1000)){
-                    status = 'Матч скоро начнется'
+            imageHeader() {
+                let imageWhite = '/images/matches/matchHeader.png';
+                let imageDark = '/images/matches/matchHeaderDark.png';
+
+                if (this.match.isLive) {
+                    imageWhite = '/images/matches/matchLiveHeader.png';
+                    imageDark = '/images/matches/matchLiveHeaderDark.png';
                 }
-                return status;
+                return {
+                    white: imageWhite,
+                    dark: imageDark,
+                }
+            },
+            isFuture() {
+                return this.match.startedAt.timeStamp > (new Date().getTime() / 1000);
             }
         },
         methods: {
@@ -147,8 +159,7 @@
 <style scoped>
     .match-header {
         margin-top: .5vw;
-        padding-top: 3vw;
-        padding-bottom: 5vw;
+        padding-bottom: 4vw;
         background: rgb(251, 252, 252);
         background: -moz-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
         background: -webkit-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
@@ -156,13 +167,32 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
     }
 
-    .dark .match-header{
+    .match-header .image-header {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+    }
+
+    .match-header .image-header.dark {
+        display: none;
+    }
+
+    .dark .match-header .image-header.white {
+        display: none;
+    }
+
+    .dark .match-header .image-header.dark {
+        display: block;
+    }
+
+    .dark .match-header {
         color: white;
-        background: rgb(37,40,42);
-        background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 15%, rgba(61,65,70,1) 50%, rgba(37,40,42,1) 85%);
-        background: -webkit-linear-gradient(90deg, rgba(37,40,42,1) 15%, rgba(61,65,70,1) 50%, rgba(37,40,42,1) 85%);
-        background: linear-gradient(90deg, rgba(37,40,42,1) 15%, rgba(61,65,70,1) 50%, rgba(37,40,42,1) 85%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a",endColorstr="#25282a",GradientType=1);
+        background: rgb(37, 40, 42);
+        background: -moz-linear-gradient(90deg, rgba(37, 40, 42, 1) 15%, rgba(61, 65, 70, 1) 50%, rgba(37, 40, 42, 1) 85%);
+        background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 15%, rgba(61, 65, 70, 1) 50%, rgba(37, 40, 42, 1) 85%);
+        background: linear-gradient(90deg, rgba(37, 40, 42, 1) 15%, rgba(61, 65, 70, 1) 50%, rgba(37, 40, 42, 1) 85%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#25282a", GradientType=1);
     }
 
     .match-header .teams .teamA,
@@ -171,6 +201,7 @@
     }
 
     .match-header .teams {
+        padding-top: 3vw;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -197,8 +228,8 @@
         justify-content: center;
     }
 
-    .dark .match-header .team-logo{
-        background-color: #35393e;
+    .dark .match-header .team-logo {
+        background-color: #222527;
     }
 
     .match-header .score,
@@ -245,18 +276,50 @@
         margin-top: 1vw;
     }
 
-    .score{
+    .score {
         display: flex;
         flex-direction: column;
         justify-content: center;
     }
 
-    .score .date{
+    .score .date {
         font-size: .9vw;
     }
 
-    .match-status{
-        text-align: center;
-        font-size: 1.5vw;
+    .match-status {
+        clip-path: polygon(5% 0, 100% 0%, 95% 100%, 0% 100%);
+        padding: .5vw 2.5vw;
+        background-color: #eff0f0;
+        margin-top: 1vw;
+    }
+
+    .dark .match-status {
+        background-color: #222527;
+    }
+
+    .match-status .status.future {
+        font-size: 2vw;
+        color: #28a745;
+    }
+
+    .match-status .status.ended {
+        font-size: 2vw;
+        color: #a2a4a5;
+    }
+
+    .match-status .date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #5c6b79;
+    }
+
+    .match-status .date i {
+        margin-right: .3vw;
+        color: #b2b4b5;
+    }
+
+    img.vs {
+        height: 4.5vw;
     }
 </style>

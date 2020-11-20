@@ -52,113 +52,12 @@ class MainController extends DefController
         $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $authenticationUtils->getLastUsername();
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $matchService = new MatchService($entityManager);
-        $eventService = new EventService($entityManager);
-        $ratingPlayersService = new RatingPersonService($entityManager);
-        $ratingCommandService = new RatingTeamService($entityManager);
-
-        $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
-        $matchesItems = $matchService->matchesDecorator($matches);
-
-        $events = $entityManager->getRepository(Event::class)->getCurrentEvents();
-        $eventItems = $eventService->eventsDecorator($events);
-
-        $results =  $entityManager->getRepository(Result::class)->getCurrent();
-        $matchResults = [];
-
-        // RATING PLAYERS
-        $ratingPlayers = $entityManager->getRepository(RatingPerson::class)->getRatingPersons();
-        $ratingPlayers = $ratingPlayersService->retingPlayersDecorator($ratingPlayers);
-
-        // RATING COMMANDS
-        $ratingCommands = $entityManager->getRepository(RatingTeam::class)->getRatingTeams();
-        $ratingCommands = $ratingCommandService->retingTeamsDecorator($ratingCommands);
-
-        // BEST PLAYER WEEK
-        /** @var Person $playerWeek */
-        $playerWeek = $entityManager->getRepository(Person::class)->getWeekPlayer();
-
-        $currDate = null;
-        foreach ($results as $result)
-        {
-            $match = $result->getMatch();
-
-            $key = date("d", $match->getStartAt()->getTimestamp());
-            /** @var Match $match */
-
-            if (!array_key_exists($key, $matchResults))
-            {
-                $matchResults[$key] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $matchResults[$key]["items"][] = $matchService->matchDecorator($match);
-        }
-
-        $repository = $entityManager->getRepository(News::class);
-        $news = $repository->findBy([], ['views'=>'DESC'] ,6,0);
-	
-	    $livesItems = [
-		    [
-			    'id' => 1,
-			    'video_id' => "Nz3_Vg5GBio",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "ТОП 5 мобильных игр | Champs | Hino",
-		    ],
-		    [
-			    'id' => 2,
-			    'video_id' => "1NnA3hbwqRY",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "ММОшим / Champs / ModirDred",
-		    ],
-		    [
-			    'id' => 3,
-			    'video_id' => "Lmz9itL7sqs",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "Новости недели / Hino x ModirDred / Champs",
-		    ],
-		    [
-			    'id' => 4,
-			    'video_id' => "cwd6zSjKEW4",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
-		    ],
-	    ];
-        
-	    /*
-	    * stream - news type - 8
-	    * video - news type - 3
-	    */
-	    $VideoData = $repository->findBy(['type'=>array(8, 3)],['date'=>'DESC'],4,0); //8 - stream; 3 - video
-	    $VideoItems = $this->prepare_video($VideoData);
-	    if(count($VideoItems) < 4) {
-		    $ij =  4 - (4 - count($VideoItems));
-		    for($ij; $ij < 4; $ij++) {
-			    $VideoItems[$ij] = $livesItems[$ij];
-		    }
-	    }
         
         return $this->render('templates/home.html.twig', [
-            'events' => $eventItems,
-            'router' => 'home',
-            'matches' => $matchesItems,
-            'results' => $matchResults,
-	        'videoNews' => $VideoItems,
-            'ratingPlayers' => $ratingPlayers,
-            'ratingCommands' => $ratingCommands,
-            'playerWeek' => $playerWeek,
-            'news' => $news
-            ]);
+            'router' => 'home',]);
     }
 	
-	public function prepare_video($data=array()) {
+	public function prepareVideo($data=array()) {
 		$VideoItems = array();
 		if(!empty($data)) {
 			foreach ($data as $v_key => &$v_value) {
@@ -308,7 +207,7 @@ class MainController extends DefController
             ->getRepository(News::class)
             ->findBy([ 'type'=> [8, 3] ],[ 'date' => 'DESC' ], 10 , 0); //8 - stream; 3 - video
 
-        $VideoItems = $this->prepare_video($VideoData);
+        $VideoItems = $this->prepareVideo($VideoData);
 
         if(count($VideoItems) < 4) {
             $ij =  4 - (4 - count($VideoItems));

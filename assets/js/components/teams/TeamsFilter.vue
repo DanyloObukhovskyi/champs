@@ -7,7 +7,7 @@
                      label="name"
                      track-by="name"
                      no-options="Команд не найдено"
-                     placeholder="Название команды"
+                     :placeholder="description"
                      open-direction="bottom"
                      :options="teams"
                      :multiple="false"
@@ -45,6 +45,9 @@
         components: {
             Multiselect
         },
+        props: [
+            'description'
+        ],
         data() {
             return {
                 selected: null,
@@ -86,6 +89,9 @@
     .teams-filter{
         display: flex;
         margin-top: 1vw;
+        margin-left: -.5vw;
+        margin-left: .4vw;
+        margin-right: -.5vw;
     }
     .filter-icon{
         width: 4vw;

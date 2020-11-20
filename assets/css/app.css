@@ -12,10 +12,7 @@ body {
     padding-top: 7vw;
 }
 
-#app.home,
-#app.matches,
-#app.events,
-#app.event{
+#app.home{
     background: url(/images/home/background.png) no-repeat center 0;
     background-size: 100%;
 }
@@ -40,10 +37,7 @@ body {
     background-size: 35%;
 }
 
-.dark #app.home,
-.dark #app.matches,
-.dark  #app.events,
-.dark #app.event{
+.dark #app.home{
     background: url(/images/home/backgroundBlack.svg) no-repeat center 0;
 }
 
@@ -55,7 +49,9 @@ body {
     margin-right: 8vw;
 }
 
-
+.dark .fa-arrow-right{
+    color: white;
+}
 /*
  Footer
 */

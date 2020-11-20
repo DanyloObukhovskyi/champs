@@ -160,4 +160,9 @@ class NewsService extends EntityService
     {
         return $this->repository->findBy([], ['date' => 'DESC'], 6, 0);
     }
+
+    public function getByGame($game)
+    {
+        return $this->repository->getByGame($game);
+    }
 }

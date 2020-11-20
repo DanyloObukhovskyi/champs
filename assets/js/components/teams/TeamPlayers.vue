@@ -1,18 +1,13 @@
 <template>
-    <div class="team-players">
+    <div class="team-players col-3">
         <div class="team">
             <div class="logo">
                 <img :src="team.logo" @error="$event.target.src = '/images/noLogo.png'">
                 {{team.name}}
             </div>
-            <div class="toggle">
-                <i class="fas"
-                   :class="show ? 'fa-caret-up': 'fa-caret-down'"
-                   @click="show = !show"></i>
-            </div>
         </div>
         <div class="players">
-            <div class="player" v-for="player in team.players" v-if="show">
+            <div class="player" v-for="player in team.players">
                 <img :src="'/uploads/images/' + player.photo" @error="$event.target.src = '/images/noLogo.png'">
                 {{player.nick}}
             </div>
@@ -24,11 +19,6 @@
     export default {
         name: "TeamPlayers",
         props: ['team'],
-        data() {
-            return {
-                show: false
-            }
-        }
     }
 </script>
 
@@ -72,9 +62,8 @@
 
     .players .player {
         font-size: 1vw;
-        padding: .5vw 1vw;
         background: white;
-        margin-bottom: .1vw;
+        padding: .2vw 1vw;
     }
 
     .dark .players .player {
@@ -87,6 +76,6 @@
     }
 
     .team-players {
-        margin-bottom: .1vw;
+        margin-bottom: 1vw;
     }
 </style>

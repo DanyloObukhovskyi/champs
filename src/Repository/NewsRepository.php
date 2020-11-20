@@ -88,4 +88,19 @@ class NewsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param $game
+     * @return mixed
+     */
+    public function getByGame($game)
+    {
+        return $this->createQueryBuilder("n")
+            ->orderBy('n.views', 'DESC')
+            ->andWhere('n.game = :game')
+            ->setParameter('game', $game)
+            ->setMaxResults(6)
+            ->getQuery()
+            ->getResult();
+    }
 }

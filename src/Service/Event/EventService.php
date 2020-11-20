@@ -417,6 +417,11 @@ class EventService extends EntityService
         return $this->repository->getOldEvents();
     }
 
+    /**
+     * @param $event
+     * @param $image
+     * @return mixed
+     */
     public function setEventImage($event, $image)
     {
         if (!empty($image))
@@ -430,6 +435,11 @@ class EventService extends EntityService
         return $this->save($event);
     }
 
+    /**
+     * @param $event
+     * @param $values
+     * @return mixed
+     */
     public function setImageLogo($event, $values)
     {
         if (!empty($values['image']))
@@ -450,6 +460,12 @@ class EventService extends EntityService
         return $event;
     }
 
+    /**
+     * @param $event
+     * @param $brackets
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function createBrackets($event, $brackets)
     {
         $brackets = $brackets['rounds'] ?? [];
@@ -539,5 +555,16 @@ class EventService extends EntityService
                 ->getSingleScalarResult();
         }
         return $result;
+    }
+
+    /**
+     * @param Event $event
+     * @return mixed
+     */
+    public function addEventView(Event $event)
+    {
+        $event->setViews($event->getViews() + 1);
+
+        return $this->save($event);
     }
 }

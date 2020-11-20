@@ -245,4 +245,20 @@ class NewsController extends AbstractController
 
         return $this->json($tags);
     }
+
+    /**
+     * News /ru/news/*
+     *
+     * @Route("/ru/ajax/news/by/game/{game}")
+     */
+    public function getNewsByGame($game)
+    {
+        $news = $this->newsService->getByGame($game);
+
+        $newsArray = [];
+        foreach ($news as $new){
+            $newsArray[] = $this->newsService->decorator($new);
+        }
+        return $this->json($newsArray);
+    }
 }
