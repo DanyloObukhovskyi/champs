@@ -77,6 +77,7 @@
     import ShareButtons from "../components/social/ShareButtons";
     import NewsComments from "../components/news/NewsComments";
     import NewsWidget from "../components/news/NewsWidget";
+    import newsService from "../services/NewsService";
 
     export default {
         name: "NewsViewPage",
@@ -133,21 +134,21 @@
             getHotNews() {
                 this.hotNewsLoad = true;
 
-                axios.post('/ru/hot/news/', this.filters)
-                    .then(({data}) => {
-                        this.hotNewsLoad = false;
+                newsService.getHotNews(this.filters)
+                    .then(data => {
                         this.hotNews = data;
+                        this.hotNewsLoad = false;
                     })
             },
             getNews() {
-                axios.post('/ru/ajax/news/single/' + this.newsId)
-                    .then(({data}) => {
+                newsService.getSingleNews(this.newsId)
+                    .then(data => {
                         this.news = data;
                         this.load = false;
                     })
             },
             newsPageUrl(tag) {
-                return `/ru/news?tag=${tag}`;
+                return `/${newsService.lang()}/news?tag=${tag}`;
             },
             clearImg() {
                 this.img = null;

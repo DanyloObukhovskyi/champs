@@ -1,8 +1,6 @@
-class MatchService {
+import Service from "./Service";
 
-    lang = () => {
-        return document.documentElement.lang
-    }
+class MatchService extends Service{
 
     matchesPage = () => {
         return `/${this.lang()}/matches`;

@@ -13,7 +13,7 @@
                 <a href="/ru/" class="pointer" :class="{active : '/ru/' == currentPath}">
                     Главная
                 </a>
-                <a href="/ru/news" class="pointer" :class="{active : '/ru/news' == currentPath}">
+                <a :href="newsPage" class="pointer" :class="{active : newsPage == currentPath}">
                     Новости
                 </a>
                 <a :href="matchesPage" class="pointer" :class="{active : matchesPage == currentPath}">
@@ -28,6 +28,9 @@
                 <a href="/ru/marketplace" class="pointer" :class="{active : '/ru/marketplace' == currentPath}">
                     Обучение
                     <small>pro</small>
+                </a>
+                <a :href="digestPage" :class="{active : digestPage == currentPath}">
+                    Дайджест турниров
                 </a>
             </div>
             <social></social>
@@ -59,6 +62,7 @@
     import GameSelect from "./GameSelect";
     import matchService from "../../services/MatchService";
     import eventService from "../../services/EventService";
+    import newsService from "../../services/NewsService";
 
     export default {
         name: "NavBar",
@@ -77,6 +81,13 @@
             'game-select': GameSelect,
         },
         computed: {
+            lang() {
+                let lang = 'ru';
+                if (document.documentElement.lang !== null && document.documentElement.lang !== ''){
+                    lang = document.documentElement.lang
+                }
+                return lang;
+            },
             currentPath() {
                 return document.location.pathname;
             },
@@ -88,6 +99,12 @@
             },
             eventsPage() {
                 return eventService.eventsPage()
+            },
+            digestPage() {
+                return eventService.digestPage()
+            },
+            newsPage() {
+                return newsService.newsPage()
             }
         },
     }

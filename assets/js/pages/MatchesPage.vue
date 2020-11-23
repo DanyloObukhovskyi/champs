@@ -1,12 +1,13 @@
 <template>
     <div class="matches">
-        <filters @setFilter="setFilter"
-                 v-bind="filters"
-                 :selected="selectMatchesType"
-                 :types="matchTypes"
-                 :counts="counts"
-                 @selected="(selected) => selectMatchesType = selected">
-        </filters>
+        <div class="d-flex align-items-end justify-content-between">
+            <tense-select @selected="(select) => selectMatchesType = select"
+                          :counts="counts"
+                          :types="matchTypes"
+                          :selected="selectMatchesType">
+            </tense-select>
+            <filters @setFilter="setFilter" v-bind="filters"/>
+        </div>
         <div class="matches-body" v-if="!load">
             <div v-for="day in matches">
                 <div class="date">

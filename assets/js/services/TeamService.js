@@ -1,8 +1,6 @@
-class TeamService {
+import Service from "./Service";
 
-    lang = () => {
-        return document.documentElement.lang
-    }
+class TeamService extends Service{
 
     searchByName = async name => {
         const {data} = await axios.post(`/${this.lang()}/ajax/search/teams`, name)

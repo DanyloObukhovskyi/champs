@@ -7,7 +7,7 @@
                 </button>
             </div>
             <div class="news-row d-flex" v-for="(news, i) in newsSorted">
-                <a :href="`/ru/news/${item.id}-${item.url}`"
+                <a :href="`/${lang}/news/${item.id}-${item.url}`"
                    class="article d-block animation-target"
                    :style="{'background-image': `url(/images/temp/news/${item.logo})`}"
                    :class="getClass(i, y)"
@@ -29,10 +29,10 @@
 
                     <div class="author-data d-flex justify-content-between align-items-center">
                         <div class="author d-flex justify-content-between align-items-center">
-<!--                            <img class="logo" src="/images/noLogo.png" alt="">-->
-<!--                            <div class="author-name">-->
-<!--                                Владимир Щипицын-->
-<!--                            </div>-->
+                            <!--                            <img class="logo" src="/images/noLogo.png" alt="">-->
+                            <!--                            <div class="author-name">-->
+                            <!--                                Владимир Щипицын-->
+                            <!--                            </div>-->
                             <div class="date">
                                 {{item.date_ru}}
                             </div>
@@ -61,6 +61,7 @@
     import NewsFilters from "../components/news/NewsFilters";
     import Loader from "../components/helpers/Loader";
     import HotNews from "../components/news/HotNews";
+    import newsService from "../services/NewsService";
 
     export default {
         name: "NewsPage",
@@ -120,6 +121,9 @@
                     news[i] = this.news.slice((i * 2), (i * 2) + 2);
                 }
                 return news;
+            },
+            lang() {
+                return newsService.lang();
             }
         },
         methods: {
@@ -172,8 +176,8 @@
                 if (!this.isLoadAll) {
                     this.load = true;
 
-                    axios.post('/ru/ajax/news/' + this.news.length, this.filters)
-                        .then(({data}) => {
+                    newsService.getNews(this.news.length, this.filters)
+                        .then(data => {
                             if (data.length === 0) {
                                 this.isLoadAll = true;
                             }
@@ -215,15 +219,11 @@
                 this.dateToView = false;
                 this.dateFromView = false;
                 this.dateFrom = date;
-
-                this.getAxios();
             },
             setToDate(date) {
                 this.dateFromView = false;
                 this.dateToView = false;
                 this.dateTo = date;
-
-                this.getAxios();
             },
             reload() {
                 this.news = [];
@@ -233,14 +233,14 @@
                 this.getNews();
             },
             getHotNews() {
-                axios.post('/ru/hot/news/')
-                    .then(({data}) => {
+                newsService.getHotNews()
+                    .then(data => {
                         this.hotNews = data;
                     })
             }
         },
         mounted() {
-            window.history.pushState('page2', '', '/ru/news/');
+            window.history.pushState('page2', '', `/${this.lang}/news/`);
 
             if (this.tag !== null && this.tag !== '') {
                 this.filters.tags.push(this.tag);
@@ -306,11 +306,11 @@
     }
 
     .dark .news .news-row .article-wrapper {
-        background: rgb(30,33,35);
-        background: -moz-linear-gradient(0deg, rgba(30,33,35,1) 0%, rgba(253,187,45,0) 66%);
-        background: -webkit-linear-gradient(0deg, rgba(30,33,35,1) 0%, rgba(253,187,45,0) 66%);
-        background: linear-gradient(0deg, rgba(30,33,35,1) 0%, rgba(253,187,45,0) 66%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1e2123",endColorstr="#fdbb2d",GradientType=1);
+        background: rgb(30, 33, 35);
+        background: -moz-linear-gradient(0deg, rgba(30, 33, 35, 1) 0%, rgba(253, 187, 45, 0) 66%);
+        background: -webkit-linear-gradient(0deg, rgba(30, 33, 35, 1) 0%, rgba(253, 187, 45, 0) 66%);
+        background: linear-gradient(0deg, rgba(30, 33, 35, 1) 0%, rgba(253, 187, 45, 0) 66%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1e2123", endColorstr="#fdbb2d", GradientType=1);
 
     }
 
@@ -332,8 +332,8 @@
     }
 
     .dark .news .news-row .article-wrapper .news-data .title,
-    .dark .news .news-row .article-wrapper .news-data .description ,
-    .dark .news .news-row .author-data .activity{
+    .dark .news .news-row .article-wrapper .news-data .description,
+    .dark .news .news-row .author-data .activity {
         color: white;
     }
 

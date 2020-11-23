@@ -24,6 +24,7 @@ import MatchPage from "./pages/MatchPage";
 import MatchesPage from "./pages/MatchesPage";
 import EventsPage from "./pages/EventsPage";
 import EventPage from "./pages/EventPage";
+import EventsDigestPage from "./pages/EventsDigestPage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -53,6 +54,7 @@ Vue.component('match-page', MatchPage)
 Vue.component('matches-page', MatchesPage)
 Vue.component('events-page', EventsPage)
 Vue.component('event-page', EventPage)
+Vue.component('events-digest-page', EventsDigestPage)
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';

@@ -1,10 +1,5 @@
 <template>
     <div class="filters">
-        <tense-select @selected="(select) => $emit('selected', select)"
-                      :counts="counts"
-                      :types="types"
-                      :selected="selected">
-        </tense-select>
         <teams-filter team="teamA" @setTeam="(team) => setFilter('teamA', team)" description="Команда 1 / Игрок 1"/>
         <teams-filter team="teamB" @setTeam="(team) => setFilter('teamB', team)" description="Команда 2 / Игрок 2"/>
         <calendar-filter
@@ -19,12 +14,10 @@
 <script>
     import CalendarFilter from "../calendar/CalendarFilter";
     import TeamsFilter from "../teams/TeamsFilter";
-    import TenseSelect from "../helpers/TenseSelect";
 
     export default {
         name: "Filters",
         components: {
-            TenseSelect,
             CalendarFilter,
             TeamsFilter
         },
@@ -41,15 +34,6 @@
             teamB: {
                 default: null
             },
-            counts: {
-                default: null
-            },
-            types: {
-                default: null
-            },
-            selected: {
-                default: null
-            }
         },
         methods: {
             setFilter(filter, value){

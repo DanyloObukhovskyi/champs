@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\EventTeamAttending;
-use App\Entity\RelatedEvent;
 use App\Service\Event\EventBracketService;
 use App\Service\Event\EventGroupPlayService;
 use App\Service\Event\EventMapPoolService;
@@ -13,7 +12,7 @@ use App\Service\Event\EventService;
 use App\Service\Event\EventTeamAttendingService;
 use App\Service\MatchService;
 use App\Service\TeamService;
-use App\Traits\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,8 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EventsController extends AbstractController
 {
-    use EntityManager;
-
     /** @var MatchService */
     public $matchService;
 
@@ -55,9 +52,9 @@ class EventsController extends AbstractController
     /**
      * EventsController constructor.
      */
-    public function __construct()
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $this->getEntityManager();
+        $this->entityManager = $entityManager;
 
         $this->matchService =  new MatchService($this->entityManager);
         $this->eventService = new EventService($this->entityManager);
@@ -145,7 +142,7 @@ class EventsController extends AbstractController
             $teams[] = $team->getTeam();
         }
         $teamsLineups = $this->teamService->teamsDecorator($teams);
-        
+
         return $this->json([
             'event' => $event,
             'prizeDistribution' => $prizeDistribution,
@@ -153,6 +150,58 @@ class EventsController extends AbstractController
             'mapsPool' => $event->getMapPool(),
             'brackets' => $brackets,
             'matches' => $matchesByDay,
+        ]);
+    }
+
+    /**
+     * @Route("/digest")
+     */
+    public function digestPage()
+    {
+        return $this->render('templates/digest.events.html.twig', [
+            'router' => 'events',
+        ]);
+    }
+
+    /**
+     * @Route("/ajax/digest/events/{type}/{page}")
+     */
+    public function ajaxDigestPage(Request $request, $type, $page)
+    {
+        $filters = $request->getContent();
+        $filters = json_decode($filters, false);
+
+        $events = $this->eventService->getEventsByType($filters, $type, $page);
+        $events = $this->eventService->eventsDecorator($events);
+
+        $counts = [];
+        foreach (MatchService::MATCH_TYPES as $type){
+            if ((isset($filters->game) and $filters->game !== 'cs') or
+                (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')){
+                $counts[$type] = 0;
+            } else {
+                $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
+            }
+        }
+        if ((isset($filters->game) and $filters->game !== 'cs') or
+            (isset($filters->tournamentType) and $filters->tournamentType !== 'pro'))
+        {
+            $events = [];
+        }
+        $digestEvents = [];
+        foreach ($events as $event){
+            $digestEvent = $event;
+
+            $digestEvent['type'] = 'pro';
+            $digestEvent['game'] = 'cs';
+
+            $digestEvents[] = $digestEvent;
+        }
+
+        return $this->json([
+            'events' => $digestEvents,
+            'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
+            'counts' => $counts,
         ]);
     }
 }

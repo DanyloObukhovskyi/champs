@@ -106,8 +106,8 @@ class NewsService extends EntityService
             $filters->tags ?? [],
             $filters->titles ?? [],
             $filters->texts ?? [],
-            $this->parseDate($filters->dateFrom),
-            $this->parseDate($filters->dateTo),
+            $this->parseDate($filters->dateFrom ?? null),
+            $this->parseDate($filters->dateTo ?? null),
             $limit,
             $offset,
             'views'

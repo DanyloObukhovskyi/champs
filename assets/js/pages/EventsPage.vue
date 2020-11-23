@@ -3,14 +3,15 @@
         <div class="banners">
             <banner-slider/>
         </div>
-        <div class="">
-            <filters @setFilter="setFilter"
-                     v-bind="filters"
-                     :counts="counts"
-                     :types="eventsTypes"
-                     :selected="selectEventsType"
-                     @selected="(selected) => selectEventsType = selected">
-            </filters>
+        <div>
+            <div class="d-flex align-items-end justify-content-between">
+                <tense-select @selected="(select) => selectEventsType = select"
+                              :counts="counts"
+                              :types="eventsTypes"
+                              :selected="selectEventsType">
+                </tense-select>
+                <filters @setFilter="setFilter" v-bind="filters"/>
+            </div>
             <div class="events-body">
                 <div class="events-wrapper d-flex row">
                     <div class="col-4" v-for="event in events">
@@ -34,21 +35,21 @@
 </template>
 
 <script>
-    import TenseSelect from "../components/helpers/TenseSelect";
     import eventService from "../services/EventService";
     import EventRow from "../components/events/EventRow";
     import Paginate from 'vuejs-paginate'
     import Filters from "../components/filters/Filters";
     import Loader from "../components/helpers/Loader";
+    import TenseSelect from "../components/helpers/TenseSelect";
 
     export default {
         name: "EventsPage",
         components: {
             EventRow,
-            TenseSelect,
             Paginate,
             Filters,
-            Loader
+            Loader,
+            TenseSelect
         },
         data() {
             return {
@@ -144,5 +145,4 @@
     .events {
         padding-bottom: 3vw;
     }
-
 </style>

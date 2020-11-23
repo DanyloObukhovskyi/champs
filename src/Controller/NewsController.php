@@ -14,6 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class NewsController extends AbstractController
 {
     /**
@@ -57,7 +60,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/ru/news", name="news_index")
+     * @Route("/news", name="news_index")
      */
     public function index(Request $request)
     {
@@ -71,7 +74,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/ru/hot/news/", name="get.hot.news")
+     * @Route("/hot/news")
      */
     public function getHotNews(Request $request)
     {
@@ -88,7 +91,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/ru/ajax/news/{offset}", name="news.ajax", defaults={"offset" = null})
+     * @Route("/ajax/news/{offset}", name="news.ajax", defaults={"offset" = null})
      */
     public function getNews(Request $request, $offset = 0)
     {
@@ -105,9 +108,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/{id}", name="news_view_single")
+     * @Route("/news/{id}", name="news_view_single")
      */
     public function view($id)
     {
@@ -150,9 +151,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/ajax/news/single/{id}")
+     * @Route("/ajax/news/single/{id}")
      */
     public function getNewsAjax($id)
     {
@@ -167,9 +166,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/last/news", name="last_news_info")
+     * @Route("/last/news", name="last_news_info")
      */
     public function getLastNews()
     {
@@ -181,9 +178,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/add/comment", name="news.add.comment")
+     * @Route("/news/add/comment", name="news.add.comment")
      */
     public function addComment(Request $request)
     {
@@ -204,9 +199,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/{newsId}/comments", name="news.get.comments")
+     * @Route("/news/{newsId}/comments", name="news.get.comments")
      */
     public function getComments(int $newsId)
     {
@@ -222,6 +215,10 @@ class NewsController extends AbstractController
         return $this->json($newsComments);
     }
 
+    /**
+     * @param string $title
+     * @return array
+     */
     public function makeTag(string $title)
     {
         $code = dechex(crc32($title));
@@ -234,9 +231,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/popular/tags/{offset}", name="news.popular.tags", defaults={"offset" = 5})
+     * @Route("/news/popular/tags/{offset}", name="news.popular.tags", defaults={"offset" = 5})
      */
     public function getPopularTags($offset)
     {
@@ -247,9 +242,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/ajax/news/by/game/{game}")
+     * @Route("/ajax/news/by/game/{game}")
      */
     public function getNewsByGame($game)
     {

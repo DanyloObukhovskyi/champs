@@ -38,7 +38,8 @@ body {
 }
 
 .dark #app.home{
-    background: url(/images/home/backgroundBlack.svg) no-repeat center 0;
+    background: url(/images/home/backgroundBlack.png) no-repeat center 0;
+    background-size: 100%;
 }
 
 .ml-8 {
@@ -104,7 +105,7 @@ body {
 
 .arrow-top {
     position: absolute;
-    top: -1.5vw;
+    top: -1.4vw;
     height: 1.5vw;
     cursor: pointer;
     transition: all .3s ease-in-out;

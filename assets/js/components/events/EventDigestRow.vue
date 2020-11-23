@@ -1,7 +1,17 @@
 <template>
-    <a :href="eventUrl(event.id)" class="event d-block">
+    <a :href="eventUrl(event.id)" class="event d-flex justify-content-between">
         <div class="title">
             {{event.name}}
+        </div>
+        <div class="digest">
+            <div class="type">
+                {{event.type}}
+            </div>
+            <div class="d-flex justify-content-end">
+                <div class="game">
+                    <img :src="`/images/events/${event.game}.png`">
+                </div>
+            </div>
         </div>
         <div class="event-footer align-items-end d-flex justify-content-between w-100">
             <div class="logo">
@@ -24,8 +34,8 @@
     import eventService from "../../services/EventService";
 
     export default {
-        name: "EventRow",
-        props: ['event'],
+        name: "EventDigestRow",
+        props: ['event', 'className'],
         methods: {
             eventUrl(id) {
                 return eventService.getEventUrl(id)
@@ -39,7 +49,7 @@
         color: black;
         margin-top: 1vw;
         padding: .3vw .8vw;
-        height: 7vw;
+        height: 8vw;
         background: linear-gradient(270deg, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
     }
 
@@ -87,5 +97,40 @@
 
     .event .title {
         font-size: 1vw;
+    }
+
+    .event .digest {
+        width: 4vw;
+        margin-right: -.8vw;
+        margin-top: -.3vw;
+    }
+
+    .event .digest .type {
+        display: flex;
+        justify-content: center;
+        color: white;
+        background-color: #ff6d1d;
+        border-radius: 0 0 0 .4vw;
+        font-size: 1vw;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .event .digest .game {
+        height: 2vw;
+        font-size: .8vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #242424;
+        border-radius: .3vw;
+        cursor: pointer;
+        width: 3vw;
+        padding: .2vw;
+        margin-top: .2vw;
+    }
+
+    .event .digest .game img {
+        width: 3vw;
     }
 </style>
