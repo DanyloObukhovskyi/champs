@@ -37,7 +37,7 @@
                 </div>
             </a>
             <div class="more">
-                <a href="/ru/results">Больше результатов</a>
+                <a href="/ru/matches">Больше результатов</a>
             </div>
         </div>
     </div>

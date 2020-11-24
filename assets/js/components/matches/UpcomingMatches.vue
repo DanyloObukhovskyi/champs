@@ -41,7 +41,10 @@
         computed: {
             currentPage() {
                 return this.matches[this.page];
-            }
+            },
+            getMatchesUrl() {
+                return '/ru/matches/';
+            },
         },
         methods: {
             getUpcomingMatches() {
@@ -51,9 +54,6 @@
                             this.matches.push(data[timestamp]);
                         }
                     })
-            },
-            getMatchesUrl() {
-                return '/ru/matches/';
             },
         },
         mounted() {
