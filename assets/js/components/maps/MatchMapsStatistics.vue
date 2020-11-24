@@ -1,0 +1,127 @@
+<template>
+    <div class="map-statistics">
+        <div class="map-statistics-header">
+            <lamp-header title="Статистика карт"/>
+        </div>
+        <div class="map-statistics-body">
+            <div class="title-row">
+                <div class="map-statistics-col">
+                    Карты
+                </div>
+                <div class="map-statistics-col">
+                    <img :src="teamA.logo" alt="">
+                    {{teamA.title}}
+                </div>
+                <div class="map-statistics-col">
+                    <img :src="teamB.logo" alt="">
+                    {{teamB.title}}
+                </div>
+            </div>
+            <div class="maps-row" v-for="map in maps" v-if="map.image !== null">
+                <div class="map" :style="getMapBackground(map)">
+                    {{map.name}}
+                </div>
+                <div class="teamA">
+                    {{getTeamMapStatistics(map.id, teamA).rating}}
+                </div>
+                <div class="teamB">
+                    {{getTeamMapStatistics(map.id, teamB).rating}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import LampHeader from "../helpers/LampHeader";
+
+    export default {
+        name: "MatchMapsStatistics",
+        props: [
+            'maps',
+            'teamA',
+            'teamB'
+        ],
+        components: {
+            LampHeader
+        },
+        methods: {
+            getMapBackground(map) {
+                return {
+                    background: `url(/uploads/images/${map.image})`,
+                    'background-size': 'cover'
+                }
+            },
+            getTeamMapStatistics(mapId, team) {
+                return team.mapStatistics.find(mapStatistic => {
+                    return mapStatistic.map.id === mapId;
+                })
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .map-statistics .map-statistics-body {
+        margin-top: 1vw;
+        padding: 1vw 1vw;
+        background: rgb(251, 252, 252);
+        background: -moz-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
+        background: -webkit-radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
+        background: radial-gradient(circle, rgba(251, 252, 252, 1) 17%, rgba(193, 198, 202, 1) 81%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
+    }
+
+    .dark .map-statistics .map-statistics-body {
+        color: white;
+        background: rgb(37, 40, 42);
+        background: -moz-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+        background: linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#3d4146", GradientType=1);
+    }
+
+    .map-statistics-col {
+        width: 30%;
+        height: 3vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3vw;
+    }
+
+    .map-statistics-col img {
+        width: 3vw;
+
+    }
+
+    .maps-row, .title-row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .maps-row div {
+        width: 30%;
+        height: 3vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3vw;
+        margin: .05vw 0;
+    }
+
+    .maps-row .map {
+        background-size: cover;
+        color: white;
+    }
+
+    .maps-row .teamA,
+    .maps-row .teamB {
+        background-color: white;
+    }
+
+    .dark .maps-row .teamA,
+    .dark .maps-row .teamB {
+        background: #26292c;
+    }
+</style>

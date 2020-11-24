@@ -1,0 +1,144 @@
+<template>
+    <div class="news-home">
+        <div class="news-home-header">
+            <lamp-header title="Новости" link="/ru/news" link-description="Все новости"></lamp-header>
+        </div>
+        <div class="news-home-body" :class="{row: !isOnePerRow}">
+            <div class="news-home-row" :class="{'col-6': !isOnePerRow}" v-for="news in newsList">
+                <a :href="getNewsUrl(news)" class="news-home-wrapper d-block">
+                    <div class="title">
+                        {{news.title}}
+                    </div>
+                    <div class="news-footer d-flex w-100">
+                        <div class="type">
+                            {{types[news.type] || 'текст'}}
+                        </div>
+                        <div class="activity">
+                            <i class="fas fa-eye"></i>
+                            {{news.views}}
+                            <i class="fas fa-comment-dots"></i>
+                            {{news.comments.length}}
+                        </div>
+                        <div class="date w-100 d-flex justify-content-end">
+                            {{news.date_ru}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import LampHeader from "../helpers/LampHeader";
+
+    export default {
+        name: "NewsHome",
+        components: {
+            'lamp-header': LampHeader
+        },
+        props: {
+            isOnePerRow: {
+                default: false
+            }
+        },
+        data() {
+            return {
+                newsList: [],
+                types: [
+                    'Трансфер',
+                    'Матч',
+                    'Видео',
+                    'Интервью',
+                    'Статья',
+                    'Обновления',
+                    'Текст'
+                ]
+            }
+        },
+        methods: {
+            getNews() {
+                axios.post('/ru/main/news')
+                    .then(({data}) => {
+                        this.newsList = data;
+                    })
+            },
+            getNewsUrl(news) {
+                return `/ru/news/${news.id}-${news.url}`
+            }
+        },
+        mounted() {
+            this.getNews();
+        }
+    }
+</script>
+
+<style scoped>
+    .news-home-body .news-home-row .news-home-wrapper {
+        color: black;
+        height: 3vw;
+        margin-top: 1vw;
+        padding: .3vw .8vw;
+        height: 7vw;
+        background: linear-gradient(270deg, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
+    }
+
+    .dark .news-home-body .news-home-row .news-home-wrapper {
+        color: white;
+        background: rgb(61, 65, 70);
+        moz-transition: all 1s ease-in-out;
+        -o-transition: all 1s ease-in-out;
+        -webkit-transition: all 1s ease-in-out;
+        transition: all .4s ease-in-out;
+        background: -moz-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 43%);
+        background: -webkit-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 43%);
+        background: linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 43%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d4146", endColorstr="#25282a", GradientType=1);
+    }
+
+    .news-home-body .news-home-row .news-home-wrapper .news-footer {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: .5vw;
+    }
+
+    .news-home-body .news-home-row .news-home-wrapper .news-footer .type {
+        color: white;
+        background: #9d9fa0;
+        text-transform: uppercase;
+        font-size: .6vw;
+        font-weight: bold;
+        padding: 0.2vw .4vw;
+    }
+
+    .dark .news-home-body .news-home-row .news-home-wrapper .news-footer .type {
+        color: #34383c;
+    }
+
+    .news-home-body .news-home-row .news-home-wrapper .news-footer .activity {
+        font-size: .9vw;
+        display: flex;
+        align-items: center;
+    }
+
+    .news-home-body .news-home-row .news-home-wrapper .news-footer .activity i {
+        color: #8298ac;
+        margin-left: .7vw;
+        margin-right: .2vw;
+    }
+
+    .news-home-body .news-home-row .news-home-wrapper .news-footer .date {
+        font-size: .9vw;
+        text-transform: lowercase;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        width: 100%;
+        margin-right: 1.4vw;
+        color: #979797;
+    }
+
+    .news-home-body .news-home-row .news-home-wrapper .title {
+        font-size: 1vw;
+    }
+</style>

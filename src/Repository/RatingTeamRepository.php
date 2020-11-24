@@ -42,7 +42,7 @@ class RatingTeamRepository extends ServiceEntityRepository
         $ratingTeams = $this->createQueryBuilder('r')
             ->orderBy('r.createdAt', 'DESC')
             ->andWhere('r.createdAt is not null')
-            ->setMaxResults(8)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 

@@ -2,75 +2,62 @@
 {% block title %}Champs.pro{% endblock %}
 {% block router %}home{% endblock %}
 {% block description %}
-  <meta name="description" content="Тренеры по League of Legends, СS:GO, Dota, матчи, игровые новости, события и мероприятия в игровой индустрии">
+    <meta name="description"
+          content="Тренеры по League of Legends, СS:GO, Dota, матчи, игровые новости, события и мероприятия в игровой индустрии">
 {% endblock %}
 {% block keywords %}
-  <meta name="Keywords" content="League of Legends, СS:GO, Dota, Игровые матчи, Игровые новости, События, Рейтинг команд, Рейтинг игроков, Игрок недели, Результаты матчей, Турниры">
+    <meta name="Keywords"
+          content="League of Legends, СS:GO, Dota, Игровые матчи, Игровые новости, События, Рейтинг команд, Рейтинг игроков, Игрок недели, Результаты матчей, Турниры">
 {% endblock %}
 {% block body %}
-<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-  Главная
-</h1>
-<div class="home">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        <div class="banner">
-
-
-{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
-{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
-{#        <img src="/images/Banner.png"/>#}
-{#    </object>#}
-{#</a>#}
-
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Главная
+    </h1>
+    <div class="home" id="app">
+        <div class="ml-8 mr-8 p-0">
+            <div class="d-flex p-0 mt-4">
+                <div class="col-6 pl-0">
+                    <live-matches></live-matches>
+                </div>
+                <div class="col-6 pr-0">
+                    <a href="/ru/" class="w-100">
+                        <img src="/images/home/homeBaner.png" class="w-100">
+                    </a>
+                </div>
+            </div>
+            <video-slider></video-slider>
+            <div class="d-flex p-0 mt-5">
+                <div class="col-6 pl-0">
+                    <news-home></news-home>
+                </div>
+                <div class="col-6 pr-0">
+                    <events-home></events-home>
+                </div>
+            </div>
+            <div class="d-flex p-0 mt-5">
+                <div class="col-9 pl-0 mr-1">
+                    <upcoming-matches-home></upcoming-matches-home>
+                </div>
+                <div class="col-3 pl-0 ml-1">
+                    <results-matches-home></results-matches-home>
+                </div>
+            </div>
         </div>
-        {% include 'templates/home/matches.html.twig' %}
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/home/videos.html.twig' %}
-      </div>
+        <div class="home-end">
+            <div class="ml-8 mr-8">
+                <banner-slider></banner-slider>
+                <div class="d-flex mt-5 rating-block" style="padding-bottom: 8vw;">
+                    <div class="col-5 pl-0 mr-1">
+                        <players-rating></players-rating>
+                    </div>
+                    <div class="col-2 pl-0 mr-1 d-flex align-items-center">
+                        <player-week></player-week>
+                    </div>
+                    <div class="col-5 pl-0 mr-1">
+                        <teams-rating></teams-rating>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/home/events.html.twig' %}
-        {% include 'templates/home/tournaments.html.twig' %}
-        <div class="banner bottom">
-          
-{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
-{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
-{#        <img src="/images/Banner.png"/>#}
-{#    </object>#}
-{#</a>#}
-
-        </div>
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-            {% include 'templates/home/updates.html.twig' %}
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-            {% include 'templates/home/results.html.twig' %}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/home/ratings.player.html.twig' %}
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-            {% include 'templates/home/ratings.teams.html.twig' %}
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-            {% include 'templates/home/player.week.html.twig' %}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}

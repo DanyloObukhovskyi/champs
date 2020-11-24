@@ -23,6 +23,8 @@ class EventBracketService extends EntityService
 
     protected $lowerDropdown1 = 'lowerDropdown1';
 
+    protected $lowerFinal = 'lowerFinal';
+
     protected $entity = EventBracket::class;
 
     protected $repository;
@@ -55,8 +57,10 @@ class EventBracketService extends EntityService
         /** @var EventBracket $eventBracket */
         $eventBracket = $this->findByEventAndTypeAndNameAndTeams($event, $type, $name, $team1, $team2);
 
-        if (empty($eventBracket))
-        {
+        if ($type === $this->grandFinal or $type === $this->lowerFinal or $type === $this->conditionFinal) {
+            $eventBracket = $this->repository->findByEventAndType($event, $type);
+        }
+        if (empty($eventBracket)) {
             $eventBracket = new $this->entity;
             $eventBracket->setEvent($event);
             $eventBracket->setTeam1($team1);
@@ -93,82 +97,131 @@ class EventBracketService extends EntityService
         $sortedBrackets = [];
 
         /** @var EventBracket $bracket */
-        foreach ($brackets as $bracket)
-        {
-            if (strpos($bracket->getType(), $this->lower) !== false or $this->conditionFinal === $bracket->getType()){
+        foreach ($brackets as $bracket) {
+            if (strpos($bracket->getType(), $this->lower) !== false or $this->conditionFinal === $bracket->getType()) {
                 $type = $this->lower;
-            } elseif($this->grandFinal === $bracket->getType()) {
+            } elseif ($this->grandFinal === $bracket->getType()) {
                 $type = $this->grandFinal;
             } else {
                 $type = $this->upper;
             }
-
-            if (!empty($bracket->getTeam1()) and !empty($bracket->getTeam2()))
-            {
-                $sortedBrackets[$type][$bracket->getType()][$bracket->getName()][] =
-                    [
-                        'bracketType' => $bracket->getType(),
-                        'team1' => $this->getTeam($bracket->getTeam1()),
-                        'team2' => $this->getTeam($bracket->getTeam2()),
-                        'score1' => $bracket->getScore1(),
-                        'score2' => $bracket->getScore2(),
-                    ];
+            $showBracketName = false;
+            if (empty($sortedBrackets[$type][$bracket->getType()])){
+                $showBracketName = true;
             }
-        }
+            $sortedBrackets[$type][$bracket->getType()][] =
+                [
+                    'id' => $bracket->getId(),
+                    'bracketName' => $bracket->getName(),
+                    'bracketType' => $bracket->getType(),
+                    'type' => $type,
+                    'match' => $bracket->getMatch(),
+                    'player1' => [
+                        'match' => $bracket->getMatch(),
+                        'playerId' => !empty($bracket->getTeam1()) ? $bracket->getTeam1()->getId() : null,
+                        'winner' => $bracket->getScore1() > $bracket->getScore2(),
 
-        $brackets = [];
+                        'team' => !empty($bracket->getTeam1()) ? $bracket->getTeam1() : null,
+                        'score' => $bracket->getScore1(),
+                    ],
+                    'player2' => [
+                        'match' => $bracket->getMatch(),
+                        'playerId' => !empty($bracket->getTeam2()) ? $bracket->getTeam2()->getId() : null,
+                        'winner' => $bracket->getScore2() > $bracket->getScore1(),
+
+                        'team' => !empty($bracket->getTeam2()) ? $bracket->getTeam2() : null,
+                        'score' => $bracket->getScore2(),
+                    ],
+                    'showBracketName' => $showBracketName
+                ];
+        }
+        $sortedBracketsStepTwo = [];
         foreach ($sortedBrackets as $type => $bracket) {
             $bracketsMatches = [];
 
             foreach ($bracket as $bracketType => $bracketMatches) {
-                foreach ($bracketMatches as $matches){
-                    $bracketsMatches[] = $matches;
+
+                if ($bracketType === $this->grandFinal or
+                    $bracketType === $this->conditionFinal or
+                    $bracketType === $this->lowerFinal) {
+
+                    $bracketsMatches[$bracketType][] = end($bracketMatches);
+                } else {
+                    $bracketsMatches[$bracketType] = $bracketMatches;
                 }
             }
-            $brackets[$type] = $bracketsMatches;
+            $sortedBracketsStepTwo[$type] = $bracketsMatches;
+        }
+        $sortedBracketsStepThree = [];
+        $grandFinal = null;
+
+        if (isset($sortedBracketsStepTwo[$this->grandFinal])){
+            $grandFinal = $sortedBracketsStepTwo[$this->grandFinal][$this->grandFinal][0];
+
+            $sortedBracketsStepThree[] = $grandFinal;
         }
 
-        $secondTeams = [];
+        if (isset($sortedBracketsStepTwo[$this->upper]))
+        {
+            $upperBrackets = $this->sortedBrackets($sortedBracketsStepTwo[$this->upper], $grandFinal);
+
+            $sortedBracketsStepThree = array_merge(
+                $sortedBracketsStepThree,
+                $upperBrackets
+            );
+        }
+
+        if (isset($sortedBracketsStepTwo[$this->lower]))
+        {
+            $lowerBrackets = $this->sortedBrackets($sortedBracketsStepTwo[$this->lower], $grandFinal);
+
+            $sortedBracketsStepThree = array_merge(
+                $sortedBracketsStepThree,
+                $lowerBrackets
+            );
+        }
+        return $sortedBracketsStepThree;
+    }
+
+    public function sortedBrackets($brackets, $grandFinal)
+    {
+        $sortedBrackets = [];
+        $upperTypes = array_keys($brackets);
+
         foreach ($brackets as $type => $matches)
         {
-            $matches = $matches[0];
+            if ($matches !== end($brackets)) {
 
-            foreach ($matches as $match)
-            {
-                $secondTeams[$type][] = [
-                     $match['team1'], $match['team2']
-                ];
-            }
-        }
-        $secondBrackets = [];
+                $next = array_search($type, $upperTypes, true);
+                $nextMatches = $brackets[$upperTypes[$next + 1]];
 
-        foreach ($brackets as $type => $matchesRounds) {
-            foreach ($matchesRounds as $matches) {
-                $scores = [];
-                foreach ($matches as $match) {
-                    if ($type === $this->lower
-                        and ($match['bracketType'] === $this->lowerDropdown1 or $match['bracketType'] === $this->consolidationFinal))
-                    {
-                        $scores[] = [
-                            (int)$match['score2'],  (int)$match['score1']
-                        ];
-                    } else {
-                        $scores[] = [
-                            (int)$match['score1'], (int)$match['score2']
-                        ];
+                if (count($nextMatches) < count($matches)) {
+
+                    $matchesChunk = array_chunk($matches, 2);
+                    foreach ($nextMatches as $index => $match) {
+                        $matchesChunk[$index][0]['next'] = $match['id'];
+                        $matchesChunk[$index][1]['next'] = $match['id'];
+
+                        $sortedBrackets[] = $matchesChunk[$index][0];
+                        $sortedBrackets[] = $matchesChunk[$index][1];
                     }
+                } elseif (count($nextMatches) === count($matches)){
+                    foreach ($nextMatches as $index => $match) {
+                        $matches[$index]['next'] = $match['id'];
 
+                        $sortedBrackets[] = $matches[$index];
+                    }
                 }
-                $secondBrackets[$type][] = $scores;
-
-                if ($type === $this->grandFinal)
-                {
-                    $secondBrackets[$type][] = [];
+            } else {
+                foreach ($matches as $match){
+                    if (isset($grandFinal)){
+                        $match['next'] = $grandFinal['id'];
+                    }
+                    $sortedBrackets[] = $match;
                 }
             }
         }
-
-        return ['teams' => $secondTeams['upper'] ?? [], 'matches' => $secondBrackets];
+        return $sortedBrackets;
     }
 
     /**
@@ -176,13 +229,13 @@ class EventBracketService extends EntityService
      * @return array
      */
     public function getTeam(Team $team)
-    {
-        $teamLogo = $team->getLogo();
-        $teamName = $team->getName();
+        {
+            $teamLogo = $team->getLogo();
+            $teamName = $team->getName();
 
-        $this->imageService->setImage($teamLogo);
-        $teamLogo = $this->imageService->getImagePath();
+            $this->imageService->setImage($teamLogo);
+            $teamLogo = $this->imageService->getImagePath();
 
-        return ['logo' => $teamLogo, 'name' => $teamName ];
+            return ['logo' => $teamLogo, 'name' => $teamName];
+        }
     }
-}

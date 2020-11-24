@@ -72,7 +72,6 @@
         },
         data(){
             return {
-                console: console,
                 error: false,
                 step: 'registration',
                 email: null,
@@ -156,9 +155,6 @@
 
                 this.axios.post('/ru/generate/confirm/code', formData)
             }
-        },
-        mounted() {
-            console.log(this.content)
         }
     }
 </script>

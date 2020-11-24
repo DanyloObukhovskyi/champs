@@ -1,0 +1,80 @@
+<template>
+    <div class="w-100">
+        <div class="lineups-header">
+            <lamp-header title="Составы команд"></lamp-header>
+        </div>
+        <div class="hide" v-if="show">
+            <button @click="show = false">
+                <i class="fas fa-caret-up"></i>
+                Свернуть
+            </button>
+        </div>
+        <div class="lineups-body" v-if="show">
+            <team-players v-for="(team, index) in teams" :key="index" :team="team"/>
+        </div>
+        <div class="show">
+            <button @click="show = !show">
+                <i class="fas"
+                   :class="show ? 'fa-caret-up': 'fa-caret-down'"></i>
+               {{ show ? 'Свернуть' : 'Показать'}}
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    import LampHeader from "../helpers/LampHeader";
+    import TeamPlayers from "../teams/TeamPlayers";
+
+    export default {
+        name: "EventTeamLineups",
+        components: {TeamPlayers, LampHeader},
+        props: ['teams'],
+        data() {
+            return {
+                show: false
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .lineups-body {
+        margin-top: 1vw;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .show button,
+    .hide button {
+        display: flex;
+        justify-content: center;
+        margin-top: 1vw;
+        background: white;
+        width: 100%;
+        border: unset;
+        padding: .5vw;
+        color: #ff6d1d;
+        font-size: 1vw;
+        align-items: center;
+        transition: all .3s ease-in-out;
+        cursor: pointer;
+    }
+
+    .show button:hover,
+    .hide button:hover {
+        opacity: .5;
+    }
+
+    .dark .show button,
+    .dark .hide button {
+        background: #1e2123;
+    }
+
+    .show button i,
+    .hide button i {
+        display: flex;
+        align-items: center;
+        margin-right: .5vw;
+    }
+</style>

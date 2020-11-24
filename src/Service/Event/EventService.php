@@ -14,6 +14,7 @@ use App\Service\FlagIconService;
 use App\Service\ImageService;
 use App\Service\MapService;
 use App\Service\MatchService;
+use App\Service\News\NewsService;
 use App\Service\TeamService;
 use App\Traits\Dispatchable;
 use DateTime;
@@ -21,10 +22,23 @@ use App\Entity\Event;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Translation\Translator;
 
 class EventService extends EntityService
 {
     use Dispatchable;
+
+    public const FUTURE = 'future';
+
+    public const LIVE = 'live';
+
+    public const PAST = 'past';
+
+    public const TYPES = [
+        self::FUTURE,
+        self::LIVE,
+        self::PAST,
+    ];
 
     protected $entity = Event::class;
 
@@ -84,11 +98,14 @@ class EventService extends EntityService
         $this->eventBracketService = new EventBracketService($entityManager);
 
         $this->matchService = new MatchService($entityManager);
+        $this->translator = new Translator($GLOBALS['request']->getLocale());
     }
 
     /**
      * @param $values
      * @param DateTime|null $parseDate
+     * @return Event
+     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -163,62 +180,37 @@ class EventService extends EntityService
     {
         $eventItems = [];
 
+        /** @var Event $event */
         foreach ($events as $event)
         {
-            /** @var Event $event */
-            $eventItems[] = [
-                "id" => $event->getId(),
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $event->getImage(),
-                'imageHeader' => $event->getImageHeader()
-            ];
+            $eventItems[] = $this->decorator($event);
         }
         return $eventItems;
     }
 
     /**
-     * @param $events
+     * @param Event $event
      * @return array
      */
-    public function futureEventsDecorator($events): array
+    public function decorator(Event $event)
     {
-        $futureEventItems = [];
-        foreach ($events as $event)
-        {
+        $dayStart = $event->getStartedAt()->format('d F');
+        $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
 
-            /** @var Event $event */
-            if (!array_key_exists(date("F Y", $event->getStartedAt()->getTimestamp()), $futureEventItems))
-            {
-                $futureEventItems[date("F Y",$event->getStartedAt()->getTimestamp())] = [
-                    "date" => date("F Y", $event->getStartedAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $image = $event->getImage();
-            $this->imageService->setImage($image);
+        $this->imageService->setImage($event->getImage());
 
-            $image = isset($image) ? $this->imageService->getImagePath(): null;
-
-            $headerImage = $event->getImageHeader();
-            $this->imageService->setImage($headerImage);
-
-            $headerImage = $this->imageService->getImagePath();
-
-            $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
-                "id" => $event->getId(),
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $image,
-                "imageHeader" => $headerImage,
-                "teams" => $event->getCommandCount(),
-                "location" => $event->getLocation(),
-                "prize" => $event->getPrize()
-            ];
-        }
-        return $futureEventItems;
+        return [
+            "id"          => $event->getId(),
+            "name"        => $event->getName(),
+            "startedAt"   => $event->getStartedAt(),
+            "endedAt"     => $event->getEndedAt(),
+            "image"       => $event->getImage(),
+            'imageHeader' => $event->getImageHeader(),
+            'logoWithPath'=> $this->imageService->getImagePath(),
+            'startedAtRu' => NewsService::replaceMonth($dayStart),
+            'endedAtRu'   => NewsService::replaceMonth($dayEnd),
+            'views'       => $event->getViews()
+        ];
     }
 
     /**
@@ -379,6 +371,12 @@ class EventService extends EntityService
         return $this->repository->getFeatureEvents();
     }
 
+    /**
+     * @param $event
+     * @param $teamsAttending
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function createEventTeamsAttending($event, $teamsAttending)
     {
         foreach ($teamsAttending as $teamAttending)
@@ -393,11 +391,19 @@ class EventService extends EntityService
         }
     }
 
+    /**
+     * @param $url
+     * @return mixed
+     */
     public function getByUrl($url)
     {
         return $this->repository->getByUrl($url);
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function getByName($name)
     {
         return $this->repository->getByName($name);
@@ -411,6 +417,11 @@ class EventService extends EntityService
         return $this->repository->getOldEvents();
     }
 
+    /**
+     * @param $event
+     * @param $image
+     * @return mixed
+     */
     public function setEventImage($event, $image)
     {
         if (!empty($image))
@@ -424,6 +435,11 @@ class EventService extends EntityService
         return $this->save($event);
     }
 
+    /**
+     * @param $event
+     * @param $values
+     * @return mixed
+     */
     public function setImageLogo($event, $values)
     {
         if (!empty($values['image']))
@@ -444,6 +460,12 @@ class EventService extends EntityService
         return $event;
     }
 
+    /**
+     * @param $event
+     * @param $brackets
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function createBrackets($event, $brackets)
     {
         $brackets = $brackets['rounds'] ?? [];
@@ -481,5 +503,69 @@ class EventService extends EntityService
                 }
             }
         }
+    }
+
+    /**
+     * @param $filters
+     * @param $type
+     * @param $page
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function getEventsByType($filters, $type, $page)
+    {
+        $filters = (object)[
+            'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
+            'dateTo' =>  MatchService::parseDate($filters->dateTo ?? null),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+        ];
+
+        return $this->repository->getEventsByType(
+            $filters,
+            $type,
+            $page - 1 ?? null,
+            $_ENV['EVENTS_PAGINATION'] ?? null
+        );
+    }
+
+    /**
+     * @param $filters
+     * @param $type
+     * @return int|mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getEventsCountByType($filters, $type)
+    {
+        $filters = (object)[
+            'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
+            'dateTo' =>  MatchService::parseDate($filters->dateTo ?? null),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+            'name' => $filters->name ?? null,
+        ];
+
+        $result = 0;
+
+        if (in_array($type, self::TYPES, false))
+        {
+            $result = $this->repository->getEventsQueryByType($filters, $type)
+                ->select('count(e.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+        return $result;
+    }
+
+    /**
+     * @param Event $event
+     * @return mixed
+     */
+    public function addEventView(Event $event)
+    {
+        $event->setViews($event->getViews() + 1);
+
+        return $this->save($event);
     }
 }

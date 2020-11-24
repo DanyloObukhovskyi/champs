@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TeamRepository::class)
  */
-class Team
+class Team implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -199,4 +199,14 @@ class Team
         $this->parseDate = $parseDate;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'logo' => $this->getLogo(),
+            'name' => $this->getName(),
+            'flag' => $this->getFlagIcon(),
+            'region' => $this->getRegion(),
+        ];
+    }
 }

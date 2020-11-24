@@ -46,7 +46,7 @@ class RatingPersonRepository extends ServiceEntityRepository
         $ratingPersons = $this->createQueryBuilder('r')
             ->orderBy('r.createdAt', 'DESC')
             ->andWhere('r.createdAt is not null')
-            ->setMaxResults(8)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
         $ratingPersonsIds = [];
@@ -60,7 +60,7 @@ class RatingPersonRepository extends ServiceEntityRepository
             ->orderBy('r.rating', 'DESC')
             ->andWhere('r.id IN (:ids)')
             ->setParameter('ids', $ratingPersonsIds)
-            ->setMaxResults(8)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 

@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Event;
 use App\Entity\Match;
+use App\Service\Event\EventService;
+use App\Service\MatchService;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -36,9 +38,9 @@ class EventRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.name = :name')
-            ->andWhere('e.started_at = :started_at')
+            ->andWhere('e.startedAt = :startedAt')
             ->setParameter('name', $name)
-            ->setParameter('started_at', $startAt)
+            ->setParameter('startedAt', $startAt)
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult();
@@ -54,7 +56,7 @@ class EventRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.name = :name')
-            ->andWhere(':date BETWEEN e.started_at AND e.ended_at')
+            ->andWhere(':date BETWEEN e.startedAt AND e.endedAt')
             ->setParameter('name', $name)
             ->setParameter('date', $date)
             ->getQuery()
@@ -70,9 +72,9 @@ class EventRepository extends ServiceEntityRepository
     {
         /** @var Match[] $matches */
         $matches = $this->createQueryBuilder('m')
-            ->orderBy('m.started_at', 'ASC')
-            ->andWhere('m.started_at <= :date')
-            ->andWhere('m.ended_at >= :date')
+            ->orderBy('m.startedAt', 'ASC')
+            ->andWhere('m.startedAt <= :date')
+            ->andWhere('m.endedAt >= :date')
             ->setParameter('date', $date->format("Y-m-d"))
             ->getQuery()
             ->getResult();
@@ -90,9 +92,9 @@ class EventRepository extends ServiceEntityRepository
     {
         /** @var Event[] $events */
         $events = $this->createQueryBuilder('m')
-            ->orderBy('m.started_at', 'ASC')
-            ->andWhere(' m.started_at > :date')
-            ->setParameter('date', (new \DateTime($date->format("Y-m-d"))) )
+            ->orderBy('m.startedAt', 'ASC')
+            ->andWhere(' m.startedAt > :date')
+            ->setParameter('date', (new \DateTime($date->format("Y-m-d"))))
             ->getQuery()
             ->getResult();
 
@@ -110,7 +112,7 @@ class EventRepository extends ServiceEntityRepository
         $events = $this->createQueryBuilder('e')
             ->orderBy('e.createdAt', 'DESC')
             ->andWhere(' e.createdAt is not null')
-            ->setMaxResults(5)
+            ->setMaxResults(6)
             ->getQuery()
             ->getResult();
 
@@ -125,8 +127,8 @@ class EventRepository extends ServiceEntityRepository
         /** @var Event[] $events */
         $events = $this->createQueryBuilder('e')
             ->andWhere(' e.url is not null')
-            ->andWhere('e.ended_at <= :dateNow')
-            ->andWhere('e.ended_at >= :dateWeek')
+            ->andWhere('e.endedAt <= :dateNow')
+            ->andWhere('e.endedAt >= :dateWeek')
             ->setParameter('dateNow', $dateNow)
             ->setParameter('dateWeek', $dateWeek)
             ->getQuery()
@@ -142,7 +144,7 @@ class EventRepository extends ServiceEntityRepository
         /** @var Event[] $events */
         $events = $this->createQueryBuilder('e')
             ->andWhere(' e.url is not null')
-            ->andWhere('e.ended_at >= :date')
+            ->andWhere('e.endedAt >= :date')
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
@@ -174,7 +176,7 @@ class EventRepository extends ServiceEntityRepository
     public function getOldEvents()
     {
         $dateNow = date('Y.m.d');
-        if(isset($_ENV['DATE_FROM_EVENT_PARSE'])) {
+        if (isset($_ENV['DATE_FROM_EVENT_PARSE'])) {
             $dateFrom = $_ENV['DATE_FROM_EVENT_PARSE'];
         } else {
             $dateFrom = date('Y.m.d', strtotime("-7 days"));
@@ -183,13 +185,100 @@ class EventRepository extends ServiceEntityRepository
         /** @var Event[] $events */
         $events = $this->createQueryBuilder('e')
             ->andWhere(' e.url is not null')
-            ->andWhere('e.ended_at <= :dateNow')
-            ->andWhere('e.ended_at >= :dateFrom')
+            ->andWhere('e.endedAt <= :dateNow')
+            ->andWhere('e.endedAt >= :dateFrom')
             ->setParameter('dateNow', $dateNow)
             ->setParameter('dateFrom', $dateFrom)
             ->getQuery()
             ->getResult();
 
         return $events;
+    }
+
+    /**
+     * @param $filters
+     * @param string $type
+     * @return \Doctrine\ORM\QueryBuilder
+     * @throws \Exception
+     */
+    public function getEventsQueryByType($filters, string $type)
+    {
+        $date = new \DateTime();
+        $date = $date->format("Y-m-d");
+
+        $query = $this->createQueryBuilder('e')
+            ->orderBy('e.startedAt', 'DESC');
+
+        if (isset($filters->teamA) or isset($filters->teamB)) {
+            $query->innerJoin('e.teamsAttending', 'ta');
+        }
+
+        if ($type === EventService::FUTURE) {
+            $query->andWhere('e.startedAt > :date')
+                ->setParameter('date', $date);
+        }
+        if ($type === EventService::LIVE) {
+            $query->andWhere('e.startedAt > :date')
+                ->andWhere('e.endedAt < :date')
+                ->setParameter('date', $date);
+        }
+        if ($type === EventService::PAST) {
+            $query->andWhere('e.startedAt < :date')
+                ->setParameter('date', $date);
+        }
+
+        if (isset($filters->teamA)) {
+            $query->andWhere('ta.team = :teamA')
+                ->setParameter('teamA', $filters->teamA);
+        }
+
+        if (isset($filters->teamB)) {
+            $query->andWhere('ta.team = :teamB')
+                ->setParameter('teamB', $filters->teamB);
+        }
+
+        if (!empty($filters->dateFrom)) {
+            $from = new \DateTime("$filters->dateFrom 00:00:00");
+            $query->andWhere('e.startedAt >= :dateFrom')
+                ->setParameter('dateFrom', $from);
+        }
+        if (!empty($filters->dateTo)) {
+            $to = new \DateTime("$filters->dateTo 23:59:59");
+            $query->andWhere('e.startedAt <= :dateTo')
+                ->setParameter('dateTo', $to);
+        }
+        if (!empty($filters->name)) {
+            $query->andWhere('e.name like :name')
+                ->setParameter('name', "%$filters->name%");
+        }
+        return $query;
+    }
+
+    /**
+     * @param $filters
+     * @param string $type
+     * @param int $page
+     * @param null $length
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function getEventsByType($filters, string $type, $page = 0, $length = null)
+    {
+        if (empty($length)) {
+            $length = 20;
+        }
+        $result = [];
+
+        if (in_array($type, EventService::TYPES, false)) {
+            $query = $this->getEventsQueryByType(
+                $filters,
+                $type
+            )->setFirstResult($page * $length)
+                ->setMaxResults($length);
+
+            $result = $query->getQuery()
+                ->getResult();
+        }
+        return $result;
     }
 }

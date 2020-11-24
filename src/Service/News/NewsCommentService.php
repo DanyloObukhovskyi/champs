@@ -67,10 +67,10 @@ class NewsCommentService extends EntityService
     }
 
     /**
-     * @param array $comments
+     * @param array|object $comments
      * @return array
      */
-    public function decorateComments(array $comments)
+    public function decorateComments($comments)
     {
         $newsComments = [];
         /** @var NewsComment $comment */
@@ -81,10 +81,12 @@ class NewsCommentService extends EntityService
                 'newsId' => $comment->getNews()->getId(),
                 'comment' => $comment->getComment(),
                 'user' => [
-                    'name' => $comment->getUser()->getName() ?? $comment->getUser()->getNickname(),
+                    'nickname' => $comment->getUser()->getNickname(),
+                    'surname' => $comment->getUser()->getFamily(),
+                    'name' => $comment->getUser()->getName(),
                     'photo' => $this->imageService->getImagePath(),
                 ],
-                'createdAt' => $comment->getCreatedAt()->format('Y.m.d H:i')
+                'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i'))
             ];
         }
         return $newsComments;

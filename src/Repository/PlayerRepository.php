@@ -60,4 +60,19 @@ class PlayerRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @param $teamId
+     * @return mixed
+     */
+    public function getByTeam($teamId)
+    {
+        return $this->createQueryBuilder('pl')
+            ->leftJoin('App\Entity\Person', 'pr', Join::WITH, 'pr.id = pl.person')
+            ->andWhere('pl.team = :team_id')
+            ->orderBy('pr.name', 'DESC')
+            ->setParameter('team_id', $teamId)
+            ->getQuery()
+            ->setMaxResults(5)
+            ->getResult();
+    }
 }

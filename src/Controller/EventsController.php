@@ -3,12 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Entity\EventBracket;
-use App\Entity\EventGroup;
-use App\Entity\EventMapPool;
-use App\Entity\EventPrizeDistribution;
 use App\Entity\EventTeamAttending;
-use App\Entity\RelatedEvent;
 use App\Service\Event\EventBracketService;
 use App\Service\Event\EventGroupPlayService;
 use App\Service\Event\EventMapPoolService;
@@ -16,20 +11,17 @@ use App\Service\Event\EventPrizeDistributionService;
 use App\Service\Event\EventService;
 use App\Service\Event\EventTeamAttendingService;
 use App\Service\MatchService;
-use App\Traits\EntityManager;
+use App\Service\TeamService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Match;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class EventsController
- * @package App\Controller
+ * @Route("/{_locale}", requirements={"locale": "ru"})
  */
 class EventsController extends AbstractController
 {
-    use EntityManager;
-
     /** @var MatchService */
     public $matchService;
 
@@ -53,12 +45,16 @@ class EventsController extends AbstractController
 
     /** @var EventBracketService */
     public $eventBracketService;
+
+    /** @var TeamService */
+    public $teamService;
+
     /**
      * EventsController constructor.
      */
-    public function __construct()
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $this->getEntityManager();
+        $this->entityManager = $entityManager;
 
         $this->matchService =  new MatchService($this->entityManager);
         $this->eventService = new EventService($this->entityManager);
@@ -68,83 +64,144 @@ class EventsController extends AbstractController
 
         $this->eventTeamAttendingService = new EventTeamAttendingService($this->entityManager);
         $this->eventMapPoolService = new EventMapPoolService($this->entityManager);
+
         $this->eventBracketService = new EventBracketService($this->entityManager);
+        $this->teamService = new TeamService($this->entityManager);
     }
 
     /**
-      * @Route("/ru/events", name="events.index")
-      */
+     * @Route("/events", name="events_index")
+     */
     public function eventsPage()
     {
-        $matches = $this->entityManager->getRepository(Match::class)->findMatchesByDay(new \DateTime());
-        $matches = $this->matchService->matchesDecorator($matches);
-
-        $events = $this->entityManager->getRepository(Event::class)->findByDate(new \DateTime());
-        $eventItems = $this->eventService->eventsDecorator($events);
-
-        $futureEvents = $this->entityManager->getRepository(Event::class)->findFutureEvents(new \DateTime());
-        $futureEvents = $this->eventService->futureEventsDecorator($futureEvents);
-
-        $finishedEvents = $this->entityManager->getRepository(Event::class)->getOldEvents();
-        $finishedEvents = $this->eventService->futureEventsDecorator($finishedEvents);
-
-        $lives = $this->entityManager->getRepository(Match::class)->findLive();
-
-        return $this->render('templates/events.html.twig',
-            [
-                'router' => 'events',
-                'matches' => $matches,
-                "lives" => $lives,
-                "events" => $eventItems,
-                "futureEvents" => $futureEvents,
-                'finishedEvents' => $finishedEvents
-            ]);
+        return $this->render('templates/events.html.twig', ['router' => 'events']);
     }
 
     /**
-     * @Route("/ru/event/{id}", name="event.page")
+     * @Route("/ajax/events/{type}/{page}")
+     */
+    public function getEvents(Request $request, $type, $page)
+    {
+        $filters = $request->getContent();
+        $filters = json_decode($filters, false);
+
+        $events = $this->eventService->getEventsByType($filters, $type, $page);
+        $events = $this->eventService->eventsDecorator($events);
+
+        $counts = [];
+        foreach (MatchService::MATCH_TYPES as $type){
+            $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
+        }
+        return $this->json([
+            'events' => $events,
+            'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
+            'counts' => $counts,
+        ]);
+    }
+
+    /**
+     * @Route("/event/{id}", name="event.page")
      */
     public function eventPage(int $id)
     {
-        $router = 'events';
-
         /** @var Event $event */
         $event = $this->entityManager->getRepository(Event::class)->find($id);
+        $this->eventService->addEventView($event);
 
-        $prizeDistribution = $this->entityManager->getRepository(EventPrizeDistribution::class)->findByEvent($event);
-        $prizeDistribution = $this->eventPrizeDistributionService->prizeDecorator($prizeDistribution);
-
-        $groupPlays = $this->entityManager->getRepository(EventGroup::class)->findByEvent($event);
-        $groupPlays = $this->eventGroupsService->groupsDecorator($groupPlays);
-
-        $teamsAttending = $this->entityManager->getRepository(EventTeamAttending::class)->findByEvent($event);
-        $teamsAttending = $this->eventTeamAttendingService->teamsDecorator($teamsAttending);
-
-        $mapsPool =  $this->entityManager->getRepository(EventMapPool::class)->findByEvent($event);
-        $mapsPool = $this->eventMapPoolService->mapsDecorator($mapsPool);
-
-        $relatedEvents = $this->entityManager->getRepository(RelatedEvent::class)->findByEvent($event);
-        $events = [];
-
-        $brackets =  $this->entityManager->getRepository(EventBracket::class)->findByEvent($event);
-        $brackets = $this->eventBracketService->eventBracketDecorator($brackets);
-
-        /** @var RelatedEvent $relatedEvent */
-        foreach ($relatedEvents as $relatedEvent)
-        {
-            $events[] = $relatedEvent->getRelated();
-        }
-        $relatedEvents = $this->eventService->eventsDecorator($events);
+        $router = 'events';
 
         return $this->render('templates/event.view.html.twig', compact(
             'router',
-            'event',
-            'prizeDistribution',
-            'groupPlays',
-            'teamsAttending',
-            'mapsPool',
-            'relatedEvents',
-            'brackets'
+            'event'
         ));
+    }
+
+    /**
+     * @Route("/ajax/event/{id}")
+     */
+    public function getEvent($id)
+    {
+        /** @var Event $event */
+        $event = $this->entityManager->getRepository(Event::class)
+            ->find($id);
+
+        $matches = $this->matchService->findByEvent($event);
+        $matchesByDay = $this->matchService->matchesDecorator($matches);
+
+        $prizeDistribution = $event->getPrizeDistribution();
+        $prizeDistribution = $this->eventPrizeDistributionService
+            ->prizeDecorator($prizeDistribution);
+
+        $brackets = $event->getTournamentBrackets();
+        $brackets = $this->eventBracketService
+            ->eventBracketDecorator($brackets);
+
+        $teams = [];
+        /** @var EventTeamAttending $team */
+        foreach ($event->getTeamsAttending() as $team){
+            $teams[] = $team->getTeam();
+        }
+        $teamsLineups = $this->teamService->teamsDecorator($teams);
+
+        return $this->json([
+            'event' => $event,
+            'prizeDistribution' => $prizeDistribution,
+            'teamsLineups' => $teamsLineups,
+            'mapsPool' => $event->getMapPool(),
+            'brackets' => $brackets,
+            'matches' => $matchesByDay,
+        ]);
+    }
+
+    /**
+     * @Route("/digest")
+     */
+    public function digestPage()
+    {
+        return $this->render('templates/digest.events.html.twig', [
+            'router' => 'events',
+        ]);
+    }
+
+    /**
+     * @Route("/ajax/digest/events/{type}/{page}")
+     */
+    public function ajaxDigestPage(Request $request, $type, $page)
+    {
+        $filters = $request->getContent();
+        $filters = json_decode($filters, false);
+
+        $events = $this->eventService->getEventsByType($filters, $type, $page);
+        $events = $this->eventService->eventsDecorator($events);
+
+        $counts = [];
+        foreach (MatchService::MATCH_TYPES as $type){
+            if ((isset($filters->game) and $filters->game !== 'cs') or
+                (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')){
+                $counts[$type] = 0;
+            } else {
+                $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
+            }
+        }
+        if ((isset($filters->game) and $filters->game !== 'cs') or
+            (isset($filters->tournamentType) and $filters->tournamentType !== 'pro'))
+        {
+            $events = [];
+        }
+        $digestEvents = [];
+        foreach ($events as $event){
+            $digestEvent = $event;
+
+            $digestEvent['type'] = 'pro';
+            $digestEvent['game'] = 'cs';
+
+            $digestEvents[] = $digestEvent;
+        }
+
+        return $this->json([
+            'events' => $digestEvents,
+            'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
+            'counts' => $counts,
+        ]);
     }
 }

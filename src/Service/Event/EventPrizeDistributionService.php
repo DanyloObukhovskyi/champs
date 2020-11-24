@@ -15,8 +15,13 @@ class EventPrizeDistributionService extends EntityService
 
     protected $repository;
 
+    /** @var TeamService */
     protected $teamService;
 
+    /**
+     * EventPrizeDistributionService constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -24,6 +29,13 @@ class EventPrizeDistributionService extends EntityService
         $this->teamService = new TeamService($entityManager);
     }
 
+    /**
+     * @param $values
+     * @param $event
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function create($values, $event)
     {
         if (empty($values['teamName']))
@@ -48,6 +60,10 @@ class EventPrizeDistributionService extends EntityService
         return $this->save($eventPrizeDistribution);
     }
 
+    /**
+     * @param $prizeDistributions
+     * @return array
+     */
     public function prizeDecorator($prizeDistributions)
     {
         $prizes = [];
@@ -58,13 +74,9 @@ class EventPrizeDistributionService extends EntityService
             $prize = [];
             $prize['position'] = $prizeDistribution->getPosition();
             $prize['prize'] = $prizeDistribution->getPrize();
+            $prize['team'] = $prizeDistribution->getTeam();
 
-            $team = $prizeDistribution->getTeam();
-            if (!empty($team)){
-                $prize['team'] = $this->teamService->teamDecorator($team);
-            }
-
-            $prizes[] = $prize;
+            $prizes[$prize['position']] = $prize;
         }
         return $prizes;
     }

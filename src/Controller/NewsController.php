@@ -4,18 +4,29 @@ namespace App\Controller;
 
 use App\Entity\Match;
 use App\Entity\News;
+use App\Entity\NewsTag;
 use App\Service\News\NewsCommentService;
 use App\Service\News\NewsService;
 use App\Service\MatchService;
-use App\Traits\EntityManager;
+use App\Service\News\NewsTagService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class NewsController extends AbstractController
 {
-    use EntityManager;
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
 
+    /**
+     * @var NewsService
+     */
     protected $newsService;
 
     /**
@@ -23,38 +34,53 @@ class NewsController extends AbstractController
      */
     protected $matchService;
 
+    /**
+     * @var NewsCommentService
+     */
     protected $newsCommentService;
 
     /**
-     * NewsController constructor.
+     * @var NewsTagService
      */
-    public function __construct()
+    protected $newsTagService;
+
+    /**
+     * NewsController constructor.
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->newsService = new NewsService($this->getEntityManager());
-        $this->matchService = new MatchService($this->getEntityManager());
-        $this->newsCommentService = new NewsCommentService($this->getEntityManager());
+        $this->entityManager = $entityManager;
+
+        $this->newsService = new NewsService($entityManager);
+        $this->matchService = new MatchService($entityManager);
+
+        $this->newsCommentService = new NewsCommentService($entityManager);
+        $this->newsTagService = new NewsTagService($entityManager);
     }
 
     /**
-     * @Route("/ru/news/", name="news_index")
+     * @Route("/news", name="news_index")
      */
     public function index(Request $request)
     {
-        if (!empty($request->get('tag'))) {
-            $tag = $this->makeTag($request->get('tag'));
-        }
+        $popularTags = $this->newsTagService->popularTags(5);
+
         return $this->render('templates/news.html.twig', [
             'router' => 'news',
-            'tag' => $tag ?? null,
+            'tag' => $request->get('tag', null),
+            'popularTags' => $popularTags
         ]);
     }
 
     /**
-     * @Route("/ru/hot/news/", name="get.hot.news")
+     * @Route("/hot/news")
      */
-    public function getHotNews()
+    public function getHotNews(Request $request)
     {
-        $newsCollect = $this->newsService->getHotNews();
+        $filters = json_decode($request->getContent(), false);
+
+        $newsCollect = $this->newsService->getHotNews($filters);
         $hotNews = [];
 
         /** @var News $newsEntity */
@@ -65,7 +91,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/ru/ajax/news/{offset}", name="news.ajax", defaults={"offset" = null})
+     * @Route("/ajax/news/{offset}", name="news.ajax", defaults={"offset" = null})
      */
     public function getNews(Request $request, $offset = 0)
     {
@@ -82,21 +108,16 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/{id}", name="news_view_single")
+     * @Route("/news/{id}", name="news_view_single")
      */
     public function view($id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $newsId = explode('-', $id)[0];
 
         /** @var News $news */
-        $news = $this->getDoctrine()
+        $news = $this->entityManager
             ->getRepository(News::class)
-            ->findOneBy([
-                'id' => $newsId
-            ]);
+            ->find($newsId);
 
         if (!$news) {
             return $this->redirectToRoute('news_index');
@@ -113,7 +134,10 @@ class NewsController extends AbstractController
 
         $tournaments = [];
 
-        $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
+        $matches = $this->entityManager
+            ->getRepository(Match::class)
+            ->findMatchesByDate(new \DateTime());
+
         $matches = $this->matchService->matchesDecorator($matches);
 
         return $this->render('templates/news.view.html.twig', [
@@ -127,23 +151,34 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/last/news", name="last_news_info")
+     * @Route("/ajax/news/single/{id}")
+     */
+    public function getNewsAjax($id)
+    {
+        /** @var News $news */
+        $news = $this->entityManager
+            ->getRepository(News::class)
+            ->find($id);
+
+        $news = $this->newsService->decorator($news);
+
+        return $this->json($news);
+    }
+
+    /**
+     * @Route("/last/news", name="last_news_info")
      */
     public function getLastNews()
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(News::class);
-        $items = $repository->findBy(array(),array('id'=>'DESC'),10,0);
+        $items = $this->entityManager
+            ->getRepository(News::class)
+            ->findBy(array(),array('id'=>'DESC'),10,0);
 
         return $this->json($items);
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/add/comment", name="news.add.comment")
+     * @Route("/news/add/comment", name="news.add.comment")
      */
     public function addComment(Request $request)
     {
@@ -164,9 +199,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * News /ru/news/*
-     *
-     * @Route("/ru/news/{newsId}/comments", name="news.get.comments")
+     * @Route("/news/{newsId}/comments", name="news.get.comments")
      */
     public function getComments(int $newsId)
     {
@@ -182,6 +215,10 @@ class NewsController extends AbstractController
         return $this->json($newsComments);
     }
 
+    /**
+     * @param string $title
+     * @return array
+     */
     public function makeTag(string $title)
     {
         $code = dechex(crc32($title));
@@ -191,5 +228,30 @@ class NewsController extends AbstractController
             'title' => $title,
             'color' => $code
         ];
+    }
+
+    /**
+     * @Route("/news/popular/tags/{offset}", name="news.popular.tags", defaults={"offset" = 5})
+     */
+    public function getPopularTags($offset)
+    {
+        $tags = $this->entityManager->getRepository(NewsTag::class)
+            ->popularTags();
+
+        return $this->json($tags);
+    }
+
+    /**
+     * @Route("/ajax/news/by/game/{game}")
+     */
+    public function getNewsByGame($game)
+    {
+        $news = $this->newsService->getByGame($game);
+
+        $newsArray = [];
+        foreach ($news as $new){
+            $newsArray[] = $this->newsService->decorator($new);
+        }
+        return $this->json($newsArray);
     }
 }

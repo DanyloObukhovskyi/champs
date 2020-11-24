@@ -19,6 +19,48 @@ class NewsTagRepository extends ServiceEntityRepository
         parent::__construct($registry, NewsTag::class);
     }
 
+    public function uniqueAll()
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n.title')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCountByTitle(string $title)
+    {
+        return $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->where('n.title = :title')
+            ->setParameter('title', $title)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function popularTags()
+    {
+        $allTags = $this->uniqueAll();
+
+        $tags = [];
+        foreach ($allTags as $tag)
+        {
+            $tags[(integer)$this->getCountByTitle($tag['title'])][] = $tag['title'];
+        }
+        ksort($tags);
+        $tags = array_reverse($tags);
+
+        $result = [];
+        foreach ($tags as $tagsTitles) {
+            foreach ($tagsTitles as $tagTitle) {
+                if (count($result) < 5){
+                    $result[] = $tagTitle;
+                }
+            }
+        }
+        dd($result);
+    }
+
     // /**
     //  * @return NewsTag[] Returns an array of NewsTag objects
     //  */

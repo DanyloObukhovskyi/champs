@@ -20,41 +20,6 @@ class NewsRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $type
-     * @param \Datetime $dateFrom
-     * @param \Datetime $dateTo
-     * @param string $search
-     * @return mixed
-     * @throws \Exception
-     */
-    public function findBySearchForm(int $type, \Datetime $dateFrom, \Datetime $dateTo, string $search)
-    {
-        $qb = $this->createQueryBuilder("e");
-
-        $from = new \DateTime($dateFrom->format("Y-m-d")." 00:00:00");
-        $to   = new \DateTime($dateTo->format("Y-m-d")." 23:59:59");
-
-        $qb
-            ->andWhere('e.created_at BETWEEN :from AND :to')
-            ->setParameter('from', $from )
-            ->setParameter('to', $to);
-        if($type != News::NEWS_TYPE_ALL){
-            $qb
-                ->andWhere('e.type = :val')
-                ->setParameter('val', $type);
-        }
-
-        if($search != '')
-        {
-            $qb
-                ->andWhere('e.title LIKE :search')
-                ->setParameter('search', '%'.$search.'%');
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * @param array $tags
      * @param array $titles
      * @param array $texts
@@ -62,6 +27,8 @@ class NewsRepository extends ServiceEntityRepository
      * @param string|null $dateTo
      * @param int $limit
      * @param int $offset
+     * @param string $orderField
+     * @param string $orderType
      * @return mixed
      * @throws \Exception
      */
@@ -72,11 +39,13 @@ class NewsRepository extends ServiceEntityRepository
         string $dateFrom = null,
         string $dateTo = null,
         int $limit,
-        int $offset
+        int $offset,
+        string $orderField = 'id',
+        string $orderType = 'DESC'
     )
     {
         $query = $this->createQueryBuilder("n")
-            ->orderBy('n.id', 'DESC');
+            ->orderBy("n.$orderField", $orderType);
 
         if (!empty($tags)){
             $query->innerJoin('n.newsTags', 'nt')
@@ -116,6 +85,21 @@ class NewsRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("n")
             ->orderBy('n.views', 'DESC')
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $game
+     * @return mixed
+     */
+    public function getByGame($game)
+    {
+        return $this->createQueryBuilder("n")
+            ->orderBy('n.views', 'DESC')
+            ->andWhere('n.game = :game')
+            ->setParameter('game', $game)
+            ->setMaxResults(6)
             ->getQuery()
             ->getResult();
     }

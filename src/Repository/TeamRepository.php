@@ -14,6 +14,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TeamRepository extends ServiceEntityRepository
 {
+    /**
+     * TeamRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Team::class);
@@ -28,11 +32,22 @@ class TeamRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.name like :name')
-            ->setParameter('name', $name)
+            ->setParameter('name', "%$name%")
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function findByName($name)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.name like :name')
+            ->setParameter('name', "%$name%")
+            ->getQuery()
+            ->getResult();
+    }
 }

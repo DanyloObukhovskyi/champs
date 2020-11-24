@@ -50,4 +50,11 @@ class MapRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
             ;
     }
+
+    public function getAll()
+    {
+        return $this->createQueryBuilder('m')
+            ->getQuery()
+            ->getResult();
+    }
 }

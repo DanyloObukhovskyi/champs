@@ -11,57 +11,24 @@
     <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
         Матч по CS:GO
     </h1>
-    <div class="match__view home">
-        <script src="{{ base_url }}assets/js/jquery351.js"></script>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                    {% include 'templates/matches/result.html.twig' with {'match': match} %}
-                    {% include 'templates/matches/statistics.html.twig' with {'match': match} %}
-                    {% include 'templates/matches/teams.html.twig' %}
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                    {% if match.streams|length > 0 %}
-                    {% include 'templates/matches/streams.html.twig' %}
-                    {% endif %}
-                    {% if matchStats|length > 0 %}
-                        {% include 'templates/matches/mapStats.html.twig' %}
-                    {% endif %}
-                    {% include 'templates/matches/maps.html.twig' %}
-                    {% if pastMatches|length > 0 %}
-                        {% include 'templates/matches/pastTeamsMatches.html.twig' %}
-                    {% endif %}
-                    {% include 'templates/matches/headToHead.html.twig' %}
-                </div>
-                <div>
-                </div>
+    <div id="app">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <a href="{{ url('matches_index_page') }}">
+                    Матчи
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span style="">
+                    {{ match.team1 is not null ? match.team1.name: '' }} VS {{ match.team2 is not null ? match.team2.name: '' }}
+                </span>
             </div>
         </div>
-        <script src="{{ base_url }}assets/js/edit_data.js"></script>
+        <div class="ml-8 mr-8 p-0">
+            <match-page match-id="{{ match.id }}"/>
+        </div>
     </div>
-{% endblock %}
-
-{% block js %}
-
-    <script>
-        const streams = new Vue({
-            el: '#streams',
-            data: {
-                streams: {
-                    active: null,
-                    show: false
-                }
-            },
-            methods: {
-                choseStream(streamUrl){
-                    this.streams.active = streamUrl
-                    this.streams.show = true
-                },
-                closePlayer(){
-                    this.streams.active = null
-                    this.streams.show = false
-                }
-            }
-        })
-    </script>
 {% endblock %}

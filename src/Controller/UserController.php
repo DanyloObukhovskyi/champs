@@ -387,7 +387,7 @@ class UserController extends AbstractController
     }
 
 
-     /**
+    /**
      * @Route("/ru/get/auth", name="get.auth.user")
      */
     public function getAuthUser()
@@ -398,10 +398,11 @@ class UserController extends AbstractController
         if (isset($user))
         {
             $user = [
-                'id' => $user->getId(),
-                'name' => $user->getName(),
-                'steam' => $user->getSteamId(),
+                'id'       => $user->getId(),
+                'name'     => $user->getName(),
+                'steam'    => $user->getSteamId(),
                 'nickname' => $user->getNickname(),
+                'photo'    => $user->getPhoto()
             ];
         }
 

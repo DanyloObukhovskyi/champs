@@ -13,6 +13,7 @@ use App\Entity\MatchStatistics;
 use App\Entity\Stream;
 use App\Entity\Team;
 use App\Repository\MatchRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class MatchService
@@ -20,6 +21,33 @@ use App\Repository\MatchRepository;
  */
 class MatchService extends EntityService
 {
+    public const MOHTHS = [
+        'January' => 'Января',
+        'February' => 'Февраля',
+        'March' => 'Марта',
+        'April' => 'Апреля',
+        'May' => 'Мая',
+        'June' => 'Июня',
+        'Jule' => 'Июля',
+        'August' => 'Августа',
+        'September' => 'Сентября',
+        'October' => 'Октября',
+        'November' => 'Ноября',
+        'December' => 'Декабря'
+    ];
+
+    public const FUTURE_MATCHES = 'future';
+
+    public const LIVE_MATCHES = 'live';
+
+    public const PAST_MATCHES = 'past';
+
+    public const MATCH_TYPES = [
+        self::FUTURE_MATCHES,
+        self::LIVE_MATCHES,
+        self::PAST_MATCHES,
+    ];
+
     protected $entity = Match::class;
 
     /**
@@ -33,6 +61,11 @@ class MatchService extends EntityService
     protected $imageService;
 
     /**
+     * @var TeamService
+     */
+    protected $teamService;
+
+    /**
      * MatchService constructor.
      * @param $entityManager
      */
@@ -41,6 +74,7 @@ class MatchService extends EntityService
         parent::__construct($entityManager);
 
         $this->imageService = new ImageService();
+        $this->teamService = new TeamService($entityManager);
     }
 
     /**
@@ -213,24 +247,32 @@ class MatchService extends EntityService
 
         foreach ($matches as $match)
         {
-            $startDay = date("md", $match->getStartAt()->getTimestamp());
+            $startDay = date("mdY", $match->getStartAt()->getTimestamp());
 
             if (!array_key_exists($startDay, $items))
             {
+                $date = date("d F", $match->getStartAt()->getTimestamp());
+
+                foreach (self::MOHTHS as $month => $lang)
+                {
+                    $date = str_replace($month, $lang, $date);
+                }
                 $items[$startDay] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
+                    "date"  => $date,
                     "items" => [],
                 ];
             }
             $items[$startDay]["items"][] = $this->matchDecorator($match);
         }
         ksort($items);
-        
+        $items = array_reverse($items);
+
         return $items;
     }
 
     /**
      * @param Match $match
+     * @param string $locale
      * @return array
      */
     public function matchDecorator(Match $match)
@@ -255,7 +297,8 @@ class MatchService extends EntityService
                 "endedAt"   => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
                 "image"     => $this->imageService->getImagePath()
             ],
-            "streams"  => $this->getMatchStrams($match)
+            "streams"  => $this->getMatchStreams($match),
+            "isLive"   => $match->getLive() ? true: false,
         ];
         $matchFields['statistics'] = $this->getMatchStatistics($match);
 
@@ -272,6 +315,7 @@ class MatchService extends EntityService
                 $match->getScore2()
             );
         }
+        $matchFields['pickAndBans'] = $this->getMatchPickAndBans($match);
         return $matchFields;
     }
 
@@ -300,7 +344,7 @@ class MatchService extends EntityService
      * @param Match $match
      * @return array
      */
-    public function getMatchStrams(Match $match): array
+    public function getMatchStreams(Match $match): array
     {
         $streams = [];
 
@@ -336,5 +380,124 @@ class MatchService extends EntityService
             "score" => $score,
             "flag"  => $flag
         ];
+    }
+
+    /**
+     * @param $id
+     * @return Match|null
+     */
+    public function find($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * @param Match $match
+     * @return array
+     */
+    public function getMatchPickAndBans(Match $match): array
+    {
+        $matchPickAndBans = [];
+
+        /** @var MatchPickAndBan $matchPickAndBan */
+        foreach ($match->getMatchPickAndBans() as $matchPickAndBan)
+        {
+            $team = $matchPickAndBan->getTeam();
+
+            if (isset($team)){
+                $this->imageService->setImage($team->getLogo());
+
+                $matchPickAndBans[] = [
+                    'team' => [
+                        'logo' => $this->imageService->getImagePath(),
+                        'name' => $team->getName()
+                    ],
+                    'operation' => $matchPickAndBan->getOperationType(),
+                    'map' => $matchPickAndBan->getMap()
+                ];
+            }
+        }
+        return $matchPickAndBans;
+    }
+
+    /**
+     * @param Match $match
+     * @param $translator
+     * @return string
+     */
+    public function translateMatchDate(Match $match, $translator): string
+    {
+        $matchDate = $match->getStartAt()->format('d');
+        $matchMonth = $translator->trans($match->getStartAt()->format('F'));
+        $matchYear = $match->getStartAt()->format('Y');
+
+        return "$matchDate $matchMonth $matchYear";
+    }
+
+    /**
+     * @param Request $filters
+     * @param $type
+     * @param int $page
+     * @param bool $isCount
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function getMatchesByType($filters, $type, $page = 0)
+    {
+        $filters = (object)[
+            'dateFrom' => $this->parseDate($filters->dateFrom),
+            'dateTo' =>  $this->parseDate($filters->dateTo),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+        ];
+        return $this->repository->getMatchesByType(
+            $filters,
+            $type,
+            $page - 1 ?? null,
+            $_ENV['MATCHES_PAGINATION'] ?? null
+        );
+    }
+
+    public function getMatchesCountByType($filters, $type)
+    {
+        $filters = (object)[
+            'dateFrom' => self::parseDate($filters->dateFrom),
+            'dateTo' =>  self::parseDate($filters->dateTo),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+        ];
+
+        $result = 0;
+
+        if (in_array($type, self::MATCH_TYPES, false))
+        {
+            $result = $this->repository->getMatchesQueryByType($filters, $type)
+                ->select('count(m.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $date
+     * @return string
+     */
+    public static function parseDate($date = null): ?string
+    {
+        if (is_string($date) and !empty($date)){
+            [$day, $month, $year] = explode('.', $date);
+            $day = trim($day);
+            $month = trim($month);
+            $year = trim($year);
+
+            $parseDate = "$day-$month-$year";
+        }
+        return $parseDate ?? null;
+    }
+
+    public function findByEvent(Event $event)
+    {
+        return $this->repository->findBy(['event' => $event]);
     }
 }

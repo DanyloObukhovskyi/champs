@@ -42,4 +42,17 @@ class MatchMapTeamWinRateService extends EntityService
         $this->entityManager->persist($matchMapTeamStatistic);
         $this->entityManager->flush();
     }
+
+    /**
+     * @param Match $match
+     * @param Team $team
+     * @return MatchMapTeamStatistic[]
+     */
+    public function getByMatchAndTeam(Match $match, Team $team)
+    {
+        return $this->repository->findBy([
+            'match' => $match,
+            'team' => $team
+        ]);
+    }
 }

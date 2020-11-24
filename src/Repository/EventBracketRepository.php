@@ -48,6 +48,19 @@ class EventBracketRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByEventAndType(Event $event, $type)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.event = :event')
+            ->andWhere('e.type = :type')
+            ->setParameter('event', $event)
+            ->setParameter('type', $type)
+            ->orderBy('e.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return EventBracket[] Returns an array of EventBracket objects
     //  */
