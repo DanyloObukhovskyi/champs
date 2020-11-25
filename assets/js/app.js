@@ -25,6 +25,7 @@ import MatchesPage from "./pages/MatchesPage";
 import EventsPage from "./pages/EventsPage";
 import EventPage from "./pages/EventPage";
 import EventsDigestPage from "./pages/EventsDigestPage";
+import header from "./layouts/header";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -36,7 +37,7 @@ if (token) {
 } else {
     console.error('CSRF token not found');
 }
-window.header = require('./layouts/header');
+window.header = header;
 
 Vue.component('live-matches', LiveMatches)
 Vue.component('upcoming-matches-home', UpcomingMatches)

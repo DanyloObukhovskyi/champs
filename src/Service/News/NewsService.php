@@ -5,6 +5,7 @@ namespace App\Service\News;
 
 
 use App\Entity\News;
+use App\Entity\NewsLike;
 use App\Entity\NewsTag;
 use App\Service\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,19 +41,19 @@ class NewsService extends EntityService
             ];
         }
         return [
-            'id'         => $news->getId(),
-            'title'      => $news->getTitle(),
-            'text'       => $news->getText(),
-            'created_at' => $news->getCreatedAt(),
-            'logo'       => $news->getLogo(),
-            'date'       => $news->getDate()->format('m-d H:i'),
-            'url'        => $news->getUrl(),
-            'type'       => $news->getType(),
-            'tags'       => $tags,
-            'game'       => $news->getGame(),
-            'date_ru'    => self::replaceMonth($news->getDate()->format('d F H:i')),
-            'views'      => $news->getViews() ?? 0,
-            'comments'   => $this->newsCommentService->decorateComments($news->getComments())
+            'id'              => $news->getId(),
+            'title'           => $news->getTitle(),
+            'text'            => $news->getText(),
+            'created_at'      => $news->getCreatedAt(),
+            'logo'            => $news->getLogo(),
+            'date'            => $news->getDate()->format('m-d H:i'),
+            'url'             => $news->getUrl(),
+            'type'            => $news->getType(),
+            'tags'            => $tags,
+            'game'            => $news->getGame(),
+            'date_ru'         => self::replaceMonth($news->getDate()->format('d F H:i')),
+            'views'           => $news->getViews() ?? 0,
+            'commentsCount'   => count($news->getComments()),
         ];
     }
 
@@ -161,8 +162,22 @@ class NewsService extends EntityService
         return $this->repository->findBy([], ['date' => 'DESC'], 6, 0);
     }
 
+    /**
+     * @param $game
+     * @return mixed
+     */
     public function getByGame($game)
     {
         return $this->repository->getByGame($game);
+    }
+
+    /**
+     * @param Mews $news
+     * @param $type
+     * @return mixed
+     */
+    public function getLikesCount(News $news)
+    {
+        return $this->entityManager->getRepository(NewsLike::class)->getCount($news);
     }
 }

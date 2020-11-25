@@ -22,7 +22,7 @@
                             <i class="fas fa-eye"></i>
                             {{news.views}} {{news.views == 1 ? 'Просмотр': 'Просмотров'}}
                             <i class="fas fa-comment-dots"></i>
-                            {{news.comments.length}} {{news.comments.length == 1 ? 'Коментарий': 'Коментариев'}}
+                            {{news.commentsCount}} {{news.commentsCount == 1 ? 'Коментарий': 'Коментариев'}}
                         </div>
                     </div>
                 </div>
@@ -34,17 +34,24 @@
                     </a>
                 </div>
                 <div class="share">
+                    <likes :users="usersLikes"
+                           :likes="likesCount"
+                           :user-like="userLike"
+                           @setLike="setLike">
+                    </likes>
                     <div class="comments-count">
                         <i class="fas fa-comment-dots"></i>
-                        {{news.comments.length}}
+                        {{news.commentsCount}}
                     </div>
                     <share-buttons/>
                 </div>
                 <div class="comments" v-if="news !== null">
                     <news-comments
-                        :news-id="newsId"
-                        :comments="news.comments"
-                        @update="(comments) => news.comments = comments"/>
+                            :comments-count="news.commentsCount"
+                            :news-id="newsId"
+                            :comments="comments"
+                            @update="updateComments">
+                    </news-comments>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -66,7 +73,14 @@
                 <div class="title_wrap">Кликните на области чтобы закрыть изображение</div>
             </div>
         </transition>
-        <news-widget :news="news"/>
+        <news-widget
+                v-if="news !== null"
+                :comments-count="news.commentsCount"
+                :users="usersLikes"
+                :user-like="userLike"
+                :likes-count="likesCount"
+                @setLike="setLike">
+        </news-widget>
     </div>
 </template>
 
@@ -77,7 +91,8 @@
     import ShareButtons from "../components/social/ShareButtons";
     import NewsComments from "../components/news/NewsComments";
     import NewsWidget from "../components/news/NewsWidget";
-    import newsService from "../services/NewsService";
+    import NewsService from "../services/NewsService";
+    import Likes from "../components/likes/Likes";
 
     export default {
         name: "NewsViewPage",
@@ -85,6 +100,7 @@
             'newsId'
         ],
         components: {
+            'likes': Likes,
             'news-filters': NewsFilters,
             'hot-news': HotNews,
             'loader': Loader,
@@ -94,6 +110,10 @@
         },
         data() {
             return {
+                load: false,
+                news: null,
+                hotNewsLoad: false,
+                hotNews: [],
                 filters: {
                     dateFrom: null,
                     dateTo: null,
@@ -104,10 +124,10 @@
                 img: null,
                 zoom: false,
                 tagsAbsolute: true,
-                hotNewsLoad: false,
-                load: false,
-                hotNews: [],
-                news: null
+                likes: [],
+                likesCount: 0,
+                userLike: null,
+                comments: [],
             }
         },
         watch: {
@@ -127,6 +147,16 @@
                 this.reload()
             },
         },
+        computed: {
+            usersLikes() {
+                const users = [];
+
+                for (let userLike of this.likes) {
+                    users.push(userLike.user)
+                }
+                return users;
+            }
+        },
         methods: {
             reload() {
                 this.getHotNews();
@@ -134,21 +164,26 @@
             getHotNews() {
                 this.hotNewsLoad = true;
 
-                newsService.getHotNews(this.filters)
+                NewsService.getHotNews(this.filters)
                     .then(data => {
                         this.hotNews = data;
                         this.hotNewsLoad = false;
                     })
             },
             getNews() {
-                newsService.getSingleNews(this.newsId)
+                NewsService.getSingleNews(this.newsId)
                     .then(data => {
-                        this.news = data;
+                        this.news = data.news;
+                        this.likes = data.likes;
+                        this.userLike = data.userLike;
+                        this.likesCount = data.likesCount;
+                        this.comments = data.comments
+
                         this.load = false;
                     })
             },
             newsPageUrl(tag) {
-                return `/${newsService.lang()}/news?tag=${tag}`;
+                return `/${NewsService.lang}/news?tag=${tag}`;
             },
             clearImg() {
                 this.img = null;
@@ -159,6 +194,17 @@
                     this.img = event.target.src;
                     this.zoom = true;
                 }
+            },
+            setLike(type) {
+                NewsService.setLike(this.newsId, type)
+                    .then(({likesCount, userLike}) => {
+                        this.likesCount = likesCount;
+                        this.userLike = userLike;
+                    })
+            },
+            updateComments(data) {
+                this.comments = data.comments;
+                this.news.commentsCount = data.commentsCount;
             }
         },
         mounted() {
@@ -175,12 +221,12 @@
         padding-bottom: 8vw;
     }
 
-    .news-view .title{
+    .news-view .title {
         font-size: 2.3vw;
         color: black;
     }
 
-    .dark .news-view .title{
+    .dark .news-view .title {
         color: white;
     }
 
@@ -286,17 +332,19 @@
     .news-view .share {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
     }
 
     .news-view .share .comments-count {
         font-size: 1vw;
         margin-right: 2vw;
     }
-    .news-view .news-body p{
+
+    .news-view .news-body p {
         background-color: transparent !important;
     }
-    .dark .news-view .news-body{
+
+    .dark .news-view .news-body {
         color: white;
     }
 </style>
@@ -305,6 +353,7 @@
     .row img {
         width: 100%;
     }
+
     p.article-render__block.article-render__block_unstyled {
         background-color: transparent !important;
     }

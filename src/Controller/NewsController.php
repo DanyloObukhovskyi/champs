@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Match;
 use App\Entity\News;
+use App\Entity\NewsCommentLike;
+use App\Entity\NewsLike;
 use App\Entity\NewsTag;
+use App\Service\News\NewsCommentLikeService;
 use App\Service\News\NewsCommentService;
+use App\Service\News\NewsLikeService;
 use App\Service\News\NewsService;
 use App\Service\MatchService;
 use App\Service\News\NewsTagService;
@@ -45,6 +48,16 @@ class NewsController extends AbstractController
     protected $newsTagService;
 
     /**
+     * @var NewsLikeService
+     */
+    protected $newsLikeService;
+
+    /**
+     * @var NewsCommentLikeService
+     */
+    protected $newsCommentLikeService;
+
+    /**
      * NewsController constructor.
      * @param EntityManagerInterface $entityManager
      */
@@ -57,6 +70,9 @@ class NewsController extends AbstractController
 
         $this->newsCommentService = new NewsCommentService($entityManager);
         $this->newsTagService = new NewsTagService($entityManager);
+
+        $this->newsLikeService = new NewsLikeService($entityManager);
+        $this->newsCommentLikeService = new NewsCommentLikeService($entityManager);
     }
 
     /**
@@ -124,29 +140,10 @@ class NewsController extends AbstractController
         }
         $this->newsService->incrementingViews($news);
 
-        $news->link = '';
-        $date = $news->unix = $news->getCreatedAt()
-            ->format(("d F Y H:i"));
-
-        $this->newsService->replaceMonth($date);
-        $news->unixdate =
-        $news->link_name = '';
-
-        $tournaments = [];
-
-        $matches = $this->entityManager
-            ->getRepository(Match::class)
-            ->findMatchesByDate(new \DateTime());
-
-        $matches = $this->matchService->matchesDecorator($matches);
-
         return $this->render('templates/news.view.html.twig', [
             'newsId' => $newsId,
-            'item' => $news,
-            'date' => $date,
-            'tournaments' => $tournaments,
+            'news' => $news,
             'router' => 'news',
-            'matches' => $matches
         ]);
     }
 
@@ -155,14 +152,46 @@ class NewsController extends AbstractController
      */
     public function getNewsAjax($id)
     {
+        $user = $this->getUser();
+
         /** @var News $news */
-        $news = $this->entityManager
+        $newsEntity = $this->entityManager
             ->getRepository(News::class)
             ->find($id);
 
-        $news = $this->newsService->decorator($news);
+        $news = $this->newsService->decorator($newsEntity);
 
-        return $this->json($news);
+        $likes = $this->newsLikeService->getLikes($newsEntity, 3);
+        $likes = $this->newsLikeService->decorateAll($likes);
+
+        $userLike = null;
+
+        if (isset($user)) {
+            $like = $this->newsLikeService->userLike($newsEntity, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->newsLikeService->decorator($like);
+            }
+        }
+        $likesCount = $this->newsLikeService->getLikesCount($newsEntity);
+
+        $newsComments = $this->newsCommentService->getRepository()->findBy([
+            'news' => $newsEntity,
+            'parent' => null
+        ]);
+
+        $comments = $this->newsCommentService->recurciveComments(
+            $newsComments,
+            $_ENV['MAX_COMMENTS_ANSWERS'],
+            $this->getUser()
+        );
+
+        return $this->json([
+            'news' => $news,
+            'likes' => $likes,
+            'userLike' => $userLike,
+            'likesCount' => $likesCount,
+            'comments' => $comments
+        ]);
     }
 
     /**
@@ -185,11 +214,19 @@ class NewsController extends AbstractController
         $request = json_decode($request->getContent(), false);
         $news = $this->newsService->getRepository()->find($request->id);
 
+        $parentComment = null;
+
+        if (isset($request->commentId)){
+            $parentComment = $this->newsCommentService->getRepository()
+                ->find($request->commentId);
+        }
+
         if (!empty($this->getUser()) and isset($news))
         {
             $this->newsCommentService->create(
                 $this->getUser(),
                 $news,
+                $parentComment,
                 $request->comment
             );
 
@@ -209,10 +246,15 @@ class NewsController extends AbstractController
             ->find($newsId);
 
         $newsComments = $this->newsCommentService->getRepository()->findBy([
-            'news' => $news
+            'news' => $news,
+            'parent' => null
         ]);
-        $newsComments = $this->newsCommentService->decorateComments($newsComments);
-        return $this->json($newsComments);
+        $newsComments = $this->newsCommentService->recurciveComments($newsComments);
+
+        return $this->json([
+            'comments' => $newsComments,
+            'commentsCount' => count($news->getComments())
+        ]);
     }
 
     /**
@@ -253,5 +295,99 @@ class NewsController extends AbstractController
             $newsArray[] = $this->newsService->decorator($new);
         }
         return $this->json($newsArray);
+    }
+
+    /**
+     * @Route("/like/news/{newsId}")
+     */
+    public function setLike(Request $request, $newsId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        /** @var News $news */
+        $news = $this->newsService
+            ->getRepository()
+            ->find($newsId);
+
+        $user = $this->getUser();
+
+        if (isset($request->type) and isset($user)
+            and in_array($request->type, NewsLike::TYPES, true)) {
+
+            $userLike = $this->entityManager->getRepository(NewsLike::class)
+                ->findOneBy([
+                    'user' => $user,
+                    'news' => $news
+                ]);
+
+            if (empty($userLike)){
+                $userLike = new NewsLike();
+                $userLike->setUser($user);
+                $userLike->setNews($news);
+            }
+            $userLike->setType($request->type);
+
+            $this->entityManager->persist($userLike);
+            $this->entityManager->flush();
+        }
+        $likesCount = $this->newsService->getLikesCount($news);
+
+        $userLike = null;
+
+        if (isset($user)) {
+            $like = $this->newsLikeService->userLike($news, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->newsLikeService->decorator($like);
+            }
+        }
+        return $this->json([
+            'likesCount' => $likesCount,
+            'userLike' => $userLike
+        ]);
+    }
+
+    /**
+     * @Route("/like/news/comment/{commentId}")
+     */
+    public function setLikeComment(Request $request, $commentId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $newsComment = $this->newsCommentService
+            ->getRepository()
+            ->find($commentId);
+
+        $newsCommentLike = null;
+        if (isset($newsComment) and !empty($this->getUser())){
+            $newsCommentLike = $this->entityManager->getRepository(NewsCommentLike::class)
+                ->findOneBy([
+                    'comment' => $newsComment,
+                    'user' => $this->getUser()
+                ]);
+
+            if (empty($newsCommentLike)){
+                $newsCommentLike = new NewsCommentLike();
+                $newsCommentLike->setUser($this->getUser());
+                $newsCommentLike->setComment($newsComment);
+            }
+            $newsCommentLike->setType($request->type);
+
+            $this->entityManager->persist($newsCommentLike);
+            $this->entityManager->flush();
+        }
+        $likesCount = $this->newsCommentLikeService->getLikesCount($newsComment);
+
+        $userLike = null;
+
+        if (!empty($this->getUser())) {
+            $like = $this->newsCommentLikeService->userLike($newsComment, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->newsCommentLikeService->decorator($like);
+            }
+        }
+        return $this->json([
+            'likesCount' => $likesCount,
+            'userLike' => $userLike
+        ]);
     }
 }

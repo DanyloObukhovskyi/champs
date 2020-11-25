@@ -17,7 +17,7 @@
                     <i class="fas fa-eye"></i>
                     {{news.views}}
                     <i class="fas fa-comment-dots"></i>
-                    {{news.comments.length}}
+                    {{news.commentsCount}}
                 </div>
             </div>
         </a>

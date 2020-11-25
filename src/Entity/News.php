@@ -22,9 +22,9 @@ class News
         NEWS_TYPE_TEXT = 7;
 
     public const GAME_ICONS = [
-        'dota' => 'dota.png',
-        'cs' => 'cs.png',
-        'lol' =>  'lol.jpg',
+        'dota'     => 'dota.png',
+        'cs'       => 'cs.png',
+        'lol'      =>  'lol.jpg',
         'valorant' =>  'valorant.png'
     ];
 
@@ -94,6 +94,11 @@ class News
      * @ORM\OneToMany(targetEntity=NewsComment::class, mappedBy="news")
      */
     private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NewsLike::class, mappedBy="news")
+     */
+    private $likes;
 
     public function __construct()
     {
@@ -262,5 +267,21 @@ class News
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @param mixed $likes
+     */
+    public function setLikes($likes): void
+    {
+        $this->likes = $likes;
     }
 }
