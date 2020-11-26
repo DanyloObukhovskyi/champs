@@ -98,6 +98,3 @@ $route['c-admin/refund/(:num)'] = 'refund_c/index/$1';
 $route['c-admin/settings'] = 'home/setting';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-
-// footer edit
-$route['c-admin/footer'] = 'footer_c/index';

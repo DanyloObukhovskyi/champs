@@ -5,6 +5,27 @@ class Setting_model extends CI_Model
 {
     private $table = "setting";
 
+    public const SOCIAL = [
+        'vk',
+        'discord',
+        'youtube',
+        'telegram',
+        'zen',
+        'twich',
+        'instagram',
+    ];
+
+    public function get_social()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where_in('key', self::SOCIAL);
+        $result = $this->db->get();
+
+        return $result->result_array();
+    }
+
     public function get_by_key($key)
     {
         $this->db->select('*');
@@ -20,6 +41,7 @@ class Setting_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where_not_in('key',  self::SOCIAL);
 
         $result = $this->db->get();
 

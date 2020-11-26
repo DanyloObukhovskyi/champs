@@ -501,7 +501,6 @@
 
 		public function setting()
         {
-
             if (isset($_POST['setting'])){
 
                 foreach ($_POST['setting'] as $key => $value){
@@ -518,6 +517,7 @@
                 redirect($this->config->item(base_url('404_override')));
                 die();
             }
+            $data['social'] = $this->setting_model->get_social();
             $data['settings'] = $settings;
             $data['current_u_can'] = $current_u_can;
             $data['output'] = $this->load->view('home/settings', $data, true);

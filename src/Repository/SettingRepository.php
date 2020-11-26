@@ -19,14 +19,32 @@ class SettingRepository extends ServiceEntityRepository
         parent::__construct($registry, Setting::class);
     }
 
+    /**
+     * @param string $key
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function getByKey(string $key)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.key = :key')
+            ->where('s.key = :key')
             ->setParameter('key', $key)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @param array $keys
+     * @return mixed
+     */
+    public function getByKeys(array $keys)
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.key IN(:keys)')
+            ->setParameter('keys', $keys)
+            ->getQuery()
+            ->getResult();
     }
 
     // /**
