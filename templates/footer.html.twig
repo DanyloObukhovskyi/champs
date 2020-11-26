@@ -126,13 +126,19 @@
                 <div class="twoblock margin-1vw">
                     <div>Сотрудничество</div>
                     <div>
-                        <a href='mailto:partners@champs.pro'>partners@champs.pro</a>
+                        {% set partners = setting.get('partners') is not null ? setting.get('partners').value : null %}
+                        <a href='mailto:{{ partners }}'>
+                            {{ partners}}
+                        </a>
                     </div>
                 </div>
                 <div class="twoblock">
                     <div>Поддержка</div>
                     <div>
-                        <a href='mailto:support@champs.pro'>support@champs.pro</a>
+                        {% set support = setting.get('support') ? setting.get('support').value : ''%}
+                        <a href='mailto:{{ support }}'>
+                            {{ support }}
+                        </a>
                     </div>
                 </div>
             </div>
