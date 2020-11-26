@@ -45,6 +45,7 @@
                         plotShadow: false,
                         type: 'pie'
                     },
+                    title: '',
                     tooltip: {
                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                     },
