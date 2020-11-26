@@ -10,7 +10,7 @@ use App\Service\News\NewsCommentLikeService;
 use App\Service\News\NewsCommentService;
 use App\Service\News\NewsLikeService;
 use App\Service\News\NewsService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use App\Service\News\NewsTagService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -207,7 +207,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/add/comment", name="news.add.comment")
+     * @Route("/news/add/comment")
      */
     public function addComment(Request $request)
     {
@@ -236,7 +236,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/{newsId}/comments", name="news.get.comments")
+     * @Route("/news/{newsId}/comments")
      */
     public function getComments(int $newsId)
     {
@@ -273,7 +273,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/popular/tags/{offset}", name="news.popular.tags", defaults={"offset" = 5})
+     * @Route("/news/popular/tags/{offset}", defaults={"offset" = 5})
      */
     public function getPopularTags($offset)
     {

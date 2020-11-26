@@ -2,27 +2,23 @@
 
 namespace App\Repository;
 
-use App\Entity\NewsComment;
-use App\Entity\NewsCommentLike;
+use App\Entity\MatchComment;
+use App\Entity\MatchCommentLike;
 use App\Entity\NewsLike;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method NewsCommentLike|null find($id, $lockMode = null, $lockVersion = null)
- * @method NewsCommentLike|null findOneBy(array $criteria, array $orderBy = null)
- * @method NewsCommentLike[]    findAll()
- * @method NewsCommentLike[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method MatchCommentLike|null find($id, $lockMode = null, $lockVersion = null)
+ * @method MatchCommentLike|null findOneBy(array $criteria, array $orderBy = null)
+ * @method MatchCommentLike[]    findAll()
+ * @method MatchCommentLike[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class NewsCommentLikeRepository extends ServiceEntityRepository
+class MatchCommentLikeRepository extends ServiceEntityRepository
 {
-    /**
-     * NewsCommentLikeRepository constructor.
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, NewsCommentLike::class);
+        parent::__construct($registry, MatchCommentLike::class);
     }
 
     /**
@@ -31,7 +27,7 @@ class NewsCommentLikeRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getCount(NewsComment $comment)
+    public function getCount(MatchComment $comment)
     {
         $likes = $this->createQueryBuilder('n')
             ->select('count(n.id)')

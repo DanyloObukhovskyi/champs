@@ -28,36 +28,35 @@
                 default: null,
             }
         },
-        data() {
-            return {
-                isLiked: false,
-                isDisliked: false,
-            }
+        computed: {
+            isLiked() {
+                let isLiked = false;
+                if (this.userLike !== null) {
+                    if (this.userLike.type === 'like') {
+                        isLiked = true;
+                    }
+                }
+                return isLiked;
+            },
+            isDisliked() {
+                let isDisliked = false;
+                if (this.userLike !== null) {
+                    if (this.userLike.type === 'dislike') {
+                        isDisliked = true;
+                    }
+                }
+                return isDisliked;
+            },
         },
         methods: {
             setLike() {
                 if (!this.isLiked && this.user !== null) {
-                    this.isDisliked = false;
-                    this.isLiked = true;
-
                     this.$emit('setLike', 'like')
                 }
             },
             setDislike() {
                 if (!this.isDisliked && this.user !== null) {
-                    this.isDisliked = true;
-                    this.isLiked = false;
-
                     this.$emit('setLike', 'dislike')
-                }
-            }
-        },
-        mounted() {
-            if (this.userLike !== null) {
-                if (this.userLike.type === 'like') {
-                    this.isLiked = true;
-                } else {
-                    this.isDisliked = true;
                 }
             }
         }

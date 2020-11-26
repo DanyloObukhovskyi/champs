@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Repository\NewsCommentRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
+use App\Traits\CommentRecursiveDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -18,6 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class NewsCommentService extends EntityService
 {
+    use CommentRecursiveDecorator;
+
     protected $entity = NewsComment::class;
 
     /**
@@ -101,6 +104,7 @@ class NewsCommentService extends EntityService
             ],
             'comment' => $comment->getComment(),
             'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
+            'timestamp' => $comment->getCreatedAt()->getTimestamp(),
             'likesCount' => $this->newsCommentLikeService->getLikesCount($comment),
             'userLike' => $userLike
         ];
@@ -121,37 +125,5 @@ class NewsCommentService extends EntityService
             $newsComments[] = $this->decorator($comment);
         }
         return $newsComments;
-    }
-
-
-    /**
-     * @param $comments
-     * @param null $count
-     * @param $user
-     * @return array
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function recurciveComments($comments, $count = null, $user = null)
-    {
-        if ($count === null){
-            $count = $_ENV['MAX_COMMENTS_ANSWERS'];
-        }
-        $commentsSlice = [];
-
-        /** @var NewsComment $comment */
-        foreach ($comments as $comment){
-            $decorateComment = $this->decorator($comment, $user);
-
-            if ($count > 0){
-                $decorateComment['children'] = $this->recurciveComments(
-                    $comment->getChildren(),
-                    $count - 1,
-                    $user
-                );
-            }
-            $commentsSlice[] = $decorateComment;
-        }
-        return $commentsSlice;
     }
 }

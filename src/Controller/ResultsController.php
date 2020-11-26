@@ -6,7 +6,7 @@ use App\Entity\Event;
 use App\Entity\EventShow;
 use App\Entity\Match;
 use App\Service\ImageService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ResultsController extends MatchesController

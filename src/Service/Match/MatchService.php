@@ -4,7 +4,7 @@
  * Date: 24/06/2020
  */
 
-namespace App\Service;
+namespace App\Service\Match;
 
 
 use App\Entity\Event;
@@ -13,6 +13,9 @@ use App\Entity\MatchPickAndBan;
 use App\Entity\Stream;
 use App\Entity\Team;
 use App\Repository\MatchRepository;
+use App\Service\EntityService;
+use App\Service\ImageService;
+use App\Service\TeamService;
 use Symfony\Component\HttpFoundation\Request;
 
 class MatchService extends EntityService
@@ -413,6 +416,13 @@ class MatchService extends EntityService
         );
     }
 
+    /**
+     * @param $filters
+     * @param $type
+     * @return int|mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function getMatchesCountByType($filters, $type)
     {
         $filters = (object)[
@@ -451,6 +461,10 @@ class MatchService extends EntityService
         return $parseDate ?? null;
     }
 
+    /**
+     * @param Event $event
+     * @return Match[]
+     */
     public function findByEvent(Event $event)
     {
         return $this->repository->findBy(['event' => $event]);

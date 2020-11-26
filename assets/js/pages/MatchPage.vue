@@ -79,6 +79,15 @@
                 :team-a="match.teamA"
                 :team-b="match.teamB">
         </match-statistics>
+        <div class="comments">
+            <match-comments
+                    v-if="match !== null"
+                    :comments-count="match.commentsCount"
+                    :match-id="matchId"
+                    :comments="comments"
+                    @update="updateComments">
+            </match-comments>
+        </div>
     </div>
 </template>
 
@@ -90,6 +99,7 @@
     import MatchStatistics from "../components/matches/MatchStatistics";
     import matchService from "../services/MatchService";
     import StreamViewer from "../components/streams/StreamViewer";
+    import MatchComments from "../components/matches/MatchComments";
 
     export default {
         name: "MatchPage",
@@ -97,6 +107,7 @@
             'matchId'
         ],
         components: {
+            MatchComments,
             StreamViewer,
             MatchStatistics,
             MatchMapsStatistics,
@@ -110,7 +121,9 @@
                 maps: [],
                 load: false,
                 selectedStream: null,
-                showStreams: false
+                showStreams: false,
+                comments: [],
+                commentsCount: 0
             }
         },
         computed: {
@@ -144,11 +157,16 @@
                 matchService.getMatch(this.matchId)
                     .then(data => {
                         this.match = data.match;
+                        this.comments = data.comments
                         this.maps = data.maps;
 
                         this.load = false;
                     })
             },
+            updateComments(data) {
+                this.comments = data.comments;
+                this.match.commentsCount = data.commentsCount;
+            }
         },
         mounted() {
             this.getMatch();
@@ -321,5 +339,9 @@
 
     img.vs {
         height: 4.5vw;
+    }
+
+    .comments{
+        margin-bottom: 3vw;
     }
 </style>

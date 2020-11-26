@@ -37,11 +37,11 @@
     import Loader from "../helpers/Loader";
     import CommentsForm from "../comments/CommentsForm";
     import CommentsList from "../comments/CommentsList";
-    import NewsService from "../../services/NewsService";
+    import MatchService from "../../services/MatchService";
 
     export default {
-        name: "NewsComments",
-        props: ['newsId', 'comments', 'commentsCount'],
+        name: "MatchComments",
+        props: ['matchId', 'comments', 'commentsCount'],
         inject: [
             'header'
         ],
@@ -83,14 +83,14 @@
         computed: {
             sortedComments() {
                 return this.sortedComments = this.comments.sort((current, next) => {
-                    if (this.orderTypes[this.order].type === 'popular') {
-                        if (this.orderTypes[this.order].sort === 'asc') {
+                    if (this.orderTypes[this.order].type === 'popular'){
+                        if (this.orderTypes[this.order].sort === 'asc'){
                             return next.likesCount - current.likesCount
                         } else {
                             return current.likesCount - next.likesCount
                         }
                     } else {
-                        if (this.orderTypes[this.order].sort === 'asc') {
+                        if (this.orderTypes[this.order].sort === 'asc'){
                             return next.timestamp - current.timestamp
                         } else {
                             return current.timestamp - next.timestamp
@@ -101,8 +101,8 @@
         },
         methods: {
             sendComment(comment) {
-                NewsService
-                    .sendComment(this.newsId, comment)
+                MatchService
+                    .sendComment(this.matchId, comment)
                     .then(() => {
                         this.getComments();
                     })
@@ -114,22 +114,22 @@
                 this.load = true;
                 this.comments = [];
 
-                NewsService
-                    .getComments(this.newsId)
+                MatchService
+                    .getComments(this.matchId)
                     .then(data => {
                         this.load = false;
                         this.$emit('update', data)
                     })
             },
             sendAnswer({comment, answer}) {
-                NewsService
-                    .sendCommentAnswer(this.newsId, comment.id, answer)
+                MatchService
+                    .sendCommentAnswer(this.matchId, comment.id, answer)
                     .then(() => {
                         this.getComments();
                     })
             },
             setLike({comment, type}) {
-                NewsService
+                MatchService
                     .setCommentLike(comment.id, type)
                     .then(data => {
                         comment.likesCount = data.likesCount;
@@ -137,7 +137,7 @@
                     })
             },
             sortComments() {
-                if (this.order === this.orderTypes.length - 1) {
+                if (this.order === this.orderTypes.length - 1){
                     this.order = 0;
                 } else {
                     this.order++;
@@ -145,7 +145,7 @@
             }
         },
         mounted() {
-            this.user = NewsService.user
+            this.user = MatchService.user
         }
     }
 </script>
@@ -182,7 +182,7 @@
         justify-content: center;
     }
 
-    #comments .ordered {
+    #comments .ordered{
         font-size: 1vw;
         cursor: pointer;
         color: #5c6b79;

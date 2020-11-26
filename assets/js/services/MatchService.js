@@ -40,7 +40,30 @@ class MatchService extends Service{
         return `/${this.lang}/matches/${id}`;
     }
 
+    sendComment = async (id, comment) => {
+        const {data} = await axios.post(`/${this.lang}/match/add/comment`, { comment, id })
 
+        return data;
+    }
+
+    sendCommentAnswer = async (id, commentId, comment) => {
+        const {data} = await axios.post(`/${this.lang}/match/add/comment`, { id, commentId, comment })
+
+        return data;
+    }
+
+    getComments = async id => {
+        const {data} = await axios.post(`/${this.lang}/match/${id}/comments`)
+
+        return data;
+    }
+
+    setCommentLike = async (commentId, type) => {
+        const {data} = await axios.post(`/${this.lang}/like/match/comment/` + commentId, {
+            type
+        });
+        return data;
+    }
 }
 
 export default new MatchService();

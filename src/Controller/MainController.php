@@ -10,7 +10,7 @@ use App\Entity\RatingPerson;
 use App\Entity\RatingTeam;
 use App\Entity\Result;
 use App\Service\Event\EventService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
 use App\Service\RatingPersonService;
 use App\Service\RatingTeamService;

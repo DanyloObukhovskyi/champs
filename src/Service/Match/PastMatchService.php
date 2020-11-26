@@ -1,12 +1,15 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Match;
 
 
 use App\Entity\Match;
 use App\Entity\PastMatch;
 use App\Entity\Team;
+use App\Service\EntityService;
+use App\Service\ImageService;
+use App\Service\TeamService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PastMatchService extends EntityService
@@ -76,6 +79,12 @@ class PastMatchService extends EntityService
         return $match;
     }
 
+    /**
+     * @param array $pastMatches
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function decorateAll(array $pastMatches)
     {
         $matches = [];
