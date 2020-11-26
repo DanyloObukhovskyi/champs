@@ -350,7 +350,7 @@
 </style>
 
 <style>
-    .row img {
+    .news-body .row img {
         width: 100%;
     }
 
