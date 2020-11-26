@@ -55,6 +55,7 @@
   height: 2.5vw;
   margin: 0 .8vw;
   flex-shrink: 0;
+  width: auto;
 }
 .staistics__view .component.ratings .table .table-row div:nth-child(1) label{
   width: 100%;
