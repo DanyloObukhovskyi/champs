@@ -26,6 +26,7 @@ import EventsPage from "./pages/EventsPage";
 import EventPage from "./pages/EventPage";
 import EventsDigestPage from "./pages/EventsDigestPage";
 import header from "./layouts/header";
+import WeaponsDoughnut from "./components/statistics/WeaponsDoughnut";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -56,6 +57,7 @@ Vue.component('matches-page', MatchesPage)
 Vue.component('events-page', EventsPage)
 Vue.component('event-page', EventPage)
 Vue.component('events-digest-page', EventsDigestPage)
+Vue.component('weapon-doughnut', WeaponsDoughnut)
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';

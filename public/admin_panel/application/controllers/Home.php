@@ -20,7 +20,7 @@
 				redirect('login/auth');
 				die();
 			}
-			$this->load->model('users_model');
+			$this->load->model(['users_model', 'setting_model']);
 			$this->user_capabilities = $this->config->item('user_capabilities');
 		}
 		
@@ -498,4 +498,29 @@
 				die();
 			}
 		}
+
+		public function setting()
+        {
+
+            if (isset($_POST['setting'])){
+
+                foreach ($_POST['setting'] as $key => $value){
+                    $this->setting_model->set_by_key($key, $value);
+                }
+            }
+            $settings = $this->setting_model->get_all();
+
+            $current_u_can = $this->users_model->get_capabilities($this->UserID);
+            if(isset($current_u_can[0]["roles"])) {
+                $current_u_can = json_decode($current_u_can[0]["roles"]);
+                $current_u_can = $current_u_can[0];
+            } else {
+                redirect($this->config->item(base_url('404_override')));
+                die();
+            }
+            $data['settings'] = $settings;
+            $data['current_u_can'] = $current_u_can;
+            $data['output'] = $this->load->view('home/settings', $data, true);
+            $this->load->view('layout/home', $data);
+        }
 	}

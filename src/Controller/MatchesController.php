@@ -18,7 +18,6 @@ use App\Service\Match\PastMatchService;
 use App\Service\PersonService;
 use App\Service\PlayerStatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
-use org\bovigo\vfs\example\FailureExample;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

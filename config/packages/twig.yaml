@@ -1,4 +1,5 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
-      base_url: "https://champs.pro/"
+      base_url: '%env(SITE_URL)%'
+      setting: '@App\Service\Setting\SettingService'

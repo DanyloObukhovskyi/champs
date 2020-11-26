@@ -17,7 +17,8 @@
 			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[3]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренеры</a></li>
 			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
 			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
-            <li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/footer'); ?>">Футер</a></li>
+            <li><a href="<?php echo base_url('c-admin/footer'); ?>">Футер</a></li>
+            <li><a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a></li>
 		</ul>
 	</aside>
 <!--	<div class="main-content">-->
