@@ -37,6 +37,20 @@
                         value="<?php echo $setting['value']?>">
                 </div>
             <?php endforeach;?>
+            <h1 class="main-title">Социальные сети</h1>
+            <?php foreach ($social as $setting):?>
+                <label class="label" for=""><?php echo $setting['title']?></label>
+                <div class="input mb-5">
+                    <input
+                        type="text"
+                        class="fw-600 input2_txt"
+                        name="setting[<?php echo $setting['key']?>]"
+                        id="nickname"
+                        placeholder="Example: nickname3456789"
+                        title="введите правильный никнейм"
+                        value="<?php echo $setting['value']?>">
+                </div>
+            <?php endforeach;?>
             <div class="flex">
                 <a href="">
                     <button class="btn btn-orange mt-15 mr-10">Сохранить</button>

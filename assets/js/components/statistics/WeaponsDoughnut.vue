@@ -79,7 +79,7 @@
 </script>
 
 <style scoped>
-    .doughnut-header{
+    .doughnut-header {
         margin-bottom: 1vw;
     }
 
@@ -91,11 +91,11 @@
 </style>
 
 <style>
-    .dark .highcharts-figure .highcharts-background{
+    .dark .highcharts-figure .highcharts-background {
         fill: #3c4045;
     }
 
-    .dark .highcharts-button-box{
+    .dark .highcharts-button-box {
         fill: #25282a;
     }
 </style>

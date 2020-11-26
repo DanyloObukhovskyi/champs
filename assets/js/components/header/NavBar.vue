@@ -33,7 +33,7 @@
                     Дайджест турниров
                 </a>
             </div>
-            <social></social>
+            <social :social="social"></social>
             <div class="login">
                 <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/timelist`"
                    v-if="isAuthorize"
@@ -70,6 +70,7 @@
             'router',
             'isAuthorize',
             'isTrainer',
+            'social'
         ],
         data() {
             return {

@@ -51,6 +51,7 @@
 <body>
 <header id="header">
     <nav-bar
+            :social="{{setting.social|json_encode}}"
             :isPageStart="isPageStart"
             @show="showLoginModal"
             router="{{ router }}"
