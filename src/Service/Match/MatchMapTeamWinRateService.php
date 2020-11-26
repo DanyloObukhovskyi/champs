@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Match;
 
 
 use App\Entity\Map;
@@ -9,6 +9,7 @@ use App\Entity\Match;
 use App\Entity\MatchMapTeamStatistic;
 use App\Entity\Team;
 use App\Repository\MatchMapTeamStatisticRepository;
+use App\Service\EntityService;
 
 class MatchMapTeamWinRateService extends EntityService
 {

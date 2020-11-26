@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Repository\NewsCommentRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
+use App\Traits\CommentRecursiveDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -18,6 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class NewsCommentService extends EntityService
 {
+    use CommentRecursiveDecorator;
+
     protected $entity = NewsComment::class;
 
     /**
@@ -26,9 +29,9 @@ class NewsCommentService extends EntityService
     protected $repository;
 
     /**
-     * @var ImageService
+     * @var NewsCommentLikeService
      */
-    protected $imageService;
+    protected $newsCommentLikeService;
 
     /**
      * NewsCommentService constructor.
@@ -38,21 +41,23 @@ class NewsCommentService extends EntityService
     {
         parent::__construct($entityManager);
 
-        $this->imageService = new ImageService();
+        $this->newsCommentLikeService = new NewsCommentLikeService($entityManager);
     }
 
     /**
-     * @param News $news
      * @param User $user
+     * @param News $news
+     * @param NewsComment|null $parentComment
      * @param $comment
      * @return mixed
      */
-    public function create(User $user, News $news, $comment)
+    public function create(User $user, News $news, ?NewsComment $parentComment, $comment)
     {
         /** @var NewsComment $newsComment */
         $newsComment = new $this->entity;
         $newsComment->setNews($news);
         $newsComment->setUser($user);
+        $newsComment->setParent($parentComment);
         $newsComment->setComment($comment);
 
         return $this->save($newsComment);
@@ -67,27 +72,57 @@ class NewsCommentService extends EntityService
     }
 
     /**
-     * @param array|object $comments
+     * @param NewsComment $comment
+     * @param null $authUser
      * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function decorateComments($comments)
+    public function decorator(NewsComment $comment, $user = null)
+    {
+        $userLike = null;
+        if (isset($user)){
+            $userLike = $this->newsCommentLikeService
+                ->getRepository()
+                ->findOneBy([
+                    'comment' => $comment,
+                    'user' => $user
+                ]);
+
+            if (isset($userLike)){
+                $userLike = $this->newsCommentLikeService->decorator($userLike);
+            }
+        }
+        return [
+            'id' => $comment->getId(),
+            'newsId' => $comment->getNews()->getId(),
+            'user' => [
+                'nickname' => $comment->getUser()->getNickname(),
+                'surname' => $comment->getUser()->getFamily(),
+                'name' => $comment->getUser()->getName(),
+                'photo' => $comment->getUser()->getPhoto(),
+            ],
+            'comment' => $comment->getComment(),
+            'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
+            'timestamp' => $comment->getCreatedAt()->getTimestamp(),
+            'likesCount' => $this->newsCommentLikeService->getLikesCount($comment),
+            'userLike' => $userLike
+        ];
+    }
+
+    /**
+     * @param $comments
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function decorateAll($comments)
     {
         $newsComments = [];
-        /** @var NewsComment $comment */
-        foreach ($comments as $comment){
-            $this->imageService->setImage($comment->getUser()->getPhoto());
 
-            $newsComments[] = [
-                'newsId' => $comment->getNews()->getId(),
-                'comment' => $comment->getComment(),
-                'user' => [
-                    'nickname' => $comment->getUser()->getNickname(),
-                    'surname' => $comment->getUser()->getFamily(),
-                    'name' => $comment->getUser()->getName(),
-                    'photo' => $this->imageService->getImagePath(),
-                ],
-                'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i'))
-            ];
+        foreach ($comments as $comment)
+        {
+            $newsComments[] = $this->decorator($comment);
         }
         return $newsComments;
     }

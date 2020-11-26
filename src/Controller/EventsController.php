@@ -10,7 +10,7 @@ use App\Service\Event\EventMapPoolService;
 use App\Service\Event\EventPrizeDistributionService;
 use App\Service\Event\EventService;
 use App\Service\Event\EventTeamAttendingService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use App\Service\TeamService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

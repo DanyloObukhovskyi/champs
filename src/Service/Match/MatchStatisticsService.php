@@ -4,14 +4,15 @@
  * Date: 24/06/2020
  */
 
-namespace App\Service;
+namespace App\Service\Match;
 
 
 use App\Entity\Map;
 use App\Entity\Match;
 use App\Entity\MatchStatistics;
-use App\Entity\Team;
 use App\Repository\MatchStatisticsRepository;
+use App\Service\EntityService;
+use App\Service\NeedMigrationService;
 
 
 class MatchStatisticsService extends EntityService

@@ -114,11 +114,17 @@ class Match implements \JsonSerializable
      */
     private $team2_win_rate;
 
+    /**
+     * @ORM\OneToMany(targetEntity=MatchComment::class, mappedBy="match")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->matchStatistics = new ArrayCollection();
         $this->streams = new ArrayCollection();
         $this->matchPickAndBans = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -452,5 +458,13 @@ class Match implements \JsonSerializable
             "teamB"    => $this->getTeam2(),
             "isLive"   => $this->getLive() ? true: false,
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

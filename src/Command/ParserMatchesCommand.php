@@ -5,7 +5,7 @@ namespace App\Command;
 use App\Entity\Match;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use App\Traits\Dispatchable;
 use App\Message\Match as MatchMessage;
 use Symfony\Component\Console\Command\Command;

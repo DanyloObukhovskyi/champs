@@ -7,7 +7,7 @@ use App\Entity\Match;
 use App\Entity\News;
 use App\Entity\Result;
 use App\Service\Event\EventService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
 use App\Service\RatingPersonService;
 use Doctrine\ORM\EntityManagerInterface;

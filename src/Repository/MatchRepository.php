@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Match;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

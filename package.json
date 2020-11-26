@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "./node_modules/.bin/encore dev",
     "watch": "./node_modules/.bin/encore dev --watch",
-    "prod": "./node_modules/.bin/encore production",
+    "prod": "./node_modules/.bin/encore production"
   },
   "repository": {
     "type": "git",

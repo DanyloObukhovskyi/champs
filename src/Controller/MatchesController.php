@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Match;
+use App\Entity\MatchCommentLike;
 use App\Entity\PlayerStatistics;
 use App\Repository\MatchRepository;
 use App\Service\MapService;
-use App\Service\MatchMapTeamWinRateService;
-use App\Service\MatchService;
-use App\Service\PastMatchService;
+use App\Service\Match\MatchCommentLikeService;
+use App\Service\Match\MatchCommentService;
+use App\Service\Match\MatchMapTeamWinRateService;
+use App\Service\Match\MatchService;
+use App\Entity\MatchMapTeamStatistic;
+use App\Service\Match\PastMatchService;
 use App\Service\PersonService;
 use App\Service\PlayerStatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,6 +67,13 @@ class MatchesController extends AbstractController
     public $matchRepository;
 
     /**
+     * @var MatchCommentService
+     */
+    public $matchCommentService;
+
+    public $matchCommentLikeService;
+
+    /**
      * MatchesController constructor.
      * @param EntityManagerInterface $entityManager
      */
@@ -80,6 +91,8 @@ class MatchesController extends AbstractController
         $this->personService = new PersonService($entityManager);
 
         $this->matchRepository = $entityManager->getRepository(Match::class);
+        $this->matchCommentService = new MatchCommentService($entityManager);
+        $this->matchCommentLikeService = new MatchCommentLikeService($entityManager);
     }
 
     /**
@@ -155,17 +168,33 @@ class MatchesController extends AbstractController
         $matchDecorate['startedAt']['time'] = $match->getStartAt()->format('H:m');
         $matchDecorate['startedAt']['timeStamp'] = $match->getStartAt()->getTimestamp();
 
+        $comments = $this->matchCommentService
+            ->getRepository()->findBy([
+                'match' =>  $match,
+                'parent' => null
+            ]);
+
+        $matchDecorate['commentsCount'] = count($match->getComments());
+
+        $comments = $this->matchCommentService->recurciveComments(
+            $comments,
+            $_ENV['MAX_COMMENTS_ANSWERS'],
+            $this->getUser()
+        );
 
         return $this->json([
-            'match' => $matchDecorate,
-            'maps'  => $this->mapService->getAll(),
+            'match'    => $matchDecorate,
+            'maps'     => $this->mapService->getAll(),
+            'comments' => $comments
         ]);
     }
 
     /**
      * @param $match
-     * @param Team|null $team
+     * @param $team
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function getMatchTeamPastMatches($match, $team)
     {
@@ -387,6 +416,108 @@ class MatchesController extends AbstractController
 
         return $this->json([
             'matches' => $matches,
+        ]);
+    }
+
+    /**
+     * @Route("/match/add/comment")
+     */
+    public function addComment(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+        $match = $this->matchService->find($request->id);
+
+        $parentComment = null;
+
+        if (isset($request->commentId)){
+            $parentComment = $this->matchCommentService->getRepository()
+                ->find($request->commentId);
+        }
+
+        if (!empty($this->getUser()) and isset($match))
+        {
+            $this->matchCommentService->create(
+                $this->getUser(),
+                $match,
+                $parentComment,
+                $request->comment
+            );
+
+            return $this->json('ok');
+        }
+        return $this->json('unauthorized', 401);
+    }
+
+    /**
+     * @Route("/match/{matchId}/comments")
+     */
+    public function getComments(int $matchId)
+    {
+        /** @var Match $news */
+        $match = $this->matchService->find($matchId);
+
+        $newsComments = $this->matchCommentService
+            ->getRepository()
+            ->findBy([
+                'match' => $match,
+                'parent' => null
+            ]);
+        $newsComments = $this->matchCommentService->recurciveComments(
+            $newsComments,
+            $_ENV['MAX_COMMENTS_ANSWERS'],
+            $this->getUser()
+        );
+
+        return $this->json([
+            'comments' => $newsComments,
+            'commentsCount' => count($match->getComments())
+        ]);
+    }
+
+    /**
+     * @Route("/like/match/comment/{commentId}")
+     */
+    public function setLikeComment(Request $request, $commentId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $matchComment = $this->matchCommentService
+            ->getRepository()
+            ->find($commentId);
+
+        $matchCommentLike = null;
+
+        if (isset($matchComment) and !empty($this->getUser())){
+            $matchCommentLike = $this->entityManager
+                ->getRepository(MatchCommentLike::class)
+                ->findOneBy([
+                    'comment' => $matchComment,
+                    'user' => $this->getUser()
+                ]);
+
+            if (empty($matchCommentLike)){
+                $matchCommentLike = new MatchCommentLike();
+                $matchCommentLike->setUser($this->getUser());
+                $matchCommentLike->setComment($matchComment);
+            }
+            $matchCommentLike->setType($request->type);
+
+            $this->entityManager->persist($matchCommentLike);
+            $this->entityManager->flush();
+        }
+        $likesCount = $this->matchCommentLikeService->getLikesCount($matchComment);
+
+        $userLike = null;
+
+        if (!empty($this->getUser())) {
+            $like = $this->matchCommentLikeService->userLike($matchComment, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->matchCommentLikeService->decorator($like);
+            }
+        }
+        return $this->json([
+            'likesCount' => $likesCount,
+            'userLike' => $userLike
         ]);
     }
 }

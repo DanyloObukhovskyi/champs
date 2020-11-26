@@ -8,10 +8,10 @@
                 <div class="grid-select">
                     <div class="lft statistics-map-selector">
                         <span
-                            v-for="(el, mapName) in teamA.playerStatistics"
-                            v-html="mapName"
-                            @click="selectMap(mapName)"
-                            :class="{active: mapName === map}">
+                                v-for="(el, mapName) in teamA.playerStatistics"
+                                v-html="mapName"
+                                @click="selectMap(mapName)"
+                                :class="{active: mapName === map}">
                         </span>
                     </div>
                     <div class="rgt">
@@ -88,7 +88,7 @@
             'map',
             'type'
         ],
-        data(){
+        data() {
             return {
                 stats: {
                     kd: 'K-D',
@@ -136,13 +136,13 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfcfc", endColorstr="#c1c6ca", GradientType=1);
     }
 
-    .dark .player-statistics .player-statistics-body{
+    .dark .player-statistics .player-statistics-body {
         color: white;
-        background: rgb(37,40,42);
-        background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 50%, rgba(37,40,42,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 50%, rgba(37,40,42,1) 100%);
-        background: linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(59,63,68,1) 50%, rgba(37,40,42,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a",endColorstr="#25282a",GradientType=1);
+        background: rgb(37, 40, 42);
+        background: -moz-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(59, 63, 68, 1) 50%, rgba(37, 40, 42, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(59, 63, 68, 1) 50%, rgba(37, 40, 42, 1) 100%);
+        background: linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(59, 63, 68, 1) 50%, rgba(37, 40, 42, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#25282a", GradientType=1);
     }
 
     .grid-select {
@@ -205,17 +205,17 @@
     .grid-row .r {
         background: white;
         padding: .7vw 0;
-        margin: .1vw .05vw;
+        margin: .1vw .1vw;
     }
 
-    .dark .grid-row .r{
+    .dark .grid-row .r {
         background: #26292c;
     }
 
     .grid-header .r:nth-child(1),
     .grid-row .r:nth-child(1) {
         width: 250%;
-        justify-content: end;
+        justify-content: flex-start;
     }
 
     .grid-row .r:nth-child(1) span {

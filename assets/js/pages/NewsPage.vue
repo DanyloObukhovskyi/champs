@@ -41,7 +41,7 @@
                             <i class="fas fa-eye"></i>
                             {{item.views}}
                             <i class="fas fa-comment-dots"></i>
-                            {{item.comments.length}}
+                            {{item.commentsCount}}
                         </div>
                     </div>
                 </a>
@@ -123,7 +123,7 @@
                 return news;
             },
             lang() {
-                return newsService.lang();
+                return newsService.lang;
             }
         },
         methods: {

@@ -1,18 +1,15 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ item.title }}{% endblock %}
-{% block router %}{{ item.title }}{% endblock %}
+{% block title %}{{ news.title }}{% endblock %}
+{% block router %}{{ news.title }}{% endblock %}
 {% block description %}
-    <meta name="description" content="{{ item.title }}">
-{% endblock %}
-{% block css %}
-    <link type="text/css" rel="stylesheet" href="/assets/styles/news-comments.css"/>
+    <meta name="description" content="{{ news.title }}">
 {% endblock %}
 {% block keywords %}
     <meta name="Keywords" content="Игровые матчи, Игровые новости, События, Видео, Интервью">
 {% endblock %}
 {% block body %}
     <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-        {{ item.title }}
+        {{ news.title }}
     </h1>
 
     <div class="news" id="app">
