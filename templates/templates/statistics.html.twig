@@ -2,56 +2,33 @@
 {% block title %}Статистика{% endblock %}
 {% block router %}statistics{% endblock %}
 {% block description %}
-  <meta name="description" content="Статистика команд и игроков по League of Legends, Dota и Cs:Go">
+    <meta name="description" content="Статистика команд и игроков по League of Legends, Dota и Cs:Go">
 {% endblock %}
 {% block keywords %}
-  <meta name="Keywords" content="Рейтинги игроков, Рейтинг команд, Top оружия, Рейтинг оружия, League of Legends, Dota, Cs:Go">
+    <meta name="Keywords" content="Рейтинги игроков, Рейтинг команд, Top оружия, Рейтинг оружия, League of Legends, Dota, Cs:Go">
 {% endblock %}
 {% block body %}
-<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-  Статистика
-</h1>
-<div class="staistics__view">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 banner-bl">
-
-
-{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
-{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
-{#        <img src="/images/Banner.png"/>#}
-{#    </object>#}
-{#</a>#}
-
-      </div>
-    </div>
-     <script src="{{base_url}}assets/js/jquery351.js"></script>
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-        <div class="row">
-          <div class="col-xl-6 col-lg-7 col-md-7 col-sm-12">
-            {% include 'templates/home/ratings.player.html.twig' %}
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            {% include 'templates/home/ratings.teams.html.twig' %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            {% include 'templates/statistics/doughnut.html.twig' %}
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-            <div class="home p-0 w-75">
-              {% include 'templates/home/player.week.html.twig' %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Статистика
+    </h1>
+    <div class="statistics" id="app">
+        <div class="ml-8 mr-8 p-0">
+            <div class="d-flex p-0 mt-4">
+                <div class="w-50 mr-2">
+                    <players-rating class-name="w-100"/>
+                </div>
+                <div class="w-50 ml-2">
+                    <teams-rating/>
+                </div>
             </div>
-          </div>
+            <div class="d-flex justify-content-center align-items-center p-0 mt-3">
+                <div class="w-50">
+                    <weapon-doughnut/>
+                </div>
+                <div class="w-50">
+                    <player-week/>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12" style="display: none">
-        {% include 'templates/statistics/filter.html.twig' %}
-      </div>
     </div>
-  </div>
-</div>
-<script src="{{base_url}}assets/js/edit_data.js"></script>
 {% endblock %}

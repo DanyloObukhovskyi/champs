@@ -34,6 +34,7 @@ import EventsPage from "./pages/EventsPage";
 import EventPage from "./pages/EventPage";
 import EventsDigestPage from "./pages/EventsDigestPage";
 import header from "./layouts/header";
+import WeaponsDoughnut from "./components/statistics/WeaponsDoughnut";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -64,6 +65,7 @@ Vue.component('matches-page', MatchesPage)
 Vue.component('events-page', EventsPage)
 Vue.component('event-page', EventPage)
 Vue.component('events-digest-page', EventsDigestPage)
+Vue.component('weapon-doughnut', WeaponsDoughnut)
 
 Vue.component('mvp-main', MvpMain)
 Vue.component('mvp-page', MvpPage)

@@ -1,5 +1,5 @@
 <template>
-    <div class="players-rating">
+    <div class="players-rating" :class="className">
         <div class="players-rating-header">
             <lamp-header title="Рейтинг игроков" link="/ru/statistics" link-description="Полный список"/>
         </div>
@@ -55,6 +55,7 @@
                 players: [],
             }
         },
+        props: ['className'],
         methods: {
             getRatingPlayers() {
                 axios.post('/ru/main/rating/players')

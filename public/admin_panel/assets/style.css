@@ -1697,6 +1697,7 @@ My styles, Denis finish
   font-size: 14px;
   display: block;
   margin-bottom: 5px;
+  display: contents;
 }
 
 .semi-bold {
@@ -3020,88 +3021,88 @@ textarea:-ms-input-placeholder {
   .table-item-content {
     display: table-row;
   }
-  
+
   header .header-menu-item.profile-link.active {
     border-bottom: none;
   }
-  
+
   header .header-menu .profile-link {
     font-size: 0;
   }
-  
+
   .desktop {
     display: none !important;
   }
-  
+
   .tablet {
     display: block !important;
   }
-  
+
   .timezone-col,
   .search-input {
     width: 100%;
   }
-  
+
   main {
     padding: 10px 0;
   }
-  
+
   main .main-content {
     width: 75%;
     padding: 0 10px 0 20px;
   }
-  
+
   .main_test{
     width: 100px;
     height: 100px;
     background: blue;
   }
-  
+
   .change-password-form .colx2 .col-item {
     width: 75%;
   }
-  
+
   .banner-block-buttons {
     padding: 0px 20px 0px 30px;
   }
-  
+
   .banner-block-info {
     padding: 20px 20px 5px 20px;
   }
-  
+
   .banner-block-info-code {
     justify-content: space-between;
   }
-  
+
   .banner-block-info-code textarea {
     width: 80%;
   }
-  
+
   .banner-block-info-main {
     height: 196px;
   }
-  
+
   .banner-block-info-main-img {
     height: 160px;
     width: 160px;
   }
-  
+
   .spin-rewriter-page .colx2 .col-item {
     width: 75%;
   }
-  
+
   .articleforce-page .colx2 .col-item {
     width: 70%;
   }
-  
+
   .namechimp-page .colx2 .col-item {
     width: 70%;
   }
-  
+
   .new-hosting-page .colx2 .col-item {
     width: 100%;
   }
-  
+
   .table-col-7.websites-list .table-head-col:nth-child(4),
   .table-col-7.websites-list .table-head-col:nth-child(5),
   .table-col-7.websites-list .table-head-col:nth-child(6),
@@ -3110,7 +3111,7 @@ textarea:-ms-input-placeholder {
   .table-col-7.websites-list .table-body-col:nth-child(6) {
     display: none;
   }
-  
+
   /* .websites-list thead tr td:nth-child(4),
   .websites-list thead tr td:nth-child(5),
   .websites-list thead tr td:nth-child(6),
@@ -3119,7 +3120,7 @@ textarea:-ms-input-placeholder {
   .websites-list tbody tr td:nth-child(6) {
     display: none;
   } */
-  
+
   .websites-list thead tr td:nth-child(7),
   .websites-list thead tr td:nth-child(5),
   .websites-list thead tr td:nth-child(6),
@@ -3128,51 +3129,51 @@ textarea:-ms-input-placeholder {
   .websites-list tbody tr td:nth-child(6) {
     display: none;
   }
-  
+
   .table-col-6.servers-list .table-head-col:nth-child(3),
   .table-col-6.servers-list .table-head-col:nth-child(4),
   .table-col-6.servers-list .table-body-col:nth-child(3),
   .table-col-6.servers-list .table-body-col:nth-child(4) {
     display: none;
   }
-  
+
   .table-col-6.city-table .table-head-col:nth-child(4),
   .table-col-6.city-table .table-body-col:nth-child(4) {
     display: none;
   }
-  
+
   .add-new-destribution-page form {
     width: 100%;
   }
-  
+
   .create-new-website-page .colx2 .col-item {
     width: 100%;
   }
-  
+
   .create-new-website-page .custom-checkbox-container {
     margin-top: 0;
     margin-bottom: 15px;
   }
-  
+
   .post {
     display: block;
   }
-  
+
   .post__left {
     width: 100%;
   }
-  
+
   .post__right {
     margin-top: 30px;
     width: 100%;
   }
-  
+
   .post__accordion {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  
+
   .post__accordion__item {
     width: 48%;
   }
@@ -3470,7 +3471,7 @@ Denis. styles. 4 september start
   border-radius: 4px;
   border: solid 1px #dfe3e9;
   background-color: #edf1f9;
-  
+
 }
 .wrapper-editor-preview-form{
   display: flex;
