@@ -26,7 +26,7 @@ class Slide
     private $url;
 
     /**
-     * @ORM\OneToOne(targetEntity=self::class)
+     * @ORM\OneToOne(targetEntity=Slide::class)
      */
     private $parent;
 
