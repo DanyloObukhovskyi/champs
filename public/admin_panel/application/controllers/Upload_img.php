@@ -71,10 +71,6 @@
 				}
 				else
 				{
-					$data = array('upload_data' => $this->upload->data());
-					// $this->load->model("edit_m");
-					// $this->edit_m->change_user_img($user_id, $data["upload_data"]["orig_name"]);
-					echo "1";
 					die();
 				}
 			} else {

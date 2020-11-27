@@ -4,14 +4,15 @@
             <div class="carousel-item d-flex" :class="{active: index === 0}" v-for="(banner, index) in banners">
                 <div class="banner w-100">
                     <a target="_blank" :href="banner.url" class="">
-                        <img :src="'/images/' + banner.img" class="w-100" style="height: 11vw;"/>
+                        <img :src="'/uploads/slides/' + banner.img" class="w-100" style="height: 11vw;"/>
+                        <p class="banner-text">{{banner.text}}</p>
                     </a>
                 </div>
-                <div class="banner-small" v-if="banner.small">
-                    <a target="_blank" :href="banner.small.url" class="">
-                        <img :src="'/images/' + banner.small.img" class="w-100" style="height: 11vw;"/>
-                    </a>
-                </div>
+                <!--                <div class="banner-small" v-if="banner.small">-->
+                <!--                    <a target="_blank" :href="banner.small.url" class="">-->
+                <!--                        <img :src="'/images/' + banner.small.img" class="w-100" style="height: 11vw;"/>-->
+                <!--                    </a>-->
+                <!--                </div>-->
             </div>
         </slick-carousel>
     </div>
@@ -26,28 +27,7 @@
         name: "BannerSlider",
         data() {
             return {
-                banners: [
-                    {
-                        url: '/',
-                        img: 'banner.png',
-                        small: {
-                            url: '/',
-                            img: 'smallBanner.png',
-                        }
-                    },
-                    {
-                        url: '/',
-                        img: 'banner.png',
-                    },
-                    {
-                        url: '/',
-                        img: 'banner.png',
-                        small: {
-                            url: '/',
-                            img: 'smallBanner.png',
-                        }
-                    },
-                ],
+                banners: [],
                 settings: {
                     dots: true,
                     edgeFriction: 0.35,
@@ -61,6 +41,17 @@
         components: {
             'slick-carousel': VueSlickCarousel,
         },
+        methods: {
+            getSlides() {
+                axios.post('/ru/get/slides')
+                    .then(({data}) => {
+                        this.banners = data;
+                    })
+            }
+        },
+        mounted() {
+            this.getSlides();
+        }
     }
 </script>
 
@@ -80,6 +71,17 @@
 
     .banner img, .banner-small img {
         height: 11vw;
+    }
+
+    .banner-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 1vw 4.6vw;
+        font-weight: bold;
+        font-size: 2vw;
+        color: white;
+        width: 50vw;
     }
 </style>
 

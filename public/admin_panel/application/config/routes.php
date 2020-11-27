@@ -98,3 +98,7 @@ $route['c-admin/refund/(:num)'] = 'refund_c/index/$1';
 $route['c-admin/settings'] = 'home/setting';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//slides
+$route['c-admin/slides'] = 'slides_c/index';
+$route['c-admin/slides/delete/(:num)'] = 'slides_c/delete/$1';

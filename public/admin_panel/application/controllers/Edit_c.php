@@ -25,7 +25,8 @@
                 'delete_m',
                 'add_m',
                 'post_tags_model',
-                'posts_model'
+                'posts_model',
+                'trainer_video'
             ));
 		}
 		
