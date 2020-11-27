@@ -28,7 +28,8 @@
                 'add_m',
                 'trainer_video',
                 'post_tags_model',
-                'posts_model'
+                'posts_model',
+                'trainer_video'
             ));
 		}
 		

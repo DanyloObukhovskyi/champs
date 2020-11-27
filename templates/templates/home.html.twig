@@ -20,8 +20,14 @@
                     <live-matches></live-matches>
                 </div>
                 <div class="col-6 pr-0">
-                    <a href="/ru/" class="w-100">
-                        <img src="/images/home/homeBaner.png" class="w-100">
+                    {% set bannerUrl = setting.get('bannerUrl') is not null ? setting.get('bannerUrl').value : null %}
+                    {% set bannerText = setting.get('bannerText') is not null ? setting.get('bannerText').value : null %}
+                    {% set bannerImage = setting.get('bannerImage') is not null ? setting.get('bannerImage').value : null %}
+                    <a href="{{ bannerUrl }}" class="w-100">
+                        <p class="banner-text">
+                            {{ bannerText }}
+                        </p>
+                        <img src="/uploads/banners/{{ bannerImage }}" class="w-100">
                     </a>
                 </div>
             </div>

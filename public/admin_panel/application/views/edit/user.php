@@ -19,6 +19,7 @@
 			<li><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
 			<li><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
             <li><a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a></li>
+            <li><a href="<?php echo base_url('c-admin/slides'); ?>">Слайды</a></li>
 		</ul>
 	</aside>
 	<!--- ---->

@@ -15,6 +15,12 @@ class Setting_model extends CI_Model
         'instagram',
     ];
 
+    public const BANNER = [
+        'bannerText',
+        'bannerImage',
+        'bannerUrl'
+    ];
+
     public function get_social()
     {
         $this->db->select('*');
@@ -41,7 +47,7 @@ class Setting_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where_not_in('key',  self::SOCIAL);
+        $this->db->where_not_in('key',  array_merge(self::SOCIAL, self::BANNER));
 
         $result = $this->db->get();
 

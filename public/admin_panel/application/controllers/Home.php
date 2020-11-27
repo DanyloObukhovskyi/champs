@@ -507,6 +507,35 @@
                     $this->setting_model->set_by_key($key, $value);
                 }
             }
+            if (isset($_FILES['file'])){
+                if(!empty($_FILES["file"]["name"])) {
+                    $files = $_FILES;
+                    $this->load->library ('upload');
+
+                    $config['upload_path'] = $this->config->item('upload_banner-pic');
+                    $config['allowed_types'] = 'jpeg|jpg|png';
+                    $this->upload->initialize($config);
+
+                    $bytes = random_bytes (11);
+
+                    $ext = explode (".", $files["file"]["name"]);
+                    $ext = array_pop ($ext);
+                    $fileName = bin2hex ($bytes).".".$ext;
+
+                    $_FILES['file']['name'] = $fileName;
+
+                    if (!$this->upload->do_upload('file')) {
+                        $error = array ('error' => $this->upload->display_errors ());
+
+                        die(var_dump($error));
+                        redirect ($_SERVER["HTTP_REFERER"]);
+                        die();
+                    } else {
+                        $data = array ('upload_data' => $this->upload->data());
+                        $this->setting_model->set_by_key('bannerImage', $fileName);
+                    }
+                }
+            }
             $settings = $this->setting_model->get_all();
 
             $current_u_can = $this->users_model->get_capabilities($this->UserID);
@@ -519,8 +548,16 @@
             }
             $data['social'] = $this->setting_model->get_social();
             $data['settings'] = $settings;
+
+            $data['banner']['text'] = $this->setting_model->get_by_key('bannerText')[0] ?? null;
+            $data['banner']['url'] = $this->setting_model->get_by_key('bannerUrl')[0] ?? null;
+            $data['banner']['image'] = $this->setting_model->get_by_key('bannerImage')[0] ?? null;
+
+            $data['images_path'] = $this->config->item('display_banner-pic');
+
             $data['current_u_can'] = $current_u_can;
             $data['output'] = $this->load->view('home/settings', $data, true);
+
             $this->load->view('layout/home', $data);
         }
 	}
