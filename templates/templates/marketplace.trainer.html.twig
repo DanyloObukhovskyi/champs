@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}Обучение{% endblock %}
+{% block router %}marketplace{% endblock %}
+{% block description %}
+    <meta name="description" content="Обучения тактикам League of Legends, Dota или Cs:go">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords" content="Обучение League of Legends, Обучение Dota, Обучение Cs:go">
+{% endblock %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Marketplace
+    </h1>
+    <div class="marketplace" id="app">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <a href="{{ url('marketplace_index') }}">
+                    Обучение
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span>
+                    {{ trainer.nickname }}
+                </span>
+            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0 mt-2">
+            <marketplace-trainer-page :social="{{setting.social|json_encode}}" trainer-id="{{ trainer.id }}"/>
+        </div>
+    </div>
+{% endblock %}

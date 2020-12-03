@@ -16,7 +16,7 @@ class SettingService extends EntityService
         'youtube',
         'telegram',
         'zen',
-        'twich',
+        'twitch',
         'instagram',
     ];
 

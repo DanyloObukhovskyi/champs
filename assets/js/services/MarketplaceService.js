@@ -14,7 +14,17 @@ class MarketplaceService extends Service{
     }
 
     getTrainerUrl = id => {
-        return `/${this.lang}/trainer/${id}`;
+        return `/${this.lang}/marketplace/trainer/${id}`;
+    }
+
+    marketplacePage = () => {
+        return `/${this.lang}/marketplace`;
+    }
+
+    getTrainer = async id => {
+        const {data} = await axios.post(`/${this.lang}/ajax/marketplace/trainer/${id}`);
+
+        return data;
     }
 }
 

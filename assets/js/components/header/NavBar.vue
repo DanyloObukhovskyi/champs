@@ -10,26 +10,26 @@
                 <img src="/images/menu.png" class="menu-btn"/>
             </div>
             <div class="menu pl-0">
-                <a href="/ru/" class="pointer" :class="{active : '/ru/' == currentPath}">
+                <a :href="home" class="pointer" :class="{active : router == 'home'}">
                     Главная
                 </a>
-                <a :href="newsPage" class="pointer" :class="{active : newsPage == currentPath}">
+                <a :href="newsPage" class="pointer" :class="{active : router == 'news'}">
                     Новости
                 </a>
-                <a :href="matchesPage" class="pointer" :class="{active : matchesPage == currentPath}">
+                <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">
                     Матчи
                 </a>
-                <a :href="eventsPage" class="pointer" :class="{active : eventsPage == currentPath}">
+                <a :href="eventsPage" class="pointer" :class="{active : router == 'events'}">
                     События
                 </a>
-                <a href="/ru/statistics" class="pointer" :class="{active : '/ru/statistics' == currentPath}">
+                <a href="/ru/statistics" class="pointer" :class="{active : router == 'statistics'}">
                     Статистика
                 </a>
-                <a href="/ru/marketplace" class="pointer" :class="{active : '/ru/marketplace' == currentPath}">
+                <a :href="marketplacePage" class="pointer" :class="{active : router == 'marketplace'}">
                     Обучение
                     <small>pro</small>
                 </a>
-                <a :href="digestPage" :class="{active : digestPage == currentPath}">
+                <a :href="digestPage" :class="{active : router == 'digest'}">
                     Дайджест турниров
                 </a>
             </div>
@@ -63,6 +63,8 @@
     import matchService from "../../services/MatchService";
     import eventService from "../../services/EventService";
     import newsService from "../../services/NewsService";
+    import MarketplaceService from "../../services/MarketplaceService";
+    import Service from "../../services/Service";
 
     export default {
         name: "NavBar",
@@ -106,6 +108,14 @@
             },
             newsPage() {
                 return newsService.newsPage()
+            },
+            marketplacePage() {
+                return MarketplaceService.marketplacePage()
+            },
+            home() {
+                const service = new Service();
+
+                return `/${service.lang}/`
             }
         },
     }

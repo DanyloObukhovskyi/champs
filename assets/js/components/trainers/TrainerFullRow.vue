@@ -2,16 +2,16 @@
     <div class="trainer-row">
         <div class="trainer">
             <div class="avatar">
-                <a :href="trainerUrl" class="gradient d-block">
+                <div class="gradient d-block">
                     <img :src="'/images/temp/matches/' + trainer.photo"
                          @error="$event.target.src = '/images/noLogo.png'">
-                </a>
+                </div>
             </div>
             <div class="data">
                 <div class="trainer-data">
-                    <a :href="trainerUrl" class="nickname">
+                    <div class="nickname">
                         {{trainer.nickname}}
-                    </a>
+                    </div>
                     <div class="game-wrapper">
                         <div class="game">
                             <img :src="'/images/marketplace/' + game.icon">
@@ -47,15 +47,20 @@
             </div>
         </div>
         <div class="price-list">
-            <trainer-cost-button
-                    v-for="(item, type) in trainingTypes"
-                    @toggleDescription="toggleDescription"
-                    :key="type"
-                    :label="item.title"
-                    :type="type"
-                    :show="show"
-                    :cost="trainer.trainer.cost">
-            </trainer-cost-button>
+            <div class="price-row" v-for="(item, type) in trainingTypes" @click="toggleDescription({type, show: !show})">
+                <div class="background">
+                    <div>
+                        <div class="type">
+                            {{item.title}}
+                        </div>
+                        <div class="price">
+                            {{trainer.trainer.cost}} RUB
+                        </div>
+                    </div>
+                    <i class="fas fa-sort-down" v-if="!show"></i>
+                    <i class="fas fa-sort-up" v-else></i>
+                </div>
+            </div>
         </div>
         <div class="trainer-footer">
             <div class="rank">
@@ -94,39 +99,6 @@
             <p class="text">
                 {{description[type].text}}
             </p>
-<!--            <div class="subtitle">-->
-<!--                Подзаголовок-->
-<!--            </div>-->
-<!--            <p class="text">-->
-<!--                Таким образом постоянное информационно-пропагандистское-->
-<!--                обеспечение нашей деятельности позволяет выполнять важные-->
-<!--                задания по разработке форм развития. Повседневная практика-->
-<!--                показывает, что сложившаяся структура организации влечет-->
-<!--                за собой процесс внедрения и модернизации соответствующий-->
-<!--                условий активизации:-->
-<!--            </p>-->
-<!--            <ul>-->
-<!--                <li>-->
-<!--                    условий активизации-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    форм развития-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    сложившаяся структура-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--            <div class="subtitle">-->
-<!--                Подзаголовок-->
-<!--            </div>-->
-<!--            <p class="text">-->
-<!--                Таким образом постоянное информационно-пропагандистское-->
-<!--                обеспечение нашей деятельности позволяет выполнять важные-->
-<!--                задания по разработке форм развития. Повседневная практика-->
-<!--                показывает, что сложившаяся структура организации влечет за-->
-<!--                собой процесс внедрения и модернизации соответствующий условий-->
-<!--                активизации:-->
-<!--            </p>-->
             <a :href="trainerUrl" class="confirm" @click="show = false">Принять</a>
         </div>
     </div>
@@ -139,7 +111,7 @@
     import MarketplaceService from "../../services/MarketplaceService";
 
     export default {
-        name: "TrainerRow",
+        name: "TrainerFullRow",
         components: {TrainerRank, TrainerCostButton, TrainerRowVideoSlider},
         inject: [
             'header'
@@ -203,10 +175,7 @@
 
             .avatar {
                 .gradient {
-                    width: 6vw;
-                    height: 6vw;
-                    border-radius: 50%;
-                    padding: .2vw;
+                    padding: .1vw;
                     background: rgb(255, 111, 31);
                     background: -moz-linear-gradient(0deg, rgba(255, 111, 31, 1) 0%, rgba(255, 194, 79, 1) 88%);
                     background: -webkit-linear-gradient(0deg, rgba(255, 111, 31, 1) 0%, rgba(255, 194, 79, 1) 88%);
@@ -214,9 +183,8 @@
                     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
 
                     img {
-                        width: 100%;
                         height: 100%;
-                        border-radius: 50%;
+                        width: 9vw;
                     }
                 }
             }
@@ -230,14 +198,15 @@
                 .trainer-data {
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
+                    justify-content: center;
 
                     .nickname {
                         font-weight: 600;
-                        line-height: 2vw;
+                        line-height: 3vw;
                         font-size: 2vw;
                         transition: color .5s ease-in-out;
                         color: #0a0a0a;
+                        margin-bottom: 1vw;
 
                         &:hover {
                             color: #ff6d1d;
@@ -329,6 +298,59 @@
             display: flex;
             justify-content: space-between;
             margin-top: 1.5vw;
+
+            .price-row {
+                cursor: pointer;
+                width: 30%;
+                background: url(/images/marketplace/priceBackground.png);
+                background-position: center;
+                background-size: cover;
+                height: 5.1vw;
+                display: flex;
+                transition: all .5s ease-in-out;
+
+                &:hover {
+                    transition: all .5s ease-in-out;
+                    background: url(/images/marketplace/priceBackgroundHover.png);
+                    background-position: center;
+                    background-size: cover;
+                    color: white;
+
+                    .background {
+                        i {
+                            color: white;
+                            font-size: 1vw;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .background {
+                    padding: 0 2vw;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    background-position: center;
+                    width: 100%;
+
+                    .type {
+                        font-size: 1vw;
+                        font-weight: 600;
+                    }
+
+                    .price {
+                        font-size: 1.2vw;
+                        color: #28a745;
+                        font-weight: 700;
+                    }
+
+                    i {
+                        color: #ff6d1d;
+                        font-size: 1vw;
+                        cursor: pointer;
+                    }
+                }
+            }
         }
 
         .trainer-footer {
@@ -447,6 +469,25 @@
                             &:hover {
                                 color: #ff6d1d;
                             }
+                        }
+                    }
+                }
+
+                .price-list {
+                    .price-row {
+                        width: 30%;
+                        padding: .1vw .11vw;
+                        background: url(/images/marketplace/darkPriceBackground.png);
+                        background-position: center;
+                        background-size: cover;
+                        height: 4.1vw;
+
+                        &:hover {
+                            transition: all .5s ease-in-out;
+                            background: url(/images/marketplace/priceBackgroundHover.png);
+                            background-position: center;
+                            background-size: cover;
+                            color: white;
                         }
                     }
                 }

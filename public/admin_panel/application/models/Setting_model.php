@@ -11,7 +11,7 @@ class Setting_model extends CI_Model
         'youtube',
         'telegram',
         'zen',
-        'twich',
+        'twitch',
         'instagram',
     ];
 

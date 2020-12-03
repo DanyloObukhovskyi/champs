@@ -38,7 +38,7 @@ class MarketplaceController extends AbstractController
     }
 
     /**
-     * @Route("/marketplace/trainer/{userId}", name="marketplace.trainer")
+     * @Route("/ajax/marketplace/trainer/{userId}")
      */
     public function getTrainerData($userId)
     {
@@ -46,5 +46,18 @@ class MarketplaceController extends AbstractController
         $trainer = $this->userService->decorator($trainer);
 
         return $this->json($trainer);
+    }
+
+    /**
+     * @Route("/marketplace/trainer/{userId}")
+     */
+    public function trainerPage($userId)
+    {
+        $trainer = $this->userService->find($userId);
+
+        return $this->render('templates/marketplace.trainer.html.twig', [
+            'trainer' => $trainer,
+            'router' => 'marketplace'
+        ]);
     }
 }
