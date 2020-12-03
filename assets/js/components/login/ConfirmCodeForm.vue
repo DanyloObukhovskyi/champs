@@ -57,7 +57,6 @@
     export default {
         name: "ConfirmCodeForm",
         inject: [
-            'axios',
             'config'
         ],
         props: [
@@ -92,7 +91,7 @@
                 formData.append('user[code]', this.confirmCode);
                 formData.append('user[email]', this.email);
 
-                this.axios.post('/ru/check/confirm/code', formData)
+                axios.post('/ru/check/confirm/code', formData)
                     .then(({data}) => {
                         this.successMessage = data;
                         this.codeConfirmed = true;

@@ -35,4 +35,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    /**
+     * @param $game
+     * @param $search
+     * @return mixed
+     */
+    public function findByGameAndNick($game, $search)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.game = :game')
+            ->andWhere('u.nickname like :search')
+            ->setParameter('game', $game)
+            ->setParameter('search', "%$search%")
+            ->getQuery()
+            ->getResult();
+    }
 }

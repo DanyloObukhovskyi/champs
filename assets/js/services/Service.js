@@ -1,15 +1,15 @@
 class Service {
 
+    user = null;
+
     constructor() {
         this.lang = this.getLang();
-        this.getAuthUser();
     }
 
-    getAuthUser = () =>  {
-        axios.post(`/${this.lang}/get/auth`)
-            .then(({data}) => {
-                this.user = data;
-            })
+    getAuthUser = async () =>  {
+        const {data} = await axios.post(`/${this.lang}/get/auth`)
+
+        return data;
     }
 
     getLang = () => {

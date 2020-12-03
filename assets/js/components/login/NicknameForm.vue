@@ -33,7 +33,6 @@
     export default {
         name: "NicknameForm",
         inject: [
-            'axios',
             'config'
         ],
         props: [
@@ -51,7 +50,7 @@
                     email: this.email,
                     nickname: this.nickname
                 }
-                this.axios.post('/ru/ajax/user/set/nickname', data)
+                axios.post('/ru/ajax/user/set/nickname', data)
                     .then(({data}) => {
                         this.$emit('setStep', 'congratulation')
                     }).catch(({response}) => {

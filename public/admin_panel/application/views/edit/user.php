@@ -11,16 +11,8 @@
 			</div>
 		<?php } ?>
 	<aside>
-		<ul>
-			<li><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
-			<li><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
-			<li class="active"><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
-			<li><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
-			<li><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
-			<li><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
-            <li><a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a></li>
-            <li><a href="<?php echo base_url('c-admin/slides'); ?>">Слайды</a></li>
-		</ul>
+        <?php $activePath = 'users';?>
+        <?php require_once APPPATH.'views/sidebar.php'?>
 	</aside>
 	<!--- ---->
 	<?php

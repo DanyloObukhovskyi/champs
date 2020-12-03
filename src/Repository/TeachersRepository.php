@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Teachers;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -67,5 +68,32 @@ class TeachersRepository extends ServiceEntityRepository
             ->getResult()
             ;
 
+    }
+
+    /**
+     * @param $filters
+     * @param $game
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getTrainers($filters, $game)
+    {
+        $users = $this->_em
+            ->getRepository(User::class)
+            ->findByGameAndNick($game, $filters['search']);
+
+        $userIds = [];
+        foreach ($users as $user){
+            $userIds[] = $user->getId();
+        }
+
+        $query = $this->createQueryBuilder('t')
+            ->where('t.userid in (:ids)')
+            ->setParameter('ids', $userIds);
+
+        if (isset($filters['isExpensive'])){
+            $query->orderBy('t.cost', $filters['isExpensive'] ? 'ASC': 'DESC');
+        }
+
+        return $query;
     }
 }

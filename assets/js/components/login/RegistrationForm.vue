@@ -102,7 +102,6 @@
 <script>
     export default {
         inject: [
-            'axios',
             'config'
         ],
         name: "RegistrationForm",
@@ -135,7 +134,7 @@
                 }
             },
             checkIsEmailValid(){
-                this.axios.post('/ru/user/check/email', this.emailForm)
+                axios.post('/ru/user/check/email', this.emailForm)
                     .then(({data}) => {
                         this.generateConfirmCode();
                     }).catch(({response}) => {

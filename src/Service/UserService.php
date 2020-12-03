@@ -4,9 +4,13 @@
 namespace App\Service;
 
 
+use App\Entity\Award;
+use App\Entity\GameRank;
 use App\Entity\Review;
 use App\Entity\Teachers;
+use App\Entity\TrainerAchievement;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService  extends EntityService
@@ -26,17 +30,14 @@ class UserService  extends EntityService
         [
             'name' =>  'cs',
             'title' =>  'CS:GO',
-            'logo' =>  '/images/cs.png'
         ],
         [
             'name' =>  'dota',
             'title' =>  'DOTA 2',
-            'logo' =>  '/images/dota.png'
         ],
         [
             'name' =>  'lol',
             'title' =>  'LOL',
-            'logo' =>  '/images/lol.jpg'
         ],
     ];
 
@@ -51,6 +52,11 @@ class UserService  extends EntityService
      * @var TimeZoneService
      */
     protected $timeZoneService;
+
+    /**
+     * @var UserRepository
+     */
+    protected $repository;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -67,13 +73,13 @@ class UserService  extends EntityService
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function teachersDecorator($users, $filters)
+    public function teachersDecorator($users)
     {
         $response = [];
 
         foreach ($users as $user)
         {
-           $teacher = $this->decorator($user, $filters);
+           $teacher = $this->decorator($user);
 
            if (isset($teacher))
            {
@@ -83,7 +89,13 @@ class UserService  extends EntityService
         return $response;
     }
 
-    public function decorator($user, $filters = null)
+    /**
+     * @param $user
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function decorator(User $user)
     {
         /** @var Teachers $trainer */
         $trainer = $this->entityManager->getRepository(Teachers::class)
@@ -131,24 +143,6 @@ class UserService  extends EntityService
         {
             $result = round($sum / $count, 2);
         }
-
-        if (isset($filters))
-        {
-            if (!empty($filters['studyCostFrom']['value']))
-            {
-                if ((int)$filters['studyCostFrom']['value'] > $trainer->getCost())
-                {
-                    return null;
-                }
-            }
-            if (!empty($filters['studyCostTo']['value']))
-            {
-                if ((int)$filters['studyCostTo']['value'] < $trainer->getCost())
-                {
-                    return null;
-                }
-            }
-        }
         $videos = $this->trainerVideosService->getByTrainer($user);
         $videos = $this->trainerVideosService->decorator($videos);
 
@@ -166,6 +160,41 @@ class UserService  extends EntityService
                 ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
         }
         $timeZone = "$timeZone ($gmt)";
+
+        $achievements = $this->entityManager->getRepository(TrainerAchievement::class)
+            ->findBy([
+                'trainer' => $user->getTrainer(),
+                'show' => true
+            ]);
+        $achievementsArray = [];
+
+        /** @var TrainerAchievement $achievement */
+        foreach ($achievements as $achievement){
+            $achievementsArray[] = [
+                'tournament' => $achievement->getTournament(),
+                'achievement' => $achievement->getAchievement()
+            ];
+        }
+
+        $rank = (int)$user->getRank();
+
+        if (is_int((int)$rank)){
+            $gameRank = $this->entityManager
+                ->getRepository(GameRank::class)
+                ->getByPoints($user->getGame(), $rank);
+        } else {
+            $gameRank = null;
+        }
+        $awards = [];
+        $awardsEntities = $user->getTrainer()->getAwards();
+        /** @var Award $award */
+        foreach ($awardsEntities as $award)
+        {
+            $awards[] = [
+                'icon' => $award->getIcon(),
+                'text' => $award->getText()
+            ];
+        }
 
         return [
             'id' => $user->getId(),
@@ -185,12 +214,59 @@ class UserService  extends EntityService
             'reviewCount' => $count,
             'reviews' => $reviews['entity'],
             'videos' => $videos,
-            'timeZone' => $timeZone
+            'timeZone' => $timeZone,
+            'achievements' => $achievementsArray,
+            'rankIcon' => isset($gameRank) ? $gameRank->getIcon(): null,
+            'awards' => $awards
         ];
     }
 
+    /**
+     * @param $userId
+     * @return object|null
+     */
     public function find($userId)
     {
         return $this->repository->find($userId);
+    }
+
+    /**
+     * @param $filters
+     * @param $game
+     * @param $offset
+     * @return mixed
+     */
+    public function getTrainers($filters, $game, $offset)
+    {
+        $teachers =  $this->entityManager
+            ->getRepository(Teachers::class)
+            ->getTrainers($filters, $game)
+            ->getQuery()
+            ->setFirstResult($offset)
+            ->setMaxResults($_ENV['TRAINERS_ON_PAGE'])
+            ->getResult();
+
+        $users = [];
+
+        /** @var Teachers $teacher */
+        foreach ($teachers as $teacher){
+            $users[] = $this->repository->find($teacher->getUserId());
+        }
+        return $users;
+    }
+
+    /**
+     * @param $filters
+     * @param $game
+     * @return mixed
+     */
+    public function getTrainersCount($filters, $game)
+    {
+        return $this->entityManager
+            ->getRepository(Teachers::class)
+            ->getTrainers($filters, $game)
+            ->select('count(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

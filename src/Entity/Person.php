@@ -155,7 +155,6 @@ class Person implements JsonSerializable
     }
 
     /**
-     * @return Carbon
      * @throws \Exception
      */
     public function getParsePhotoDate()

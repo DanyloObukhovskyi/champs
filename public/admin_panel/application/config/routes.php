@@ -102,3 +102,14 @@ $route['translate_uri_dashes'] = FALSE;
 //slides
 $route['c-admin/slides'] = 'slides_c/index';
 $route['c-admin/slides/delete/(:num)'] = 'slides_c/delete/$1';
+
+//ranks
+$route['c-admin/ranks'] = 'ranks_c/index';
+$route['c-admin/ajax/ranks'] = 'ranks_c/ajax';
+$route['c-admin/ajax/ranks/save'] = 'ranks_c/save';
+
+//awards
+$route['c-admin/awards'] = 'award_c/index';
+$route['c-admin/ajax/awards'] = 'award_c/ajax';
+$route['c-admin/ajax/award/save'] = 'award_c/save';
+$route['c-admin/delete/(:num)'] = 'award_c/delete/$1';

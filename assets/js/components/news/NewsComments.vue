@@ -145,7 +145,10 @@
             }
         },
         mounted() {
-            this.user = NewsService.user
+            NewsService.getAuthUser()
+                .then(user => {
+                    this.user = user;
+                })
         }
     }
 </script>

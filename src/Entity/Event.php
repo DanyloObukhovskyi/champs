@@ -7,6 +7,7 @@ use App\Service\News\NewsService;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 /**
@@ -212,9 +213,9 @@ class Event implements \JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): Carbon
+    public function getCreatedAt()
     {
-        return new Carbon($this->createdAt);
+        return $this->createdAt;
     }
 
     public function setCreatedAt($date): self

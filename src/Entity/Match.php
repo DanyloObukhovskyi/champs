@@ -134,8 +134,7 @@ class Match implements \JsonSerializable
 
     public function getStartAt(): ?\DateTimeInterface
     {
-        $temp = clone $this->start_at;
-        return $temp->modify('+3 hours');
+        return $this->start_at;
     }
 
     public function setStartAt(\DateTimeInterface $start_at): self

@@ -24,9 +24,6 @@ export default new Vue({
         isPageStart: true,
         game: 'cs',
     },
-    provide: {
-        axios
-    },
     methods: {
         showLoginModal() {
             this.show = true;
