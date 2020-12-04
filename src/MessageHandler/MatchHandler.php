@@ -122,6 +122,10 @@ class MatchHandler implements MessageHandlerInterface
     {
         dump($match->getMatch());
         $matchFull = HLTVService::getMatchFull($match->getMatch());
+        if (empty($matchFull)){
+
+            return;
+        }
         $matchFull = $this->setScores($matchFull);
         $teams = $this->createTeams($matchFull['teams']);
         $match = $this->createMatch($matchFull, $teams);
