@@ -216,7 +216,9 @@ class MatchHandler implements MessageHandlerInterface
 
             $team = HLTVService::getTeam($left);
             $leftTeamEntity = $this->teamService->create($team);
-            $this->createPlayers($team['players'], $leftTeamEntity);
+            if (isset($team['players'])){
+                $this->createPlayers($team['players'], $leftTeamEntity);
+            }
         }
         if (isset($right['name'])){
             $rightTeamEntity = $this->teamService->getByName($right['name']);
@@ -231,7 +233,9 @@ class MatchHandler implements MessageHandlerInterface
             $team = HLTVService::getTeam($right);
 
             $rightTeamEntity = $this->teamService->create($team);
-            $this->createPlayers($team['players'], $rightTeamEntity);
+            if (isset($team['players'])){
+                $this->createPlayers($team['players'], $rightTeamEntity);
+            }
         }
         return array($leftTeamEntity, $rightTeamEntity);
     }
