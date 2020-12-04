@@ -1,0 +1,202 @@
+parameters:
+  proxy:
+#    1:
+#        host: '144.172.97.6'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    2:
+#        host: '107.189.12.74'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    3:
+#        host: '185.196.191.108'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    4:
+#        host: '196.16.179.81'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    5:
+#        host: '104.249.7.227'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    6:
+#        host: '185.195.222.57'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    7:
+#        host: '185.205.196.22'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    8:
+#        host: '185.199.116.46'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    9:
+#        host: '67.227.120.67'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+#    10:
+#        host: '185.207.99.204'
+#        port: '3199'
+#        user: 'alexander_hong-e9rdh'
+#        password: 'T2g6KR8pVI'
+    11:
+      host: '172.86.107.180'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    12:
+      host: '104.194.146.22'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    13:
+      host: '185.205.199.123'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    14:
+      host: '185.193.73.64'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    15:
+      host: '104.194.136.159'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    16:
+      host: '107.189.22.82'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    17:
+      host: '67.227.120.195'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    18:
+      host: '196.17.89.184'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    19:
+      host: '172.86.107.170'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    20:
+      host: '107.189.17.236'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    21:
+      host: '196.16.226.30'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    22:
+      host: '104.233.52.82'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    23:
+      host: '104.194.148.181'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    24:
+      host: '144.172.108.186'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    25:
+      host: '172.86.110.144'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    26:
+      host: '185.199.116.30'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    27:
+      host: '104.194.155.132'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    28:
+      host: '104.194.152.233'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    29:
+      host: '185.188.77.67'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    30:
+      host: '196.18.246.126'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    31:
+      host: '185.195.221.176'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    32:
+      host: '185.205.198.204'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    33:
+      host: '104.194.147.109'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    34:
+      host: '196.16.176.40'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    35:
+      host: '172.86.110.22'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    36:
+      host: '107.189.20.140'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    37:
+      host: '104.194.139.254'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    38:
+      host: '185.205.198.174'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    39:
+      host: '196.17.73.88'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'
+    40:
+      host: '144.172.99.210'
+      port: '3199'
+      user: 'alexander_hong-k4bur'
+      password: 'TXSgbzOAEZ'

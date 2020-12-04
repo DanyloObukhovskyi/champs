@@ -122,9 +122,7 @@ class MatchHandler implements MessageHandlerInterface
     {
         dump($match->getMatch());
         $matchFull = HLTVService::getMatchFull($match->getMatch());
-
         $matchFull = $this->setScores($matchFull);
-
         $teams = $this->createTeams($matchFull['teams']);
         $match = $this->createMatch($matchFull, $teams);
         $streams = $this->createStreams($matchFull['streams'], $match);
@@ -200,11 +198,12 @@ class MatchHandler implements MessageHandlerInterface
      */
     public function createTeams($teams)
     {
-        $left =  $teams[0] ?? null;
-        $right = $teams[1] ?? null;
+        $left =  $teams[0] ?? [];
+        $right = $teams[1] ?? [];
 
-        $leftTeamEntity = $this->teamService->getByName($left['name']);
-
+        if (isset($left['name'])){
+            $leftTeamEntity = $this->teamService->getByName($left['name']);
+        }
         $date = (date('Y.m.d H:m:s', strtotime("-7 days")));
 
         $leftTeamParseDate = isset($leftTeamEntity) ? $leftTeamEntity->getParseDate(): null;
@@ -213,24 +212,21 @@ class MatchHandler implements MessageHandlerInterface
         } else {
             $isDateParse = $leftTeamParseDate->format('Y.m.d H:m:s') >= $date;
         }
-
         if (empty($leftTeamEntity) or count($leftTeamEntity->getPlayers()) < 5 or $isDateParse){
 
             $team = HLTVService::getTeam($left);
-
             $leftTeamEntity = $this->teamService->create($team);
             $this->createPlayers($team['players'], $leftTeamEntity);
         }
-
-        $rightTeamEntity = $this->teamService->getByName($right['name']);
-
+        if (isset($right['name'])){
+            $rightTeamEntity = $this->teamService->getByName($right['name']);
+        }
         $rightTeamParseDate = isset($rightTeamEntity) ? $rightTeamEntity->getParseDate(): null;
         if (empty($rightTeamParseDate)){
             $isDateParse = true;
         } else {
             $isDateParse = $rightTeamParseDate->format('Y.m.d H:m:s') >= $date;
         }
-
         if (empty($rightTeamEntity) or count($rightTeamEntity->getPlayers()) < 5 or $isDateParse){
             $team = HLTVService::getTeam($right);
 
@@ -342,9 +338,10 @@ class MatchHandler implements MessageHandlerInterface
      */
     private function setScores($matchDataFull)
     {
-        $matchDataFull['score1'] = $matchDataFull['teams'][0]['score'] ?? null;
-        $matchDataFull['score2'] = $matchDataFull['teams'][1]['score'] ?? null;
-
+        if (isset($matchDataFull['teams'])){
+            $matchDataFull['score1'] = $matchDataFull['teams'][0]['score'] ?? null;
+            $matchDataFull['score2'] = $matchDataFull['teams'][1]['score'] ?? null;
+        }
         return $matchDataFull;
     }
 
