@@ -114,7 +114,6 @@ class DownloadFile
 
         if (!in_array($statusCode, [200, 301, 302]))
         {
-            LoggerService::warning("{$url} wrong status {$statusCode}");
             return false;
         }
 

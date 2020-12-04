@@ -56,27 +56,32 @@ class TeamService extends EntityService
     {
         ini_set('max_execution_time', 0);
 
-        $team = $this->repository->getByName($values['name']);
-        if (empty($team))
-        {
-            $team = new $this->entity;
-        }
-        $team->setName($values['name'])->setRegion($values['region']);
-
-        $this->setTeamLogo($values['logo'], $team);
-
-        if (isset($values['regionIconName']))
-        {
-            $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
-
-            if (isset($flagIcon)){
-                $team->setFlagIcon($flagIcon);
+        if ($values){
+            $team = $this->repository->getByName($values['name']);
+            if (empty($team))
+            {
+                $team = new $this->entity;
             }
-        }
-        $team->setParseDate(new \DateTime());
-        $this->save($team);
 
-        return $team;
+            $team->setName($values['name'])
+                ->setRegion($values['region']);
+
+            $this->setTeamLogo($values['logo'], $team);
+
+            if (isset($values['regionIconName']))
+            {
+                $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
+
+                if (isset($flagIcon)){
+                    $team->setFlagIcon($flagIcon);
+                }
+            }
+            $team->setParseDate(new \DateTime());
+            $this->save($team);
+
+            return $team;
+        }
+        return null;
     }
 
     /**

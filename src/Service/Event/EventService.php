@@ -491,15 +491,17 @@ class EventService extends EntityService
                         }
                     }
 
-                    $this->eventBracketService->create(
-                        $match,
-                        $event,
-                        $team1 ?? null,
-                        $team2 ?? null,
-                        $matchEntity ?? null,
-                        $type,
-                        $name
-                    );
+                    if (isset($team1) or isset($team2)){
+                        $this->eventBracketService->create(
+                            $match,
+                            $event,
+                            $team1 ?? null,
+                            $team2 ?? null,
+                            $matchEntity ?? null,
+                            $type,
+                            $name
+                        );
+                    }
                 }
             }
         }

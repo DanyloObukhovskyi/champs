@@ -21,7 +21,7 @@ class MatchParserService
     public function getLiveMatches(Document $document)
     {
         $matches = [];
-        $matchLiveCells = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' liveMatch ')]//a[contains(@class, 'a-reset')]", Query::TYPE_XPATH);
+        $matchLiveCells = $document->find('.liveMatches a.match');
 
         foreach ($matchLiveCells as $matchCellLink)
         {
@@ -140,8 +140,18 @@ class MatchParserService
      */
     public function getMatchFull(Document $document, $match)
     {
+        $isLive = $document->first('.timeAndEvent .countdown');
+
+        if (isset($isLive)){
+            $isLiveText = strtolower(trim($isLive->text()));
+            $isLive = $isLiveText === 'live' ? true: false;
+        } else {
+            $isLive = false;
+        }
+
         $teamsCells = $document->find("//div[contains(@class, 'teamsBox')]//div[contains(concat(' ', normalize-space(@class), ' '), ' team ')]", Query::TYPE_XPATH);
 
+        $match['is_live'] = $isLive;
         $match['teams'] = $this->getMatchTeams($teamsCells);
 
         if (empty($match['code'])){
