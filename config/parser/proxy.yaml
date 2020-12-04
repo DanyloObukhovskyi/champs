@@ -1,55 +1,5 @@
 parameters:
   proxy:
-#    1:
-#        host: '144.172.97.6'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    2:
-#        host: '107.189.12.74'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    3:
-#        host: '185.196.191.108'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    4:
-#        host: '196.16.179.81'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    5:
-#        host: '104.249.7.227'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    6:
-#        host: '185.195.222.57'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    7:
-#        host: '185.205.196.22'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    8:
-#        host: '185.199.116.46'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    9:
-#        host: '67.227.120.67'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
-#    10:
-#        host: '185.207.99.204'
-#        port: '3199'
-#        user: 'alexander_hong-e9rdh'
-#        password: 'T2g6KR8pVI'
     11:
       host: '172.86.107.180'
       port: '3199'
@@ -200,3 +150,153 @@ parameters:
       port: '3199'
       user: 'alexander_hong-k4bur'
       password: 'TXSgbzOAEZ'
+    41:
+      host: '144.172.101.246'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    42:
+      host: '196.17.91.120'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    43:
+      host: '195.200.210.133'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    44:
+      host: '144.172.102.195'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    45:
+      host: '104.233.52.57'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    46:
+      host: '196.16.222.75'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    47:
+      host: '95.214.219.85'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    48:
+      host: '104.194.140.176'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    49:
+      host: '104.194.152.120'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    50:
+      host: '196.18.248.131'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    51:
+      host: '195.200.210.182'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    52:
+      host: '107.189.17.142'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    53:
+      host: '196.16.176.16'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    54:
+      host: '185.199.119.81'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    55:
+      host: '199.168.121.17'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    56:
+      host: '196.16.69.247'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    57:
+      host: '172.86.110.251'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    58:
+      host: '67.227.123.254'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    59:
+      host: '80.65.208.227'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    60:
+      host: '185.195.212.17'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    61:
+      host: '185.195.220.181'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    62:
+      host: '196.16.222.226'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    63:
+      host: '185.205.197.97'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    64:
+      host: '185.188.76.33'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    65:
+      host: '144.172.87.174'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    66:
+      host: '162.245.4.147'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    67:
+      host: '104.194.155.186'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    68:
+      host: '185.195.213.180'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    69:
+      host: '104.249.0.246'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
+    70:
+      host: '196.17.89.80'
+      port: '3199'
+      user: 'alex_oles-xy2zy'
+      password: 'cSZizfGqAo'
