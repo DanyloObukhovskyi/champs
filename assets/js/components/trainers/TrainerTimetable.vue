@@ -48,7 +48,7 @@
             <button class="payment-btn"
                     data-toggle="modal"
                     data-target="#confirmPaymentModal"
-                    v-if="times.filter(t => t.status === 2).length > 0">
+                    v-if="times.filter(t => t.status === 2).length > 0 && user !== null">
                 Записаться
             </button>
             <button class="payment-btn disable" v-else>
@@ -89,7 +89,8 @@
             return {
                 date: null,
                 load: false,
-                times: []
+                times: [],
+                user: null
             }
         },
         watch: {
@@ -139,7 +140,6 @@
                 return str;
             },
             selectedTime() {
-                console.log(this.times.filter(t => t.status === 2))
                 return this.times.filter(t => t.status === 2)
             }
         },
@@ -190,6 +190,13 @@
             this.date = `${day}.${month}.${date.getFullYear()}`;
 
             this.getTimes()
+
+            MarketplaceService.getAuthUser()
+                .then(user => {
+                    this.user = user;
+
+                    console.log(this.user)
+                })
         }
     }
 </script>
