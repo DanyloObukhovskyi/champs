@@ -14,7 +14,9 @@ use App\Message\PaymentLessonMail;
 use App\Service\LessonService;
 use App\Service\LessonTimeService;
 use App\Service\ScheduleService;
-use App\Traits\EntityManager;
+use App\Service\TimeZoneService;
+use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,8 +29,6 @@ use Swift_Mailer;
  */
 class LessonsController extends AbstractController
 {
-    use EntityManager;
-
     /**
      * @var LessonService
      */
@@ -45,13 +45,20 @@ class LessonsController extends AbstractController
     public $lessonTimeService;
 
     /**
+     * @var TimeZoneService
+     */
+    public $timezoneService;
+
+    /**
      * LessonsController constructor.
      */
-    public function __construct()
+    public function __construct( EntityManagerInterface $entityManager)
     {
-        $this->lessonsService = new LessonService($this->getEntityManager());
-        $this->scheduleService = new ScheduleService($this->getEntityManager());
-        $this->lessonTimeService = new LessonTimeService($this->getEntityManager());
+        $this->lessonsService = new LessonService($entityManager);
+        $this->scheduleService = new ScheduleService($entityManager);
+
+        $this->lessonTimeService = new LessonTimeService($entityManager);
+        $this->timezoneService = new TimeZoneService();
     }
 
     /**
@@ -285,9 +292,28 @@ class LessonsController extends AbstractController
             return $this->json(['message' => 'Неверные данные!']);
         }
 
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        if ($gmtNumeric < 0){
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        }
+        $timeOffset = $trainerTimezone - (int)$data->timezone;
+
+        $lessons = [];
+        foreach ($data->lessons as $lesson) {
+            $carbon = Carbon::createFromFormat('d.m.Y', $lesson->date);
+            $carbon->setHour($lesson->time - $timeOffset);
+
+            $lessons[] = [
+                'date' => $carbon->format('d.m.Y'),
+                'time' => $carbon->hour
+            ];
+        }
         /** @var User $user */
         $user = $this->getUser();
-        $lessons = $data->lessons ?? [];
 
         $lessons = $this->lessonsService
             ->decorationLessonsForPayed($lessons);

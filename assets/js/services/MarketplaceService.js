@@ -45,8 +45,16 @@ class MarketplaceService extends Service{
     }
 
     setLessonPay = async (lessons, trainerId) => {
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0){
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
         const {data} = await axios.post(`/${this.lang}/lessons/create/`, {
             lessons,
+            timezone,
             trainer_id: trainerId
         });
         return data;
