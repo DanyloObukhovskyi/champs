@@ -127,7 +127,7 @@
 <!--                собой процесс внедрения и модернизации соответствующий условий-->
 <!--                активизации:-->
 <!--            </p>-->
-            <a :href="trainerUrl" class="confirm" @click="show = false">Принять</a>
+            <a :href="trainerUrl + `?type=${type}`" class="confirm" @click="show = false">Принять</a>
         </div>
     </div>
 </template>

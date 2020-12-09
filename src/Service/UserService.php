@@ -11,6 +11,7 @@ use App\Entity\Teachers;
 use App\Entity\TrainerAchievement;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\News\NewsService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService  extends EntityService
@@ -90,12 +91,13 @@ class UserService  extends EntityService
     }
 
     /**
-     * @param $user
+     * @param User $user
+     * @param bool $isFull
      * @return array
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function decorator(User $user)
+    public function decorator(User $user, $isFull = false)
     {
         /** @var Teachers $trainer */
         $trainer = $this->entityManager->getRepository(Teachers::class)
@@ -119,30 +121,6 @@ class UserService  extends EntityService
 
         $user->setTrainer($trainer);
 
-        $reviews = $this->entityManager
-            ->getRepository(Review::class)
-            ->findRateByTrainerId($user->getId());
-
-        $sum = 0;
-        $count = 0;
-
-        $keys = [];
-        for ($i = 1; $i <= 10; $i++){
-            $keys[$i] = 0;
-        }
-        foreach ($reviews['entity'] as $review)
-        {
-            /** @var Review $review */
-            $sum += $review['rate'];
-            $keys[$review['rate']]++;
-            $count++;
-        }
-
-        $result = 0;
-        if($sum > 0)
-        {
-            $result = round($sum / $count, 2);
-        }
         $videos = $this->trainerVideosService->getByTrainer($user);
         $videos = $this->trainerVideosService->decorator($videos);
 
@@ -152,7 +130,9 @@ class UserService  extends EntityService
                 $trainerGame = $game;
             }
         }
-        if (!empty($trainer->getTimeZone())){
+
+        $timezone = $trainer->getTimeZone();
+        if (!empty($timezone)){
             [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
                 ->getGmtTimezoneString($trainer->getTimeZone());
         } else {
@@ -161,11 +141,21 @@ class UserService  extends EntityService
         }
         $timeZone = "$timeZone ($gmt)";
 
-        $achievements = $this->entityManager->getRepository(TrainerAchievement::class)
-            ->findBy([
+
+        if ($isFull) {
+            $achievementsCriteria = [
+                'trainer' => $user->getTrainer(),
+            ];
+        } else {
+            $achievementsCriteria = [
                 'trainer' => $user->getTrainer(),
                 'show' => true
-            ]);
+            ];
+        }
+        $achievements = $this->entityManager
+            ->getRepository(TrainerAchievement::class)
+            ->findBy($achievementsCriteria);
+
         $achievementsArray = [];
 
         /** @var TrainerAchievement $achievement */
@@ -196,6 +186,40 @@ class UserService  extends EntityService
             ];
         }
 
+        $reviews = $this->entityManager
+            ->getRepository(Review::class)
+            ->findRateByTrainerId($user->getId());
+
+        $sum = 0;
+        $count = 0;
+
+        $keys = [];
+        for ($i = 1; $i <= 10; $i++){
+            $keys[$i] = 0;
+        }
+
+        $reviewsParse = [];
+
+        foreach ($reviews as $review){
+            /** @var Review $review */
+            $sum += $review['rate'];
+            $keys[$review['rate']]++;
+            $count++;
+
+            $newReview = $review;
+
+            $reviewCreatedAt = $review['createdAt']->format('d F H:m');
+            $newReview['dateRu'] = NewsService::replaceMonth($reviewCreatedAt);
+
+            $reviewsParse[] = $newReview;
+        }
+
+        $result = 0;
+        if($sum > 0)
+        {
+            $result = round($sum / $count, 2);
+        }
+
         return [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -212,7 +236,7 @@ class UserService  extends EntityService
             'ratingTotal' => $result,
             'rating' => $keys,
             'reviewCount' => $count,
-            'reviews' => $reviews['entity'],
+            'reviews' => $reviewsParse,
             'videos' => $videos,
             'timeZone' => $timeZone,
             'achievements' => $achievementsArray,

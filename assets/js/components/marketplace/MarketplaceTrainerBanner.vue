@@ -45,7 +45,8 @@
                 </a>
             </div>
         </div>
-        <div class="right">
+        <div class="right" :style="background">
+
         </div>
     </div>
 </template>
@@ -53,9 +54,19 @@
 <script>
     export default {
         name: "MarketplaceTrainerBanner",
-        props: ['social'],
-        mounted() {
-            console.log(this.social)
+        props: ['social', 'banner'],
+        computed: {
+            background() {
+                const style = {
+                    'background-image' : 'url("/images/marketplace/trainerBanner.png")'
+                }
+
+                if (this.banner !== null){
+                    style['background-image'] = `url("/uploads/banners/${this.banner}")`;
+                }
+
+                return style;
+            }
         }
     }
 </script>
@@ -106,6 +117,7 @@
                         width: 3.5vw;
                         padding: .8vw 0 .8vw 0;
                         clip-path: polygon(0 0, 100% 0, 77% 100%, 0% 100%);
+                        margin-left: -.1vw;
 
                         img {
                             height: 1vw;
@@ -146,6 +158,13 @@
 
                 .text {
                     color: #fff;
+                }
+
+                .trainer-social {
+                    a {
+                        background-color: #2d3135;
+                        color: white;
+                    }
                 }
             }
         }

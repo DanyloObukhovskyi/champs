@@ -7,25 +7,32 @@ use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\ScheduleService;
-use App\Traits\EntityManager;
+use App\Service\TimeZoneService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
 
 class SchleduleController extends AbstractController
 {
-    use EntityManager;
-
     /**
      * @var ScheduleService
      */
     public $scheduleService;
 
-    public function __construct()
+    /**
+     * @var TimeZoneService
+     */
+    public $timezoneService;
+
+    public $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->scheduleService = new ScheduleService($this->getEntityManager());
+        $this->entityManager = $entityManager;
+
+        $this->scheduleService = new ScheduleService($entityManager);
+        $this->timezoneService = new TimeZoneService();
     }
 
     /**
@@ -135,6 +142,42 @@ class SchleduleController extends AbstractController
 
         $schedule = $this->scheduleService
             ->createWeek($userId, $dateFrom, $isStudent);
+
+        return $this->json($schedule);
+    }
+
+    /**
+     * Schedule /ru/calendar/*
+     *
+     * @Route("/ru/calendar/trainer/date/day", methods={"POST"})
+     */
+    public function viewSchleduleDay(Request $request)
+    {
+        $form = json_decode($request->getContent(), false);
+        $userId = $form->trainerId;
+        $date = new \DateTime($form->date);
+
+        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId: true;
+
+        /** @var Teachers $trainer */
+        $trainer = $this->entityManager->getRepository(Teachers::class)->findOneBy([
+            'userid' => $userId
+        ]);
+
+        $userTimezone = $form->timezone;
+
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        if ($gmtNumeric < 0){
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        }
+
+        $timeOffset = $trainerTimezone - $userTimezone;
+        $schedule = $this->scheduleService
+            ->createDay($userId, $date, $timeOffset, $isStudent);
 
         return $this->json($schedule);
     }

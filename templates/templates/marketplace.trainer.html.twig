@@ -28,7 +28,11 @@
             </div>
         </div>
         <div class="ml-8 mr-8 p-0 mt-2">
-            <marketplace-trainer-page :social="{{setting.social|json_encode}}" trainer-id="{{ trainer.id }}"/>
+            <marketplace-trainer-page
+                    :social="{{setting.social|json_encode}}"
+                    banner="{{ setting.get('marketplaceBanner') is not null ? setting.get('marketplaceBanner').value: null }}"
+                    trainer-id="{{ trainer.id }}">
+            </marketplace-trainer-page>
         </div>
     </div>
 {% endblock %}

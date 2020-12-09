@@ -536,6 +536,37 @@
                     }
                 }
             }
+
+            if (isset($_FILES['marketplace_banner'])){
+                if(!empty($_FILES["marketplace_banner"]["name"])) {
+                    $files = $_FILES;
+                    $this->load->library ('upload');
+
+                    $config['upload_path'] = $this->config->item('upload_banner-pic');
+                    $config['allowed_types'] = 'jpeg|jpg|png';
+                    $this->upload->initialize($config);
+
+                    $bytes = random_bytes (11);
+
+                    $ext = explode (".", $files["marketplace_banner"]["name"]);
+                    $ext = array_pop ($ext);
+                    $fileName = bin2hex ($bytes).".".$ext;
+
+                    $_FILES['marketplace_banner']['name'] = $fileName;
+
+                    if (!$this->upload->do_upload('marketplace_banner')) {
+                        $error = array ('error' => $this->upload->display_errors ());
+
+                        die(var_dump($error));
+                        redirect ($_SERVER["HTTP_REFERER"]);
+                        die();
+                    } else {
+                        $data = array ('upload_data' => $this->upload->data());
+                        $this->setting_model->set_by_key('marketplaceBanner', $fileName);
+                    }
+                }
+            }
+
             $settings = $this->setting_model->get_all();
 
             $current_u_can = $this->users_model->get_capabilities($this->UserID);
@@ -552,6 +583,7 @@
             $data['banner']['text'] = $this->setting_model->get_by_key('bannerText')[0] ?? null;
             $data['banner']['url'] = $this->setting_model->get_by_key('bannerUrl')[0] ?? null;
             $data['banner']['image'] = $this->setting_model->get_by_key('bannerImage')[0] ?? null;
+            $data['marketplaceBanner'] = $this->setting_model->get_by_key('marketplaceBanner')[0] ?? null;
 
             $data['images_path'] = $this->config->item('display_banner-pic');
 

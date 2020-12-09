@@ -110,7 +110,31 @@
                                 <?php echo $banner['text']['value']?>
                             </div>
                         </div>
-                        <img class="preview" id="img_preview" src="<?php echo $images_path.$banner['image']['value']?>" style="margin: 0;">
+                        <img class="preview preview_image" id="img_preview" src="<?php echo $images_path.$banner['image']['value']?>" style="margin: 0;">
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php if(isset($marketplaceBanner)):?>
+                <h1 class="main-title"><?php echo $marketplaceBanner['title']?></h1>
+                <div class="form-group">
+                    <div class="changePass mt-25" style="display: inline-block;">
+                        <div class="changePassBTN mt-5">
+                            <input type="file" name="marketplace_banner" style="opacity: 0"/>
+                            <div class="changePassBTN" style="margin-top: -17px !important;"> загрузить фото
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uploadImgTxT" style="display: none;" id="upload_data">
+                        <div class="txt-orange uploadImgTxT ml-10" id="img_name"></div>
+                        <div class="txt-orange uploadImgTxT  ml-10 rmo_close"></div>
+                    </div>
+                </div>
+                <div class="col-item w-100">
+                    <label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img
+                            style="top: 3px;" class="search-img"
+                            src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
+                    <div class="mb-10 slide-preview" style="display: flex; justify-content: center;">
+                        <img class="preview preview_image" id="marketplace_banner_preview" src="<?php echo $images_path.$marketplaceBanner['value']?>" style="margin: 0;">
                     </div>
                 </div>
             <?php endif; ?>
@@ -125,10 +149,11 @@
 
 <script>
     const imagePreview = document.getElementById('img_preview');
+    const marketplaceBannerPreview = document.getElementById('marketplace_banner_preview');
     const text = document.getElementById('text');
 
     window.onload = function () {
-        document.querySelector('input[type="file"]').addEventListener('change', function () {
+        document.querySelector('input[name="file"]').addEventListener('change', function () {
             if (this.files && this.files[0]) {
                 const url = URL.createObjectURL(this.files[0]);
 
@@ -142,12 +167,27 @@
                 imagePreview.style.width = '100%';
             }
         });
+
+        document.querySelector('input[name="marketplace_banner"]').addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const url = URL.createObjectURL(this.files[0]);
+
+                if (this.files[0].type != "image/jpg"
+                    && this.files[0].type != "image/jpeg"
+                    && this.files[0].type != "image/svg+xml"
+                    && this.files[0].type != "image/png") {
+                    return;
+                }
+                marketplaceBannerPreview.src = url;
+                marketplaceBannerPreview.style.width = '100%';
+            }
+        });
     };
 
-    imagePreview.onerror = function () {
+    $('.preview_image').on('error', function () {
         event.target.src = 'https://champs.pro/images/temp/matches/prof-pic.svg';
         event.target.style.width = '50%';
-    }
+    })
 
     text.oninput = function () {
         document.getElementById('text-preview').innerHTML = event.target.value;

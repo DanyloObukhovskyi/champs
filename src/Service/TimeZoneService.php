@@ -70,4 +70,10 @@ class TimeZoneService
 
         return $timezones;
     }
+
+
+    public function getTimezoneOffsetFromString($timezoneString = null)
+    {
+
+    }
 }

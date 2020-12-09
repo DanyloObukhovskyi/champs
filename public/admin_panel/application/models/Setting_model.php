@@ -18,7 +18,8 @@ class Setting_model extends CI_Model
     public const BANNER = [
         'bannerText',
         'bannerImage',
-        'bannerUrl'
+        'bannerUrl',
+        'marketplaceBanner'
     ];
 
     public function get_social()

@@ -397,4 +397,19 @@ class UserController extends AbstractController
 
         return $this->json($user);
     }
+
+    /**
+     * @Route("/ru/user/check/email")
+     */
+    public function checkIsEmailValid(Request $request)
+    {
+        $email = $request->get('email');
+
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
+            'email' => $email
+        ]);
+        return isset($user) ?
+            $this->json('Этот эмейл уже занят!',422):
+            $this->json('ok');
+    }
 }

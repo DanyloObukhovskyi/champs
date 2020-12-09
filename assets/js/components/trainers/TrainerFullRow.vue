@@ -62,6 +62,14 @@
                 </div>
             </div>
         </div>
+        <div class="description" v-show="show && type !== null">
+            <p class="title">
+                {{description[type] ? description[type].title: ''}}
+            </p>
+            <p class="text">
+                {{description[type] ? description[type].text: ''}}
+            </p>
+        </div>
         <div class="trainer-footer">
             <div class="rank">
                 <label>Ранг</label>
@@ -79,27 +87,20 @@
             </div>
             <div class="achievements">
                 <label v-if="trainer.achievements.length > 0">Достижения</label>
-                <div class="achievement" v-for="achievement in trainer.achievements">
-                    <div class="name">
-                        {{achievement.tournament}}
-                    </div>
-                    <div class="position">
-                        {{achievement.achievement}}
+                <div class="d-flex flex-wrap">
+                    <div class="achievement" v-for="achievement in trainer.achievements">
+                        <div class="name">
+                            {{achievement.tournament}}
+                        </div>
+                        <div class="position">
+                            {{achievement.achievement}}
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="video-slider">
                 <trainer-row-video-slider :videos="trainer.videos"/>
             </div>
-        </div>
-        <div class="description" v-if="show && type !== null" @click="show = false">
-            <p class="title">
-                {{description[type].title}}
-            </p>
-            <p class="text">
-                {{description[type].text}}
-            </p>
-            <a :href="trainerUrl" class="confirm" @click="show = false">Принять</a>
         </div>
     </div>
 </template>
@@ -194,6 +195,7 @@
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
+                align-items: center;
 
                 .trainer-data {
                     display: flex;
@@ -358,10 +360,11 @@
             margin-top: 1vw;
 
             .achievements {
-                width: 25%;
+                width: 50%;
 
                 .achievement {
                     font-size: 1vw;
+                    width: 50%;
 
                     .position {
                         color: #ff6d1d;
@@ -399,14 +402,25 @@
 
         .description {
             z-index: 1;
-            position: absolute;
-            width: 100%;
-            margin-left: -1vw;
-            top: 50%;
+            width: 102.5%;
             background-color: #eff0f0;
             padding: 1vw;
-            -webkit-animation: jelly 1000ms linear both;
-            animation: jelly 1000ms linear both;
+            -webkit-animation: height-bounce 1000ms linear both;
+            animation: height-bounce 1000ms linear both;
+            margin-left: -1vw;
+            margin-top: 1vw;
+            margin-bottom: 1vw;
+
+            &::before{
+                content: "";
+                border: solid transparent;
+                position: absolute;
+                bottom: 100%;
+                left: 20%;
+                border-bottom-color: #eee;
+                border-width: 9 ;
+                margin-left: -9px;
+            }
 
             .title {
                 color: #ff6d1d;
@@ -429,20 +443,6 @@
             ul {
                 margin-left: -1vw;
                 margin-bottom: 0;
-            }
-
-            a.confirm {
-                display: flex;
-                justify-content: center;
-                margin-top: 1vw;
-                outline: unset;
-                color: white;
-                border: unset;
-                font-size: 1vw;
-                padding: .4vw 0 .5vw 0;
-                cursor: pointer;
-                width: 100%;
-                background-color: #ff6d1d;
             }
         }
     }
@@ -472,23 +472,20 @@
                         }
                     }
                 }
+            }
 
-                .price-list {
-                    .price-row {
-                        width: 30%;
-                        padding: .1vw .11vw;
-                        background: url(/images/marketplace/darkPriceBackground.png);
+            .price-list {
+                .price-row {
+                    background: url(/images/marketplace/darkPriceBackground.png);
+                    background-position: center;
+                    background-size: cover;
+
+                    &:hover {
+                        transition: all .5s ease-in-out;
+                        background: url(/images/marketplace/priceBackgroundHover.png);
                         background-position: center;
                         background-size: cover;
-                        height: 4.1vw;
-
-                        &:hover {
-                            transition: all .5s ease-in-out;
-                            background: url(/images/marketplace/priceBackgroundHover.png);
-                            background-position: center;
-                            background-size: cover;
-                            color: white;
-                        }
+                        color: white;
                     }
                 }
             }

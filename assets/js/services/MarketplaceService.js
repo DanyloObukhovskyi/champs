@@ -26,6 +26,31 @@ class MarketplaceService extends Service{
 
         return data;
     }
+
+    getTrainerScheduleDay = async (trainerId, date) => {
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0){
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+
+        const {data} = await axios.post(`/${this.lang}/calendar/trainer/date/day`, {
+            trainerId,
+            date,
+            timezone
+        })
+        return data;
+    }
+
+    setLessonPay = async (lessons, trainerId) => {
+        const {data} = await axios.post(`/${this.lang}/lessons/create/`, {
+            lessons,
+            trainer_id: trainerId
+        });
+        return data;
+    }
 }
 
 export default new MarketplaceService();

@@ -43,7 +43,7 @@ class MarketplaceController extends AbstractController
     public function getTrainerData($userId)
     {
         $trainer = $this->userService->find($userId);
-        $trainer = $this->userService->decorator($trainer);
+        $trainer = $this->userService->decorator($trainer, true);
 
         return $this->json($trainer);
     }
