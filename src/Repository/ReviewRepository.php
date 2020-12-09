@@ -47,9 +47,7 @@ class ReviewRepository extends ServiceEntityRepository
             ->addSelect("o.dateTimeFrom", "o.dateTimeTo")
             ->getQuery();
 
-        return [
-            'entity' => $query->getResult(),
-        ];
+        return $query->getResult();
     }
 
     /**

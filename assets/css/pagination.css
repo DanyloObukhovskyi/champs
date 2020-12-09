@@ -1,0 +1,37 @@
+.pagination {
+    list-style: none;
+    display: flex;
+    margin: revert;
+    justify-content: center;
+}
+
+.pagination li:first-child a {
+    border-radius: .3vw 0 0 .3vw;
+}
+
+.pagination li:last-child a {
+    border-radius: 0 .3vw .3vw 0;
+}
+
+.pagination li a {
+    outline: unset;
+    color: black;
+    border: .1vw solid #ff6d1d;
+    font-size: 1vw;
+    padding: 0 1.5vw;
+    cursor: pointer;
+    background: transparent;
+    padding: 0.6vw 1vw;
+}
+.dark .pagination li a {
+    color: #FFFFFF;
+}
+.pagination li.active a {
+    background-color: #FF6D1D;
+    color: #FFFFFF;
+}
+
+.pagination li:hover a {
+    background-color: #FF6D1D;
+    color: #FFFFFF;
+}

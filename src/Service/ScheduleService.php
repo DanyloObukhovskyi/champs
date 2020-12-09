@@ -5,8 +5,10 @@ namespace App\Service;
 
 
 use App\Entity\Schedule;
+use App\Entity\User;
 use App\Repository\ScheduleRepository;
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ScheduleService extends EntityService
 {
@@ -14,6 +16,15 @@ class ScheduleService extends EntityService
 
     /** @var ScheduleRepository */
     protected $repository;
+
+    protected $timezoneService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->timezoneService = new TimeZoneService();
+    }
 
     /**
      * @param int $teacherId
@@ -23,6 +34,84 @@ class ScheduleService extends EntityService
     public function findByTrainerAndDate(int $teacherId, string $date)
     {
         return $this->repository->findByTrainerAndDate($teacherId, $date);
+    }
+
+    /**
+     * @param $userId
+     * @param $date
+     * @param int $timeOffset
+     * @param bool $isStudent
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function createDay($userId, $date, int $timeOffset, bool $isStudent = false)
+    {
+        $trainer = $this->entityManager
+            ->getRepository(User::class)
+            ->find($userId);
+
+        $date = new \DateTime($date->format("Y-m-d"));
+        $hours = 24;
+
+        $carbonDayDate = Carbon::createFromFormat(
+            "Y-m-d",
+            $date->format("Y-m-d")
+        );
+        $carbonDayDate->setHour( 0 - $timeOffset);
+        $carbonDayDate->setMinutes(0);
+
+        $schedules = [];
+        for ($i = 0; $i < $hours; $i++)
+        {
+            $scheduleDayDate = Carbon::createFromFormat(
+                "Y-m-d",
+                $date->format("Y-m-d")
+            );
+            $scheduleDayDate->setHour($i);
+            $scheduleDayDate->setMinutes(0);
+
+            /** @var Schedule $scheduleEntity */
+            $scheduleEntity = $this->repository
+                ->getByTrainerDateAndTime(
+                    $trainer,
+                    $carbonDayDate->format("Y-m-d"),
+                    $carbonDayDate->hour
+                );
+            if (isset($scheduleEntity)){
+                $carbonNow = Carbon::now();
+                $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
+
+                if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0 and $isStudent){
+                    $status = 0;
+                } else {
+                    $status = $scheduleEntity->getStatus();
+                }
+                $schedules[] = [
+                    'date' => $scheduleEntity->getDate(),
+                    'time' => $scheduleDayDate->hour,
+                    'status' => $status
+                ];
+            } else {
+                $schedules[] = [
+                    'date' => $scheduleDayDate->format("Y-m-d"),
+                    'time' => $scheduleDayDate->hour,
+                    'status' => 0
+                ];
+            }
+            $carbonDayDate->addHour(1);
+        }
+
+        $scheduleCollect = [];
+        foreach ($schedules as $schedule){
+            $timeFrom = $schedule['time'] < 10 ? "0".$schedule['time'] : $schedule['time'];
+            $timeTo = $schedule['time'] + 1 < 10 ? "0".($schedule['time'] + 1) : $schedule['time'] + 1;
+            $time = "time". $timeFrom. "_". $timeTo;
+
+            $scheduleCollect[$time] = $schedule['status'];
+        }
+        $scheduleCollect['date'] = $date->format("Y-m-d");
+
+        return $scheduleCollect;
     }
 
     /**
@@ -43,39 +132,7 @@ class ScheduleService extends EntityService
         $schedules = [];
         for ($i = 0; $i < 7; $i++)
         {
-            $schedulesEntities = $this->repository->findByTrainerAndDate($userId, $from->format("Y-m-d"));
-
-            $scheduleCollect = [];
-            for ($k = 0; $k < $hours; $k++)
-            {
-                $timeFrom = $k < 10 ? "0$k" : $k;
-                $timeTo = $k + 1 < 10 ? "0".($k + 1) : $k + 1;
-                $time = "time". $timeFrom. "_". $timeTo;
-
-                $scheduleCollect[$time] = 0;
-
-                /** @var Schedule $schedule */
-                foreach ($schedulesEntities as $schedule)
-                {
-                    if ($schedule->getTime() === $k)
-                    {
-                        $carbon = Carbon::create(
-                            $schedule->getDate()->format('Y'),
-                            $schedule->getDate()->format('m'),
-                            $schedule->getDate()->format('d'),
-                            $k
-                        );
-                        if (((int)$carbonNow->timestamp - (int)$carbon->timestamp) > 0 and $isStudent){
-                            $scheduleCollect[$time] = 10;
-                        } else {
-                            $scheduleCollect[$time] = $schedule->getStatus();
-                        }
-                    }
-                }
-            }
-            $scheduleCollect['date'] = $from->format("Y-m-d");
-
-            $schedules[] = $scheduleCollect;
+            $schedules[] = $this->createDay($userId, $from, $isStudent);
             $from = $from->modify('+1 day');
         }
         return $schedules;

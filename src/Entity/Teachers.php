@@ -67,7 +67,13 @@ class Teachers
      */
     private $streamType;
 
+
     private $comissionCost;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Award::class)
+     */
+    private $awards;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -78,6 +84,11 @@ class Teachers
      * @ORM\Column(type="string", nullable=true)
      */
     private $timeZone;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : true})
+     */
+    private $isProvideTraining;
 
     public function getId(): ?int
     {
@@ -244,5 +255,37 @@ class Teachers
     public function setIsLessonCost($isLessonCost): void
     {
         $this->isLessonCost = $isLessonCost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsProvideTraining()
+    {
+        return $this->isProvideTraining;
+    }
+
+    /**
+     * @param mixed $isProvideTraining
+     */
+    public function setIsProvideTraining($isProvideTraining): void
+    {
+        $this->isProvideTraining = $isProvideTraining;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAwards()
+    {
+        return $this->awards;
+    }
+
+    /**
+     * @param mixed $awards
+     */
+    public function setAwards($awards): void
+    {
+        $this->awards = $awards;
     }
 }

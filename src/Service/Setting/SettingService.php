@@ -16,8 +16,23 @@ class SettingService extends EntityService
         'youtube',
         'telegram',
         'zen',
-        'twich',
+        'twitch',
         'instagram',
+    ];
+
+    public const TRAINING_DESCRIPTION = [
+        'individual' => [
+            'title' => 'trainingIndividualTitle',
+            'text' => 'trainingIndividualText',
+        ],
+        'group' => [
+            'title' => 'trainingGroupTitle',
+            'text' => 'trainingGroupText',
+        ],
+        'analytic' => [
+            'title' => 'trainingAnalyticsTitle',
+            'text' => 'trainingAnalyticsText',
+        ],
     ];
 
     protected $entity = Setting::class;

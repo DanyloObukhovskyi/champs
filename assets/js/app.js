@@ -35,6 +35,8 @@ import EventPage from "./pages/EventPage";
 import EventsDigestPage from "./pages/EventsDigestPage";
 import header from "./layouts/header";
 import WeaponsDoughnut from "./components/statistics/WeaponsDoughnut";
+import MarketplacePage from "./pages/MarketplacePage";
+import MarketplaceTrainerPage from "./pages/MarketplaceTrainerPage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -66,13 +68,16 @@ Vue.component('events-page', EventsPage)
 Vue.component('event-page', EventPage)
 Vue.component('events-digest-page', EventsDigestPage)
 Vue.component('weapon-doughnut', WeaponsDoughnut)
-
 Vue.component('mvp-main', MvpMain)
 Vue.component('mvp-page', MvpPage)
 Vue.component('mvp-team-page', MvpTeamPage)
 Vue.component('mvp-invite-page', MvpInviteTeamPage)
 Vue.component('mvp-tournaments-list', MvpTournamentsList)
 Vue.component('login-form', LoginModal)
+Vue.component('marketplace-page', MarketplacePage)
+Vue.component('marketplace-trainer-page', MarketplaceTrainerPage)
+// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
+// import $ from 'jquery';
 
 new Vue({
     el: '#app',

@@ -159,7 +159,7 @@ class EventsController extends AbstractController
     public function digestPage()
     {
         return $this->render('templates/digest.events.html.twig', [
-            'router' => 'events',
+            'router' => 'digest',
         ]);
     }
 

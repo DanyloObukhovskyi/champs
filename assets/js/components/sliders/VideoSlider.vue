@@ -4,7 +4,7 @@
         <div class="slider-body">
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
-                    <div href="" class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
+                    <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
                         <a target="_blank" :href="'https://www.youtube.com/watch?v=' + video.video_id">
                             <img :src="video.video_id ? getVideoLogo(video.video_id): 'images/temp/news/' + video.logo"
                                  class="logo videoBox"

@@ -38,14 +38,8 @@
     <?php } ?>
     <aside>
         <ul>
-            <li style="<?php print ($current_u_can[0] == 1 || $current_u_can[1]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
-            <li style="<?php print ($current_u_can[0] == 1 || $current_u_can[2]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
-            <li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
-            <li style="<?php print ($current_u_can[0] == 1 || $current_u_can[3]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
-            <li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
-            <li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
-            <li class="active" style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a class="active" href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a></li>
-            <li><a href="<?php echo base_url('c-admin/slides'); ?>">Слайды</a></li>
+            <?php $activePath = 'settings';?>
+            <?php require_once APPPATH.'views/sidebar.php'?>
         </ul>
     </aside>
     <!--- ---->
@@ -116,7 +110,31 @@
                                 <?php echo $banner['text']['value']?>
                             </div>
                         </div>
-                        <img class="preview" id="img_preview" src="<?php echo $images_path.$banner['image']['value']?>" style="margin: 0;">
+                        <img class="preview preview_image" id="img_preview" src="<?php echo $images_path.$banner['image']['value']?>" style="margin: 0;">
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php if(isset($marketplaceBanner)):?>
+                <h1 class="main-title"><?php echo $marketplaceBanner['title']?></h1>
+                <div class="form-group">
+                    <div class="changePass mt-25" style="display: inline-block;">
+                        <div class="changePassBTN mt-5">
+                            <input type="file" name="marketplace_banner" style="opacity: 0"/>
+                            <div class="changePassBTN" style="margin-top: -17px !important;"> загрузить фото
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uploadImgTxT" style="display: none;" id="upload_data">
+                        <div class="txt-orange uploadImgTxT ml-10" id="img_name"></div>
+                        <div class="txt-orange uploadImgTxT  ml-10 rmo_close"></div>
+                    </div>
+                </div>
+                <div class="col-item w-100">
+                    <label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img
+                            style="top: 3px;" class="search-img"
+                            src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
+                    <div class="mb-10 slide-preview" style="display: flex; justify-content: center;">
+                        <img class="preview preview_image" id="marketplace_banner_preview" src="<?php echo $images_path.$marketplaceBanner['value']?>" style="margin: 0;">
                     </div>
                 </div>
             <?php endif; ?>
@@ -131,10 +149,11 @@
 
 <script>
     const imagePreview = document.getElementById('img_preview');
+    const marketplaceBannerPreview = document.getElementById('marketplace_banner_preview');
     const text = document.getElementById('text');
 
     window.onload = function () {
-        document.querySelector('input[type="file"]').addEventListener('change', function () {
+        document.querySelector('input[name="file"]').addEventListener('change', function () {
             if (this.files && this.files[0]) {
                 const url = URL.createObjectURL(this.files[0]);
 
@@ -148,12 +167,27 @@
                 imagePreview.style.width = '100%';
             }
         });
+
+        document.querySelector('input[name="marketplace_banner"]').addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const url = URL.createObjectURL(this.files[0]);
+
+                if (this.files[0].type != "image/jpg"
+                    && this.files[0].type != "image/jpeg"
+                    && this.files[0].type != "image/svg+xml"
+                    && this.files[0].type != "image/png") {
+                    return;
+                }
+                marketplaceBannerPreview.src = url;
+                marketplaceBannerPreview.style.width = '100%';
+            }
+        });
     };
 
-    imagePreview.onerror = function () {
+    $('.preview_image').on('error', function () {
         event.target.src = 'https://champs.pro/images/temp/matches/prof-pic.svg';
         event.target.style.width = '50%';
-    }
+    })
 
     text.oninput = function () {
         document.getElementById('text-preview').innerHTML = event.target.value;

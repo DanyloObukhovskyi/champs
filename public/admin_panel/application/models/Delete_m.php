@@ -24,6 +24,8 @@
 			
 			return false;
 		}
+
+
 		
 		function delete_match($id=0) {
 			$id = (int) $id;

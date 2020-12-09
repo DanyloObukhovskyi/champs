@@ -58,7 +58,6 @@
     export default {
         name: "LoginModal",
         inject: [
-            'axios',
             'config'
         ],
         props: {
@@ -109,9 +108,9 @@
 
                 formData.append('email', this.email);
                 formData.append('password', this.password);
-                formData.append('_csrf_token', this.axios._csrf_token);
+                formData.append('_csrf_token', axios._csrf_token);
 
-                this.axios.post('/ru/login', formData)
+                axios.post('/ru/login', formData)
                     .then((res) => {
                         if (res.data.error) {
                             this.error = true;
@@ -130,9 +129,9 @@
                 formData.append('user[email]', this.email);
                 formData.append('user[password][first]', this.password);
                 formData.append('user[password][second]', this.password);
-                formData.append('_csrf_token', this.axios._csrf_token);
+                formData.append('_csrf_token', axios._csrf_token);
 
-                this.axios.post('/ru/registration', formData)
+                axios.post('/ru/registration', formData)
                     .then((res) => {
                         if (res.data.error) {
                             this.error = true;
@@ -153,7 +152,7 @@
                 const formData = new FormData();
                 formData.append('email', this.email);
 
-                this.axios.post('/ru/generate/confirm/code', formData)
+                axios.post('/ru/generate/confirm/code', formData)
             }
         }
     }

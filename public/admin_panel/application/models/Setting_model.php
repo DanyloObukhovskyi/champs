@@ -11,14 +11,15 @@ class Setting_model extends CI_Model
         'youtube',
         'telegram',
         'zen',
-        'twich',
+        'twitch',
         'instagram',
     ];
 
     public const BANNER = [
         'bannerText',
         'bannerImage',
-        'bannerUrl'
+        'bannerUrl',
+        'marketplaceBanner'
     ];
 
     public function get_social()

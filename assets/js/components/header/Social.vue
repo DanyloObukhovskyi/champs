@@ -1,6 +1,6 @@
 <template>
     <div class="social mr-5">
-        <a class="h" :href="social.twich ? social.twich.link : ''" target="_blank">
+        <a class="h" :href="social.twitch ? social.twitch.link : ''" target="_blank">
             <svg width="15" height="15" viewBox="0 0 19 19" fill="#5c6b79" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1.265 0L0 3.236V16.459H4.502V18L7.033 18.85L9.425 16.459H13.083L18.006 11.535V0H1.265ZM16.317 10.691L13.504 13.505H9.002L6.611 15.896V13.505H2.813V1.688H16.317V10.691ZM13.505 4.924V9.847H11.817V4.924H13.505ZM9.003 4.924V9.847H7.315V4.924H9.003Z"
                       fill="#5c6b79"/>
