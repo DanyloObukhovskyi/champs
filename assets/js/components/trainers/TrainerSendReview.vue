@@ -18,8 +18,12 @@
                     <div class="title">Оцените работу тренера</div>
                     <div class="stars">
                         <template v-for="i in [10,9,8,7,6,5,4,3,2,1]">
-                            <input type="radio" v-model="stars" name="rating" :id="`st_${i}`" :value="i"/>
-                            <label :for="`st_${i}`"></label>
+                            <input
+                                type="radio"
+                                name="rating"
+                                :id="`st_${i}`"
+                                :checked="stars === i"/>
+                            <label :for="`st_${i}`" @click="stars === i"></label>
                         </template>
                     </div>
                     <div class="title">Отзыв</div>
