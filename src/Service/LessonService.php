@@ -78,6 +78,7 @@ class LessonService extends EntityService
         $orderedLessons = [];
         foreach ($lessons as $lesson)
         {
+            $lesson = (object)$lesson;
             $lesson->time = (int)explode(':',  $lesson->time)[0];
             $orderedLessons[$lesson->date][] = $lesson;
         }
@@ -88,6 +89,7 @@ class LessonService extends EntityService
             $orderLessons = [];
             foreach ($lessons as $index => $lesson)
             {
+                $lesson = (object)$lesson;
                 if (empty($orderLessons))
                 {
                     $orderLessons[] = $lesson;
