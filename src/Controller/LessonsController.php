@@ -293,7 +293,7 @@ class LessonsController extends AbstractController
         }
 
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            $trainerEntity->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
         if ($gmtNumeric < 0){
             $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
