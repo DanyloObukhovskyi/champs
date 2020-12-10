@@ -59,6 +59,24 @@ class MarketplaceService extends Service{
         });
         return data;
     }
+
+    checkPermissionToReview = async trainerId => {
+        const {data} = await axios.post(`/${this.lang}/check/permission/to/review`, {trainerId});
+
+        return data;
+    }
+
+    sendReview = async form => {
+        const {data} = await  axios.post(`/${this.lang}/lesson/review/`, form)
+
+        return data;
+    }
+
+    getTrainerReviews = async trainerId => {
+        const {data} = await  axios.post(`/${this.lang}/trainer/reviews/${trainerId}`)
+
+        return data;
+    }
 }
 
 export default new MarketplaceService();

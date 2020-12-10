@@ -20,7 +20,10 @@
                     v-if="trainer !== null && !load"
                     :trainer="trainer">
             </trainer-timetable>
-            <trainer-reviews v-if="trainer !== null && !load" :trainer="trainer"/>
+            <trainer-reviews v-if="trainer !== null && !load"
+                             @update="updateReviews"
+                             :trainer="trainer">
+            </trainer-reviews>
         </div>
         <div class="d-flex justify-content-center" v-if="load">
             <loader/>
@@ -90,6 +93,15 @@
                     .then(trainer => {
                         this.trainer = trainer;
                         this.load = false;
+                    })
+            },
+            updateReviews() {
+                MarketplaceService.getTrainerReviews(this.trainer.id)
+                    .then(data => {
+                        this.trainer.reviews = data.reviews;
+                        this.trainer.reviewCount = data.reviewCount;
+                        this.trainer.ratingTotal = data.ratingTotal;
+                        this.trainer.rating = data.rating;
                     })
             }
         },

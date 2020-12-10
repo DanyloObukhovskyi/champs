@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Lessons;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
+use App\Service\News\NewsService;
 
 /**
  * Class ReviewService
@@ -69,5 +70,49 @@ class ReviewService extends EntityService
         return $this->repository->findOneBy([
             'lesson' => $lesson
         ]);
+    }
+
+    /**
+     * @param $reviews
+     * @return array
+     */
+    public function reviewsDecorator($reviews)
+    {
+        $sum = 0;
+        $count = 0;
+
+        $rating = [];
+        for ($i = 1; $i <= 10; $i++){
+            $rating[$i] = 0;
+        }
+
+        $reviewsParse = [];
+
+        foreach ($reviews as $review){
+            /** @var Review $review */
+            $sum += $review['rate'];
+            $rating[$review['rate']]++;
+            $count++;
+
+            $newReview = $review;
+
+            $reviewCreatedAt = $review['createdAt']->format('d F H:m');
+            $newReview['dateRu'] = NewsService::replaceMonth($reviewCreatedAt);
+
+            $reviewsParse[] = $newReview;
+        }
+
+        $result = 0;
+        if($sum > 0)
+        {
+            $result = round($sum / $count, 2);
+        }
+
+        return [
+            'reviews' => $reviewsParse,
+            'reviewCount' => $count,
+            'ratingTotal' => $result,
+            'rating' => $rating
+        ];
     }
 }
