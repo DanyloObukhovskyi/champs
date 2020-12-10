@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="trainer-social">
-                <a :href="social.vk.link">
+                <a :href="social.vk ? social.vk.link : null">
                     <div class="icon">
                         <img src="/images/marketplace/vk.svg">
                     </div>
@@ -19,7 +19,7 @@
                         CHAMPS_PRO
                     </div>
                 </a>
-                <a :href="social.youtube.link">
+                <a :href="social.youtube ? social.youtube.link : null">
                     <div class="icon">
                         <img src="/images/marketplace/youtube.svg">
                     </div>
@@ -27,7 +27,7 @@
                         CHAMPSPRO
                     </div>
                 </a>
-                <a :href="social.telegram.link">
+                <a :href="social.telegram ? social.telegram.link : null">
                     <div class="icon">
                         <img src="/images/marketplace/telegram.svg">
                     </div>
@@ -35,7 +35,7 @@
                         CHAMPS_PRO
                     </div>
                 </a>
-                <a :href="social.twitch.link">
+                <a :href="social.twitch ? social.twitch.link : null">
                     <div class="icon">
                         <img src="/images/marketplace/twitch.svg">
                     </div>
