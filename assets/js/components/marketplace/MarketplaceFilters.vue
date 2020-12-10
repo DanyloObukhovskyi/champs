@@ -32,7 +32,7 @@
         ],
         computed: {
             priceType() {
-                return this.isExpensive ? this.priceTypes.expensive : this.priceTypes.cheaper;
+                return !this.isExpensive ? this.priceTypes.expensive : this.priceTypes.cheaper;
             }
         },
         data() {

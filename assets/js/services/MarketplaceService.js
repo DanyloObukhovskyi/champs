@@ -45,10 +45,36 @@ class MarketplaceService extends Service{
     }
 
     setLessonPay = async (lessons, trainerId) => {
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0){
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
         const {data} = await axios.post(`/${this.lang}/lessons/create/`, {
             lessons,
+            timezone,
             trainer_id: trainerId
         });
+        return data;
+    }
+
+    checkPermissionToReview = async trainerId => {
+        const {data} = await axios.post(`/${this.lang}/check/permission/to/review`, {trainerId});
+
+        return data;
+    }
+
+    sendReview = async form => {
+        const {data} = await  axios.post(`/${this.lang}/lesson/review/`, form)
+
+        return data;
+    }
+
+    getTrainerReviews = async trainerId => {
+        const {data} = await  axios.post(`/${this.lang}/trainer/reviews/${trainerId}`)
+
         return data;
     }
 }

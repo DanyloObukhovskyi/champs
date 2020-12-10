@@ -1,5 +1,6 @@
 <template>
-    <div class="modal fade" id="confirmPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -214,12 +215,12 @@
             .modal-dialog {
                 .modal-content {
                     color: white;
-                    background: rgb(55,58,63);
-                    background: rgb(65,69,75);
-                    background: -moz-linear-gradient(90deg, rgba(65,69,75,1) 0%, rgba(23,26,29,1) 100%);
-                    background: -webkit-linear-gradient(90deg, rgba(65,69,75,1) 0%, rgba(23,26,29,1) 100%);
-                    background: linear-gradient(90deg, rgba(65,69,75,1) 0%, rgba(23,26,29,1) 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#41454b",endColorstr="#171a1d",GradientType=1);
+                    background: rgb(55, 58, 63);
+                    background: rgb(65, 69, 75);
+                    background: -moz-linear-gradient(90deg, rgba(65, 69, 75, 1) 0%, rgba(23, 26, 29, 1) 100%);
+                    background: -webkit-linear-gradient(90deg, rgba(65, 69, 75, 1) 0%, rgba(23, 26, 29, 1) 100%);
+                    background: linear-gradient(90deg, rgba(65, 69, 75, 1) 0%, rgba(23, 26, 29, 1) 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#41454b", endColorstr="#171a1d", GradientType=1);
 
                     .modal-body {
                         .modal-head {

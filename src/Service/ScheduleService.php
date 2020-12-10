@@ -124,7 +124,6 @@ class ScheduleService extends EntityService
     public function createWeek($userId, $dateFrom, $isStudent = false)
     {
         $from = new \DateTime($dateFrom->format("Y-m-d"));
-        $hours = 24;
 
         $carbonNow = Carbon::now();
         $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);

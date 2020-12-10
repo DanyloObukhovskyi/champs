@@ -61,11 +61,18 @@ class UserService  extends EntityService
      */
     protected $repository;
 
+    /**
+     * @var ReviewService
+     */
+    protected $reviewsService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->trainerVideosService = new TrainerVideoService($entityManager);
+        $this->reviewsService = new ReviewService($entityManager);
+
         $this->timeZoneService = new TimeZoneService();
     }
 
@@ -192,35 +199,12 @@ class UserService  extends EntityService
             ->getRepository(Review::class)
             ->findRateByTrainerId($user->getId());
 
-        $sum = 0;
-        $count = 0;
-
-        $keys = [];
-        for ($i = 1; $i <= 10; $i++){
-            $keys[$i] = 0;
-        }
-
-        $reviewsParse = [];
-
-        foreach ($reviews as $review){
-            /** @var Review $review */
-            $sum += $review['rate'];
-            $keys[$review['rate']]++;
-            $count++;
-
-            $newReview = $review;
-
-            $reviewCreatedAt = $review['createdAt']->format('d F H:m');
-            $newReview['dateRu'] = NewsService::replaceMonth($reviewCreatedAt);
-
-            $reviewsParse[] = $newReview;
-        }
-
-        $result = 0;
-        if($sum > 0)
-        {
-            $result = round($sum / $count, 2);
-        }
+        [
+            'reviews' => $reviewsParse,
+            'ratingTotal' => $ratingTotal,
+            'rating' => $rating,
+            'reviewCount' => $count,
+        ] = $this->reviewsService->reviewsDecorator($reviews);
 
         return [
             'id' => $user->getId(),
@@ -235,8 +219,8 @@ class UserService  extends EntityService
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
             'trainer' => $trainer,
-            'ratingTotal' => $result,
-            'rating' => $keys,
+            'ratingTotal' => $ratingTotal,
+            'rating' => $rating,
             'reviewCount' => $count,
             'reviews' => $reviewsParse,
             'videos' => $videos,

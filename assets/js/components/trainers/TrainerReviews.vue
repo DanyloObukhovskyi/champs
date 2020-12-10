@@ -63,17 +63,21 @@
                         </span>
                     </div>
                 </div>
-                <button class="add-review" data-toggle="modal" data-target="#trainerSendReviewModal">
+                <button class="add-review"
+                        data-toggle="modal"
+                        data-target="#trainerSendReviewModal"
+                        v-if="hasPermissionToReview">
                     Оставить отзыв
                 </button>
             </div>
         </div>
-        <!--<trainer-send-review/>-->
+        <trainer-send-review @send="sendReview" v-if="hasPermissionToReview"/>
     </div>
 </template>
 
 <script>
     import TrainerSendReview from "./TrainerSendReview";
+    import MarketplaceService from "../../services/MarketplaceService";
 
     export default {
         name: "TrainerReviews",
@@ -85,7 +89,8 @@
         ],
         data() {
             return {
-                reviewsOffset: 2
+                reviewsOffset: 2,
+                hasPermissionToReview: false
             }
         },
         computed: {
@@ -113,7 +118,33 @@
                     title = `Еще ${offset} отзывов`;
                 }
                 return title;
+            },
+        },
+        methods: {
+            sendReview({rating, review}) {
+                const form = new FormData();
+
+                form.append('trainer_id', this.trainer.id);
+                form.append('rate', rating);
+                form.append('comment', review);
+
+                MarketplaceService.sendReview(form)
+                    .then(() => {
+                        this.updateReviews();
+                    })
+            },
+            updateReviews() {
+                this.$emit('update')
+            },
+            checkPermissionToReview() {
+                MarketplaceService.checkPermissionToReview(this.trainer.id)
+                    .then(res => {
+                        this.hasPermissionToReview = res
+                    })
             }
+        },
+        mounted() {
+            this.checkPermissionToReview();
         }
     }
 </script>

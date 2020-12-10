@@ -149,6 +149,7 @@
             },
             getTimes() {
                 this.load = true;
+
                 MarketplaceService.getTrainerScheduleDay(this.trainer.id, this.date)
                     .then(times => {
                         const timesParse = [];
@@ -194,8 +195,6 @@
             MarketplaceService.getAuthUser()
                 .then(user => {
                     this.user = user;
-
-                    console.log(this.user)
                 })
         }
     }

@@ -8,64 +8,64 @@ use App\Entity\User;
 use App\Service\LessonService;
 use App\Service\ReviewService;
 use App\Traits\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class ReviewController extends AbstractController
 {
-    use EntityManager;
-
+    /**
+     * @var LessonService
+     */
     public $lessonService;
 
+    /**
+     * @var ReviewService
+     */
     public $reviewService;
 
-    public function __construct()
-    {
-        $this->lessonService = new LessonService($this->getEntityManager());
-        $this->reviewService = new ReviewService($this->getEntityManager());
-    }
-
     /**
-     * @Route("/review", name="review")
+     * @var EntityManagerInterface
      */
-    public function index()
+    public $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        return $this->render('review/index.html.twig', [
-            'controller_name' => 'ReviewController',
-        ]);
+        $this->entityManager = $entityManager;
+
+        $this->lessonService = new LessonService($entityManager);
+        $this->reviewService = new ReviewService($entityManager);
     }
 
     /**
-     * @Route("/ru/lesson/review/", methods={"POST"}, name="set_lesson_review")
+     * @Route("/lesson/review/", methods={"POST"}, name="set_lesson_review")
      */
     public function setLessonReview(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $student = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->find(intval($request->request->get('student_id')));
+        $student = $this->getUser();
         $trainer = $this->getDoctrine()
             ->getRepository(User::class)
             ->find(intval($request->request->get('trainer_id')));
-        $lesson = $this->getDoctrine()
-            ->getRepository(Lessons::class)
-            ->find(intval($request->request->get('lesson_id')));
 
         /** @var Review $review */
         $review = new Review();
-        $review->setLesson($lesson);
         $review->setStudent($student);
         $review->setTrainer($trainer);
         $review->setRate($request->request->get('rate'));
-        $review->setTactics($request->request->get('tactics'));
-        $review->setScatter($request->request->get('scatter'));
-        $review->setAim($request->request->get('aim'));
-        $review->setMentor($request->request->get('mentor'));
-        $review->setDuel($request->request->get('duel'));
-        $review->setComment($request->request->get('comment'));
 
+        $review->setTactics($request->request->get('tactics') ?? false);
+        $review->setDuel($request->request->get('duel') ?? false);
+        $review->setScatter($request->request->get('scatter') ?? false);
+        $review->setAim($request->request->get('aim') ?? false);
+        $review->setMentor($request->request->get('mentor') ?? false);
+
+        $review->setComment($request->request->get('comment'));
 
         $entityManager->persist($review);
         $entityManager->flush();
@@ -78,7 +78,7 @@ class ReviewController extends AbstractController
     /**
      * Characteristic /ru/review/*
      *
-     * @Route("/ru/rate/by-user/{id}", name="get_user_rate")
+     * @Route("/rate/by-user/{id}", name="get_user_rate")
      */
     public function getUserRate($id)
     {
@@ -112,9 +112,7 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * Characteristic /ru/review/*
-     *
-     * @Route("/ru/trainer/reviews/{trainerId}", methods={"POST"}, name="get_user_rate")
+     * @Route("/trainer/reviews/{trainerId}", methods={"POST"}, name="get_user_rate")
      */
     public function getTrainerReviews($trainerId)
     {
@@ -122,13 +120,13 @@ class ReviewController extends AbstractController
             ->getRepository(Review::class)
             ->findRateByTrainerId($trainerId);
 
-        return $this->json($reviews['entity']);
+        $reviewsData = $this->reviewService->reviewsDecorator($reviews);
+
+        return $this->json($reviewsData);
     }
 
     /**
-     * Lessons /ru/send/review/lesson/*
-     *
-     * @Route("/ru/review/lesson/{lessonId}", name="review.lesson.post")
+     * @Route("/review/lesson/{lessonId}", name="review.lesson.post")
      */
     public function lessonReview(Request $request, $lessonId)
     {
@@ -145,5 +143,32 @@ class ReviewController extends AbstractController
             }
         }
         return $this->redirectToRoute('main');
+    }
+
+    /**
+     * @Route("/check/permission/to/review")
+     */
+    public function checkPermissionToReview(Request $request)
+    {
+        $permission = false;
+        $request = json_decode($request->getContent(), false);
+
+        $trainer = $this->entityManager
+            ->getRepository(User::class)
+            ->find($request->trainerId);
+
+        if (!empty($this->getUser())){
+            $lesson = $this->entityManager
+                ->getRepository(Lessons::class)
+                ->findOneBy([
+                    'trainer' => $trainer,
+                    'student' => $this->getUser()
+                ]);
+
+            if (isset($lesson)){
+                $permission = true;
+            }
+        }
+        return $this->json($permission);
     }
 }
