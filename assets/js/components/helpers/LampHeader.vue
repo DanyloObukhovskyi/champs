@@ -85,5 +85,10 @@
         margin-right: 1vw;
         font-size: .8vw;
         color: #ff6d1d;
+        transition: all .1s ease;
+    }
+
+    .lamp-header .description:hover{
+        color: #fff;
     }
 </style>

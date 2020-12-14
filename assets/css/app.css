@@ -13,8 +13,17 @@ body {
 }
 
 #app.home{
-    background: url(/images/home/background.png) no-repeat center 0;
+    background: url(/images/home/background.png) no-repeat;
     background-size: 100%;
+}
+
+#app.home .video-slider-container{
+    overflow: hidden;
+    width: 100%;
+}
+
+#app.home .video-slider-container .slick-list{
+    overflow: inherit;
 }
 
 .padding-top-7vw {
@@ -22,23 +31,23 @@ body {
 }
 
 #app.home .home-end {
-    background: url(/images/home/background2.svg) no-repeat center 0;
+    background: url(/images/home/background2.png) no-repeat center 0;
     background-size: 100%;
 }
 
 .dark #app.home .home-end {
-    background: url(/images/home/background2Black.svg) no-repeat center 0;
+    background: url(/images/home/background2Black.png) no-repeat center 0;
     background-size: 100%;
 }
 
 .home .home-end .rating-block {
-    background: url(/images/rating/lightning.svg) no-repeat center;
+    background: url(/images/rating/lightning.png) no-repeat center;
     background-size: auto;
     background-size: 35%;
 }
 
 .dark #app.home{
-    background: url(/images/home/backgroundBlack.png) no-repeat center 0;
+    background: url(/images/home/backgroundBlack.png) no-repeat;
     background-size: 100%;
 }
 
@@ -48,6 +57,10 @@ body {
 
 .mr-8 {
     margin-right: 8vw;
+}
+
+.w-8vw {
+    width: 8vw;
 }
 
 .dark .fa-arrow-right{
@@ -103,12 +116,25 @@ body {
     padding-bottom: 1.5vw;
 }
 
-.arrow-top {
+.arrow-up {
     position: absolute;
-    top: -1.4vw;
+    align-items: center;
+    top: -1.5vw;
     height: 1.5vw;
     cursor: pointer;
     transition: all .3s ease-in-out;
+    color: #9d9fa0;
+}
+
+.arrow-up::before{
+    content: '';
+    position: absolute;
+    height: 1.5vw;
+    width: 6vw;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    background: #1e2123;
+    clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
 }
 
 .arrow-top:hover {

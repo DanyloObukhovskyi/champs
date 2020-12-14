@@ -5,6 +5,10 @@ class Slide_model extends CI_Model
 {
     private $table = "slide";
 
+    public const HOME_TYPE = 'home';
+
+    public const GENERAL_TYPE = 'general';
+
     public function get_all_slides()
     {
         $this->db->select('*');
@@ -24,13 +28,18 @@ class Slide_model extends CI_Model
         $this->db->delete();
     }
 
-    public function create($url, $text, $img, $parent_id = null)
+    public function create($url, $text, $img, $type = null, $parent_id = null)
     {
+        if (empty($type)){
+            $type = self::GENERAL_TYPE;
+        }
+
         $this->db->insert($this->table, [
             'parent_id' => $parent_id,
             'url' => $url,
             'img' => $img,
-            'text' => $text
+            'text' => $text,
+            'type' => $type
         ]);
     }
 

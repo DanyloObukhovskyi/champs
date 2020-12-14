@@ -5,17 +5,13 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\News;
-use App\Entity\Person;
-use App\Entity\RatingPerson;
-use App\Entity\RatingTeam;
 use App\Entity\Result;
 use App\Service\Event\EventService;
 use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
 use App\Service\RatingPersonService;
-use App\Service\RatingTeamService;
-use App\Traits\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -108,14 +104,24 @@ class MainController extends DefController
     /**
      * @Route("/ru/main/matches")
      */
-	public function getMainMatches()
+	public function getMainMatches(Request $request)
     {
+        $request = json_decode($request->getContent(), false);
+        $date = !empty($request->date) ? new \DateTime($request->date): new \DateTime();
+
         $matches = $this->entityManager
             ->getRepository(Match::class)
-            ->findMatchesByDate(new \DateTime());
-        $matchesItems = $this->matchService->matchesDecorator($matches);
+            ->findMatchesByDate($date);
 
-        return $this->json($matchesItems);
+        $matchesParse = [];
+        foreach ($matches as $match){
+            $matchesParse[] = $this->matchService->matchDecorator($match);
+        }
+
+        return $this->json([
+            'dateRu' => NewsService::replaceMonth($date->format('d F')),
+            'matches' => $matchesParse
+        ]);
     }
 
     /**
@@ -223,8 +229,12 @@ class MainController extends DefController
      */
     public function getMainRatingPlayers()
     {
-        $events = $this->entityManager->getRepository(Event::class)->getCurrentEvents();
-        $events = $this->eventService->eventsDecorator($events);
+        $events = $this->entityManager
+            ->getRepository(Event::class)
+            ->getCurrentEvents();
+
+        $events = $this->eventService
+            ->eventsDecorator($events);
 
         return $this->json($events);
     }

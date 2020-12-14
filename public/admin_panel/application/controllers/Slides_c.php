@@ -61,6 +61,7 @@ class Slides_c extends CI_Controller
                 $this->slide_model->update(
                     $_POST['id'],
                     $_POST['url'],
+                    $_POST['type'],
                     $_POST['text'],
                     $fileName
                 );
@@ -74,6 +75,10 @@ class Slides_c extends CI_Controller
         }
         $data['image_path'] = $this->config->item('display_slide-pic');
         $data['slides'] = $this->slide_model->get_all_slides();
+        $data['types'] = [
+            Slide_model::HOME_TYPE => 'Главная',
+            Slide_model::GENERAL_TYPE => 'Общие'
+        ];
 
         $data['output'] = $this->load->view('home/slides', $data, true);
         $this->load->view('layout/home', $data);

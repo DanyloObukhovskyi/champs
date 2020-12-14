@@ -22,6 +22,7 @@
     import VueSlickCarousel from 'vue-slick-carousel'
     import 'vue-slick-carousel/dist/vue-slick-carousel.css'
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+    import SlideService from "../../services/SlideService";
 
     export default {
         name: "BannerSlider",
@@ -43,9 +44,9 @@
         },
         methods: {
             getSlides() {
-                axios.post('/ru/get/slides')
-                    .then(({data}) => {
-                        this.banners = data;
+                SlideService.getGeneralSlides()
+                    .then(banners => {
+                        this.banners = banners
                     })
             }
         },

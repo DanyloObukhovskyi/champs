@@ -32,7 +32,7 @@
     export default {
         name: "Calendar",
         props: {
-            date: String
+            date: String,
         },
         computed: {
             getDays() {
@@ -58,12 +58,11 @@
         },
         methods: {
             setDay(day) {
-                this.$emit('date', `
-                    ${day < 10 ? '0' + day : day}.
-                    ${this.month < 10 ? '0' + (this.month + 1) : this.month + 1}.
-                    ${this.year}`
-                )
-                this.day = day < 10 ? '0' + day : day;
+                const date = day < 10 ? '0' + day : day
+                const month = this.month < 10 ? '0' + (this.month + 1) : this.month + 1;
+
+                this.$emit('date', `${date}.${month}.${this.year}`);
+                this.day = date;
             }
         },
         mounted() {

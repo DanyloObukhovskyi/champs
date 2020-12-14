@@ -92,6 +92,16 @@
         background: url(/images/matches/matchBackground.png);
         background-repeat: round;
         background-size: 100%;
+        moz-transition: all .1s ease-in-out;
+        -o-transition: all .1s ease-in-out;
+        -webkit-transition: all .1s ease-in-out;
+        transition: all .1s ease-in-out;
+    }
+
+    .match-row:hover{
+        height: 6.2vw;
+        margin-left: -.3vw;
+        margin-right: -.3vw;
     }
 
     .dark .match-row {
@@ -106,7 +116,7 @@
 
     .event {
         padding-left: .5vw;
-        width: 24%;
+        width: 19%;
     }
 
     .event-logo img {
@@ -120,7 +130,7 @@
     }
 
     .teams {
-        width: 50%;
+        width: 61%;
     }
 
     .teams .score {
@@ -155,10 +165,9 @@
     .time {
         color: #5c6b79;
         font-size: .8vw;
-        width: 24%;
+        width: 19%;
         display: flex;
         justify-content: center;
-        padding-left: 10%;
     }
 
     .play {

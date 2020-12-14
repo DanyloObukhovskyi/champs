@@ -2,8 +2,12 @@ import Service from "./Service";
 
 class MatchService extends Service{
 
-    matchesPage = () => {
-        return `/${this.lang}/matches`;
+    matchesPage = (type = null) => {
+        let url = `/${this.lang}/matches`;
+        if (type !== null) {
+            url += `?type=${type}`;
+        }
+        return url;
     }
 
     getMatch = async id => {
@@ -30,8 +34,8 @@ class MatchService extends Service{
         return data
     }
 
-    getUpcomingMatches = async () => {
-        const {data} = await axios.post(`/${this.lang}/main/matches`)
+    getUpcomingMatches = async (date) => {
+        const {data} = await axios.post(`/${this.lang}/main/matches`,{date})
 
         return data
     }

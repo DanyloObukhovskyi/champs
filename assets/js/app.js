@@ -11,6 +11,7 @@ import '../css/app.css';
 import LiveMatches from "./components/matches/LiveMatches";
 import VideoSlider from "./components/sliders/VideoSlider";
 import BannerSlider from "./components/sliders/BannerSlider";
+import HomeSlider from "./components/sliders/HomeSlider";
 import NewsViewPage from "./pages/NewsViewPage";
 import EventsHome from "./components/events/EventsHome";
 import UpcomingMatches from "./components/matches/UpcomingMatches";
@@ -29,6 +30,7 @@ import header from "./layouts/header";
 import WeaponsDoughnut from "./components/statistics/WeaponsDoughnut";
 import MarketplacePage from "./pages/MarketplacePage";
 import MarketplaceTrainerPage from "./pages/MarketplaceTrainerPage";
+import HomePage from "./pages/HomePage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -62,6 +64,8 @@ Vue.component('events-digest-page', EventsDigestPage)
 Vue.component('weapon-doughnut', WeaponsDoughnut)
 Vue.component('marketplace-page', MarketplacePage)
 Vue.component('marketplace-trainer-page', MarketplaceTrainerPage)
+Vue.component('home-slider', HomeSlider)
+Vue.component('home-page', HomePage)
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

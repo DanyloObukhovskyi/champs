@@ -52,7 +52,7 @@
     .player-week {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        margin-top: 7vw;
         flex-direction: column;
         align-items: center;
     }
