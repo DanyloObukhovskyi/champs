@@ -14,15 +14,21 @@
                    v-for="(item, y) in news">
 
                     <div class="article-wrapper">
-                        <div class="tags">
-                            <button @click="addTag(tag.title)" class="tag" v-for="tag in item.tags">
-                                {{tag.title}}
-                            </button>
+                        <div class="d-flex justify-content-between">
+                            <div class="tags">
+                                <button @click="addTag(tag.title)" class="tag" v-for="tag in item.tags">
+                                    {{tag.title}}
+                                </button>
+                            </div>
+                            <div class="bookmark" @click="addBookmark(item)">
+                                <i class="far fa-bookmark" v-if="!item.bookmark"></i>
+                                <i class="fas fa-bookmark active" v-else></i>
+                            </div>
                         </div>
                         <div class="news-data">
                             <div class="title" v-html="getTitle(item.title)">
                             </div>
-                            <div class="description" v-html="getDescription(item.text)">
+                            <div class="description" v-html="getDescription(item.text, i, y)">
                             </div>
                         </div>
                     </div>
@@ -62,6 +68,8 @@
     import Loader from "../components/helpers/Loader";
     import HotNews from "../components/news/HotNews";
     import newsService from "../services/NewsService";
+    import Swal from 'sweetalert2'
+
 
     export default {
         name: "NewsPage",
@@ -70,9 +78,9 @@
             'popularTags'
         ],
         components: {
-            'news-filters': NewsFilters,
-            'loader': Loader,
-            'hot-news': HotNews,
+            NewsFilters,
+            Loader,
+            HotNews,
         },
         data() {
             return {
@@ -88,6 +96,7 @@
                 load: false,
                 isLoadAll: false,
                 filters: {
+                    search: null,
                     dateFrom: null,
                     dateTo: null,
                     tags: [],
@@ -111,6 +120,9 @@
                 this.reload()
             },
             "filters.dateTo": function () {
+                this.reload()
+            },
+            "filters.search": function () {
                 this.reload()
             },
         },
@@ -163,11 +175,24 @@
                     return title;
                 }
             },
-            getDescription(description) {
-                description = description.replace(/<\/?[^>]+(>|$)/g, "");
+            getDescription(description, i, y) {
+                let count = 80;
 
-                if (description.length > 90) {
-                    return `${description.substr(0, 90)}...`
+                if ((i + 1) % 2 === 0){
+                    count = 95;
+                } else {
+                    if (y === 0){
+                        count = 125;
+                    }
+                }
+                description = description
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    .replace(/\s{2,}/g, ' ')
+                    .replace(/&nbsp;/gi, ' ')
+                    .trim();
+
+                if (description.length > count) {
+                    return `${description.substr(0, count)}...`
                 } else {
                     return description;
                 }
@@ -204,9 +229,11 @@
             addTag(tag) {
                 event.preventDefault()
 
-                const findTags = this.filters.tags.find(t => t.title === tag)
+                const findTags = this.filters.tags.find(t => t === tag)
                 if (!findTags) {
                     this.filters.tags.push(tag);
+                } else {
+                    this.filters.tags = this.filters.tags.filter(t => t !== tag)
                 }
             },
             getGameImage(game) {
@@ -236,6 +263,20 @@
                 newsService.getHotNews()
                     .then(data => {
                         this.hotNews = data;
+                    })
+            },
+            addBookmark(news) {
+                event.preventDefault();
+
+                newsService.setBookmark(news.id, !news.bookmark)
+                    .then(() => {
+                        news.bookmark = !news.bookmark;
+                    }).catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Что бы добавить в закладки, необходимо авторизироваться!',
+                        })
                     })
             }
         },
@@ -303,6 +344,24 @@
         height: 18vw;
         background: rgb(255, 255, 255);
         background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 0) 65%);
+    }
+
+    .news .news-row .article-wrapper .bookmark {
+        margin: 1vw;
+        width: 1.5vw;
+        height: 1.5vw;
+        background-color: #fbf8f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: .15vw solid #ff6d1d;
+        font-size: 1vw;
+        color: black;
+        cursor: pointer;
+    }
+
+    .news .news-row .article-wrapper .bookmark i.active{
+        color: #ff6d1d;
     }
 
     .dark .news .news-row .article-wrapper {

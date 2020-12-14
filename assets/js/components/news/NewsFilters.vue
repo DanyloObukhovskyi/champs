@@ -14,22 +14,22 @@
                            type="text"
                            class="col search-input"
                            @click="showFilters = !showFilters"
-                           :placeholder="`${types[filterType]}: Введите ключевое слово`">
+                           placeholder="Введите ключевое слово">
                 </div>
             </div>
             <calendar-filter
-                @setToDate="setToDate"
-                @setFromDate="setFromDate"
-                :date-from="dateFrom"
-                :date-to="dateTo">
+                    @setToDate="setToDate"
+                    @setFromDate="setFromDate"
+                    :date-from="dateFrom"
+                    :date-to="dateTo">
             </calendar-filter>
             <div class="types d-flex">
-                <div class="icon pointer" @click="show = !show">
+                <div class="icon pointer" @dblclick="show = false, filterType = null" @click="show = !show">
                     <img src="/images/news/filter.svg" alt="">
                 </div>
                 <div class="full-input col d-flex align-items-center justify-content-between">
                     <div>
-                        Фильтры
+                        {{filterType !== null ? types[filterType] : 'Фильтры'}}
                     </div>
                     <i class="fas fa-chevron-down pointer" @click="show = !show"></i>
                 </div>
@@ -38,7 +38,7 @@
                             :class="{active: filterType === type}"
                             @click="filterType = type, show = false"
                             v-for="(label, type) in types">
-                        {{label}}
+                            {{label}}
                     </button>
                 </div>
             </div>
@@ -70,20 +70,20 @@
         ],
         components: {
             CalendarFilter,
-            'lamp-header': LampHeader,
-            'calendar': Calendar,
+            LampHeader,
+            Calendar,
         },
         data() {
             return {
                 show: false,
                 search: null,
                 showFilters: false,
-                filterType: 'tags',
+                filterType: null,
                 types: {
                     tags: 'Теги',
                     titles: 'Названия',
                     texts: 'Текст'
-                }
+                },
             }
         },
         computed: {
@@ -91,13 +91,30 @@
                 if (this.filters.dateFrom) {
                     return this.filters.dateFrom
                 }
-                return '21.02.2015'
+                const date = new Date();
+
+                const day = date.getDate() < 10 ? `0${date.getDate()}`: date.getDate();
+                const month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}`: date.getMonth() + 1;
+
+                return `${day}.${month}.${date.getFullYear() - 1}`;
             },
             dateTo() {
                 if (this.filters.dateTo) {
                     return this.filters.dateTo
                 }
-                return '21.02.2022'
+                const date = new Date();
+
+                const day = date.getDate() < 10 ? `0${date.getDate()}`: date.getDate();
+                const month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}`: date.getMonth() + 1;
+
+                return `${day}.${month}.${date.getFullYear()}`;
+            },
+        },
+        watch: {
+            search() {
+                if (this.filterType === null){
+                    this.filters['search'] = this.search;
+                }
             }
         },
         methods: {

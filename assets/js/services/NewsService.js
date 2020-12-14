@@ -55,6 +55,14 @@ class NewsService extends Service {
         });
         return data;
     }
+
+    setBookmark = async (newsId, isBookmark) => {
+        const {data} = await axios.post(`/${this.lang}/set/bookmark/`, {
+            newsId,
+            isBookmark
+        });
+        return data;
+    }
 }
 
 export default new NewsService();

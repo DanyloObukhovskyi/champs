@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\News;
+use App\Entity\NewsBookmark;
 use App\Entity\NewsCommentLike;
 use App\Entity\NewsLike;
 use App\Entity\NewsTag;
@@ -389,5 +390,37 @@ class NewsController extends AbstractController
             'likesCount' => $likesCount,
             'userLike' => $userLike
         ]);
+    }
+
+    /**
+     * @Route("/set/bookmark/")
+     */
+    public function setBookmark(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $news = $this->entityManager
+            ->getRepository(News::class)
+            ->find($request->newsId);
+
+        if (!empty($this->getUser())){
+            $newsBookmark = $this->entityManager->getRepository(NewsBookmark::class)
+                ->findOneBy([
+                    'user' => $this->getUser(),
+                    'news' => $news
+                ]);
+            if (empty($newsBookmark)){
+                $newsBookmark = new NewsBookmark();
+                $newsBookmark->setUser($this->getUser());
+                $newsBookmark->setNews($news);
+                $this->entityManager->persist($newsBookmark);
+            } else {
+                $this->entityManager->remove($newsBookmark);
+            }
+            $this->entityManager->flush();
+
+            return $this->json('ok', 200);
+        }
+        return $this->json('error', 422);
     }
 }

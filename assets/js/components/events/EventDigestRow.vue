@@ -58,9 +58,8 @@
     }
 
     .event:hover {
-        width: 103%;
-        height: 8.2vw;
         margin-left: -.2vw;
+        margin-right: -.2vw;
     }
 
     .dark .event {

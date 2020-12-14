@@ -5,8 +5,10 @@ namespace App\Service\News;
 
 
 use App\Entity\News;
+use App\Entity\NewsBookmark;
 use App\Entity\NewsLike;
 use App\Entity\NewsTag;
+use App\Repository\NewsRepository;
 use App\Service\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,6 +16,9 @@ class NewsService extends EntityService
 {
     protected $entity = News::class;
 
+    /**
+     * @var NewsRepository
+     */
     protected $repository;
 
     protected $newsCommentService;
@@ -33,6 +38,8 @@ class NewsService extends EntityService
     {
         $tags = [];
 
+        $user = $this->getUser();
+
         /** @var NewsTag $tagsEntity */
         foreach ($news->getTags() as $tagsEntity)
         {
@@ -40,6 +47,17 @@ class NewsService extends EntityService
                 'title' => $tagsEntity->getTitle(),
             ];
         }
+        $bookmark = false;
+
+        if (isset($user)) {
+            $newsBookmark = $this->entityManager->getRepository(NewsBookmark::class)
+                ->findOneBy([
+                    'user' => $user,
+                    'news' => $news
+                ]);
+            $bookmark = isset($newsBookmark);
+        }
+
         return [
             'id'              => $news->getId(),
             'title'           => $news->getTitle(),
@@ -50,10 +68,11 @@ class NewsService extends EntityService
             'url'             => $news->getUrl(),
             'type'            => $news->getType(),
             'tags'            => $tags,
-            'game'            => $news->getGame(),
+            'game'            => !empty($news->getGame()) ? $news->getGame(): null,
             'date_ru'         => self::replaceMonth($news->getDate()->format('d F H:i')),
             'views'           => $news->getViews() ?? 0,
             'commentsCount'   => count($news->getComments()),
+            'bookmark'        => $bookmark
         ];
     }
 
@@ -74,6 +93,7 @@ class NewsService extends EntityService
     public function getByFilters($request, $limit, $offset)
     {
         return $this->repository->getByFilters(
+            $request->search ?? null,
             $request->tags,
             $request->titles,
             $request->texts,
@@ -104,6 +124,7 @@ class NewsService extends EntityService
     public function getHotNews($filters = null, int $limit = 10, int $offset = 0)
     {
         return $this->repository->getByFilters(
+            $request->search ?? null,
             $filters->tags ?? [],
             $filters->titles ?? [],
             $filters->texts ?? [],
