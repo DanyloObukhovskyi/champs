@@ -29,8 +29,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="online">
+                    <button :class="{active: filters.online}" @click="filters.online = true">
+                        Online
+                    </button>
+                </div>
                 <div class="search-filter">
-                    <input type="text" placeholder="Название турнира" v-model="filters.name">
+                    <input class="tournament-filter" type="text" placeholder="Турнир" v-model="filters.name">
                 </div>
                 <div class="search-filter">
                     <multiselect
@@ -41,7 +46,7 @@
                 </div>
                 <div class="search-filter">
                     <multiselect
-                            placeholder="Города"
+                            placeholder="Город"
                             v-model="filters.city"
                             :options="cities">
                     </multiselect>
@@ -55,16 +60,15 @@
                         v-bind="filters">
                 </calendar-filter>
             </div>
-            <div class="d-flex justify-content-between align-items-end filters-bottom">
-                <tense-select @selected="(select) => selectEventsType = select"
-                              :counts="counts"
-                              :types="eventsTypes"
-                              :selected="selectEventsType">
-                </tense-select>
+            <div class="d-flex align-items-end filters-bottom">
+                <div class="tense-select">
+                    <tense-select @selected="(select) => selectEventsType = select"
+                                  :counts="counts"
+                                  :types="eventsTypes"
+                                  :selected="selectEventsType">
+                    </tense-select>
+                </div>
                 <div class="online">
-                    <button :class="{active: filters.online}" @click="filters.online = true">
-                        Online
-                    </button>
                     <button :class="{active: !filters.online}" @click="filters.online = false">
                         LAN
                     </button>
@@ -111,6 +115,36 @@
     import Multiselect from 'vue-multiselect'
     import EventDigestRow from "../components/events/EventDigestRow";
 
+    const GAMES = [
+        'cs',
+        'dota',
+        'lol',
+        'valorant',
+        'fortnite',
+        'warcraft',
+        'pubg',
+        'fifa',
+        'overwatch',
+        'apex'
+    ];
+
+    const EVENT_TYPES = {
+        past: 'Прошедшие',
+        live: 'Активные',
+        future: 'Будующие'
+    };
+
+    const TOURNAMENTS_TYPES = [
+        {
+            type: 'pro',
+            description: 'Для профессионалов'
+        },
+        {
+            type: 'все',
+            description: 'Для любителей'
+        }
+    ];
+
     export default {
         name: "EventsDigestPage",
         components: {
@@ -124,39 +158,16 @@
             CalendarFilter,
             Multiselect
         },
+        props: ['eventsGames'],
         data() {
             return {
                 events: [],
                 load: false,
                 counts: {},
                 selectEventsType: 'live',
-                eventsTypes: {
-                    past: 'Прошедшие',
-                    live: 'Активные',
-                    future: 'Будующие'
-                },
-                tournamentsTypes: [
-                    {
-                        type: 'pro',
-                        description: 'Для профессионалов'
-                    },
-                    {
-                        type: 'все',
-                        description: 'Для любителей'
-                    }
-                ],
-                games: [
-                    'cs',
-                    'dota',
-                    'lol',
-                    'valorant',
-                    'fortnite',
-                    'warcraft',
-                    'pubg',
-                    'fifa',
-                    'overwatch',
-                    'apex'
-                ],
+                eventsTypes: EVENT_TYPES,
+                tournamentsTypes: TOURNAMENTS_TYPES,
+                games: [],
                 page: 1,
                 perPage: 20,
                 filters: {
@@ -257,6 +268,12 @@
         },
         mounted() {
             this.getEvents()
+
+            GAMES.map(game => {
+                if (this.eventsGames.indexOf(game) !== -1){
+                    this.games.push(game);
+                }
+            })
         }
     }
 </script>
@@ -289,6 +306,11 @@
 
     .events-digest .tournaments-types .tournament-type {
         display: flex;
+        margin-right: 1vw;
+    }
+
+    .events-digest .tense-select {
+        width: 32vw;
         margin-right: 1vw;
     }
 
@@ -362,13 +384,16 @@
         margin-right: 1vw;
     }
 
+    .events-digest .search-filter .tournament-filter{
+        width: 7vw;
+    }
+
     .events-digest .search-filter input,
     .events-digest .search-filter select {
         height: 3vw;
         outline: none;
         border: 0;
         border-radius: 0.5vw;
-        text-align: center;
         font-size: 1vw;
     }
 
@@ -415,12 +440,12 @@
         margin-top: .5vw;
     }
 
-    .events-digest .filters-bottom .online {
+    .events-digest .online {
         display: flex;
         margin-right: 1vw;
     }
 
-    .events-digest .filters-bottom .online button {
+    .events-digest .online button {
         outline: none;
         border: none;
         height: 3vw;
@@ -436,7 +461,7 @@
         margin-right: .5vw;
     }
 
-    .events-digest .filters-bottom .online button.active {
+    .events-digest .online button.active {
         background: #ff6d1d;
         color: white;
     }

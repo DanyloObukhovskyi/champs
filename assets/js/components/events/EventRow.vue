@@ -40,7 +40,17 @@
         margin-top: 1vw;
         padding: .3vw .8vw;
         height: 7vw;
+        moz-transition: all .1s ease-in-out;
+        -o-transition: all .1s ease-in-out;
+        -webkit-transition: all .1s ease-in-out;
+        transition: all .1s ease-in-out;
         background: linear-gradient(270deg, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
+    }
+
+    .event:hover {
+        width: 103%;
+        height: 7.2vw;
+        margin-left: -.2vw;
     }
 
     .dark .event {

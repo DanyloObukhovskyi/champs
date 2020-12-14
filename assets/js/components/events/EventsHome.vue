@@ -56,11 +56,3 @@
         animation: animation-translate-right 1500ms linear both;
     }
 </style>
-
-<style>
-    .events-home .events-home-body .event-home-row a:hover {
-        width: 103%;
-        height: 7.2vw;
-        margin-left: -.2vw;
-    }
-</style>
