@@ -28,7 +28,7 @@ class Slide_model extends CI_Model
         $this->db->delete();
     }
 
-    public function create($url, $text, $img, $type = null, $parent_id = null)
+    public function create($url, $type, $text, $img, $parent_id = null)
     {
         if (empty($type)){
             $type = self::GENERAL_TYPE;
