@@ -1695,7 +1695,7 @@ My styles, Denis finish
     font-weight: 400;
 }
 
-.label {
+.label:not(.tag) {
     color: #7f8fa4;
     font-weight: 600;
     font-size: 14px;
@@ -3577,4 +3577,11 @@ Denis. styles. 4 september start
     align-items: center;
     width: 100%;
     justify-content: space-between;
+}
+
+.bootstrap-tagsinput .tag {
+    margin-right: 2px;
+    color: white;
+    display: flex;
+    align-items: center;
 }

@@ -25,6 +25,13 @@
 </template>
 
 <script>
+    const GAMES = {
+        dota: 'dota.png',
+        cs: 'cs.png',
+        lol: 'lol.png',
+        valorant: 'valorant.png'
+    };
+
     export default {
         name: "HotNews",
         props: [
@@ -32,12 +39,7 @@
         ],
         data() {
             return {
-                gamesIcons: {
-                    dota: 'dota.svg',
-                    cs: 'cs.svg',
-                    lol: 'lol.svg',
-                    valorant: 'valorant.png'
-                },
+                gamesIcons: GAMES,
             }
         },
     }

@@ -53,4 +53,27 @@ abstract class EntityService
             );
         }
     }
+
+    public function getUser()
+    {
+        global $kernel;
+
+        return $kernel->getContainer()
+            ->get('security.token_storage')
+            ->getToken()
+            ->getUser();
+
+        if (!$kernel->getContainer()->has('security.token_storage')) {
+            return null;
+        }
+
+        if (null === $token = $kernel->getContainer()->get('security.token_storage')->getToken()) {
+            return null;
+        }
+
+        if (!\is_object($user = $token->getUser())) {
+            return null;
+        }
+        return $user;
+    }
 }

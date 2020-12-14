@@ -20,6 +20,7 @@ class NewsRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string|null $search
      * @param array $tags
      * @param array $titles
      * @param array $texts
@@ -33,6 +34,7 @@ class NewsRepository extends ServiceEntityRepository
      * @throws \Exception
      */
     public function getByFilters(
+        ?string $search = null,
         array $tags = [],
         array $titles = [],
         array $texts = [],
@@ -51,6 +53,14 @@ class NewsRepository extends ServiceEntityRepository
             $query->innerJoin('n.newsTags', 'nt')
                 ->andwhere('nt.title IN(:tags)')
                 ->setParameter('tags', $tags);
+        } else {
+            $query->leftJoin('n.newsTags', 'nt');
+        }
+        if (!empty($search)) {
+            $query->andWhere('n.title like :search')
+                ->orWhere('n.text like :search')
+                ->orWhere('nt.title like :search')
+                ->setParameter('search', "%$search%");
         }
         foreach ($titles as $title){
             $query->andwhere('n.title like :title')
