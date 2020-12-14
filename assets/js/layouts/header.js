@@ -6,17 +6,6 @@ Vue.component('nav-bar', NavBar);
 Vue.component('sub-nav-bar', SubNavbar);
 Vue.component('login-modal', LoginModal);
 
-const axios = require('axios');
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-const token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-    axios._csrf_token = token.content;
-} else {
-    console.error('CSRF token not found');
-}
-
 export default new Vue({
     el: '#header',
     data: {

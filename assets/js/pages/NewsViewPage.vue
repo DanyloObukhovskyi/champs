@@ -100,13 +100,13 @@
             'newsId'
         ],
         components: {
-            'likes': Likes,
-            'news-filters': NewsFilters,
-            'hot-news': HotNews,
-            'loader': Loader,
-            'share-buttons': ShareButtons,
-            'news-comments': NewsComments,
-            'news-widget': NewsWidget
+            Likes,
+            NewsFilters,
+            HotNews,
+            Loader,
+            ShareButtons,
+            NewsComments,
+            NewsWidget
         },
         data() {
             return {

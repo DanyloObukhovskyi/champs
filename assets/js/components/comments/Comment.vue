@@ -24,6 +24,7 @@
                 </div>
                 <div>
                     <comment-likes
+                        :disable="user === null || comment.user.id === user.id"
                         @setLike="setLike"
                         :user="user"
                         :likes="comment.likesCount"

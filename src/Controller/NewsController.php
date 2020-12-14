@@ -108,7 +108,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/news/{offset}", name="news.ajax", defaults={"offset" = null})
+     * @Route("/ajax/news/{offset}", name="news.ajax", defaults={"offset" = 0})
      */
     public function getNews(Request $request, $offset = 0)
     {

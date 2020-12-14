@@ -26,7 +26,10 @@
             },
             user: {
                 default: null,
-            }
+            },
+            disable: {
+                default: false,
+            },
         },
         computed: {
             isLiked() {
@@ -50,12 +53,12 @@
         },
         methods: {
             setLike() {
-                if (!this.isLiked && this.user !== null) {
+                if (!this.isLiked && this.user !== null && !this.disable) {
                     this.$emit('setLike', 'like')
                 }
             },
             setDislike() {
-                if (!this.isDisliked && this.user !== null) {
+                if (!this.isDisliked && this.user !== null && !this.disable) {
                     this.$emit('setLike', 'dislike')
                 }
             }

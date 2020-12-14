@@ -48,7 +48,7 @@
 <header id="header">
     <nav-bar
             :social="{{setting.social|json_encode}}"
-            :isPageStart="isPageStart"
+            :is-page-start="isPageStart"
             @show="showLoginModal"
             router="{{ router }}"
             :is-trainer="{{ is_granted('IS_AUTHENTICATED_FULLY') and app.user.istrainer ? 'true': 'false' }}"
@@ -59,7 +59,6 @@
     <login-modal
             show-first="{{ router == 'mvp' ? 'registration': 'login' }}"
             :show="show"
-            redirect="{{ router == 'mvp' ? url('mvp.cabinet.tournaments'): url('timelist_index') }}"
             show-first="login">
     </login-modal>
 </header>
