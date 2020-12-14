@@ -68,6 +68,7 @@ class Slides_c extends CI_Controller
             } else {
                 $this->slide_model->create(
                     $_POST['url'],
+                    $_POST['type'],
                     $_POST['text'],
                     $fileName
                 );
