@@ -9,7 +9,7 @@ use App\Service\Match\MatchService;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Validator\Constraints\DateTime;
+use DateTime;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -108,10 +108,13 @@ class EventRepository extends ServiceEntityRepository
      */
     public function getCurrentEvents()
     {
+        $date = new DateTime();
+
         /** @var Event[] $events */
         $events = $this->createQueryBuilder('e')
-            ->orderBy('e.createdAt', 'DESC')
-            ->andWhere(' e.createdAt is not null')
+            ->orderBy('e.startedAt', 'ASC')
+            ->andWhere(' e.startedAt >= :date')
+            ->setParameter('date', $date->format('Y-m-d'))
             ->setMaxResults(6)
             ->getQuery()
             ->getResult();

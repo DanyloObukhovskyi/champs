@@ -10,9 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Slide
 {
-    public const BANNER_TYPE = 'banner';
+    public const HOME_TYPE = 'home';
 
-    public const SLIDE_TYPE = 'slide';
+    public const GENERAL_TYPE = 'general';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -39,6 +40,11 @@ class Slide
      * @ORM\Column(type="string", nullable=true)
      */
     private $text;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $type;
 
     public function getId(): ?int
     {
@@ -107,5 +113,21 @@ class Slide
     public function setText($text): void
     {
         $this->text = $text;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type): void
+    {
+        $this->type = $type;
     }
 }

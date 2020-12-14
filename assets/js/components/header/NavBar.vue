@@ -26,31 +26,35 @@
                     Статистика
                 </a>
                 <a :href="marketplacePage" class="pointer" :class="{active : router == 'marketplace'}">
-                    Обучение
-                    <small>pro</small>
+                    <div>
+                        <small>pro</small>
+                        Обучение
+                    </div>
                 </a>
                 <a :href="digestPage" :class="{active : router == 'digest'}">
                     Дайджест турниров
                 </a>
             </div>
             <social :social="social"></social>
-            <div class="login">
-                <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/timelist`"
-                   v-if="isAuthorize"
-                   class="ln text-light">
-                    кабинет
-                </a>
-                <span v-else
-                      @click="$emit('show')">
-                Войти
-            </span>
-                <div class="arrow-right">
+            <div class="login-wrapper">
+                <div class="login">
                     <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/timelist`"
                        v-if="isAuthorize"
-                       class="icon">
-                        <i class="fas fa-arrow-right"></i>
+                       class="ln text-light">
+                        кабинет
                     </a>
-                    <i v-else class="fas fa-arrow-right" @click="$emit('show')"></i>
+                    <span v-else
+                          @click="$emit('show')">
+                          Войти
+                    </span>
+                    <div class="arrow-right">
+                        <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/timelist`"
+                           v-if="isAuthorize"
+                           class="icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <i v-else class="fas fa-arrow-right" @click="$emit('show')"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,15 +90,12 @@
         computed: {
             lang() {
                 let lang = 'ru';
-                if (document.documentElement.lang !== null && document.documentElement.lang !== ''){
+                if (document.documentElement.lang !== null && document.documentElement.lang !== '') {
                     lang = document.documentElement.lang
                 }
                 return lang;
             },
-            currentPath() {
-                return document.location.pathname;
-            },
-            isPageStart(){
+            isPageStart() {
                 return this.$parent.isPageStart;
             },
             matchesPage() {
@@ -125,39 +126,46 @@
     .header_nav {
         width: 100%;
         height: 3.8vw;
-        background: rgb(51,56,61);
-        background: -moz-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-        background: -webkit-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-        background: radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d",endColorstr="#2d3135",GradientType=1);
+        background: rgb(51, 56, 61);
+        background: -moz-radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+        background: -webkit-radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+        background: radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d", endColorstr="#2d3135", GradientType=1);
         transition: all .3s ease-in-out;
     }
+
     .logo-wrapper {
         width: 12vw;
         z-index: 6;
         transition: all .5s ease-in-out;
-        background: rgb(51,56,61);
-        background: -moz-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-        background: -webkit-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-        background: radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d",endColorstr="#2d3135",GradientType=1);
+        background: rgb(51, 56, 61);
+        background: -moz-radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+        background: -webkit-radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+        background: radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d", endColorstr="#2d3135", GradientType=1);
     }
+
     .start {
         width: 9vw;
         height: 6.5vw;
     }
+
     .start img {
         width: 3.8vw;
     }
+
     .menu a:hover, .menu a.active {
         background: linear-gradient(180deg, rgba(53, 57, 62, 0.15) -25%, rgba(53, 57, 62, 0.0) 125%), rgba(255, 109, 29, 0.15);
     }
+
     .menu a:hover small {
         color: white;
     }
+
     .pointer {
         cursor: pointer;
     }
+
     .arrow-right {
         flex-shrink: 0;
         width: 1.7vw;
@@ -168,47 +176,62 @@
         background-color: #ff6d1d;
         border-radius: 50%;
     }
+
     .arrow-right i {
         color: white;
     }
+
+    .login-wrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
     .login span {
         color: #ff6d1d;
     }
+
     .login {
         left: 0;
         transition: all .5s ease-in-out;
         z-index: 11;
+        background: rgb(45, 49, 53);
+        background: linear-gradient(270deg, rgba(45, 49, 53, 0) 0%, rgba(64, 68, 74, 1) 79%);
     }
+
     .login:hover {
         left: -5px;
-        transition: all .5s;
-        background: rgb(45,49,53);
-        background: linear-gradient(270deg, rgba(45,49,53,0) 0%, rgba(64,68,74,1) 79%);
+        transition: all .5s ease-in-out;
     }
+
     .pl-8 {
         padding-left: 8vw;
     }
+
     .pr-8 {
         padding-right: 8vw;
     }
-    .h-3{
+
+    .h-3 {
         height: 2.8vw;
     }
-    .menu a small{
+
+    .menu a small {
         font-size: 6px;
         color: yellow;
         position: absolute;
-        right: 0;
-        top: 14px;
+        right: -.4vw;
+        top: -.2vw;
     }
+
     .menu a {
         text-transform: none;
     }
+
     .header_nav .nav .login {
         right: 2vw;
-        top: 18%;
         flex-shrink: 0;
-        height: 64%;
+        height: 2vw;
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -216,14 +239,17 @@
         transition: 0.9s;
         cursor: pointer;
     }
+
     .header_nav .nav .login:hover {
         right: 2.5vw;
     }
+
     .header_nav .nav .menu a.active,
     .header_nav .nav .menu span.active {
         color: #ffffff;
         cursor: default;
     }
+
     .header_nav .nav .menu a.active:after,
     .header_nav .nav .menu span.active:after {
         content: "";
@@ -234,6 +260,7 @@
         top: 0;
         background: linear-gradient(270deg, #ff6d1d -25%, #ffc350 125%);
     }
+
     .header_nav .nav .menu a,
     .header_nav .nav .menu span {
         font-size: .8vw;

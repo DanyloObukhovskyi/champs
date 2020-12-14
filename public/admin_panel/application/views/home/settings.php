@@ -67,53 +67,6 @@
                         value="<?php echo $setting['value']?>">
                 </div>
             <?php endforeach;?>
-            <?php if(isset($banner)):?>
-                <h1 class="main-title">Баннер</h1>
-                <label class="label" for=""><?php echo $banner['text']['title']?></label>
-                <div class="input mb-5">
-                    <input
-                        type="text"
-                        class="fw-600 input2_txt"
-                        id="text"
-                        name="setting[<?php echo $banner['text']['key']?>]"
-                        value="<?php echo $banner['text']['value']?>">
-                </div>
-                <label class="label" for=""><?php echo $banner['url']['title']?></label>
-                <div class="input mb-5">
-                    <input
-                            type="text"
-                            class="fw-600 input2_txt"
-                            id="text"
-                            name="setting[<?php echo $banner['url']['key']?>]"
-                            value="<?php echo $banner['url']['value']?>">
-                </div>
-                <div class="form-group">
-                    <div class="changePass mt-25" style="display: inline-block;">
-                        <div class="changePassBTN mt-5">
-                            <input type="file" name="file" style="opacity: 0"/>
-                            <div class="changePassBTN" style="margin-top: -17px !important;"> загрузить фото
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uploadImgTxT" style="display: none;" id="upload_data">
-                        <div class="txt-orange uploadImgTxT ml-10" id="img_name"></div>
-                        <div class="txt-orange uploadImgTxT  ml-10 rmo_close"></div>
-                    </div>
-                </div>
-                <div class="col-item w-100">
-                    <label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img
-                            style="top: 3px;" class="search-img"
-                            src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
-                    <div class="mb-10 slide-preview" style="display: flex; justify-content: center;">
-                        <div class="w-100">
-                            <div class="text-preview" id="text-preview">
-                                <?php echo $banner['text']['value']?>
-                            </div>
-                        </div>
-                        <img class="preview preview_image" id="img_preview" src="<?php echo $images_path.$banner['image']['value']?>" style="margin: 0;">
-                    </div>
-                </div>
-            <?php endif; ?>
             <?php if(isset($marketplaceBanner)):?>
                 <h1 class="main-title"><?php echo $marketplaceBanner['title']?></h1>
                 <div class="form-group">

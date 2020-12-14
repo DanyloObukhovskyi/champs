@@ -22,13 +22,29 @@ class SlidesController extends AbstractController
     }
 
     /**
-     * @Route("/get/slides", name="get_slides")
+     * @Route("/get/slides")
      */
-    public function index(): Response
+    public function general(): Response
     {
         $slides = $this->entityManager
             ->getRepository(Slide::class)
-            ->findAll();
+            ->findBy([
+                'type' => Slide::GENERAL_TYPE
+            ]);
+
+        return $this->json($slides);
+    }
+
+    /**
+     * @Route("/get/home/slides")
+     */
+    public function home(): Response
+    {
+        $slides = $this->entityManager
+            ->getRepository(Slide::class)
+            ->findBy([
+                'type' => Slide::HOME_TYPE
+            ]);
 
         return $this->json($slides);
     }

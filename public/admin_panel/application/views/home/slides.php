@@ -23,6 +23,28 @@
     w-100 {
         width: 100%;
     }
+
+    .slide-preview.main {
+        width: 100%;
+        display: flex;
+        border-radius: 4px;
+        border: solid 1px #dfe3e9;
+        background-color: #edf1f9;
+    }
+
+    .slide-preview.main .text-preview {
+        position: absolute;
+        color: white;
+        font-size: 3.5vw;
+        font-weight: 600;
+        margin-left: 4.2vw;
+        width: 60%;
+        margin-top: 2vw;
+    }
+
+    .slide-preview.main .preview {
+        width: 100%;
+    }
 </style>
 <main class="flex create-new-website-page">
     <?php
@@ -36,8 +58,8 @@
         </div>
     <?php } ?>
     <aside>
-        <?php $activePath = 'slides';?>
-        <?php require_once APPPATH.'views/sidebar.php'?>
+        <?php $activePath = 'slides'; ?>
+        <?php require_once APPPATH . 'views/sidebar.php' ?>
     </aside>
 
     <div class="main-content">
@@ -57,8 +79,10 @@
                     <td class="js-expand-table-item pointer">
                         Текст
                     </td>
+                    <td class="js-expand-table-item pointer">
+                        Тип
+                    </td>
                     <td class="t-a-r pr-15">
-
                     </td>
                 </tr>
                 </thead>
@@ -68,19 +92,23 @@
                         ?>
                         <tr id="slide_<?php echo $slide['id']; ?>"
                             data-id="<?php echo $slide['id']; ?>"
-                            data-img="<?php echo $image_path. $slide['img']?>"
+                            data-img="<?php echo $image_path . $slide['img'] ?>"
                             data-url="<?php print $slide['url']; ?>"
                             data-text="<?php print $slide['text']; ?>"
+                            data-type="<?php print $slide['type']; ?>"
                         >
                             <td><?php echo $slide['id']; ?></td>
                             <td class="js-expand-table-item pointer">
-                                <img class="profile-pic-small" src="<?php echo $image_path. $slide['img']?>"/>
+                                <img class="profile-pic-small" src="<?php echo $image_path . $slide['img'] ?>"/>
                             </td>
                             <td class="js-expand-table-item pointer">
                                 <?php print $slide['url']; ?>
                             </td>
                             <td class="js-expand-table-item pointer">
                                 <?php print $slide['text']; ?>
+                            </td>
+                            <td class="js-expand-table-item pointer">
+                                <?php print $types[$slide['type']]; ?>
                             </td>
                             <td class="t-a-r pr-15">
                                 <button onclick="editSlide(<?php echo $slide['id']; ?>)"
@@ -89,8 +117,8 @@
                                         class="btn btn-dark-blue btn-small">
                                     Редактировать
                                 </button>
-                                <a href="<?php echo base_url('c-admin/slides/delete/' .$slide['id'] ); ?>"
-                                     class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">
+                                <a href="<?php echo base_url('c-admin/slides/delete/' . $slide['id']); ?>"
+                                   class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">
                                     Удалить
                                 </a>
                             </td>
@@ -123,6 +151,16 @@
                         <div class="form-group">
                             <label class="control-label">Текст</label>
                             <input id="text" type="text" name="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"></label>
+                            <select name="type" class="form-control" id="slide_type">
+                                <?php foreach ($types as $type => $title): ?>
+                                    <option value="<?php echo $type ?>">
+                                        <?php echo $title ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="form-group">
                             <div class="changePass mt-25" style="display: inline-block;">
@@ -194,13 +232,38 @@
         const slideRaw = document.getElementById(`slide_${id}`);
         const form = document.getElementById('slideModal');
 
-        if (slideRaw && form){
+        if (slideRaw && form) {
             form.querySelector('input[name="id"]').value = slideRaw.dataset.id;
             form.querySelector('input[name="url"]').value = slideRaw.dataset.url;
             form.querySelector('input[name="text"]').value = slideRaw.dataset.text;
 
-            document.getElementById('text-preview').innerHTML =  slideRaw.dataset.text;
+            document.getElementById('text-preview').innerHTML = slideRaw.dataset.text;
             document.getElementById('img_preview').src = slideRaw.dataset.img;
+            document.querySelectorAll('#slide_type option').forEach(function (option) {
+                if (option.value === slideRaw.dataset.type) {
+                    option.selected = true;
+                }
+            })
+            const slidePreview = document.querySelector('.slide-preview');
+            if (slidePreview) {
+                if (slideRaw.dataset.type === 'home') {
+                    slidePreview.classList.add('main')
+                } else {
+                    slidePreview.classList.remove('main')
+                }
+            }
         }
     }
+
+    document.getElementById('slide_type').addEventListener('change', function () {
+
+        const slidePreview = document.querySelector('.slide-preview');
+        if (slidePreview) {
+            if (event.target.value === 'home') {
+                slidePreview.classList.add('main')
+            } else {
+                slidePreview.classList.remove('main')
+            }
+        }
+    })
 </script>

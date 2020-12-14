@@ -3,7 +3,10 @@
         <div class="news-home-header">
             <lamp-header title="Новости" link="/ru/news" link-description="Все новости"></lamp-header>
         </div>
-        <div class="news-home-body" :class="{row: !isOnePerRow}">
+        <div class="d-flex justify-content-center align-items-center p-5" v-if="load">
+            <small-loader/>
+        </div>
+        <div class="news-home-body" v-else :class="{row: !isOnePerRow}">
             <div class="news-home-row" :class="{'col-6': !isOnePerRow}" v-for="news in newsList">
                 <a :href="getNewsUrl(news)" class="news-home-wrapper d-block">
                     <div class="title">
@@ -31,11 +34,13 @@
 
 <script>
     import LampHeader from "../helpers/LampHeader";
+    import SmallLoader from "../helpers/SmallLoader";
 
     export default {
         name: "NewsHome",
         components: {
-            'lamp-header': LampHeader
+            LampHeader,
+            SmallLoader
         },
         props: {
             isOnePerRow: {
@@ -53,7 +58,8 @@
                     'Статья',
                     'Обновления',
                     'Текст'
-                ]
+                ],
+                load: true,
             }
         },
         methods: {
@@ -61,6 +67,7 @@
                 axios.post('/ru/main/news')
                     .then(({data}) => {
                         this.newsList = data;
+                        this.load = false
                     })
             },
             getNewsUrl(news) {
@@ -74,6 +81,13 @@
 </script>
 
 <style scoped>
+    @import '../../../css/animations.css';
+
+    .news-home-body {
+        -webkit-animation: animation-translate-left 1500ms linear both;
+        animation: animation-translate-left 1500ms linear both;
+    }
+
     .news-home-body .news-home-row .news-home-wrapper {
         color: black;
         height: 3vw;
@@ -83,13 +97,19 @@
         background: linear-gradient(270deg, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
     }
 
+    .news-home-body .news-home-row a:hover{
+        width: 103%;
+        height: 7.2vw;
+        margin-left: -.2vw;
+    }
+
     .dark .news-home-body .news-home-row .news-home-wrapper {
         color: white;
         background: rgb(61, 65, 70);
-        moz-transition: all 1s ease-in-out;
-        -o-transition: all 1s ease-in-out;
-        -webkit-transition: all 1s ease-in-out;
-        transition: all .4s ease-in-out;
+        moz-transition: all .1s ease-in-out;
+        -o-transition: all .1s ease-in-out;
+        -webkit-transition: all .1s ease-in-out;
+        transition: all .1s ease-in-out;
         background: -moz-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 43%);
         background: -webkit-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 43%);
         background: linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 43%);

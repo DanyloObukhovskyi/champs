@@ -14,56 +14,6 @@
         Главная
     </h1>
     <div class="home" id="app">
-        <div class="ml-8 mr-8 p-0">
-            <div class="d-flex p-0 mt-4">
-                <div class="col-6 pl-0">
-                    <live-matches></live-matches>
-                </div>
-                <div class="col-6 pr-0">
-                    {% set bannerUrl = setting.get('bannerUrl') is not null ? setting.get('bannerUrl').value : null %}
-                    {% set bannerText = setting.get('bannerText') is not null ? setting.get('bannerText').value : null %}
-                    {% set bannerImage = setting.get('bannerImage') is not null ? setting.get('bannerImage').value : null %}
-                    <a href="{{ bannerUrl }}" class="w-100">
-                        <p class="banner-text">
-                            {{ bannerText }}
-                        </p>
-                        <img src="/uploads/banners/{{ bannerImage }}" class="w-100">
-                    </a>
-                </div>
-            </div>
-            <video-slider></video-slider>
-            <div class="d-flex p-0 mt-5">
-                <div class="col-6 pl-0">
-                    <news-home></news-home>
-                </div>
-                <div class="col-6 pr-0">
-                    <events-home></events-home>
-                </div>
-            </div>
-            <div class="d-flex p-0 mt-5">
-                <div class="col-9 pl-0 mr-1">
-                    <upcoming-matches-home></upcoming-matches-home>
-                </div>
-                <div class="col-3 pl-0 ml-1">
-                    <results-matches-home></results-matches-home>
-                </div>
-            </div>
-        </div>
-        <div class="home-end">
-            <div class="ml-8 mr-8">
-                <banner-slider></banner-slider>
-                <div class="d-flex mt-5 rating-block" style="padding-bottom: 8vw;">
-                    <div class="col-5 pl-0 mr-1">
-                        <players-rating></players-rating>
-                    </div>
-                    <div class="col-2 pl-0 mr-1 d-flex align-items-center">
-                        <player-week></player-week>
-                    </div>
-                    <div class="col-5 pl-0 mr-1">
-                        <teams-rating></teams-rating>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <home-page></home-page>
     </div>
 {% endblock %}

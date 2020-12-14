@@ -3,7 +3,10 @@
         <div class="results-matches-header">
             <lamp-header title="Результаты"/>
         </div>
-        <div class="results-matches-body">
+        <div class="d-flex justify-content-center align-items-center p-5" v-if="load">
+            <small-loader/>
+        </div>
+        <div class="results-matches-body" v-else>
             <a :href="'/ru/matches/' + match.match_id" class="results-matches-row" v-for="match in matches">
                 <div class="event">
                     <div>
@@ -37,7 +40,7 @@
                 </div>
             </a>
             <div class="more">
-                <a href="/ru/matches">Больше результатов</a>
+                <a :href="matchesPage">Больше результатов</a>
             </div>
         </div>
     </div>
@@ -46,15 +49,23 @@
 <script>
     import LampHeader from "../helpers/LampHeader";
     import matchService from "../../services/MatchService";
+    import SmallLoader from "../helpers/SmallLoader";
 
     export default {
         name: "ResultsMatches",
         components: {
-            'lamp-header': LampHeader
+            LampHeader,
+            SmallLoader
         },
         data() {
             return {
-                matches: []
+                matches: [],
+                load: true,
+            }
+        },
+        computed: {
+            matchesPage() {
+                return matchService.matchesPage('results')
             }
         },
         methods: {
@@ -62,6 +73,7 @@
                 matchService.getMainResults()
                     .then((data) => {
                         this.matches = data;
+                        this.load = false;
                     })
             },
             getScoreClass(scoreA, scoreB) {
@@ -81,13 +93,26 @@
 </script>
 
 <style scoped>
+    @import '../../../css/animations.css';
+
     .results-matches .results-matches-body {
         padding-top: .8vw;
+        -webkit-animation: animation-translate-right 1500ms linear both;
+        animation: animation-translate-right 1500ms linear both;
     }
 
     .results-matches .results-matches-body .results-matches-row {
         margin-bottom: .3vw;
         display: block;
+        moz-transition: all .1s ease-in-out;
+        -o-transition: all .1s ease-in-out;
+        -webkit-transition: all .1s ease-in-out;
+        transition: all .1s ease-in-out;
+    }
+
+    .results-matches .results-matches-body .results-matches-row:hover {
+        margin-right: -.2vw;
+        margin-left: -.2vw;
     }
 
     .results-matches .results-matches-body .results-matches-row .event {
@@ -148,11 +173,11 @@
     }
 
     .results-matches .results-matches-body .results-matches-row .teams .score.red {
-        color: darkred;
+        color: #be1517;
     }
 
     .results-matches .results-matches-body .results-matches-row .teams .score.green {
-        color: darkgreen;
+        color: #33cc66;
     }
 
     .results-matches .results-matches-body .more {
@@ -166,5 +191,13 @@
 
     .results-matches .results-matches-body .more a {
         color: #ff6d1d;
+        moz-transition: all .1s ease-in-out;
+        -o-transition: all .1s ease-in-out;
+        -webkit-transition: all .1s ease-in-out;
+        transition: all .1s ease-in-out;
+    }
+
+    .results-matches .results-matches-body .more a:hover {
+        color: white;
     }
 </style>

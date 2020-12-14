@@ -191,9 +191,10 @@ class MatchRepository extends ServiceEntityRepository
      */
     public function findMatchesByDate(\Datetime $date)
     {
-        $from = new \DateTime();
-        $to   = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('+7 day');
+        $from = $date->format("Y-m-d")." 00:00:00";
+        $to = $date->format("Y-m-d")." 23:59:59";
 
+        /** @var Match[] $matches */
         $matches = $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
             ->andWhere('m.start_at BETWEEN :from AND :to')
@@ -203,7 +204,6 @@ class MatchRepository extends ServiceEntityRepository
             ->getResult();
 
         return $matches;
-
     }
 
     /**
