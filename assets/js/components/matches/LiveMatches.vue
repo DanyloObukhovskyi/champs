@@ -226,7 +226,7 @@
                 background: linear-gradient(270deg, rgba(61, 65, 70, 0.0) -25%, rgba(61, 65, 70, 0.0) 11.84082%, rgba(61, 65, 70, 0.25) 95.007324%, rgba(61, 65, 70, 0.25) 125%), #ffffff;
 
                 .match-event {
-                    width: 10vw;
+                    width: 13vw;
                     padding-left: 1vw;
                     font-size: .8vw;
                     color: #5c6b79;
@@ -237,7 +237,7 @@
                 }
 
                 .teams {
-                    width: 23vw;
+                    width: 20vw;
 
                     .score {
                         width: 15%;
