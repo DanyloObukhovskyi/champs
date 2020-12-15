@@ -84,8 +84,8 @@
             }
         },
         components: {
-            'social': Social,
-            'game-select': GameSelect,
+            Social,
+            GameSelect,
         },
         computed: {
             lang() {

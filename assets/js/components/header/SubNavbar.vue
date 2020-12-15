@@ -13,17 +13,9 @@
                 GMT+3
             </div>
             <div class="games d-flex">
-                <div class="cs d-flex align-items-center" @click="setGame('cs')">
-                    <img src="/images/navbar/cs.png" alt="CS:GO">
-                    CS:GO
-                </div>
-                <div class="dota d-flex align-items-center" @click="setGame('dota')">
-                    <img src="/images/navbar/dota.png" alt="DOTA 2">
-                    DOTA 2
-                </div>
-                <div class="lol d-flex align-items-center" @click="setGame('lol')">
-                    <img src="/images/navbar/lol.png" alt="LOL">
-                    LOL
+                <div class="cs d-flex align-items-center" v-for="game in games" @click="setGame(game.code)">
+                    <img :src="`/uploads/games/${game.sidebarIcon}`">
+                    {{game.name}}
                 </div>
             </div>
         </div>
@@ -52,6 +44,7 @@
 <script>
     export default {
         name: "SubNavbar",
+        props: ['games'],
         data() {
             return {
                 theme: null,
@@ -85,7 +78,7 @@
                     this.setTheme(localStorage.getItem('theme'));
                 }
                 this.theme = localStorage.getItem('theme');
-            }
+            },
         },
         mounted() {
             this.setDefaultTheme()
@@ -202,11 +195,7 @@
         color: #ff6d1d;
     }
 
-    .games .cs img {
-        width: .8vw;
-    }
-
-    .games .lol img, .games .dota img {
+    .games  img{
         width: 1vw;
         margin-right: .3vw;
     }

@@ -97,6 +97,7 @@ class NewsCommentService extends EntityService
             'id' => $comment->getId(),
             'newsId' => $comment->getNews()->getId(),
             'user' => [
+                'id' => $comment->getUser()->getId(),
                 'nickname' => $comment->getUser()->getNickname(),
                 'surname' => $comment->getUser()->getFamily(),
                 'name' => $comment->getUser()->getName(),

@@ -13,7 +13,7 @@
             <i class="fas" :class="priceType.icon"></i>
         </div>
         <div class="search">
-            <div class="search-button" @click="setFilter('search', search)">
+            <div class="search-button" @click="search = ''">
                 <i class="fas fa-search"></i>
             </div>
             <div class="input">
@@ -54,6 +54,11 @@
                     }
                 },
                 search: null,
+            }
+        },
+        watch: {
+            search() {
+                this.setFilter('search', this.search)
             }
         },
         methods: {

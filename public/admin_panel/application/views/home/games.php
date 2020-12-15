@@ -40,12 +40,12 @@
         </div>
     <?php } ?>
     <aside>
-        <?php $activePath = 'awards' ?>
+        <?php $activePath = 'games' ?>
         <?php require_once APPPATH . 'views/sidebar.php' ?>
     </aside>
 
     <div class="main-content">
-        <h1 class="main-title">Награды</h1>
+        <h1 class="main-title">Игры</h1>
 
         <div class="relative">
             <div id="app">
@@ -53,7 +53,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">{{editAward !== null ? `Редактировать награду №${editAward.id}`: 'Добавить награду' }}</h5>
+                                <h5 class="modal-title">{{editGame !== null ? `Редактировать игру №${editGame.id}`: 'Добавить игру' }}</h5>
                                 <div class="alert alert-success" role="alert" v-if="message !== null">
                                     {{message}}
                                     <button type="button" class="close" @click="message = null">
@@ -62,24 +62,33 @@
                                 </div>
                             </div>
                             <div class="modal-body">
-                                <form name="saveAward">
+                                <form name="saveGame">
                                     <div class="col-item">
-                                        <label class="label" for="">Изображение</label>
-                                        <div v-if="imageSrc !== null">
-                                            <img :src="imageSrc" style="width: 44px; margin-bottom: 15px; margin-top: 15px;">
+                                        <label class="label" for="">Лого</label>
+                                        <div class="input mb-5">
+                                            <input name="logo" type="file" class="fw-600 input2_txt">
                                         </div>
-                                        <div class="input mb-5" id="input">
-                                            <input name="icon" @change="addShowAwardUploadImage($event.target)" type="file" class="fw-600 input2_txt">
+                                        <label class="label" for="">Иконка в меню</label>
+                                        <div class="input mb-5">
+                                            <input name="sidebar_icon" type="file" class="fw-600 input2_txt">
                                         </div>
-                                        <label class="label" for="">Текст</label>
+                                        <label class="label" for="">Иконка в новости</label>
+                                        <div class="input mb-5">
+                                            <input name="news_icon" type="file" class="fw-600 input2_txt">
+                                        </div>
+                                        <label class="label" for="">Название</label>
                                         <div class="input mb-5" id="input">
-                                            <input name="text" type="text" :value="editAward !== null ? editAward.text: ''" class="fw-600 input2_txt">
+                                            <input name="name" type="text" :value="editGame !== null ? editGame.name: ''" class="fw-600 input2_txt">
+                                        </div>
+                                        <label class="label" for="">Код</label>
+                                        <div class="input mb-5" id="input">
+                                            <input name="code" type="text" :value="editGame !== null ? editGame.code: ''" class="fw-600 input2_txt">
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="clearForm">Отмена</button>
                                 <button type="button" class="btn btn-primary" @click="save">Сохранить</button>
                             </div>
                         </div>
@@ -95,10 +104,19 @@
                                     id
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    Изображение
+                                    Лого
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    Текст
+                                    Иконка в меню
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    Иконка в новостях
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    Название
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    Код
                                 </td>
                                 <td class="js-expand-table-item pointer">
                                     Опции
@@ -106,25 +124,34 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="award in awards">
+                            <tr v-for="game in games">
                                 <td>
-                                    {{award.id}}
+                                    {{game.id}}
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    <img :src="imagesPath + award.icon">
+                                    <img :src="imagesPath + game.logo">
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    {{award.text}}
+                                    <img :src="imagesPath + game.sidebar_icon">
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    <img :src="imagesPath + game.news_icon">
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    {{game.name}}
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    {{game.code}}
                                 </td>
                                 <td class="t-a-r pr-15">
                                     <button class="pointer btn btn-dark-blue btn-small"
                                             data-toggle="modal"
                                             data-target="#addModal"
-                                            @click="editAward = award, imageSrc = `${imagesPath}${award.icon}`">
+                                            @click="clearForm, editGame = game, imageSrc = `${imagesPath}${game.logo}`">
                                         Редактировать
                                     </button>
-                                    <a :href="'<?php echo site_url('c-admin/award/delete/'); ?>' + award.id"
-                                         class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">
+                                    <a :href="'<?php echo site_url('c-admin/game/delete/'); ?>' + game.id"
+                                       class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">
                                         Удалить
                                     </a>
                                 </td>
@@ -135,6 +162,7 @@
                             <button
                                 data-toggle="modal"
                                 data-target="#addModal"
+                                @click="clearForm"
                                 class="btn btn-orange mt-15 mr-10 fw-400">
                                 Добавить
                             </button>
@@ -165,26 +193,28 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
 <script>
-    const awards = new Vue({
+    const games = new Vue({
         el: '#app',
-        data: {
-            page: 1,
-            awards: [],
-            editAward: null,
-            imageSrc: null,
-            awardsCount: 0,
-            limit: 0,
-            imagesPath: '<?php echo $images_url; ?>',
-            message: null
+        data() {
+            return {
+                page: 1,
+                games: [],
+                editGame: null,
+                imageSrc: null,
+                gamesCount: 0,
+                limit: 0,
+                imagesPath: '<?php echo $images_url; ?>',
+                message: null
+            }
         },
         watch: {
             page() {
-                this.getAwards()
+                this.getGames()
             }
         },
         computed: {
             pagesCount() {
-                return Math.ceil(this.awardsCount / this.limit)
+                return Math.ceil(this.gamesCount / this.limit)
             },
             pages() {
                 const pages = [];
@@ -198,7 +228,7 @@
             }
         },
         methods: {
-            addShowAwardUploadImage(input) {
+            addShowGameUploadImage(input) {
                 if (input.files && input.files[0]) {
                     const url = URL.createObjectURL(input.files[0]);
 
@@ -212,26 +242,35 @@
                     this.imageSrc = url
                 }
             },
-            getAwards() {
+            getGames() {
                 const form = new FormData();
 
                 form.append('page', this.page)
 
-                axios.post('<?php echo base_url('c-admin/ajax/awards');?>', form)
+                axios.post('<?php echo base_url('c-admin/ajax/games');?>', form)
                     .then(({data}) => {
-                        this.awards = data.awards;
-                        this.awardsCount = data.awards_count;
+                        this.games = data.games;
+                        this.gamesCount = data.games_count;
                         this.limit = data.limit;
                     })
             },
+            clearForm() {
+                document.forms.saveGame.reset();
+                this.imageSrc = null;
+            },
             save() {
-                const form = new FormData(document.forms.saveAward);
+                const form = new FormData(document.forms.saveGame);
 
-                axios.post('<?php echo base_url('c-admin/ajax/award/save');?>', form)
+                if (this.editGame !== null){
+                    form.append('id', this.editGame.id)
+                }
+                axios.post('<?php echo base_url('c-admin/ajax/games/save');?>', form)
                     .then(() => {
-                        this.getAwards()
-                        document.forms.saveAward.reset();
-                        this.message = 'Награду сохранено!';
+                        this.getGames()
+                        document.forms.saveGame.reset();
+                        this.message = 'Игру сохранено!';
+                        this.imageSrc = null;
+                        this.editGame = null;
                     })
             },
             prevPage() {
@@ -240,13 +279,13 @@
                 }
             },
             nextPage() {
-                if (this.awardsCount > this.page) {
+                if (this.gamesCount > this.page) {
                     this.page = this.page + 1;
                 }
             }
         },
         mounted() {
-            this.getAwards()
+            this.getGames();
         }
     })
 </script>

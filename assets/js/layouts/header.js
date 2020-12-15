@@ -1,28 +1,19 @@
 import NavBar from "../components/header/NavBar";
 import LoginModal from "../components/LoginModal";
 import SubNavbar from "../components/header/SubNavbar";
+import Service from "../services/Service";
 
 Vue.component('nav-bar', NavBar);
 Vue.component('sub-nav-bar', SubNavbar);
 Vue.component('login-modal', LoginModal);
-
-const axios = require('axios');
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-const token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-    axios._csrf_token = token.content;
-} else {
-    console.error('CSRF token not found');
-}
 
 export default new Vue({
     el: '#header',
     data: {
         show: false,
         isPageStart: true,
-        game: 'cs',
+        game: null,
+        games: []
     },
     methods: {
         showLoginModal() {
@@ -30,6 +21,16 @@ export default new Vue({
         },
         setGame(game){
             this.game = game;
+        },
+        getGames() {
+            const service = new Service();
+
+            service.getGames()
+                .then(games => {
+                    this.games = games;
+
+                    this.game = this.games[0].code
+                })
         }
     },
     mounted() {
@@ -38,5 +39,6 @@ export default new Vue({
         document.onscroll = function () {
             self.isPageStart = window.pageYOffset === 0;
         }
+        this.getGames();
     }
 })

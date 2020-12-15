@@ -112,4 +112,16 @@ $route['c-admin/ajax/ranks/save'] = 'ranks_c/save';
 $route['c-admin/awards'] = 'award_c/index';
 $route['c-admin/ajax/awards'] = 'award_c/ajax';
 $route['c-admin/ajax/award/save'] = 'award_c/save';
-$route['c-admin/delete/(:num)'] = 'award_c/delete/$1';
+$route['c-admin/award/delete/(:num)'] = 'award_c/delete/$1';
+
+//games
+$route['c-admin/games'] = 'game_c/index';
+$route['c-admin/ajax/games'] = 'game_c/ajax';
+$route['c-admin/ajax/games/save'] = 'game_c/save';
+$route['c-admin/game/delete/(:num)'] = 'game_c/delete/$1';
+
+//marketplace banners
+$route['c-admin/marketplace/banners'] = 'marketplace_c/index';
+$route['c-admin/ajax/marketplace/banners'] = 'marketplace_c/ajax';
+$route['c-admin/ajax/marketplace/banners/save'] = 'marketplace_c/save';
+$route['c-admin/marketplace/banners/delete/(:num)'] = 'marketplace_c/delete/$1';

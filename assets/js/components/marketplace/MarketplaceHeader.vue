@@ -1,51 +1,69 @@
 <template>
     <div class="marketplace-header">
-        <div class="slide-text" v-show="game === 'cs'">
-            <div class="title">Перенимайте опыт игры в CS:GO
-                <div>от профессионалов</div>
+        <div class="slide-text" v-show="game === banner.game.code" v-for="banner in banners">
+            <div class="title">
+                {{getTitle(banner).strFirst}}
+                <div> {{getTitle(banner).strSecond}}</div>
             </div>
             <div class="text">
-                Если вы давно хотели освоить CS:GO на профессиональном уровне, то вы пришли по адресу. На бирже Champs
-                свои услуги предлагают профессиональные игроки, которые готовы поделиться опытом и передать полезные
-                знания. Будь то теоретическая подготовка или оттачивание механических навыков - здесь вы найдете все
-                необходимое.
-            </div>
-        </div>
-        <div class="slide-text" v-show="game === 'dota'" style="display: none">
-            <div class="title">Прогрессируйте во всех аспектах Dota 2
-                <div>каждый день!</div>
-            </div>
-            <div class="text">
-                Давно хотели освоить мастерство тактических перемещений, тайминговых стаков и профессиональных
-                ластхитов, но не знали кто может с этим помочь? Биржа Champs - это профессиональные наставники, которые
-                готовы не только поделиться опытом и указать на ошибки, но и провести с вами ни одну игру.
-            </div>
-        </div>
-        <div class="slide-text" v-show="game === 'lol'" style="display: none">
-            <div class="title">Войдите в топы призывателей
-                <div> своего региона!</div>
-            </div>
-            <div class="text">
-                Ищете полезную информацию о возможностях ваших любимых героев, спавне и баффах Нашора и Герольда, но в
-                интернете ее никак не найти? В таком случае вы пришли по адресу, ведь высокорейтинговые наставники биржи
-                Champs на своем опыте прочувствовали все тонкости игры.
+                {{banner.text}}
             </div>
         </div>
         <div class="slide-images">
-            <div class="slide cs" v-show="game === 'cs'">
-            </div>
-            <div class="slide dota" v-show="game === 'dota'">
-            </div>
-            <div class="slide lol" v-show="game === 'lol'">
+            <div class="slide" v-show="game === banner.game.code" v-for="banner in banners">
+                <img :src="'/uploads/marketplace/' + banner.img" alt="">
             </div>
         </div>
     </div>
 </template>
 
 <script>
+
+
+    import MarketplaceService from "../../services/MarketplaceService";
+
     export default {
         name: "MarketplaceHeader",
         props: ['game'],
+        data() {
+            return {
+                banners: []
+            }
+        },
+        methods: {
+            getBanners() {
+                MarketplaceService.getGamesBanners()
+                    .then(banners => {
+                        this.banners = banners;
+                    })
+            },
+            getTitle(banner) {
+
+                let strFirst = '';
+                let strSecond = '';
+
+                const bannerSplit = banner.title.split(' ');
+
+                if (bannerSplit.length > 6) {
+                    const first = bannerSplit.splice(0, bannerSplit.length - 2);
+
+                    for (let word of first){
+                        strFirst += `${word} `;
+                    }
+
+                    for (let word of bannerSplit){
+                        strSecond += `${word} `;
+                    }
+                } else {
+                    strFirst = banner.title;
+                }
+
+                return {strFirst, strSecond}
+            }
+        },
+        mounted() {
+            this.getBanners();
+        }
     }
 </script>
 
@@ -79,10 +97,16 @@
             .slide {
                 width: 30vw;
                 height: 13vw;
-                background-position: center;
-                background-size: 110%;
                 -webkit-animation: animation-translate-right 1500ms linear both;
                 animation: animation-translate-right 1500ms linear both;
+                display: flex;
+                justify-content: center;
+                overflow: hidden;
+
+                img {
+                    width: 110%;
+                    height: 110%;
+                }
             }
 
             .slide.cs {

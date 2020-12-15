@@ -198,12 +198,12 @@
                 }
             },
             getNews() {
-                if (!this.isLoadAll) {
+                if (!this.isLoadAll && !this.load) {
                     this.load = true;
 
                     newsService.getNews(this.news.length, this.filters)
                         .then(data => {
-                            if (data.length === 0) {
+                            if (data.length < 10) {
                                 this.isLoadAll = true;
                             }
                             for (let item of data) {

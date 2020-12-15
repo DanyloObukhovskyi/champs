@@ -14,7 +14,7 @@
                     </a>
                     <div class="game-wrapper">
                         <div class="game">
-                            <img :src="'/images/marketplace/' + game.icon">
+                            <img :src="'/uploads/games/' + game.logo">
                             <div class="title">
                                 <p>
                                     Тренер
@@ -170,7 +170,7 @@
         computed: {
             game() {
                 return this.games.find(el => {
-                    return el.name === this.trainer.game.name
+                    return el.code === this.trainer.game.name
                 })
             },
             trainerUrl() {

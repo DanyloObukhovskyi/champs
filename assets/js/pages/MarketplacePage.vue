@@ -41,24 +41,6 @@
     import Loader from "../components/helpers/Loader";
     import Paginate from 'vuejs-paginate'
 
-    const games = [
-        {
-            name: 'cs',
-            title: 'CS:GO',
-            icon: 'cs.png'
-        },
-        {
-            name: 'dota',
-            title: 'DOTA 2',
-            icon: 'dota.png'
-        },
-        {
-            name: 'lol',
-            title: 'LOL',
-            icon: 'lol.jpg'
-        },
-    ];
-
     export default {
         name: "MarketplacePage",
         components: {
@@ -79,7 +61,6 @@
                     isExpensive: false,
                     search: null,
                 },
-                games: games,
                 trainers: [],
                 count: 0,
                 page: 1,
@@ -112,6 +93,9 @@
         computed: {
             pagesCount() {
                 return Math.ceil(+this.count / +this.perPage)
+            },
+            games() {
+                return this.header.games;
             }
         },
         methods: {

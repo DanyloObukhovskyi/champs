@@ -311,20 +311,31 @@
                 display: flex;
                 transition: all .5s ease-in-out;
 
-                &:hover {
-                    transition: all .5s ease-in-out;
-                    background: url(/images/marketplace/priceBackgroundHover.png);
-                    background-position: center;
-                    background-size: cover;
-                    color: white;
+                /*&:hover {*/
+                /*    transition: all .5s ease-in-out;*/
+                /*    background: url(/images/marketplace/priceBackgroundHover.png);*/
+                /*    background-position: center;*/
+                /*    background-size: cover;*/
+                /*    color: white;*/
 
-                    .background {
-                        i {
-                            color: white;
-                            font-size: 1vw;
-                            cursor: pointer;
-                        }
-                    }
+                /*    .background {*/
+                /*        i {*/
+                /*            color: white;*/
+                /*            font-size: 1vw;*/
+                /*            cursor: pointer;*/
+                /*        }*/
+                /*    }*/
+                /*}*/
+                transition: all .5s ease-in-out;
+                background: url(/images/marketplace/priceBackgroundHover.png);
+                background-position: center;
+                background-size: cover;
+                color: white;
+
+                i {
+                    color: white;
+                    font-size: 1vw;
+                    cursor: pointer;
                 }
 
                 .background {
@@ -346,11 +357,11 @@
                         font-weight: 700;
                     }
 
-                    i {
-                        color: #ff6d1d;
-                        font-size: 1vw;
-                        cursor: pointer;
-                    }
+                    /*i {*/
+                    /*    color: #ff6d1d;*/
+                    /*    font-size: 1vw;*/
+                    /*    cursor: pointer;*/
+                    /*}*/
                 }
             }
         }

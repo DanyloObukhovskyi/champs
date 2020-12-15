@@ -77,6 +77,12 @@ class MarketplaceService extends Service{
 
         return data;
     }
+
+    getGamesBanners = async () => {
+        const {data} = await  axios.post(`/${this.lang}/games/banners`)
+
+        return data;
+    }
 }
 
 export default new MarketplaceService();
