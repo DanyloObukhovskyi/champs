@@ -29,4 +29,10 @@
     <li class="<?php echo 'awards' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/awards'); ?>">Награды</a>
     </li>
+    <li class="<?php echo 'games' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/games'); ?>">Игры</a>
+    </li>
+    <li class="<?php echo 'marketplace/banners' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/marketplace/banners'); ?>">Банеры маркетплейса</a>
+    </li>
 </ul>

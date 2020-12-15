@@ -19,6 +19,12 @@ class Service {
         }
         return lang;
     }
+
+    getGames = async () => {
+        const {data} = await axios.post(`/${this.lang}/games`)
+
+        return data;
+    }
 }
 
 export default Service;

@@ -1,11 +1,11 @@
 <template>
     <div class="marketplace-sidebar">
         <div class="game"
-             @click="setGame(item.name)"
-             :class="{active: game === item.name}"
-             v-for="item in games"  >
-            <img :src="'/images/marketplace/' + item.icon" alt="">
-            {{item.title}}
+             @click="setGame(item.code)"
+             :class="{active: game === item.code}"
+             v-for="item in games">
+            <img :src="'/uploads/games/' + item.logo">
+            {{item.name}}
         </div>
     </div>
 </template>

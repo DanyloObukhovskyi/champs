@@ -54,7 +54,7 @@
             :is-trainer="{{ is_granted('IS_AUTHENTICATED_FULLY') and app.user.istrainer ? 'true': 'false' }}"
             :is-authorize="{{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true': 'false'}}">
     </nav-bar>
-    <sub-nav-bar @setgame="setGame">
+    <sub-nav-bar @setgame="setGame" :games="games">
     </sub-nav-bar>
     <login-modal
             show-first="{{ router == 'mvp' ? 'registration': 'login' }}"

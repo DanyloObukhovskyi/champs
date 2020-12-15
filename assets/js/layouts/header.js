@@ -1,6 +1,7 @@
 import NavBar from "../components/header/NavBar";
 import LoginModal from "../components/LoginModal";
 import SubNavbar from "../components/header/SubNavbar";
+import Service from "../services/Service";
 
 Vue.component('nav-bar', NavBar);
 Vue.component('sub-nav-bar', SubNavbar);
@@ -11,7 +12,8 @@ export default new Vue({
     data: {
         show: false,
         isPageStart: true,
-        game: 'cs',
+        game: null,
+        games: []
     },
     methods: {
         showLoginModal() {
@@ -19,6 +21,16 @@ export default new Vue({
         },
         setGame(game){
             this.game = game;
+        },
+        getGames() {
+            const service = new Service();
+
+            service.getGames()
+                .then(games => {
+                    this.games = games;
+
+                    this.game = this.games[0].code
+                })
         }
     },
     mounted() {
@@ -27,5 +39,6 @@ export default new Vue({
         document.onscroll = function () {
             self.isPageStart = window.pageYOffset === 0;
         }
+        this.getGames();
     }
 })
