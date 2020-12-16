@@ -5,6 +5,11 @@
         </div>
         <div class="last-matches-body">
             <team-last-matches :team="teamA"/>
+            <match-personal-meeting
+                    :matches="meetingMatches"
+                    :team-a="teamA"
+                    :team-b="teamB">
+            </match-personal-meeting>
             <team-last-matches :team="teamB"/>
         </div>
     </div>
@@ -13,14 +18,17 @@
 <script>
     import LampHeader from "../helpers/LampHeader";
     import TeamLastMatches from "./TeamLastMatches";
+    import MatchPersonalMeeting from "../matches/MatchPersonalMeeting";
 
     export default {
         name: "TeamsLastMatches",
         props: [
             'teamA',
-            'teamB'
+            'teamB',
+            'meetingMatches'
         ],
         components: {
+            MatchPersonalMeeting,
             TeamLastMatches,
             LampHeader
         }
@@ -50,7 +58,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d4146",endColorstr="#25282a",GradientType=1);
     }
 
-    .last-matches-body .team-matches:nth-child(2) {
+    .last-matches-body .team-matches:nth-child(3) {
         margin-left: .5vw;
         background: rgb(193, 198, 202);
         background: -moz-linear-gradient(90deg, rgba(193, 198, 202, 1) 0%, rgba(251, 252, 252, 1) 100%);
@@ -59,7 +67,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c1c6ca", endColorstr="#fbfcfc", GradientType=1);
     }
 
-    .dark .last-matches-body .team-matches:nth-child(2){
+    .dark .last-matches-body .team-matches:nth-child(3){
         color: white;
         background: rgb(37,40,42);
         background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(61,65,70,1) 100%);

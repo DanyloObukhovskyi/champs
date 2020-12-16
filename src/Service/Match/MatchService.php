@@ -514,4 +514,17 @@ class MatchService extends EntityService
     {
         return $this->repository->findBy(['event' => $event]);
     }
+
+    /**
+     * @param Match $match
+     * @return mixed
+     */
+    public function getMeetingMatches(Match $match)
+    {
+        return $this->repository->getMeetingMatches(
+            $match->getTeam1(),
+            $match->getTeam2(),
+            $match->getStartAt()
+        );
+    }
 }

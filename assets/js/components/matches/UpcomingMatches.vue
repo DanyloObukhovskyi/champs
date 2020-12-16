@@ -54,7 +54,7 @@
         },
         computed: {
             matchesUrl() {
-                return matchService.matchesPage('upcoming');
+                return matchService.matchesPage('future');
             },
             dateString() {
                 const year = this.date.getFullYear();
