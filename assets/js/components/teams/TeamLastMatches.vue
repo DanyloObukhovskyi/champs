@@ -16,7 +16,7 @@
                     {{match.opponent.name}}
                 </div>
                 <div class="score">
-                    {{match.score}}
+                    {{scoreParse(match)}}
                 </div>
             </div>
         </div>
@@ -38,76 +38,164 @@
                     className = 'lose';
                 }
                 return className;
+            },
+            scoreParse(match) {
+                let [scoreTeam, scoreOpponent] = match.score.split('-');
+
+                return `${scoreTeam} : ${scoreOpponent}`
             }
         }
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .team-matches {
         width: 100%;
         margin: 1vw 0;
-        padding: 1vw 0;
-    }
+        padding: .2vw 0;
+        height: 9.5vw;
 
-    .team-matches .team-matches-head {
-        display: flex;
-        justify-content: center;
-        font-size: 1.2vw;
-        margin-bottom: .5vw;
-    }
+        .team-matches-head {
+            display: flex;
+            justify-content: center;
+            font-size: 1vw;
+            margin-bottom: .5vw;
+        }
 
-    .team-matches .opponent-title {
-        padding: 1vw 0 .5vw;
-        font-size: 1vw;
-    }
+        .opponent-title {
+            padding-top: .2vw;
+            font-size: 1vw;
+        }
 
-    .team-matches .score {
-        font-size: 1.5vw;
-    }
+        .score {
+            font-size: 1.2vw;
+            line-height: 1.2vw;
+        }
 
-    .team-matches .opponent-logo,
-    .team-matches .opponent-title,
-    .team-matches .score {
-        display: flex;
-        justify-content: center;
-        text-align: center;
-    }
+        .opponent-logo,
+        .opponent-title,
+        .score {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
 
-    .team-matches .opponent-logo img {
-        height: 4vw;
+        .opponent-logo img {
+            height: 2vw;
+        }
     }
 
     .line {
         background: gray;
         display: flex;
-        height: .3vw;
+        height: .2vw;
         align-items: center;
-        margin: 1vw .05vw 0;
+        margin: .7vw .05vw 0;
         justify-content: center;
+
+        .dot {
+            background: gray;
+            height: .9vw;
+            width: .9vw;
+            border-radius: 50%;
+            border: .25vw solid #2d3135;
+        }
+
+        &.win {
+            background: #33cc66;
+
+            .dot {
+                background: #33cc66;
+            }
+
+            .dot::before {
+                content: "";
+                position: absolute;
+                height: .9vw;
+                width: .9vw;
+                top: -.25vw;
+                left: -.25vw;
+                border-radius: 50%;
+                border: .1vw solid #33cc66;
+            }
+        }
+
+        &.lose {
+            background: #ff0000;
+
+
+            .dot {
+                background: #ff0000;
+            }
+
+            .dot::before {
+                content: "";
+                position: absolute;
+                height: .9vw;
+                width: .9vw;
+                top: -.25vw;
+                left: -.25vw;
+                border-radius: 50%;
+                border: .1vw solid #ff6b1c;
+            }
+        }
     }
 
-    .line.win {
-        background: green;
-    }
+    .dark {
+        .line {
+            background: gray;
+            display: flex;
+            height: .3vw;
+            align-items: center;
+            margin: 1vw .05vw 0;
+            justify-content: center;
 
-    .line.lose {
-        background: red;
-    }
+            .dot {
+                background: gray;
+                height: 1.2vw;
+                width: 1.2vw;
+                border-radius: 50%;
+                border: .25vw solid #2d3135;
+            }
 
-    .line .dot {
-        background: gray;
-        height: 1.3vw;
-        width: 1.2vw;
-        border-radius: 50%;
-        border: .25vw solid black;
-    }
+            &.win {
+                background: #33cc66;
 
-    .line.win .dot {
-        background: green;
-    }
+                .dot {
+                    background: #33cc66;
+                }
 
-    .line.lose .dot {
-        background: red;
+                .dot::before {
+                    content: "";
+                    position: absolute;
+                    height: 1.2vw;
+                    width: 1.2vw;
+                    top: -.25vw;
+                    left: -.25vw;
+                    border-radius: 50%;
+                    border: .1vw solid #f3faf5;
+                }
+            }
+
+            &.lose {
+                background: #ff0000;
+
+
+                .dot {
+                    background: #ff0000;
+                }
+
+                .dot::before {
+                    content: "";
+                    position: absolute;
+                    height: 1.2vw;
+                    width: 1.2vw;
+                    top: -.25vw;
+                    left: -.25vw;
+                    border-radius: 50%;
+                    border: .1vw solid #2d3135;
+                }
+            }
+        }
     }
 </style>

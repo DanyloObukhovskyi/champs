@@ -8,7 +8,7 @@
             </tense-select>
             <filters @setFilter="setFilter" v-bind="filters"/>
         </div>
-        <div class="matches-body" v-if="!load">
+        <div class="matches-body">
             <div v-for="day in matches">
                 <div class="date">
                     {{day.date}}
@@ -24,14 +24,6 @@
         <div class="w-100 d-flex justify-content-center">
             <loader v-if="load"/>
         </div>
-        <paginate
-                v-if="showPaginate"
-                :page-count="pagesCount"
-                :click-handler="setPage"
-                prev-text="Prev"
-                next-text="Next"
-                container-class="matches-pagination">
-        </paginate>
     </div>
 </template>
 
@@ -53,6 +45,7 @@
             MatchRow,
             Paginate,
         },
+        props: ['type'],
         data() {
             return {
                 counts: {},
@@ -62,8 +55,8 @@
                     live: 'Активные',
                     future: 'Будующие'
                 },
-                load: false,
                 page: 1,
+                load: false,
                 perPage: 20,
                 matches: [],
                 filters: {
@@ -71,15 +64,14 @@
                     dateTo: '21.02.2022',
                     teamA: null,
                     teamB: null
-                }
+                },
+                isLoadAll: false,
             }
         },
         watch: {
             selectMatchesType() {
                 this.page = 1;
-                this.getMatches();
-            },
-            page() {
+                this.matches = [];
                 this.getMatches();
             },
             'filters.dateFrom': function () {
@@ -105,18 +97,33 @@
         },
         methods: {
             getMatches() {
-                this.load = true;
+                if (!this.load && !this.isLoadAll){
+                    this.load = true;
+                    matchService.getMatches(this.selectMatchesType, this.page, this.filters)
+                        .then(data => {
+                            this.counts = data.counts;
 
-                matchService.getMatches(this.selectMatchesType, this.page, this.filters)
-                    .then(data => {
-                        this.matches = data.matches;
-                        this.counts = data.counts;
-
-                        if (data.limit !== null) {
-                            this.perPage = data.limit
-                        }
-                        this.load = false;
-                    })
+                            for (let matches of data.matches){
+                                const matchesDay = this.matches.find(
+                                    match => match.date === matches.date
+                                )
+                                if (matchesDay !== undefined){
+                                    this.matches = this.matches.map(match => {
+                                        if (match.date === matches.date){
+                                            for(let item of matches.items){
+                                                match.items.push(item)
+                                            }
+                                        }
+                                        return match;
+                                    })
+                                } else {
+                                    this.matches.push(matches);
+                                }
+                            }
+                            this.load = false;
+                            this.page = this.page + 1;
+                        })
+                }
             },
             setPage(page) {
                 this.page = page;
@@ -124,9 +131,24 @@
             setFilter(data) {
                 this.filters[data.filter] = data.value;
             },
+            scrollEventTrigger() {
+                const self = this;
+                window.onscroll = () => {
+                    const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+
+                    if (scrollable <= 10) {
+                        self.getMatches()
+                    }
+                }
+            },
         },
         mounted() {
             this.getMatches();
+            this.scrollEventTrigger();
+
+            if (this.type && this.matchTypes[this.type]){
+                this.selectMatchesType = this.type;
+            }
         }
     }
 </script>

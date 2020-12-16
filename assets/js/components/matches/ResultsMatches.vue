@@ -65,7 +65,7 @@
         },
         computed: {
             matchesPage() {
-                return matchService.matchesPage('results')
+                return matchService.matchesPage('past')
             }
         },
         methods: {

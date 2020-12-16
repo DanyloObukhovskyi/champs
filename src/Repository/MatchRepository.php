@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Match;
+use App\Entity\Team;
 use App\Service\Match\MatchService;
 use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -338,26 +339,6 @@ class MatchRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $type
-     * @return int|mixed
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getMatchesCountByType($filters, string $type)
-    {
-        $result = 0;
-
-        if (in_array($type, MatchService::MATCH_TYPES, false))
-        {
-            $result = $this->getMatchesQueryByType($dateFrom, $dateTo, $type)
-                ->select('count(m.id)')
-                ->getQuery()
-                ->getSingleScalarResult();
-        }
-        return $result;
-    }
-
-    /**
      * @param $dateFrom
      * @param $dateTo
      * @param $teamA
@@ -389,5 +370,48 @@ class MatchRepository extends ServiceEntityRepository
                 ->getResult();
         }
         return $result;
+    }
+
+    /**
+     * @param Team|null $teamA
+     * @param Team|null $teamB
+     * @param $startedAt
+     * @return array|mixed
+     */
+    public function getMeetingMatches(?Team $teamA, ?Team $teamB, $startedAt)
+    {
+        $matches = [];
+
+        if (isset($teamA) and isset($teamB)){
+            $first = $this->createQueryBuilder('m')
+                ->where('m.start_at < :startedAt')
+                ->andWhere('m.team1 = :teamA')
+                ->andWhere('m.team2 = :teamB')
+                ->setParameter('teamA', $teamA)
+                ->setParameter('teamB', $teamB)
+                ->setParameter('startedAt', $startedAt)
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getResult();
+
+            $second = $this->createQueryBuilder('m')
+                ->where('m.start_at < :startedAt')
+                ->andWhere('m.team1 = :teamB')
+                ->andWhere('m.team2 = :teamA')
+                ->setParameter('teamA', $teamA)
+                ->setParameter('teamB', $teamB)
+                ->setParameter('startedAt', $startedAt)
+                ->setMaxResults(5 - (int)count($first))
+                ->getQuery()
+                ->getResult();
+
+            foreach ($first as $match){
+                $matches[] = $match;
+            }
+            foreach ($second as $match){
+                $matches[] = $match;
+            }
+        }
+        return $matches;
     }
 }

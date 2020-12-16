@@ -199,10 +199,10 @@
     }
 
     .teams .score.red {
-        color: darkred;
+        color: #be1517;
     }
 
     .teams .score.green {
-        color: darkgreen;
+        color: #33cc66;
     }
 </style>

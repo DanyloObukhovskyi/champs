@@ -100,9 +100,13 @@ class MatchesController extends AbstractController
     /**
      * @Route("/matches", name="matches_index_page")
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->render('templates/matches.html.twig', ['router' => 'matches']);
+        $type = $request->get('type');
+        return $this->render('templates/matches.html.twig', [
+            'router' => 'matches',
+            'type' => $type
+        ]);
     }
 
     /**
@@ -169,6 +173,14 @@ class MatchesController extends AbstractController
         $matchDecorate['startedAt']['date'] = $this->matchService->translateMatchDate($match, $translator);
         $matchDecorate['startedAt']['time'] = $match->getStartAt()->format('H:m');
         $matchDecorate['startedAt']['timeStamp'] = $match->getStartAt()->getTimestamp();
+
+        $meetingMatches = $this->matchService->getMeetingMatches($match);
+        $matchDecorate['meetingMatches'] = [];
+
+        /** @var Match $meetingMatch */
+        foreach ($meetingMatches as $meetingMatch){
+            $matchDecorate['meetingMatches'][] = $this->matchService->matchDecorator($meetingMatch);
+        }
 
         $comments = $this->matchCommentService
             ->getRepository()->findBy([

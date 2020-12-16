@@ -17,7 +17,13 @@
                          <img class="vs" src="/images/matches/vs.png">
                     </span>
                     <span class="d-flex justify-content-center" v-else>
-                         {{match.teamA.score}} : {{match.teamB.score}}
+                        <span :class="getScoreClass(match.teamA.score, match.teamB.score)">
+                            {{match.teamA.score}}
+                        </span>
+                        <span>&nbsp;:&nbsp;</span>
+                        <span :class="getScoreClass(match.teamB.score, match.teamA.score)">
+                            {{match.teamB.score}}
+                        </span>
                     </span>
                 </div>
                 <div class="teamB">
@@ -60,7 +66,11 @@
             <loader v-if="load"/>
         </div>
         <div class="last-matches" v-if="!load && match !== null">
-            <teams-last-matches :team-a="match.teamA" :team-b="match.teamB"/>
+            <teams-last-matches
+                    :team-a="match.teamA"
+                    :team-b="match.teamB"
+                    :meeting-matches="match.meetingMatches">
+            </teams-last-matches>
         </div>
         <div class="matches d-flex" v-if="!load && match !== null">
             <div class="col-4 pl-0" v-if="match.pickAndBans.length > 0">
@@ -166,6 +176,16 @@
             updateComments(data) {
                 this.comments = data.comments;
                 this.match.commentsCount = data.commentsCount;
+            },
+            getScoreClass(scoreA, scoreB) {
+                let className = '';
+                if (Number(scoreA) > Number(scoreB)){
+                    className = 'win';
+                }
+                if (Number(scoreA) < Number(scoreB)){
+                    className = 'lose';
+                }
+                return className;
             }
         },
         mounted() {
@@ -343,5 +363,13 @@
 
     .comments{
         margin-bottom: 3vw;
+    }
+
+    .win {
+        color: #33cc66;
+    }
+
+    .lose {
+        color: #be1517;
     }
 </style>
