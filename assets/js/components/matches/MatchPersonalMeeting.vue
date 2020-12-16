@@ -8,7 +8,7 @@
 
             </div>
             <div class="date">
-                {{parseDate(match.startAt)}}
+                {{parseDate(match.startedAt.timeStamp)}}
             </div>
             <div class="ball" :class="checkIsWin(match, teamB) ? 'win' : 'lose'">
 
@@ -22,8 +22,8 @@
         name: "MatchPersonalMeeting",
         props: ['matches', 'teamA', 'teamB'],
         methods: {
-            parseDate(dateString) {
-                const date = new Date(dateString);
+            parseDate(timestamp) {
+                const date = new Date(timestamp * 1000);
 
                 const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
                 const month = date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth();

@@ -177,7 +177,13 @@ class MatchesController extends AbstractController
 
         /** @var Match $meetingMatch */
         foreach ($meetingMatches as $meetingMatch){
-            $matchDecorate['meetingMatches'][] = $this->matchService->matchDecorator($meetingMatch);
+            $matchMeetingMatches = $this->matchService->matchDecorator($meetingMatch);
+
+            $matchMeetingMatches['startedAt']['date'] = $this->matchService->translateMatchDate($meetingMatch, $translator);
+            $matchMeetingMatches['startedAt']['time'] = $meetingMatch->getStartAt()->format('H:m');
+            $matchMeetingMatches['startedAt']['timeStamp'] = $meetingMatch->getStartAt()->getTimestamp();
+
+            $matchDecorate['meetingMatches'][] = $matchMeetingMatches;
         }
 
         $comments = $this->matchCommentService
