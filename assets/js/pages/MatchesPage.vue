@@ -103,7 +103,9 @@
                         .then(data => {
                             this.counts = data.counts;
 
-                            for (let matches of data.matches){
+                            for (let key in data.matches){
+                                const matches = data.matches[key];
+
                                 const matchesDay = this.matches.find(
                                     match => match.date === matches.date
                                 )
