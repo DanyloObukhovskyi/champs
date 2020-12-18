@@ -10,6 +10,7 @@ use App\Entity\LessonTime;
 use App\Entity\Payment;
 use App\Entity\Schedule;
 use App\Entity\Teachers;
+use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
 use App\Repository\LessonsRepository;
 use Carbon\Carbon;
@@ -118,10 +119,11 @@ class LessonService extends EntityService
      * @param array $lessonsCollection
      * @param $trainer
      * @param $user
+     * @param null $type
      * @return array
-     * @throws \Exception
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function createLessons(array $lessonsCollection, $trainer, $user)
+    public function createLessons(array $lessonsCollection, $trainer, $user, $type = null)
     {
         $lessonIds = [];
         $bookedTime = [];
@@ -153,10 +155,16 @@ class LessonService extends EntityService
                     {
                         $lessonsCount = (int)$lessonsCount / Lessons::LESSON_HOURS;
                     }
-
+                    $lessonCost = 0;
+                    /** @var TrainerLessonPrice $cost */
+                    foreach ($trainerEntity->getCosts() as $cost){
+                        if ($cost->getLessonType() === $type){
+                            $lessonCost = $cost->getPrice();
+                        }
+                    }
                     $lesson->setStudent($user);
                     $lesson->setTrainer($trainer);
-                    $lesson->setCost($trainerEntity->getCost() * $lessonsCount);
+                    $lesson->setCost($lessonCost * $lessonsCount);
                     $lesson->setStatus(Lessons::STATUS_NEW);
                     $lesson->setDateTimeFrom($dateFrom);
                     $lesson->setDateTimeTo($dateTo);

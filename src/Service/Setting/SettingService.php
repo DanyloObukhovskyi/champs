@@ -35,6 +35,19 @@ class SettingService extends EntityService
         ],
     ];
 
+    public const TRAINER_BANNER = [
+        'title' => 'marketplaceBannerTitle',
+        'text' => 'marketplaceBannerText',
+        'image' => 'marketplaceBanner'
+    ];
+
+    public const TRAINER_BANNER_LINKS = [
+        'vk' => 'marketplaceBannerVk',
+        'youtube' => 'marketplaceBannerYoutube',
+        'telegram' => 'marketplaceBannerTelegram',
+        'twitch' => 'marketplaceBannerTwitch'
+    ];
+
     protected $entity = Setting::class;
 
     /**

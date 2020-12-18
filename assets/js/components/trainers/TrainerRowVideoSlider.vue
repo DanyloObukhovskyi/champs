@@ -3,7 +3,10 @@
         <slick-carousel v-bind="settings" v-if="videos.length > 0">
             <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                 <div class="preview">
-                    <iframe :src="'https://www.youtube.com/embed/' + video" frameborder="0">
+                    <iframe allowfullscreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            :src="'https://www.youtube.com/embed/' + video"
+                            frameborder="0">
                     </iframe>
                 </div>
             </div>
@@ -32,7 +35,7 @@
                     centerMode: true,
                     centerPadding: "20px",
                     focusOnSelect: true,
-                    infinite: false,
+                    infinite: true,
                     slidesToShow: 1,
                     speed: 500,
                     dots: false,

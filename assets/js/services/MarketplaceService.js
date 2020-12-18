@@ -1,8 +1,8 @@
 import Service from "./Service";
 
 class MarketplaceService extends Service{
-    getTrainers = async (game, page, filters) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/trainers/${game}/${page}`, filters);
+    getTrainers = async (game, offset, filters) => {
+        const {data} = await axios.post(`/${this.lang}/ajax/trainers/${game}/${offset}`, filters);
 
         return data;
     }
@@ -44,7 +44,7 @@ class MarketplaceService extends Service{
         return data;
     }
 
-    setLessonPay = async (lessons, trainerId) => {
+    setLessonPay = async (lessons, type, trainerId) => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
         if (timezone < 0){
@@ -54,6 +54,7 @@ class MarketplaceService extends Service{
         }
         const {data} = await axios.post(`/${this.lang}/lessons/create/`, {
             lessons,
+            type,
             timezone,
             trainer_id: trainerId
         });
@@ -80,6 +81,12 @@ class MarketplaceService extends Service{
 
     getGamesBanners = async () => {
         const {data} = await  axios.post(`/${this.lang}/games/banners`)
+
+        return data;
+    }
+
+    getTrainerBanner = async () => {
+        const {data} = await  axios.post(`/${this.lang}/ajax/setting/trainer/banner`)
 
         return data;
     }

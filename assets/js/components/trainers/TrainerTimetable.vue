@@ -56,12 +56,11 @@
             </button>
         </div>
         <trainer-confirm-payment
-                type="individual"
                 :trainer="trainer"
                 :lessons="times"
                 :date="date"
                 :selected-time="resultTime"
-                :nickname="trainer.nickname">
+                :training-type="trainingType">
         </trainer-confirm-payment>
     </div>
 </template>
@@ -83,7 +82,8 @@
         },
         props: [
             'trainer',
-            'selectedType'
+            'selectedType',
+            'trainingType'
         ],
         data() {
             return {

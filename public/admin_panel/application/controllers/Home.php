@@ -173,11 +173,7 @@
 				die();
 			}
 		}
-		
-		
-		
-		
-		
+
 		public function users($page = 0) {
 			$current_u_can = $this->users_model->get_capabilities($this->UserID);
 			if(isset($current_u_can[0]["roles"])) {
@@ -256,11 +252,7 @@
 				die();
 			}
 		}
-		
-		
-		
-		
-		
+
 		public function trainers($page = 0) {
 			$current_u_can = $this->users_model->get_capabilities($this->UserID);
 			if(isset($current_u_can[0]["roles"])) {
@@ -577,16 +569,31 @@
                 redirect($this->config->item(base_url('404_override')));
                 die();
             }
+            $data['trainingDescription'] = [];
+
+            foreach (Setting_model::TRAININGS_TYPES as $item)
+            {
+                $data['trainingDescriptions'][] = [
+                    'title' => $this->setting_model->get_by_key($item['title'])[0] ?? null,
+                    'description' => $this->setting_model->get_by_key($item['description'])[0] ?? null,
+                ];
+            }
             $data['social'] = $this->setting_model->get_social();
             $data['settings'] = $settings;
 
-            $data['banner']['text'] = $this->setting_model->get_by_key('bannerText')[0] ?? null;
-            $data['banner']['url'] = $this->setting_model->get_by_key('bannerUrl')[0] ?? null;
-            $data['banner']['image'] = $this->setting_model->get_by_key('bannerImage')[0] ?? null;
-            $data['marketplaceBanner'] = $this->setting_model->get_by_key('marketplaceBanner')[0] ?? null;
+            $data['marketplaceBanner']['image'] = $this->setting_model->get_by_key('marketplaceBanner')[0] ?? null;
+            $data['marketplaceBanner']['text'] = $this->setting_model->get_by_key('marketplaceBannerText')[0] ?? null;
+            $data['marketplaceBanner']['title'] = $this->setting_model->get_by_key('marketplaceBannerTitle')[0] ?? null;
+            $data['marketplaceBanner']['links'] = [];
 
+            foreach (Setting_model::MARKETPLACE_BANNER_LINKS as $link){
+                $bannerLink =  $this->setting_model->get_by_key($link)[0] ?? null;
+
+                if (isset($bannerLink)){
+                    $data['marketplaceBanner']['links'][] = $bannerLink;
+                }
+            }
             $data['images_path'] = $this->config->item('display_banner-pic');
-
             $data['current_u_can'] = $current_u_can;
             $data['output'] = $this->load->view('home/settings', $data, true);
 

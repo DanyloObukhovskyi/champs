@@ -227,11 +227,15 @@
             save() {
                 const form = new FormData(document.forms.saveAward);
 
+                if (this.editAward !== null){
+                    form.append('id', this.editAward.id);
+                }
                 axios.post('<?php echo base_url('c-admin/ajax/award/save');?>', form)
                     .then(() => {
                         this.getAwards()
                         document.forms.saveAward.reset();
                         this.message = 'Награду сохранено!';
+                        this.editAward = null;
                     })
             },
             prevPage() {

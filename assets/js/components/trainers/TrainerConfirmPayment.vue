@@ -27,7 +27,7 @@
                                     {{getType}}
                                 </div>
                                 <div class="price">
-                                    {{trainer.trainer.cost}} RUB
+                                    {{getPrice}} RUB
                                 </div>
                             </div>
                         </div>
@@ -68,9 +68,9 @@
         props: [
             'selectedTime',
             'date',
-            'type',
             'lessons',
-            'trainer'
+            'trainer',
+            'trainingType'
         ],
         data() {
             return {
@@ -79,37 +79,49 @@
         },
         computed: {
             getType() {
-                return TRAINING_TYPES[this.type];
+                return TRAINING_TYPES[this.trainingType];
             },
             selectedLessons() {
                 return this.lessons.filter(t => t.status === 2)
             },
+            getPrice() {
+                let price = 0;
+
+                for (let cost of this.trainer.trainer.costs){
+                    if (this.trainingType === cost.lessonType){
+                        price = cost.price;
+                    }
+                }
+                return price;
+            }
         },
         methods: {
             setPay() {
                 this.load = true;
 
-                const lessons = this.selectedLessons.map(lesson => {
-                    return {
-                        date: this.date,
-                        time: lesson.from,
-                    }
-                });
-                MarketplaceService.setLessonPay(lessons, this.trainer.id)
-                    .then((data) => {
-                        this.load = false;
-                        if (data.ids) {
-                            window.location.assign('/ru/payment/pay/lesson?lessonIds=' + JSON.stringify(data.ids))
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: 'На данное время урок забронирован!',
-                            })
+                if (this.trainingType){
+                    const lessons = this.selectedLessons.map(lesson => {
+                        return {
+                            date: this.date,
+                            time: lesson.from,
                         }
-                    })
+                    });
+                    MarketplaceService.setLessonPay(lessons, this.trainingType, this.trainer.id)
+                        .then((data) => {
+                            this.load = false;
+                            if (data.ids) {
+                                window.location.assign('/ru/payment/pay/lesson?lessonIds=' + JSON.stringify(data.ids))
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Упс...',
+                                    text: 'На данное время урок забронирован!',
+                                })
+                            }
+                        })
+                }
             }
-        },
+        }
     }
 </script>
 
@@ -120,8 +132,10 @@
                 background-color: #eff0f0;
                 border-radius: unset;
                 border: unset;
+                width: 35vw;
 
                 .modal-body {
+                    width: 35vw;
                     padding-left: 4.5vw;
                     padding-right: 4.5vw;
 

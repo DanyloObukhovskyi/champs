@@ -8,6 +8,7 @@ use App\Entity\Review;
 use App\Entity\Schedule;
 use App\Entity\Schledule;
 use App\Entity\Teachers;
+use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
 use App\Message\EndLessonMail;
 use App\Message\PaymentLessonMail;
@@ -318,7 +319,13 @@ class LessonsController extends AbstractController
         $lessons = $this->lessonsService
             ->decorationLessonsForPayed($lessons);
 
-        [$lessonIds] = $this->lessonsService->createLessons($lessons, $trainer, $user);
+        [$lessonIds] = $this->lessonsService
+            ->createLessons(
+                $lessons,
+                $trainer,
+                $user,
+                $data->type
+            );
 
         $lessons = $this->lessonsService->getLessonsByIds($lessonIds);
 

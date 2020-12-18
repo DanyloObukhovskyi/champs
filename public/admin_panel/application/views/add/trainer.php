@@ -108,7 +108,7 @@
                 <div class="col-item">
                     <label class="label" for="">Twitch URL</label>
                     <div class="input mb-20" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="twitch" id="twitch"
+                        <input type="text" class="fw-600 input2_txt" name="twitch" id="twitch"
                                placeholder="https://" title="введите правильный">
                     </div>
                     <label class="label" for="">Тип стрима</label>
@@ -133,11 +133,6 @@
                     </div>
                 </div>
                 <div class="col-item">
-                    <label class="label" for="">Краткий заголовок</label>
-                    <div class="input mb-20" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="shorttitle" id="shorttitle"
-                               placeholder="" title="введите правильный">
-                    </div>
                     <label class="label" for="">Игра</label>
                     <div class="input mb-5" id="input">
                         <input required type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""

@@ -29,7 +29,8 @@ class Edit_c extends CI_Controller
             'trainer_video',
             'trainer_achievement',
             'award_model',
-            'trainer_award_model'
+            'trainer_award_model',
+            'trainer_lesson_price_m'
         ));
     }
 
@@ -387,8 +388,6 @@ class Edit_c extends CI_Controller
                 $new_passw = (isset($_POST["new_password"]) && !empty($_POST["new_password"])) ? trim($_POST["new_password"]) : '';
                 $new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
 
-                $price = (int)(isset($_POST["price"]) && !empty($_POST["price"])) ? trim($_POST["price"]) : '';
-                $video_url = (isset($_POST["video_url"]) && !empty($_POST["video_url"])) ? trim($_POST["video_url"]) : '';
                 $about = (isset($_POST["about"]) && !empty($_POST["about"])) ? trim($_POST["about"]) : '';
                 $method = (isset($_POST["method"]) && !empty($_POST["method"])) ? trim($_POST["method"]) : '';
                 $game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
@@ -406,10 +405,22 @@ class Edit_c extends CI_Controller
                 $achievements = (isset($_POST["achievements"]) && !empty($_POST["achievements"])) ? $_POST["achievements"] : [];
                 $is_provide_training = isset($_POST["is_provide_training"]);
                 $awards = (isset($_POST["awards"]) && !empty($_POST["awards"])) ? $_POST["awards"] : [];
+                $trainings = (isset($_POST["training"]) && !empty($_POST["training"])) ? $_POST["training"] : [];
+                $prices = (isset($_POST["price"]) && !empty($_POST["price"])) ? $_POST["price"] : [];
+                $global_elite = isset($_POST["global_elite"]);
 
                 $this->trainer_video->deleteRecords($id);
                 foreach ($videos as $video) {
                     $this->trainer_video->create($id, $video);
+                }
+
+                foreach (Trainer_lesson_price_m::PRICE_TYPES as $type => $title){
+                    $this->trainer_lesson_price_m->create_or_update(
+                        $id,
+                        $type,
+                        $prices[$type] ?? 0,
+                        isset($trainings[$type])
+                    );
                 }
 
                 $this->trainer_achievement->delete_records($id);
@@ -421,7 +432,7 @@ class Edit_c extends CI_Controller
                     $this->trainer_award_model->create($id, $award);
                 }
 
-                if (!empty($nickname) && !empty($Email) && !empty($price)) {
+                if (!empty($nickname) && !empty($Email)) {
                     $mask = "ROLE_USER";
                     $user_capabilities = array($mask);
 
@@ -455,15 +466,13 @@ class Edit_c extends CI_Controller
 
                     if (empty($delete_trainer)) {
                         $update_data = array();
-                        $update_data['cost'] = $price;
                         $update_data['about'] = $about;
-                        $update_data['videolink'] = $video_url;
                         $update_data['method'] = $method;
                         $update_data['twitch'] = $twitch;
                         $update_data['shorttitle'] = $shorttitle;
                         $update_data['stream_type'] = $stream_type;
                         $update_data['admin_percentage'] = $admin_percentage;
-                        $update_data['is_provide_training'] = $is_provide_training;
+                        $update_data['global_elite'] = $global_elite;
 
                         $this->edit_m->updateTeacher($id, $update_data);
                     }
@@ -541,6 +550,15 @@ class Edit_c extends CI_Controller
         $data['current_u_can'] = $current_u_can;
         $data['awards'] = $this->award_model->get_all();
         $data['trainer_awards'] = [];
+        $data['prices_types'] = Trainer_lesson_price_m::PRICE_TYPES;
+
+        $trainer_prices = $this->trainer_lesson_price_m->get_by_trainer_id($id);
+        $data['trainer_prices'] = [];
+
+        foreach (Trainer_lesson_price_m::PRICE_TYPES as $type => $title){
+            $trainer_price = array_search($type, array_column($trainer_prices, 'lesson_type'), true);
+            $data['trainer_prices'][$type] = $trainer_price !== false ? $trainer_prices[$trainer_price] ?? null: null;
+        }
         $trainer_awards = $this->trainer_award_model->get_by_trainer_id($id);
 
         foreach ($trainer_awards as $award){

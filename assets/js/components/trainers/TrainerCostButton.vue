@@ -1,5 +1,5 @@
 <template>
-    <div class="price-row" @click="toggleDescription">
+    <div class="price-row" @click="toggleDescription" :class="{active: active}">
         <div class="background">
             <div>
                 <div class="type">
@@ -18,7 +18,7 @@
 <script>
     export default {
         name: "TrainerCostButton",
-        props: ['type', 'cost', 'label', 'show'],
+        props: ['type', 'cost', 'label', 'show', 'active'],
         methods: {
             toggleDescription() {
                 this.$emit('toggleDescription', {

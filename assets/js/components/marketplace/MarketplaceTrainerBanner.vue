@@ -1,17 +1,15 @@
 <template>
     <div class="trainer-banner">
         <div class="left">
-            <div>
+            <div id="banner-description">
                 <div class="title">
-                    Апни свой скилл бесплатно!
+                    {{banner.title.value}}
                 </div>
-                <div class="text">
-                    Не хочешь платить сразу? Вступай в наши соцсети и не пропусти
-                    еженедельный розыгрыш тренировок совершенно бесплатно!
+                <div class="text" v-html="banner.text.value">
                 </div>
             </div>
             <div class="trainer-social">
-                <a :href="social.vk ? social.vk.link : null">
+                <a :href="banner.links.vk ? banner.links.vk.value : null">
                     <div class="icon">
                         <img src="/images/marketplace/vk.svg">
                     </div>
@@ -19,7 +17,7 @@
                         CHAMPS_PRO
                     </div>
                 </a>
-                <a :href="social.youtube ? social.youtube.link : null">
+                <a :href="banner.links.youtube ? banner.links.youtube.value : null">
                     <div class="icon">
                         <img src="/images/marketplace/youtube.svg">
                     </div>
@@ -27,7 +25,7 @@
                         CHAMPSPRO
                     </div>
                 </a>
-                <a :href="social.telegram ? social.telegram.link : null">
+                <a :href="banner.links.telegram ? banner.links.telegram.value : null">
                     <div class="icon">
                         <img src="/images/marketplace/telegram.svg">
                     </div>
@@ -35,7 +33,7 @@
                         CHAMPS_PRO
                     </div>
                 </a>
-                <a :href="social.twitch ? social.twitch.link : null">
+                <a :href="banner.links.twitch ? banner.links.twitch.value : null">
                     <div class="icon">
                         <img src="/images/marketplace/twitch.svg">
                     </div>
@@ -54,17 +52,15 @@
 <script>
     export default {
         name: "MarketplaceTrainerBanner",
-        props: ['social', 'banner'],
+        props: ['banner'],
         computed: {
             background() {
                 const style = {
-                    'background-image' : 'url("/images/marketplace/trainerBanner.png")'
+                    'background-image': 'url("/images/marketplace/trainerBanner.png")'
                 }
-
-                if (this.banner !== null){
-                    style['background-image'] = `url("/uploads/banners/${this.banner}")`;
+                if (this.banner !== null) {
+                    style['background-image'] = `url("/uploads/banners/${this.banner.image.value}")`;
                 }
-
                 return style;
             }
         }
@@ -130,8 +126,8 @@
                         margin-right: 1vw;
                     }
 
-                    &:hover{
-                      opacity: .6;
+                    &:hover {
+                        opacity: .6;
                     }
                 }
             }
@@ -156,8 +152,8 @@
                 -webkit-animation: animation-translate-left 1500ms linear both;
                 animation: animation-translate-left 1500ms linear both;
 
-                .text {
-                    color: #fff;
+                .text{
+                    color: white;
                 }
 
                 .trainer-social {
@@ -168,5 +164,11 @@
                 }
             }
         }
+    }
+</style>
+<style>
+    .dark .trainer-banner .text span {
+        color: white !important;
+        background-color: transparent !important;
     }
 </style>

@@ -38,39 +38,38 @@
                     </div>
                 </div>
                 <div class="recommended">
-                    <img src="/images/marketplace/recommended.png">
-                    <div>
-                        <p>Champs</p>
-                        <p>рекомендует</p>
+                    <div class="award" v-for="award in trainer.awards">
+                        <img :src="'/uploads/trainers_awards/' + award.icon">
+                        <div>
+                            {{award.text}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="price-list">
             <trainer-cost-button
-                    v-for="(item, type) in trainingTypes"
+                    v-for="(cost, type) in trainer.trainer.costs"
                     @toggleDescription="toggleDescription"
                     :key="type"
-                    :label="item.title"
-                    :type="type"
+                    :label="getTrainingTypeTitle(cost.lessonType)"
+                    :type="cost.lessonType"
                     :show="show"
-                    :cost="trainer.trainer.cost">
+                    :cost="cost.price">
             </trainer-cost-button>
         </div>
         <div class="trainer-footer">
             <div class="rank">
                 <label>Ранг</label>
-                <div>
+                <div class="d-flex align-items-center">
                     <img v-if="!rankIconError" :src="'/images/marketplace/' + trainer.rankIcon" @error="rankIconError = true">
-                    {{trainer.rank}}
-                </div>
-                <template v-if="trainer.awards.length > 0">
-                    <label>Награды</label>
-                    <div v-for="award in trainer.awards">
-                        <img :src="'/uploads/trainers_awards/' + award.icon">
-                        {{award.text}}
+                    <div>
+                        {{trainer.rank}}
+                        <div class="global-elite" v-if="trainer.trainer.globalElite">
+                            THE GLOBAL ELITE
+                        </div>
                     </div>
-                </template>
+                </div>
             </div>
             <div class="achievements">
                 <label v-if="trainer.achievements.length > 0">Достижения</label>
@@ -83,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="video-slider">
+            <div class="trainer-video">
                 <trainer-row-video-slider :videos="trainer.videos"/>
             </div>
         </div>
@@ -91,43 +90,9 @@
             <p class="title">
                 {{description[type].title}}
             </p>
-            <p class="text">
-                {{description[type].text}}
-            </p>
-<!--            <div class="subtitle">-->
-<!--                Подзаголовок-->
-<!--            </div>-->
-<!--            <p class="text">-->
-<!--                Таким образом постоянное информационно-пропагандистское-->
-<!--                обеспечение нашей деятельности позволяет выполнять важные-->
-<!--                задания по разработке форм развития. Повседневная практика-->
-<!--                показывает, что сложившаяся структура организации влечет-->
-<!--                за собой процесс внедрения и модернизации соответствующий-->
-<!--                условий активизации:-->
-<!--            </p>-->
-<!--            <ul>-->
-<!--                <li>-->
-<!--                    условий активизации-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    форм развития-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    сложившаяся структура-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--            <div class="subtitle">-->
-<!--                Подзаголовок-->
-<!--            </div>-->
-<!--            <p class="text">-->
-<!--                Таким образом постоянное информационно-пропагандистское-->
-<!--                обеспечение нашей деятельности позволяет выполнять важные-->
-<!--                задания по разработке форм развития. Повседневная практика-->
-<!--                показывает, что сложившаяся структура организации влечет за-->
-<!--                собой процесс внедрения и модернизации соответствующий условий-->
-<!--                активизации:-->
-<!--            </p>-->
-            <a :href="trainerUrl + `?type=${type}`" class="confirm" @click="show = false">Принять</a>
+            <div class="text" v-html="description[type].text">
+            </div>
+            <a :href="trainerUrl + `?type=${type}`" class="confirm">Принять</a>
         </div>
     </div>
 </template>
@@ -155,15 +120,9 @@
                 type: null,
                 rankIconError: false,
                 trainingTypes: {
-                    individual: {
-                        title: 'Идивидуальная',
-                    },
-                    // group: {
-                    //     title: 'Груповая тренировка',
-                    // },
-                    // analytic: {
-                    //     title: 'Анализ видео',
-                    // }
+                    individual: 'Идивидуальная',
+                    group: 'Груповая тренировка',
+                    analytic: 'Анализ видео',
                 }
             }
         },
@@ -181,6 +140,17 @@
             toggleDescription({type, show}) {
                 this.show = show;
                 this.type = type;
+
+                const self = this;
+
+                $('body').one('mousedown', function () {
+                    if ($(event.target).prop("tagName") !== 'A'){
+                        self.show = false;
+                    }
+                })
+            },
+            getTrainingTypeTitle(type) {
+                return this.trainingTypes[type];
             }
         },
     }
@@ -311,24 +281,32 @@
             }
 
             .recommended {
-                display: flex;
+                .award {
+                    display: flex;
+                    align-items: center;
 
-                img {
-                    height: 2vw;
-                    margin-right: .5vw;
-                }
+                    img {
+                        height: 2vw;
+                        margin-right: .5vw;
+                    }
 
-                p {
-                    margin: 0;
-                    font-size: .7vw;
+                    div {
+                        width: 6vw;
+                        font-size: 1vw;
+                        line-height: 1.2vw;
+                    }
                 }
             }
         }
 
         .price-list {
             display: flex;
-            justify-content: space-between;
             margin-top: 1.5vw;
+
+            .price-row:nth-child(2),
+            .price-row:nth-child(3){
+                margin-left: 5%;
+            }
         }
 
         .trainer-footer {
@@ -347,7 +325,7 @@
                 }
             }
 
-            .video-slider {
+            .trainer-video {
                 width: 50%;
             }
 
@@ -371,6 +349,13 @@
                         width: 2vw;
                         margin-right: .5vw;
                     }
+                }
+
+                .global-elite {
+                    font-weight: 600;
+                    font-size: .8vw;
+                    color: #ff6d1d;
+                    line-height: .9vw;
                 }
             }
         }

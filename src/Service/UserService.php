@@ -64,12 +64,18 @@ class UserService  extends EntityService
      */
     protected $reviewsService;
 
+    /**
+     * @var TeacherService
+     */
+    protected $teacherService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->trainerVideosService = new TrainerVideoService($entityManager);
         $this->reviewsService = new ReviewService($entityManager);
+        $this->teacherService = new TeacherService($entityManager);
 
         $this->timeZoneService = new TimeZoneService();
     }
@@ -216,7 +222,7 @@ class UserService  extends EntityService
             'family' => $user->getFamily(),
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
-            'trainer' => $trainer,
+            'trainer' => $this->teacherService->decorator($trainer),
             'ratingTotal' => $ratingTotal,
             'rating' => $rating,
             'reviewCount' => $count,
@@ -248,11 +254,7 @@ class UserService  extends EntityService
     {
         $teachers =  $this->entityManager
             ->getRepository(Teachers::class)
-            ->getTrainers($filters, $game)
-            ->getQuery()
-            ->setFirstResult($offset)
-            ->setMaxResults($_ENV['TRAINERS_ON_PAGE'])
-            ->getResult();
+            ->getTrainers($filters, $game, $offset);
 
         $users = [];
 
@@ -261,20 +263,5 @@ class UserService  extends EntityService
             $users[] = $this->repository->find($teacher->getUserId());
         }
         return $users;
-    }
-
-    /**
-     * @param $filters
-     * @param $game
-     * @return mixed
-     */
-    public function getTrainersCount($filters, $game)
-    {
-        return $this->entityManager
-            ->getRepository(Teachers::class)
-            ->getTrainers($filters, $game)
-            ->select('count(t.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
     }
 }

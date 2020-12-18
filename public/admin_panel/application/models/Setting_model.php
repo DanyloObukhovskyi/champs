@@ -15,11 +15,47 @@ class Setting_model extends CI_Model
         'instagram',
     ];
 
-    public const BANNER = [
-        'bannerText',
-        'bannerImage',
-        'bannerUrl',
-        'marketplaceBanner'
+    public const MARKETPLACE_BANNER = [
+        'marketplaceBanner',
+        'marketplaceBannerTitle',
+        'marketplaceBannerText',
+    ];
+
+    public const MARKETPLACE_BANNER_LINKS = [
+        'marketplaceBannerVk',
+        'marketplaceBannerYoutube',
+        'marketplaceBannerTelegram',
+        'marketplaceBannerTwitch'
+    ];
+
+    public const TRAININGS_DESCRIPTION = [
+        'trainingIndividualTitle',
+        'trainingIndividualText',
+        'trainingGroupTitle',
+        'trainingGroupText',
+        'trainingAnalyticsTitle',
+        'trainingAnalyticsText'
+    ];
+
+    public const TRAINING_INDIVIDUAL = [
+        'title' => 'trainingIndividualTitle',
+        'description' => 'trainingIndividualText',
+    ];
+
+    public const TRAINING_GROUP = [
+        'title' => 'trainingGroupTitle',
+        'description' => 'trainingGroupText',
+    ];
+
+    public const TRAINING_ANALYTICS = [
+        'title' => 'trainingAnalyticsTitle',
+        'description' => 'trainingAnalyticsText',
+    ];
+
+    public const TRAININGS_TYPES = [
+        'individual' => self::TRAINING_INDIVIDUAL,
+        'group' => self::TRAINING_GROUP,
+        'analytic' => self::TRAINING_ANALYTICS
     ];
 
     public function get_social()
@@ -48,7 +84,14 @@ class Setting_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where_not_in('key',  array_merge(self::SOCIAL, self::BANNER));
+        $this->db->where_not_in('key',
+            array_merge(
+            self::SOCIAL,
+            self::MARKETPLACE_BANNER,
+                self::TRAININGS_DESCRIPTION,
+                self::MARKETPLACE_BANNER_LINKS
+            )
+        );
 
         $result = $this->db->get();
 

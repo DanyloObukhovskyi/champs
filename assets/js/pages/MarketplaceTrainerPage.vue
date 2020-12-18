@@ -1,9 +1,14 @@
 <template>
     <div class="trainer-page">
-        <marketplace-trainer-banner :social="social" :banner="banner"/>
+        <marketplace-trainer-banner
+                v-if="banner !== null"
+                :banner="banner">
+        </marketplace-trainer-banner>
         <div class="trainer">
             <trainer-full-row
                     v-if="trainer !== null && !load"
+                    @setTrainingType="(type) => trainingType = type"
+                    :training-type="trainingType"
                     :games="games"
                     :description="description"
                     :trainer="trainer">
@@ -18,6 +23,7 @@
             </div>
             <trainer-timetable
                     v-if="trainer !== null && !load"
+                    :training-type="trainingType"
                     :trainer="trainer">
             </trainer-timetable>
             <trainer-reviews v-if="trainer !== null && !load"
@@ -59,7 +65,7 @@
 
     export default {
         name: "MarketplaceTrainerPage",
-        props: ['social', 'trainerId', 'banner'],
+        props: ['social', 'trainerId', 'trainingType'],
         components: {
             TrainerReviews,
             TrainerTimetable,
@@ -77,6 +83,7 @@
                 },
                 trainer: null,
                 load: false,
+                banner: null
             }
         },
         methods: {
@@ -103,9 +110,16 @@
                         this.trainer.ratingTotal = data.ratingTotal;
                         this.trainer.rating = data.rating;
                     })
-            }
+            },
+            getBanner() {
+                MarketplaceService.getTrainerBanner()
+                    .then(data => {
+                        this.banner = data;
+                    })
+            },
         },
         mounted() {
+            this.getBanner();
             this.getTrainer();
             this.getTrainingDescription();
         }

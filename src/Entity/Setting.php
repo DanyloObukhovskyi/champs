@@ -23,7 +23,7 @@ class Setting
     private $key;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $value;
 

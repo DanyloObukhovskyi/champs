@@ -95,7 +95,6 @@
     <div class="main-content">
         <h1 class="main-title">Редактировать профиль тренера- <?php print $user_info[0]['nickname']; ?></h1>
 
-
         <form action="<?php print base_url("c-admin/trainer/edit/" . $user_info[0]['userid'] . "/" . $UserID); ?>"
               method="post" enctype="multipart/form-data">
             <input type="hidden" value="true" name="edit">
@@ -159,23 +158,28 @@
             <!--- --->
             <div class="colx2">
                 <div class="col-item">
-                    <div class="provide_training">
-                        <label class="label">
-                            <input type="checkbox"
-                                   onchange="checkIsProvideTraining()"
-                                   name="is_provide_training"
-                                <?php echo $user_info[0]['is_provide_training'] == 1 ? 'checked' : ''; ?>
-                                   class="fw-600 input2_txt">
-                            Предоставляет услуги тренировки
-                        </label>
-                    </div>
-                    <label class="label" for="">Price</label>
-                    <div class="input mb-5" id="input">
-                        <input type="text" class="fw-600 input2_txt" name="price" id="price"
-                               placeholder="100руб./час" title="введите правильный E-mail"
-                               value="<?php print $user_info[0]['cost']; ?>"
-                               onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
-                    </div>
+                    <?php foreach ($prices_types as $type => $title): ?>
+                        <input type="checkbox"
+                                <?php if (isset($trainer_prices[$type])):?>
+                                    <?php print $trainer_prices[$type]['is_active'] ? 'checked': '';?>
+                                <?php endif;?>
+                                onchange="changeTrainerPriceActive('<?php print $type;?>')"
+                                name="training[<?php print $type;?>]">
+                        <label class="label" for=""><?php print $title; ?></label>
+                        <div class="input mb-5">
+                            <input type="text"
+                                   class="fw-600 input2_txt"
+                                   name="price[<?php print $type;?>]"
+                                   placeholder="100руб./час"
+                                   <?php if (isset($trainer_prices[$type])):?>
+                                       <?php print $trainer_prices[$type]['is_active'] ? '': 'disabled';?>
+                                   <?php else: ?>
+                                        disabled
+                                   <?php endif;?>
+                                   value=" <?php echo $trainer_prices[$type]['price'] ?? null ?>"
+                                   onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
+                        </div>
+                    <?php endforeach;?>
                     <div class="mb-15">
                         <img src="<?php print base_url("assets/icons/info.svg"); ?>"/>
                         <div class="info_txt">Формат поля - числовой</div>
@@ -226,7 +230,7 @@
                 <div class="col-item">
                     <label class="label" for="">Twitch URL</label>
                     <div class="input mb-20" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="twitch" id="twitch"
+                        <input type="text" class="fw-600 input2_txt" name="twitch" id="twitch"
                                placeholder="https://" title="введите правильный"
                                value="<?php print $user_info[0]['twitch']; ?>">
                     </div>
@@ -250,6 +254,10 @@
                         <img src="<?php print base_url("assets/icons/info.svg"); ?>"/>
                         <div class="info_txt">Формат поля - числовой</div>
                     </div>
+                    <div class="mb-10">
+                        <input type="checkbox" name="global_elite" <?php echo $user_info[0]['global_elite'] ? 'checked': ''?>>
+                        <label class="label" for="">THE GLOBAL ELITE</label>
+                    </div>
                     <label class="label" for="">сколько текущий админ будет получать с ставки тренера в %</label>
                     <div class="input mb-5" id="input">
                         <input required type="text" class="fw-600 input2_txt" name="admin_percentage"
@@ -263,12 +271,6 @@
                     </div>
                 </div>
                 <div class="col-item">
-                    <label class="label" for="">Краткий заголовок</label>
-                    <div class="input mb-20" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="shorttitle" id="shorttitle"
-                               placeholder="" title="введите правильный"
-                               value="<?php print $user_info[0]['shorttitle']; ?>">
-                    </div>
                     <label class="label" for="">Игра</label>
                     <div class="input mb-20" id="input">
                         <input required type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""
@@ -567,17 +569,17 @@
         }
     }
 
-    function checkIsProvideTraining() {
-        if ($('.provide_training input[type="checkbox"]').is(':checked')) {
-            $('input#price').prop("disabled", false);
+    function changeTrainerPriceActive(type) {
+        const checked = $(event.target).prop('checked');
+
+        if (checked) {
+            $(`input[name="price[${type}]"]`).prop('disabled', false);
         } else {
-            $('input#price').prop("disabled", true);
+            $(`input[name="price[${type}]"]`).prop('disabled', true);
         }
     }
 
     window.onload = () => {
-        checkIsProvideTraining()
-
         $(document).ready(function() {
             $('.js-example-basic-single').select2();
         });

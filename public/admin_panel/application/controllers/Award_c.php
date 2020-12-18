@@ -62,6 +62,9 @@ class Award_c extends CI_Controller
             $data = [
                 'text' => $_POST['text']
             ];
+            if (isset($_POST['id'])){
+                $data['id'] = $_POST['id'];
+            }
             if (!empty($_FILES["icon"]["name"])) {
                 $config['upload_path'] = $this->config->item('upload_trainers_awards-pic');
                 $config['allowed_types'] = 'jpeg|jpg|png|svg';
@@ -77,15 +80,19 @@ class Award_c extends CI_Controller
                 $_FILES["icon"]["name"] = $fileName;
                 if (!$this->upload->do_upload('icon')) {
                     $error = array('error' => $this->upload->display_errors());
-                } else {
                 }
                 if ($ext === 'svg') {
-                    $path = $this->config->item('upload_trainers-pic') . $fileName;
-                    move_uploaded_file($_FILES['userfile']['tmp_name'], $path);
+                    $path = $this->config->item('upload_trainers_awards-pic') . $fileName;
+                    move_uploaded_file($_FILES['icon']['tmp_name'], $path);
                 }
 
                 $data['icon'] = $fileName;
-                $this->award_model->create($data);
+
+                if (isset($_POST['id'])){
+                    $this->award_model->update($data);
+                } else {
+                    $this->award_model->create($data);
+                }
             }
         }
     }
