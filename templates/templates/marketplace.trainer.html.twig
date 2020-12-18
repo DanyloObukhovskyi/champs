@@ -29,6 +29,7 @@
         </div>
         <div class="ml-8 mr-8 p-0 mt-2">
             <marketplace-trainer-page
+                    training-type="{{ type }}"
                     :social="{{setting.social|json_encode}}"
                     banner="{{ setting.get('marketplaceBanner') is not null ? setting.get('marketplaceBanner').value: null }}"
                     trainer-id="{{ trainer.id }}">

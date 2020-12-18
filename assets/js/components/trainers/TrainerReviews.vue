@@ -38,7 +38,9 @@
                     <div v-if="trainer.reviews.length - reviewsOffset > 0"
                          class="more-reviews"
                          @click="reviewsOffset = trainer.reviews.length">
-                        {{moreReviewsTitle}}
+                        <span>
+                            {{moreReviewsTitle}}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -67,7 +69,7 @@
                         data-toggle="modal"
                         data-target="#trainerSendReviewModal"
                         v-if="hasPermissionToReview">
-                    Оставить отзыв
+                        Оставить отзыв
                 </button>
             </div>
         </div>
@@ -166,22 +168,23 @@
             display: flex;
 
             .left {
-                width: 73%;
+                width: 80%;
 
                 .reviews-list {
                     background-color: #ffffff;
+                    min-height: 6vw;
 
                     .review {
                         padding: 1vw;
 
                         .review-header {
                             display: flex;
-                            align-items: flex-end;
+                            align-items: center;
 
                             .avatar-wrapper {
                                 .avatar {
-                                    width: 3.5vw;
-                                    height: 3.5vw;
+                                    width: 2.5vw;
+                                    height: 2.5vw;
                                     border-radius: 50%;
                                     overflow: hidden;
                                     display: flex;
@@ -214,7 +217,8 @@
 
                                 .rating {
                                     display: flex;
-                                    margin-top: .2vw;
+                                    position: absolute;
+                                    margin-top: .3vw;
 
                                     img {
                                         width: 1vw;
@@ -237,21 +241,34 @@
                         font-size: 1vw;
                         cursor: pointer;
 
-                        &:hover {
+                        &:hover .span{
                             opacity: .5;
+                        }
+
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            width: 100%;
+                            height: 4vw;
+                            top: -4vw;
+                            background: -moz-linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6110819327731092) 100%);
+                            background: -webkit-linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6110819327731092) 100%);
+                            background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6110819327731092) 100%);
+                            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
                         }
                     }
                 }
             }
 
             .right {
-                width: 27%;
+                width: 20%;
+                height: 25vw;
                 background-color: #ffffff;
                 margin-left: 1vw;
 
                 .reviews-stat {
                     display: flex;
-                    margin-left: 3.1vw;
+                    margin-left: 2.1vw;
                     flex-direction: column-reverse;
 
                     .line {
@@ -261,8 +278,6 @@
 
                         img {
                             width: 1vw;
-                            margin-left: .15vw;
-                            margin-right: .15vw;
                         }
 
                         span {
@@ -325,10 +340,35 @@
                             }
                         }
                     }
+
+                    .more-reviews {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 1vw;
+                        color: #ff6d1d;
+                        font-size: 1vw;
+                        cursor: pointer;
+
+                        &:hover .span{
+                            opacity: .5;
+                        }
+
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            width: 100%;
+                            height: 4vw;
+                            top: -4vw;
+                            background: -moz-linear-gradient(0deg, rgba(30,33,35,1) 0%, rgba(30,33,35,0.13769257703081228) 100%);
+                            background: -webkit-linear-gradient(0deg, rgba(30,33,35,1) 0%, rgba(30,33,35,0.13769257703081228) 100%);
+                            background: linear-gradient(0deg, rgba(30,33,35,1) 0%, rgba(30,33,35,0.13769257703081228) 100%);
+                            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1e2123",endColorstr="#1e2123",GradientType=1);
+                        }
+                    }
                 }
 
                 .right {
-                    width: 27%;
                     background-color: #1e2123;
                     color: white;
                     margin-left: 1vw;

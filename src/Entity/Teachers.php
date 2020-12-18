@@ -30,27 +30,7 @@ class Teachers
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $videolink;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $cost;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
-    private $isLessonCost;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $about;
-
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
-    private $shorttitle;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -66,9 +46,6 @@ class Teachers
      * @ORM\Column(type="integer", nullable=true)
      */
     private $streamType;
-
-
-    private $comissionCost;
 
     /**
      * @ORM\ManyToMany(targetEntity=Award::class)
@@ -86,9 +63,19 @@ class Teachers
     private $timeZone;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : true})
+     * @ORM\Column(type="boolean", options={"default" : false})
      */
-    private $isProvideTraining;
+    private $isLessonCost;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : false})
+     */
+    private $globalElite;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrainerLessonPrice::class, mappedBy="trainer")
+     */
+    private $costs;
 
     public function getId(): ?int
     {
@@ -119,31 +106,6 @@ class Teachers
         return $this;
     }
 
-    public function getCost(): ?int
-    {
-        $percentageMarkup = $_ENV['PERCENTAGE_MARKUP_LESSON'];
-
-        $cost = $this->cost;
-
-        if (isset($percentageMarkup))
-        {
-            $cost = ($this->cost / 100)  * ($percentageMarkup + 100);
-        }
-        return $cost;
-    }
-
-    public function getCostWithNoPercentage()
-    {
-        return $this->cost;
-    }
-
-    public function setCost(?int $cost): self
-    {
-        $this->cost = $cost;
-
-        return $this;
-    }
-
     public function getAbout(): ?string
     {
         return $this->about;
@@ -152,18 +114,6 @@ class Teachers
     public function setAbout(?string $about): self
     {
         $this->about = $about;
-
-        return $this;
-    }
-
-    public function getShorttitle(): ?string
-    {
-        return $this->shorttitle;
-    }
-
-    public function setShorttitle(?string $shorttitle): self
-    {
-        $this->shorttitle = $shorttitle;
 
         return $this;
     }
@@ -204,11 +154,6 @@ class Teachers
         return $this;
     }
 
-    public function getComissionCost()
-    {
-        return ($this->cost) * self::SERVICE_COST_MULTIPLIER;
-    }
-
     /**
      * @return mixed
      */
@@ -244,22 +189,6 @@ class Teachers
     /**
      * @return mixed
      */
-    public function getIsLessonCost()
-    {
-        return $this->isLessonCost;
-    }
-
-    /**
-     * @param mixed $isLessonCost
-     */
-    public function setIsLessonCost($isLessonCost): void
-    {
-        $this->isLessonCost = $isLessonCost;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIsProvideTraining()
     {
         return $this->isProvideTraining;
@@ -287,5 +216,45 @@ class Teachers
     public function setAwards($awards): void
     {
         $this->awards = $awards;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCosts()
+    {
+        return $this->costs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsLessonCost()
+    {
+        return $this->isLessonCost;
+    }
+
+    /**
+     * @param mixed $isLessonCost
+     */
+    public function setIsLessonCost($isLessonCost): void
+    {
+        $this->isLessonCost = $isLessonCost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGlobalElite()
+    {
+        return $this->globalElite;
+    }
+
+    /**
+     * @param mixed $globalElite
+     */
+    public function setGlobalElite($globalElite): void
+    {
+        $this->globalElite = $globalElite;
     }
 }

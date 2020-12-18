@@ -7,25 +7,16 @@
             </div>
             <div class="right">
                 <marketplace-filters @setFilter="setFilter" v-bind="filters"/>
-                <div class="d-flex justify-content-center w-100" v-if="load">
-                    <loader/>
-                </div>
                 <trainer-row
-                        v-else
                         v-for="(trainer, index) in trainers"
                         :key="index"
                         :games="games"
                         :description="description"
                         :trainer="trainer">
                 </trainer-row>
-                <paginate
-                        v-if="count > trainers.length"
-                        :page-count="pagesCount"
-                        :click-handler="setPage"
-                        prev-text="Prev"
-                        next-text="Next"
-                        container-class="pagination">
-                </paginate>
+                <div class="d-flex justify-content-center w-100" v-if="load">
+                    <loader/>
+                </div>
             </div>
         </div>
     </div>
@@ -39,7 +30,6 @@
     import MarketplaceService from "../services/MarketplaceService";
     import TrainerRow from "../components/trainers/TrainerRow";
     import Loader from "../components/helpers/Loader";
-    import Paginate from 'vuejs-paginate'
 
     export default {
         name: "MarketplacePage",
@@ -48,8 +38,7 @@
             TrainerRow,
             MarketplaceFilters,
             MarketplaceSidebar,
-            MarketplaceHeader,
-            Paginate
+            MarketplaceHeader
         },
         inject: [
             'header'
@@ -62,6 +51,7 @@
                     search: null,
                 },
                 trainers: [],
+                loadAllTrainers: false,
                 count: 0,
                 page: 1,
                 perPage: 5,
@@ -78,15 +68,27 @@
                 this.getTrainers();
             },
             'header.game': function() {
+                this.trainers = [];
+                this.loadAllTrainers = false;
+
                 this.getTrainers();
             },
             'filters.workout': function() {
+                this.trainers = [];
+                this.loadAllTrainers = false;
+
                 this.getTrainers();
             },
             'filters.isExpensive': function() {
+                this.trainers = [];
+                this.loadAllTrainers = false;
+
                 this.getTrainers();
             },
             'filters.search': function() {
+                this.trainers = [];
+                this.loadAllTrainers = false;
+
                 this.getTrainers();
             },
         },
@@ -107,16 +109,21 @@
                 this.filters[name] = value;
             },
             getTrainers() {
-                this.load = true;
+                if (!this.load){
+                    this.load = true;
 
-                MarketplaceService.getTrainers(this.header.game, this.page,  this.filters)
-                    .then(data => {
-                        this.trainers = data.trainers;
-                        this.count = data.count;
-                        this.perPage = data.limit;
-
-                        this.load = false;
-                    })
+                    MarketplaceService.getTrainers(this.header.game, this.trainers.length,  this.filters)
+                        .then(data => {
+                            for (let trainer of data.trainers){
+                                const searchTrainer = this.trainers.find(t => t.id === trainer.id)
+                                if (!searchTrainer){
+                                    this.trainers.push(trainer);
+                                }
+                            }
+                            this.perPage = data.limit;
+                            this.load = false;
+                        })
+                }
             },
             setPage(page) {
                 this.page = page;
@@ -126,10 +133,23 @@
                     .then(data => {
                         this.description = data;
                     })
-            }
+            },
+            scrollEventTrigger() {
+                const self = this;
+                window.onscroll = () => {
+                    const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+
+                    if (scrollable <= 10) {
+                        self.getTrainers()
+                    }
+                }
+            },
         },
         mounted() {
-            this.getTrainers();
+            if (this.header.game !== null){
+                this.getTrainers();
+            }
+            this.scrollEventTrigger();
             this.getTrainingDescription();
         }
     }

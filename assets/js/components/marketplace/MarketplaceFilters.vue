@@ -41,7 +41,7 @@
                     all: 'Все',
                     individual: 'Индивидуальная',
                     group: 'Групповая',
-                    analysis: 'Анализ реплея',
+                    analytic: 'Анализ реплея',
                 },
                 priceTypes: {
                     expensive: {
@@ -140,6 +140,11 @@
                 input {
                     outline: unset;
                     border: none;
+                    text-indent: .5vw;
+
+                    &::placeholder {
+                        color: black;
+                    }
                 }
             }
         }

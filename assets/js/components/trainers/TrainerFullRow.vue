@@ -38,37 +38,33 @@
                     </div>
                 </div>
                 <div class="recommended">
-                    <img src="/images/marketplace/recommended.png">
-                    <div>
-                        <p>Champs</p>
-                        <p>рекомендует</p>
+                    <div class="award" v-for="award in trainer.awards">
+                        <img :src="'/uploads/trainers_awards/' + award.icon">
+                        <div>
+                            {{award.text}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="price-list">
-            <div class="price-row" v-for="(item, type) in trainingTypes" @click="toggleDescription({type, show: !show})">
-                <div class="background">
-                    <div>
-                        <div class="type">
-                            {{item.title}}
-                        </div>
-                        <div class="price">
-                            {{trainer.trainer.cost}} RUB
-                        </div>
-                    </div>
-                    <i class="fas fa-sort-down" v-if="!show"></i>
-                    <i class="fas fa-sort-up" v-else></i>
-                </div>
-            </div>
+            <trainer-cost-button
+                    v-for="(cost, type) in trainer.trainer.costs"
+                    @toggleDescription="toggleDescription"
+                    :key="type"
+                    :label="getTrainingTypeTitle(cost.lessonType)"
+                    :type="cost.lessonType"
+                    :show="show"
+                    :active="trainingType === cost.lessonType"
+                    :cost="cost.price">
+            </trainer-cost-button>
         </div>
         <div class="description" v-show="show && type !== null">
             <p class="title">
                 {{description[type] ? description[type].title: ''}}
             </p>
-            <p class="text">
-                {{description[type] ? description[type].text: ''}}
-            </p>
+            <div class="text" v-html="description[type] ? description[type].text: ''">
+            </div>
         </div>
         <div class="trainer-footer">
             <div class="rank">
@@ -120,7 +116,8 @@
         props: [
             'trainer',
             'games',
-            'description'
+            'description',
+            'trainingType'
         ],
         data() {
             return {
@@ -128,15 +125,9 @@
                 type: null,
                 rankIconError: false,
                 trainingTypes: {
-                    individual: {
-                        title: 'Идивидуальная',
-                    },
-                    // group: {
-                    //     title: 'Груповая тренировка',
-                    // },
-                    // analytic: {
-                    //     title: 'Анализ видео',
-                    // }
+                    individual: 'Идивидуальная',
+                    group: 'Груповая тренировка',
+                    analytic: 'Анализ видео',
                 }
             }
         },
@@ -151,9 +142,16 @@
             }
         },
         methods: {
-            toggleDescription({type, show}) {
-                this.show = show;
-                this.type = type;
+            toggleDescription({type}) {
+                if(this.type === type){
+                    this.show = !this.show;
+                } else {
+                    this.type = type;
+                }
+                this.$emit('setTrainingType', type)
+            },
+            getTrainingTypeTitle(type) {
+                return this.trainingTypes[type];
             }
         },
     }
@@ -282,26 +280,49 @@
             }
 
             .recommended {
-                display: flex;
+                .award {
+                    display: flex;
+                    align-items: center;
 
-                img {
-                    height: 2vw;
-                    margin-right: .5vw;
-                }
+                    img {
+                        height: 2vw;
+                        margin-right: .5vw;
+                    }
 
-                p {
-                    margin: 0;
-                    font-size: .7vw;
+                    div {
+                        width: 6vw;
+                        font-size: 1vw;
+                        line-height: 1.2vw;
+                    }
                 }
             }
         }
 
         .price-list {
             display: flex;
-            justify-content: space-between;
             margin-top: 1.5vw;
 
+            .price-row:nth-child(2),
+            .price-row:nth-child(3){
+                margin-left: 5%;
+            }
+
             .price-row {
+
+                &.active {
+                    background: url(/images/marketplace/priceBackgroundHover.png);
+                    background-position: center;
+                    background-size: cover;
+                    color: white;
+
+                    .background {
+                        i {
+                            color: white;
+                            font-size: 1vw;
+                            cursor: pointer;
+                        }
+                    }
+                }
                 cursor: pointer;
                 width: 30%;
                 background: url(/images/marketplace/priceBackground.png);
@@ -311,32 +332,22 @@
                 display: flex;
                 transition: all .5s ease-in-out;
 
-                /*&:hover {*/
-                /*    transition: all .5s ease-in-out;*/
-                /*    background: url(/images/marketplace/priceBackgroundHover.png);*/
-                /*    background-position: center;*/
-                /*    background-size: cover;*/
-                /*    color: white;*/
-
-                /*    .background {*/
-                /*        i {*/
-                /*            color: white;*/
-                /*            font-size: 1vw;*/
-                /*            cursor: pointer;*/
-                /*        }*/
-                /*    }*/
-                /*}*/
-                transition: all .5s ease-in-out;
-                background: url(/images/marketplace/priceBackgroundHover.png);
-                background-position: center;
-                background-size: cover;
-                color: white;
-
-                i {
+                &:hover {
+                    transition: all .5s ease-in-out;
+                    background: url(/images/marketplace/priceBackgroundHover.png);
+                    background-position: center;
+                    background-size: cover;
                     color: white;
-                    font-size: 1vw;
-                    cursor: pointer;
+
+                    .background {
+                        i {
+                            color: white;
+                            font-size: 1vw;
+                            cursor: pointer;
+                        }
+                    }
                 }
+                transition: all .5s ease-in-out;
 
                 .background {
                     padding: 0 2vw;

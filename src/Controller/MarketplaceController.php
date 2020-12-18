@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\TrainerLessonPrice;
 use App\Service\UserService;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,13 +52,14 @@ class MarketplaceController extends AbstractController
     /**
      * @Route("/marketplace/trainer/{userId}")
      */
-    public function trainerPage($userId)
+    public function trainerPage(Request $request, $userId)
     {
         $trainer = $this->userService->find($userId);
 
         return $this->render('templates/marketplace.trainer.html.twig', [
             'trainer' => $trainer,
-            'router' => 'marketplace'
+            'router' => 'marketplace',
+            'type' => $request->get('type') ?? TrainerLessonPrice::INDIVIDUAL_TYPE
         ]);
     }
 }

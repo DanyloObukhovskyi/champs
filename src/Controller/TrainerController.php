@@ -190,21 +190,17 @@ class TrainerController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/trainers/{game}/{page}", name="get_trainer_info_slider_games")
+     * @Route("/ajax/trainers/{game}/{offset}", name="get_trainer_info_slider_games")
      */
-    public function setTrainerSliderInfo(Request $request, $game, $page)
+    public function setTrainerSliderInfo(Request $request, $game, $offset = 0)
     {
         $filters = json_decode($request->getContent(), true);
-        $offset = ($page - 1) * $_ENV['TRAINERS_ON_PAGE'];
 
         $users = $this->userService->getTrainers($filters, $game, $offset);
-        $trainersCount = $this->userService->getTrainersCount($filters, $game);
         $trainers = $this->userService->teachersDecorator($users);
 
         return $this->json([
             'trainers' => $trainers,
-            'count' => $trainersCount,
-            'limit' => $_ENV['TRAINERS_ON_PAGE']
         ]);
     }
 

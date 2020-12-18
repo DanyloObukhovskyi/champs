@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Teachers;
+use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -51,8 +53,7 @@ class TeachersRepository extends ServiceEntityRepository
             ->andWhere('l.userid = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -65,8 +66,7 @@ class TeachersRepository extends ServiceEntityRepository
             ->andWhere('l.cost < :val')
             ->setParameter('val', $cost)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
 
@@ -74,26 +74,60 @@ class TeachersRepository extends ServiceEntityRepository
      * @param $filters
      * @param $game
      * @return \Doctrine\ORM\QueryBuilder
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
-    public function getTrainers($filters, $game)
+    public function getTrainers($filters, $game, $offset)
     {
-        $users = $this->_em
+        $users = $this->getEntityManager()
             ->getRepository(User::class)
             ->findByGameAndNick($game, $filters['search']);
 
         $userIds = [];
-        foreach ($users as $user){
-            $userIds[] = $user->getId();
+        foreach ($users as $user) {
+            $userIds[$user->getId()] = $user->getId();
         }
 
-        $query = $this->createQueryBuilder('t')
-            ->where('t.userid in (:ids)')
-            ->setParameter('ids', $userIds);
+        $trainers = $this->createQueryBuilder('t')
+            ->where('t.userid IN(:ids)')
+            ->setParameter('ids', $userIds)
+            ->getQuery()
+            ->getResult();
 
-        if (isset($filters['isExpensive'])){
-            $query->orderBy('t.cost', $filters['isExpensive'] ? 'ASC': 'DESC');
+        $orderByWorkout = [];
+
+        if ($filters['workout'] !== 'all') {
+            /** @var Teachers $trainer */
+            foreach ($trainers as $trainer) {
+                /** @var TrainerLessonPrice $cost */
+                foreach ($trainer->getCosts() as $cost) {
+                    if ($cost->getIsActive() and $cost->getLessonType() === $filters['workout']) {
+                        $orderByWorkout[$cost->getPrice()][] = $trainer;
+                    }
+                }
+            }
+        } else {
+            foreach ($trainers as $trainer) {
+                $sumCost = 0;
+                /** @var TrainerLessonPrice $cost */
+                foreach ($trainer->getCosts() as $cost) {
+                    $sumCost += $cost->getPrice();
+                }
+                $orderByWorkout[$sumCost][] = $trainer;
+            }
         }
+        ksort($orderByWorkout);
 
-        return $query;
+        if (!$filters['isExpensive']) {
+            $orderByWorkout = array_reverse($orderByWorkout);
+        }
+        $trainers = [];
+
+        foreach ($orderByWorkout as $orderByWorkoutTrainers) {
+            foreach ($orderByWorkoutTrainers as $trainer){
+                $trainers[] = $trainer;
+            }
+        }
+        return array_slice($trainers, $offset, $_ENV['TRAINERS_ON_PAGE']);
     }
 }
