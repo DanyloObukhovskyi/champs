@@ -23,9 +23,9 @@ final class Version20201216134519 extends AbstractMigration
         $this->addSql('ALTER TABLE teachers DROP shorttitle');
         $this->addSql('ALTER TABLE teachers DROP videolink');
         $this->addSql('ALTER TABLE teachers DROP cost');
+        $this->addSql('CREATE TABLE trainer_lesson_price (id INT AUTO_INCREMENT NOT NULL, trainer_id INT DEFAULT NULL, lesson_type VARCHAR(255) NOT NULL, price INT NOT NULL, INDEX IDX_2E300490FB08EDF6 (trainer_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE trainer_lesson_price ADD is_active TINYINT(1) NOT NULL');
         $this->addSql('ALTER TABLE setting CHANGE value value LONGTEXT DEFAULT NULL');
-        $this->addSql('CREATE TABLE trainer_lesson_price (id INT AUTO_INCREMENT NOT NULL, trainer_id INT DEFAULT NULL, lesson_type VARCHAR(255) NOT NULL, price INT NOT NULL, INDEX IDX_2E300490FB08EDF6 (trainer_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE trainer_lesson_price ADD CONSTRAINT FK_2E300490FB08EDF6 FOREIGN KEY (trainer_id) REFERENCES teachers (id)');
         $this->addSql('ALTER TABLE teachers ADD global_elite TINYINT(1) DEFAULT \'0\' NOT NULL, DROP is_provide_training');
         $this->addSql('ALTER TABLE teachers ADD shorttitle VARCHAR(500) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`');
