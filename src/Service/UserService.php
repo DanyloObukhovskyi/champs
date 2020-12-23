@@ -123,7 +123,6 @@ class UserService  extends EntityService
             $trainer = new Teachers();
             $trainer->setUser($user->getId());
             $trainer->setVideoLink("");
-            $trainer->setCost(0);
             $trainer->setAbout("");
             $trainer->setShorttitle("");
             $trainer->setMethod("");

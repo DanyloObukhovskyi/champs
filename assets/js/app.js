@@ -31,6 +31,7 @@ import WeaponsDoughnut from "./components/statistics/WeaponsDoughnut";
 import MarketplacePage from "./pages/MarketplacePage";
 import MarketplaceTrainerPage from "./pages/MarketplaceTrainerPage";
 import HomePage from "./pages/HomePage";
+import CabinetPage from "./pages/CabinetPage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -66,6 +67,7 @@ Vue.component('marketplace-page', MarketplacePage)
 Vue.component('marketplace-trainer-page', MarketplaceTrainerPage)
 Vue.component('home-slider', HomeSlider)
 Vue.component('home-page', HomePage)
+Vue.component('cabinet-page', CabinetPage)
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

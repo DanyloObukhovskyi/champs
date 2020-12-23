@@ -38,7 +38,7 @@
             <social :social="social"></social>
             <div class="login-wrapper">
                 <div class="login">
-                    <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/timelist`"
+                    <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/cabinet`"
                        v-if="isAuthorize"
                        class="ln text-light">
                         кабинет
@@ -48,7 +48,7 @@
                           Войти
                     </span>
                     <div class="arrow-right">
-                        <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/timelist`"
+                        <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/cabinet`"
                            v-if="isAuthorize"
                            class="icon">
                             <i class="fas fa-arrow-right"></i>

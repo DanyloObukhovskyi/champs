@@ -64,6 +64,7 @@ class LessonsRepository extends ServiceEntityRepository
         foreach ($lessons as $lesson)
         {
             $isPayed = $lessonService->checkIsLessonPayed($lesson);
+            $isPayed = true;
             if ($isPayed){
                 $paymentLessons[] = $lesson;
             }
@@ -92,6 +93,7 @@ class LessonsRepository extends ServiceEntityRepository
         foreach ($lessons as $lesson)
         {
             $isPayed = $lessonService->checkIsLessonPayed($lesson);
+            $isPayed = true;
             if ($isPayed){
                 $paymentLessons[] = $lesson;
             }
