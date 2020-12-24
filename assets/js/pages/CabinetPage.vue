@@ -28,10 +28,14 @@
     import CabinetHeader from "../components/cabinet/CabinetHeader";
     import Cabinet from "../components/cabinet/pages/Cabinet";
     import Training from "../components/cabinet/pages/Training";
+    import News from "../components/cabinet/pages/News";
+    import Video from "../components/cabinet/pages/Video";
 
     const routes = [
         { path: `/${CabinetService.lang}/user/cabinet/`, component: Cabinet },
         { path: `/${CabinetService.lang}/user/cabinet/training`, component: Training },
+        { path: `/${CabinetService.lang}/user/cabinet/news`, component: News },
+        { path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video },
     ];
 
     export default {

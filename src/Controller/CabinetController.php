@@ -60,7 +60,7 @@ class CabinetController extends AbstractController
 
 
     /**
-     * @Route("/{type}/cabinet/{page}", name="user_cabinet")
+     * @Route("/{type}/cabinet/{page}", name="user_cabinet", defaults={"page"=null})
      */
     public function page($type)
     {
