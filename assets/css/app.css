@@ -8,21 +8,21 @@ body {
     transition: all .5s ease-in-out;
 }
 
-#app {
+#layout .page{
     padding-top: 7vw;
 }
 
-#app.home{
+.home{
     background: url(/images/home/background.png) no-repeat;
     background-size: 100%;
 }
 
-#app.home .video-slider-container{
+.home .video-slider-container{
     overflow: hidden;
     width: 100%;
 }
 
-#app.home .video-slider-container .slick-list{
+.home .video-slider-container .slick-list{
     overflow: inherit;
 }
 
@@ -30,12 +30,12 @@ body {
     padding-top: 7vw;
 }
 
-#app.home .home-end {
+.home .home-end {
     background: url(/images/home/background2.png) no-repeat center 0;
     background-size: 100%;
 }
 
-.dark #app.home .home-end {
+.dark .home .home-end {
     background: url(/images/home/background2Black.png) no-repeat center 0;
     background-size: 100%;
 }
@@ -46,7 +46,7 @@ body {
     background-size: 35%;
 }
 
-.dark #app.home{
+.dark .home{
     background: url(/images/home/backgroundBlack.png) no-repeat;
     background-size: 100%;
 }

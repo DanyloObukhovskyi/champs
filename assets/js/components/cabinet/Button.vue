@@ -1,5 +1,5 @@
 <template>
-    <div class="button">
+    <div class="button" @click="$emit('click')">
         <div class="cabinet-button">
             <div class="icon-wrapper">
                 <div class="background">
@@ -106,11 +106,18 @@
         }
 
         .more-detail {
+            transition: all .3s ease-in-out;
             background-color: #aeaeae;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 17%;
+        }
+
+        &:hover {
+            .more-detail {
+                background-color: #ff6d1d;
+            }
         }
     }
 
@@ -148,7 +155,14 @@
             }
 
             .more-detail {
+                transition: all .3s ease-in-out;
                 background-color: #171a1b;
+            }
+
+            &:hover {
+                .more-detail {
+                    background-color: #ff6d1d;
+                }
             }
         }
     }

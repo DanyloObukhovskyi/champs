@@ -357,7 +357,7 @@ class LessonService extends EntityService
             'name' => $user->getName(),
             'family' => $user->getFamily(),
             'game' => $user->getGame(),
-            'rank' => $user->getRank(),
+            'rank' => $user->getRang(),
             'discord' => $user->getDiscord(),
             'trainingAll' => $lessonsCount,
         ];
@@ -429,6 +429,7 @@ class LessonService extends EntityService
 
     /**
      * @return mixed
+     * @throws \Exception
      */
     public function getNotNoticedLessons()
     {
@@ -444,5 +445,16 @@ class LessonService extends EntityService
         $lesson->setIsNotice(true);
 
         return $this->save($lesson);
+    }
+
+    /**
+     * @param Lessons $lesson
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTrainingTogetherCount(Lessons $lesson)
+    {
+        return $this->repository->getTrainingTogetherCount($lesson->getStudent(), $lesson->getTrainer());
     }
 }

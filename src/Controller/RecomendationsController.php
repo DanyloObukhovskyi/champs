@@ -118,7 +118,7 @@ class RecomendationsController extends AbstractController
                     'photo' => $user->getPhoto(),
                     'name' => $user->getName(),
                     'game' => $user->getGame(),
-                    'rank' => $user->getRank(),
+                    'rank' => $user->getRang(),
                     'family' => $user->getFamily(),
                     'discord' => $user->getDiscord(),
                     'purse' => $user->getPurse(),

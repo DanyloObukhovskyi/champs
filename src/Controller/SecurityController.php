@@ -8,10 +8,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/ru/login", name="app_login")
+     * @Route("/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -24,7 +27,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/ru/logout", name="app_logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logout()
     {

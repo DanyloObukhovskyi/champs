@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Lessons
 {
     public const STATUS_NEW = 0;
+
     public const STATUS_ENDED = 1;
 
     public const LESSON_HOURS = 3;
@@ -81,6 +82,11 @@ class Lessons
      * @ORM\Column(type="string", nullable=true, options={"default" : "individual"})
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $trainerNotice;
 
     public function getId(): ?int
     {
@@ -253,5 +259,21 @@ class Lessons
     public function setType($type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrainerNotice()
+    {
+        return $this->trainerNotice;
+    }
+
+    /**
+     * @param mixed $trainerNotice
+     */
+    public function setTrainerNotice($trainerNotice): void
+    {
+        $this->trainerNotice = $trainerNotice;
     }
 }

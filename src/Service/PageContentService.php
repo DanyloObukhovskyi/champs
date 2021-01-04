@@ -83,5 +83,4 @@ class PageContentService
 
         return $response;
     }
-
 }

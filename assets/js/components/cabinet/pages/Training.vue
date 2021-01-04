@@ -6,8 +6,8 @@
         </div>
         <div class="timetable-wrapper">
             <timetable
-                    v-if="!load && Object.keys(futureLessons).length > 0"
-                    :lessons="futureLessons">
+                    v-if="!load && Object.keys(lessons.future).length > 0 && user !== null"
+                    :lessons="lessons.future">
                 <template v-slot:title>
                     Расписание
                 </template>
@@ -15,10 +15,10 @@
         </div>
         <div class="timetable-wrapper">
             <timetable
-                    v-if="!load && Object.keys(pastLessons).length > 0"
-                    :lessons="pastLessons"
+                    v-if="!load && Object.keys(lessons.past).length > 0 && user !== null"
+                    :lessons="lessons.past"
                     :is-past="true">
-                <template v-slot:title>
+                    <template v-slot:title>
                     Прошедшие тренировки
                 </template>
             </timetable>
@@ -31,15 +31,23 @@
     import CabinetService from "../../../services/CabinetService";
     import Timetable from "../training/Timetable";
     import SmallLoader from "../../helpers/SmallLoader";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Training",
         components: {SmallLoader, Timetable, CabinetBottomBanner},
         data() {
             return {
-                futureLessons: [],
-                pastLessons: [],
-                load: false,
+                load: false
+            }
+        },
+        computed: {
+            ...mapGetters([
+                'user',
+                'cabinet/training/lessons'
+            ]),
+            lessons() {
+                return this['cabinet/training/lessons'];
             }
         },
         methods: {
@@ -48,8 +56,7 @@
 
                 CabinetService.getLessons()
                     .then(({future, past}) => {
-                        this.futureLessons = future;
-                        this.pastLessons = past;
+                        this.$store.commit('cabinet/training/setLessons', {future, past})
 
                         this.load = false;
                     })

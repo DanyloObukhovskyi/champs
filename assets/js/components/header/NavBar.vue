@@ -1,14 +1,11 @@
 <template>
     <nav class="header_nav fixed-top pl-8 pr-8 d-flex" :class="{'h-3': !isPageStart}" id="header">
         <div class="container nav align-items-stretch p-0">
-            <a href="/" class="d-flex justify-content-center align-items-center logo-wrapper"
+            <a :href="`/${lang}`" class="d-flex justify-content-center align-items-center logo-wrapper"
                :class="{'start p-3': isPageStart}">
                 <img v-show="!isPageStart" src="/images/logo.svg" class="logo w-75"/>
                 <img v-show="isPageStart" :class="{'mt-1': isPageStart}" src="/images/navbar/bigLogo.png" class="logo"/>
             </a>
-            <div class="menu-btn-cont">
-                <img src="/images/menu.png" class="menu-btn"/>
-            </div>
             <div class="menu pl-0">
                 <a :href="home" class="pointer" :class="{active : router == 'home'}">
                     Главная
@@ -38,23 +35,28 @@
             <social :social="social"></social>
             <div class="login-wrapper">
                 <div class="login">
-                    <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/cabinet`"
+                    <a :href="`/${lang}/${isTrainer ? 'trainer': 'user'}/cabinet`"
                        v-if="isAuthorize"
-                       class="ln text-light">
-                        кабинет
+                       class="ln text-light nickname">
+                        {{user !== null ? user.nickname: 'КАБИНЕТ'}}
                     </a>
                     <span v-else
                           @click="$emit('show')">
-                          Войти
+                          ВОЙТИ
                     </span>
-                    <div class="arrow-right">
-                        <a :href="`/ru/${isTrainer ? 'trainer': 'user'}/cabinet`"
-                           v-if="isAuthorize"
-                           class="icon">
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                        <i v-else class="fas fa-arrow-right" @click="$emit('show')"></i>
-                    </div>
+                </div>
+                <div class="arrow-right">
+                    <a :href="`/${lang}/${isTrainer ? 'trainer': 'user'}/cabinet`"
+                       v-if="isAuthorize"
+                       class="icon">
+                        <div class="avatar" v-if="user !== null">
+                            <div class="gradient">
+                                <img :src="'/uploads/avatars/' + user.photo">
+                            </div>
+                        </div>
+                        <i v-else class="fas fa-arrow-right"></i>
+                    </a>
+                    <i v-else class="fas fa-arrow-right" @click="$emit('show')"></i>
                 </div>
             </div>
         </div>
@@ -62,6 +64,8 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex';
+
     import Social from "./Social";
     import GameSelect from "./GameSelect";
     import matchService from "../../services/MatchService";
@@ -76,11 +80,11 @@
             'router',
             'isAuthorize',
             'isTrainer',
-            'social'
+            'social',
         ],
         data() {
             return {
-                theme: null,
+                theme: null
             }
         },
         components: {
@@ -88,6 +92,9 @@
             GameSelect,
         },
         computed: {
+            ...mapGetters([
+                'user',
+            ]),
             lang() {
                 let lang = 'ru';
                 if (document.documentElement.lang !== null && document.documentElement.lang !== '') {
@@ -118,7 +125,7 @@
 
                 return `/${service.lang}/`
             }
-        },
+        }
     }
 </script>
 
@@ -132,6 +139,26 @@
         background: radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d", endColorstr="#2d3135", GradientType=1);
         transition: all .3s ease-in-out;
+    }
+
+    .header_nav .nav {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        font-size: 0.7vw;
+        font-weight: 500;
+        letter-spacing: 0.05vw;
+        z-index: 3;
+    }
+
+    .header_nav .nav .menu {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        padding: 0 2vw;
     }
 
     .logo-wrapper {
@@ -183,8 +210,12 @@
 
     .login-wrapper {
         height: 100%;
+        width: 12%;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        transition: all .5s ease-in-out;
+        right: .5vw;
     }
 
     .login span {
@@ -199,8 +230,39 @@
         background: linear-gradient(270deg, rgba(45, 49, 53, 0) 0%, rgba(64, 68, 74, 1) 79%);
     }
 
-    .login:hover {
-        left: -5px;
+    .header_nav .nav .login-wrapper a {
+        width: max-content;
+    }
+
+    .header_nav .nav .login-wrapper a.nickname {
+        padding-right: 1vw;
+    }
+
+    .header_nav .nav .login-wrapper .avatar {
+        display: flex;
+        justify-content: center;
+    }
+
+    .header_nav .nav .login-wrapper .gradient {
+        width: 2.5vw;
+        height: 2.5vw;
+        border-radius: 50%;
+        padding: .1vw;
+        background: #ff6f1f;
+        background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+        background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+        background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+    }
+
+    .header_nav .nav .login-wrapper .gradient img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+
+    .header_nav .nav .login-wrapper:hover {
+        right: 1vw;
         transition: all .5s ease-in-out;
     }
 
@@ -230,18 +292,14 @@
 
     .header_nav .nav .login {
         right: 2vw;
-        flex-shrink: 0;
         height: 2vw;
         display: flex;
         align-items: center;
-        justify-content: flex-start;
         overflow: hidden;
-        transition: 0.9s;
         cursor: pointer;
-    }
-
-    .header_nav .nav .login:hover {
-        right: 2.5vw;
+        min-width: 5vw;
+        justify-content: center;
+        padding-left: .5vw;
     }
 
     .header_nav .nav .menu a.active,

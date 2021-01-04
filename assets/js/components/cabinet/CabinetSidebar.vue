@@ -2,10 +2,16 @@
     <div class="cabinet-sidebar">
         <div class="page" v-for="page in pages">
             <router-link
-                :to="getPageLink(page.code)">
-                <img :src="'/images/cabinet/' + page.icon" alt="">
+                    :to="getPageLink(page.code)">
+                <img :src="'/images/cabinet/' + page.icon">
                 {{page.name}}
             </router-link>
+        </div>
+        <div class="page">
+            <a :href="logoutUrl">
+                <img src="/images/cabinet/logout.png">
+                Выйти
+            </a>
         </div>
     </div>
 </template>
@@ -53,6 +59,11 @@
                 pages: PAGES
             }
         },
+        computed: {
+            logoutUrl() {
+                return CabinetService.logoutUrl;
+            }
+        },
         methods: {
             getPageLink(code) {
                 return `/${CabinetService.lang}/user/cabinet/${code}`;
@@ -64,7 +75,7 @@
 <style scoped lang="scss">
     @import '../../../css/animations.css';
 
-    .cabinet-sidebar {
+    #layout .cabinet-sidebar {
         margin-top: 1vw;
         height: 100%;
         background-color: #eff0f0;
@@ -80,6 +91,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            padding-top: 0;
 
             a {
                 color: #9d9fa0;
@@ -107,7 +119,7 @@
         }
     }
 
-    .dark {
+    .dark #layout{
         .cabinet-sidebar {
             background-color: #1e2123;
             color: white;

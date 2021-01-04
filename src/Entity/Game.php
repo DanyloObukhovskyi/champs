@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=GameRepository::class)
  */
-class Game
+class Game implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -125,5 +125,20 @@ class Game
     public function setNewsIcon($newsIcon): void
     {
         $this->newsIcon = $newsIcon;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'code' => $this->getCode(),
+            'logo' => $this->getLogo(),
+            'newsIcon' => $this->getNewsIcon(),
+            'sidebarIcon' => $this->getSidebarIcon()
+        ];
     }
 }

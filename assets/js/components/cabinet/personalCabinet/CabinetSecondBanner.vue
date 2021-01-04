@@ -16,19 +16,25 @@
                     </a>
                 </div>
             </div>
-            <div class="video-wrapper">
+            <div class="video-wrapper dota" v-if="user !== null && user.game === 'dota'">
                 <div class="video">
-                    <img src="/images/cabinet/video.png" alt="">
+                    <img src="/images/cabinet/videoDota.png">
+                </div>
+            </div>
+            <div class="video-wrapper" v-else>
+                <div class="video">
+                    <img src="/images/cabinet/videoCs.png">
                     <div class="faceit">
-                        <img src="/images/cabinet/faceit.png" alt="">
+                        <img src="/images/cabinet/faceit.png">
                     </div>
                 </div>
                 <div class="rating">
-                    <img src="/images/cabinet/rating.png" alt="">
+                    <img src="/images/cabinet/rating.png" >
                 </div>
             </div>
             <div class="background-solder">
-                <img src="/images/cabinet/secondBanner.png" alt="">
+                <img src="/images/cabinet/secondBannerDota.png" v-if="user !== null && user.game === 'dota'">
+                <img src="/images/cabinet/secondBannerCs.png" v-else>
             </div>
         </div>
         <div class="right">
@@ -40,16 +46,29 @@
                     Закажи анализ реплея!
                 </div>
             </div>
-            <div class="video">
-                <img src="/images/cabinet/analyticBanner.png" alt="">
-            </div>
+            <a :href="marketplacePage" class="video">
+                <img src="/images/cabinet/analyticBannerDota.png" v-if="user !== null && user.game === 'dota'">
+                <img src="/images/cabinet/analyticBannerCs.png" v-else>
+                <img class="play" src="/images/cabinet/playIcon.png">
+            </a>
         </div>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+    import MarketplaceService from "../../../services/MarketplaceService";
+
     export default {
-        name: "CabinetSecondBanner"
+        name: "CabinetSecondBanner",
+        computed: {
+            ...mapGetters([
+                'user'
+            ]),
+            marketplacePage() {
+                return MarketplaceService.marketplacePage();
+            }
+        },
     }
 </script>
 
@@ -123,6 +142,19 @@
     }
 
 
+    @keyframes analytic-pulse {
+        0% {
+            width: 3.2vw;
+        }
+        70% {
+            width: 3vw;
+        }
+        100% {
+            width: 3vw;
+        }
+    }
+
+
     .second-banner {
         display: flex;
         padding: 1vw;
@@ -143,9 +175,9 @@
 
             .title {
                 color: #000000;
-                font-size: 1.2vw;
+                font-size: 1.4vw;
                 font-weight: 500;
-                line-height: 1.5vw;
+                line-height: 2vw;
 
                 span {
                     color: #ff6d1d;
@@ -212,6 +244,15 @@
                         width: 3vw;
                     }
                 }
+
+                &.dota {
+                    .video {
+                        img {
+                            width: 19vw;
+                            margin-bottom: -1vw;
+                        }
+                    }
+                }
             }
 
             .background-solder {
@@ -248,8 +289,22 @@
             }
 
             .video {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
                 img {
+                    border-radius: .5vw .5vw 0 0;
                     width: 13vw;
+                }
+
+                .play {
+                    width: 3vw;
+                    position: absolute;
+
+                    &:hover {
+                        animation: analytic-pulse 1s infinite;
+                    }
                 }
             }
         }

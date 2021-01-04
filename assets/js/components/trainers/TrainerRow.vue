@@ -14,7 +14,7 @@
                     </a>
                     <div class="game-wrapper">
                         <div class="game">
-                            <img :src="'/uploads/games/' + game.logo">
+                            <img :src="'/uploads/games/' + trainer.game.logo">
                             <div class="title">
                                 <p>
                                     Тренер

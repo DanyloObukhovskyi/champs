@@ -3,7 +3,7 @@
         <div class="user">
             <div class="avatar">
                 <div class="gradient">
-                    <img :src="'/images/album/' + user.photo" alt="avatar">
+                    <img :src="'/uploads/avatars/' + user.photo" alt="avatar">
                 </div>
                 <div class="lvl">
                     <span>
@@ -16,7 +16,7 @@
                 {{user.nickname}}
             </div>
         </div>
-        <div class="invite">
+        <div class="invite" data-toggle="modal" data-target="#inviteModal">
             <div class="invite-button">
                 <div class="icon-wrapper">
                     <div class="background">
@@ -44,13 +44,18 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         name: "UserCard",
-        props: ['user'],
+        computed: {
+            ...mapGetters([
+                'user'
+            ]),
+        }
     }
 </script>
 
@@ -190,6 +195,7 @@
         }
 
         .more-detail {
+            transition: all .5s ease-in-out;
             background-color: #aeaeae;
             display: flex;
             justify-content: center;
@@ -199,6 +205,17 @@
             i {
                 color: white;
                 font-size: .7vw;
+            }
+        }
+
+        &:hover {
+            .more-detail {
+                background-color: #ff6d1d;
+
+                i {
+                    color: white;
+                    font-size: .7vw;
+                }
             }
         }
     }
@@ -283,6 +300,7 @@
             }
 
             .more-detail {
+                transition: all .5s ease-in-out;
                 background-color: #171a1b;
                 display: flex;
                 justify-content: center;
@@ -292,6 +310,17 @@
                 i {
                     color: #555a5c;
                     font-size: .7vw;
+                }
+            }
+
+            &:hover {
+                .more-detail {
+                    background-color: #ff6d1d;
+
+                    i {
+                        color: white;
+                        font-size: .7vw;
+                    }
                 }
             }
         }

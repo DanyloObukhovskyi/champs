@@ -1,12 +1,9 @@
 <template>
     <div class="cabinet-wrapper">
-        <cabinet-first-banner
-                v-if="banner !== null"
-                :banner="banner">
-        </cabinet-first-banner>
-        <cabinet-second-banner/>
+        <cabinet-first-banner v-if="banner !== null" :banner="banner"/>
+        <cabinet-second-banner v-if="!loadUser"/>
         <cabinet-video-slider/>
-        <cabinet-bottom-banner/>
+        <cabinet-bottom-banner v-if="!loadUser"/>
     </div>
 </template>
 
@@ -16,6 +13,7 @@
     import CabinetSecondBanner from "../personalCabinet/CabinetSecondBanner";
     import CabinetVideoSlider from "../personalCabinet/CabinetVideoSlider";
     import CabinetBottomBanner from "../CabinetBottomBanner";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Cabinet",
@@ -29,6 +27,11 @@
             return {
                 banner: null,
             }
+        },
+        computed: {
+            ...mapGetters([
+                'loadUser'
+            ]),
         },
         methods: {
             getFirstBanner() {

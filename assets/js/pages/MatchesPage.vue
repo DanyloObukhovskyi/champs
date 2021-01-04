@@ -28,7 +28,6 @@
 </template>
 
 <script>
-    import '../../css/matches/matches-pagination.css'
     import Paginate from 'vuejs-paginate'
     import MatchRow from "../components/matches/MatchRow";
     import Loader from "../components/helpers/Loader";

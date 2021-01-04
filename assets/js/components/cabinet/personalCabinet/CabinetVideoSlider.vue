@@ -4,11 +4,12 @@
             <slick-carousel v-bind="settings">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                     <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
-                        <a target="_blank" :href="'https://www.youtube.com/watch?v=' + video.video_id">
-                            <img :src="video.video_id ? getVideoLogo(video.video_id): 'images/temp/news/' + video.logo"
-                                 class="logo videoBox"
-                                 alt="Video"/>
-                        </a>
+                        <iframe :src="'https://www.youtube.com/embed/' + video.videoId"
+                                class="logo videoBox"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
                     </div>
                     <div class="title">
                         {{video.title}}
@@ -32,6 +33,7 @@
 
     import 'vue-slick-carousel/dist/vue-slick-carousel.css'
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+    import CabinetService from "../../../services/CabinetService";
 
     export default {
         name: "CabinetVideoSlider",
@@ -54,9 +56,9 @@
         },
         methods: {
             getVideoNews() {
-                axios.post('/ru/main/video/news')
-                    .then(({data}) => {
-                        this.videos = [...data, ...data];
+                CabinetService.getVideos()
+                    .then(videos => {
+                        this.videos = videos;
                     })
             },
             getVideoLogo(videoId) {
@@ -102,9 +104,14 @@
         align-items: center;
     }
 
-    .video-slider .slider-body .carousel-item .preview a{
+    .video-slider .slider-body .carousel-item .preview a {
         display: flex;
         align-items: center;
+    }
+
+    .video-slider .slider-body .carousel-item .preview iframe {
+        width: 13vw;
+        height: 7.5vw;
     }
 
     .video-slider .slider-body .carousel-item .preview::after {
@@ -222,13 +229,15 @@
         background: white;
     }
 
-    .video-slider.cabinet-video-slider .slick-prev, .video-slider .slick-next {
+    .video-slider.cabinet-video-slider .slick-prev,
+    .video-slider.cabinet-video-slider .slick-next {
         z-index: 1;
         top: 30%;
         right: 13vw;
     }
 
-    .video-slider.cabinet-video-slider .slick-prev, .video-slider .slick-prev {
+    .video-slider.cabinet-video-slider .slick-prev,
+    .video-slider.cabinet-video-slider .slick-prev {
         z-index: 1;
         top: 30%;
         left: 14vw;
@@ -247,7 +256,7 @@
         color: #9a9c9f;
     }
 
-    .video-slider.cabinet-video-slider .slider-body::before{
+    .video-slider.cabinet-video-slider .slider-body::before {
         content: '';
         position: absolute;
         top: 0;
@@ -255,20 +264,20 @@
         width: 13vw;
         height: 7.2vw;
         z-index: 1;
-        background: linear-gradient(90deg, rgba(116,118,121,0.9248074229691877) 43%, rgba(116,118,121,0) 100%);
+        background: linear-gradient(90deg, rgba(116, 118, 121, 0.9248074229691877) 43%, rgba(116, 118, 121, 0) 100%);
     }
 
-    .video-slider.cabinet-video-slider .slider-body::after{
+    .video-slider.cabinet-video-slider .slider-body::after {
         content: '';
         position: absolute;
         top: 0;
         right: 0;
         width: 13vw;
         height: 7.2vw;
-        background: linear-gradient(90deg, rgba(116,118,121,0) 0%, rgba(116,118,121,0.9248074229691877) 58%);
+        background: linear-gradient(90deg, rgba(116, 118, 121, 0) 0%, rgba(116, 118, 121, 0.9248074229691877) 58%);
     }
 
-    .dark .video-slider.cabinet-video-slider .slider-body::before{
+    .dark .video-slider.cabinet-video-slider .slider-body::before {
         content: '';
         position: absolute;
         top: 0;
@@ -276,16 +285,16 @@
         width: 13vw;
         height: 7.2vw;
         z-index: 1;
-        background: linear-gradient(90deg, rgba(48,52,56,1) 40%, rgba(48,52,56,0.11528361344537819) 100%);
+        background: linear-gradient(90deg, rgba(48, 52, 56, 1) 40%, rgba(48, 52, 56, 0.11528361344537819) 100%);
     }
 
-    .dark .video-slider.cabinet-video-slider .slider-body::after{
+    .dark .video-slider.cabinet-video-slider .slider-body::after {
         content: '';
         position: absolute;
         top: 0;
         right: 0;
         width: 13vw;
         height: 7.2vw;
-        background: linear-gradient(90deg, rgba(48,52,56,0.11528361344537819) 0%, rgba(48,52,56,1) 60%);
+        background: linear-gradient(90deg, rgba(48, 52, 56, 0.11528361344537819) 0%, rgba(48, 52, 56, 1) 60%);
     }
 </style>

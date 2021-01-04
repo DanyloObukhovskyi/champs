@@ -142,8 +142,7 @@
                     })
             },
             close(){
-                this.$parent.show = false;
-                this.show = false;
+                this.$store.dispatch('closeLogin');
             },
             checkStep(step){
                 return this.show && this.step === step;

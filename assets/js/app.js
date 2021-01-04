@@ -8,6 +8,9 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
 
+import Vuex from 'vuex'
+import Store from "./store/Store";
+
 import LiveMatches from "./components/matches/LiveMatches";
 import VideoSlider from "./components/sliders/VideoSlider";
 import BannerSlider from "./components/sliders/BannerSlider";
@@ -26,12 +29,12 @@ import MatchesPage from "./pages/MatchesPage";
 import EventsPage from "./pages/EventsPage";
 import EventPage from "./pages/EventPage";
 import EventsDigestPage from "./pages/EventsDigestPage";
-import header from "./layouts/header";
 import WeaponsDoughnut from "./components/statistics/WeaponsDoughnut";
 import MarketplacePage from "./pages/MarketplacePage";
 import MarketplaceTrainerPage from "./pages/MarketplaceTrainerPage";
 import HomePage from "./pages/HomePage";
 import CabinetPage from "./pages/CabinetPage";
+import Header from "./components/header/Header";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -43,37 +46,36 @@ if (token) {
 } else {
     console.error('CSRF token not found');
 }
-window.header = header;
+Vue.use(Vuex);
 
-Vue.component('live-matches', LiveMatches)
-Vue.component('upcoming-matches-home', UpcomingMatches)
-Vue.component('results-matches-home', ResultsMatches)
-Vue.component('video-slider', VideoSlider)
-Vue.component('banner-slider', BannerSlider)
-Vue.component('news-home', NewsHome)
-Vue.component('news-page', NewsPage)
-Vue.component('news-view-page', NewsViewPage)
-Vue.component('events-home', EventsHome)
-Vue.component('players-rating', PlayersRating)
-Vue.component('player-week', PlayerWeek)
-Vue.component('teams-rating', TeamsRating)
-Vue.component('match-page', MatchPage)
-Vue.component('matches-page', MatchesPage)
-Vue.component('events-page', EventsPage)
-Vue.component('event-page', EventPage)
-Vue.component('events-digest-page', EventsDigestPage)
-Vue.component('weapon-doughnut', WeaponsDoughnut)
-Vue.component('marketplace-page', MarketplacePage)
-Vue.component('marketplace-trainer-page', MarketplaceTrainerPage)
-Vue.component('home-slider', HomeSlider)
-Vue.component('home-page', HomePage)
-Vue.component('cabinet-page', CabinetPage)
+Vue.component('live-matches', LiveMatches);
+Vue.component('upcoming-matches-home', UpcomingMatches);
+Vue.component('results-matches-home', ResultsMatches);
+Vue.component('video-slider', VideoSlider);
+Vue.component('banner-slider', BannerSlider);
+Vue.component('news-home', NewsHome);
+Vue.component('news-page', NewsPage);
+Vue.component('news-view-page', NewsViewPage);
+Vue.component('events-home', EventsHome);
+Vue.component('players-rating', PlayersRating);
+Vue.component('player-week', PlayerWeek);
+Vue.component('teams-rating', TeamsRating);
+Vue.component('match-page', MatchPage);
+Vue.component('matches-page', MatchesPage);
+Vue.component('events-page', EventsPage);
+Vue.component('event-page', EventPage);
+Vue.component('events-digest-page', EventsDigestPage);
+Vue.component('weapon-doughnut', WeaponsDoughnut);
+Vue.component('marketplace-page', MarketplacePage);
+Vue.component('marketplace-trainer-page', MarketplaceTrainerPage);
+Vue.component('home-slider', HomeSlider);
+Vue.component('home-page', HomePage);
+Vue.component('cabinet-page', CabinetPage);
+Vue.component('v-header', Header);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
-new Vue({
+window.app = new Vue({
     el: '#app',
-    provide: {
-        header,
-    }
+    store: Store
 })

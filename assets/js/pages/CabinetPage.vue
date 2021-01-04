@@ -1,8 +1,8 @@
 <template>
     <div class="cabinet">
-        <div class="cabinet-head">
+        <div class="cabinet-body">
             <div class="left">
-                <user-card :user="user" v-if="user !== null"/>
+                <user-card v-if="!loadUser && user !== null"/>
                 <div class="d-flex justify-content-center mt-3 mb-3" v-else>
                     <small-loader/>
                 </div>
@@ -15,10 +15,13 @@
                 <router-view></router-view>
             </div>
         </div>
+       <invite-modal/>
     </div>
 </template>
 
 <script>
+    import '../../css/setting.css';
+
     import VueRouter from 'vue-router'
 
     import CabinetSidebar from "../components/cabinet/CabinetSidebar";
@@ -26,16 +29,21 @@
     import CabinetService from "../services/CabinetService";
     import SmallLoader from "../components/helpers/SmallLoader";
     import CabinetHeader from "../components/cabinet/CabinetHeader";
+
     import Cabinet from "../components/cabinet/pages/Cabinet";
     import Training from "../components/cabinet/pages/Training";
     import News from "../components/cabinet/pages/News";
     import Video from "../components/cabinet/pages/Video";
+    import Setting from "../components/cabinet/pages/Setting";
+    import {mapGetters} from "vuex";
+    import InviteModal from "../components/cabinet/InviteModal";
 
     const routes = [
         { path: `/${CabinetService.lang}/user/cabinet/`, component: Cabinet },
         { path: `/${CabinetService.lang}/user/cabinet/training`, component: Training },
         { path: `/${CabinetService.lang}/user/cabinet/news`, component: News },
         { path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video },
+        { path: `/${CabinetService.lang}/user/cabinet/settings`, component: Setting },
     ];
 
     export default {
@@ -45,6 +53,7 @@
             mode: 'history'
         }),
         components: {
+            InviteModal,
             CabinetHeader,
             SmallLoader,
             UserCard,
@@ -54,23 +63,13 @@
         data() {
             return {
                 current: '',
-                load: false,
-                user: null,
             }
         },
-        methods: {
-            getUser() {
-                this.load = true;
-
-                CabinetService.getUserFull()
-                    .then(user => {
-                        this.user = user;
-                        this.load = false;
-                    })
-            }
-        },
-        mounted() {
-            this.getUser();
+        computed: {
+            ...mapGetters([
+                'user',
+                'loadUser'
+            ]),
         }
     }
 </script>
@@ -81,7 +80,7 @@
         margin-bottom: 3vw;
     }
 
-    .cabinet-head {
+    .cabinet-body {
         display: flex;
 
         .left {

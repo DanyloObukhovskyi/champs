@@ -1,5 +1,5 @@
 <template>
-    <div class="banners">
+    <div class="banners" v-if="user !== null">
         <div class="left">
             <a href="">
                 <img class="background" src="/images/cabinet/tournamentBannerBackground.png">
@@ -17,7 +17,8 @@
             </div>
             <div class="bottom">
                 <div class="image">
-                    <img src="/images/cabinet/questBanner.png">
+                    <img src="/images/cabinet/questBannerDota.png" v-if="user.game === 'dota'">
+                    <img src="/images/cabinet/questBannerCs.png" v-else>
                 </div>
                 <div class="sub-title">
                     <div class="first">
@@ -33,8 +34,15 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
-        name: "CabinetBottomBanner"
+        name: "CabinetBottomBanner",
+        computed: {
+            ...mapGetters([
+                'user'
+            ]),
+        }
     }
 </script>
 

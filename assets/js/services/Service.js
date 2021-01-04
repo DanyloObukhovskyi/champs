@@ -4,6 +4,13 @@ class Service {
 
     constructor() {
         this.lang = this.getLang();
+        this.logoutUrl = `/${this.lang}/logout`;
+    }
+
+    getUserFull = async () =>  {
+        const {data} = await axios.post(`/${this.lang}/auth/user/full`)
+
+        return data;
     }
 
     getAuthUser = async () =>  {
