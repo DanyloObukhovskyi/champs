@@ -2,16 +2,12 @@ import Service from "./Service";
 
 class SlideService extends Service{
 
-    getGeneralSlides = async () => {
-        const {data} = await axios.post(`/${this.lang}/get/slides`)
-
-        return  data
+    getGeneralSlides = () => {
+        return this.send('get/slides');
     }
 
-    getHomeSlides = async () => {
-        const {data} = await axios.post(`/${this.lang}/get/home/slides`)
-
-        return data;
+    getHomeSlides = () => {
+        return this.send('get/home/slides');
     }
 }
 

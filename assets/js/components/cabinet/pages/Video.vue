@@ -5,16 +5,71 @@
             <div class="title">
                 Видео
             </div>
+            <div class="videos">
+                <video-row v-for="(video, index) in videos"
+                           :key="index"
+                           :video="video">
+                </video-row>
+            </div>
+            <div class="d-flex align-items-center justify-content-center" v-if="load">
+                <small-loader/>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
     import CabinetBottomBanner from "../CabinetBottomBanner";
+    import YouTubeService from "../../../services/YouTubeService";
+    import VideoRow from "../videos/VideoRow";
+    import SmallLoader from "../../helpers/SmallLoader";
 
     export default {
         name: "Video",
-        components: {CabinetBottomBanner}
+        components: {SmallLoader, VideoRow, CabinetBottomBanner},
+        data() {
+            return {
+                videos: [],
+                isLoadAll: false,
+                load: false,
+            }
+        },
+        methods: {
+            getVideos() {
+                if (!this.isLoadAll && !this.load) {
+                    this.load = true;
+
+                    YouTubeService
+                        .getVideos(this.videos.length)
+                        .then(videos => {
+                            if (videos.length < 9) {
+                                this.isLoadAll = true;
+                            }
+                            for (let item of videos) {
+                                const video = this.videos.find(v => v.videoId === item.videoId);
+                                if (!video){
+                                    this.videos.push(item);
+                                }
+                            }
+                            this.load = false;
+                        })
+                }
+            },
+            scrollEventTrigger() {
+                const self = this;
+                window.onscroll = () => {
+                    const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+
+                    if (scrollable <= 5) {
+                        self.getVideos()
+                    }
+                }
+            },
+        },
+        mounted() {
+            this.scrollEventTrigger();
+            this.getVideos();
+        }
     }
 </script>
 
@@ -34,6 +89,12 @@
             line-height: 1.3vw;
             font-weight: 500;
             color: #9d9fa0;
+        }
+
+        .videos {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 1vw;
         }
     }
 

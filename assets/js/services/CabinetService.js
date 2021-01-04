@@ -1,7 +1,7 @@
 import Service from "./Service";
 
 class CabinetService extends Service {
-    getLessons = async () => {
+    getLessons = () => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
         if (timezone < 0){
@@ -9,53 +9,42 @@ class CabinetService extends Service {
         } else {
             timezone = -timezone
         }
-        const {data} = await axios.post(`/${this.lang}/cabinet/lessons`, {
+
+        return this.send('cabinet/lessons', {
             timezone
-        })
-        return data;
+        });
     }
 
-    getTimezones = async () => {
-        const {data} = await axios.post(`/${this.lang}/ajax/cabinet/get/timezones`)
-
-        return data;
+    getTimezones = () => {
+        return this.send('ajax/cabinet/get/timezones')
     }
 
-    updateUser = async updateData => {
-        const {data} = await axios.post(`/${this.lang}/ajax/cabinet/update/user`, updateData)
-
-        return data;
+    updateUser = updateData => {
+        return this.send('ajax/cabinet/update/user', updateData)
     }
 
-    getVideos = async () => {
-        const {data} = await axios.post(`/${this.lang}/ajax/cabinet/get/videos`)
-
-        return data;
+    getVideos = () => {
+        return this.send('ajax/cabinet/get/videos')
     }
 
-    sendTrainerNotice = async (lessonId, trainerNotice) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/cabinet/set/trainer/notice/${lessonId}`, {
+    sendTrainerNotice = (lessonId, trainerNotice) => {
+        return this.send(`ajax/cabinet/set/trainer/notice/${lessonId}`, {
             notice: trainerNotice
         })
-        return data;
     }
 
-    setConfirmed = async lessonId => {
-        const {data} = await axios.post(`/${this.lang}/ajax/cabinet/set/lesson/status/${lessonId}`)
-
-        return data;
+    setConfirmed = lessonId => {
+        return this.send(`ajax/cabinet/set/lesson/status/${lessonId}`)
     }
 
-    sendReview = async (trainerId, rate, comment) => {
+    sendReview = (trainerId, rate, comment) => {
         const form = new FormData();
 
         form.append('trainer_id', trainerId);
         form.append('rate', rate);
         form.append('comment', comment);
 
-        const {data} = await axios.post(`/${this.lang}/lesson/review/`, form)
-
-        return data;
+        return this.send(`lesson/review/`, form)
     }
 }
 

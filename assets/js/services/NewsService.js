@@ -6,68 +6,47 @@ class NewsService extends Service {
         return `/${this.lang}/news`
     }
 
-    getNews = async (length, filters = {}) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/news/` + length, filters);
-
-        return data;
+    getNews = (length, filters = {}) => {
+        return this.send(`ajax/news/${length}`, filters);
     }
 
-    getHotNews = async (filters = {}) => {
-        const {data} = await axios.post(`/${this.lang}/hot/news`, filters);
-
-        return data;
+    getHotNews = (filters = {}) => {
+        return this.send(`hot/news`, filters);
     }
 
-    getSingleNews = async id => {
-        const {data} = await axios.post(`/${this.lang}/ajax/news/single/` + id);
-
-        return data;
+    getSingleNews = id => {
+        return this.send(`ajax/news/single/${id}`);
     }
 
     setLike = async (id, type) => {
-        const {data} = await axios.post(`/${this.lang}/like/news/` + id, {
-            type
-        });
-        return data;
+        return this.send(`like/news/${id}`,  { type });
     }
 
-    sendComment = async (id, comment) => {
-        const {data} = await axios.post(`/${this.lang}/news/add/comment`, { comment, id })
-
-        return data;
+    sendComment = (id, comment) => {
+        return this.send(`news/add/comment`, { comment, id });
     }
 
-    sendCommentAnswer = async (id, commentId, comment) => {
-        const {data} = await axios.post(`/${this.lang}/news/add/comment`, { id, commentId, comment })
-
-        return data;
+    sendCommentAnswer = (id, commentId, comment) => {
+        return this.send(`news/add/comment`, { id, commentId, comment });
     }
 
-    getComments = async id => {
-        const {data} = await axios.post(`/${this.lang}/news/${id}/comments`)
-
-        return data;
+    getComments = id => {
+        return this.send(`news/${id}/comments`);
     }
 
-    setCommentLike = async (commentId, type) => {
-        const {data} = await axios.post(`/${this.lang}/like/news/comment/` + commentId, {
-            type
-        });
-        return data;
+    setCommentLike = (commentId, type) => {
+        return this.send(`like/news/comment/${commentId}`, { type });
     }
 
-    setBookmark = async (newsId, isBookmark) => {
-        const {data} = await axios.post(`/${this.lang}/set/bookmark/`, {
+    setBookmark = (newsId, isBookmark) => {
+        return this.send(`set/bookmark/`, {
             newsId,
             isBookmark
         });
-        return data;
     }
 
-    getUserBookmarkNews = async () => {
-        const {data} = await axios.post(`/${this.lang}/news/user/bookmark`)
-
-        return data;
+    getUserBookmarkNews = () => {
+        return this.send(`news/user/bookmark`);
     }
 }
 

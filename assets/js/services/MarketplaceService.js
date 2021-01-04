@@ -1,16 +1,12 @@
 import Service from "./Service";
 
 class MarketplaceService extends Service{
-    getTrainers = async (game, offset, filters) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/trainers/${game}/${offset}`, filters);
-
-        return data;
+    getTrainers = (game, offset, filters) => {
+        return this.send(`ajax/trainers/${game}/${offset}`, filters)
     }
 
-    getTrainingDescription = async () => {
-        const {data} = await axios.post(`/${this.lang}/ajax/settings/training/description`);
-
-        return data;
+    getTrainingDescription = () => {
+        return this.send(`ajax/settings/training/description`)
     }
 
     getTrainerUrl = id => {
@@ -21,13 +17,11 @@ class MarketplaceService extends Service{
         return `/${this.lang}/marketplace`;
     }
 
-    getTrainer = async id => {
-        const {data} = await axios.post(`/${this.lang}/ajax/marketplace/trainer/${id}`);
-
-        return data;
+    getTrainer = id => {
+        return this.send(`ajax/marketplace/trainer/${id}`)
     }
 
-    getTrainerScheduleDay = async (trainerId, date) => {
+    getTrainerScheduleDay = (trainerId, date) => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
         if (timezone < 0){
@@ -35,16 +29,14 @@ class MarketplaceService extends Service{
         } else {
             timezone = -timezone
         }
-
-        const {data} = await axios.post(`/${this.lang}/calendar/trainer/date/day`, {
+        return this.send(`calendar/trainer/date/day`, {
             trainerId,
             date,
             timezone
         })
-        return data;
     }
 
-    setLessonPay = async (lessons, type, trainerId) => {
+    setLessonPay = (lessons, type, trainerId) => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
         if (timezone < 0){
@@ -52,43 +44,32 @@ class MarketplaceService extends Service{
         } else {
             timezone = -timezone
         }
-        const {data} = await axios.post(`/${this.lang}/lessons/create/`, {
+        return this.send(`lessons/create/`, {
             lessons,
             type,
             timezone,
             trainer_id: trainerId
-        });
-        return data;
+        })
     }
 
-    checkPermissionToReview = async trainerId => {
-        const {data} = await axios.post(`/${this.lang}/check/permission/to/review`, {trainerId});
-
-        return data;
+    checkPermissionToReview = trainerId => {
+        return this.send(`check/permission/to/review`, {trainerId})
     }
 
-    sendReview = async form => {
-        const {data} = await  axios.post(`/${this.lang}/lesson/review/`, form)
-
-        return data;
+    sendReview = form => {
+        return this.send(`lesson/review/`, form)
     }
 
-    getTrainerReviews = async trainerId => {
-        const {data} = await  axios.post(`/${this.lang}/trainer/reviews/${trainerId}`)
-
-        return data;
+    getTrainerReviews = trainerId => {
+        return this.send(`trainer/reviews/${trainerId}`)
     }
 
-    getGamesBanners = async () => {
-        const {data} = await  axios.post(`/${this.lang}/games/banners`)
-
-        return data;
+    getGamesBanners = () => {
+        return this.send(`games/banners`)
     }
 
-    getTrainerBanner = async () => {
-        const {data} = await  axios.post(`/${this.lang}/ajax/setting/trainer/banner`)
-
-        return data;
+    getTrainerBanner = () => {
+        return this.send(`ajax/setting/trainer/banner`)
     }
 }
 

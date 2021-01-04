@@ -43,15 +43,19 @@ class YouTubeService
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getVideoList(int $count = 50)
+    public function getVideoList(?int $count = null)
     {
         $options = [
             'key' => $this->apiKey,
             'channelId' => $this->chanelId,
             'part' => 'snippet,id',
             'order' => 'date',
-            'maxResults' => $count
+            'type' => 'video',
         ];
+
+        if (isset($count)) {
+            $options['maxResults'] = $count;
+        }
         $client = new CurlHttpClient();
 
         $response = $client->request(
@@ -60,6 +64,16 @@ class YouTubeService
         );
         $content = json_decode($response->getContent(), false);
 
+        return $this->parseVideos($content);
+    }
+
+    /**
+     * @param $content
+     * @return array
+     * @throws \Exception
+     */
+    public function parseVideos(object $content)
+    {
         $videos = [];
 
         if (isset($content->items)) {

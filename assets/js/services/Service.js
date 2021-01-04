@@ -7,16 +7,18 @@ class Service {
         this.logoutUrl = `/${this.lang}/logout`;
     }
 
-    getUserFull = async () =>  {
-        const {data} = await axios.post(`/${this.lang}/auth/user/full`)
+    send = async (url, params = {}) => {
+        const {data} = await axios.post(`/${this.lang}/${url}`, params)
 
         return data;
     }
 
-    getAuthUser = async () =>  {
-        const {data} = await axios.post(`/${this.lang}/get/auth`)
+    getUserFull = () =>  {
+        return this.send('auth/user/full')
+    }
 
-        return data;
+    getAuthUser = () =>  {
+        return this.send('get/auth')
     }
 
     getLang = () => {
@@ -27,10 +29,8 @@ class Service {
         return lang;
     }
 
-    getGames = async () => {
-        const {data} = await axios.post(`/${this.lang}/games`)
-
-        return data;
+    getGames = () => {
+        return this.send('games')
     }
 }
 
