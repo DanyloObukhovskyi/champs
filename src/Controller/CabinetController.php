@@ -176,7 +176,11 @@ class CabinetController extends AbstractController
         $trainer = $this->teacherService->findByUserId($lesson->getTrainer()->getId());
 
         $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
-        $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
+        if (empty($lesson->getDateTimeTo())) {
+            $dateTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('Y.m.d H');
+        } else {
+            $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
+        }
 
         $timeOffset = 0;
 
