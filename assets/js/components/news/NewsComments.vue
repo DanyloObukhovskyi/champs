@@ -108,7 +108,7 @@
                     })
             },
             showLogin() {
-                this.header.show = true;
+                this.$store.dispatch('showLogin')
             },
             getComments() {
                 this.load = true;

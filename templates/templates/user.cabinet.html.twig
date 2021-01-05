@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Кабинет{% endblock %}
+{% block router %}cabinet{% endblock %}
+{% block description %}
+    <meta name="description" content="Статистика команд и игроков по League of Legends, Dota и Cs:Go">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="Рейтинги игроков, Рейтинг команд, Top оружия, Рейтинг оружия, League of Legends, Dota, Cs:Go">
+{% endblock %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Кабинет
+    </h1>
+    <div class="page">
+        <div class="ml-8 mr-8 p-0">
+            <div class="navigation d-flex align-items-center justify-content-between" style="width: 11%;">
+                <a style="" href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right" style="font-size: .7vw"></i>
+                <span style="">
+                Кабинет
+            </span>
+            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0">
+            <cabinet-page :is-trainer="{{ type == 'trainer' ? 'true' : 'false' }}"></cabinet-page>
+        </div>
+    </div>
+{% endblock %}

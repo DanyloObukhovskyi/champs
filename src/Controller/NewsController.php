@@ -423,4 +423,25 @@ class NewsController extends AbstractController
         }
         return $this->json('error', 422);
     }
+
+
+    /**
+     * @Route("/news/user/bookmark")
+     */
+    public function getUserBookmarkNews()
+    {
+        $userBookmarks = $this->entityManager
+            ->getRepository(NewsBookmark::class)
+            ->findBy([
+               'user' => $this->getUser()
+            ]);
+
+        $news = [];
+
+        /** @var NewsBookmark $bookmark */
+        foreach ($userBookmarks as $bookmark){
+            $news[] = $this->newsService->decorator($bookmark->getNews());
+        }
+        return $this->json($news);
+    }
 }

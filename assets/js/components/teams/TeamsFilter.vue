@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import  '../../../css/teams/vue-multiselect.css'
+    import  '../../../css/vue-multiselect.css'
     import Multiselect from 'vue-multiselect'
     import teamService from "../../services/TeamService";
 

@@ -2,16 +2,12 @@ import Service from "./Service";
 
 class EventService extends Service{
 
-    getEvents = async (type, page, filters) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/events/${type}/${page}`, filters);
-
-        return data
+    getEvents = (type, page, filters) => {
+        return this.send(`ajax/events/${type}/${page}`, filters)
     }
 
-    getMainEvents = async () => {
-        const {data} = await axios.post(`/${this.lang}/main/events`)
-
-        return data
+    getMainEvents = () => {
+        return this.send(`main/events`)
     }
 
     getEventUrl = id => {
@@ -26,16 +22,12 @@ class EventService extends Service{
         return `/${this.lang}/digest`;
     }
 
-    getEvent = async id => {
-        const {data} = await axios.post(`/${this.lang}/ajax/event/${id}`)
-
-        return data
+    getEvent = id => {
+        return this.send(`ajax/event/${id}`)
     }
 
-    getDigestEvents = async (type, page, filters) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/digest/events/${type}/${page}`, filters);
-
-        return data
+    getDigestEvents = (type, page, filters) => {
+        return this.send(`ajax/digest/events/${type}/${page}`, filters)
     }
 }
 

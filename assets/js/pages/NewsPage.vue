@@ -7,50 +7,14 @@
                 </button>
             </div>
             <div class="news-row d-flex" v-for="(news, i) in newsSorted">
-                <a :href="`/${lang}/news/${item.id}-${item.url}`"
-                   class="article d-block animation-target"
-                   :style="{'background-image': `url(/images/temp/news/${item.logo})`}"
-                   :class="getClass(i, y)"
-                   v-for="(item, y) in news">
-
-                    <div class="article-wrapper">
-                        <div class="d-flex justify-content-between">
-                            <div class="tags">
-                                <button @click="addTag(tag.title)" class="tag" v-for="tag in item.tags">
-                                    {{tag.title}}
-                                </button>
-                            </div>
-                            <div class="bookmark" @click="addBookmark(item)">
-                                <i class="far fa-bookmark" v-if="!item.bookmark"></i>
-                                <i class="fas fa-bookmark active" v-else></i>
-                            </div>
-                        </div>
-                        <div class="news-data">
-                            <div class="title" v-html="getTitle(item.title)">
-                            </div>
-                            <div class="description" v-html="getDescription(item.text, i, y)">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="author-data d-flex justify-content-between align-items-center">
-                        <div class="author d-flex justify-content-between align-items-center">
-                            <!--                            <img class="logo" src="/images/noLogo.png" alt="">-->
-                            <!--                            <div class="author-name">-->
-                            <!--                                Владимир Щипицын-->
-                            <!--                            </div>-->
-                            <div class="date">
-                                {{item.date_ru}}
-                            </div>
-                        </div>
-                        <div class="activity">
-                            <i class="fas fa-eye"></i>
-                            {{item.views}}
-                            <i class="fas fa-comment-dots"></i>
-                            {{item.commentsCount}}
-                        </div>
-                    </div>
-                </a>
+                <news-row
+                        v-for="(item, y) in news"
+                        :key="y"
+                        :news="item"
+                        :class-name="getClass(i, y)"
+                        @addTag="addTag"
+                        @setBookmark="() => item.bookmark = !item.bookmark">
+                </news-row>
             </div>
             <div class="d-flex justify-content-center">
                 <loader v-show="load"></loader>
@@ -69,6 +33,7 @@
     import HotNews from "../components/news/HotNews";
     import newsService from "../services/NewsService";
     import Swal from 'sweetalert2'
+    import NewsRow from "../components/news/NewsRow";
 
 
     export default {
@@ -78,6 +43,7 @@
             'popularTags'
         ],
         components: {
+            NewsRow,
             NewsFilters,
             Loader,
             HotNews,
@@ -168,35 +134,6 @@
                 }
                 return className;
             },
-            getTitle(title) {
-                if (title.length > 70) {
-                    return `${title.substr(0, 70)}...`
-                } else {
-                    return title;
-                }
-            },
-            getDescription(description, i, y) {
-                let count = 80;
-
-                if ((i + 1) % 2 === 0){
-                    count = 95;
-                } else {
-                    if (y === 0){
-                        count = 125;
-                    }
-                }
-                description = description
-                    .replace(/<\/?[^>]+(>|$)/g, "")
-                    .replace(/\s{2,}/g, ' ')
-                    .replace(/&nbsp;/gi, ' ')
-                    .trim();
-
-                if (description.length > count) {
-                    return `${description.substr(0, count)}...`
-                } else {
-                    return description;
-                }
-            },
             getNews() {
                 if (!this.isLoadAll && !this.load) {
                     this.load = true;
@@ -227,8 +164,6 @@
                 }
             },
             addTag(tag) {
-                event.preventDefault()
-
                 const findTags = this.filters.tags.find(t => t === tag)
                 if (!findTags) {
                     this.filters.tags.push(tag);
@@ -263,20 +198,6 @@
                 newsService.getHotNews()
                     .then(data => {
                         this.hotNews = data;
-                    })
-            },
-            addBookmark(news) {
-                event.preventDefault();
-
-                newsService.setBookmark(news.id, !news.bookmark)
-                    .then(() => {
-                        news.bookmark = !news.bookmark;
-                    }).catch(() => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Упс...',
-                            text: 'Что бы добавить в закладки, необходимо авторизироваться!',
-                        })
                     })
             }
         },
@@ -360,8 +281,12 @@
         cursor: pointer;
     }
 
-    .news .news-row .article-wrapper .bookmark i.active{
-        color: #ff6d1d;
+    .news .news-row .article-wrapper .bookmark.active{
+        background-color: #ff6d1d;
+    }
+
+    .news .news-row .article-wrapper .bookmark.active i{
+        color: #fbf8f8;
     }
 
     .dark .news .news-row .article-wrapper {

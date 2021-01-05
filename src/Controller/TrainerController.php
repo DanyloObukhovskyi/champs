@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -179,7 +180,6 @@ class TrainerController extends AbstractController
                 'No trainer found for id ' . $newInfo->id
             );
         }
-        $user->setVideoLink($newInfo->videolink);
         $user->setGame($newInfo->game);
         $user->setCost($newInfo->cost);
         $user->setAbout($newInfo->about);
@@ -190,11 +190,13 @@ class TrainerController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/trainers/{game}/{offset}", name="get_trainer_info_slider_games")
+     * @Route("/ajax/trainers/{gameCode}/{offset}", name="get_trainer_info_slider_games")
      */
-    public function setTrainerSliderInfo(Request $request, $game, $offset = 0)
+    public function setTrainerSliderInfo(Request $request, $gameCode, $offset = 0)
     {
         $filters = json_decode($request->getContent(), true);
+        $game = $this->entityManager->getRepository(Game::class)
+            ->findOneBy(['code' => $gameCode]);
 
         $users = $this->userService->getTrainers($filters, $game, $offset);
         $trainers = $this->userService->teachersDecorator($users);

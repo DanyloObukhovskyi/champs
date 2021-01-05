@@ -57,14 +57,14 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=25, nullable=true)
+     * @ORM\ManyToOne(targetEntity=Game::class)
      */
     private $game;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $rank;
+    private $rang;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -75,7 +75,6 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $steam_id;
-
 
     private $trainer = null;
     /**
@@ -143,6 +142,10 @@ class User implements UserInterface
      * @ORM\Column(type="string", nullable=true)
      */
     private $vkId;
+    /**
+     * @ORM\Column(type="string", options={"default" : "Europe/Moscow"})
+     */
+    private $timezone;
 
     public function __construct()
     {
@@ -281,7 +284,7 @@ class User implements UserInterface
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): self
+    public function setPhoto($photo = null): self
     {
         $this->photo = $photo;
 
@@ -305,26 +308,26 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGame(): ?string
+    public function getGame(): ?Game
     {
         return $this->game;
     }
 
-    public function setGame(?string $game): self
+    public function setGame(Game $game): self
     {
         $this->game = $game;
 
         return $this;
     }
 
-    public function getRank(): ?string
+    public function getRang(): ?string
     {
-        return $this->rank;
+        return $this->rang;
     }
 
-    public function setRank(?string $rank): self
+    public function setRang(?string $rang): self
     {
-        $this->rank = $rank;
+        $this->rang = $rang;
 
         return $this;
     }
@@ -622,5 +625,21 @@ class User implements UserInterface
     public function setVkId($vkId): void
     {
         $this->vkId = $vkId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone): void
+    {
+        $this->timezone = $timezone;
     }
 }

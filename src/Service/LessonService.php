@@ -40,11 +40,17 @@ class LessonService extends EntityService
      */
     protected $teacherService;
 
+    /**
+     * @var TimeZoneService
+     */
+    protected $timezoneService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->imageService = new ImageService();
+        $this->timezoneService = new TimeZoneService();
 
         $this->scheduleService = new ScheduleService($entityManager);
         $this->teacherService = new TeacherService($entityManager);
@@ -77,28 +83,23 @@ class LessonService extends EntityService
     public function decorationLessonsForPayed($lessons)
     {
         $orderedLessons = [];
-        foreach ($lessons as $lesson)
-        {
+        foreach ($lessons as $lesson) {
             $lesson = (object)$lesson;
-            $lesson->time = (int)explode(':',  $lesson->time)[0];
+            $lesson->time = (int)explode(':', $lesson->time)[0];
             $orderedLessons[$lesson->date][] = $lesson;
         }
 
         $orderedLessonsStepTwo = [];
-        foreach ($orderedLessons as $data => $lessons)
-        {
+        foreach ($orderedLessons as $data => $lessons) {
             $orderLessons = [];
-            foreach ($lessons as $index => $lesson)
-            {
+            foreach ($lessons as $index => $lesson) {
                 $lesson = (object)$lesson;
-                if (empty($orderLessons))
-                {
+                if (empty($orderLessons)) {
                     $orderLessons[] = $lesson;
                 } else {
                     $lastLesson = end($orderLessons);
 
-                    if ($lastLesson->time + 1 === $lesson->time)
-                    {
+                    if ($lastLesson->time + 1 === $lesson->time) {
                         $orderLessons[] = $lesson;
                     } else {
                         $orderedLessonsStepTwo[$data][] = $orderLessons;
@@ -106,8 +107,7 @@ class LessonService extends EntityService
                         $orderLessons = [$lesson];
                     }
                 }
-                if ($index + 1 === count($lessons))
-                {
+                if ($index + 1 === count($lessons)) {
                     $orderedLessonsStepTwo[$data][] = $orderLessons;
                 }
             }
@@ -128,16 +128,13 @@ class LessonService extends EntityService
         $lessonIds = [];
         $bookedTime = [];
 
-        foreach ($lessonsCollection as $date => $lessons)
-        {
-            foreach ($lessons as $lessonTimes)
-            {
-                if (isset($trainer) and isset($user) and !empty($lessonTimes))
-                {
+        foreach ($lessonsCollection as $date => $lessons) {
+            foreach ($lessons as $lessonTimes) {
+                if (isset($trainer) and isset($user) and !empty($lessonTimes)) {
                     $timeFrom = $lessonTimes[0]->time;
                     $timeTo = end($lessonTimes)->time + 1;
 
-                    $dateFrom = new Carbon((string)$date );
+                    $dateFrom = new Carbon((string)$date);
                     $dateFrom = $dateFrom->setHour($timeFrom);
 
                     $dateTo = new Carbon((string)$date);
@@ -151,19 +148,19 @@ class LessonService extends EntityService
 
                     $lessonsCount = count($lessonTimes);
 
-                    if ($trainerEntity->getIsLessonCost())
-                    {
+                    if ($trainerEntity->getIsLessonCost()) {
                         $lessonsCount = (int)$lessonsCount / Lessons::LESSON_HOURS;
                     }
                     $lessonCost = 0;
                     /** @var TrainerLessonPrice $cost */
-                    foreach ($trainerEntity->getCosts() as $cost){
-                        if ($cost->getLessonType() === $type){
+                    foreach ($trainerEntity->getCosts() as $cost) {
+                        if ($cost->getLessonType() === $type) {
                             $lessonCost = $cost->getPrice();
                         }
                     }
                     $lesson->setStudent($user);
                     $lesson->setTrainer($trainer);
+                    $lesson->setType($type);
                     $lesson->setCost($lessonCost * $lessonsCount);
                     $lesson->setStatus(Lessons::STATUS_NEW);
                     $lesson->setDateTimeFrom($dateFrom);
@@ -173,9 +170,8 @@ class LessonService extends EntityService
 
                     $this->save($lesson);
 
-                    foreach ($lessonTimes as $lessonTime)
-                    {
-                        $time = (int)explode(':',  $lessonTime->time)[0];
+                    foreach ($lessonTimes as $lessonTime) {
+                        $time = (int)explode(':', $lessonTime->time)[0];
                         $date = new Carbon($lessonTime->date);
 
                         /** @var Schedule $schedule */
@@ -207,17 +203,75 @@ class LessonService extends EntityService
 
     /**
      * @param $lessons
+     * @param $timezone
      * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function lessonsDecoratorForCabinet($lessons)
+    public function lessonsDecoratorForCabinet($lessons, $timezone)
     {
         $result = [];
         /** @var Lessons $lesson */
-        foreach ($lessons as $lesson)
-        {
-            $result[] = $this->lessonDecorator($lesson);
+        foreach ($lessons as $lesson) {
+            $result[] = $this->lessonDecoratorForCabinet($lesson, $timezone);
         }
         return $result;
+    }
+
+    /**
+     * @param Lessons $lesson
+     * @param $timezone
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function lessonDecoratorForCabinet(Lessons $lesson, $timezone)
+    {
+        $userData = $this->getLessonPerson($lesson->getStudent());
+
+        /** @var Teachers $trainer */
+        $trainer = $this->teacherService->findByUserId($lesson->getTrainer()->getId());
+        $trainerData = $this->getLessonPerson($lesson->getTrainer(), true);
+
+        $trainerData['training'] = $this->repository
+            ->findCountByTrainerAndStudent(
+                $lesson->getTrainer(),
+                $lesson->getStudent()
+            );
+
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        if ($gmtNumeric < 0){
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        }
+        $timeOffset = $trainerTimezone - (int)$timezone;
+
+        $timeFrom = Carbon::createFromFormat('Y-m-d H:i:s', $lesson->getDateTimeFrom());
+        $timeFrom->setHour($timeFrom->hour - $timeOffset);
+
+        $timeTo = Carbon::createFromFormat('d.m.Y', $lesson->getDateTimeTo());
+        $timeTo->setHour($timeTo->hour - $timeOffset);
+
+        /** @var Lessons $lesson */
+        return [
+            'id' => $lesson->getId(),
+            'timeFrom' => $timeFrom,
+            'timeTo' => $timeTo,
+            'dateTimeFrom' => $lesson->getDateTimeFrom(),
+            'dateTimeTo' => $lesson->getDateTimeTo(),
+            'cost' => $lesson->getCost(),
+            'type' => $lesson->getType(),
+            'student' => $userData,
+            'trainer' => $trainerData,
+            'studentStatus' => $lesson->getStudentStatus(),
+            'trainerStatus' => $lesson->getTrainerStatus(),
+            'status' => $lesson->getStatus(),
+            'reviewIsset' => $lesson->getReview() === null ? false : true,
+            'trainerDiscord' => $lesson->getTrainer()->getDiscord()
+        ];
     }
 
     /**
@@ -239,7 +293,6 @@ class LessonService extends EntityService
                 $lesson->getTrainer(),
                 $lesson->getStudent()
             );
-        $trainerData['cost'] = $trainer->getCost();
 
         /** @var Lessons $lesson */
         return [
@@ -249,6 +302,7 @@ class LessonService extends EntityService
             'dateTimeFrom' => $lesson->getDateTimeFrom(),
             'dateTimeTo' => $lesson->getDateTimeTo(),
             'cost' => $lesson->getCost(),
+            'type' => $lesson->getType(),
             'student' => $userData,
             'trainer' => $trainerData,
             'studentStatus' => $lesson->getStudentStatus(),
@@ -266,9 +320,8 @@ class LessonService extends EntityService
     public function getLessonTimes(Lessons $lesson)
     {
         $timeFrom = $lesson->getDateTimeFrom()->format('H');
-        $timeTo   = empty($lesson->getDateTimeTo()) ? null : $lesson->getDateTimeTo()->format('H');
-        if (empty($timeTo))
-        {
+        $timeTo = empty($lesson->getDateTimeTo()) ? null : $lesson->getDateTimeTo()->format('H');
+        if (empty($timeTo)) {
             $timeTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('H');
         }
 
@@ -287,7 +340,7 @@ class LessonService extends EntityService
         $this->imageService->setImage($user->getPhoto());
         $photo = $this->imageService->getImagePath();
 
-        if ($isTrainer){
+        if ($isTrainer) {
             $lessonsCount = $this->repository
                 ->findCountByTrainerId($user->getId());
         } else {
@@ -295,7 +348,7 @@ class LessonService extends EntityService
                 ->findCountByStudentId($user->getId());
         }
 
-        return  [
+        return [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'istrainer' => $user->getIsTrainer(),
@@ -304,7 +357,7 @@ class LessonService extends EntityService
             'name' => $user->getName(),
             'family' => $user->getFamily(),
             'game' => $user->getGame(),
-            'rank' => $user->getRank(),
+            'rank' => $user->getRang(),
             'discord' => $user->getDiscord(),
             'trainingAll' => $lessonsCount,
         ];
@@ -323,11 +376,10 @@ class LessonService extends EntityService
             ->findBy(['lesson' => $lesson]);
         $lessonPayment = $lessonPayment[0] ?? null;
 
-        if (isset($lessonPayment)){
+        if (isset($lessonPayment)) {
             $paymentStatus = $lessonPayment->getPayment()->getPaymentStatus();
 
-            if ($paymentStatus === 1)
-            {
+            if ($paymentStatus === 1) {
                 $isPayment = true;
             }
         } else {
@@ -336,9 +388,8 @@ class LessonService extends EntityService
                 ->findBy(['lesson_id' => $lesson->getId()]);
             $payment = $payment[0] ?? null;
 
-            if (isset($payment)){
-                if ($payment->getPaymentStatus() === 1)
-                {
+            if (isset($payment)) {
+                if ($payment->getPaymentStatus() === 1) {
                     $isPayment = true;
                 }
             }
@@ -378,16 +429,32 @@ class LessonService extends EntityService
 
     /**
      * @return mixed
+     * @throws \Exception
      */
     public function getNotNoticedLessons()
     {
         return $this->repository->getNotNoticedLessons();
     }
 
+    /**
+     * @param Lessons $lesson
+     * @return mixed
+     */
     public function setNoticed(Lessons $lesson)
     {
         $lesson->setIsNotice(true);
 
         return $this->save($lesson);
+    }
+
+    /**
+     * @param Lessons $lesson
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTrainingTogetherCount(Lessons $lesson)
+    {
+        return $this->repository->getTrainingTogetherCount($lesson->getStudent(), $lesson->getTrainer());
     }
 }

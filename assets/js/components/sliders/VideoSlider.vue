@@ -1,5 +1,5 @@
 <template>
-    <div class="video-slider">
+    <div class="video-slider video-slider-home">
         <lamp-header title="Видео" link="/ru/news" link-description="Смотреть все"></lamp-header>
         <div class="slider-body">
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
@@ -140,7 +140,7 @@
 </style>
 
 <style>
-    .slider-body .slick-list {
+    .video-slider.video-slider-home .slider-body .slick-list {
         padding: 0px !important;
     }
 
@@ -234,7 +234,7 @@
         color: #9a9c9f;
     }
 
-    .video-slider .slick-slide[aria-hidden='true']:not(.slick-active) {
+    .video-slider.video-slider-home .slick-slide[aria-hidden='true']:not(.slick-active) {
         -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 100%);
         -webkit-mask-size: 100% 50%;
         -webkit-mask-position: left top, left bottom;

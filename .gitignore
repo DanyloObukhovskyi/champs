@@ -6,6 +6,7 @@
 /.env.*.local
 /.idea/
 /config/secrets/prod/prod.decrypt.private.php
+/config/upload/user.yaml
 /public/bundles/
 /public/uploads/images/
 /var/

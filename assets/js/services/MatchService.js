@@ -10,63 +10,44 @@ class MatchService extends Service{
         return url;
     }
 
-    getMatch = async id => {
-        const {data} = await axios.post(`/${this.lang}/get/match/${id}`)
-
-        return data
+    getMatch = id => {
+        return this.send(`get/match/${id}`);
     }
 
-    getMatches = async (type, page, filters) => {
-        const {data} = await axios.post(`/${this.lang}/ajax/matches/${type}/${page}`, filters);
-
-        return data
+    getMatches = (type, page, filters) => {
+        return this.send(`ajax/matches/${type}/${page}`, filters);
     }
 
-    getHomeLives = async () => {
-        const {data} = await axios.post(`/${this.lang}/main/live/matches`)
-
-        return data
+    getHomeLives = () => {
+        return this.send(`main/live/matches`);
     }
 
-    getMainResults = async () => {
-        const {data} = await axios.post(`/${this.lang}/main/results`)
-
-        return data
+    getMainResults = () => {
+        return this.send(`main/results`);
     }
 
-    getUpcomingMatches = async (date) => {
-        const {data} = await axios.post(`/${this.lang}/main/matches`,{date})
-
-        return data
+    getUpcomingMatches = (date) => {
+        return this.send(`main/matches`, date);
     }
 
     getMatchUrl = id => {
         return `/${this.lang}/matches/${id}`;
     }
 
-    sendComment = async (id, comment) => {
-        const {data} = await axios.post(`/${this.lang}/match/add/comment`, { comment, id })
-
-        return data;
+    sendComment = (id, comment) => {
+        return this.send(`match/add/comment`, { comment, id });
     }
 
-    sendCommentAnswer = async (id, commentId, comment) => {
-        const {data} = await axios.post(`/${this.lang}/match/add/comment`, { id, commentId, comment })
-
-        return data;
+    sendCommentAnswer = (id, commentId, comment) => {
+        return this.send(`match/add/comment`, { id, commentId, comment });
     }
 
-    getComments = async id => {
-        const {data} = await axios.post(`/${this.lang}/match/${id}/comments`)
-
-        return data;
+    getComments = id => {
+        return this.send(`match/${id}/comments`);
     }
 
-    setCommentLike = async (commentId, type) => {
-        const {data} = await axios.post(`/${this.lang}/like/match/comment/` + commentId, {
-            type
-        });
-        return data;
+    setCommentLike = (commentId, type) => {
+        return this.send(`like/match/comment/${commentId}`, { type });
     }
 }
 

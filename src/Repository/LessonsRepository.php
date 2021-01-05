@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Lessons;
 use App\Entity\LessonsPayment;
 use App\Entity\Payment;
+use App\Entity\User;
 use App\Service\LessonService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -64,6 +65,7 @@ class LessonsRepository extends ServiceEntityRepository
         foreach ($lessons as $lesson)
         {
             $isPayed = $lessonService->checkIsLessonPayed($lesson);
+            $isPayed = true;
             if ($isPayed){
                 $paymentLessons[] = $lesson;
             }
@@ -92,6 +94,7 @@ class LessonsRepository extends ServiceEntityRepository
         foreach ($lessons as $lesson)
         {
             $isPayed = $lessonService->checkIsLessonPayed($lesson);
+            $isPayed = true;
             if ($isPayed){
                 $paymentLessons[] = $lesson;
             }
@@ -272,6 +275,10 @@ class LessonsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function getNotNoticedLessons()
     {
         $date = new \DateTime();
@@ -283,5 +290,28 @@ class LessonsRepository extends ServiceEntityRepository
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param User $student
+     * @param User $trainer
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTrainingTogetherCount(User $student, User $trainer)
+    {
+        $date = new \DateTime();
+
+        return $this->createQueryBuilder('l')
+            ->select('count(l.id)')
+            ->where('l.student = :student')
+            ->andWhere('l.trainer = :trainer')
+            ->andWhere('l.dateTimeTo < :date')
+            ->setParameter('student', $student)
+            ->setParameter('trainer', $trainer)
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

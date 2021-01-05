@@ -94,18 +94,6 @@ class Teachers
         return $this;
     }
 
-    public function getVideoLink(): ?string
-    {
-        return $this->videolink;
-    }
-
-    public function setVideoLink(?string $videolink): self
-    {
-        $this->videolink = $videolink;
-
-        return $this;
-    }
-
     public function getAbout(): ?string
     {
         return $this->about;
@@ -184,22 +172,6 @@ class Teachers
     public function setPayPal($payPal): void
     {
         $this->payPal = $payPal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsProvideTraining()
-    {
-        return $this->isProvideTraining;
-    }
-
-    /**
-     * @param mixed $isProvideTraining
-     */
-    public function setIsProvideTraining($isProvideTraining): void
-    {
-        $this->isProvideTraining = $isProvideTraining;
     }
 
     /**

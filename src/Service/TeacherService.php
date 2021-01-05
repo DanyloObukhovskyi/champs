@@ -33,7 +33,7 @@ class TeacherService extends EntityService
         /** @var TrainerLessonPrice $cost */
         foreach ($teacher->getCosts() as $cost){
             if($cost->getIsActive()){
-                $availableCosts[] = $cost;
+                $availableCosts[] = $cost->jsonSerialize();
             }
         }
         return [

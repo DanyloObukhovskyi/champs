@@ -42,9 +42,6 @@
     export default {
         name: "MatchComments",
         props: ['matchId', 'comments', 'commentsCount'],
-        inject: [
-            'header'
-        ],
         components: {
             CommentsForm,
             CommentsList,
@@ -108,7 +105,7 @@
                     })
             },
             showLogin() {
-                this.header.show = true;
+                this.$store.dispatch('showLogin')
             },
             getComments() {
                 this.load = true;

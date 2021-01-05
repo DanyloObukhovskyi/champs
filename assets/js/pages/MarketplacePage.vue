@@ -1,9 +1,9 @@
 <template>
     <div class="marketplace">
-        <marketplace-header :game="header.game"/>
+        <marketplace-header :game="game"/>
         <div class="marketplace-body">
             <div class="left">
-                <marketplace-sidebar @setGame="setGame" :game="header.game" :games="games"/>
+                <marketplace-sidebar @setGame="setGame" :game="game" :games="games"/>
             </div>
             <div class="right">
                 <marketplace-filters @setFilter="setFilter" v-bind="filters"/>
@@ -23,7 +23,8 @@
 </template>
 
 <script>
-    import '../../css/pagination.css'
+    import { mapGetters } from 'vuex';
+
     import MarketplaceHeader from "../components/marketplace/MarketplaceHeader";
     import MarketplaceSidebar from "../components/marketplace/MarketplaceSidebar";
     import MarketplaceFilters from "../components/marketplace/MarketplaceFilters";
@@ -40,9 +41,6 @@
             MarketplaceSidebar,
             MarketplaceHeader
         },
-        inject: [
-            'header'
-        ],
         data(){
             return {
                 filters: {
@@ -67,7 +65,7 @@
             page() {
                 this.getTrainers();
             },
-            'header.game': function() {
+            'game': function() {
                 this.trainers = [];
                 this.loadAllTrainers = false;
 
@@ -93,16 +91,17 @@
             },
         },
         computed: {
+            ...mapGetters([
+                'game',
+                'games'
+            ]),
             pagesCount() {
                 return Math.ceil(+this.count / +this.perPage)
-            },
-            games() {
-                return this.header.games;
             }
         },
         methods: {
             setGame(game) {
-                this.header.setGame(game)
+                this.$store.commit('setGame', game);
                 this.page = 1;
             },
             setFilter({name, value}){
@@ -112,7 +111,7 @@
                 if (!this.load){
                     this.load = true;
 
-                    MarketplaceService.getTrainers(this.header.game, this.trainers.length,  this.filters)
+                    MarketplaceService.getTrainers(this.game, this.trainers.length,  this.filters)
                         .then(data => {
                             for (let trainer of data.trainers){
                                 const searchTrainer = this.trainers.find(t => t.id === trainer.id)
@@ -146,7 +145,7 @@
             },
         },
         mounted() {
-            if (this.header.game !== null){
+            if (this.game !== null){
                 this.getTrainers();
             }
             this.scrollEventTrigger();

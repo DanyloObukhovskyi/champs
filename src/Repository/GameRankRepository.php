@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Game;
 use App\Entity\GameRank;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,7 +20,7 @@ class GameRankRepository extends ServiceEntityRepository
         parent::__construct($registry, GameRank::class);
     }
 
-    public function getByPoints($game, int $points)
+    public function getByPoints(Game $game, int $points)
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.pointsTo >= :points')

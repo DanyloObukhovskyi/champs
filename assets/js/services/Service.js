@@ -4,12 +4,21 @@ class Service {
 
     constructor() {
         this.lang = this.getLang();
+        this.logoutUrl = `/${this.lang}/logout`;
     }
 
-    getAuthUser = async () =>  {
-        const {data} = await axios.post(`/${this.lang}/get/auth`)
+    send = async (url, params = {}) => {
+        const {data} = await axios.post(`/${this.lang}/${url}`, params)
 
         return data;
+    }
+
+    getUserFull = () =>  {
+        return this.send('auth/user/full')
+    }
+
+    getAuthUser = () =>  {
+        return this.send('get/auth')
     }
 
     getLang = () => {
@@ -20,10 +29,8 @@ class Service {
         return lang;
     }
 
-    getGames = async () => {
-        const {data} = await axios.post(`/${this.lang}/games`)
-
-        return data;
+    getGames = () => {
+        return this.send('games')
     }
 }
 

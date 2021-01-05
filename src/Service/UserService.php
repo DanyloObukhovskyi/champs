@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\Entity\Award;
+use App\Entity\Game;
 use App\Entity\GameRank;
 use App\Entity\Review;
 use App\Entity\Teachers;
@@ -13,6 +14,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\News\NewsService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UserService  extends EntityService
 {
@@ -124,8 +126,6 @@ class UserService  extends EntityService
         {
             $trainer = new Teachers();
             $trainer->setUser($user->getId());
-            $trainer->setVideoLink("");
-            $trainer->setCost(0);
             $trainer->setAbout("");
             $trainer->setShorttitle("");
             $trainer->setMethod("");
@@ -139,12 +139,7 @@ class UserService  extends EntityService
         $videos = $this->trainerVideosService->getByTrainer($user);
         $videos = $this->trainerVideosService->decorator($videos);
 
-        $trainerGame = null;
-        foreach ( self::GAMES as $game){
-            if ($game['name'] === $user->getGame()){
-                $trainerGame = $game;
-            }
-        }
+        $trainerGame = $user->getGame();
 
         $timezone = $trainer->getTimeZone();
         if (!empty($timezone)){
@@ -181,7 +176,7 @@ class UserService  extends EntityService
             ];
         }
 
-        $rank = (int)$user->getRank();
+        $rank = (int)$user->getRang();
 
         if (is_int((int)$rank)){
             $gameRank = $this->entityManager
@@ -220,7 +215,7 @@ class UserService  extends EntityService
             'photo' => $user->getPhoto(),
             'name' => $user->getName(),
             'game' => $trainerGame,
-            'rank' => $user->getRank(),
+            'rank' => $user->getRang(),
             'family' => $user->getFamily(),
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
@@ -447,7 +442,7 @@ class UserService  extends EntityService
      */
     public function getTrainers($filters, $game, $offset)
     {
-        $teachers =  $this->entityManager
+        $teachers = $this->entityManager
             ->getRepository(Teachers::class)
             ->getTrainers($filters, $game, $offset);
 
@@ -458,5 +453,57 @@ class UserService  extends EntityService
             $users[] = $this->repository->find($teacher->getUserId());
         }
         return $users;
+    }
+
+    /**
+     * @param User $user
+     * @param object $data
+     * @return mixed
+     */
+    public function updateUser(User $user, object $data)
+    {
+        if(isset($data->name)){
+            $user->setName($data->name);
+        }
+        if(isset($data->nickname)){
+            $user->setNickname($data->nickname);
+        }
+        if(isset($data->family)){
+            $user->setFamily($data->family);
+        }
+        if(isset($data->email)){
+            $user->setEmail($data->email);
+        }
+        if(isset($data->rank)){
+            $user->setRang($data->rank);
+        }
+        if(isset($data->game)){
+            $game = $this->entityManager->getRepository(Game::class)
+                ->findOneBy(['code' => $data->game]);
+
+            if (isset($game)){
+                $user->setGame($game);
+            }
+        }
+        if(isset($data->timezone)){
+            $user->setTimezone($data->timezone);
+        }
+        if(isset($data->avatar)){
+            $user->setPhoto($data->avatar);
+        }
+        if(isset($data->discord)){
+            $user->setDiscord($data->discord);
+        }
+        return $this->save($user);
+    }
+
+    /**
+     * @param string $email
+     * @param int $userId
+     * @return mixed
+     */
+    public function findByEmail(string $email, int $userId)
+    {
+        return $this->repository->findByEmail($email, $userId);
     }
 }

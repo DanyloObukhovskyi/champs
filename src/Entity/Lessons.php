@@ -10,11 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Lessons
 {
-    const
-        STATUS_NEW = 0,
-        STATUS_ENDED = 1;
+    public const STATUS_NEW = 0;
 
-    const LESSON_HOURS = 3;
+    public const STATUS_ENDED = 1;
+
+    public const LESSON_HOURS = 3;
 
     /**
      * @ORM\Id()
@@ -77,6 +77,16 @@ class Lessons
      * @ORM\OneToOne(targetEntity=Review::class, mappedBy="lesson", cascade={"persist", "remove"})
      */
     private $review;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, options={"default" : "individual"})
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $trainerNotice;
 
     public function getId(): ?int
     {
@@ -233,5 +243,37 @@ class Lessons
     public function setIsNotice($isNotice): void
     {
         $this->isNotice = $isNotice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrainerNotice()
+    {
+        return $this->trainerNotice;
+    }
+
+    /**
+     * @param mixed $trainerNotice
+     */
+    public function setTrainerNotice($trainerNotice): void
+    {
+        $this->trainerNotice = $trainerNotice;
     }
 }

@@ -3,7 +3,7 @@
         <div class="trainer">
             <div class="avatar">
                 <a :href="trainerUrl" class="gradient d-block">
-                    <img :src="'/images/temp/matches/' + trainer.photo"
+                    <img :src="'/uploads/avatars/' + trainer.photo"
                          @error="$event.target.src = '/images/noLogo.png'">
                 </a>
             </div>
@@ -14,7 +14,7 @@
                     </a>
                     <div class="game-wrapper">
                         <div class="game">
-                            <img :src="'/uploads/games/' + game.logo">
+                            <img :src="'/uploads/games/' + trainer.game.logo">
                             <div class="title">
                                 <p>
                                     Тренер
@@ -62,7 +62,7 @@
             <div class="rank">
                 <label>Ранг</label>
                 <div class="d-flex align-items-center">
-                    <img v-if="!rankIconError" :src="'/images/marketplace/' + trainer.rankIcon" @error="rankIconError = true">
+                    <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
                     <div>
                         {{trainer.rank}}
                         <div class="global-elite" v-if="trainer.trainer.globalElite">
