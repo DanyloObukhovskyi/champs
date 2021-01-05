@@ -53,7 +53,7 @@
                             <div class="rank">
                                 <label>Ранг</label>
                                 <div class="d-flex align-items-center">
-                                    <img v-if="!rankIconError" :src="'/images/marketplace/' + lesson.trainer.rankIcon"
+                                    <img v-if="!rankIconError" :src="'/images/ranks/' + lesson.trainer.rankIcon"
                                          @error="rankIconError = true">
                                     <div class="rank-wrapper">
                                         <div class="rank-raw">
