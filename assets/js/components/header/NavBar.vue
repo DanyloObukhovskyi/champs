@@ -51,7 +51,8 @@
                        class="icon">
                         <div class="avatar" v-if="user !== null">
                             <div class="gradient">
-                                <img :src="'/uploads/avatars/' + user.photo">
+                                <img :src="'/uploads/avatars/' + user.photo"
+                                     @error="$event.target.src = '/images/noLogo.png'">
                             </div>
                         </div>
                         <i v-else class="fas fa-arrow-right"></i>
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex';
+    import {mapGetters} from 'vuex';
 
     import Social from "./Social";
     import GameSelect from "./GameSelect";

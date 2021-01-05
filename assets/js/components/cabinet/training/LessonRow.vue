@@ -7,7 +7,8 @@
             <div class="trainer">
                 <template v-if="!user.isTrainer">
                     <div class="avatar">
-                        <img :src="'/uploads/avatars/' + lesson.trainer.photo">
+                        <img :src="'/uploads/avatars/' + lesson.trainer.photo"
+                             @error="$event.target.src = '/images/noLogo.png'">
                     </div>
                     <div class="nickname">
                         {{lesson.trainer.nickname}}
@@ -15,7 +16,8 @@
                 </template>
                 <template v-else>
                     <div class="avatar">
-                        <img :src="'/uploads/avatars/' + lesson.student.photo">
+                        <img :src="'/uploads/avatars/' + lesson.student.photo"
+                             @error="$event.target.src = '/images/noLogo.png'">
                     </div>
                     <div class="nickname">
                         {{lesson.student.nickname}}
@@ -128,7 +130,7 @@
                 return `${hours}:${minutes}`;
             },
             setConfirmed() {
-                if (!this.isConfirmed){
+                if (!this.isConfirmed) {
                     CabinetService.setConfirmed(this.lesson.id)
                         .then(lesson => {
                             this.$store.commit('cabinet/training/updateLesson', lesson);

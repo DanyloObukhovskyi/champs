@@ -1,6 +1,12 @@
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <style>
+    select {
+        height: 100%;
+        width: 100%;
+        border: unset;
+    }
+
     .achievements,
     .awards {
         display: flex;
@@ -59,7 +65,7 @@
         margin-top: 30px;
     }
 
-    .select2.select2-container{
+    .select2.select2-container {
         width: 50% !important;
     }
 </style>
@@ -160,26 +166,26 @@
                 <div class="col-item">
                     <?php foreach ($prices_types as $type => $title): ?>
                         <input type="checkbox"
-                                <?php if (isset($trainer_prices[$type])):?>
-                                    <?php print $trainer_prices[$type]['is_active'] ? 'checked': '';?>
-                                <?php endif;?>
-                                onchange="changeTrainerPriceActive('<?php print $type;?>')"
-                                name="training[<?php print $type;?>]">
+                            <?php if (isset($trainer_prices[$type])): ?>
+                                <?php print $trainer_prices[$type]['is_active'] ? 'checked' : ''; ?>
+                            <?php endif; ?>
+                               onchange="changeTrainerPriceActive('<?php print $type; ?>')"
+                               name="training[<?php print $type; ?>]">
                         <label class="label" for=""><?php print $title; ?></label>
                         <div class="input mb-5">
                             <input type="text"
                                    class="fw-600 input2_txt"
-                                   name="price[<?php print $type;?>]"
+                                   name="price[<?php print $type; ?>]"
                                    placeholder="100руб./час"
-                                   <?php if (isset($trainer_prices[$type])):?>
-                                       <?php print $trainer_prices[$type]['is_active'] ? '': 'disabled';?>
-                                   <?php else: ?>
-                                        disabled
-                                   <?php endif;?>
+                                <?php if (isset($trainer_prices[$type])): ?>
+                                    <?php print $trainer_prices[$type]['is_active'] ? '' : 'disabled'; ?>
+                                <?php else: ?>
+                                    disabled
+                                <?php endif; ?>
                                    value=" <?php echo $trainer_prices[$type]['price'] ?? null ?>"
                                    onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
                         </div>
-                    <?php endforeach;?>
+                    <?php endforeach; ?>
                     <div class="mb-15">
                         <img src="<?php print base_url("assets/icons/info.svg"); ?>"/>
                         <div class="info_txt">Формат поля - числовой</div>
@@ -247,7 +253,7 @@
                     <label class="label" for="">Ранг</label>
                     <div class="input mb-5" id="input">
                         <input required type="text" class="fw-600 input2_txt" name="rank" placeholder=""
-                               value="<?php print $user_info[0]['rank']; ?>" title="введите правильный"
+                               value="<?php print $user_info[0]['rang']; ?>" title="введите правильный"
                                onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
                     </div>
                     <div class="mb-15">
@@ -255,7 +261,8 @@
                         <div class="info_txt">Формат поля - числовой</div>
                     </div>
                     <div class="mb-10">
-                        <input type="checkbox" name="global_elite" <?php echo $user_info[0]['global_elite'] ? 'checked': ''?>>
+                        <input type="checkbox"
+                               name="global_elite" <?php echo $user_info[0]['global_elite'] ? 'checked' : '' ?>>
                         <label class="label" for="">THE GLOBAL ELITE</label>
                     </div>
                     <label class="label" for="">сколько текущий админ будет получать с ставки тренера в %</label>
@@ -273,8 +280,16 @@
                 <div class="col-item">
                     <label class="label" for="">Игра</label>
                     <div class="input mb-20" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="game" id="game" placeholder=""
-                               value="<?php print $user_info[0]['game']; ?>" title="введите правильный">
+                        <select name="game" id="game">
+                            <option value=""></option>
+                            <?php foreach ($games as $game): ?>
+                                <option
+                                    <?php echo $game['id'] === $user_info[0]['game_id'] ? 'selected' : '' ?>
+                                        value="<?php echo $game['id']; ?>">
+                                    <?php echo $game['name']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="col-item">
@@ -368,12 +383,12 @@
             <div class="mt-15">
                 <label class="label" for="">Награды</label>
                 <div>
-                    <select class="js-example-basic-single" multiple name="awards[]" >
+                    <select class="js-example-basic-single" multiple name="awards[]">
                         <?php foreach ($awards as $award): ?>
                             <option
-                                <?php echo in_array($award['id'], $trainer_awards) ? 'selected': '';?>
-                                value="<?php echo $award['id']?>">
-                                <?php echo $award['text']?>
+                                <?php echo in_array($award['id'], $trainer_awards) ? 'selected' : ''; ?>
+                                    value="<?php echo $award['id'] ?>">
+                                <?php echo $award['text'] ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -394,7 +409,9 @@
                 </div>
 
                 <div class="col-item">
-                    <label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img style="top: 3px;" class="search-img" src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
+                    <label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img style="top: 3px;"
+                                                                                                class="search-img"
+                                                                                                src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
                     <div class="mb-10 preview_img">
                         <img class="img_preview" id="img_preview"
                              src="<?php print $imgs_url . $user_info[0]['photo']; ?>">
@@ -580,7 +597,7 @@
     }
 
     window.onload = () => {
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.js-example-basic-single').select2();
         });
     }

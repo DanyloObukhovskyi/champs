@@ -30,7 +30,8 @@ class Edit_c extends CI_Controller
             'trainer_achievement',
             'award_model',
             'trainer_award_model',
-            'trainer_lesson_price_m'
+            'trainer_lesson_price_m',
+            'game_m',
         ));
     }
 
@@ -372,6 +373,8 @@ class Edit_c extends CI_Controller
 
     public function trainer($id = 0, $user_id = 0)
     {
+        $game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
+
         $current_u_can = $this->users_model->get_capabilities($this->UserID);
         if (isset($current_u_can[0]["roles"])) {
             $current_u_can = json_decode($current_u_can[0]["roles"]);
@@ -393,7 +396,6 @@ class Edit_c extends CI_Controller
                 $game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
 
                 $twitch = (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
-                $shorttitle = (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
                 $stream_type = (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
                 $admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
                 $discord = (isset($_POST["discord"]) && !empty($_POST["discord"])) ? trim($_POST["discord"]) : '';
@@ -440,7 +442,7 @@ class Edit_c extends CI_Controller
 
                     $update_data['nickname'] = $nickname;
                     $update_data['email'] = $Email;
-                    $update_data['game'] = $game;
+                    $update_data['game_id'] = (int)$game;
 
 
                     if ($new_passw == $new_passw_confirm && !empty($new_passw)) {
@@ -460,7 +462,7 @@ class Edit_c extends CI_Controller
                     $update_data['discord'] = $discord;
 
                     $update_data['roles'] = json_encode($user_capabilities);
-                    $update_data['rank'] = $rank;
+                    $update_data['rang'] = $rank;
 
                     $this->edit_m->updateUser($id, $update_data);
 
@@ -469,7 +471,6 @@ class Edit_c extends CI_Controller
                         $update_data['about'] = $about;
                         $update_data['method'] = $method;
                         $update_data['twitch'] = $twitch;
-                        $update_data['shorttitle'] = $shorttitle;
                         $update_data['stream_type'] = $stream_type;
                         $update_data['admin_percentage'] = $admin_percentage;
                         $update_data['global_elite'] = $global_elite;
@@ -550,6 +551,7 @@ class Edit_c extends CI_Controller
         $data['current_u_can'] = $current_u_can;
         $data['awards'] = $this->award_model->get_all();
         $data['trainer_awards'] = [];
+        $data['games'] = $this->game_m->get_all();
         $data['prices_types'] = Trainer_lesson_price_m::PRICE_TYPES;
 
         $trainer_prices = $this->trainer_lesson_price_m->get_by_trainer_id($id);
