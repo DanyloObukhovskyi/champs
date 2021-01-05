@@ -43,7 +43,7 @@
                 if (this.isAuthorize){
                     window.location = this.loginRedirect
                 } else {
-                    login.show = true
+                    this.$store.dispatch('showLogin');
                 }
             }
         },

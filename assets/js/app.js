@@ -7,53 +7,39 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
-import MvpService from "./components/mvp/services/MvpService.js";
-import config from "./config";
+
+import Vuex from 'vuex'
+import Store from "./store/Store";
+
 import MvpPage from "./components/mvp/cabinet/MvpPage";
 import MvpTeamPage from "./components/mvp/cabinet/MvpTeamPage";
 import MvpInviteTeamPage from "./components/mvp/invite/MvpInviteTeamPage";
-import LoginModal from "./components/LoginModal";
+import Header from "./components/header/Header";
 import MvpMain from "./components/mvp/tournaments/MvpMain";
 import MvpTournamentsList from "./components/mvp/tournaments/MvpTournamentsList";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-let token = document.head.querySelector('meta[name="csrf-token"]');
+const token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
     window.axios._csrf_token = token.content;
 } else {
     console.error('CSRF token not found');
 }
+Vue.use(Vuex);
 
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-// import $ from 'jquery';
-
+Vue.component('v-header', Header);
 Vue.component('mvp-main', MvpMain)
 Vue.component('mvp-page', MvpPage)
 Vue.component('mvp-team-page', MvpTeamPage)
 Vue.component('mvp-invite-page', MvpInviteTeamPage)
 Vue.component('mvp-tournaments-list', MvpTournamentsList)
-Vue.component('login-form', LoginModal)
+// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
+// import $ from 'jquery';
 
-new Vue({
-    el: '#app',
-    provide: {
-        http: new MvpService(axios),
-        axios,
-        config,
-        header
-    }
-})
-
-window.login = new Vue({
-    el: '#login',
-    provide: {
-        axios,
-        config
-    },
-    data: {
-        show: false,
-    }
+window.app1 = new Vue({
+    el: '#app1',
+    store: Store
 })

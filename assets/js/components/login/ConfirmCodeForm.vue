@@ -16,7 +16,7 @@
                             data-toggle="tooltip"
                             data-placement="right"
                             title="Не пришел код? Проверьте папку Спам или попытайтесь отправить еще раз.">
-                            <i class="fas fa-question"></i>
+                        <i class="fas fa-question"></i>
                     </button>
                 </div>
                 <div class="send" @click="sendRegistrationConfirm">
@@ -57,7 +57,6 @@
     export default {
         name: "ConfirmCodeForm",
         inject: [
-            'axios',
             'config'
         ],
         props: [
@@ -92,7 +91,7 @@
                 formData.append('user[code]', this.confirmCode);
                 formData.append('user[email]', this.email);
 
-                this.axios.post('/ru/check/confirm/code', formData)
+                axios.post('/ru/check/confirm/code', formData)
                     .then(({data}) => {
                         this.successMessage = data;
                         this.codeConfirmed = true;
@@ -100,9 +99,9 @@
                         this.$emit('registration')
                         this.$emit('setStep', 'nickname')
                     }).catch(({response}) => {
-                        this.errorMessage = response.data;
-                        this.codeConfirmed = false;
-                    })
+                    this.errorMessage = response.data;
+                    this.codeConfirmed = false;
+                })
             },
             showNickname(){
                 if (this.codeConfirmed){

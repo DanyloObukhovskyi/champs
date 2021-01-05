@@ -92,175 +92,19 @@
     <!-- /Yandex.Metrika counter -->
 </head>
 <body>
-<nav class="header_nav" id="header">
-    <div class="container nav">
-        <a href="/">
-            <img src="/images/logo.svg" class="logo"/>
-        </a>
-        <div class="menu-btn-cont">
-            <img src="/images/menu.png" class="menu-btn" @click="menu = menu ? false : true"/>
-        </div>
-        <div class="menu" :class="[menu ? 'open' : '']">
-            <a href="{{ path('main') }}" {% if router == 'home' %}class="active"{% endif %}>Главная</a>
-            <a href="{{ path('news_index') }}" {% if router == 'news' %}class="active"{% endif %}>Новости</a>
-            <a href="{{ path('matches_index_page') }}" {% if router == 'matches' %}class="active"{% endif %}>Матчи</a>
-            <a href="{{ path('results_index_page') }}" {% if router == 'results' %}class="active"{% endif %}>Результаты</a>
-            <a href="{{ path('events.index') }}" {% if router == 'events' %}class="active"{% endif %}>События</a>
-            <a href="{{ path('statistics_index') }}" {% if router == 'statistics' %}class="active"{% endif %}>Cтатистика</a>
-            <a href="{{ path('marketplace_index') }}" {% if router == 'marketplace' %}class="active"{% endif %}>Обучение</a>
-            <a href="{{ path('mvp.index') }}" {% if router == 'mvp' %}class="active"{% endif %}>MVP</a>
-        </div>
-        {% include 'social.html.twig' %}
-        <div class="live" v-if="false">
-            <div class="round"></div>
-            <div class="text">Live</div>
-        </div>
-        <div class="games">
-            <div class="select-block" :class="[show ? 'shadow' : '']">
-                {% if router == 'mvp' %}
-                    <div class="select" @click="show=show?false:true">
-                        <img :src="`/images/${icon}`" class="logo"/>
-                        <div class="text" v-text="game"></div>
-                        <img src="/images/arrowBtn.svg" class="arrow"/>
-                    </div>
-                    <div class="select" @click="game='DOTA',icon='dota.png',show=false"
-                         v-if="(game === 'CS:GO' || game === 'Valorant') && show" title="Dota">
-                        <img src="/images/dota.png" class="logo"/>
-                        <div class="text">DOTA</div>
-                    </div>
-                    <div class="select" @click="game='CS:GO',icon='cs.png',show=false"
-                         v-if="(game === 'DOTA' || game === 'Valorant') && show" title="Counter Strike">
-                        <img src="/images/cs.png" class="logo"/>
-                        <div class="text">CS:GO</div>
-                    </div>
-                    <div class="select" @click="game='Valorant',icon='valorant.png',show=false"
-                         v-if="(game === 'DOTA' || game === 'CS:GO') && show" title="Lol">
-                        <img src="/images/valorant.png" class="logo"/>
-                        <div class="text">Valorant</div>
-                    </div>
-                {% else %}
-                    <div class="select" @click="show = show ? false : true">
-                        <img :src="`/images/${icon}`" class="logo"/>
-                        <div class="text" v-text="game"></div>
-                        <img src="/images/arrowBtn.svg" class="arrow"/>
-                    </div>
-                    <div class="select" @click="game = 'DOTA',icon='dota.png',show=false"
-                         v-if="(game === 'CS:GO' || game === 'LOL') && show" title="Dota">
-                        <img src="/images/dota.png" class="logo"/>
-                        <div class="text">DOTA</div>
-                    </div>
-                    <div class="select" @click="game = 'CS:GO',icon='cs.png',show=false"
-                         v-if="(game === 'DOTA' || game === 'LOL') && show" title="Counter Strike">
-                        <img src="/images/cs.png" class="logo"/>
-                        <div class="text">CS:GO</div>
-                    </div>
-                    <div class="select" @click="game = 'LOL',icon='lol.jpg',show=false"
-                         v-if="(game === 'DOTA' || game === 'CS:GO') && show" title="Lol">
-                        <img src="/images/lol.jpg" class="logo"/>
-                        <div class="text">LOL</div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-        <div class="login" {% if is_granted('IS_AUTHENTICATED_FULLY') == false %} @click="showLogin"{% endif %}>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {% if app.user.istrainer %}
-                    <a href="/ru/trainer/timelist" class="ln">кабинет</a>
-                {% else %}
-                    <a href="/ru/user/specifications" class="ln">кабинет</a>
-                {% endif %}
-            {% else %}
-                <span>Войти</span>
-            {% endif %}
-            <div>
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    {% if app.user.istrainer %}
-                        <a href="/ru/trainer/timelist" class="icon"><img src="/images/arrowLogin.svg"/></a>
-                    {% else %}
-                        <a href="/ru/user/specifications" class="icon"><img src="/images/arrowLogin.svg"/></a>
-                    {% endif %}
-                {% else %}
-                    <img src="/images/arrowLogin.svg"/>
-                {% endif %}
-            </div>
-        </div>
+<div id="app1">
+    <v-header
+            :social="[]"
+            router="{{ router }}"
+            :is-trainer="{{ is_granted('IS_AUTHENTICATED_FULLY') and app.user.istrainer ? 'true': 'false' }}"
+            :is-authorize="{{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true': 'false'}}">
+    </v-header>
+    <div id="layout">
+        {% block body %}
+        {% endblock %}
     </div>
-</nav>
-<script>
-    const header = new Vue({
-        el: '#header',
-        data: function () {
-            return {
-                icon: 'cs.png',
-                game: 'CS:GO',
-                show: false,
-                menu: false,
-                view: null,
-                start: false,
-                block: true,
-                check: false,
-                blockAuth: true,
-                csrf_token: '{{ csrf_token('authenticate') }}',
-                email: '',
-                password: '',
-                password_confirm: '',
-                error: false,
-            };
-        },
-        watch: {
-            email() {
-                this.valid()
-            },
-            password() {
-                this.valid()
-            },
-            check() {
-                this.valid()
-            }
-        },
-        methods: {
-            showLogin(){
-                window.login.show = true
-            },
-            valid() {
-                const re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-                if (re.test(this.email) && this.password.length > 5) {
-                    this.blockAuth = false;
-                    if (this.check) {
-                        this.block = false;
-                    } else {
-                        this.block = true;
-                    }
-                } else {
-                    this.blockAuth = true;
-                    this.block = true;
-                }
-            }
-        },
-        created() {
-            window.addEventListener('click', (e) => {
-                if (e.target.classList.contains('menu-btn') || e.target.classList.contains('search-input')
-                    || e.target.classList.contains('icon') || e.target.classList.contains('icon-svg')) return false;
-                this.menu = false;
-            });
-            window.addEventListener('load', () => {
-                this.start = true;
-            });
-        }
-    });
-</script>
-<div id="login">
-    <login-form show-first="{{ router == 'mvp' ? 'registration': 'login' }}"
-                :show="show"
-                redirect="{{ router == 'mvp' ? url('mvp.cabinet.tournaments'): url('timelist_index') }}"
-                show-first="login">
-    </login-form>
 </div>
-{% block body %}{% endblock %}
-{% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
-{% endblock %}
-
+{{ encore_entry_script_tags('app') }}
 <div class="cookie" id="cookie">
     <div class="footer">
         <div class="container">
