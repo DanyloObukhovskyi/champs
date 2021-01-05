@@ -54,8 +54,8 @@
                     .then(({data}) => {
                         this.$emit('setStep', 'congratulation')
                     }).catch(({response}) => {
-                        this.errorMessage = response.data
-                    })
+                    this.errorMessage = response.data
+                })
             },
             close(){
                 this.$emit('close')

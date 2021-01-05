@@ -11,24 +11,24 @@
                     </div>
                     <div class="login_input">
                         <input
-                            type="text"
-                            :value="email"
-                            @input="$emit('inputEmail', $event.target.value)"/>
+                                type="text"
+                                :value="email"
+                                @input="$emit('inputEmail', $event.target.value)"/>
                         <span>Адрес электронной почты</span>
                     </div>
                     <div class="login_input">
                         <input
-                            type="password"
-                            :value="password"
-                            @input="$emit('inputPassword', $event.target.value)"/>
+                                type="password"
+                                :value="password"
+                                @input="$emit('inputPassword', $event.target.value)"/>
                         <span>Пароль</span>
                     </div>
                     <div class="login_check">
                         <label>
                             <input
-                                type="checkbox"
-                                :checked="check"
-                                @change="$emit('input', $event.target.value)"/>
+                                    type="checkbox"
+                                    :checked="check"
+                                    @change="$emit('input', $event.target.value)"/>
                         </label>
                         <span>
                             <a href="/ru/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a>
@@ -138,8 +138,8 @@
                     .then(({data}) => {
                         this.generateConfirmCode();
                     }).catch(({response}) => {
-                        this.errorMessage = response.data;
-                    })
+                    this.errorMessage = response.data;
+                })
             },
             close(){
                 this.$emit('close')
