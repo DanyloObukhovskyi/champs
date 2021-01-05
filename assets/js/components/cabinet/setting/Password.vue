@@ -52,34 +52,41 @@
         },
         methods: {
             updatePassword() {
-                if (this.password === null || this.password === '') {
-                    return Swal.fire({
-                        icon: 'error',
-                        title: 'Упс...',
-                        text: 'Пароль не может быть пустым!',
-                    })
-                }
-                if (this.password === this.passwordConfirm) {
-                    const form = new FormData();
-                    form.append('password', this.password);
-
-                    this.load = true;
-                    CabinetService.updateUser(form)
-                        .then(data => {
-                            this.$store.commit('setUser', data)
-
-                            this.load = false;
-                            this.isUpdate = true;
+                if (!this.load){
+                    if (this.password === null || this.password === '') {
+                        return Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Пароль не может быть пустым!',
                         })
-                        .catch(() => {
-                            this.load = false;
+                    }
+                    if (this.password === this.passwordConfirm) {
+                        const form = new FormData();
+                        form.append('password', this.password);
+
+                        this.load = true;
+                        CabinetService.updateUser(form)
+                            .then(data => {
+                                this.$store.commit('setUser', data)
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Пароль сохранен!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.load = false;
+                            })
+                            .catch(() => {
+                                this.load = false;
+                            })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Пароли не совпадают!',
                         })
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Упс...',
-                        text: 'Пароли не совпадают!',
-                    })
+                    }
                 }
             }
         }

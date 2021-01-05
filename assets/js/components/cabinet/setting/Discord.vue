@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 <template>
     <div class="setting-container-body discord-setting">
         <div class="title">
@@ -11,9 +12,8 @@
                 </div>
             </div>
         </div>
-        <div class="bottom-save" @click="updateDiscord" :class="{disable: load, update: !load && isUpdate}">
+        <div class="bottom-save" @click="updateDiscord" :class="{disable: load}">
             Сохранить изменения
-            <i class="fas fa-check"></i>
             <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                 <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
@@ -28,6 +28,7 @@
 
 <script>
     import CabinetService from "../../../services/CabinetService";
+    import Swal from 'sweetalert2'
 
     export default {
         name: "Discord",
@@ -36,25 +37,31 @@
             return {
                 discordVal: null,
                 load: false,
-                isUpdate: false,
             }
         },
         methods: {
             updateDiscord() {
-                const form = new FormData();
-                form.append('discord', this.discordVal);
+                if (!this.load){
+                    const form = new FormData();
+                    form.append('discord', this.discordVal);
 
-                this.load = true;
-                CabinetService.updateUser(form)
-                    .then(data => {
-                        this.$store.commit('setUser', data)
+                    this.load = true;
+                    CabinetService.updateUser(form)
+                        .then(data => {
+                            this.$store.commit('setUser', data)
 
-                        this.load = false;
-                        this.isUpdate = true;
-                    })
-                    .catch(() => {
-                        this.load = false;
-                    })
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Дискорд сохранен!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
+                        })
+                        .catch(() => {
+                            this.load = false;
+                        })
+                }
             }
         },
         mounted() {

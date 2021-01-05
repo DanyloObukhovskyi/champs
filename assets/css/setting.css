@@ -183,7 +183,7 @@
 }
 
 .setting .setting-container-body .form-group .button-save:hover {
-    opacity: .5;
+    background-color: #ff8f2b;
 }
 
 .setting .setting-container-body .multiselect .multiselect__tags {
@@ -276,7 +276,7 @@
 }
 
 .setting .bottom-save:hover {
-    opacity: .5;
+    background-color: #ff8f2b;
 }
 
 .setting .bottom-save svg {

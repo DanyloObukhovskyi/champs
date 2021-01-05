@@ -110,10 +110,6 @@ class User implements UserInterface
      */
     private $vk;
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $rankString;
-    /**
      * @ORM\Column(type="string", options={"default" : "Europe/Moscow"})
      */
     private $timezone;
@@ -516,22 +512,6 @@ class User implements UserInterface
     public function setVk($vk): void
     {
         $this->vk = $vk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRankString()
-    {
-        return $this->rankString;
-    }
-
-    /**
-     * @param mixed $rankString
-     */
-    public function setRankString($rankString): void
-    {
-        $this->rankString = $rankString;
     }
 
     /**

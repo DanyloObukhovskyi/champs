@@ -114,7 +114,6 @@ class CabinetController extends AbstractController
             'family' => $user->getFamily(),
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
-            'rankString' => $user->getRankString(),
             'timezone' => $user->getTimezone(),
             'isTrainer' => $user->getIsTrainer()
         ];

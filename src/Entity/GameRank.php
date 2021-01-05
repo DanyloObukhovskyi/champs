@@ -18,7 +18,7 @@ class GameRank
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity=Game::class)
      */
     private $game;
 

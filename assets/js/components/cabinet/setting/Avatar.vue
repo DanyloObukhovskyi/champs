@@ -17,9 +17,8 @@
                 <input type="file" name="avatar" id="avatar-upload-form" @change="setPreviewImage">
             </form>
         </div>
-        <div class="bottom-save" @click="updateAvatar" :class="{disable: load, update: !load && isUpdate}">
+        <div class="bottom-save" @click="updateAvatar" :class="{disable: load}">
             Сохранить изменения
-            <i class="fas fa-check"></i>
             <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                 <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
@@ -54,25 +53,32 @@
         },
         methods: {
             updateAvatar() {
-                const form = new FormData(document.forms.uploadAvatar);
+                if (!this.load){
+                    const form = new FormData(document.forms.uploadAvatar);
 
-                this.load = true;
-                CabinetService.updateUser(form)
-                    .then(user => {
-                        this.$store.commit('setUser', user);
+                    this.load = true;
+                    CabinetService.updateUser(form)
+                        .then(user => {
+                            this.$store.commit('setUser', user);
 
-                        this.load = false;
-                        this.isUpdate = true;
-                    })
-                    .catch(({response: { data }}) => {
-                        this.load = false;
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Упс...',
-                            text: data.avatar,
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Аватар сохранен!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
                         })
-                    })
+                        .catch(({response: { data }}) => {
+                            this.load = false;
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Упс...',
+                                text: data.avatar,
+                            })
+                        })
+                }
             },
             setPreviewImage() {
                 const input = document.querySelector('#avatar-upload-form');
@@ -100,7 +106,7 @@
                 width: 9vw;
                 height: 9vw;
                 border-radius: 50%;
-                padding: .1vw;
+                padding: .2vw;
                 background: #ff6f1f;
                 background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
                 background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
@@ -134,7 +140,7 @@
             }
 
             label:hover{
-                opacity: .5;
+                background: #ff8f2b;
             }
         }
     }

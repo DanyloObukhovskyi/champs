@@ -30,8 +30,8 @@
                     </multiselect>
                 </div>
                 <div class="form-group">
-                    <button class="button-save" :class="{disable: load, update: !load && isUpdate}" @click="save">
-                        Сохранить изменения <i class="fas fa-check"></i>
+                    <button class="button-save" :class="{disable: load}" @click="save">
+                        Сохранить изменения
                         <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                              viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                             <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
@@ -66,13 +66,13 @@
                     <div class="form-group">
                         <label>Звание</label>
                         <div class="input">
-                            <input type="text" v-model="rankString">
+                            <input type="text" disabled v-model="rankString">
                         </div>
                     </div>
-                    <div class="form-group rank-icon">
+                    <div class="form-group rank-icon" v-if="rankIcon !== null">
                         <label>Ранг</label>
                         <div class="input">
-                            <img src="/images/cabinet/rankIcon.png">
+                            <img :src="'/images/ranks/' + rankIcon">
                         </div>
                     </div>
                 </div>
@@ -116,16 +116,47 @@
                 family: null,
                 email: null,
                 rank: null,
-                rankString: null,
-
                 load: false,
-                isUpdate: false
             }
         },
         computed: {
             ...mapGetters([
-                'user'
+                'user',
             ]),
+            ...mapGetters('cabinet/setting', [
+                'ranks',
+            ]),
+            userRank() {
+                if (this.game !== null) {
+                    const ranks = this.ranks[this.game.code];
+
+                    if (ranks) {
+                        const userRank = ranks.find(e => {
+                            if (Number(e.pointsFrom) <= Number(this.rank)){
+                                if (e.pointsTo === null || Number(e.pointsTo) >= Number(this.rank)){
+                                    return e;
+                                }
+                            }
+                        })
+                        if (userRank !== undefined && userRank !== null){
+                            return userRank;
+                        }
+                    }
+                }
+                return null;
+            },
+            rankString() {
+                if (this.userRank !== null){
+                    return this.userRank.rank;
+                }
+                return null;
+            },
+            rankIcon() {
+                if (this.userRank !== null){
+                    return this.userRank.icon;
+                }
+                return null;
+            }
         },
         watch: {
             'user.game': function () {
@@ -153,35 +184,41 @@
                 this.rankString = this.user.rankString;
             },
             save() {
-                this.load = true;
-                const form = new FormData();
+                if (!this.load) {
+                    this.load = true;
+                    const form = new FormData();
 
-                form.append('name', this.name);
-                form.append('nickname', this.nickname);
-                form.append('family', this.family);
-                form.append('email', this.email);
-                form.append('rank', this.rank);
-                form.append('rankString', this.rankString);
-                form.append('game', this.game ? this.game.code : null);
-                form.append('timezone', this.timezone);
+                    form.append('name', this.name);
+                    form.append('nickname', this.nickname);
+                    form.append('family', this.family);
+                    form.append('email', this.email);
+                    form.append('rank', this.rank);
+                    form.append('rankString', this.rankString);
+                    form.append('game', this.game ? this.game.code : null);
+                    form.append('timezone', this.timezone);
 
-                CabinetService.updateUser(form)
-                    .then(data => {
-                        this.$store.commit('setUser', data)
+                    CabinetService.updateUser(form)
+                        .then(data => {
+                            this.$store.commit('setUser', data)
 
-                        this.load = false;
-                        this.isUpdate = true;
-                    })
-                    .catch(({response: {data}}) => {
-                        this.load = false;
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Упс...',
-                            text: data.email,
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Изменения были сохранены!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
                         })
-                    })
+                        .catch(({response: {data}}) => {
+                            this.load = false;
 
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Упс...',
+                                text: data.email,
+                            })
+                        })
+                }
             }
         },
         mounted() {

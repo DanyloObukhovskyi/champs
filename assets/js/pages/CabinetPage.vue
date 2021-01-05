@@ -70,6 +70,9 @@
                 'user',
                 'loadUser'
             ]),
+        },
+        mounted() {
+            this.$store.dispatch('cabinet/setting/getRanks')
         }
     }
 </script>

@@ -180,7 +180,7 @@ class UserService  extends EntityService
         if (is_int((int)$rank)){
             $gameRank = $this->entityManager
                 ->getRepository(GameRank::class)
-                ->getByPoints($user->getGame()->getCode(), $rank);
+                ->getByPoints($user->getGame(), $rank);
         } else {
             $gameRank = null;
         }
