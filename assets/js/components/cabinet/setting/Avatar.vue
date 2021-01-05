@@ -6,7 +6,8 @@
         <div class="avatar-wrapper">
             <div class="avatar">
                 <div class="gradient">
-                    <img :src="'/uploads/avatars/' + user.photo" v-if="previewImage === null">
+                    <img :src="'/uploads/avatars/' + user.photo" v-if="previewImage === null"
+                         @error="$event.target.src = '/images/noLogo.png'">
                     <img :src="previewImage" v-else @error="previewImage = null">
                 </div>
             </div>
@@ -53,7 +54,7 @@
         },
         methods: {
             updateAvatar() {
-                if (!this.load){
+                if (!this.load) {
                     const form = new FormData(document.forms.uploadAvatar);
 
                     this.load = true;
@@ -69,7 +70,7 @@
                             })
                             this.load = false;
                         })
-                        .catch(({response: { data }}) => {
+                        .catch(({response: {data}}) => {
                             this.load = false;
 
                             Swal.fire({
@@ -139,7 +140,7 @@
                 cursor: pointer;
             }
 
-            label:hover{
+            label:hover {
                 background: #ff8f2b;
             }
         }
