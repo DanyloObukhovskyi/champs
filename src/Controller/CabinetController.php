@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lessons;
 use App\Entity\Teachers;
 use App\Entity\User;
+use App\Service\DownloadFile;
 use App\Service\LessonService;
 use App\Service\TeacherService;
 use App\Service\TimeZoneService;
@@ -339,21 +340,26 @@ class CabinetController extends AbstractController
      */
     public function validationAndUploadAvatar($validator, $file, $user): array
     {
+        global $kernel;
+
         $violations = $validator->validate(
             $file,
             new Image([])
         );
         $error = null;
         $filename = null;
+
+        $path = $kernel->getProjectDir(). $this->getParameter('upload-avatar');
+
         if ($violations->count() > 0) {
             $violation = $violations[0];
             $error = $violation->getMessage();
         } else {
             $filename = md5(uniqid('', true)) . '.' . $file->guessExtension();
-            $file->move($this->getParameter('upload-avatar'), $filename);
+            $file->move($path, $filename);
 
             $filesystem = new Filesystem();
-            $filesystem->remove($this->getParameter('upload-avatar') . $user->getPhoto());
+            $filesystem->remove($path . $user->getPhoto());
         }
         return [
             'filename' => $filename,
