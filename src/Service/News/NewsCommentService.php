@@ -81,7 +81,7 @@ class NewsCommentService extends EntityService
     public function decorator(NewsComment $comment, $user = null)
     {
         $userLike = null;
-        if (isset($user)){
+        if (isset($user)) {
             $userLike = $this->newsCommentLikeService
                 ->getRepository()
                 ->findOneBy([
@@ -89,7 +89,7 @@ class NewsCommentService extends EntityService
                     'user' => $user
                 ]);
 
-            if (isset($userLike)){
+            if (isset($userLike)) {
                 $userLike = $this->newsCommentLikeService->decorator($userLike);
             }
         }
@@ -121,8 +121,7 @@ class NewsCommentService extends EntityService
     {
         $newsComments = [];
 
-        foreach ($comments as $comment)
-        {
+        foreach ($comments as $comment) {
             $newsComments[] = $this->decorator($comment);
         }
         return $newsComments;

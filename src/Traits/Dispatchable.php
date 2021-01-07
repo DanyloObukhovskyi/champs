@@ -27,7 +27,7 @@ trait Dispatchable
 
         if (!$container->has('messenger.default_bus')) {
             $message = class_exists(Envelope::class) ? 'You need to define the "messenger.default_bus" configuration option.' : 'Try running "composer require symfony/messenger".';
-            throw new \LogicException('The message bus is not enabled in your application. '.$message);
+            throw new \LogicException('The message bus is not enabled in your application. ' . $message);
         }
 
         return $container->get('messenger.default_bus')->dispatch($message, $params);

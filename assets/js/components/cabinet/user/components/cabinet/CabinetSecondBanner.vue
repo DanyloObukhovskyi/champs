@@ -57,7 +57,7 @@
 
 <script>
     import {mapGetters} from "vuex";
-    import MarketplaceService from "../../../services/MarketplaceService";
+    import MarketplaceService from "../../../../../services/MarketplaceService";
 
     export default {
         name: "CabinetSecondBanner",
@@ -73,7 +73,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import '../../../../css/animations.css';
+    @import '../../../../../../css/animations.css';
 
     @-webkit-keyframes pulse {
         0% {

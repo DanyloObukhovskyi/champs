@@ -157,7 +157,7 @@ class ReviewController extends AbstractController
             ->getRepository(User::class)
             ->find($request->trainerId);
 
-        if (!empty($this->getUser())){
+        if (!empty($this->getUser())) {
             $lesson = $this->entityManager
                 ->getRepository(Lessons::class)
                 ->findOneBy([
@@ -165,7 +165,7 @@ class ReviewController extends AbstractController
                     'student' => $this->getUser()
                 ]);
 
-            if (isset($lesson)){
+            if (isset($lesson)) {
                 $permission = true;
             }
         }

@@ -8,8 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class LearningController extends AbstractController
 {
     /**
-      * @Route("/ru/learning", name="learning_index")
-      */
+     * @Route("/ru/learning", name="learning_index")
+     */
     public function index()
     {
         return $this->render('templates/learning.html.twig', ['router' => 'learning']);

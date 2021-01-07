@@ -120,7 +120,7 @@ class MatchesController extends AbstractController
 
         $counts = [];
 
-        foreach (MatchService::MATCH_TYPES as $type){
+        foreach (MatchService::MATCH_TYPES as $type) {
             $counts[$type] = $this->matchService->getMatchesCountByType($filters, $type);
         }
 
@@ -176,7 +176,7 @@ class MatchesController extends AbstractController
         $matchDecorate['meetingMatches'] = [];
 
         /** @var Match $meetingMatch */
-        foreach ($meetingMatches as $meetingMatch){
+        foreach ($meetingMatches as $meetingMatch) {
             $matchMeetingMatches = $this->matchService->matchDecorator($meetingMatch);
 
             $matchMeetingMatches['startedAt']['date'] = $this->matchService->translateMatchDate($meetingMatch, $translator);
@@ -188,7 +188,7 @@ class MatchesController extends AbstractController
 
         $comments = $this->matchCommentService
             ->getRepository()->findBy([
-                'match' =>  $match,
+                'match' => $match,
                 'parent' => null
             ]);
 
@@ -201,8 +201,8 @@ class MatchesController extends AbstractController
         );
 
         return $this->json([
-            'match'    => $matchDecorate,
-            'maps'     => $this->mapService->getAll(),
+            'match' => $matchDecorate,
+            'maps' => $this->mapService->getAll(),
             'comments' => $comments
         ]);
     }
@@ -218,7 +218,7 @@ class MatchesController extends AbstractController
     {
         $team1PastMatches = [];
 
-        if (isset($team)){
+        if (isset($team)) {
             $team1PastMatches = $this->pastMatchService->getByMatchAndTeam($match, $team);
         }
 
@@ -235,13 +235,12 @@ class MatchesController extends AbstractController
         $teamMapStatistics = [];
         $matchMapStatistics = [];
 
-        if (isset($team)){
+        if (isset($team)) {
             /** @var MatchMapTeamStatistic[] $matchMapStatistics */
             $matchMapStatistics = $this->matchMapTeamWinRateService->getByMatchAndTeam($match, $team);
         }
         /** @var MatchMapTeamStatistic $mapTeamStatistic */
-        foreach ($matchMapStatistics as $mapTeamStatistic)
-        {
+        foreach ($matchMapStatistics as $mapTeamStatistic) {
             $teamMapStatistics[] = [
                 'map' => $mapTeamStatistic->getMap(),
                 'rating' => $mapTeamStatistic->getWinRate()
@@ -259,7 +258,7 @@ class MatchesController extends AbstractController
     {
         $matchPlayerStatistics = null;
 
-        if(isset($team)){
+        if (isset($team)) {
             $playerStatisticsTeam = $this->getDoctrine()
                 ->getRepository(PlayerStatistics::class)
                 ->findByMatchTeam(
@@ -284,15 +283,14 @@ class MatchesController extends AbstractController
         $teamPersons = [];
         $playerStatistics = $match->getPlayerStatistics();
 
-        if (isset($team)){
+        if (isset($team)) {
             /** @var PlayerStatistics $playerStatistic */
-            foreach ($playerStatistics as $playerStatistic)
-            {
+            foreach ($playerStatistics as $playerStatistic) {
                 $teamId = $playerStatistic->getPlayer()
                     ->getTeam()
                     ->getId();
 
-                if ($teamId === $team->getId()){
+                if ($teamId === $team->getId()) {
                     $teamPerson = $playerStatistic->getPlayer()->getPerson();
 
                     $teamPersons[$teamPerson->getId()] = $this->personService->personDecorate($teamPerson);
@@ -357,8 +355,7 @@ class MatchesController extends AbstractController
         $streams = $match->getStreams();
 //        $streamItems = [];
         $url = null;
-        foreach ($streams as $stream)
-        {
+        foreach ($streams as $stream) {
             /** @var Stream $stream */
             $url = $stream->getUrl();
 //            $streamItems[$stream->getLanguage()] =  $stream->getUrl();
@@ -380,15 +377,13 @@ class MatchesController extends AbstractController
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesNotEnded();
 
-        $items    = [];
+        $items = [];
         $currDate = null;
 
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             /** @var Match $match */
 
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
+            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items)) {
                 $items[date("d", $match->getStartAt()->getTimestamp())] = [
                     "date" => date("d F", $match->getStartAt()->getTimestamp()),
                     "items" => [],
@@ -426,8 +421,8 @@ class MatchesController extends AbstractController
      */
     public function getMatchesByDate($filter)
     {
-        $form          = json_decode($filter);
-        $date          = new \DateTime($form['date']);
+        $form = json_decode($filter);
+        $date = new \DateTime($form['date']);
         $entityManager = $this->getDoctrine()->getManager();
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDate($date);
@@ -447,13 +442,12 @@ class MatchesController extends AbstractController
 
         $parentComment = null;
 
-        if (isset($request->commentId)){
+        if (isset($request->commentId)) {
             $parentComment = $this->matchCommentService->getRepository()
                 ->find($request->commentId);
         }
 
-        if (!empty($this->getUser()) and isset($match))
-        {
+        if (!empty($this->getUser()) and isset($match)) {
             $this->matchCommentService->create(
                 $this->getUser(),
                 $match,
@@ -505,7 +499,7 @@ class MatchesController extends AbstractController
 
         $matchCommentLike = null;
 
-        if (isset($matchComment) and !empty($this->getUser())){
+        if (isset($matchComment) and !empty($this->getUser())) {
             $matchCommentLike = $this->entityManager
                 ->getRepository(MatchCommentLike::class)
                 ->findOneBy([
@@ -513,7 +507,7 @@ class MatchesController extends AbstractController
                     'user' => $this->getUser()
                 ]);
 
-            if (empty($matchCommentLike)){
+            if (empty($matchCommentLike)) {
                 $matchCommentLike = new MatchCommentLike();
                 $matchCommentLike->setUser($this->getUser());
                 $matchCommentLike->setComment($matchComment);

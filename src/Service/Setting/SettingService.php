@@ -74,8 +74,7 @@ class SettingService extends EntityService
         $socialParse = [];
 
         /** @var Setting $set */
-        foreach ($social as $set)
-        {
+        foreach ($social as $set) {
             $socialParse[$set->getKey()] = [
                 'link' => $set->getValue(),
                 'title' => $set->getTitle()

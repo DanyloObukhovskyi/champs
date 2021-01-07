@@ -144,8 +144,7 @@ class EventService extends EntityService
     public function getByNameAndStartDate($name, $startAt)
     {
         $event = $this->repository->getByNameAndStartDate($name, $startAt);
-        if (isset($event))
-        {
+        if (isset($event)) {
             $this->entityManager->persist($event);
             return $event;
         }
@@ -163,8 +162,7 @@ class EventService extends EntityService
     public function getByNameAndBetweenDate($name, $date)
     {
         $event = $this->repository->getByNameAndBetweenDate($name, $date);
-        if (isset($event))
-        {
+        if (isset($event)) {
             $this->entityManager->persist($event);
             return $event;
         }
@@ -181,8 +179,7 @@ class EventService extends EntityService
         $eventItems = [];
 
         /** @var Event $event */
-        foreach ($events as $event)
-        {
+        foreach ($events as $event) {
             $eventItems[] = $this->decorator($event);
         }
         return $eventItems;
@@ -200,16 +197,16 @@ class EventService extends EntityService
         $this->imageService->setImage($event->getImage());
 
         return [
-            "id"          => $event->getId(),
-            "name"        => $event->getName(),
-            "startedAt"   => $event->getStartedAt(),
-            "endedAt"     => $event->getEndedAt(),
-            "image"       => $event->getImage(),
+            "id" => $event->getId(),
+            "name" => $event->getName(),
+            "startedAt" => $event->getStartedAt(),
+            "endedAt" => $event->getEndedAt(),
+            "image" => $event->getImage(),
             'imageHeader' => $event->getImageHeader(),
-            'logoWithPath'=> $this->imageService->getImagePath(),
+            'logoWithPath' => $this->imageService->getImagePath(),
             'startedAtRu' => NewsService::replaceMonth($dayStart),
-            'endedAtRu'   => NewsService::replaceMonth($dayEnd),
-            'views'       => $event->getViews()
+            'endedAtRu' => NewsService::replaceMonth($dayEnd),
+            'views' => $event->getViews()
         ];
     }
 
@@ -226,21 +223,19 @@ class EventService extends EntityService
         /** @var Event $event */
         $event = $this->getByUrl($values['url']);
 
-        if (empty($event))
-        {
+        if (empty($event)) {
             $event = new $this->entity;
             $event->setUrl($values['url'] ?? null);
         }
-        if (!empty($values['started_at']))
-        {
+        if (!empty($values['started_at'])) {
             $startedAt = $values['started_at']->format("Y-m-d");
 
             $event->setStartedAt(new \DateTime($startedAt));
         }
-        if (empty($values['ended_at'])){
-            $values['ended_at'] =  $values['started_at'] ?? null;
+        if (empty($values['ended_at'])) {
+            $values['ended_at'] = $values['started_at'] ?? null;
         }
-        if (is_string($values['ended_at'])){
+        if (is_string($values['ended_at'])) {
             $values['ended_at'] = new \DateTime($values['ended_at']);
         }
 
@@ -253,22 +248,19 @@ class EventService extends EntityService
         $event->setCreatedAt($parseDate);
 
         $event = $this->setImageLogo($event, $values);
-        if (!empty($values['imageHeader']))
-        {
+        if (!empty($values['imageHeader'])) {
             try {
                 $image = DownloadFile::getImage($values['imageHeader']);
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 //
             }
-            if (isset($image))
-            {
+            if (isset($image)) {
                 $event->setImageHeader($image);
             }
         }
-        if (isset($values['flag']))
-        {
+        if (isset($values['flag'])) {
             $flag = $this->flagIconService->getFlagByOrigName($values['flag']['name']);
-            if (empty($flag)){
+            if (empty($flag)) {
                 $flag = $this->flagIconService->createOrUpdate($values['flag']);
             }
             $event->setFlagIcon($flag);
@@ -284,10 +276,8 @@ class EventService extends EntityService
      */
     public function setPrizeDistributions($event, $prizeDistributions)
     {
-        if (isset($prizeDistributions))
-        {
-            foreach ($prizeDistributions as $prizeDistribution)
-            {
+        if (isset($prizeDistributions)) {
+            foreach ($prizeDistributions as $prizeDistribution) {
                 $this->eventPrizeDistributionService->create($prizeDistribution, $event);
             }
         }
@@ -299,14 +289,11 @@ class EventService extends EntityService
      */
     public function setGroupPLay($event, $groupPlay)
     {
-        if (isset($groupPlay)){
-            foreach ($groupPlay as $groupName => $teams)
-            {
-                foreach ($teams as $teamName => $teamFields)
-                {
+        if (isset($groupPlay)) {
+            foreach ($groupPlay as $groupName => $teams) {
+                foreach ($teams as $teamName => $teamFields) {
                     $team = $this->teamService->getByName($teamName);
-                    if (isset($team))
-                    {
+                    if (isset($team)) {
                         $this->eventGroupPlayService->create($event, $team, $groupName, $teamFields);
                     }
                 }
@@ -320,12 +307,11 @@ class EventService extends EntityService
      */
     public function setMapPool($event, $mapPool)
     {
-        if (isset($mapPool))
-        {
-            foreach ($mapPool as $mapName){
+        if (isset($mapPool)) {
+            foreach ($mapPool as $mapName) {
                 $map = $this->mapService->getByName($mapName);
 
-                if (isset($map)){
+                if (isset($map)) {
                     $this->eventMapPoolService->create($event, $map);
                 }
             }
@@ -341,14 +327,11 @@ class EventService extends EntityService
      */
     public function setRelatedEvents($event, $relatedEvents)
     {
-        if (isset($relatedEvents))
-        {
-            foreach ($relatedEvents as $relatedEvent)
-            {
+        if (isset($relatedEvents)) {
+            foreach ($relatedEvents as $relatedEvent) {
                 $relatedEventEntity = $this->createBaseEvent($relatedEvent);
 
-                if (isset($relatedEventEntity))
-                {
+                if (isset($relatedEventEntity)) {
                     $this->relatedEventService->create($event, $relatedEventEntity);
                 }
             }
@@ -379,12 +362,10 @@ class EventService extends EntityService
      */
     public function createEventTeamsAttending($event, $teamsAttending)
     {
-        foreach ($teamsAttending as $teamAttending)
-        {
+        foreach ($teamsAttending as $teamAttending) {
             $team = $this->teamService->getByName($teamAttending['teamName']);
 
-            if (empty($team))
-            {
+            if (empty($team)) {
                 continue;
             }
             $this->eventTeamAttendingService->create($event, $team, $teamAttending['number']);
@@ -424,11 +405,9 @@ class EventService extends EntityService
      */
     public function setEventImage($event, $image)
     {
-        if (!empty($image))
-        {
+        if (!empty($image)) {
             $image = DownloadFile::getImage($image);
-            if (isset($image))
-            {
+            if (isset($image)) {
                 $event->setImage($image);
             }
         }
@@ -442,18 +421,15 @@ class EventService extends EntityService
      */
     public function setImageLogo($event, $values)
     {
-        if (!empty($values['image']))
-        {
+        if (!empty($values['image'])) {
             $image = DownloadFile::getImage($values['image']);
-            if (isset($image))
-            {
+            if (isset($image)) {
                 $event->setImage($image);
             }
         } else {
             /** @var Event $prevent */
             $prevent = $this->getByName($values['name']);
-            if (isset($prevent))
-            {
+            if (isset($prevent)) {
                 $event->setImage($prevent->getImage());
             }
         }
@@ -470,20 +446,17 @@ class EventService extends EntityService
     {
         $brackets = $brackets['rounds'] ?? [];
 
-        foreach ($brackets as $type => $bracket)
-        {
-            foreach ($bracket as $name => $matches){
+        foreach ($brackets as $type => $bracket) {
+            foreach ($bracket as $name => $matches) {
 
                 foreach ($matches as $match) {
-                    if (isset($match['team1']['name']))
-                    {
+                    if (isset($match['team1']['name'])) {
                         $team1 = $this->teamService->getByName($match['team1']['name']);
                     }
-                    if (isset($match['team2']['name']))
-                    {
+                    if (isset($match['team2']['name'])) {
                         $team2 = $this->teamService->getByName($match['team2']['name']);
                     }
-                    if (isset($match['matchUrl'])){
+                    if (isset($match['matchUrl'])) {
                         $matchEntity = $this->matchService->findByUrl($match['matchUrl']);
 
                         if (empty($matchEntity)) {
@@ -518,7 +491,7 @@ class EventService extends EntityService
     {
         $filters = (object)[
             'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
-            'dateTo' =>  MatchService::parseDate($filters->dateTo ?? null),
+            'dateTo' => MatchService::parseDate($filters->dateTo ?? null),
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
         ];
@@ -542,7 +515,7 @@ class EventService extends EntityService
     {
         $filters = (object)[
             'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
-            'dateTo' =>  MatchService::parseDate($filters->dateTo ?? null),
+            'dateTo' => MatchService::parseDate($filters->dateTo ?? null),
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
             'name' => $filters->name ?? null,
@@ -550,8 +523,7 @@ class EventService extends EntityService
 
         $result = 0;
 
-        if (in_array($type, self::TYPES, false))
-        {
+        if (in_array($type, self::TYPES, false)) {
             $result = $this->repository->getEventsQueryByType($filters, $type)
                 ->select('count(e.id)')
                 ->getQuery()

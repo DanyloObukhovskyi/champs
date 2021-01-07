@@ -53,14 +53,12 @@ class PaymentController extends AbstractController
         $paymentService = new YandexKassaPaymentService($this->getDoctrine()->getManager());
 
         $cost = 0;
-        foreach ($lessons as $lesson)
-        {
+        foreach ($lessons as $lesson) {
             $cost += (int)$lesson->getCost();
         }
         $payment = $paymentService->createPayment($lessons, $cost, $_ENV['YANDEX_KASSA_RETURN_URL']);
 
-        if($payment && $payment->getConfirmation()->getType() === ConfirmationType::REDIRECT)
-        {
+        if ($payment && $payment->getConfirmation()->getType() === ConfirmationType::REDIRECT) {
             return $this->redirect($payment->getConfirmation()->getConfirmationUrl());
         }
 
@@ -75,8 +73,7 @@ class PaymentController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (empty($user))
-        {
+        if (empty($user)) {
             return $this->redirectToRoute('main');
         }
         /** @var Payment $lesson */
@@ -89,8 +86,7 @@ class PaymentController extends AbstractController
 
         $isPayed = false;
 
-        if (isset($paymentLesson) and $paymentLesson->getPaymentStatus() !== 0)
-        {
+        if (isset($paymentLesson) and $paymentLesson->getPaymentStatus() !== 0) {
             $message = 'Спасибо за покупку!';
             $messageClass = 'text-success';
 
@@ -115,15 +111,13 @@ class PaymentController extends AbstractController
         $this->logger->info(json_encode($requestBody));
 
         try {
-            if ($requestBody['event'] === NotificationEventType::PAYMENT_SUCCEEDED)
-            {
+            if ($requestBody['event'] === NotificationEventType::PAYMENT_SUCCEEDED) {
                 $notification = new NotificationSucceeded($requestBody);
 
                 (new YandexKassaPaymentService($this->getDoctrine()->getManager()))->markSuccess($notification->getObject()->getId());
             }
         } catch (\Exception $e) {
-            if ($requestBody['event'] === NotificationEventType::PAYMENT_CANCELED)
-            {
+            if ($requestBody['event'] === NotificationEventType::PAYMENT_CANCELED) {
                 $notification = new NotificationSucceeded($requestBody);
 
                 (new YandexKassaPaymentService($this->getDoctrine()->getManager()))->onCancel($notification->getObject()->getId());

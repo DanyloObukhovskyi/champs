@@ -106,17 +106,17 @@ class MainController extends DefController
     /**
      * @Route("/ru/main/matches")
      */
-	public function getMainMatches(Request $request)
+    public function getMainMatches(Request $request)
     {
         $request = json_decode($request->getContent(), false);
-        $date = !empty($request->date) ? new \DateTime($request->date): new \DateTime();
+        $date = !empty($request->date) ? new \DateTime($request->date) : new \DateTime();
 
         $matches = $this->entityManager
             ->getRepository(Match::class)
             ->findMatchesByDate($date);
 
         $matchesParse = [];
-        foreach ($matches as $match){
+        foreach ($matches as $match) {
             $matchesParse[] = $this->matchService->matchDecorator($match);
         }
 

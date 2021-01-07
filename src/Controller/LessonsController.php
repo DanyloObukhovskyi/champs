@@ -53,7 +53,7 @@ class LessonsController extends AbstractController
     /**
      * LessonsController constructor.
      */
-    public function __construct( EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->lessonsService = new LessonService($entityManager);
         $this->scheduleService = new ScheduleService($entityManager);
@@ -84,9 +84,8 @@ class LessonsController extends AbstractController
 
         $userId = (int)$form->user_id;
 
-        if(($lesson->getTrainer()->getId() === $userId) || ($lesson->getStudent()->getId() === $userId))
-        {
-            if($form->istrainer === true){
+        if (($lesson->getTrainer()->getId() === $userId) || ($lesson->getStudent()->getId() === $userId)) {
+            if ($form->istrainer === true) {
                 $this->dispatchMessage(new EndLessonMail($mailer, $lesson, true));
 
                 $lesson->setTrainerStatus(Lessons::STATUS_ENDED);
@@ -95,8 +94,7 @@ class LessonsController extends AbstractController
                 $lesson->setStudentStatus(Lessons::STATUS_ENDED);
             }
 
-            if(($lesson->getTrainerStatus()) && ($lesson->getStudentStatus()))
-            {
+            if (($lesson->getTrainerStatus()) && ($lesson->getStudentStatus())) {
                 $lesson->setStatus(Lessons::STATUS_ENDED);
                 /** @var User $user */
                 $user = $this->getDoctrine()
@@ -106,7 +104,7 @@ class LessonsController extends AbstractController
                 /** @var PurseHistory $purse */
                 $purse = new PurseHistory();
                 $purse->setUser($user);
-                $purse->setOperation($lesson->getCost()/2);
+                $purse->setOperation($lesson->getCost() / 2);
                 $purse->setDatetime($lesson->getDateTimeFrom());
 
                 $user->setPurse($user->getPurse() + $purse->getOperation());
@@ -114,7 +112,7 @@ class LessonsController extends AbstractController
                 $entityManager->persist($purse, $user, $lesson);
 
             }
-        }else{
+        } else {
             return new JsonResponse('У вас нет прав на закрытие тренировки');
         }
 
@@ -142,15 +140,14 @@ class LessonsController extends AbstractController
             'userid' => $trainer->getId()
         ]);
 
-        if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS !== 0)
-        {
+        if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS !== 0) {
             return $this->json(['message' => 'Неверные данные!']);
         }
 
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
             $trainerEntity->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
-        if ($gmtNumeric < 0){
+        if ($gmtNumeric < 0) {
             $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
         } else {
             $trainerTimezone = (int)gmdate("g", $gmtNumeric);
@@ -183,8 +180,7 @@ class LessonsController extends AbstractController
 
         $lessons = $this->lessonsService->getLessonsByIds($lessonIds);
 
-        foreach ($lessons as $lesson)
-        {
+        foreach ($lessons as $lesson) {
             // Dispatch payment mail
             $this->dispatchMessage(new PaymentLessonMail($mailer, $lesson));
         }
@@ -203,8 +199,7 @@ class LessonsController extends AbstractController
 
         $lessons = $this->lessonsService->getEndedLessonsByTrainerAndUser($trainerId, $userId);
 
-        foreach ($lessons as $lesson)
-        {
+        foreach ($lessons as $lesson) {
             $student = $this->getDoctrine()->getRepository(User::class)->find($userId);
             $trainer = $this->getDoctrine()->getRepository(User::class)->find($trainerId);
 
@@ -213,12 +208,11 @@ class LessonsController extends AbstractController
                 ->getRepository(Review::class)
                 ->findByLessonAndTrainerAndStudent($lesson, $trainer, $student);
 
-            if (empty($lessonReview))
-            {
+            if (empty($lessonReview)) {
                 return $this->json($lesson->getId());
             }
         }
-        return  $this->json(null);
+        return $this->json(null);
     }
 
     /**
@@ -231,22 +225,18 @@ class LessonsController extends AbstractController
         $trainer = $this->getUser();
         $lesson = $this->lessonsService->find($lessonId);
 
-        if (isset($lesson))
-        {
-            if (empty($trainer))
-            {
+        if (isset($lesson)) {
+            if (empty($trainer)) {
                 return $this->render('templates/login.html.twig', [
                     'router' => 'login'
                 ]);
             }
-            if ($trainer->getId() === $lesson->getTrainer()->getId())
-            {
+            if ($trainer->getId() === $lesson->getTrainer()->getId()) {
                 $lesson = $this->lessonsService->setCanceled($lesson);
                 $lessonTimes = $this->lessonTimeService->getTimesByLesson($lesson);
 
                 /** @var Schedule $time */
-                foreach ($lessonTimes as $time)
-                {
+                foreach ($lessonTimes as $time) {
                     $this->scheduleService->setScheduleStatus($time, Schedule::TIME_STATUS_BLOCK);
                 }
                 $this->addFlash('notice', 'Урок был отменен!');

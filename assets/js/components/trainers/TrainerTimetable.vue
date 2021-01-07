@@ -1,14 +1,14 @@
 <template>
     <div class="timetable">
         <div class="trainer-nickname">
-            Запись на тренировку к <span>{{trainer.nickname}}</span>
+            Запись на тренировку к <span>{{ trainer.nickname }}</span>
         </div>
         <div class="trainer-timezone">
             <img src="/images/matches/time.svg">
             <div class="trainer-gmt">
                 часовой пояс тренера
                 <span>
-                    {{trainer.timeZone}}
+                    {{ trainer.timeZone }}
                 </span>
             </div>
         </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="payment-button">
             <div class="result-time" v-show="resultTime !== null">
-                {{resultTime}}
+                {{ resultTime }}
             </div>
             <button class="payment-btn"
                     data-toggle="modal"
@@ -201,164 +201,164 @@
 </script>
 
 <style scoped lang="scss">
-    .timetable {
-        padding: 1vw;
-        margin-top: 1vw;
-        background: #eff0f0;
+  .timetable {
+	padding: 1vw;
+	margin-top: 1vw;
+	background: #eff0f0;
 
-        .trainer-nickname {
-            color: #ff6d1d;
-            font-size: 1.2vw;
-            font-weight: 600;
+	.trainer-nickname {
+	  color: #ff6d1d;
+	  font-size: 1.2vw;
+	  font-weight: 600;
 
-            span {
-                color: black;
-            }
-        }
+	  span {
+		color: black;
+	  }
+	}
 
-        .trainer-timezone {
-            display: flex;
-            font-size: .9vw;
-            align-items: center;
+	.trainer-timezone {
+	  display: flex;
+	  font-size: .9vw;
+	  align-items: center;
 
-            img {
-                margin-right: .3vw;
-                width: .8vw;
-            }
+	  img {
+		margin-right: .3vw;
+		width: .8vw;
+	  }
 
-            .trainer-gmt {
-                color: #7c7c7c;
+	  .trainer-gmt {
+		color: #7c7c7c;
 
-                span {
-                    color: #5c6b79;
-                }
-            }
-        }
+		span {
+		  color: #5c6b79;
+		}
+	  }
+	}
 
-        .container-wrapper {
-            display: flex;
-            justify-content: space-between;
+	.container-wrapper {
+	  display: flex;
+	  justify-content: space-between;
 
-            .left-box {
-                margin-top: 2vw;
-                width: 30%;
+	  .left-box {
+		margin-top: 2vw;
+		width: 30%;
 
-                .trainer-calendar {
-                    .trainer-calendar-title {
-                        color: #ff6d1d;
-                        font-size: 1vw;
-                        font-weight: 600;
-                    }
-                }
-            }
+		.trainer-calendar {
+		  .trainer-calendar-title {
+			color: #ff6d1d;
+			font-size: 1vw;
+			font-weight: 600;
+		  }
+		}
+	  }
 
-            .right-box {
-                margin-top: 2vw;
-                width: 60%;
+	  .right-box {
+		margin-top: 2vw;
+		width: 60%;
 
-                .trainer-timetable {
-                    .trainer-timetable-title {
-                        color: #ff6d1d;
-                        font-size: 1vw;
-                        font-weight: 600;
-                    }
+		.trainer-timetable {
+		  .trainer-timetable-title {
+			color: #ff6d1d;
+			font-size: 1vw;
+			font-weight: 600;
+		  }
 
-                    .time-status-description {
-                        font-size: .9vw;
-                        display: flex;
-                        align-items: center;
-                        margin-top: 1.5vw;
+		  .time-status-description {
+			font-size: .9vw;
+			display: flex;
+			align-items: center;
+			margin-top: 1.5vw;
 
-                        .free {
-                            margin-right: .2vw;
-                            width: .7vw;
-                            border: .2vw solid #28a745;
-                            height: .7vw;
-                            display: inline-block;
-                            border-radius: 50%;
-                        }
+			.free {
+			  margin-right: .2vw;
+			  width: .7vw;
+			  border: .2vw solid #28a745;
+			  height: .7vw;
+			  display: inline-block;
+			  border-radius: 50%;
+			}
 
-                        .busy {
-                            margin-left: 1vw;
-                            margin-right: .2vw;
-                            width: .7vw;
-                            border: .2vw solid #808387;
-                            background-color: #fa1b1b;
-                            height: .7vw;
-                            display: inline-block;
-                            border-radius: 50%;
-                        }
-                    }
+			.busy {
+			  margin-left: 1vw;
+			  margin-right: .2vw;
+			  width: .7vw;
+			  border: .2vw solid #808387;
+			  background-color: #fa1b1b;
+			  height: .7vw;
+			  display: inline-block;
+			  border-radius: 50%;
+			}
+		  }
 
-                    .loader {
-                        height: 21vw;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
-                }
-            }
-        }
+		  .loader {
+			height: 21vw;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		  }
+		}
+	  }
+	}
 
-        .payment-button {
-            display: flex;
+	.payment-button {
+	  display: flex;
 
-            .result-time {
-                background-color: #ffffff;
-                padding: 1vw;
-                font-size: 1vw;
-                margin-right: 1vw;
-            }
+	  .result-time {
+		background-color: #ffffff;
+		padding: 1vw;
+		font-size: 1vw;
+		margin-right: 1vw;
+	  }
 
-            .payment-btn {
-                color: white;
-                border: unset;
-                outline: unset;
-                background: #ff6d1d;
-                padding: 1vw 3vw;
-                cursor: pointer;
+	  .payment-btn {
+		color: white;
+		border: unset;
+		outline: unset;
+		background: #ff6d1d;
+		padding: 1vw 3vw;
+		cursor: pointer;
 
-                &.disable {
-                    opacity: .5;
-                }
+		&.disable {
+		  opacity: .5;
+		}
 
-                &:hover {
-                    opacity: .5;
-                }
-            }
-        }
-    }
+		&:hover {
+		  opacity: .5;
+		}
+	  }
+	}
+  }
 
-    .dark {
-        .timetable {
-            background: #1e2123;
+  .dark {
+	.timetable {
+	  background: #1e2123;
 
-            .trainer-nickname {
-                color: #ff6d1d;
+	  .trainer-nickname {
+		color: #ff6d1d;
 
-                span {
-                    color: white;
-                }
-            }
+		span {
+		  color: white;
+		}
+	  }
 
-            .container-wrapper {
-                .right-box {
-                    .trainer-timetable {
-                        .time-status-description {
-                            color: #9d9fa0;
-                        }
-                    }
-                }
-            }
+	  .container-wrapper {
+		.right-box {
+		  .trainer-timetable {
+			.time-status-description {
+			  color: #9d9fa0;
+			}
+		  }
+		}
+	  }
 
-            .payment-button {
-                display: flex;
+	  .payment-button {
+		display: flex;
 
-                .result-time {
-                    background-color: #171a1b;
-                    color: white;
-                }
-            }
-        }
-    }
+		.result-time {
+		  background-color: #171a1b;
+		  color: white;
+		}
+	  }
+	}
+  }
 </style>

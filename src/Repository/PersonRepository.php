@@ -27,17 +27,14 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function getByNick($nick): ?Person
     {
-        try
-        {
+        try {
             $query = $this->createQueryBuilder('p')
                 ->andWhere('p.nick like :nick')
                 ->setParameter('nick', "%$nick%")
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getOneOrNullResult();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -51,8 +48,7 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function getByNameAndNick($name, $nick): ?Person
     {
-        try
-        {
+        try {
             $query = $this->createQueryBuilder('p')
                 ->andWhere('p.name = :name')
                 ->andWhere('p.nick = :nick')
@@ -61,9 +57,7 @@ class PersonRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getOneOrNullResult();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -85,7 +79,7 @@ class PersonRepository extends ServiceEntityRepository
         return $weekPlayer;
     }
 
-	public function getPersonsByTeam(Team $team)
+    public function getPersonsByTeam(Team $team)
     {
         return $this->createQueryBuilder('p')
             ->leftJoin('p.player', 'pp')

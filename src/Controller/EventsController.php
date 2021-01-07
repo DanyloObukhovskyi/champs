@@ -56,7 +56,7 @@ class EventsController extends AbstractController
     {
         $this->entityManager = $entityManager;
 
-        $this->matchService =  new MatchService($this->entityManager);
+        $this->matchService = new MatchService($this->entityManager);
         $this->eventService = new EventService($this->entityManager);
 
         $this->eventPrizeDistributionService = new EventPrizeDistributionService($this->entityManager);
@@ -89,7 +89,7 @@ class EventsController extends AbstractController
         $events = $this->eventService->eventsDecorator($events);
 
         $counts = [];
-        foreach (MatchService::MATCH_TYPES as $type){
+        foreach (MatchService::MATCH_TYPES as $type) {
             $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
         }
         return $this->json([
@@ -138,7 +138,7 @@ class EventsController extends AbstractController
 
         $teams = [];
         /** @var EventTeamAttending $team */
-        foreach ($event->getTeamsAttending() as $team){
+        foreach ($event->getTeamsAttending() as $team) {
             $teams[] = $team->getTeam();
         }
         $teamsLineups = $this->teamService->teamsDecorator($teams);
@@ -175,21 +175,20 @@ class EventsController extends AbstractController
         $events = $this->eventService->eventsDecorator($events);
 
         $counts = [];
-        foreach (MatchService::MATCH_TYPES as $type){
+        foreach (MatchService::MATCH_TYPES as $type) {
             if ((isset($filters->game) and $filters->game !== 'cs') or
-                (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')){
+                (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')) {
                 $counts[$type] = 0;
             } else {
                 $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
             }
         }
         if ((isset($filters->game) and $filters->game !== 'cs') or
-            (isset($filters->tournamentType) and $filters->tournamentType !== 'pro'))
-        {
+            (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')) {
             $events = [];
         }
         $digestEvents = [];
-        foreach ($events as $event){
+        foreach ($events as $event) {
             $digestEvent = $event;
 
             $digestEvent['type'] = 'pro';

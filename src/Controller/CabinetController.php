@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\GameRank;
 use App\Entity\Lessons;
+use App\Entity\Schedule;
 use App\Entity\Teachers;
 use App\Entity\User;
-use App\Service\DownloadFile;
+use App\Service\Game\GameRankService;
 use App\Service\LessonService;
+use App\Service\ScheduleService;
 use App\Service\TeacherService;
 use App\Service\TimeZoneService;
 use App\Service\UserService;
@@ -63,6 +66,16 @@ class CabinetController extends AbstractController
      */
     public $youTubeService;
 
+    /**
+     * @var GameRankService
+     */
+    public $gameRankService;
+
+    /**
+     * @var ScheduleService
+     */
+    public $scheduleService;
+
     public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->entityManager = $entityManager;
@@ -73,7 +86,11 @@ class CabinetController extends AbstractController
 
         $this->userService = new UserService($entityManager);
         $this->lessonService = new LessonService($entityManager);
+
         $this->teacherService = new TeacherService($entityManager);
+        $this->gameRankService = new GameRankService($entityManager);
+
+        $this->scheduleService = new ScheduleService($entityManager);
     }
 
 
@@ -104,6 +121,19 @@ class CabinetController extends AbstractController
 
     public function getUserData(User $user)
     {
+        $userLvl = 0;
+
+        if (!empty($user->getGame())) {
+            $gameRank = $this->gameRankService->getByGameAndPoints(
+                $user->getGame(),
+                $user->getRang()
+            );
+            /** @var GameRank $gameRank */
+            if (isset($gameRank)) {
+                $userLvl = $gameRank->getRank();
+            }
+        }
+
         return [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -116,7 +146,8 @@ class CabinetController extends AbstractController
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
             'timezone' => $user->getTimezone(),
-            'isTrainer' => $user->getIsTrainer()
+            'isTrainer' => $user->getIsTrainer(),
+            'level' => $userLvl
         ];
     }
 
@@ -138,9 +169,25 @@ class CabinetController extends AbstractController
                 ->getRepository(Lessons::class)
                 ->findByTrainerId($user->getId());
         }
-        $parseLessons['future'] = [];
-        $parseLessons['past'] = [];
+        $parseLessons = $this->decorateLessons($lessons, $user, $data->timezone, $translator);
 
+        return $this->json($parseLessons);
+    }
+
+    /**
+     * @param $lessons
+     * @param $user
+     * @param $timezone
+     * @param $translator
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function decorateLessons($lessons, $user, $timezone, $translator)
+    {
+        $parseLessons = [];
         /** @var Lessons $lesson */
         foreach ($lessons as $lesson) {
             $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
@@ -155,9 +202,9 @@ class CabinetController extends AbstractController
 
             $dateRu = $this->dateTranslate($dateFrom, $translator);
 
-            $parseLessons[$type][$dateRu][] = $this->decorateLesson($lesson, $user, $data->timezone, $translator);
+            $parseLessons[$type][$dateRu][] = $this->decorateLesson($lesson, $user, $timezone, $translator);
         }
-        return $this->json($parseLessons);
+        return $parseLessons;
     }
 
     /**
@@ -353,7 +400,7 @@ class CabinetController extends AbstractController
         $error = null;
         $filename = null;
 
-        $path = $kernel->getProjectDir(). $this->getParameter('upload-avatar');
+        $path = $kernel->getProjectDir() . $this->getParameter('upload-avatar');
 
         if ($violations->count() > 0) {
             $violation = $violations[0];
@@ -415,7 +462,7 @@ class CabinetController extends AbstractController
 
         $user = $this->getUser();
 
-        if (isset($lesson) and isset($data->notice)){
+        if (isset($lesson) and isset($data->notice)) {
             $lesson->setTrainerNotice($data->notice);
 
             $this->entityManager->persist($lesson);
@@ -446,5 +493,120 @@ class CabinetController extends AbstractController
         $parseLesson = $this->decorateLesson($lesson, $user, null, $translator);
 
         return $this->json($parseLesson);
+    }
+
+    /**
+     * @Route("/cabinet/get/first-lessons/and/earned", name="cabinet_get_first_lessons_and_earned")
+     */
+    public function getFirstLessonsAndEarned(TranslatorInterface $translator)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $lessons = [];
+        $earned = [];
+
+        $currentMonth = $translator->trans('earned.per this month');
+        $prevMonth = $translator->trans('earned.per previous month');
+
+        $earned[$currentMonth] = 0;
+        $earned[$prevMonth] = 0;
+
+        if (isset($user) and $user->getIsTrainer()) {
+            $lessonsEntities = $this->lessonService->getFutureByTeacher($user, 3);
+            $lessons = $this->decorateLessons($lessonsEntities, $user, null, $translator);
+
+            $date = Carbon::now();
+            $date->setDay(1);
+
+            $datePrev = Carbon::now()->subMonth();
+            $datePrev->setDay(1);
+
+            $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
+            $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);
+        }
+
+        return $this->json(
+            compact(
+                'lessons',
+                'earned'
+            )
+        );
+    }
+
+    /**
+     * Schedule /calendar/*
+     *
+     * @Route("/cabinet/calendar/set/trainer/date/day", methods={"POST"})
+     */
+    public function toggleTrainerScheduleDay(Request $request)
+    {
+        $form = json_decode($request->getContent(), false);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $schedules = [];
+        if (isset($form->date) and isset($form->time) and isset($user)) {
+            $date = new \DateTime($form->date);
+
+            /** @var Schedule $schedule
+             */
+            $schedule = $this->scheduleService->getByTrainerDateAndTime(
+                $user,
+                $date,
+                $form->time->from
+            );
+            if (isset($schedule)) {
+                if ($schedule->getStatus() !== Schedule::TIME_STATUS_RESERVED) {
+                    if ($schedule->getStatus() === Schedule::TIME_STATUS_BLOCK) {
+                        $schedule->setStatus(Schedule::TIME_STATUS_OPEN);
+                    } else {
+                        $schedule->setStatus(Schedule::TIME_STATUS_BLOCK);
+                    }
+
+                }
+            } else {
+                $schedule = new Schedule();
+                $schedule->setTrainer($user);
+                $schedule->setDate($date);
+                $schedule->setTime($form->time->from);
+                $schedule->setStatus(Schedule::TIME_STATUS_OPEN);
+            }
+            $this->entityManager->persist($schedule);
+            $this->entityManager->flush();
+
+            $schedules = $this->getTrainerScheduleDay($user, $date);
+        }
+        return $this->json($schedules);
+    }
+
+    /**
+     * @Route("/cabinet/calendar/trainer/date/day", methods={"POST"})
+     */
+    public function viewCabinetScheduleDay(Request $request)
+    {
+        $form = json_decode($request->getContent(), false);
+        /** @var User $user */
+        $user = $this->getUser();
+        $date = new \DateTime($form->date);
+
+        return $this->json($this->getTrainerScheduleDay($user, $date));
+    }
+
+    /**
+     * @param User $trainer
+     * @param $date
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTrainerScheduleDay(User $trainer, $date)
+    {
+        $user = $this->getUser();
+
+        $schedule = [];
+        if (isset($user)) {
+            $schedule = $this->scheduleService->createDay($trainer->getId(), $date);
+        }
+        return $schedule;
     }
 }

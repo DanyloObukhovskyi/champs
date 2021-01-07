@@ -29,8 +29,8 @@ class TrainerLessonPrice implements \JsonSerializable
     private $trainer;
 
     /**
-    * @ORM\Column(type="string")
-    */
+     * @ORM\Column(type="string")
+     */
     private $lessonType;
 
     /**
@@ -89,9 +89,8 @@ class TrainerLessonPrice implements \JsonSerializable
 
         $cost = $this->price;
 
-        if (isset($percentageMarkup))
-        {
-            $cost = ($this->price / 100)  * ($percentageMarkup + 100);
+        if (isset($percentageMarkup)) {
+            $cost = ($this->price / 100) * ($percentageMarkup + 100);
         }
         return $cost;
     }

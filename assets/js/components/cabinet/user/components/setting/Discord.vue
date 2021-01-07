@@ -27,7 +27,7 @@ import Swal from "sweetalert2";
 </template>
 
 <script>
-    import CabinetService from "../../../services/CabinetService";
+    import CabinetService from "../../../../../services/CabinetService";
     import Swal from 'sweetalert2'
 
     export default {

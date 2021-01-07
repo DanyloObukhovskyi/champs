@@ -80,7 +80,7 @@ class RatingPersonService extends EntityService
     {
         $players = [];
 
-        foreach ($ratingPlayers as $ratingPlayer){
+        foreach ($ratingPlayers as $ratingPlayer) {
             $players[] = $this->retingPlayerDecorator($ratingPlayer);
         }
         return $players;

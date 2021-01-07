@@ -22,7 +22,7 @@ class RegistrationController extends AbstractController
 
     private $mailer;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder,SwiftMailer $mailer)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, SwiftMailer $mailer)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->mailer = $mailer;
@@ -49,7 +49,7 @@ class RegistrationController extends AbstractController
 
             $user->setIsTrainer(0);
             $user->setPurse(0);
-            
+
             // Save
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -68,7 +68,7 @@ class RegistrationController extends AbstractController
                 'router' => 'main',
                 'route' => 'app_login',
                 'status' => 200,
-                    ]);
+            ]);
         }
         return $this->json([
             'error' => "Form not valid",
@@ -89,16 +89,15 @@ class RegistrationController extends AbstractController
      */
     public function mail()
     {
-       $message = (new \Swift_Message('Hello Email'))
+        $message = (new \Swift_Message('Hello Email'))
             ->setFrom('mailer@champs.pro')
             ->setTo('hawkprimo1997@mail.ru')
             ->setBody(
                 'Поздравляем! Вы успешно зарегистрировались на сайте champs.pro',
                 'text/html'
-            )
-        ;
+            );
 
-         return new Response($this->mailer->send($message));
+        return new Response($this->mailer->send($message));
     }
 
 }

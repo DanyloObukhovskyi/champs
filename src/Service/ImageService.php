@@ -22,8 +22,8 @@ class ImageService
     public function setImage($image, $withPath = false)
     {
         $this->image = $image;
-        if (!$withPath and !empty($image)){
-            $this->image = self::PATH.$this->image;
+        if (!$withPath and !empty($image)) {
+            $this->image = self::PATH . $this->image;
         }
         return $this->image;
     }
@@ -33,7 +33,7 @@ class ImageService
      */
     public function isExist(): bool
     {
-        return file_exists(__DIR__.'/../../public'.$this->image);
+        return file_exists(__DIR__ . '/../../public' . $this->image);
     }
 
     /**
@@ -41,7 +41,7 @@ class ImageService
      */
     public function getImagePath(): string
     {
-        if(empty($this->image) or !$this->isExist()){
+        if (empty($this->image) or !$this->isExist()) {
             return self::DEFAULT;
         }
         return $this->image;

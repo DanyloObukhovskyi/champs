@@ -43,8 +43,7 @@ class TrainerVideoService extends EntityService
     public function deleteVideo(User $trainer, $video)
     {
         $trainerVideo = $this->repository->getByTrainerAndVideo($trainer, $video);
-        if (isset($trainerVideo))
-        {
+        if (isset($trainerVideo)) {
             $this->delete($trainerVideo);
         }
     }
@@ -67,11 +66,10 @@ class TrainerVideoService extends EntityService
         $videosUrls = [];
 
         /** @var TrainerVideo $video */
-        foreach ($videos as $video)
-        {
+        foreach ($videos as $video) {
             $video = explode('/', $video->getVideoUrl());
             $video = end($video);
-            
+
             $video = str_replace('watch?v=', '', $video);
             $videosUrls[] = $video;
         }
@@ -84,10 +82,8 @@ class TrainerVideoService extends EntityService
      */
     public function isYouTubeVideo($video)
     {
-        foreach (self::YOUTUBE_TYPES as $type)
-        {
-            if (strpos($video, $type) !== false)
-            {
+        foreach (self::YOUTUBE_TYPES as $type) {
+            if (strpos($video, $type) !== false) {
                 return true;
             }
         }

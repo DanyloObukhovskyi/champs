@@ -126,7 +126,7 @@ class Match implements \JsonSerializable
         $this->matchPickAndBans = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -201,12 +201,10 @@ class Match implements \JsonSerializable
     {
         $score = 0;
 
-        foreach ($this->matchStatistics as $match_statistic)
-        {
+        foreach ($this->matchStatistics as $match_statistic) {
             /** @var MatchStatistics $match_statistic */
             $method = "getScore{$team}";
-            if($match_statistic->$method() >= 16)
-            {
+            if ($match_statistic->$method() >= 16) {
                 $score++;
             }
         }
@@ -325,17 +323,15 @@ class Match implements \JsonSerializable
 
     public function getPlayerStatistics(): Collection
     {
-        return  $this->playerStatistics;
+        return $this->playerStatistics;
     }
 
     public function getRounds(int $map_id)
     {
         $score = 0;
 
-        foreach ($this->getMatchStatistics() as $match_statistic)
-        {
-            if($map_id == $match_statistic->getMap()->getId())
-            {
+        foreach ($this->getMatchStatistics() as $match_statistic) {
+            if ($map_id == $match_statistic->getMap()->getId()) {
                 $score += $match_statistic->getScore1() + $match_statistic->getScore2();
             }
         }
@@ -345,12 +341,12 @@ class Match implements \JsonSerializable
 
     public function getEvent(): ?Event
     {
-        if (isset($this->event)){
+        if (isset($this->event)) {
             try {
                 $this->event->getName();
 
                 return $this->event;
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 return null;
             }
         }
@@ -449,13 +445,13 @@ class Match implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            "id"       => $this->getId(),
-            "startAt"  => $this->getStartAt(),
-            "startAtRu"=> NewsService::replaceMonth($this->getStartAt()->format('d F Y')),
-            "time"     => date("H:i", $this->getStartAt()->getTimestamp()),
-            "teamA"    => $this->getTeam1(),
-            "teamB"    => $this->getTeam2(),
-            "isLive"   => $this->getLive() ? true: false,
+            "id" => $this->getId(),
+            "startAt" => $this->getStartAt(),
+            "startAtRu" => NewsService::replaceMonth($this->getStartAt()->format('d F Y')),
+            "time" => date("H:i", $this->getStartAt()->getTimestamp()),
+            "teamA" => $this->getTeam1(),
+            "teamB" => $this->getTeam2(),
+            "isLive" => $this->getLive() ? true : false,
         ];
     }
 

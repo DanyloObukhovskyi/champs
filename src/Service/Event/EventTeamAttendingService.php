@@ -32,8 +32,7 @@ class EventTeamAttendingService extends EntityService
     public function create(Event $event, Team $team, $number)
     {
         $eventTeamAttending = $this->repository->findByEventAndTeam($event, $team);
-        if (empty($eventTeamAttending))
-        {
+        if (empty($eventTeamAttending)) {
             /** @var EventTeamAttending $eventTeamAttending */
             $eventTeamAttending = new $this->entity;
             $eventTeamAttending->setTeam($team);
@@ -49,8 +48,7 @@ class EventTeamAttendingService extends EntityService
         $teams = [];
 
         /** @var EventTeamAttending $teamAttending */
-        foreach ($teamsAttending as $teamAttending)
-        {
+        foreach ($teamsAttending as $teamAttending) {
             /** @var Team $team */
             $team = $teamAttending->getTeam();
 

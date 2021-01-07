@@ -40,16 +40,14 @@ class RecomendationsController extends AbstractController
             ], 1, 0);
 
         $filter = [];
-        foreach ($characteristics as $characteristic)
-        {
+        foreach ($characteristics as $characteristic) {
             /** @var Charactristics $characteristic */
             $filter['game'] = $characteristic->getGame();
             $filter['role'] = $characteristic->getRole();
             $filter['skills'] = $characteristic->getSkills();
             $filter['goals'] = $characteristic->getGoals();
             $filter['cost'] = $characteristic->getCost();
-            if($filter['cost'] == 0)
-            {
+            if ($filter['cost'] == 0) {
                 $filter['cost'] = 10000;
             }
         }
@@ -72,8 +70,7 @@ class RecomendationsController extends AbstractController
             ->findForRecommendations($features);
 
         $trainers = [];
-        switch ($filter['game'])
-        {
+        switch ($filter['game']) {
             case "Counter Strike: GO":
                 $filter['game'] = 'cs';
                 break;
@@ -88,28 +85,24 @@ class RecomendationsController extends AbstractController
                 break;
         }
 
-        foreach ($reviews as $review)
-        {
+        foreach ($reviews as $review) {
             /** @var Review $review */
             $teacher = $review->getTrainer();
 
-            if( $teacher->getGame() == $filter['game'])
-            {
+            if ($teacher->getGame() == $filter['game']) {
                 $trainers[] = $teacher;
             }
         }
         $response = [];
 
-        foreach ($trainers as $user)
-        {
+        foreach ($trainers as $user) {
             /** @var Teachers $trainer */
             $trainer = $entityManager->getRepository(Teachers::class)
                 ->findOneBy([
                     /** @var User $user */
                     'userid' => $user->getId(),
                 ]);
-            if(($filter['cost'] == 0)||($filter['cost'] >= $trainer->getCost()) && !in_array($user->getId(), array_column($response, 'id')))
-            {
+            if (($filter['cost'] == 0) || ($filter['cost'] >= $trainer->getCost()) && !in_array($user->getId(), array_column($response, 'id'))) {
                 $response[] = [
                     'id' => $user->getId(),
                     'email' => $user->getEmail(),

@@ -33,7 +33,7 @@
 
     import 'vue-slick-carousel/dist/vue-slick-carousel.css'
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
-    import CabinetService from "../../../services/CabinetService";
+    import CabinetService from "../../../../../services/CabinetService";
 
     export default {
         name: "CabinetVideoSlider",
@@ -72,7 +72,7 @@
 </script>
 
 <style scoped>
-    @import '../../../../css/animations.css';
+    @import '../../../../../../css/animations.css';
 
     .cabinet-video-slider {
         -webkit-animation: animation-translate-right 1500ms linear both;

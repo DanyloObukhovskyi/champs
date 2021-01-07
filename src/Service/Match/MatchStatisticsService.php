@@ -34,8 +34,7 @@ class MatchStatisticsService extends EntityService
     {
         $isNew = false;
         $matchStatistics = $this->getByMatchAndMap($match->getId(), $map->getId());
-        if (!$matchStatistics)
-        {
+        if (!$matchStatistics) {
             /** @var MatchStatistics $matchStatistics */
             $matchStatistics = new $this->entity;
             $matchStatistics->setMatch($match)
@@ -46,37 +45,29 @@ class MatchStatisticsService extends EntityService
 
         $score1 = false;
         $score2 = false;
-        foreach ($values as $stat)
-        {
+        foreach ($values as $stat) {
             $score = intval($stat['score']);
-            if ($score === '-')
-            {
+            if ($score === '-') {
                 $score = 0;
             }
 
-            if ($score1 === false)
-            {
+            if ($score1 === false) {
                 $score1 = $score;
-            }
-            elseif ($score1 !== false && $score2 === false)
-            {
+            } elseif ($score1 !== false && $score2 === false) {
                 $score2 = $score;
             }
         }
 
         $needMigration = false;
-        if ($score1 != $matchStatistics->getScore1())
-        {
+        if ($score1 != $matchStatistics->getScore1()) {
             $needMigration = true;
         }
 
-        if ($score2 != $matchStatistics->getScore2())
-        {
+        if ($score2 != $matchStatistics->getScore2()) {
             $needMigration = true;
         }
 
-        if ($needMigration && !$isNew)
-        {
+        if ($needMigration && !$isNew) {
             NeedMigrationService::setNeedMigration($matchStatistics);
         }
 
@@ -100,8 +91,7 @@ class MatchStatisticsService extends EntityService
     public function getByMatchAndMap($matchId, $mapId)
     {
         $matchStatistics = $this->repository->getByMatchAndMap($matchId, $mapId);
-        if (isset($matchStatistics))
-        {
+        if (isset($matchStatistics)) {
             $this->entityManager->persist($matchStatistics);
             return $matchStatistics;
         }

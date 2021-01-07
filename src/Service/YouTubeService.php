@@ -60,7 +60,7 @@ class YouTubeService
 
         $response = $client->request(
             'GET',
-            self::URL . '?'. http_build_query($options)
+            self::URL . '?' . http_build_query($options)
         );
         $content = json_decode($response->getContent(), false);
 

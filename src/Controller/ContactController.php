@@ -8,8 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     /**
-      * @Route("/ru/contact", name="contact_index")
-      */
+     * @Route("/ru/contact", name="contact_index")
+     */
     public function index()
     {
         return $this->render('templates/contact.html.twig', ['router' => 'contact']);

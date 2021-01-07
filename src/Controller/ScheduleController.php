@@ -13,7 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SchleduleController extends AbstractController
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
+class ScheduleController extends AbstractController
 {
     /**
      * @var ScheduleService
@@ -25,6 +28,9 @@ class SchleduleController extends AbstractController
      */
     public $timezoneService;
 
+    /**
+     * @var EntityManagerInterface
+     */
     public $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -36,78 +42,9 @@ class SchleduleController extends AbstractController
     }
 
     /**
-     * @Route("/schledule", name="schledule")
-     */
-    public function index()
-    {
-        return $this->render('schledule/index.html.twig', [
-            'controller_name' => 'SchleduleController',
-        ]);
-    }
-
-    /**
      * Schledule /ru/calendar/*
      *
-     * @Route("/ru/calendar/user/{user_id}", name="user_schledule")
-     */
-    public function viewSchledule($user_id)
-    {
-        $scheledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->findOneBy([
-                'trainer_id' => $user_id,
-            ]);
-
-        if (!$scheledule) {
-            throw $this->createNotFoundException(
-                'No schledule found for id '.$user_id
-            );
-        }
-
-        return $this->json($scheledule);
-    }
-
-
-    /**
-     * Schledule /ru/calendar/*
-     *
-     * @Route("/ru/calendar/user/date/{form}", name="user_schledule_date")
-     */
-    public function viewSchleduleDate($form)
-    {
-        $form = json_decode($form);
-        $user_id = $form->user_id;
-        $date = new \DateTime($form->started_at);
-
-        $scheledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->findByUserAndDate($user_id, $date);
-
-        return $this->json($scheledule);
-    }
-
-    /**
-     * Schledule /ru/calendar/*
-     *
-     * @Route("/ru/calendar/user/date/from/{form}", name="user_schledule_date_from")
-     */
-    public function viewSchleduleDateFrom($form)
-    {
-        $form = json_decode($form);
-        $user_id = $form->user_id;
-        $date = new \DateTime($form->started_at);
-
-        $scheledule = $this->getDoctrine()
-            ->getRepository(Schledule::class)
-            ->findByUserAndDateFrom($user_id, $date);
-
-        return $this->json($scheledule);
-    }
-
-    /**
-     * Schledule /ru/calendar/*
-     *
-     * @Route("/ru/calendar/change/time/status/", methods={"POST"}, name="change_scheledule_date_time_status")
+     * @Route("/calendar/change/time/status/", methods={"POST"}, name="change_scheledule_date_time_status")
      */
     public function changeTimeStatus(Request $request)
     {
@@ -127,18 +64,18 @@ class SchleduleController extends AbstractController
     }
 
     /**
-     * Schedule /ru/calendar/*
+     * Schedule /calendar/*
      *
-     * @Route("/ru/calendar/trainer/date/week/", methods={"GET","POST"}, name="user_schedule_date_week")
+     * @Route("/calendar/trainer/date/week/", methods={"GET","POST"}, name="user_schedule_date_week")
      */
-    public function viewSchleduleWeek(Request $request)
+    public function viewScheduleWeek(Request $request)
     {
         $form = json_decode($request->getContent());
 
         $userId = $form->user_id;
         $dateFrom = new \DateTime($form->date);
 
-        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId: true;
+        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId : true;
 
         $schedule = $this->scheduleService
             ->createWeek($userId, $dateFrom, $isStudent);
@@ -147,17 +84,17 @@ class SchleduleController extends AbstractController
     }
 
     /**
-     * Schedule /ru/calendar/*
+     * Schedule /calendar/*
      *
-     * @Route("/ru/calendar/trainer/date/day", methods={"POST"})
+     * @Route("/calendar/trainer/date/day", methods={"POST"})
      */
-    public function viewSchleduleDay(Request $request)
+    public function viewScheduleDay(Request $request)
     {
         $form = json_decode($request->getContent(), false);
         $userId = $form->trainerId;
         $date = new \DateTime($form->date);
 
-        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId: true;
+        $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId : true;
 
         /** @var Teachers $trainer */
         $trainer = $this->entityManager->getRepository(Teachers::class)->findOneBy([
@@ -169,7 +106,7 @@ class SchleduleController extends AbstractController
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
             $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
-        if ($gmtNumeric < 0){
+        if ($gmtNumeric < 0) {
             $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
         } else {
             $trainerTimezone = (int)gmdate("g", $gmtNumeric);

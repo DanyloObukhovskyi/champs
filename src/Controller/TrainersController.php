@@ -11,15 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrainersController extends AbstractController
 {
     /**
-      * Matches /ru/trainers/*
-      *
-      * @Route("/ru/trainers/{game}", name="trainers_index")
-      */
+     * Matches /ru/trainers/*
+     *
+     * @Route("/ru/trainers/{game}", name="trainers_index")
+     */
     public function index($game)
     {
         $id = 0;
-        if(isset($_GET['id']))
-        {
+        if (isset($_GET['id'])) {
             $id = $_GET['id'];
         }
         return $this->render('templates/trainers.html.twig', [
@@ -30,25 +29,25 @@ class TrainersController extends AbstractController
     }
 
     /**
-      * @Route("/ru/lessons/{id}", name="lessons_index")
-      */
+     * @Route("/ru/lessons/{id}", name="lessons_index")
+     */
     public function lessons($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
         /** @var User $user */
         $user = $entityManager->getRepository(User::class)->find($id);
         /** @var Teachers $trainer */
-        $trainer  = $entityManager->getRepository(Teachers::class)->findOneBy([
+        $trainer = $entityManager->getRepository(Teachers::class)->findOneBy([
             'userid' => $user
         ]);
-	    $canEdit = true;
+        $canEdit = true;
         return $this->render('templates/lessons.html.twig', [
-          'router' => 'marketplace',
-	      'canEdit' =>$canEdit,
-          'styles' => [
-            'lessons.css',
-          ],
-          'id' => $id,
+            'router' => 'marketplace',
+            'canEdit' => $canEdit,
+            'styles' => [
+                'lessons.css',
+            ],
+            'id' => $id,
             'nickname' => $user->getNickname(),
             'cost' => $trainer->getComissionCost()
         ]);
@@ -84,8 +83,8 @@ class TrainersController extends AbstractController
   }
 
     /**
-      * @Route("/ru/order/{id}", name="lessons_order_index")
-      */
+     * @Route("/ru/order/{id}", name="lessons_order_index")
+     */
     public function lessons_order($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -94,12 +93,12 @@ class TrainersController extends AbstractController
         $trainer = $lesson->getTrainer();
 
         return $this->render('templates/lessons/lessons.order.html.twig', [
-          'router' => 'marketplace',
-          'styles' => [
-            'lessons.css',
-          ],
-          'nickname' => $trainer->getNickname(),
-          'id' => $id
+            'router' => 'marketplace',
+            'styles' => [
+                'lessons.css',
+            ],
+            'nickname' => $trainer->getNickname(),
+            'id' => $id
         ]);
     }
 

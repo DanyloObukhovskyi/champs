@@ -220,8 +220,8 @@ class TrainerController extends AbstractController
 
         $payPal = null;
 
-        if (isset($trainer)){
-            if ($method === 'set'){
+        if (isset($trainer)) {
+            if ($method === 'set') {
                 $constraints = new Assert\Collection([
                     'payPal' => [new Assert\Email()],
                 ]);
@@ -229,8 +229,7 @@ class TrainerController extends AbstractController
 
                 $data = [];
 
-                if ($violations->count() === 0)
-                {
+                if ($violations->count() === 0) {
                     $data['message'] = [
                         'type' => 'success',
                         'text' => 'Paypal был успешно сохранен'

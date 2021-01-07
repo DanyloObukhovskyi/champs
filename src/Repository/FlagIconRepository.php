@@ -26,7 +26,6 @@ class FlagIconRepository extends ServiceEntityRepository
             ->setParameter('name', $name)
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

@@ -30,13 +30,13 @@ class SettingController extends AbstractController
     {
         $descriptions = [];
 
-        foreach (SettingService::TRAINING_DESCRIPTION as $type => $fields){
+        foreach (SettingService::TRAINING_DESCRIPTION as $type => $fields) {
             $title = $this->settingService->get($fields['title']);
             $text = $this->settingService->get($fields['text']);
 
             $descriptions[$type] = [
-                'title' => isset($title) ? $title->getValue(): null,
-                'text' =>  isset($text) ? $text->getValue(): null,
+                'title' => isset($title) ? $title->getValue() : null,
+                'text' => isset($text) ? $text->getValue() : null,
             ];
         }
         return $this->json($descriptions);
@@ -48,8 +48,7 @@ class SettingController extends AbstractController
     public function trainerPageBanner()
     {
         $banner = [];
-        foreach (SettingService::TRAINER_BANNER_LINKS as $link => $key)
-        {
+        foreach (SettingService::TRAINER_BANNER_LINKS as $link => $key) {
             $banner['links'][$link] = $this->settingService->get($key);
         }
         $banner['title'] = $this->settingService->get(SettingService::TRAINER_BANNER['title']);

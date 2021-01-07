@@ -17,9 +17,9 @@ class EventMapPool
      */
     private $id;
 
-     /**
-      * @ORM\ManyToOne(targetEntity=Event::class)
-      */
+    /**
+     * @ORM\ManyToOne(targetEntity=Event::class)
+     */
     private $event;
 
     /**

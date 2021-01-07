@@ -93,8 +93,7 @@ class OauthController extends AbstractController
      */
     public function steam(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        if (!empty($request->get('state')) and $request->get('state') == 'steam')
-        {
+        if (!empty($request->get('state')) and $request->get('state') == 'steam') {
             // Вытаскиваем id юзера
             preg_match(
                 "/^https:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/",
@@ -102,8 +101,7 @@ class OauthController extends AbstractController
                 $key
             );
 
-            if(count($key) > 0)
-            {
+            if (count($key) > 0) {
                 $steamId = $key[1];
 
                 /** @var User $user */
@@ -111,8 +109,7 @@ class OauthController extends AbstractController
                     'steam_id' => $steamId
                 ]);
 
-                if(empty($user))
-                {
+                if (empty($user)) {
                     $user = $this->userService->createUserFromSteamData($steamId, $this->passwordEncoder);
                 }
                 $this->loginUser($user);
@@ -137,12 +134,12 @@ class OauthController extends AbstractController
     {
         $discordUser = $this->discordAuthService->getUserByToken($request->get('code'));
 
-        if (isset($discordUser)){
+        if (isset($discordUser)) {
             /** @var User $user */
             $user = $this->getDoctrine()->getManager()->getRepository(User::class)
                 ->findOneBy(['discordId' => $discordUser->id]);
 
-            if (empty($user)){
+            if (empty($user)) {
                 $user = $this->userService->createUserFromDiscord($discordUser, $this->passwordEncoder);
             }
             $this->loginUser($user);
@@ -165,20 +162,20 @@ class OauthController extends AbstractController
     {
         $faceBookAccount = $this->faceBookAuthService->getAccountInfo($request->get('code'));
 
-        if (isset($faceBookAccount)){
+        if (isset($faceBookAccount)) {
             /** @var User $user */
             $user = $this->getDoctrine()
                 ->getManager()
                 ->getRepository(User::class)
                 ->findOneBy(['faceBookId' => $faceBookAccount->id]);
 
-            if (empty($user)){
+            if (empty($user)) {
                 $user = $this->getDoctrine()
                     ->getManager()
                     ->getRepository(User::class)
                     ->findOneBy(['email' => $faceBookAccount->email]);
 
-                if (empty($user)){
+                if (empty($user)) {
                     $user = $this->userService->createUserFromFaceBookData($faceBookAccount, $this->passwordEncoder);
                 }
             }
@@ -205,20 +202,20 @@ class OauthController extends AbstractController
     {
         $googleAccount = $this->googleAuthService->getAccountInfo($request->get('code'));
 
-        if (isset($googleAccount)){
+        if (isset($googleAccount)) {
             /** @var User $user */
             $user = $this->getDoctrine()
                 ->getManager()
                 ->getRepository(User::class)
                 ->findOneBy(['googleId' => $googleAccount->id]);
 
-            if (empty($user)){
+            if (empty($user)) {
                 $user = $this->getDoctrine()
                     ->getManager()
                     ->getRepository(User::class)
                     ->findOneBy(['email' => $googleAccount->email]);
 
-                if (empty($user)){
+                if (empty($user)) {
                     $user = $this->userService->createUserFromGoogleData($googleAccount, $this->passwordEncoder);
                 }
             }
@@ -245,13 +242,13 @@ class OauthController extends AbstractController
     {
         $twichAccount = $this->twichAuthService->getAccountInfo($request->get('code'));
 
-        if (isset($twichAccount)){
+        if (isset($twichAccount)) {
             $user = $this->getDoctrine()
                 ->getManager()
                 ->getRepository(User::class)
                 ->findOneBy(['twichId' => $twichAccount->sub]);
 
-            if (empty($user)){
+            if (empty($user)) {
                 $user = $this->userService->createUserFromTwichData($twichAccount, $this->passwordEncoder);
             }
             $this->loginUser($user);
@@ -276,13 +273,13 @@ class OauthController extends AbstractController
     {
         $vkAccount = $this->vkAuthService->getAccountInfo($request->get('code'));
 
-        if (isset($vkAccount)){
+        if (isset($vkAccount)) {
             $user = $this->getDoctrine()
                 ->getManager()
                 ->getRepository(User::class)
                 ->findOneBy(['vkId' => $vkAccount->id]);
 
-            if (empty($user)){
+            if (empty($user)) {
                 $user = $this->userService->createUserFromVkData($vkAccount, $this->passwordEncoder);
             }
             $this->loginUser($user);

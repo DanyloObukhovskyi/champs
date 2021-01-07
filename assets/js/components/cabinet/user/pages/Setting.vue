@@ -15,12 +15,12 @@
 </template>
 
 <script>
-    import CabinetFirstBanner from "../personalCabinet/CabinetFirstBanner";
-    import MarketplaceService from "../../../services/MarketplaceService";
-    import GeneralSettings from "../setting/GeneralSettings";
-    import Avatar from "../setting/Avatar";
-    import Password from "../setting/Password";
-    import Discord from "../setting/Discord";
+    import CabinetFirstBanner from "../components/cabinet/CabinetFirstBanner";
+    import MarketplaceService from "../../../../services/MarketplaceService";
+    import GeneralSettings from "../components/setting/GeneralSettings";
+    import Avatar from "../components/setting/Avatar";
+    import Password from "../components/setting/Password";
+    import Discord from "../components/setting/Discord";
     import {mapGetters} from "vuex";
 
     export default {

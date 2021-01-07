@@ -25,7 +25,7 @@ class GameRank
     /**
      * @ORM\Column(type="string")
      */
-    private $rank;
+    private $rang;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -68,7 +68,7 @@ class GameRank
      */
     public function getRank()
     {
-        return $this->rank;
+        return $this->rang;
     }
 
     /**

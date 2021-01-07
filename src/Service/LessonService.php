@@ -59,6 +59,7 @@ class LessonService extends EntityService
     /**
      * @param $teacher
      * @param $datetime
+     * @param null $count
      * @return mixed
      */
     public function getByTeacherAndDate($teacher, $datetime)
@@ -242,7 +243,7 @@ class LessonService extends EntityService
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
             $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
-        if ($gmtNumeric < 0){
+        if ($gmtNumeric < 0) {
             $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
         } else {
             $trainerTimezone = (int)gmdate("g", $gmtNumeric);
@@ -456,5 +457,49 @@ class LessonService extends EntityService
     public function getTrainingTogetherCount(Lessons $lesson)
     {
         return $this->repository->getTrainingTogetherCount($lesson->getStudent(), $lesson->getTrainer());
+    }
+
+    /**
+     * @param User $trainer
+     * @param null $count
+     * @return mixed
+     */
+    public function getFutureByTeacher(User $trainer, $count = null)
+    {
+        return $this->repository->getFutureByTeacher($trainer, $count);
+    }
+
+    /**
+     * @param User $user
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
+     * @return mixed
+     */
+    public function getByTrainerAndPeriod(User $user, \DateTime $dateFrom, \DateTime $dateTo)
+    {
+        return $this->repository->getByTrainerAndPeriod($user, $dateFrom, $dateTo);
+    }
+
+    /**
+     * @param User $trainer
+     * @param Carbon $date
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getTrainerEarnedLessonsByMonth(User $trainer, Carbon $date)
+    {
+        $currentDateFrom = new \DateTime($date->format('Y-m-d'));
+        $currentDateTo = new \DateTime($date->endOfMonth()->format('Y-m-d'));
+
+        $lessons = $this->getByTrainerAndPeriod(
+            $trainer, $currentDateFrom, $currentDateTo
+        );
+        $earned = 0;
+
+        /** @var Lessons $lesson */
+        foreach ($lessons as $lesson) {
+            $earned += (int)$lesson->getCost();
+        }
+        return $earned;
     }
 }

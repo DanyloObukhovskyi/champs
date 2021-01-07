@@ -39,8 +39,7 @@ class CheckLessonsPayedCommand extends Command
         $this
             ->setDescription('Add a short description for your command')
             ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
     /**
@@ -84,8 +83,7 @@ class CheckLessonsPayedCommand extends Command
 
     public function setSchedulesStatus($schedules, $status)
     {
-        foreach ($schedules as $schedule)
-        {
+        foreach ($schedules as $schedule) {
             $this->scheduleService->setScheduleStatus($schedule, $status);
         }
     }

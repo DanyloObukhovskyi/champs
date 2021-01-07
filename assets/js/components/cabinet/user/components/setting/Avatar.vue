@@ -35,7 +35,7 @@
 
 <script>
     import {mapGetters} from "vuex";
-    import CabinetService from "../../../services/CabinetService";
+    import CabinetService from "../../../../../services/CabinetService";
     import Swal from 'sweetalert2'
 
     export default {

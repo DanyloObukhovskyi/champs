@@ -42,6 +42,7 @@
                        v-if="isAuthorize"
                        class="ln text-light nickname">
                         {{user !== null ? user.nickname: 'КАБИНЕТ'}}
+                        <small v-if="user !== null && user.isTrainer">Тренер</small>
                     </a>
                     <span v-else
                           @click="$emit('show')">
@@ -226,6 +227,12 @@
         color: #ff6d1d;
     }
 
+    .login small {
+		color: #ff6d1d;
+		font-size: .35vw;
+		line-height: .2vw;
+    }
+
     .login {
         left: 0;
         transition: all .5s ease-in-out;
@@ -236,6 +243,10 @@
 
     .header_nav .nav .login-wrapper a {
         width: max-content;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
     }
 
     .header_nav .nav .login-wrapper a.nickname {

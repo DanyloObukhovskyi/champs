@@ -3,11 +3,12 @@
         <div class="user">
             <div class="avatar">
                 <div class="gradient">
-                    <img :src="'/uploads/avatars/' + user.photo" alt="avatar">
+                    <img :src="'/uploads/avatars/' + user.photo" alt="avatar"
+                         @error="$event.target.src = '/images/noLogo.png'">
                 </div>
                 <div class="lvl">
                     <span>
-                        10
+                        {{user.level}}
                     </span>
                     <img src="/images/cabinet/csLvl.png" alt="lvl">
                 </div>

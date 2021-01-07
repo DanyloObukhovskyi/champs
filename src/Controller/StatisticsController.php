@@ -59,8 +59,8 @@ class StatisticsController extends AbstractController
     }
 
     /**
-      * @Route("/statistics", name="statistics_index")
-      */
+     * @Route("/statistics", name="statistics_index")
+     */
     public function index()
     {
         return $this->render('templates/statistics.html.twig', ['router' => 'statistics',]);

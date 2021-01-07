@@ -55,7 +55,7 @@ trait LessonMailHandler
             'user' => $lesson->getStudent(),
             'trainer' => $lesson->getTrainer(),
             'lesson' => $lesson,
-            'game' => $this->getTrainerGame($lesson->getTrainer()),
+            'game' => $lesson->getTrainer()->getGame(),
             'isTrainer' => $isTrainer,
             'lessonDuration' => $lessonDuration
         ];

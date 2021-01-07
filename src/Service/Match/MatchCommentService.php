@@ -69,7 +69,7 @@ class MatchCommentService extends EntityService
     public function decorator(MatchComment $comment, $user = null)
     {
         $userLike = null;
-        if (isset($user)){
+        if (isset($user)) {
             $userLike = $this->matchCommentLikeService
                 ->getRepository()
                 ->findOneBy([
@@ -77,7 +77,7 @@ class MatchCommentService extends EntityService
                     'user' => $user
                 ]);
 
-            if (isset($userLike)){
+            if (isset($userLike)) {
                 $userLike = $this->matchCommentLikeService->decorator($userLike);
             }
         }

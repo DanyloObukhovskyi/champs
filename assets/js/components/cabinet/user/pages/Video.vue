@@ -19,10 +19,10 @@
 </template>
 
 <script>
-    import CabinetBottomBanner from "../CabinetBottomBanner";
-    import YouTubeService from "../../../services/YouTubeService";
-    import VideoRow from "../videos/VideoRow";
-    import SmallLoader from "../../helpers/SmallLoader";
+    import CabinetBottomBanner from "../../CabinetBottomBanner";
+    import YouTubeService from "../../../../services/YouTubeService";
+    import VideoRow from "../components/videos/VideoRow";
+    import SmallLoader from "../../../helpers/SmallLoader";
 
     export default {
         name: "Video",
@@ -74,7 +74,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import '../../../../css/animations.css';
+    @import '../../../../../css/animations.css';
 
     .video-wrapper {
         -webkit-animation: animation-translate-right 1500ms linear both;

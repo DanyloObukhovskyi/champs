@@ -40,9 +40,9 @@ class PastMatchService extends EntityService
      */
     public function create(Match $match, array $pastMatch, Team $matchTeam)
     {
-        $past =  $this->repository->findMatch($match, $pastMatch, $matchTeam);
+        $past = $this->repository->findMatch($match, $pastMatch, $matchTeam);
 
-        if (empty($past)){
+        if (empty($past)) {
             $past = new $this->entity;
             $past->setMatch($match);
             $past->setTeamTwo($pastMatch['team_two']);
@@ -70,7 +70,7 @@ class PastMatchService extends EntityService
         $match['opponent']['name'] = $pastMatch->getTeamTwo();
         $match['score'] = $pastMatch->getScore();
 
-        if (isset($teamOpponent)){
+        if (isset($teamOpponent)) {
             $this->imageService->setImage($teamOpponent->getLogo());
             $match['opponent']['logo'] = $this->imageService->getImagePath();
         } else {
@@ -89,8 +89,7 @@ class PastMatchService extends EntityService
     {
         $matches = [];
 
-        foreach ($pastMatches as $pastMatch)
-        {
+        foreach ($pastMatches as $pastMatch) {
             $matches[] = $this->decorate($pastMatch);
         }
         return $matches;

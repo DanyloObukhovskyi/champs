@@ -40,8 +40,7 @@ class WeaponRatingService extends EntityService
     public function update($weapon)
     {
         $weaponRating = $this->repository->findByName($weapon['label']);
-        if (empty($weaponRating))
-        {
+        if (empty($weaponRating)) {
             return $this->create($weapon);
         }
         $weaponRating->setName($weapon['label']);
@@ -58,22 +57,23 @@ class WeaponRatingService extends EntityService
      * @param $weapons
      * @return array
      */
-	public function ratingWeaponsDecorator($weapons) {
-		$ratingWeapons = [];
-		
-		$weaponsRatingSum = 0;
-		foreach ($weapons as $weapon) {
-			$weaponsRatingSum += (int)$weapon->getRating();
-		}
-		foreach ($weapons as $weapon) {
-			$ratingInPercentage = ((int)$weapon->getRating() / $weaponsRatingSum) * 100;
-			$ratingInPercentage = round($ratingInPercentage, 1);
+    public function ratingWeaponsDecorator($weapons)
+    {
+        $ratingWeapons = [];
+
+        $weaponsRatingSum = 0;
+        foreach ($weapons as $weapon) {
+            $weaponsRatingSum += (int)$weapon->getRating();
+        }
+        foreach ($weapons as $weapon) {
+            $ratingInPercentage = ((int)$weapon->getRating() / $weaponsRatingSum) * 100;
+            $ratingInPercentage = round($ratingInPercentage, 1);
 
             $ratingWeapons[] = [
                 'name' => $weapon->getName(),
                 'y' => $ratingInPercentage,
             ];
-		}
-		return $ratingWeapons;
-	}
+        }
+        return $ratingWeapons;
+    }
 }

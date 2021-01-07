@@ -204,10 +204,10 @@ class Person implements JsonSerializable
 
     public function jsonSerialize()
     {
-       return [
-           'name' => $this->getName(),
-           'photo' => $this->getPhoto(),
-           'nick' => $this->getNick()
-       ];
+        return [
+            'name' => $this->getName(),
+            'photo' => $this->getPhoto(),
+            'nick' => $this->getNick()
+        ];
     }
 }

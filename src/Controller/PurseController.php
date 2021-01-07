@@ -42,7 +42,7 @@ class PurseController extends AbstractController
     public function createUserPurseHistory(Request $request)
     {
         exit();
-        $userId        = $request->request->get('user_id');
+        $userId = $request->request->get('user_id');
         $entityManager = $this->getDoctrine()->getManager();
 
         /** @var User $user */

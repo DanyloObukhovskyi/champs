@@ -43,8 +43,7 @@ class NewsTagRepository extends ServiceEntityRepository
         $allTags = $this->uniqueAll();
 
         $tags = [];
-        foreach ($allTags as $tag)
-        {
+        foreach ($allTags as $tag) {
             $tags[(integer)$this->getCountByTitle($tag['title'])][] = $tag['title'];
         }
         ksort($tags);
@@ -53,7 +52,7 @@ class NewsTagRepository extends ServiceEntityRepository
         $result = [];
         foreach ($tags as $tagsTitles) {
             foreach ($tagsTitles as $tagTitle) {
-                if (count($result) < 5){
+                if (count($result) < 5) {
                     $result[] = $tagTitle;
                 }
             }

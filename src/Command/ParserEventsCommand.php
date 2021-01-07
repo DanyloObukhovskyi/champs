@@ -47,8 +47,7 @@ class ParserEventsCommand extends Command
         $this
             ->setDescription('get events')
             ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
     /**
@@ -74,8 +73,7 @@ class ParserEventsCommand extends Command
         LoggerService::info("hltv events getMainEvents");
         $mainEvents = $this->getMainEvents();
 
-        if (empty($mainEvents))
-        {
+        if (empty($mainEvents)) {
             LoggerService::error("hltv events not found");
             return 0;
         }
@@ -83,8 +81,7 @@ class ParserEventsCommand extends Command
         $this->createEvents($mainEvents);
 
         $events = $this->getEvents();
-        if (empty($events))
-        {
+        if (empty($events)) {
             LoggerService::error("hltv events not found");
             return 0;
         }
@@ -106,8 +103,7 @@ class ParserEventsCommand extends Command
         LoggerService::info("get events");
 
         $events = HLTVService::getMainEvents();
-        if (empty($events))
-        {
+        if (empty($events)) {
             return null;
         }
         return $events;
@@ -123,21 +119,19 @@ class ParserEventsCommand extends Command
     private function createEvents($events, bool $isNotMain = false)
     {
         $result = [];
-        foreach ($events as $event)
-        {
+        foreach ($events as $event) {
             $parseDate = $this->parseDate;
-            if ($isNotMain){
+            if ($isNotMain) {
                 $parseDate = null;
             }
-            if (isset($event['started_at']))
-            {
+            if (isset($event['started_at'])) {
                 $eventEntity = $this->eventService->create($event, $parseDate);
             }
 
             if (empty($eventEntity)) {
                 LoggerService::error("event entity didnt created");
             } else {
-                if ($isNotMain ){
+                if ($isNotMain) {
                     $this->eventShowService->createOrUpdate($eventEntity, $this->parseDate);
                 }
                 $result[] = $eventEntity;
@@ -154,8 +148,7 @@ class ParserEventsCommand extends Command
     {
         $events = HLTVService::getEvents();
 
-        if (empty($events))
-        {
+        if (empty($events)) {
             return null;
         }
         return $events;
@@ -168,21 +161,17 @@ class ParserEventsCommand extends Command
     private function createTeams($teams)
     {
         $fullTeams = [];
-        foreach ($teams as $team)
-        {
-            if (isset($team['teamName']))
-            {
+        foreach ($teams as $team) {
+            if (isset($team['teamName'])) {
                 $teamEntity = $this->teamService->getByName($team['teamName']);
 
-                if (isset($teamEntity))
-                {
+                if (isset($teamEntity)) {
                     continue;
                 }
 
-                $fullTeam = HLTVService::getTeam(['name' => $team['teamName'], 'url' =>  $team['teamUrl']]);
+                $fullTeam = HLTVService::getTeam(['name' => $team['teamName'], 'url' => $team['teamUrl']]);
 
-                if (empty($fullTeam))
-                {
+                if (empty($fullTeam)) {
                     continue;
                 }
                 $fullTeams[] = $fullTeam;
@@ -196,8 +185,7 @@ class ParserEventsCommand extends Command
      */
     private function updateInfiEventsFromArray($events)
     {
-        foreach ($events as $eventEntity)
-        {
+        foreach ($events as $eventEntity) {
             LoggerService::info("dispatch event: {$eventEntity->getUrl()}");
 
             $this->dispatch(new Event($eventEntity->getUrl()));
