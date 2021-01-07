@@ -102,8 +102,7 @@ class Stream
     public function getType()
     {
         $type = 'youtube';
-        if (strripos($this->getUrl(), 'youtube') === false)
-        {
+        if (strripos($this->getUrl(), 'youtube') === false) {
             $type = 'twich';
         }
         return $type;

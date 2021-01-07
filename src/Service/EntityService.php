@@ -19,7 +19,7 @@ abstract class EntityService
     /** @var EntityManager */
     protected $entityManager;
 
-    /** @var  */
+    /** @var */
     protected $entity;
 
     public function __construct(EntityManagerInterface $entityManager)

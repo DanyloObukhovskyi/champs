@@ -36,24 +36,20 @@ class DownloadFile
         $ext = static::getFileExt($url);
 
         $fileResponse = static::getContent($url);
-        if (!$fileResponse)
-        {
+        if (!$fileResponse) {
             return null;
         }
 
-        if (!static::isFileImage($fileResponse['type']))
-        {
+        if (!static::isFileImage($fileResponse['type'])) {
             LoggerService::error("{$url} is not image");
             return null;
         }
 
-        if (!$ext)
-        {
+        if (!$ext) {
             $ext = static::getExtByContentType($fileResponse['type']);
         }
 
-        if (empty($ext))
-        {
+        if (empty($ext)) {
             LoggerService::error("{$url} wrong extension");
             return null;
         }
@@ -77,8 +73,7 @@ class DownloadFile
         $parseUrl = parse_url($url);
 
         $extPos = strrpos($parseUrl['path'], '.');
-        if ($extPos !== false)
-        {
+        if ($extPos !== false) {
             $result = substr($parseUrl['path'], $extPos + 1);
         }
 
@@ -101,8 +96,7 @@ class DownloadFile
 
         $statusCode = $response->getStatusCode();
 
-        if (!in_array($statusCode, [200, 301, 302]))
-        {
+        if (!in_array($statusCode, [200, 301, 302])) {
             LoggerService::warning("{$url} wrong status {$statusCode}");
             return false;
         }
@@ -131,10 +125,8 @@ class DownloadFile
     {
         $extList = static::getImageExtList();
 
-        foreach ($extList as $imageExt => $extValue)
-        {
-            if (strpos($type, $imageExt))
-            {
+        foreach ($extList as $imageExt => $extValue) {
+            if (strpos($type, $imageExt)) {
                 return $extValue;
             }
         }
@@ -150,15 +142,13 @@ class DownloadFile
      */
     protected static function saveFile($filePath, $filename, $content): bool
     {
-        if (file_exists($filePath))
-        {
+        if (file_exists($filePath)) {
             return $filename;
         }
 
         $fp = fopen($filePath, 'wb+');
-        if (!$fp)
-        {
-            LoggerService::error("Cant create file ". $filename);
+        if (!$fp) {
+            LoggerService::error("Cant create file " . $filename);
             return false;
         }
 

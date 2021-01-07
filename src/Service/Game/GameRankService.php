@@ -25,7 +25,17 @@ class GameRankService extends EntityService
     public function getAllByGame(Game $game)
     {
         return $this->repository->findBy([
-           'game' =>  $game
+            'game' => $game
         ]);
+    }
+
+    /**
+     * @param Game $game
+     * @param $points
+     * @return int|mixed|string|null
+     */
+    public function getByGameAndPoints(Game $game, $points)
+    {
+        return $this->repository->getByPoints($game, $points);
     }
 }

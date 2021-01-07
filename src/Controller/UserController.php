@@ -43,116 +43,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/ru/user/timelist", name="timelist_index")
-     */
-    public function index()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('main');
-        } else {
-            return $this->render('templates/cabinet/user/timelist.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/timelist.css'
-                    ]
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/ru/user/specifications", name="specifications_index")
-     */
-    public function specifications()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('trainer_index');
-        } else {
-            $gameRoles['Counter Strike: GO'] = Charactristics::CS_ROLES;
-            $gameRoles['DOTA']               = Charactristics::DOTA_ROLES;
-            $gameRoles['League of Legends']  = Charactristics::LOL_ROLES;
-
-            return $this->render('templates/cabinet/user/specifications.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/specifications.css'
-                    ],
-                    'gameRoles' => $gameRoles
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/ru/user/history", name="history_index")
-     */
-    public function history()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('main');
-        } else {
-            $data = [
-                [
-                    'date' => 'Сегодня, 25 июня',
-                    'items' => [
-                        [
-                            'time' => '13:00-14:00',
-                            'image' => '/images/temp/Rectangle506.png',
-                            'name' => 'Rafaeeela',
-                            'rating' => 3,
-                            'price' => 3000,
-                            'closed' => true,
-                        ],
-                        [
-                            'time' => '13:00-14:00',
-                            'image' => '/images/temp/Rectangle506.png',
-                            'name' => 'Rafaeeela',
-                            'rating' => 3,
-                            'price' => 3000,
-                            'closed' => true,
-                        ]
-                    ]
-                ]
-            ];
-
-            return $this->render('templates/cabinet/user/history.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/history.css'
-                    ],
-                    'data' => $data,
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/ru/user/settings", name="settings_index")
-     */
-    public function settings()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('main');
-        } else {
-            return $this->render('templates/cabinet/user/settings.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/settings.css'
-                    ]
-                ]
-            );
-        }
-    }
-
-    /**
      * User /ru/user/*
      *
      * @Route("/ru/user/info/by-mail/{mail}", name="get_user_info_by_mail")
@@ -215,14 +105,13 @@ class UserController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        if (isset($user))
-        {
+        if (isset($user)) {
             $user = [
-                'id'       => $user->getId(),
-                'name'     => $user->getName(),
-                'steam'    => $user->getSteamId(),
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'steam' => $user->getSteamId(),
                 'nickname' => $user->getNickname(),
-                'photo'    => $user->getPhoto()
+                'photo' => $user->getPhoto()
             ];
         }
 
@@ -240,7 +129,7 @@ class UserController extends AbstractController
             'email' => $email
         ]);
         return isset($user) ?
-            $this->json('Этот эмейл уже занят!',422):
+            $this->json('Этот эмейл уже занят!', 422) :
             $this->json('ok');
     }
 }

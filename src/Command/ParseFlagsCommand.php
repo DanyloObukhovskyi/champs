@@ -27,8 +27,7 @@ class ParseFlagsCommand extends Command
         $this
             ->setDescription('Add a short description for your command')
             ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
     /**
@@ -45,7 +44,7 @@ class ParseFlagsCommand extends Command
 
         LoggerService::info("hltv flags parse");
         $flags = $this->getFlags();
-        foreach ($flags as $flag){
+        foreach ($flags as $flag) {
             LoggerService::info("hltv flag create: {$flag['name']}");
 
             $flagIconService->createOrUpdate($flag);

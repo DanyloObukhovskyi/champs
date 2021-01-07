@@ -21,11 +21,10 @@ class GalleryController extends AbstractController
 
         $albums = $manager->getRepository(Albums::class)->findAll();
 
-        $items    = [];
+        $items = [];
         $currDate = null;
 
-        foreach ($albums as $album)
-        {
+        foreach ($albums as $album) {
             /** @var Albums $album */
             $photos = $album->getPhotos();
             $items[] = [
@@ -55,11 +54,10 @@ class GalleryController extends AbstractController
         $album = $manager->getRepository(Albums::class)->find($id);
         $photos = $album->getPhotos();
 
-        $items    = [];
+        $items = [];
         $currDate = null;
 
-        foreach ($photos as $photo)
-        {
+        foreach ($photos as $photo) {
             /** @var AlbumPhotos $photo */
             $items[] = [
                 'id' => $photo->getId(),
@@ -81,15 +79,14 @@ class GalleryController extends AbstractController
     public function live($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $match                 = $entityManager->getRepository(Match::class)->findOneBy([
+        $match = $entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
         ]);
 
         $streams = $match->getStreams();
 //        $streamItems = [];
         $url = null;
-        foreach ($streams as $stream)
-        {
+        foreach ($streams as $stream) {
             /** @var Stream $stream */
             $url = $stream->getUrl();
 //            $streamItems[$stream->getLanguage()] =  $stream->getUrl();
@@ -98,7 +95,7 @@ class GalleryController extends AbstractController
             'router' => 'gallery',
             'match' => $match,
             'styles' => [
-              'live.css',
+                'live.css',
             ],
             'url' => $url
         ]);

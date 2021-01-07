@@ -24,15 +24,12 @@ class PageContentService
     {
         sleep(1);
         $response = static::getContent($url);
-        if (is_array($response) && isset($response['error']))
-        {
-            if($response['status'] == 503 && $count < 2)
-            {
+        if (is_array($response) && isset($response['error'])) {
+            if ($response['status'] == 503 && $count < 2) {
                 usleep(1500000);
                 return static::getPageContent($url, ++$count);
             }
-            if($response['status'] == 429 && $count < 2)
-            {
+            if ($response['status'] == 429 && $count < 2) {
                 LoggerService::error('BLock by to many Request');
                 sleep(10);
                 return static::getPageContent($url, ++$count);
@@ -76,8 +73,7 @@ class PageContentService
             $statusCode = 404;
         }
 
-        if ($statusCode != 200)
-        {
+        if ($statusCode != 200) {
             return ['status' => $statusCode, 'error' => true, 'message' => $message];
         }
 

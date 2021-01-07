@@ -38,16 +38,14 @@ class CharacteristicsController extends AbstractController
             ], 1, 0);
 
         $result = [];
-        foreach ($characteristics as $characteristic)
-        {
+        foreach ($characteristics as $characteristic) {
             /** @var Charactristics $characteristic */
             $result['hours'] = $characteristic->getHours();
             $result['game'] = $characteristic->getGame();
             $result['role'] = $characteristic->getRole();
             $result['skills'] = $characteristic->getSkills();
             $result['goals'] = $characteristic->getGoals();
-            switch ($characteristic->getCost())
-            {
+            switch ($characteristic->getCost()) {
                 case "500":
                     $result['cost'] = "< 500";
                     break;
@@ -72,7 +70,7 @@ class CharacteristicsController extends AbstractController
      */
     public function setUserCharacteristic(Request $request)
     {
-        $userId        = $request->request->get('user_id');
+        $userId = $request->request->get('user_id');
         $entityManager = $this->getDoctrine()->getManager();
 
         $user = $this->getDoctrine()
@@ -87,8 +85,7 @@ class CharacteristicsController extends AbstractController
         $characteristic->setSkills(explode(",", $request->request->get('skills')));
         $characteristic->setGoals(explode(",", $request->request->get('goals')));
 
-        switch ($request->request->get('cost'))
-        {
+        switch ($request->request->get('cost')) {
             case "< 500":
                 $characteristic->setCost(500);
                 break;

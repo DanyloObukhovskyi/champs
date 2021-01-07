@@ -27,21 +27,20 @@ class LoggerService
         static::$logger = $logger;
     }
 
-    public static function add($value, $type=false)
+    public static function add($value, $type = false)
     {
-        switch($type)
-        {
+        switch ($type) {
             case static::TYPE_ERROR:
                 static::$logger->error($value);
-            break;
+                break;
 
             case static::TYPE_WARNING:
                 static::$logger->warning($value);
-            break;
+                break;
 
             case static::TYPE_NOTE:
                 static::$logger->note($value);
-            break;
+                break;
 
             case static::TYPE_INFO:
             default:

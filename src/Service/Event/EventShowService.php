@@ -8,7 +8,7 @@ use App\Entity\Event;
 use App\Entity\EventShow;
 use App\Service\EntityService;
 
-class EventShowService extends  EntityService
+class EventShowService extends EntityService
 {
     protected $entity = EventShow::class;
 
@@ -19,7 +19,7 @@ class EventShowService extends  EntityService
         /** @var EventShow $showEvent */
         $showEvent = $this->repository->findByEvent($event);
 
-        if (empty($showEvent)){
+        if (empty($showEvent)) {
             $showEvent = new $this->entity;
 
             $showEvent->setEvent($event);

@@ -146,7 +146,7 @@ class Event implements \JsonSerializable
         return $this->startedAt;
     }
 
-    public function setStartedAt( $startedAt): self
+    public function setStartedAt($startedAt): self
     {
         $this->startedAt = $startedAt;
 
@@ -158,7 +158,7 @@ class Event implements \JsonSerializable
         return $this->endedAt;
     }
 
-    public function setEndedAt( $endedAt): self
+    public function setEndedAt($endedAt): self
     {
         $this->endedAt = $endedAt;
 
@@ -220,7 +220,7 @@ class Event implements \JsonSerializable
 
     public function setCreatedAt($date): self
     {
-        if (isset($date)){
+        if (isset($date)) {
             $date = new Carbon($date);
         }
         $this->createdAt = $date;
@@ -348,21 +348,21 @@ class Event implements \JsonSerializable
         $dayStart = $this->getStartedAt()->format('d F');
         $dayEnd = !empty($this->getEndedAt()) ? $this->getEndedAt()->format('d F') : null;
 
-       return [
-           "id"            => $this->getId(),
-           "name"          => $this->getName(),
-           "startedAt"     => $this->getStartedAt(),
-           "endedAt"       => $this->getEndedAt(),
-           "image"         => $this->getImage(),
-           'imageHeader'   => $this->getImageHeader(),
-           'logo'          => $this->getImage(),
-           'prize'         => $this->getPrize(),
-           'startedAtRu'   => NewsService::replaceMonth($dayStart),
-           'endedAtRu'     => NewsService::replaceMonth($dayEnd),
-           'views'         => $this->getViews(),
-           'commandsCount' => $this->getCommandCount(),
-           'location'      => $this->getLocation(),
-           'flag'          => $this->getFlagIcon(),
-       ];
+        return [
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "startedAt" => $this->getStartedAt(),
+            "endedAt" => $this->getEndedAt(),
+            "image" => $this->getImage(),
+            'imageHeader' => $this->getImageHeader(),
+            'logo' => $this->getImage(),
+            'prize' => $this->getPrize(),
+            'startedAtRu' => NewsService::replaceMonth($dayStart),
+            'endedAtRu' => NewsService::replaceMonth($dayEnd),
+            'views' => $this->getViews(),
+            'commandsCount' => $this->getCommandCount(),
+            'location' => $this->getLocation(),
+            'flag' => $this->getFlagIcon(),
+        ];
     }
 }

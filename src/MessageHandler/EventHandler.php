@@ -32,13 +32,11 @@ class EventHandler implements MessageHandlerInterface
 
         $event = HLTVService::getEventFull($event->getUrl());
 
-        if (isset($event['prizeDistributions']))
-        {
+        if (isset($event['prizeDistributions'])) {
             $this->createTeams($event['prizeDistributions']);
         }
 
-        if (!empty($event['teamsAttending']))
-        {
+        if (!empty($event['teamsAttending'])) {
             $this->createTeams($event['teamsAttending']);
         }
 
@@ -48,21 +46,17 @@ class EventHandler implements MessageHandlerInterface
     private function createTeams($teams)
     {
         $fullTeams = [];
-        foreach ($teams as $team)
-        {
-            if (isset($team['teamName']))
-            {
+        foreach ($teams as $team) {
+            if (isset($team['teamName'])) {
                 $teamEntity = $this->teamService->getByName($team['teamName']);
 
-                if (isset($teamEntity))
-                {
+                if (isset($teamEntity)) {
                     continue;
                 }
 
-                $fullTeam = HLTVService::getTeam(['name' => $team['teamName'], 'url' =>  $team['teamUrl']]);
+                $fullTeam = HLTVService::getTeam(['name' => $team['teamName'], 'url' => $team['teamUrl']]);
 
-                if (empty($fullTeam))
-                {
+                if (empty($fullTeam)) {
                     continue;
                 }
                 $fullTeams[] = $fullTeam;

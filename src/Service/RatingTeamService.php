@@ -70,13 +70,13 @@ class RatingTeamService extends EntityService
     {
         $teams = [];
         /** @var RatingTeam $ratingTeam */
-        foreach ($ratingTeams as $ratingTeam){
+        foreach ($ratingTeams as $ratingTeam) {
 
             /** @var Team $team */
             $team = $ratingTeam->getTeam();
             $this->imageService->setImage($team->getLogo());
             $teams[] = [
-                "id" =>$ratingTeam->getId (),
+                "id" => $ratingTeam->getId(),
                 'team_id' => $team->getId(),
                 'title' => $team->getName(),
                 'image' => $this->imageService->getImagePath(),

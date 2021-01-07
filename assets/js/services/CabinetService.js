@@ -4,7 +4,7 @@ class CabinetService extends Service {
     getLessons = () => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
-        if (timezone < 0){
+        if (timezone < 0) {
             timezone = Math.abs(timezone);
         } else {
             timezone = -timezone
@@ -45,6 +45,21 @@ class CabinetService extends Service {
         form.append('comment', comment);
 
         return this.send(`lesson/review/`, form)
+    }
+
+    getFirstLessonsAndEarned = () => {
+        return this.send('cabinet/get/first-lessons/and/earned');
+    }
+
+    setTrainerDayTime = (date, time) => {
+        return this.send('cabinet/calendar/set/trainer/date/day', {
+            date,
+            time
+        })
+    }
+
+    getTrainerScheduleDay = date => {
+        return this.send('cabinet/calendar/trainer/date/day', {date})
     }
 }
 

@@ -101,7 +101,7 @@ class NewsController extends AbstractController
         $hotNews = [];
 
         /** @var News $newsEntity */
-        foreach ($newsCollect as $newsEntity){
+        foreach ($newsCollect as $newsEntity) {
             $hotNews[] = $this->newsService->decorator($newsEntity);
         }
         return $this->json($hotNews);
@@ -117,8 +117,7 @@ class NewsController extends AbstractController
         $newsEntities = $this->newsService->getByFilters($request, 10, $offset);
 
         $news = [];
-        foreach ($newsEntities as $newsEntity)
-        {
+        foreach ($newsEntities as $newsEntity) {
             $news[] = $this->newsService->decorator($newsEntity);
         }
         return $this->json($news);
@@ -202,7 +201,7 @@ class NewsController extends AbstractController
     {
         $items = $this->entityManager
             ->getRepository(News::class)
-            ->findBy(array(),array('id'=>'DESC'),10,0);
+            ->findBy(array(), array('id' => 'DESC'), 10, 0);
 
         return $this->json($items);
     }
@@ -217,13 +216,12 @@ class NewsController extends AbstractController
 
         $parentComment = null;
 
-        if (isset($request->commentId)){
+        if (isset($request->commentId)) {
             $parentComment = $this->newsCommentService->getRepository()
                 ->find($request->commentId);
         }
 
-        if (!empty($this->getUser()) and isset($news))
-        {
+        if (!empty($this->getUser()) and isset($news)) {
             $this->newsCommentService->create(
                 $this->getUser(),
                 $news,
@@ -292,7 +290,7 @@ class NewsController extends AbstractController
         $news = $this->newsService->getByGame($game);
 
         $newsArray = [];
-        foreach ($news as $new){
+        foreach ($news as $new) {
             $newsArray[] = $this->newsService->decorator($new);
         }
         return $this->json($newsArray);
@@ -321,7 +319,7 @@ class NewsController extends AbstractController
                     'news' => $news
                 ]);
 
-            if (empty($userLike)){
+            if (empty($userLike)) {
                 $userLike = new NewsLike();
                 $userLike->setUser($user);
                 $userLike->setNews($news);
@@ -359,14 +357,14 @@ class NewsController extends AbstractController
             ->find($commentId);
 
         $newsCommentLike = null;
-        if (isset($newsComment) and !empty($this->getUser())){
+        if (isset($newsComment) and !empty($this->getUser())) {
             $newsCommentLike = $this->entityManager->getRepository(NewsCommentLike::class)
                 ->findOneBy([
                     'comment' => $newsComment,
                     'user' => $this->getUser()
                 ]);
 
-            if (empty($newsCommentLike)){
+            if (empty($newsCommentLike)) {
                 $newsCommentLike = new NewsCommentLike();
                 $newsCommentLike->setUser($this->getUser());
                 $newsCommentLike->setComment($newsComment);
@@ -403,13 +401,13 @@ class NewsController extends AbstractController
             ->getRepository(News::class)
             ->find($request->newsId);
 
-        if (!empty($this->getUser())){
+        if (!empty($this->getUser())) {
             $newsBookmark = $this->entityManager->getRepository(NewsBookmark::class)
                 ->findOneBy([
                     'user' => $this->getUser(),
                     'news' => $news
                 ]);
-            if (empty($newsBookmark)){
+            if (empty($newsBookmark)) {
                 $newsBookmark = new NewsBookmark();
                 $newsBookmark->setUser($this->getUser());
                 $newsBookmark->setNews($news);
@@ -433,13 +431,13 @@ class NewsController extends AbstractController
         $userBookmarks = $this->entityManager
             ->getRepository(NewsBookmark::class)
             ->findBy([
-               'user' => $this->getUser()
+                'user' => $this->getUser()
             ]);
 
         $news = [];
 
         /** @var NewsBookmark $bookmark */
-        foreach ($userBookmarks as $bookmark){
+        foreach ($userBookmarks as $bookmark) {
             $news[] = $this->newsService->decorator($bookmark->getNews());
         }
         return $this->json($news);

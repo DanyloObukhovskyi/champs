@@ -2,16 +2,16 @@
     <div class="lesson">
         <div class="lesson-body">
             <div class="time">
-                {{getLessonTime(lesson.dateFrom)}} - {{getLessonTime(lesson.dateTo)}}
+                {{ getLessonTime(lesson.dateFrom) }} - {{ getLessonTime(lesson.dateTo) }}
             </div>
-            <div class="trainer">
+            <div class="trainer" :class="{'justify-content-center': !isTrainerCabinetSmall}" v-if="user !== null">
                 <template v-if="!user.isTrainer">
                     <div class="avatar">
                         <img :src="'/uploads/avatars/' + lesson.trainer.photo"
                              @error="$event.target.src = '/images/noLogo.png'">
                     </div>
                     <div class="nickname">
-                        {{lesson.trainer.nickname}}
+                        {{ lesson.trainer.nickname }}
                     </div>
                 </template>
                 <template v-else>
@@ -20,7 +20,7 @@
                              @error="$event.target.src = '/images/noLogo.png'">
                     </div>
                     <div class="nickname">
-                        {{lesson.student.nickname}}
+                        {{ lesson.student.nickname }}
                     </div>
                 </template>
                 <div class="buttons" v-if="!isPast">
@@ -29,14 +29,14 @@
                             <img src="/images/cabinet/user.png">
                         </template>
                     </cabinet-button>
-                    <cabinet-button text-first="Подробнее" @click="showMoreDetail = !showMoreDetail">
+                    <cabinet-button text-first="Подробнее" @click="toggleMoreDetail">
                         <template v-slot:img>
                             <img src="/images/cabinet/inviteIcon.png">
                         </template>
                     </cabinet-button>
                     <cabinet-button text-first="Занятие окончено?"
                                     @click="setConfirmed"
-                                    v-if="!(user.isTrainer && isConfirmed)"
+                                    v-if="!(user.isTrainer && isConfirmed) && isTrainerCabinetSmall"
                                     :text-second="finishLessonLabel">
                         <template v-slot:img>
                             <img src="/images/cabinet/arrow.png">
@@ -44,7 +44,7 @@
                     </cabinet-button>
                 </div>
                 <div class="buttons" v-else>
-                    <cabinet-button text-first="Подробнее" @click="showMoreDetail = !showMoreDetail">
+                    <cabinet-button text-first="Подробнее" @click="toggleMoreDetail">
                         <template v-slot:img>
                             <img src="/images/cabinet/inviteIcon.png">
                         </template>
@@ -52,7 +52,7 @@
                     <cabinet-button
                             @click="setConfirmed"
                             text-first="Занятие окончено"
-                            v-if="!(user.isTrainer && isConfirmed)"
+                            v-if="!(user.isTrainer && isConfirmed) && isTrainerCabinetSmall"
                             :text-second="finishLessonLabel">
                         <template v-slot:img>
                             <img src="/images/cabinet/arrow.png">
@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="lesson-bottom">
-            <more-detail :lesson="lesson" :show="showMoreDetail"/>
+            <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="!isTrainerCabinetSmall"/>
             <send-review :lesson="lesson" v-if="showReview"/>
         </div>
     </div>
@@ -71,15 +71,25 @@
 <script>
     import MoreDetail from "./MoreDetail";
     import Swal from 'sweetalert2'
-    import CabinetButton from "../Button";
+    import CabinetButton from "../../../Button";
     import {mapGetters} from "vuex";
-    import CabinetService from "../../../services/CabinetService";
+    import CabinetService from "../../../../../services/CabinetService";
     import SendReview from "./SendReview";
-    import TrainerSendReview from "../../trainers/TrainerSendReview";
+    import TrainerSendReview from "../../../../trainers/TrainerSendReview";
 
     export default {
         name: "LessonRow",
-        props: ['lesson', 'isPast'],
+        props: {
+            lesson: {
+                default: null,
+            },
+            isPast: {
+                default: false,
+            },
+            isTrainerCabinetSmall: {
+                default: true
+            }
+        },
         components: {
             TrainerSendReview,
             SendReview,
@@ -166,82 +176,97 @@
                     showConfirmButton: false
                 })
             },
-        }
+            toggleMoreDetail() {
+                this.showMoreDetail = !this.showMoreDetail;
+
+                const self = this;
+                $('body').on('mousedown', function () {
+
+                    if ($(event.target).parents(".more-detail-wrapper").length === 0
+                        && $(event.target).parents(".cabinet-button").length === 0){
+
+                        self.showMoreDetail = false;
+                    }
+                })
+            }
+        },
     }
 </script>
 
 <style scoped lang="scss">
-    .lesson {
-        margin-left: 2.5vw;
-        padding: 1vw 0;
+  .lesson {
+	margin-left: 2.5vw;
+	padding: .5vw 0;
 
-        .lesson-body {
-            display: flex;
-            align-items: center;
-        }
+	.lesson-body {
+	  display: flex;
+	  align-items: center;
+	}
 
-        .time {
-            color: #a2a4a5;
-            font-size: .8vw;
-            width: 9vw;
-        }
+	.time {
+	  color: #a2a4a5;
+	  font-size: .8vw;
+	  width: 9vw;
+	}
 
-        .trainer {
-            display: flex;
-            align-items: center;
-            width: 100%;
+	.trainer {
+	  display: flex;
+	  align-items: center;
+	  width: 100%;
 
-            .avatar {
-                width: 2.5vw;
-                height: 2.5vw;
-                border-radius: 50%;
-                padding: .1vw;
-                margin-right: 1vw;
-                background: #ff6f1f;
-                background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-                background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-                background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+	  .avatar {
+		width: 2.5vw;
+		height: 2.5vw;
+		border-radius: 50%;
+		padding: .1vw;
+		margin-right: 1vw;
+		background: #ff6f1f;
+		background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+		background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+		background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
 
-                img {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;
-                }
-            }
+		img {
+		  width: 100%;
+		  height: 100%;
+		  border-radius: 50%;
+		}
+	  }
 
-            .nickname {
-                color: #9d9fa0;
-                font-size: 1vw;
-                width: 8vw;
-            }
+	  .nickname {
+		color: #9d9fa0;
+		font-size: 1vw;
+		width: 8vw;
+	  }
 
-            .buttons {
-                display: flex;
-                align-items: center;
-                width: 80%;
+	  .buttons {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 45%;
+		max-width: 70%;
 
-                .button {
-                    margin-right: 1vw;
-                }
-            }
-        }
-    }
+		.button {
+		  margin-right: 1vw;
+		}
+	  }
+	}
+  }
 </style>
 
 <style>
-    .discord-button {
-        height: 2.3vw;
-        border: unset;
-        color: white;
-        background: #ff6d1d;
-        border-radius: .4vw;
-        outline: unset;
-        cursor: pointer;
-        font-size: .8vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1vw 0 01vw;
-    }
+	.discord-button {
+		height: 2.3vw;
+		border: unset;
+		color: white;
+		background: #ff6d1d;
+		border-radius: .4vw;
+		outline: unset;
+		cursor: pointer;
+		font-size: .8vw;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 1vw 0 01vw;
+	}
 </style>

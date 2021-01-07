@@ -22,8 +22,7 @@ class GosuGamersService
         LoggerService::add("mathes func");
         LoggerService::add("gosu get cs matches", LoggerService::TYPE_INFO);
         $content = PageContentService::getPageContent(static::$baseUrl . '/counterstrike/matches');
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
 
@@ -32,63 +31,51 @@ class GosuGamersService
         $matches = [];
         $matchCells = $document->find("//div[contains(@class, 'cell')]/a", Query::TYPE_XPATH);
 
-        foreach ($matchCells as $matchCellLink)
-        {
-            if (count($matchCellLink->find("div[contains(@class, 'match')]", Query::TYPE_XPATH)) == 0)
-            {
+        foreach ($matchCells as $matchCellLink) {
+            if (count($matchCellLink->find("div[contains(@class, 'match')]", Query::TYPE_XPATH)) == 0) {
                 continue;
             }
 
             $matchItem = [];
             $url = $matchCellLink->attr('href');
 
-            if (strrpos($url, 'http') === false)
-            {
+            if (strrpos($url, 'http') === false) {
                 $url = static::$baseUrl . $url;
             }
 
             $matchItem['url'] = $url;
 
             $matchInfo = $matchCellLink->find("//div[contains(@class, 'match-info')]", Query::TYPE_XPATH);
-            if (empty($matchInfo))
-            {
+            if (empty($matchInfo)) {
                 return ['error' => true, 'code' => 'match_info_not_found'];
             }
 
             $matchItem['teams'] = [];
 
             $team1 = $matchInfo[0]->find("//span[contains(@class, 'team-1')]", Query::TYPE_XPATH);
-            if (!empty($team1))
-            {
+            if (!empty($team1)) {
                 $matchItem['teams'][] = trim($team1[0]->text());
             }
 
 
             $team2 = $matchInfo[0]->find("//span[contains(@class, 'team-2')]", Query::TYPE_XPATH);
-            if (!empty($team2))
-            {
+            if (!empty($team2)) {
                 $matchItem['teams'][] = trim($team2[0]->text());
             }
 
             $matchStatus = $matchCellLink->find("//div[contains(@class, 'match-status')]", Query::TYPE_XPATH);
-            if (empty($matchStatus))
-            {
+            if (empty($matchStatus)) {
                 return ['error' => true, 'code' => 'match_status_not_found'];
             }
 
             $startTime = null;
             $matchDate = $matchStatus[0]->find("//span[contains(@class, 'post-date')]/time", Query::TYPE_XPATH);
-            if (!empty($matchDate))
-            {
+            if (!empty($matchDate)) {
                 $matchItem['start_time'] = $matchDate[0]->attr('datetime');
-            }
-            else
-            {
+            } else {
                 $matchLive = $matchStatus[0]->find("//span", Query::TYPE_XPATH);
-                if (!empty($matchLive))
-                {
-                    if (strtolower($matchLive[0]->text()) == 'live')
-                    {
+                if (!empty($matchLive)) {
+                    if (strtolower($matchLive[0]->text()) == 'live') {
                         $matchItem['is_live'] = true;
                     }
                 }
@@ -107,19 +94,17 @@ class GosuGamersService
         LoggerService::add("get match info {$match['teams'][0]} vs {$match['teams'][1]}", LoggerService::TYPE_INFO);
 
         $content = PageContentService::getPageContent($match['url']);
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
 
         $document = new Document($content);
 
         $dateRaw = $document->find("//div[contains(@class, 'match')]//div[contains(@class, 'details')]/small", Query::TYPE_XPATH);
-        if (count($dateRaw) > 0)
-        {
+        if (count($dateRaw) > 0) {
             $date = trim($dateRaw[0]->text());
 
-            $match['start_at'] = \DateTime::createFromFormat("M d, Y, H:i A e",$date);
+            $match['start_at'] = \DateTime::createFromFormat("M d, Y, H:i A e", $date);
         }
 
         $teamsCells = $document->find("//div[contains(@class, 'cell match')]//div[contains(@class, 'team')]", Query::TYPE_XPATH);
@@ -127,30 +112,26 @@ class GosuGamersService
         $match['teams'] = [];
         $match['code'] = $match['start_at']->format('Y-m-d');
 
-        foreach ($teamsCells as $teamCell)
-        {
+        foreach ($teamsCells as $teamCell) {
             $team = [];
 
             $teamUrlRaw = $teamCell->find("//h2/a", Query::TYPE_XPATH);
-            if (empty($teamUrlRaw))
-            {
+            if (empty($teamUrlRaw)) {
                 return false;
             }
 
             $teamUrl = $teamUrlRaw[0]->attr('href');
-            if (strrpos($teamUrl, 'http') === false)
-            {
+            if (strrpos($teamUrl, 'http') === false) {
                 $teamUrl = static::$baseUrl . $teamUrl;
             }
 
             $team['url'] = $teamUrl;
 
             $teamFullInfo = static::getTeam($team);
-            if (!$teamFullInfo or ($teamFullInfo and is_array($teamFullInfo) && isset($teamFullInfo['error'])))
-            {
-                if(isset($team['name'])){
+            if (!$teamFullInfo or ($teamFullInfo and is_array($teamFullInfo) && isset($teamFullInfo['error']))) {
+                if (isset($team['name'])) {
                     LoggerService::error("team not found {$team['name']}");
-                }else{
+                } else {
                     LoggerService::error("team not found {$team['url']}");
                 }
 //                try{
@@ -160,8 +141,7 @@ class GosuGamersService
                 return false;
             }
 
-            if ($teamFullInfo)
-            {
+            if ($teamFullInfo) {
                 $team = $team + $teamFullInfo;
                 $match['code'] .= (!empty($matchItem['code']) ? '|' : "") . $team['name'];
             }
@@ -182,18 +162,15 @@ class GosuGamersService
         LoggerService::add("get match full info {$match['teams'][0]['name']} vs {$match['teams'][1]['name']}", LoggerService::TYPE_INFO);
 
         $content = PageContentService::getPageContent($match['url']);
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
 
         $document = new Document($content);
 
-        foreach($match['teams'] as &$team)
-        {
+        foreach ($match['teams'] as &$team) {
             $teamFull = static::getTeamFull($team);
-            if (!$teamFull)
-            {
+            if (!$teamFull) {
                 LoggerService::error("team  {$team['name']} full info is empty");
                 continue;
             }
@@ -202,8 +179,7 @@ class GosuGamersService
         unset($team);
 
         $scoreRaw = $document->find("//div[contains(@class, 'match')]//div[contains(@class, 'details')]//div[contains(@class, 'score')]/span", Query::TYPE_XPATH);
-        if (count($scoreRaw) > 0)
-        {
+        if (count($scoreRaw) > 0) {
             $match['score1'] = trim($scoreRaw[0]->text());
             $match['score2'] = trim($scoreRaw[1]->text());
         }
@@ -221,16 +197,14 @@ class GosuGamersService
         LoggerService::add("get match {$matchUrl} statistic", LoggerService::TYPE_INFO);
 
         $content = PageContentService::getPageContent($matchUrl);
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
 
         $document = new Document($content);
 
         $scoreRaw = $document->find("//div[contains(@class, 'match')]//div[contains(@class, 'details')]//div[contains(@class, 'score')]/span", Query::TYPE_XPATH);
-        if (count($scoreRaw) > 0)
-        {
+        if (count($scoreRaw) > 0) {
             $match['score1'] = trim($scoreRaw[0]->text());
             $match['score2'] = trim($scoreRaw[1]->text());
         }
@@ -246,17 +220,14 @@ class GosuGamersService
     {
         LoggerService::add("matchesMapsInfo func");
         $mapsRaw = $document->find("//div[contains(@data-tabs-content, 'matchGames')]//div[contains(@id, 'game')]//div[contains(@class, 'game-data')]", Query::TYPE_XPATH);
-        if (count($mapsRaw) == 0)
-        {
+        if (count($mapsRaw) == 0) {
             return false;
         }
 
         $maps = [];
-        foreach ($mapsRaw as $mapRaw)
-        {
+        foreach ($mapsRaw as $mapRaw) {
             $mapsNameRaw = $mapRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' map ')]/following::text()[1]", Query::TYPE_XPATH);
-            if (count($mapsNameRaw) == 0)
-            {
+            if (count($mapsNameRaw) == 0) {
                 continue;
             }
 
@@ -266,23 +237,20 @@ class GosuGamersService
             ];
 
             $mapsStatItemRaw = $mapRaw->find("//div[contains(@class, 'game-data')]", Query::TYPE_XPATH);
-            if (count($mapsStatItemRaw) == 0)
-            {
+            if (count($mapsStatItemRaw) == 0) {
                 continue;
             }
 
             $mapsStatItemRaw = $mapsStatItemRaw[0];
 
             $teamLeftStat = static::getMapResultByType($mapsStatItemRaw, static::TEAM_RESULT_STAT_1);
-            if (empty($teamLeftStat))
-            {
+            if (empty($teamLeftStat)) {
                 LoggerService::add("left team info not found", LoggerService::TYPE_ERROR);
                 return false;
             }
 
             $teamRightStat = static::getMapResultByType($mapsStatItemRaw, static::TEAM_RESULT_STAT_2);
-            if (empty($teamRightStat))
-            {
+            if (empty($teamRightStat)) {
                 LoggerService::add("right team info not found", LoggerService::TYPE_ERROR);
                 return false;
             }
@@ -301,15 +269,13 @@ class GosuGamersService
     private static function getMapResultByType($mapsStatItemRaw, $type)
     {
         LoggerService::add("mapResultByType func");
-        if (!in_array($type, [static::TEAM_RESULT_STAT_1, static::TEAM_RESULT_STAT_2]))
-        {
+        if (!in_array($type, [static::TEAM_RESULT_STAT_1, static::TEAM_RESULT_STAT_2])) {
             return false;
         }
 
         $resultRaw = $mapsStatItemRaw->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' {$type} ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' details ')]", Query::TYPE_XPATH);
 
-        if (count($resultRaw) == 0)
-        {
+        if (count($resultRaw) == 0) {
             LoggerService::add("{$type} team info block not found", LoggerService::TYPE_ERROR);
             return false;
         }
@@ -317,16 +283,14 @@ class GosuGamersService
         $resultRaw = $resultRaw[0];
         $resultTeamNameRaw = $resultRaw->find("//a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]", Query::TYPE_XPATH);
 
-        if (count($resultTeamNameRaw) == 0)
-        {
+        if (count($resultTeamNameRaw) == 0) {
             LoggerService::add("{$type} team name info not found", LoggerService::TYPE_ERROR);
             return false;
         }
 
         $resultTeamScoreRaw = $resultRaw->find("//span[contains(concat(' ', normalize-space(@class), ' '), ' score ')]", Query::TYPE_XPATH);
 
-        if (count($resultTeamScoreRaw) == 0)
-        {
+        if (count($resultTeamScoreRaw) == 0) {
             LoggerService::add("{$type} team score info not found", LoggerService::TYPE_ERROR);
             return false;
         }
@@ -341,17 +305,14 @@ class GosuGamersService
     {
         LoggerService::add("teams func");
         $result = [];
-        if (empty($match['teams']))
-        {
+        if (empty($match['teams'])) {
             LoggerService::error('teams not found');
             return false;
         }
 
-        foreach ($match['teams'] as $team)
-        {
+        foreach ($match['teams'] as $team) {
             $teamItem = static::getTeam($team);
-            if (!$teamItem)
-            {
+            if (!$teamItem) {
                 LoggerService::error('team not found');
                 return false;
             }
@@ -367,8 +328,7 @@ class GosuGamersService
     public static function getTeam($team)
     {
         LoggerService::add("team func 365");
-        if (!empty($team['full_name']))
-        {
+        if (!empty($team['full_name'])) {
             LoggerService::add($team['full_name']);
             return $team;
         }
@@ -376,8 +336,7 @@ class GosuGamersService
         LoggerService::add("team func debug 0");
 
         $content = PageContentService::getPageContent($team['url']);
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (!$content or ($content and is_array($content) && isset($content['error']))) {
             return false;
         }
         LoggerService::add("team func debug 1");
@@ -385,12 +344,10 @@ class GosuGamersService
         $document = new Document($content);
 
         $avatarRaw = $document->find("//div[contains(@class, 'player-header')]//div[contains(@class, 'avatar')]", Query::TYPE_XPATH);
-        if (count($avatarRaw) > 0)
-        {
+        if (count($avatarRaw) > 0) {
             $avatarRaw = $avatarRaw[0]->attr('style');
             preg_match("/url\(\'(.*?)\'\)/i", $avatarRaw, $avatarMatch);
-            if (!empty($avatarMatch) && !empty($avatarMatch[1]))
-            {
+            if (!empty($avatarMatch) && !empty($avatarMatch[1])) {
                 $team['logo'] = trim($avatarMatch[1]);
             }
         }
@@ -398,22 +355,19 @@ class GosuGamersService
         LoggerService::add("team func debug 2");
 
         $nameRaw = $document->find("//h3[contains(@class, 'name')]", Query::TYPE_XPATH);
-        if (count($nameRaw) > 0)
-        {
+        if (count($nameRaw) > 0) {
             $team['name'] = trim($nameRaw[0]->text());
         }
 
 
         $realNameRaw = $document->find("//div[contains(@class, 'meta')]//span[contains(@class, 'real-name')]", Query::TYPE_XPATH);
-        if (count($realNameRaw) > 0)
-        {
+        if (count($realNameRaw) > 0) {
             $team['full_name'] = trim($realNameRaw[0]->text());
         }
         LoggerService::add("team func debug 3");
 
         $regionRaw = $document->find("//span[contains(@class, 'region')]", Query::TYPE_XPATH);
-        if (count($regionRaw) > 0)
-        {
+        if (count($regionRaw) > 0) {
             $team['region'] = trim($regionRaw[0]->text());
         }
 
@@ -424,24 +378,20 @@ class GosuGamersService
     {
         LoggerService::add("teamfull func");
         $content = PageContentService::getPageContent($team['url']);
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (!$content or ($content and is_array($content) && isset($content['error']))) {
             return $content;
         }
 
         $document = new Document($content);
 
         $playersRaw = $document->find("//div[contains(@class, 'team-players')]//div[contains(@class, 'row')]/a[contains(@class, 'player')]", Query::TYPE_XPATH);
-        if (count($playersRaw) == 0)
-        {
+        if (count($playersRaw) == 0) {
             return $team;
         }
 
-        foreach ($playersRaw as $playersItemRaw)
-        {
+        foreach ($playersRaw as $playersItemRaw) {
             $playerUrl = $playersItemRaw->attr('href');
-            if (strrpos($playerUrl, 'http') === false)
-            {
+            if (strrpos($playerUrl, 'http') === false) {
                 $playerUrl = static::$baseUrl . $playerUrl;
             }
 
@@ -455,18 +405,14 @@ class GosuGamersService
 
         }
 
-        if (!empty($team['players']))
-        {
-            foreach ($team['players'] as &$player)
-            {
-                if (empty($player['url']))
-                {
+        if (!empty($team['players'])) {
+            foreach ($team['players'] as &$player) {
+                if (empty($player['url'])) {
                     continue;
                 }
 
                 $playerItem = static::getPerson($player);
-                if (!$playerItem)
-                {
+                if (!$playerItem) {
                     LoggerService::error("team player {$player['nick']} not found, url: {$player['url']}");
                     continue;
                 }
@@ -482,50 +428,41 @@ class GosuGamersService
     {
         LoggerService::add("person func");
         $content = PageContentService::getPageContent($player['url']);
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
 
         $document = new Document($content);
 
         $avatarRaw = $document->find("//div[contains(@class, 'avatar')]", Query::TYPE_XPATH);
-        if (count($avatarRaw) > 0)
-        {
+        if (count($avatarRaw) > 0) {
             $avatarRaw = $avatarRaw[0]->attr('style');
             preg_match("/url\(\'(.*?)\'\)/i", $avatarRaw, $avatarMatch);
-            if (!empty($avatarMatch) && !empty($avatarMatch[1]))
-            {
+            if (!empty($avatarMatch) && !empty($avatarMatch[1])) {
                 $player['photo'] = trim($avatarMatch[1]);
             }
         }
 
-        if (empty($player['nick']))
-        {
+        if (empty($player['nick'])) {
             $nickRaw = $document->find("//h3[contains(@class, 'name')]", Query::TYPE_XPATH);
-            if (count($nickRaw) > 0)
-            {
+            if (count($nickRaw) > 0) {
                 $player['nick'] = trim($nickRaw[0]->text());
             }
         }
 
         $realNameRaw = $document->find("//span[contains(@class, 'real-name')]", Query::TYPE_XPATH);
-        if (count($realNameRaw) > 0)
-        {
+        if (count($realNameRaw) > 0) {
             $realName = trim($realNameRaw[0]->text());
-            if (!empty($realName))
-            {
+            if (!empty($realName)) {
                 $player['real_name'] = $realName;
             }
         }
 
 
         $regionRaw = $document->find("//span[contains(@class, 'region')]", Query::TYPE_XPATH);
-        if (count($regionRaw) > 0)
-        {
+        if (count($regionRaw) > 0) {
             $region = trim($regionRaw[0]->text());
-            if (!empty($region))
-            {
+            if (!empty($region)) {
                 $player['region'] = $region;
             }
         }
@@ -537,38 +474,32 @@ class GosuGamersService
     {
         LoggerService::add("streams func");
         $streamsRaw = $document->find("//ul[contains(@id, 'streamTabs')]/li/a[contains(concat(' ', normalize-space(@class), ' '), ' stream ') and not(contains(concat(' ', normalize-space(@class), ' '), ' icon-plus '))]", Query::TYPE_XPATH);
-        if (count($streamsRaw) == 0)
-        {
+        if (count($streamsRaw) == 0) {
             return false;
         }
 
         $streams = [];
-        foreach ($streamsRaw as $streamRaw)
-        {
+        foreach ($streamsRaw as $streamRaw) {
             $streamItem = [];
             $url = $streamRaw->attr('href');
-            if (strrpos($url, 'http') === false)
-            {
+            if (strrpos($url, 'http') === false) {
                 $url = static::$baseUrl . $url;
             }
 
             $streamItemUrl = static::getStreamUrl($url);
-            if (empty($streamItemUrl))
-            {
+            if (empty($streamItemUrl)) {
                 continue;
             }
 
             $streamItem['url'] = $streamItemUrl;
 
             $streamNameRaw = $streamRaw->find("text()", Query::TYPE_XPATH);
-            if (count($streamNameRaw) > 0)
-            {
+            if (count($streamNameRaw) > 0) {
                 $streamItem['name'] = trim($streamNameRaw[0]);
             }
 
             $streamLanguageRaw = $streamRaw->find("//small", Query::TYPE_XPATH);
-            if (count($streamLanguageRaw) > 0)
-            {
+            if (count($streamLanguageRaw) > 0) {
                 $streamLanguageText = $streamLanguageRaw[0]->find("text()", Query::TYPE_XPATH);
                 $streamItem['language'] = trim($streamLanguageText[0]);
             }
@@ -583,15 +514,13 @@ class GosuGamersService
     {
         LoggerService::add("streamUrl func");
         $content = PageContentService::getPageContent($streamUrl);
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
 
         $document = new Document($content);
         $streamRaw = $document->find("//iframe", Query::TYPE_XPATH);
-        if (count($streamRaw) == 0)
-        {
+        if (count($streamRaw) == 0) {
             return false;
         }
 

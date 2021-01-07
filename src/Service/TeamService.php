@@ -57,19 +57,17 @@ class TeamService extends EntityService
         ini_set('max_execution_time', 0);
 
         $team = $this->repository->getByName($values['name']);
-        if (empty($team))
-        {
+        if (empty($team)) {
             $team = new $this->entity;
         }
         $team->setName($values['name'])->setRegion($values['region']);
 
         $this->setTeamLogo($values['logo'], $team);
 
-        if (isset($values['regionIconName']))
-        {
+        if (isset($values['regionIconName'])) {
             $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
 
-            if (isset($flagIcon)){
+            if (isset($flagIcon)) {
                 $team->setFlagIcon($flagIcon);
             }
         }
@@ -88,8 +86,7 @@ class TeamService extends EntityService
     public function getByName($name)
     {
         $team = $this->repository->getByName($name);
-        if (isset($team))
-        {
+        if (isset($team)) {
             $this->entityManager->persist($team);
             return $team;
         }
@@ -103,18 +100,16 @@ class TeamService extends EntityService
      */
     public function setTeamLogo($photo, Team $team)
     {
-        if (!empty($photo))
-        {
+        if (!empty($photo)) {
             $parseDate = new Carbon($team->getParseLogoDate());
-            if ($parseDate->addWeek(1) >= Carbon::now() or $team->getLogo() === null){
+            if ($parseDate->addWeek(1) >= Carbon::now() or $team->getLogo() === null) {
                 try {
                     $imagePhoto = DownloadFile::getImage($photo);
-                    if (!empty($imagePhoto))
-                    {
+                    if (!empty($imagePhoto)) {
                         $team->setLogo($imagePhoto);
                         $team->setParseLogoDate(Carbon::now());
                     }
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     LoggerService::add("Download image error: $e");
                 }
             }
@@ -129,26 +124,21 @@ class TeamService extends EntityService
     public function createTeams($teams)
     {
         $result = [];
-        foreach ($teams as $team)
-        {
+        foreach ($teams as $team) {
             $teamEntity = $this->create($team);
 
-            if (!isset($teamEntity))
-            {
+            if (!isset($teamEntity)) {
                 return [];
             }
-            foreach ($team['players'] as $playerValues)
-            {
+            foreach ($team['players'] as $playerValues) {
                 $personEntity = $this->personService->create($playerValues);
 
-                if (!isset($personEntity))
-                {
+                if (!isset($personEntity)) {
                     continue;
                 }
                 /** @var Player|null $playerEntity */
                 $playerEntity = $this->playerService->create($personEntity, $teamEntity);
-                if (!isset($playerEntity))
-                {
+                if (!isset($playerEntity)) {
                     continue;
                 }
             }
@@ -171,13 +161,13 @@ class TeamService extends EntityService
 
         $players = [];
         /** @var Player $playerEntity */
-        foreach ($playersEntities as $playerEntity){
+        foreach ($playersEntities as $playerEntity) {
             $players[] = $playerEntity->getPerson();
         }
         return [
-            'id'      => $team->getId(),
-            'name'    => $team->getName(),
-            'logo'    => $this->imageService->getImagePath(),
+            'id' => $team->getId(),
+            'name' => $team->getName(),
+            'logo' => $this->imageService->getImagePath(),
             'players' => $players
         ];
     }
@@ -190,7 +180,7 @@ class TeamService extends EntityService
     {
         $teamsDecorate = [];
 
-        foreach ($teams as $team){
+        foreach ($teams as $team) {
             $teamsDecorate[] = $this->teamDecorator($team);
         }
 
@@ -212,7 +202,7 @@ class TeamService extends EntityService
      */
     public function find($id)
     {
-        if (isset($id)){
+        if (isset($id)) {
             $team = $this->repository->find($id);
         } else {
             $team = null;

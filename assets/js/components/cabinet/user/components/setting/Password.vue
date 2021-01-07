@@ -38,7 +38,7 @@
 
 <script>
     import Swal from 'sweetalert2'
-    import CabinetService from "../../../services/CabinetService";
+    import CabinetService from "../../../../../services/CabinetService";
 
     export default {
         name: "Password",

@@ -38,8 +38,7 @@ class EventPrizeDistributionService extends EntityService
      */
     public function create($values, $event)
     {
-        if (empty($values['teamName']))
-        {
+        if (empty($values['teamName'])) {
             $team = null;
         } else {
             $team = $this->teamService->getByName($values['teamName']);
@@ -48,8 +47,7 @@ class EventPrizeDistributionService extends EntityService
         /** @var EventPrizeDistribution $eventPrizeDistribution */
         $eventPrizeDistribution = $this->repository->findByTeamAndEvent($values['position'], $event, $team);
 
-        if (empty($eventPrizeDistribution))
-        {
+        if (empty($eventPrizeDistribution)) {
             $eventPrizeDistribution = new $this->entity;
         }
         $eventPrizeDistribution->setEvent($event);
@@ -69,8 +67,7 @@ class EventPrizeDistributionService extends EntityService
         $prizes = [];
 
         /** @var EventPrizeDistribution $prizeDistribution */
-        foreach ($prizeDistributions as $prizeDistribution)
-        {
+        foreach ($prizeDistributions as $prizeDistribution) {
             $prize = [];
             $prize['position'] = $prizeDistribution->getPosition();
             $prize['prize'] = $prizeDistribution->getPrize();

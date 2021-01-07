@@ -31,8 +31,7 @@ class MatchMapTeamWinRateService extends EntityService
     {
         $matchMapTeamStatistic = $this->repository->findByMatchTeamAndMap($match, $team, $map);
 
-        if (empty($matchMapTeamStatistic))
-        {
+        if (empty($matchMapTeamStatistic)) {
             $matchMapTeamStatistic = new $this->entity;
             $matchMapTeamStatistic->setTeam($team);
             $matchMapTeamStatistic->setMatch($match);

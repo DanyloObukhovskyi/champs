@@ -18,11 +18,11 @@ class TimeZoneService
         $isMinus = false;
         $gmtNumeric = (new \DateTime('2010-12-21', new DateTimeZone($timezone)))->getOffset();
 
-        if ($gmtNumeric < 0 ){
+        if ($gmtNumeric < 0) {
             $isMinus = true;
         }
         $gmt = gmdate("G:i", $gmtNumeric);
-        $gmt = $isMinus ? "GMT -$gmt": "GMT +$gmt";
+        $gmt = $isMinus ? "GMT -$gmt" : "GMT +$gmt";
 
         return [$gmt, $gmtNumeric, $timezone];
     }
@@ -36,8 +36,7 @@ class TimeZoneService
         $timezones = DateTimeZone::listIdentifiers();
 
         $timezonesWithGMT = [];
-        foreach ($timezones as $timezone)
-        {
+        foreach ($timezones as $timezone) {
             [$gmt, $gmtNumeric] = $this->getGmtTimezoneString($timezone);
 
             $timezonesWithGMT[$gmtNumeric]['gmt'] = $gmt;
@@ -47,9 +46,8 @@ class TimeZoneService
         $minusGmt = [];
         $plusGmt = [];
 
-        foreach ($timezonesWithGMT as $gmt => $zones)
-        {
-            if ($gmt < 0){
+        foreach ($timezonesWithGMT as $gmt => $zones) {
+            if ($gmt < 0) {
                 $minusGmt[$gmt] = $zones;
             } else {
                 $plusGmt[$gmt] = $zones;
@@ -63,8 +61,7 @@ class TimeZoneService
         $timezonesWithGMT = array_merge($minusGmt, $plusGmt);
 
         $timezones = [];
-        foreach ($timezonesWithGMT as $zones)
-        {
+        foreach ($timezonesWithGMT as $zones) {
             $timezones[] = $zones;
         }
 

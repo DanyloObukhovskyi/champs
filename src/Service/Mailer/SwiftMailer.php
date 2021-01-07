@@ -10,12 +10,12 @@ class SwiftMailer
     const
         SENDER_MAIL = "send@example.com";
 
-    public function sendRegistrationMail($theme ,$recipient, $name, \Swift_Mailer $mailer)
+    public function sendRegistrationMail($theme, $recipient, $name, \Swift_Mailer $mailer)
     {
         $message = (new \Swift_Message($theme))
             ->setFrom(self::SENDER_MAIL)
             ->setTo($recipient)
-            ->setBody( "Привет, $name! Вы успешно зарегистрировались на сайте champs.pro")
+            ->setBody("Привет, $name! Вы успешно зарегистрировались на сайте champs.pro")
 //                $this->renderView(
 //                // templates/emails/registration.html.twig
 //                    'mailer/welcome.html.twig',

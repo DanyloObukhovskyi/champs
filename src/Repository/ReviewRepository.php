@@ -59,31 +59,25 @@ class ReviewRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('l')
             ->andWhere('l.lesson > 0');
 
-        if($features['tactics'])
-        {
+        if ($features['tactics']) {
             $query->orWhere('l.tactics = 1');
         }
-        if($features['scatter'])
-        {
+        if ($features['scatter']) {
             $query->orWhere('l.scatter = 1');
         }
-        if($features['aim'])
-        {
+        if ($features['aim']) {
             $query->orWhere('l.aim = 1');
         }
-        if($features['mentor'])
-        {
+        if ($features['mentor']) {
             $query->orWhere('l.mentor = 1');
         }
-        if($features['duel'])
-        {
+        if ($features['duel']) {
             $query->orWhere('l.duel = 1');
         }
 
         return $query
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     /**

@@ -13,7 +13,7 @@
                             <td style="color: rgba(0,0,0,.3)">
                                 На нашем сайте <a class="text-orange" href="https://champs.pro/ru/">Champs.pro</a>
                                 пользователем {{ user.name is not null ? user.name: user.email }} было совершено бронирование
-                                урока по игре <strong>{{ game }}</strong>
+                                урока по игре <strong>{{ game.name ?? null }}</strong>
                             </td>
                         </tr>
                     </table>
@@ -70,7 +70,7 @@
                                 class="text-orange">{{ user.name is not null ? user.name: user.email }}</strong>!
                     </h2>
                     <p class="mt-2">
-                        Вы успешно забронировали и оплатили урок игры в <strong>{{ game }}</strong> c
+                        Вы успешно забронировали и оплатили урок игры в <strong>{{ game.name ?? null }}</strong> c
                         <strong>{{ trainer.nickname }}</strong>
                         на сайте <a class="text-orange" href="https://champs.pro/ru/">Сhamps.pro</a>
                         продолжительностью {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}!

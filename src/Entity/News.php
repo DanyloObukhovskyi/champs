@@ -22,10 +22,10 @@ class News
         NEWS_TYPE_TEXT = 7;
 
     public const GAME_ICONS = [
-        'dota'     => 'dota.png',
-        'cs'       => 'cs.png',
-        'lol'      =>  'lol.jpg',
-        'valorant' =>  'valorant.png'
+        'dota' => 'dota.png',
+        'cs' => 'cs.png',
+        'lol' => 'lol.jpg',
+        'valorant' => 'valorant.png'
     ];
 
     /**
@@ -254,8 +254,7 @@ class News
     {
         $iconName = null;
 
-        if (isset($this->game))
-        {
+        if (isset($this->game)) {
             $iconName = self::GAME_ICONS[$this->game] ?? null;
         }
         return $iconName;

@@ -35,8 +35,7 @@ class MatchRepository extends ServiceEntityRepository
             ->setParameter('code', $code)
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -51,8 +50,7 @@ class MatchRepository extends ServiceEntityRepository
             ->getResult();
 
         $results = [];
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             /** @var Match $match */
             $results[] = $match;
         }
@@ -119,11 +117,9 @@ class MatchRepository extends ServiceEntityRepository
 
 
         $results = [];
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             /** @var Match $match */
-            if($match->getScore1() < 2 && $match->getScore2() < 2)
-            {
+            if ($match->getScore1() < 2 && $match->getScore2() < 2) {
                 $results[] = $match;
             }
         }
@@ -137,13 +133,13 @@ class MatchRepository extends ServiceEntityRepository
     public function findResults(): array
     {
         $date = new \DateTime();
-        $from = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('-7 day');
-        $to = $date->format("Y-m-d")." 23:59:59";
+        $from = (new \DateTime($date->format("Y-m-d") . " 23:59:59"))->modify('-7 day');
+        $to = $date->format("Y-m-d") . " 23:59:59";
 
         $matches = $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
             ->andWhere('m.start_at BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->getQuery()
             ->getResult();
@@ -159,13 +155,13 @@ class MatchRepository extends ServiceEntityRepository
     {
         $date = new \DateTime();
         $from = $date;
-        $to   = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('+1 week');
+        $to = (new \DateTime($date->format("Y-m-d") . " 23:59:59"))->modify('+1 week');
 
         $matches = $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
             ->andWhere('m.start_at BETWEEN :from AND :to')
             ->orWhere('m.live LIKE :live')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->setParameter('live', 1)
             ->getQuery()
@@ -173,11 +169,9 @@ class MatchRepository extends ServiceEntityRepository
 
 
         $results = [];
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             /** @var Match $match */
-            if($match->getScore1() < 2 && $match->getScore2() < 2)
-            {
+            if ($match->getScore1() < 2 && $match->getScore2() < 2) {
                 $results[] = $match;
             }
         }
@@ -192,14 +186,14 @@ class MatchRepository extends ServiceEntityRepository
      */
     public function findMatchesByDate(\Datetime $date)
     {
-        $from = $date->format("Y-m-d")." 00:00:00";
-        $to = $date->format("Y-m-d")." 23:59:59";
+        $from = $date->format("Y-m-d") . " 00:00:00";
+        $to = $date->format("Y-m-d") . " 23:59:59";
 
         /** @var Match[] $matches */
         $matches = $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
             ->andWhere('m.start_at BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->getQuery()
             ->getResult();
@@ -214,13 +208,13 @@ class MatchRepository extends ServiceEntityRepository
      */
     public function findMatchesByDay(\Datetime $date)
     {
-        $from = (new \DateTime($date->format("Y-m-d")." 00:00:00"));
-        $to   = (new \DateTime($date->format("Y-m-d")." 23:59:59"));
+        $from = (new \DateTime($date->format("Y-m-d") . " 00:00:00"));
+        $to = (new \DateTime($date->format("Y-m-d") . " 23:59:59"));
 
         $matches = $this->createQueryBuilder('m')
             ->orderBy('m.start_at', 'ASC')
             ->andWhere('m.start_at BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->getQuery()
             ->getResult();
@@ -271,13 +265,13 @@ class MatchRepository extends ServiceEntityRepository
      */
     public function findByStartAtAndTeams(\DateTime $startAt, $teams)
     {
-        $team1Id = isset($teams[0]) ? $teams[0]->getId(): null;
-        $team2Id = isset($teams[1]) ? $teams[1]->getId(): null;
+        $team1Id = isset($teams[0]) ? $teams[0]->getId() : null;
+        $team2Id = isset($teams[1]) ? $teams[1]->getId() : null;
         $startAt = $startAt->format('Y-m-d H:i:s');
 
         $match = $this->createQueryBuilder('m')
             ->where("m.start_at = '$startAt'")
-            ->setParameter('team1_id', $team1Id )
+            ->setParameter('team1_id', $team1Id)
             ->setParameter('team2_id', $team2Id)
             ->andWhere("m.team1_id = :team1_id")
             ->andWhere("m.team2_id = :team2_id")
@@ -297,41 +291,41 @@ class MatchRepository extends ServiceEntityRepository
     public function getMatchesQueryByType($filters, string $type)
     {
         $date = new \DateTime();
-        $date = $date->format("Y-m-d")." 23:59:59";
+        $date = $date->format("Y-m-d") . " 23:59:59";
 
         $query = $this->createQueryBuilder('m')
-                    ->orderBy('m.start_at', 'DESC');
+            ->orderBy('m.start_at', 'DESC');
 
-        if ($type === MatchService::FUTURE_MATCHES){
+        if ($type === MatchService::FUTURE_MATCHES) {
             $query->andWhere('m.start_at > :date')
                 ->setParameter('date', $date);
         }
-        if ($type === MatchService::LIVE_MATCHES){
+        if ($type === MatchService::LIVE_MATCHES) {
             $query->andWhere('m.live = :live')
                 ->setParameter('live', true);
         }
-        if ($type === MatchService::PAST_MATCHES){
+        if ($type === MatchService::PAST_MATCHES) {
             $query->andWhere('m.start_at < :date')
                 ->setParameter('date', $date);
         }
 
-        if (isset($filters->teamA)){
+        if (isset($filters->teamA)) {
             $query->andWhere('m.team1 = :teamA')
                 ->setParameter('teamA', $filters->teamA);
         }
 
-        if (isset($filters->teamB)){
+        if (isset($filters->teamB)) {
             $query->andWhere('m.team2 = :teamB')
                 ->setParameter('teamB', $filters->teamB);
         }
 
-        if (!empty($filters->dateFrom)){
+        if (!empty($filters->dateFrom)) {
             $from = new \DateTime("$filters->dateFrom 00:00:00");
             $query->andWhere('m.start_at >= :dateFrom')
                 ->setParameter('dateFrom', $from);
         }
-        if (!empty($filters->dateTo)){
-            $to   = new \DateTime("$filters->dateTo 23:59:59");
+        if (!empty($filters->dateTo)) {
+            $to = new \DateTime("$filters->dateTo 23:59:59");
             $query->andWhere('m.start_at <= :dateTo')
                 ->setParameter('dateTo', $to);
         }
@@ -351,19 +345,18 @@ class MatchRepository extends ServiceEntityRepository
      */
     public function getMatchesByType(
         $filters,
-        string  $type,
+        string $type,
         ?int $page = 0,
         ?int $length = 20
     )
     {
         $result = [];
 
-        if (in_array($type, MatchService::MATCH_TYPES, false))
-        {
+        if (in_array($type, MatchService::MATCH_TYPES, false)) {
             $query = $this->getMatchesQueryByType(
                 $filters,
                 $type
-                )->setFirstResult($page * $length)
+            )->setFirstResult($page * $length)
                 ->setMaxResults($length);
 
             $result = $query->getQuery()
@@ -382,7 +375,7 @@ class MatchRepository extends ServiceEntityRepository
     {
         $matches = [];
 
-        if (isset($teamA) and isset($teamB)){
+        if (isset($teamA) and isset($teamB)) {
             $first = $this->createQueryBuilder('m')
                 ->where('m.start_at < :startedAt')
                 ->andWhere('m.team1 = :teamA')
@@ -405,10 +398,10 @@ class MatchRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();
 
-            foreach ($first as $match){
+            foreach ($first as $match) {
                 $matches[] = $match;
             }
-            foreach ($second as $match){
+            foreach ($second as $match) {
                 $matches[] = $match;
             }
         }

@@ -32,11 +32,11 @@ class PurseHistoryRepository extends ServiceEntityRepository
     {
         $date = new \DateTime();
         $to = $date;
-        $from   = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('-1 month');
+        $from = (new \DateTime($date->format("Y-m-d") . " 23:59:59"))->modify('-1 month');
 
         return $this->createQueryBuilder('m')
             ->andWhere('m.datetime BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->andWhere('m.user = :id')
             ->setParameter('id', $id)
@@ -55,12 +55,12 @@ class PurseHistoryRepository extends ServiceEntityRepository
     public function sumByPreLastMonth($id)
     {
         $date = new \DateTime();
-        $to = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('-1 month');
-        $from   = (new \DateTime($date->format("Y-m-d")." 23:59:59"))->modify('-2 month');
+        $to = (new \DateTime($date->format("Y-m-d") . " 23:59:59"))->modify('-1 month');
+        $from = (new \DateTime($date->format("Y-m-d") . " 23:59:59"))->modify('-2 month');
 
         return $this->createQueryBuilder('m')
             ->andWhere('m.datetime BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->andWhere('m.user = :id')
             ->setParameter('id', $id)

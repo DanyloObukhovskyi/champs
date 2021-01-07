@@ -23,3 +23,6 @@ trainings:
   individual: Индивидуальная тренировка
   group: Груповая тренировка
   analytic: Анализ реплея
+earned:
+  per this month: за этот месяц
+  per previous month: за прошлый месяц

@@ -57,7 +57,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import '../../../../css/animations.css';
+    @import '../../../../../../css/animations.css';
 
     .cabinet-first-banner {
         display: flex;

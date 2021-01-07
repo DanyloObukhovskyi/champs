@@ -6,10 +6,10 @@
             </div>
             <div class="date">
                 <div class="month">
-                    {{months[month]}}
+                    {{ months[month] }}
                 </div>
                 <div class="year">
-                    {{year}}
+                    {{ year }}
                 </div>
             </div>
             <div class="next" @click="nextMonth">
@@ -22,7 +22,7 @@
         <div class="days">
             <div class="day disable" v-for="d in prevMonthDays">
                 <span>
-                    {{d}}
+                    {{ d }}
                 </span>
             </div>
             <div class="day sel"
@@ -30,12 +30,12 @@
                  @click="setDay(d)"
                  :class="[+day === +d ? 'active' : '']">
                 <span>
-                    {{d}}
+                    {{ d }}
                 </span>
             </div>
             <div class="day disable" v-for="i in nextMonthDays">
                 <span>
-                    {{i}}
+                    {{ i }}
                 </span>
             </div>
         </div>
@@ -169,196 +169,197 @@
 </script>
 
 <style scoped lang="scss">
-    .trainer-calendar {
-        margin-top: 1vw;
-        border-radius: 0;
+  .trainer-calendar {
+	margin-top: 1vw;
+	border-radius: 0;
 
-        .title {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
+	.title {
+	  width: 100%;
+	  display: flex;
+	  flex-direction: row;
+	  align-items: center;
 
-            .prev {
-                cursor: pointer;
-                height: 2.5vw;
-                width: 1.5vw;
-                clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
-                background-color: #aeaeae;
-                margin-right: .1vw;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+	  .prev {
+		cursor: pointer;
+		height: 2.5vw;
+		width: 1.5vw;
+		clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+		background-color: #aeaeae;
+		margin-right: .1vw;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-                i {
-                    color: white;
-                    font-size: .8vw;
-                }
+		i {
+		  color: white;
+		  font-size: .8vw;
+		}
 
-                &:hover {
-                    opacity: .5;
-                }
-            }
+		&:hover {
+		  opacity: .5;
+		}
+	  }
 
-            .next {
-                cursor: pointer;
-                clip-path: polygon(0 0, 100% 25%, 100% 75%, 0% 100%);
-                height: 2.5vw;
-                width: 1.5vw;
-                background-color: #aeaeae;
-                margin-left: .1vw;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+	  .next {
+		cursor: pointer;
+		clip-path: polygon(0 0, 100% 25%, 100% 75%, 0% 100%);
+		height: 2.5vw;
+		width: 1.5vw;
+		background-color: #aeaeae;
+		margin-left: .1vw;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-                i {
-                    color: white;
-                    font-size: .8vw;
-                }
+		i {
+		  color: white;
+		  font-size: .8vw;
+		}
 
-                &:hover {
-                    opacity: .5;
-                }
-            }
+		&:hover {
+		  opacity: .5;
+		}
+	  }
 
-            .date {
-                display: flex;
-                justify-content: center;
-                width: 100%;
-                font-size: .9vw;
+	  .date {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		font-size: .9vw;
 
-                .month {
-                    margin-right: .5vw;
-                }
-            }
-        }
+		.month {
+		  margin-right: .5vw;
+		}
+	  }
+	}
 
-        .weeks {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            padding-top: 1vw;
-            padding-bottom: 0.3vw;
+	.weeks {
+	  width: 100%;
+	  display: flex;
+	  flex-direction: row;
+	  padding-top: 1vw;
+	  padding-bottom: 0.3vw;
 
-            .week {
-                flex-shrink: 0;
-                width: 14.2%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.9vw;
-                color: #5c6b79;
-            }
-        }
+	  .week {
+		flex-shrink: 0;
+		width: 14.2%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.9vw;
+		color: #5c6b79;
+	  }
+	}
 
-        .days {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+	.days {
+	  width: 100%;
+	  display: flex;
+	  flex-direction: row;
+	  flex-wrap: wrap;
 
-            .day {
-                flex-shrink: 0;
-                width: 14.2%;
-                padding: .1vw;
+	  .day {
+		flex-shrink: 0;
+		width: 14.2%;
+		padding: .1vw;
 
-                span {
-                    padding: 0.3vw 0;
-                    height: 3.4vw;
-                    color: white;
-                    background-color: #aeaeae;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 0.7vw;
-                    display: flex;
+		span {
+		  min-height: 2.5vw;
+		  max-height: 3.5vw;
+		  color: white;
+		  background-color: #aeaeae;
+		  align-items: center;
+		  justify-content: center;
+		  font-size: 0.7vw;
+		  display: flex;
+		  padding: 34% 0;
 
-                    &:hover {
-                        background-color: #FF6D1D;
-                        color: #FFFFFF;
-                        cursor: pointer;
-                    }
-                }
+		  &:hover {
+			background-color: #FF6D1D;
+			color: #FFFFFF;
+			cursor: pointer;
+		  }
+		}
 
-                &.active {
-                    span {
-                        background-color: #FF6D1D;
-                        color: #FFFFFF;
-                    }
-                }
+		&.active {
+		  span {
+			background-color: #FF6D1D;
+			color: #FFFFFF;
+		  }
+		}
 
-                &.disable {
-                    span {
-                        color: #c9c9c9;
+		&.disable {
+		  span {
+			color: #6b6d6f;
 
-                        &:hover {
-                            color: #c9c9c9;
-                            background-color: #aeaeae;
-                        }
-                    }
-                }
-            }
-        }
-    }
+			&:hover {
+			  color: #c9c9c9;
+			  background-color: #aeaeae;
+			}
+		  }
+		}
+	  }
+	}
+  }
 
-    .dark {
-        .trainer-calendar {
-            .title {
-                .prev {
-                    background-color: #2d3135;
+  .dark {
+	.trainer-calendar {
+	  .title {
+		.prev {
+		  background-color: #2d3135;
 
-                    &:hover {
-                        opacity: .5;
-                    }
-                }
+		  &:hover {
+			opacity: .5;
+		  }
+		}
 
-                .next {
-                    background-color: #2d3135;
+		.next {
+		  background-color: #2d3135;
 
-                    &:hover {
-                        opacity: .5;
-                    }
-                }
+		  &:hover {
+			opacity: .5;
+		  }
+		}
 
-                .date {
-                    .month,
-                    .year{
-                        color: white;
-                    }
-                }
-            }
+		.date {
+		  .month,
+		  .year {
+			color: white;
+		  }
+		}
+	  }
 
-            .days {
-                .day {
-                    span {
-                        color: white;
-                        background-color: #2d3135;
+	  .days {
+		.day {
+		  span {
+			color: white;
+			background-color: #2d3135;
 
-                        &:hover {
-                            background-color: #FF6D1D;
-                            color: #FFFFFF;
-                            cursor: pointer;
-                        }
-                    }
+			&:hover {
+			  background-color: #FF6D1D;
+			  color: #FFFFFF;
+			  cursor: pointer;
+			}
+		  }
 
-                    &.active {
-                        span {
-                            background-color: #FF6D1D;
-                            color: #FFFFFF;
-                        }
-                    }
+		  &.active {
+			span {
+			  background-color: #FF6D1D;
+			  color: #FFFFFF;
+			}
+		  }
 
-                    &.disable {
-                        span {
-                            color: #67696b;
+		  &.disable {
+			span {
+			  color: #67696b;
 
-                            &:hover {
-                                color: #67696b;
-                                background-color: #2d3135;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+			  &:hover {
+				color: #67696b;
+				background-color: #2d3135;
+			  }
+			}
+		  }
+		}
+	  }
+	}
+  }
 </style>

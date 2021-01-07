@@ -17,14 +17,13 @@ class RelatedEventService extends EntityService
     {
         $related = $this->repository->findByEventAndRelated($event, $relatedEvent);
 
-        if (empty($related))
-        {
+        if (empty($related)) {
             /** @var RelatedEvent $related */
             $related = new $this->entity;
             $related->setEvent($event);
             $related->setRelated($relatedEvent);
         }
 
-        return  $this->save($related);
+        return $this->save($related);
     }
 }

@@ -8,15 +8,15 @@
 </template>
 
 <script>
-    import CabinetFirstBanner from "../personalCabinet/CabinetFirstBanner";
-    import MarketplaceService from "../../../services/MarketplaceService";
-    import CabinetSecondBanner from "../personalCabinet/CabinetSecondBanner";
-    import CabinetVideoSlider from "../personalCabinet/CabinetVideoSlider";
-    import CabinetBottomBanner from "../CabinetBottomBanner";
+    import CabinetFirstBanner from "../components/cabinet/CabinetFirstBanner";
+    import MarketplaceService from "../../../../services/MarketplaceService";
+    import CabinetSecondBanner from "../components/cabinet/CabinetSecondBanner";
+    import CabinetVideoSlider from "../components/cabinet/CabinetVideoSlider";
+    import CabinetBottomBanner from "../../CabinetBottomBanner";
     import {mapGetters} from "vuex";
 
     export default {
-        name: "Cabinet",
+        name: "UserCabinet",
         components: {
             CabinetBottomBanner,
             CabinetSecondBanner,

@@ -48,73 +48,74 @@ class MainController extends DefController
         $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $authenticationUtils->getLastUsername();
-        
+
         return $this->render('templates/home.html.twig', [
             'router' => 'home',]);
     }
-	
-	public function prepareVideo($data=array()) {
-		$VideoItems = array();
-		if(!empty($data)) {
-			foreach ($data as $v_key => &$v_value) {
-				$tmp = array();
-				$tmp['id'] = $v_value->getId();
-				
-				$link = $v_value->getText();
-				preg_match("/http|s:\/\//",$link,$match_items);
-				preg_match("/twitch/",$link,$is_TW);
-				preg_match("/youtu/",$link,$is_YT);
-				if(strlen($link) == 11 && count($match_items) == 0) {
-					$tmp['video_type'] = 0; //YouTube video
-					$tmp['video_id'] = $link;
-				}
-				if(count($is_TW) > 0) {
-					$tmp['video_type'] = 1; //Twich video
-					$link = str_replace("https://www.twitch.tv/", "", $link);
-					$link = str_replace("http://www.twitch.tv/", "", $link);
-					$link = str_replace("https://twitch.tv/", "", $link);
-					$link = str_replace("http://twitch.tv/", "", $link);
-					$link = str_replace("https://player.twitch.tv/?channel=", "", $link);
-					$link = str_replace("http://player.twitch.tv/?channel=", "", $link);
-					$tmp['video_id'] = $link;
-				}
-				if(count($is_YT) > 0) {
-					$tmp['video_type'] = 0; //YouTube video
-					$link = str_replace("https://youtu.be/", "", $link);
-					$link = str_replace("http://youtu.be/", "", $link);
-					$link = str_replace("https://www.youtube.com/watch?v=", "", $link);
-					$link = str_replace("http://www.youtube.com/watch?v=", "", $link);
-					
-					$tmp['video_id'] = $link;
-				}
-				$tmp['logo'] = $v_value->getLogo();
-				$tmp['title'] = $v_value->getTitle();
-				$date = $v_value->getDate()->format('d F Y');
 
-				foreach (MatchService::MOHTHS as $month => $lang){
+    public function prepareVideo($data = array())
+    {
+        $VideoItems = array();
+        if (!empty($data)) {
+            foreach ($data as $v_key => &$v_value) {
+                $tmp = array();
+                $tmp['id'] = $v_value->getId();
+
+                $link = $v_value->getText();
+                preg_match("/http|s:\/\//", $link, $match_items);
+                preg_match("/twitch/", $link, $is_TW);
+                preg_match("/youtu/", $link, $is_YT);
+                if (strlen($link) == 11 && count($match_items) == 0) {
+                    $tmp['video_type'] = 0; //YouTube video
+                    $tmp['video_id'] = $link;
+                }
+                if (count($is_TW) > 0) {
+                    $tmp['video_type'] = 1; //Twich video
+                    $link = str_replace("https://www.twitch.tv/", "", $link);
+                    $link = str_replace("http://www.twitch.tv/", "", $link);
+                    $link = str_replace("https://twitch.tv/", "", $link);
+                    $link = str_replace("http://twitch.tv/", "", $link);
+                    $link = str_replace("https://player.twitch.tv/?channel=", "", $link);
+                    $link = str_replace("http://player.twitch.tv/?channel=", "", $link);
+                    $tmp['video_id'] = $link;
+                }
+                if (count($is_YT) > 0) {
+                    $tmp['video_type'] = 0; //YouTube video
+                    $link = str_replace("https://youtu.be/", "", $link);
+                    $link = str_replace("http://youtu.be/", "", $link);
+                    $link = str_replace("https://www.youtube.com/watch?v=", "", $link);
+                    $link = str_replace("http://www.youtube.com/watch?v=", "", $link);
+
+                    $tmp['video_id'] = $link;
+                }
+                $tmp['logo'] = $v_value->getLogo();
+                $tmp['title'] = $v_value->getTitle();
+                $date = $v_value->getDate()->format('d F Y');
+
+                foreach (MatchService::MOHTHS as $month => $lang) {
                     $date = str_replace($month, $lang, $date);
                 }
                 $tmp['date'] = $date;
-				$VideoItems[$v_key] = $tmp;
-			}
-		}
-		return $VideoItems;
-	}
+                $VideoItems[$v_key] = $tmp;
+            }
+        }
+        return $VideoItems;
+    }
 
     /**
      * @Route("/ru/main/matches")
      */
-	public function getMainMatches(Request $request)
+    public function getMainMatches(Request $request)
     {
         $request = json_decode($request->getContent(), false);
-        $date = !empty($request->date) ? new \DateTime($request->date): new \DateTime();
+        $date = !empty($request->date) ? new \DateTime($request->date) : new \DateTime();
 
         $matches = $this->entityManager
             ->getRepository(Match::class)
             ->findMatchesByDate($date);
 
         $matchesParse = [];
-        foreach ($matches as $match){
+        foreach ($matches as $match) {
             $matchesParse[] = $this->matchService->matchDecorator($match);
         }
 
@@ -134,8 +135,7 @@ class MainController extends DefController
             ->getCurrent();
 
         $matchResults = [];
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             /** @var Match $match */
             $match = $result->getMatch();
             $matchResults[] = $this->matchService->matchDecorator($match);
@@ -150,7 +150,7 @@ class MainController extends DefController
     {
         $matches = $this->entityManager
             ->getRepository(Match::class)
-            ->findBy(['live' => 1], [ 'id' => 'DESC' ], 6);
+            ->findBy(['live' => 1], ['id' => 'DESC'], 6);
         $matchesItems = $this->matchService->matchesDecorator($matches);
 
         return $this->json($matchesItems);
@@ -164,7 +164,7 @@ class MainController extends DefController
         $news = $this->newsService->getMainNews();
 
         $newsArray = [];
-        foreach ($news as $new){
+        foreach ($news as $new) {
             $newsArray[] = $this->newsService->decorator($new);
         }
         return $this->json($newsArray);
@@ -205,19 +205,19 @@ class MainController extends DefController
                 'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
             ],
         ];
-       /*
-       * stream - news type - 8
-       * video - news type - 3
-       */
+        /*
+        * stream - news type - 8
+        * video - news type - 3
+        */
         $VideoData = $this->entityManager
             ->getRepository(News::class)
-            ->findBy([ 'type'=> [8, 3] ],[ 'date' => 'DESC' ], 10 , 0); //8 - stream; 3 - video
+            ->findBy(['type' => [8, 3]], ['date' => 'DESC'], 10, 0); //8 - stream; 3 - video
 
         $VideoItems = $this->prepareVideo($VideoData);
 
-        if(count($VideoItems) < 4) {
-            $ij =  4 - (4 - count($VideoItems));
-            for($ij; $ij < 4; $ij++) {
+        if (count($VideoItems) < 4) {
+            $ij = 4 - (4 - count($VideoItems));
+            for ($ij; $ij < 4; $ij++) {
                 $VideoItems[$ij] = $livesItems[$ij];
             }
         }
@@ -238,7 +238,7 @@ class MainController extends DefController
 
         return $this->json($events);
     }
-	
+
     /**
      * @Route("/ru/404", name="notFound")
      */

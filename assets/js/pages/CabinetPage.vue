@@ -11,7 +11,7 @@
                 </cabinet-sidebar>
             </div>
             <div class="right">
-                <cabinet-header></cabinet-header>
+                <cabinet-header v-if="user !== null && !user.isTrainer"></cabinet-header>
                 <router-view></router-view>
             </div>
         </div>
@@ -30,20 +30,27 @@
     import SmallLoader from "../components/helpers/SmallLoader";
     import CabinetHeader from "../components/cabinet/CabinetHeader";
 
-    import Cabinet from "../components/cabinet/pages/Cabinet";
-    import Training from "../components/cabinet/pages/Training";
-    import News from "../components/cabinet/pages/News";
-    import Video from "../components/cabinet/pages/Video";
-    import Setting from "../components/cabinet/pages/Setting";
+    import UserCabinet from "../components/cabinet/user/pages/UserCabinet";
+    import Training from "../components/cabinet/user/pages/Training";
+    import News from "../components/cabinet/user/pages/News";
+    import Video from "../components/cabinet/user/pages/Video";
+    import Setting from "../components/cabinet/user/pages/Setting";
     import {mapGetters} from "vuex";
     import InviteModal from "../components/cabinet/InviteModal";
+    import TrainerCabinet from "../components/cabinet/trainer/pages/TrainerCabinet";
 
     const routes = [
-        { path: `/${CabinetService.lang}/user/cabinet/`, component: Cabinet },
+        { path: `/${CabinetService.lang}/user/cabinet/`, component: UserCabinet },
         { path: `/${CabinetService.lang}/user/cabinet/training`, component: Training },
         { path: `/${CabinetService.lang}/user/cabinet/news`, component: News },
         { path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video },
         { path: `/${CabinetService.lang}/user/cabinet/settings`, component: Setting },
+
+        { path: `/${CabinetService.lang}/trainer/cabinet/`, component: TrainerCabinet },
+        { path: `/${CabinetService.lang}/trainer/cabinet/training`, component: Training },
+        { path: `/${CabinetService.lang}/trainer/cabinet/news`, component: News },
+        { path: `/${CabinetService.lang}/trainer/cabinet/videos`, component: Video },
+        { path: `/${CabinetService.lang}/trainer/cabinet/settings`, component: Setting },
     ];
 
     export default {

@@ -24,8 +24,8 @@ class MarketplaceController extends AbstractController
     }
 
     /**
-      * @Route("/marketplace", name="marketplace_index")
-      */
+     * @Route("/marketplace", name="marketplace_index")
+     */
     public function index(Request $request)
     {
         $trainerId = $request->get('trainerId', null);

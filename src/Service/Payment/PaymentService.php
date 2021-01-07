@@ -9,7 +9,7 @@ use App\Entity\LessonTime;
 use App\Entity\Payment;
 use App\Service\EntityService;
 
-class PaymentService  extends EntityService
+class PaymentService extends EntityService
 {
     protected $entity = Payment::class;
 
@@ -23,19 +23,17 @@ class PaymentService  extends EntityService
     public function getPaymentLessonsShedules(Payment $payment)
     {
         $paymentLessons = $this->entityManager->getRepository(LessonsPayment::class)->findBy([
-           'payment' => $payment
+            'payment' => $payment
         ]);
 
         $schedules = [];
         /** @var LessonsPayment $paymentLesson */
-        foreach ($paymentLessons as $paymentLesson)
-        {
+        foreach ($paymentLessons as $paymentLesson) {
             $lessonTimes = $this->entityManager->getRepository(LessonTime::class)->findBy([
-                    'lesson' => $paymentLesson->getLesson()
+                'lesson' => $paymentLesson->getLesson()
             ]);
             /** @var LessonTime $lessonTime */
-            foreach ($lessonTimes as $lessonTime)
-            {
+            foreach ($lessonTimes as $lessonTime) {
                 $schedules[] = $lessonTime->getTrainerTime();
             }
         }

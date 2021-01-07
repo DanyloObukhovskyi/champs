@@ -44,7 +44,7 @@ class ScheduleService extends EntityService
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function createDay($userId, $date, int $timeOffset, bool $isStudent = false)
+    public function createDay($userId, $date, int $timeOffset = 0, bool $isStudent = false)
     {
         $trainer = $this->entityManager
             ->getRepository(User::class)
@@ -57,12 +57,11 @@ class ScheduleService extends EntityService
             "Y-m-d",
             $date->format("Y-m-d")
         );
-        $carbonDayDate->setHour( 0 - $timeOffset);
+        $carbonDayDate->setHour(0 - $timeOffset);
         $carbonDayDate->setMinutes(0);
 
         $schedules = [];
-        for ($i = 0; $i < $hours; $i++)
-        {
+        for ($i = 0; $i < $hours; $i++) {
             $scheduleDayDate = Carbon::createFromFormat(
                 "Y-m-d",
                 $date->format("Y-m-d")
@@ -77,11 +76,11 @@ class ScheduleService extends EntityService
                     $carbonDayDate->format("Y-m-d"),
                     $carbonDayDate->hour
                 );
-            if (isset($scheduleEntity)){
+            if (isset($scheduleEntity)) {
                 $carbonNow = Carbon::now();
                 $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
 
-                if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0 and $isStudent){
+                if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0 and $isStudent) {
                     $status = 0;
                 } else {
                     $status = $scheduleEntity->getStatus();
@@ -102,10 +101,10 @@ class ScheduleService extends EntityService
         }
 
         $scheduleCollect = [];
-        foreach ($schedules as $schedule){
-            $timeFrom = $schedule['time'] < 10 ? "0".$schedule['time'] : $schedule['time'];
-            $timeTo = $schedule['time'] + 1 < 10 ? "0".($schedule['time'] + 1) : $schedule['time'] + 1;
-            $time = "time". $timeFrom. "_". $timeTo;
+        foreach ($schedules as $schedule) {
+            $timeFrom = $schedule['time'] < 10 ? "0" . $schedule['time'] : $schedule['time'];
+            $timeTo = $schedule['time'] + 1 < 10 ? "0" . ($schedule['time'] + 1) : $schedule['time'] + 1;
+            $time = "time" . $timeFrom . "_" . $timeTo;
 
             $scheduleCollect[$time] = $schedule['status'];
         }
@@ -129,8 +128,7 @@ class ScheduleService extends EntityService
         $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
 
         $schedules = [];
-        for ($i = 0; $i < 7; $i++)
-        {
+        for ($i = 0; $i < 7; $i++) {
             $schedules[] = $this->createDay($userId, $from, $isStudent);
             $from = $from->modify('+1 day');
         }
@@ -148,8 +146,7 @@ class ScheduleService extends EntityService
     {
         $schedule = $this->getByTrainerDateAndTime($trainer, $date, $time);
 
-        if (empty($schedule))
-        {
+        if (empty($schedule)) {
             /** @var Schedule $schedule */
             $schedule = new $this->entity;
             $schedule->setTrainer($trainer);

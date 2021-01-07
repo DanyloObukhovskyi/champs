@@ -76,43 +76,39 @@ class MatchService extends EntityService
     {
         /** @var Match $match */
         $match = $this->repository->findByUrl($values['url']);
-        if (empty($match)){
+        if (empty($match)) {
             $match = $this->repository->findByStartAtAndTeams($values['start_at'], $teams);
         }
 
-        if (empty($match))
-        {
-           $match = new $this->entity;
+        if (empty($match)) {
+            $match = new $this->entity;
 
-           $match->setCode($values['code'])
-               ->setUrl($values['url'])
-               ->setStartAt($values['start_at']);
+            $match->setCode($values['code'])
+                ->setUrl($values['url'])
+                ->setStartAt($values['start_at']);
         }
-        if (isset($values['headToHead'])){
+        if (isset($values['headToHead'])) {
             $match->setTeam1WinRate($values['headToHead'][0] ?? null);
             $match->setTeam2WinRate($values['headToHead'][1] ?? null);
         }
 
         if (!empty($teams)) {
             $match->setTeam1($teams[0]);
-            if (isset($teams[1])){
+            if (isset($teams[1])) {
                 $match->setTeam2($teams[1]);
             }
         }
 
-        if ($event)
-        {
-           $match->setEvent($event);
+        if ($event) {
+            $match->setEvent($event);
         }
 
-        if (!empty($values['is_detail_info']))
-        {
-           $match->setDetailInfo($values['is_detail_info']);
+        if (!empty($values['is_detail_info'])) {
+            $match->setDetailInfo($values['is_detail_info']);
         }
 
-        if (!empty($values['statistics']['live']))
-        {
-           $match->setLive($values['statistics']['live']);
+        if (!empty($values['statistics']['live'])) {
+            $match->setLive($values['statistics']['live']);
         }
 
         $this->save($match);
@@ -122,12 +118,10 @@ class MatchService extends EntityService
 
     public function updateStatistic(Match $match, $values)
     {
-        if (isset($values['score1']))
-        {
+        if (isset($values['score1'])) {
             $match->setScore1($values['score1']);
         }
-        if (isset($values['score2']))
-        {
+        if (isset($values['score2'])) {
             $match->setScore2($values['score2']);
         }
 
@@ -143,8 +137,7 @@ class MatchService extends EntityService
     public function getByCode($code)
     {
         $match = $this->repository->getByCode($code);
-        if (isset($match))
-        {
+        if (isset($match)) {
             $this->entityManager->persist($match);
             return $match;
         }
@@ -225,20 +218,17 @@ class MatchService extends EntityService
     {
         $items = [];
 
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             $startDay = date("mdY", $match->getStartAt()->getTimestamp());
 
-            if (!array_key_exists($startDay, $items))
-            {
+            if (!array_key_exists($startDay, $items)) {
                 $date = date("d F", $match->getStartAt()->getTimestamp());
 
-                foreach (self::MOHTHS as $month => $lang)
-                {
+                foreach (self::MOHTHS as $month => $lang) {
                     $date = str_replace($month, $lang, $date);
                 }
                 $items[$startDay] = [
-                    "date"  => $date,
+                    "date" => $date,
                     "items" => [],
                 ];
             }
@@ -257,7 +247,7 @@ class MatchService extends EntityService
      */
     public function matchDecorator(Match $match)
     {
-        if (!empty($match->getEvent()) and !empty($match->getEvent()->getImage())){
+        if (!empty($match->getEvent()) and !empty($match->getEvent()->getImage())) {
             $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImage());
         } else {
             $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImageHeader());
@@ -265,29 +255,29 @@ class MatchService extends EntityService
 
         $matchFields = [
             "match_id" => $match->getId(),
-            "startAt"  => $match->getStartAt(),
-            "time"     => date("H:i", $match->getStartAt()->getTimestamp()),
-            "title"    => "",
-            "logo"     => "",
-            "teamA"    => null,
-            "teamB"    => null,
-            "event"    => [
-                "name"      => $match->getEvent() === null ? null : $match->getEvent()->getName(),
+            "startAt" => $match->getStartAt(),
+            "time" => date("H:i", $match->getStartAt()->getTimestamp()),
+            "title" => "",
+            "logo" => "",
+            "teamA" => null,
+            "teamB" => null,
+            "event" => [
+                "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
                 "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                "endedAt"   => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                "image"     => $this->imageService->getImagePath()
+                "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
+                "image" => $this->imageService->getImagePath()
             ],
-            "streams"  => $this->getMatchStreams($match),
-            "isLive"   => $match->getLive() ? true: false,
+            "streams" => $this->getMatchStreams($match),
+            "isLive" => $match->getLive() ? true : false,
         ];
         $team1 = $match->getTeam1();
-        if(isset($team1)){
+        if (isset($team1)) {
             $matchFields['teamA'] = $this->getMatchTeam(
                 $match->getTeam1(),
                 $match->getScore1()
             );
         }
-        if(!empty($match->getTeam2())){
+        if (!empty($match->getTeam2())) {
             $matchFields['teamB'] = $this->getMatchTeam(
                 $match->getTeam2(),
                 $match->getScore2()
@@ -307,10 +297,10 @@ class MatchService extends EntityService
         $streams = [];
 
         /** @var Stream $stream */
-        foreach ($match->getStreams() as $stream){
+        foreach ($match->getStreams() as $stream) {
             $streams[] = [
                 'name' => $stream->getName(),
-                'url'  => $stream->getUrl(),
+                'url' => $stream->getUrl(),
                 'lang' => $stream->getLanguage(),
                 'type' => $stream->getType()
             ];
@@ -325,7 +315,7 @@ class MatchService extends EntityService
      */
     public function getMatchTeam(Team $team, $score): array
     {
-        $flag = empty($team->getFlagIcon()) ? null: $team->getFlagIcon()->getName();
+        $flag = empty($team->getFlagIcon()) ? null : $team->getFlagIcon()->getName();
 
         $this->imageService->setImage($flag);
         $flag = $this->imageService->getImagePath();
@@ -334,9 +324,9 @@ class MatchService extends EntityService
 
         return [
             "title" => str_replace("'", "", $team->getName()),
-            "logo"  => $this->imageService->getImagePath(),
+            "logo" => $this->imageService->getImagePath(),
             "score" => $score,
-            "flag"  => $flag
+            "flag" => $flag
         ];
     }
 
@@ -358,11 +348,10 @@ class MatchService extends EntityService
         $matchPickAndBans = [];
 
         /** @var MatchPickAndBan $matchPickAndBan */
-        foreach ($match->getMatchPickAndBans() as $matchPickAndBan)
-        {
+        foreach ($match->getMatchPickAndBans() as $matchPickAndBan) {
             $team = $matchPickAndBan->getTeam();
 
-            if (isset($team)){
+            if (isset($team)) {
                 $this->imageService->setImage($team->getLogo());
 
                 $matchPickAndBans[] = [
@@ -404,7 +393,7 @@ class MatchService extends EntityService
     {
         $filters = (object)[
             'dateFrom' => $this->parseDate($filters->dateFrom),
-            'dateTo' =>  $this->parseDate($filters->dateTo),
+            'dateTo' => $this->parseDate($filters->dateTo),
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
         ];
@@ -427,15 +416,14 @@ class MatchService extends EntityService
     {
         $filters = (object)[
             'dateFrom' => self::parseDate($filters->dateFrom),
-            'dateTo' =>  self::parseDate($filters->dateTo),
+            'dateTo' => self::parseDate($filters->dateTo),
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
         ];
 
         $result = 0;
 
-        if (in_array($type, self::MATCH_TYPES, false))
-        {
+        if (in_array($type, self::MATCH_TYPES, false)) {
             $result = $this->repository->getMatchesQueryByType($filters, $type)
                 ->select('count(m.id)')
                 ->getQuery()
@@ -450,7 +438,7 @@ class MatchService extends EntityService
      */
     public static function parseDate($date = null): ?string
     {
-        if (is_string($date) and !empty($date)){
+        if (is_string($date) and !empty($date)) {
             [$day, $month, $year] = explode('.', $date);
             $day = trim($day);
             $month = trim($month);

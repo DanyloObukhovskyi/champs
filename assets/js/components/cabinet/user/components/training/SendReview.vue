@@ -33,7 +33,7 @@
 </template>
 
 <script>
-    import CabinetService from "../../../services/CabinetService";
+    import CabinetService from "../../../../../services/CabinetService";
 
     export default {
         name: "SendReview",

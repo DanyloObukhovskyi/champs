@@ -29,7 +29,7 @@ class TeamController extends AbstractController
         $teams = $this->teamService->findByName($request->getContent());
 
         $teamsArray = [];
-        foreach ($teams as $team){
+        foreach ($teams as $team) {
             $teamsArray[] = $this->teamService->teamDecorator($team);
         }
         return $this->json($teamsArray);

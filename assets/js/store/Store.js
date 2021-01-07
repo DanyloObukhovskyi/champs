@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import HeaderModule from "./header/HeaderModule";
 import TrainingModule from "./Cabinet/TrainingModule";
 import SettingModule from "./Cabinet/SettingModule";
+import TrainerCabinetModule from "./Cabinet/TrainerCabinetModule";
 
 export default new Vuex.Store({
     modules: {
@@ -12,6 +13,7 @@ export default new Vuex.Store({
             modules: {
                 training: TrainingModule,
                 setting: SettingModule,
+                trainerCabinet: TrainerCabinetModule
             }
         }
     }

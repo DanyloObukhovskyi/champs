@@ -82,13 +82,13 @@ class ReviewService extends EntityService
         $count = 0;
 
         $rating = [];
-        for ($i = 1; $i <= 10; $i++){
+        for ($i = 1; $i <= 10; $i++) {
             $rating[$i] = 0;
         }
 
         $reviewsParse = [];
 
-        foreach ($reviews as $review){
+        foreach ($reviews as $review) {
             /** @var Review $review */
             $sum += $review['rate'];
             $rating[$review['rate']]++;
@@ -103,8 +103,7 @@ class ReviewService extends EntityService
         }
 
         $result = 0;
-        if($sum > 0)
-        {
+        if ($sum > 0) {
             $result = round($sum / $count, 2);
         }
 

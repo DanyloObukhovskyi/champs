@@ -41,8 +41,7 @@ class NewsService extends EntityService
         $user = $this->getUser();
 
         /** @var NewsTag $tagsEntity */
-        foreach ($news->getTags() as $tagsEntity)
-        {
+        foreach ($news->getTags() as $tagsEntity) {
             $tags[] = [
                 'title' => $tagsEntity->getTitle(),
             ];
@@ -59,20 +58,20 @@ class NewsService extends EntityService
         }
 
         return [
-            'id'              => $news->getId(),
-            'title'           => $news->getTitle(),
-            'text'            => $news->getText(),
-            'created_at'      => $news->getCreatedAt(),
-            'logo'            => $news->getLogo(),
-            'date'            => $news->getDate()->format('m-d H:i'),
-            'url'             => $news->getUrl(),
-            'type'            => $news->getType(),
-            'tags'            => $tags,
-            'game'            => !empty($news->getGame()) ? $news->getGame(): null,
-            'date_ru'         => self::replaceMonth($news->getDate()->format('d F H:i')),
-            'views'           => $news->getViews() ?? 0,
-            'commentsCount'   => count($news->getComments()),
-            'bookmark'        => $bookmark
+            'id' => $news->getId(),
+            'title' => $news->getTitle(),
+            'text' => $news->getText(),
+            'created_at' => $news->getCreatedAt(),
+            'logo' => $news->getLogo(),
+            'date' => $news->getDate()->format('m-d H:i'),
+            'url' => $news->getUrl(),
+            'type' => $news->getType(),
+            'tags' => $tags,
+            'game' => !empty($news->getGame()) ? $news->getGame() : null,
+            'date_ru' => self::replaceMonth($news->getDate()->format('d F H:i')),
+            'views' => $news->getViews() ?? 0,
+            'commentsCount' => count($news->getComments()),
+            'bookmark' => $bookmark
         ];
     }
 
@@ -142,7 +141,7 @@ class NewsService extends EntityService
      */
     public function parseDate($date = null): ?string
     {
-        if (is_string($date) and !empty($date)){
+        if (is_string($date) and !empty($date)) {
             [$day, $month, $year] = explode('.', $date);
             $day = trim($day);
             $month = trim($month);

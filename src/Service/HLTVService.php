@@ -39,8 +39,7 @@ class HLTVService
 
         LoggerService::add("hltv get matches", LoggerService::TYPE_INFO);
         $content = PageContentService::getPageContent(static::$baseUrl . '/matches');
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
         $document = new Document($content);
@@ -48,18 +47,18 @@ class HLTVService
         $matches = $parseMatchService->getLiveMatches($document);
         $matchesSortedByDay = $parseMatchService->getUpcomingMatches($document);
 
-        $content = PageContentService::getPageContent(self::$baseUrl.'/results');
+        $content = PageContentService::getPageContent(self::$baseUrl . '/results');
 
         $document = new Document($content);
         $resultMatchesSortedByDay = $parseMatchService->getMatchesResults($document);
 
-        foreach ($matchesSortedByDay as $matchesDay){
+        foreach ($matchesSortedByDay as $matchesDay) {
 
-            $matches =  array_merge((array)$matches, $matchesDay);
+            $matches = array_merge((array)$matches, $matchesDay);
         }
-        foreach ($resultMatchesSortedByDay as $matchesDay){
+        foreach ($resultMatchesSortedByDay as $matchesDay) {
 
-            $matches =  array_merge((array)$matches, $matchesDay);
+            $matches = array_merge((array)$matches, $matchesDay);
         }
         return $matches;
     }
@@ -76,8 +75,7 @@ class HLTVService
         ini_set('max_execution_time', 0);
 
         $content = PageContentService::getPageContent($match['url']);
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (!$content or ($content and is_array($content) && isset($content['error']))) {
             return null;
         }
         $document = new Document($content);
@@ -97,12 +95,11 @@ class HLTVService
 
         try {
             $content = PageContentService::getPageContent($team['url']);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
 
             $content = null;
         }
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (!$content or ($content and is_array($content) && isset($content['error']))) {
             return false;
         }
 
@@ -122,13 +119,12 @@ class HLTVService
 
         try {
             $content = PageContentService::getPageContent($player['url']);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
 
             $content = null;
         }
 
-        if (empty($content) or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (empty($content) or ($content and is_array($content) && isset($content['error']))) {
             return null;
         }
 
@@ -136,34 +132,29 @@ class HLTVService
 
         $profileRaw = $document->find("//div[contains(@class, 'playerProfile')]", Query::TYPE_XPATH);
 
-        if (count($profileRaw) == 0)
-        {
+        if (count($profileRaw) == 0) {
             return null;
         }
 
         $profileRaw = $profileRaw[0];
 
         $profileNickRaw = $profileRaw->find("//h1[contains(@class, 'playerNickname')]", Query::TYPE_XPATH);
-        if (count($profileNickRaw) > 0)
-        {
+        if (count($profileNickRaw) > 0) {
             $player['nick'] = trim($profileNickRaw[0]->text());
         }
 
         $profileAgeRaw = $profileRaw->find("//div[contains(@class, 'playerAge')]/span[2]", Query::TYPE_XPATH);
-        if (count($profileAgeRaw) > 0)
-        {
+        if (count($profileAgeRaw) > 0) {
             $player['age'] = intval($profileAgeRaw[0]->text());
         }
 
         $profileRealNameRaw = $profileRaw->find("//div[contains(@class, 'playerRealname')]", Query::TYPE_XPATH);
-        if (count($profileRealNameRaw) > 0)
-        {
+        if (count($profileRealNameRaw) > 0) {
             $player['realname'] = trim($profileRealNameRaw[0]->text());
         }
 
         $profileRegionRaw = $profileRaw->first("//div[contains(@class, 'playerRealname')]/img[contains(@class, 'flag')]", Query::TYPE_XPATH);
-        if (isset($profileRegionRaw))
-        {
+        if (isset($profileRegionRaw)) {
             $player['region'] = trim($profileRegionRaw->attr('title'));
 
             // LoggerService::info('person get region icon name');
@@ -176,22 +167,18 @@ class HLTVService
         }
 
         $profilePhotoRaw = $profileRaw->find("//img[contains(@class, 'bodyshot-img')]", Query::TYPE_XPATH);
-        if (count($profilePhotoRaw) > 0)
-        {
+        if (count($profilePhotoRaw) > 0) {
             $player['photo'] = trim($profilePhotoRaw[0]->attr('src'));
         }
 
         $profileTeamsRaw = $profileRaw->find("//table[contains(@class, 'team-breakdown')]/tbody/tr", Query::TYPE_XPATH);
 
-        if (count($profileTeamsRaw) > 0)
-        {
+        if (count($profileTeamsRaw) > 0) {
             $player['teams'] = [];
-            foreach ($profileTeamsRaw as $profileTeamRaw)
-            {
+            foreach ($profileTeamsRaw as $profileTeamRaw) {
 
                 $teamNameRaw = $profileTeamRaw->first("//td[contains(@class, 'team-name-cell')]//img[contains(@class, 'team-logo')]", Query::TYPE_XPATH);
-                if (empty($teamNameRaw))
-                {
+                if (empty($teamNameRaw)) {
                     continue;
                 }
                 $team = [
@@ -200,22 +187,19 @@ class HLTVService
                 ];
 
                 $timePeriodRaw = $profileTeamRaw->find("//td[contains(@class, 'time-period-cell')]", Query::TYPE_XPATH);
-                if (count($timePeriodRaw) == 0)
-                {
+                if (count($timePeriodRaw) == 0) {
                     continue;
                 }
 
                 $timePeriodRaw = $timePeriodRaw[0];
                 $timeStartRaw = $timePeriodRaw->find("span[1]", Query::TYPE_XPATH);
-                if (count($timeStartRaw) == 0)
-                {
+                if (count($timeStartRaw) == 0) {
                     continue;
                 }
 
                 $unixtime = trim($timeStartRaw[0]->attr('data-unix'));
                 $dateTime = new \DateTime();
-                if (strlen($unixtime) == 13)
-                {
+                if (strlen($unixtime) == 13) {
                     $unixtime = substr($unixtime, 0, -3);
                 }
                 $dateTime = $dateTime->setTimestamp($unixtime + 3600);
@@ -223,12 +207,10 @@ class HLTVService
                 $team['start_at'] = $dateTime;
 
                 $timeEndRaw = $timePeriodRaw->find("span[2]", Query::TYPE_XPATH);
-                if (count($timeEndRaw) > 0)
-                {
+                if (count($timeEndRaw) > 0) {
                     $unixtime = trim($timeEndRaw[0]->attr('data-unix'));
                     $dateTime = new \DateTime();
-                    if (strlen($unixtime) == 13)
-                    {
+                    if (strlen($unixtime) == 13) {
                         $unixtime = substr($unixtime, 0, -3);
                     }
                     $dateTime = $dateTime->setTimestamp($unixtime);
@@ -240,7 +222,7 @@ class HLTVService
         }
         //get current team
         $currentTeamBlock = $document->first('.playerTeam');
-        if (isset($currentTeamBlock)){
+        if (isset($currentTeamBlock)) {
             $currentTeamName = $currentTeamBlock->first('a');
 
             $teamUrl = $currentTeamName->attr('href');
@@ -249,8 +231,8 @@ class HLTVService
             $teamName = trim($currentTeamName->text());
 
             $teamIcon = $currentTeamBlock->first('img');
-            $teamIcon = isset($teamIcon) ? $teamIcon->attr('src'): null;
-            $teamIcon = isset($teamIcon) ? self::urlDecorator($teamIcon): null;
+            $teamIcon = isset($teamIcon) ? $teamIcon->attr('src') : null;
+            $teamIcon = isset($teamIcon) ? self::urlDecorator($teamIcon) : null;
 
             $player['currentTeam'] = [
                 'name' => $teamName,
@@ -272,25 +254,23 @@ class HLTVService
 
         try {
             $content = PageContentService::getPageContent(static::$baseUrl);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             LoggerService::error("hltv get events $e", LoggerService::TYPE_INFO);
 
             $content = null;
         }
 
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
         $document = new Document($content);
         $events = [];
         $eventLiveCells = $document->find('.event');
 
-        foreach ($eventLiveCells as $eventCellLink){
+        foreach ($eventLiveCells as $eventCellLink) {
             $eventItem = static::getEventMainInfo($eventCellLink);
 
-            if (empty($eventItem))
-            {
+            if (empty($eventItem)) {
                 continue;
             }
             $events[] = $eventItem;
@@ -307,8 +287,7 @@ class HLTVService
     protected static function getEventMainInfo($eventCellLink)
     {
         $eventUrl = $eventCellLink->attr('href');
-        if (strrpos($eventUrl, 'http') === false)
-        {
+        if (strrpos($eventUrl, 'http') === false) {
             $eventUrl = static::$baseUrl . $eventUrl;
         }
 
@@ -318,14 +297,12 @@ class HLTVService
 
         $imageRaw = $eventCellLink->first("//img[contains(@class, 'logo')]", Query::TYPE_XPATH);
 
-        if (isset($imageRaw))
-        {
+        if (isset($imageRaw)) {
             $eventItem['image'] = trim($imageRaw->attr('src'));
         }
         $imageHeaderRaw = $eventCellLink->first('.event-header');
 
-        if (isset($imageHeaderRaw))
-        {
+        if (isset($imageHeaderRaw)) {
             $imageHeaderUrl = trim($imageHeaderRaw->attr('src'));
             $imageHeaderUrl = self::urlDecorator($imageHeaderUrl);
 
@@ -333,7 +310,7 @@ class HLTVService
         }
         $eventFull = static::getEventFull($eventUrl);
 
-        if (is_array($eventFull)){
+        if (is_array($eventFull)) {
             $eventItem += $eventFull;
         }
 
@@ -349,8 +326,7 @@ class HLTVService
     {
         $unixtime = trim($unix);
         $dateTime = new \DateTime();
-        if (strlen($unixtime) == 13)
-        {
+        if (strlen($unixtime) == 13) {
             $unixtime = substr($unixtime, 0, -3);
         }
         $dateTime = $dateTime->setTimestamp((int)$unixtime);
@@ -369,12 +345,11 @@ class HLTVService
 
         try {
             $content = PageContentService::getPageContent($url);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
 
             $content = null;
         }
-        if ($content and is_array($content) && isset($content['error']))
-        {
+        if ($content and is_array($content) && isset($content['error'])) {
             return false;
         }
         $document = new Document($content);
@@ -388,7 +363,7 @@ class HLTVService
      */
     public static function getPlayersRating(): array
     {
-        $content = PageContentService::getPageContent(self::$baseUrl.'/stats');
+        $content = PageContentService::getPageContent(self::$baseUrl . '/stats');
 
         $document = new Document($content);
 
@@ -397,15 +372,13 @@ class HLTVService
         $ratingPlayersBlock = $document->first('div.stats-section > div.columns > div:nth-child(1)');
         $ratingPlayers = $ratingPlayersBlock->find('.top-x-box.standard-box');
 
-        foreach ($ratingPlayers as $player)
-        {
+        foreach ($ratingPlayers as $player) {
             $nick = self::getSubElemByClass($player, '.name');
             $rating = self::getSubElemByClass($player, '.rating .bold');
             $maps = self::getSubElemByClass($player, '.average.gtSmartphone-only .bold');
             $url = $player->first('a')->attr('href');
 
-            if (strrpos($url, 'http') === false)
-            {
+            if (strrpos($url, 'http') === false) {
                 $url = static::$baseUrl . $url;
                 $url = str_replace('stats/players', 'player', $url);
             }
@@ -424,7 +397,7 @@ class HLTVService
     public static function getSubElemByClass($elem, $class)
     {
         $element = $elem->first($class);
-        if (isset($element)){
+        if (isset($element)) {
             $element = trim($element->text());
         }
         return $element;
@@ -436,7 +409,7 @@ class HLTVService
      */
     public static function getTeamsRating(): array
     {
-        $content = PageContentService::getPageContent(self::$baseUrl.'/stats');
+        $content = PageContentService::getPageContent(self::$baseUrl . '/stats');
 
         $document = new Document($content);
 
@@ -445,15 +418,13 @@ class HLTVService
         $ratingTeamsBlock = $document->first('div.stats-section > div.columns > div:nth-child(2)');
         $ratingTeams = $ratingTeamsBlock->find('.top-x-box.standard-box');
 
-        foreach ($ratingTeams as $team)
-        {
+        foreach ($ratingTeams as $team) {
             $name = self::getSubElemByClass($team, '.name');
             $rating = self::getSubElemByClass($team, '.rating .bold');
             $maps = self::getSubElemByClass($team, '.average.gtSmartphone-only .bold');
             $url = $team->first('a')->attr('href');
 
-            if (strrpos($url, 'http') === false)
-            {
+            if (strrpos($url, 'http') === false) {
                 $url = static::$baseUrl . $url;
                 $url = str_replace('stats/teams', 'team', $url);
             }
@@ -475,23 +446,21 @@ class HLTVService
 
         try {
             $content = PageContentService::getPageContent($team['url']);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             LoggerService::error("get team {$team['name']} error: $e");
 
             $content = null;
         }
         LoggerService::info("get team {$team['name']}");
 
-        if (!$content or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (!$content or ($content and is_array($content) && isset($content['error']))) {
             return false;
         }
 
         $document = new Document($content);
 
         $teamLogoRaw = $document->first('.teamlogo');
-        if (empty($teamLogoRaw))
-        {
+        if (empty($teamLogoRaw)) {
             LoggerService::error('team logo not found');
             return false;
         }
@@ -502,15 +471,13 @@ class HLTVService
         ];
 
         $profileRaw = $document->first('.profile-team-info');
-        if (empty($profileRaw))
-        {
+        if (empty($profileRaw)) {
             LoggerService::error('team profile not found');
             return false;
         }
 
-        $nameTeamRaw = $profileRaw->first( '.profile-team-name');
-        if (empty($nameTeamRaw))
-        {
+        $nameTeamRaw = $profileRaw->first('.profile-team-name');
+        if (empty($nameTeamRaw)) {
             LoggerService::error('team name not found');
             return false;
         }
@@ -518,18 +485,15 @@ class HLTVService
 
         $regionTeamRaw = $profileRaw->first(".team-country img");
 
-        if (isset($regionTeamRaw))
-        {
+        if (isset($regionTeamRaw)) {
             $team['region'] = trim($regionTeamRaw->attr('title'));
         }
 
         $teamPersonsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' bodyshot-team ')]/a[contains(concat(' ', normalize-space(@class), ' '), ' col-custom ')]", Query::TYPE_XPATH);
 
-        foreach ($teamPersonsRaw as $teamPersonRaw)
-        {
+        foreach ($teamPersonsRaw as $teamPersonRaw) {
             $playerUrl = $teamPersonRaw->attr('href');
-            if (strrpos($playerUrl, 'http') === false)
-            {
+            if (strrpos($playerUrl, 'http') === false) {
                 $playerUrl = static::$baseUrl . $playerUrl;
             }
 
@@ -539,27 +503,22 @@ class HLTVService
             ];
 
             $playerImageRaw = $teamPersonRaw->find("//img[contains(@class, 'bodyshot-team-img')]", Query::TYPE_XPATH);
-            if (count($playerImageRaw) > 0)
-            {
+            if (count($playerImageRaw) > 0) {
                 $player['photo'] = trim($playerImageRaw[0]->attr('src'));
             }
 
             $team['players'][] = $player;
         }
 
-        if (!empty($team['players']))
-        {
+        if (!empty($team['players'])) {
             $players = [];
-            foreach ($team['players'] as $player)
-            {
-                if (empty($player['url']))
-                {
+            foreach ($team['players'] as $player) {
+                if (empty($player['url'])) {
                     continue;
                 }
 
                 $personItem = static::getPerson($player);
-                if (!$personItem)
-                {
+                if (!$personItem) {
                     LoggerService::error("person of player {$player['nick']} not found");
                     continue;
                 }
@@ -585,7 +544,7 @@ class HLTVService
 
         $nick = self::getSubElemByClass($playerOfTheWeekContainer, '.playerOfTheWeekPlayerName');
         $data = self::getSubElemByClass($playerOfTheWeekContainer, '.playerOfTheWeekData');
-        $title =  self::getSubElemByClass($playerOfTheWeekContainer, '.playerOfTheWeekTitle');
+        $title = self::getSubElemByClass($playerOfTheWeekContainer, '.playerOfTheWeekTitle');
 
         return compact('nick', 'data', 'title');
     }
@@ -596,8 +555,7 @@ class HLTVService
      */
     public static function urlDecorator($url): string
     {
-        if (strrpos($url, 'http') === false)
-        {
+        if (strrpos($url, 'http') === false) {
             $url = static::$baseUrl . $url;
         }
         return $url;
@@ -610,19 +568,16 @@ class HLTVService
     public static function getRatingWeapons()
     {
         $weaponsRatings = [];
-        $content = PageContentService::getPageContent(self::$baseUrl. '/stats');
+        $content = PageContentService::getPageContent(self::$baseUrl . '/stats');
 
         $document = new Document($content);
 
         $statsWeaponSection = $document->first('.stats-section');
-        if (isset($statsWeaponSection))
-        {
+        if (isset($statsWeaponSection)) {
             $weaponRatingBlock = $statsWeaponSection->first('.graph');
-            if (isset($weaponRatingBlock))
-            {
+            if (isset($weaponRatingBlock)) {
                 $weaponsRatingJson = $weaponRatingBlock->attr('data-fusionchart-config');
-                if (isset($weaponsRatingJson))
-                {
+                if (isset($weaponsRatingJson)) {
                     $jsonEncoder = new JsonDecoder();
 
                     $weaponsRatings = $jsonEncoder->decode($weaponsRatingJson);
@@ -640,8 +595,8 @@ class HLTVService
     public static function getEvents()
     {
         try {
-            $content = PageContentService::getPageContent(self::$baseUrl. '/events');
-        }catch (\Exception $e){
+            $content = PageContentService::getPageContent(self::$baseUrl . '/events');
+        } catch (\Exception $e) {
             LoggerService::info("getEvents $e");
 
             return [];
@@ -652,14 +607,13 @@ class HLTVService
         $eventsBlocks = $document->find('.events-month');
 
         $events = [];
-        foreach ($eventsBlocks as $eventsBlock)
-        {
+        foreach ($eventsBlocks as $eventsBlock) {
             $smallEvents = $eventsBlock->find('a.small-event');
             $bigEvents = $eventsBlock->find('a.big-event');
 
-            foreach ($smallEvents as $smallEvent){
+            foreach ($smallEvents as $smallEvent) {
                 $url = $smallEvent->attr('href');
-                if (isset($url)){
+                if (isset($url)) {
                     $url = self::urlDecorator($url);
                 }
 
@@ -677,9 +631,9 @@ class HLTVService
                 $events[] = $eventItem;
             }
 
-            foreach ($bigEvents as $bigEvent){
+            foreach ($bigEvents as $bigEvent) {
                 $url = $bigEvent->attr('href');
-                if (isset($url)){
+                if (isset($url)) {
                     $url = self::urlDecorator($url);
                 }
                 $eventItem = static::getEventFull($url);
@@ -706,12 +660,12 @@ class HLTVService
 
         $urls = [];
 
-        foreach ($flags as $flag){
+        foreach ($flags as $flag) {
             $href = $flag->attr('href');
             [$name, $extension] = explode('.', $href);
 
             $urls[] = [
-                'url' => $url.$href,
+                'url' => $url . $href,
                 'name' => $name,
                 'extension' => $extension
             ];

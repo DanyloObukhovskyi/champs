@@ -18,7 +18,7 @@ class NewsTagService extends EntityService
         $allTags = $this->repository->uniqueAll();
 
         $tags = [];
-        foreach ($allTags as $tag){
+        foreach ($allTags as $tag) {
             $tagsCount = (integer)$this->repository->getCountByTitle($tag['title']);
 
             $tags[$tagsCount][] = $tag['title'];
@@ -29,7 +29,7 @@ class NewsTagService extends EntityService
         $result = [];
         foreach ($tags as $tagsTitles) {
             foreach ($tagsTitles as $tagTitle) {
-                if (count($result) < $offset){
+                if (count($result) < $offset) {
                     $result[] = $tagTitle;
                 }
             }

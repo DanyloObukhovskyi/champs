@@ -20,7 +20,7 @@ class GameRankRepository extends ServiceEntityRepository
         parent::__construct($registry, GameRank::class);
     }
 
-    public function getByPoints(Game $game, int $points)
+    public function getByPoints(Game $game, $points)
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.pointsTo >= :points')

@@ -51,7 +51,7 @@ class NewsCommentLikeService extends EntityService
     {
         $newsLikes = [];
 
-        foreach ($likes as $like){
+        foreach ($likes as $like) {
             $newsLikes[] = $this->decorator($like);
         }
         return $newsLikes;

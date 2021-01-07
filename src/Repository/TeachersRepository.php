@@ -124,7 +124,7 @@ class TeachersRepository extends ServiceEntityRepository
         $trainers = [];
 
         foreach ($orderByWorkout as $orderByWorkoutTrainers) {
-            foreach ($orderByWorkoutTrainers as $trainer){
+            foreach ($orderByWorkoutTrainers as $trainer) {
                 $trainers[] = $trainer;
             }
         }

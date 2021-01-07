@@ -22,8 +22,7 @@ class EndLessonMailHandler implements MessageHandlerInterface
         //Send user mail
         $endLessonMail->getMailer()->send($this->makeEmail($lesson));
         //Send trainer mail
-        if (!$endLessonMail->isOnlyStudent())
-        {
+        if (!$endLessonMail->isOnlyStudent()) {
             $endLessonMail->getMailer()->send($this->makeEmail($lesson, true));
         }
     }

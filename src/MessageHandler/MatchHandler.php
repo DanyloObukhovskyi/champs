@@ -129,8 +129,7 @@ class MatchHandler implements MessageHandlerInterface
         $match = $this->createMatch($matchFull, $teams);
         $streams = $this->createStreams($matchFull['streams'], $match);
 
-        if (isset($matchFull['is_main_result']) and $matchFull['is_main_result'] === true)
-        {
+        if (isset($matchFull['is_main_result']) and $matchFull['is_main_result'] === true) {
             $createdAt = Carbon::now();
 
             $this->resultsMatchService->create($match, $createdAt);
@@ -152,11 +151,9 @@ class MatchHandler implements MessageHandlerInterface
      */
     public function createMatch($matchData, $teams)
     {
-        if (isset($matchData['eventUrl']))
-        {
+        if (isset($matchData['eventUrl'])) {
             $eventEntity = $this->eventService->getByUrl($matchData['eventUrl']);
-            if (empty($eventEntity))
-            {
+            if (empty($eventEntity)) {
                 $eventData = HLTVService::getEventFull($matchData['eventUrl']);
 
                 $eventEntity = $this->eventService->create($eventData);
@@ -165,8 +162,7 @@ class MatchHandler implements MessageHandlerInterface
             $eventEntity = null;
         }
 
-        if (isset($eventEntity) and empty($eventEntity->getImage()) and isset($matchData['eventLogo']))
-        {
+        if (isset($eventEntity) and empty($eventEntity->getImage()) and isset($matchData['eventLogo'])) {
             $this->eventService->setEventImage($eventEntity, $matchData['eventLogo']);
         }
 
@@ -179,13 +175,11 @@ class MatchHandler implements MessageHandlerInterface
      */
     public function updateMatchScores($match, $statistics)
     {
-        if (!empty($statistics['score1']) && !empty($statistics['score2']))
-        {
+        if (!empty($statistics['score1']) && !empty($statistics['score2'])) {
             $match
                 ->setScore1($statistics['score1'])
                 ->setScore2($statistics['score2']);
-            if(((int)$statistics['score1'] === 2) or ((int)$statistics['score2'] === 2))
-            {
+            if (((int)$statistics['score1'] === 2) or ((int)$statistics['score2'] === 2)) {
                 $match->setLive(false);
             }
 
@@ -200,21 +194,21 @@ class MatchHandler implements MessageHandlerInterface
      */
     public function createTeams($teams)
     {
-        $left =  $teams[0] ?? null;
+        $left = $teams[0] ?? null;
         $right = $teams[1] ?? null;
 
         $leftTeamEntity = $this->teamService->getByName($left['name']);
 
         $date = (date('Y.m.d H:m:s', strtotime("-7 days")));
 
-        $leftTeamParseDate = isset($leftTeamEntity) ? $leftTeamEntity->getParseDate(): null;
-        if (empty($leftTeamParseDate)){
+        $leftTeamParseDate = isset($leftTeamEntity) ? $leftTeamEntity->getParseDate() : null;
+        if (empty($leftTeamParseDate)) {
             $isDateParse = true;
         } else {
             $isDateParse = $leftTeamParseDate->format('Y.m.d H:m:s') >= $date;
         }
 
-        if (empty($leftTeamEntity) or count($leftTeamEntity->getPlayers()) < 5 or $isDateParse){
+        if (empty($leftTeamEntity) or count($leftTeamEntity->getPlayers()) < 5 or $isDateParse) {
 
             $team = HLTVService::getTeam($left);
 
@@ -224,14 +218,14 @@ class MatchHandler implements MessageHandlerInterface
 
         $rightTeamEntity = $this->teamService->getByName($right['name']);
 
-        $rightTeamParseDate = isset($rightTeamEntity) ? $rightTeamEntity->getParseDate(): null;
-        if (empty($rightTeamParseDate)){
+        $rightTeamParseDate = isset($rightTeamEntity) ? $rightTeamEntity->getParseDate() : null;
+        if (empty($rightTeamParseDate)) {
             $isDateParse = true;
         } else {
             $isDateParse = $rightTeamParseDate->format('Y.m.d H:m:s') >= $date;
         }
 
-        if (empty($rightTeamEntity) or count($rightTeamEntity->getPlayers()) < 5 or $isDateParse){
+        if (empty($rightTeamEntity) or count($rightTeamEntity->getPlayers()) < 5 or $isDateParse) {
             $team = HLTVService::getTeam($right);
 
             $rightTeamEntity = $this->teamService->create($team);
@@ -246,12 +240,10 @@ class MatchHandler implements MessageHandlerInterface
      */
     public function createPlayers($players, $team)
     {
-        foreach ($players as $player)
-        {
+        foreach ($players as $player) {
             $personEntity = $this->personService->create($player);
 
-            if (!isset($personEntity))
-            {
+            if (!isset($personEntity)) {
                 continue;
             }
 
@@ -269,11 +261,9 @@ class MatchHandler implements MessageHandlerInterface
     {
         $result = [];
 
-        foreach ($streams as $stream)
-        {
+        foreach ($streams as $stream) {
             $streamEntity = $this->streamService->create($match, $stream);
-            if (!isset($streamEntity))
-            {
+            if (!isset($streamEntity)) {
                 return false;
             }
             $result[] = $streamEntity;
@@ -292,21 +282,18 @@ class MatchHandler implements MessageHandlerInterface
     protected function updateMatchTeamWinrate($matchDataFull, $match)
     {
 
-        if (isset($matchDataFull['winrate']))
-        {
-            foreach ($matchDataFull['winrate'] as $teamName => $winRates)
-            {
+        if (isset($matchDataFull['winrate'])) {
+            foreach ($matchDataFull['winrate'] as $teamName => $winRates) {
                 $team = $this->teamService->getByName($teamName);
 
-                foreach ($winRates as $winRate)
-                {
+                foreach ($winRates as $winRate) {
                     $map = $this->mapService->getByName($winRate['name']);
                     if (empty($map)) {
                         $map = $this->mapService->create($winRate['name']);
                     }
                     $this->mapService->updateImage($map, $winRate['image']);
 
-                    if (isset($team) and isset($match) and isset($map)){
+                    if (isset($team) and isset($match) and isset($map)) {
                         $this->matchMapTeamWinRateService->create($team, $match, $map, $winRate['winrate']);
                     }
                 }
@@ -320,15 +307,12 @@ class MatchHandler implements MessageHandlerInterface
      */
     protected function updateMatchTeamPastMatches($matchDataFull, $match)
     {
-        if (isset($matchDataFull['pastMatches']))
-        {
-            foreach ($matchDataFull['pastMatches'] as $teamName => $pastMatches)
-            {
+        if (isset($matchDataFull['pastMatches'])) {
+            foreach ($matchDataFull['pastMatches'] as $teamName => $pastMatches) {
                 $matchTeam = $this->teamService->getByName($teamName);
 
-                foreach ($pastMatches as $pastMatch){
-                    if (isset($match) and isset($matchTeam))
-                    {
+                foreach ($pastMatches as $pastMatch) {
+                    if (isset($match) and isset($matchTeam)) {
                         $this->pastMatchService->create($match, $pastMatch, $matchTeam);
                     }
                 }
@@ -357,11 +341,10 @@ class MatchHandler implements MessageHandlerInterface
      */
     private function createPlayerStatistics(Match $match, $mapEntity, $playersStats, $type)
     {
-        foreach ($playersStats as $playerStat)
-        {
+        foreach ($playersStats as $playerStat) {
             /** @var Person $person */
             $person = $this->personService->getByNick($playerStat['nick']);
-            if (isset($person) and !empty( $person->getPlayer())){
+            if (isset($person) and !empty($person->getPlayer())) {
                 $player = $person->getPlayer();
 
                 $result[] = $this->playerStatisticsService->create($player, $match, $mapEntity, $playerStat, $type);
@@ -379,36 +362,30 @@ class MatchHandler implements MessageHandlerInterface
      */
     private function updateMatchStatistics($match, $matchStatistics)
     {
-        if (empty($matchStatistics['maps']))
-        {
+        if (empty($matchStatistics['maps'])) {
             return false;
         }
 
-        foreach ($matchStatistics['maps'] as $map)
-        {
+        foreach ($matchStatistics['maps'] as $map) {
             $code = $this->mapService->makeCode($map['name']);
             $mapEntity = $this->mapService->getByCode($code);
-            if (!$mapEntity)
-            {
+            if (!$mapEntity) {
                 $mapEntity = $this->mapService->create($map['name']);
             }
 
             $this->matchStatisticsService->create($match, $mapEntity, $map['stat']);
         }
-        if (!empty($matchStatistics['playerMapStats']))
-        {
-            foreach ((array)$matchStatistics['playerMapStats'] as $name => $mapStats)
-            {
+        if (!empty($matchStatistics['playerMapStats'])) {
+            foreach ((array)$matchStatistics['playerMapStats'] as $name => $mapStats) {
                 $mapEntity = null;
-                if ($name !== 'All maps')
-                {
+                if ($name !== 'All maps') {
                     $code = $this->mapService->makeCode($name);
                     $mapEntity = $this->mapService->getByCode($code);
                 }
-                foreach ($mapStats['stat']['left'] as $type => $playersStats){
+                foreach ($mapStats['stat']['left'] as $type => $playersStats) {
                     $this->createPlayerStatistics($match, $mapEntity, $playersStats, $type);
                 }
-                foreach ($mapStats['stat']['right'] as $type => $playersStats){
+                foreach ($mapStats['stat']['right'] as $type => $playersStats) {
                     $this->createPlayerStatistics($match, $mapEntity, $playersStats, $type);
                 }
             }
@@ -422,28 +399,22 @@ class MatchHandler implements MessageHandlerInterface
      */
     protected function updateMatchPickAndBans($matchStatistics, $match)
     {
-        if (isset($matchStatistics['maps-pick']))
-        {
-            foreach ($matchStatistics['maps-pick'] as $mapPick)
-            {
+        if (isset($matchStatistics['maps-pick'])) {
+            foreach ($matchStatistics['maps-pick'] as $mapPick) {
                 $add = true;
-                foreach ($match->getMatchPickAndBans() as $pickAndBan)
-                {
-                    if($pickAndBan->getOperationType() == $mapPick['type'] && $pickAndBan->getMap() == $mapPick['map'])
-                    {
+                foreach ($match->getMatchPickAndBans() as $pickAndBan) {
+                    if ($pickAndBan->getOperationType() == $mapPick['type'] && $pickAndBan->getMap() == $mapPick['map']) {
                         $add = false;
                     }
                 }
-                if($add)
-                {
+                if ($add) {
                     $mapPickEntity = new MatchPickAndBan();
                     $mapPickEntity
                         ->setGame($match)
                         ->setMap($mapPick['map'])
                         ->setOperationType($mapPick['type']);
 
-                    if ($mapPickEntity->getOperationType() != MatchPickAndBan::OPERATION_TYPE_LEFT)
-                    {
+                    if ($mapPickEntity->getOperationType() != MatchPickAndBan::OPERATION_TYPE_LEFT) {
                         $team = $this->teamService->getByName($mapPick['team']);
                         $mapPickEntity->setTeam($team);
                     }

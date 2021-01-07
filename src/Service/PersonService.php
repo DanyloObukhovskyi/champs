@@ -59,26 +59,23 @@ class PersonService extends EntityService
     {
         $person = $this->repository->getByNick($values['nick']);
 
-        if (empty($person))
-        {
+        if (empty($person)) {
             $person = new $this->entity;
         }
-        if (isset($values['nick'])){
+        if (isset($values['nick'])) {
             $person->setNick($values['nick']);
         }
-        if (isset($values['realname']))
-        {
+        if (isset($values['realname'])) {
             $person->setName($values['realname']);
         }
-        if (isset($values['regionIconName']))
-        {
+        if (isset($values['regionIconName'])) {
             $flagIcon = $this->flagIconService->getFlagByOrigName($values['regionIconName']);
 
-            if (isset($flagIcon)){
+            if (isset($flagIcon)) {
                 $person->setFlagIcon($flagIcon);
             }
         }
-        if (!empty($values['photo'])){
+        if (!empty($values['photo'])) {
             $this->setPersonPhoto($values['photo'], $person);
         }
 
@@ -100,7 +97,7 @@ class PersonService extends EntityService
     {
         $weekPlayer = $this->repository->getWeekPlayer();
 
-        if (isset($weekPlayer)){
+        if (isset($weekPlayer)) {
             $weekPlayer->setIsWeekPlayer(false);
             $this->entityManager->persist($weekPlayer);
         }
@@ -122,23 +119,21 @@ class PersonService extends EntityService
     {
         global $kernel;
 
-        if (!empty($photo) && strpos($photo, 'blankplayer.svg') === false)
-        {
+        if (!empty($photo) && strpos($photo, 'blankplayer.svg') === false) {
             $parseDate = new Carbon($person->getParsePhotoDate());
 
-            $photoPath = $kernel->getProjectDir().'/public/uploads/images/'.$person->getPhoto();
+            $photoPath = $kernel->getProjectDir() . '/public/uploads/images/' . $person->getPhoto();
 
             if ($parseDate->addMonth(1) >= Carbon::now() or
                 $person->getPhoto() === null or
-                !file_exists($photoPath)){
+                !file_exists($photoPath)) {
                 try {
                     $imagePhoto = DownloadFile::getImage($photo);
-                    if (!empty($imagePhoto))
-                    {
+                    if (!empty($imagePhoto)) {
                         $person->setPhoto($imagePhoto);
                         $person->setParsePhotoDate(Carbon::now());
                     }
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     LoggerService::error("Download image error: $e");
                 }
             }
@@ -171,14 +166,14 @@ class PersonService extends EntityService
         $flag = $person->getFlagIcon();
         $flagID = $person->getFlagIconId();
 
-        if (isset($flag)){
+        if (isset($flag)) {
             $flag = $flag->getName();
         }
         $this->imageService->setImage($flag);
         $flag = $this->imageService->getImagePath();
         $player = [
-            'user_id' => $person->getId (),
-            'rating' => isset($ratingPerson) ? $ratingPerson->getRating(): $person->getRating(),
+            'user_id' => $person->getId(),
+            'rating' => isset($ratingPerson) ? $ratingPerson->getRating() : $person->getRating(),
             'nickname' => $person->getNick(),
             'fullname' => $person->getName(),
             'image' => $image,
@@ -186,7 +181,7 @@ class PersonService extends EntityService
             'flag_id' => $flagID
         ];
 
-        if (!empty($person->getPlayer())){
+        if (!empty($person->getPlayer())) {
             /** @var Team $team */
             $team = $person->getPlayer()->getTeam();
             $this->imageService->setImage($team->getLogo());
@@ -194,7 +189,7 @@ class PersonService extends EntityService
 
             $player['team'] = [
                 'title' => $team->getName(),
-                'image' =>$logo,
+                'image' => $logo,
                 'id' => $team->getId()
             ];
         }

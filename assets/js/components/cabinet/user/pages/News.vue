@@ -23,10 +23,10 @@
 </template>
 
 <script>
-    import CabinetBottomBanner from "../CabinetBottomBanner";
-    import NewsService from "../../../services/NewsService";
-    import NewsRow from "../../news/NewsRow";
-    import SmallLoader from "../../helpers/SmallLoader";
+    import CabinetBottomBanner from "../../CabinetBottomBanner";
+    import NewsService from "../../../../services/NewsService";
+    import NewsRow from "../../../news/NewsRow";
+    import SmallLoader from "../../../helpers/SmallLoader";
 
     export default {
         name: "News",
@@ -87,7 +87,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import '../../../../css/animations.css';
+    @import '../../../../../css/animations.css';
 
     .news-wrapper {
         -webkit-animation: animation-translate-right 1500ms linear both;

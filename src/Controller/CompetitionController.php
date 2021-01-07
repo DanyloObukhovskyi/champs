@@ -8,8 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompetitionController extends AbstractController
 {
     /**
-      * @Route("/ru/competition", name="competition_index")
-      */
+     * @Route("/ru/competition", name="competition_index")
+     */
     public function index()
     {
         return $this->render('templates/competition.html.twig', ['router' => 'competition']);

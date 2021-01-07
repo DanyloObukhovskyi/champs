@@ -49,7 +49,7 @@ class NewsRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder("n")
             ->orderBy("n.$orderField", $orderType);
 
-        if (!empty($tags)){
+        if (!empty($tags)) {
             $query->innerJoin('n.newsTags', 'nt')
                 ->andwhere('nt.title IN(:tags)')
                 ->setParameter('tags', $tags);
@@ -62,21 +62,21 @@ class NewsRepository extends ServiceEntityRepository
                 ->orWhere('nt.title like :search')
                 ->setParameter('search', "%$search%");
         }
-        foreach ($titles as $title){
+        foreach ($titles as $title) {
             $query->andwhere('n.title like :title')
                 ->setParameter('title', "%$title%");
         }
-        foreach ($texts as $text){
+        foreach ($texts as $text) {
             $query->andwhere('n.text like :text')
                 ->setParameter('text', "%$text%");
         }
-        if (!empty($dateFrom)){
+        if (!empty($dateFrom)) {
             $from = new \DateTime("$dateFrom 00:00:00");
             $query->andWhere('n.created_at >= :dateFrom')
                 ->setParameter('dateFrom', $from);
         }
-        if (!empty($dateTo)){
-            $to   = new \DateTime("$dateTo 23:59:59");
+        if (!empty($dateTo)) {
+            $to = new \DateTime("$dateTo 23:59:59");
             $query->andWhere('n.created_at <= :dateTo')
                 ->setParameter('dateTo', $to);
         }

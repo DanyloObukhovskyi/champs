@@ -92,7 +92,7 @@
 </template>
 
 <script>
-    import MarketplaceService from "../../../services/MarketplaceService";
+    import MarketplaceService from "../../../../../services/MarketplaceService";
     import {mapGetters} from "vuex";
 
     export default {

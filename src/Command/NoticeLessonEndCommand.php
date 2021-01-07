@@ -69,8 +69,7 @@ class NoticeLessonEndCommand extends Command
 
         $this->setDescription('Add a short description for your command')
             ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
     /**
@@ -95,8 +94,7 @@ class NoticeLessonEndCommand extends Command
      */
     protected function noticedLessons($lessons)
     {
-        foreach ($lessons as $lesson)
-        {
+        foreach ($lessons as $lesson) {
             $this->lessonService->setNoticed($lesson);
 
             $this->logger->text('Dispatch end mail');

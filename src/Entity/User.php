@@ -117,10 +117,10 @@ class User implements UserInterface
     public function __construct()
     {
         $this->charactristics = new ArrayCollection();
-        $this->reviews        = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
         $this->trainerReviews = new ArrayCollection();
         $this->purseHistories = new ArrayCollection();
-        $this->videosUrls     = new ArrayCollection();
+        $this->videosUrls = new ArrayCollection();
     }
 
     /**
@@ -332,8 +332,7 @@ class User implements UserInterface
 
     public function addCharactristic(Charactristics $charactristic): self
     {
-        if (!$this->charactristics->contains($charactristic))
-        {
+        if (!$this->charactristics->contains($charactristic)) {
             $this->charactristics[] = $charactristic;
             $charactristic->setUser($this);
         }
@@ -343,12 +342,10 @@ class User implements UserInterface
 
     public function removeCharactristic(Charactristics $charactristic): self
     {
-        if ($this->charactristics->contains($charactristic))
-        {
+        if ($this->charactristics->contains($charactristic)) {
             $this->charactristics->removeElement($charactristic);
             // set the owning side to null (unless already changed)
-            if ($charactristic->getUser() === $this)
-            {
+            if ($charactristic->getUser() === $this) {
                 $charactristic->setUser(null);
             }
         }
@@ -378,8 +375,7 @@ class User implements UserInterface
 
     public function addReview(Review $review): self
     {
-        if (!$this->reviews->contains($review))
-        {
+        if (!$this->reviews->contains($review)) {
             $this->reviews[] = $review;
             $review->setStudent($this);
         }
@@ -389,12 +385,10 @@ class User implements UserInterface
 
     public function removeReview(Review $review): self
     {
-        if ($this->reviews->contains($review))
-        {
+        if ($this->reviews->contains($review)) {
             $this->reviews->removeElement($review);
             // set the owning side to null (unless already changed)
-            if ($review->getStudent() === $this)
-            {
+            if ($review->getStudent() === $this) {
                 $review->setStudent(null);
             }
         }
@@ -412,8 +406,7 @@ class User implements UserInterface
 
     public function addTrainerReview(Review $trainerReview): self
     {
-        if (!$this->trainerReviews->contains($trainerReview))
-        {
+        if (!$this->trainerReviews->contains($trainerReview)) {
             $this->trainerReviews[] = $trainerReview;
             $trainerReview->setTrainer($this);
         }
@@ -423,12 +416,10 @@ class User implements UserInterface
 
     public function removeTrainerReview(Review $trainerReview): self
     {
-        if ($this->trainerReviews->contains($trainerReview))
-        {
+        if ($this->trainerReviews->contains($trainerReview)) {
             $this->trainerReviews->removeElement($trainerReview);
             // set the owning side to null (unless already changed)
-            if ($trainerReview->getTrainer() === $this)
-            {
+            if ($trainerReview->getTrainer() === $this) {
                 $trainerReview->setTrainer(null);
             }
         }
@@ -446,8 +437,7 @@ class User implements UserInterface
 
     public function addPurseHistory(PurseHistory $purseHistory): self
     {
-        if (!$this->purseHistories->contains($purseHistory))
-        {
+        if (!$this->purseHistories->contains($purseHistory)) {
             $this->purseHistories[] = $purseHistory;
             $purseHistory->setUser($this);
         }
@@ -457,12 +447,10 @@ class User implements UserInterface
 
     public function removePurseHistory(PurseHistory $purseHistory): self
     {
-        if ($this->purseHistories->contains($purseHistory))
-        {
+        if ($this->purseHistories->contains($purseHistory)) {
             $this->purseHistories->removeElement($purseHistory);
             // set the owning side to null (unless already changed)
-            if ($purseHistory->getUser() === $this)
-            {
+            if ($purseHistory->getUser() === $this) {
                 $purseHistory->setUser(null);
             }
         }

@@ -27,12 +27,10 @@ class OauthController extends AbstractController
      */
     public function steam(AuthenticationUtils $authenticationUtils)
     {
-        if (isset($_GET["state"]) and @$_GET["state"] == "steam")
-        {
+        if (isset($_GET["state"]) and @$_GET["state"] == "steam") {
             preg_match("/^https:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/", $_GET["openid_identity"], $key); // Вытаскиваем id юзера
 
-            if(count($key) > 0)
-            {
+            if (count($key) > 0) {
                 $steam_id = $key[1];
 
                 /** @var User $user */
@@ -40,8 +38,7 @@ class OauthController extends AbstractController
                     'steam_id' => $steam_id
                 ]);
 
-                if(!$user)
-                {
+                if (!$user) {
                     $user = new User();
 
                     $user->setEmail('steam-email-' . $steam_id . '@champs.pro');

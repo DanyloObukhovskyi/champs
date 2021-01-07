@@ -36,8 +36,7 @@ class PlayerRepository extends ServiceEntityRepository
             ->setParameter('person_id', $personId)
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -56,8 +55,7 @@ class PlayerRepository extends ServiceEntityRepository
                 'nick' => $nick])
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     /**
