@@ -37,7 +37,7 @@
   .button {
 	display: flex;
 	height: 2.1vw;
-	width: 10vw;
+	width: 10.3vw;
 	border-radius: .6vw;
 	overflow: hidden;
 	cursor: pointer;
@@ -45,7 +45,6 @@
 	.cabinet-button {
 	  display: flex;
 	  align-items: center;
-	  width: 84%;
 	  background-image: url(/images/cabinet/buttonBackground.png);
 	  background-position: center;
 	  background-size: 110%;
@@ -97,6 +96,7 @@
 		div:nth-child(1) {
 		  font-size: .6vw;
 		  color: #28a745;
+		  width: 6vw;
 		}
 
 		img {
@@ -111,7 +111,7 @@
 	  display: flex;
 	  justify-content: center;
 	  align-items: center;
-	  width: 17%;
+	  width: 25%;
 	}
 
 	&:hover {

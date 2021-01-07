@@ -61,6 +61,10 @@ class CabinetService extends Service {
     getTrainerScheduleDay = date => {
         return this.send('cabinet/calendar/trainer/date/day', {date})
     }
+
+    getTrainerWeek = date => {
+        return this.send('cabinet/calendar/trainer/date/week', {date})
+    }
 }
 
 export default new CabinetService();

@@ -29,3 +29,8 @@
 /public/admin_panel/vendor/
 ###< Codeigniter admin
 
+###> Encore
+/public/build/*
+yarn.lock
+###< Encore
+

@@ -594,6 +594,28 @@ class CabinetController extends AbstractController
     }
 
     /**
+     * @Route("/cabinet/calendar/trainer/date/week", methods={"POST"})
+     */
+    public function viewCabinetScheduleWeek(Request $request)
+    {
+        $form = json_decode($request->getContent(), false);
+        /** @var User $user */
+        $user = $this->getUser();
+        $dateCarbon = Carbon::createFromFormat('d.m.Y', $form->date);
+
+        $date = $dateCarbon->startOfWeek();
+
+        $week = [];
+        for ($i = 0; $i < 7; $i++) {
+            $dateTime = new \DateTime($date->format('d.m.Y'));
+
+            $week[] = $this->getTrainerScheduleDay($user, $dateTime);
+            $date = $date->addDays(1);
+        }
+        return $this->json($week);
+    }
+
+    /**
      * @param User $trainer
      * @param $date
      * @return array
