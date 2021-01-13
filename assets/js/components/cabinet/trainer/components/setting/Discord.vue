@@ -1,9 +1,9 @@
 <template>
     <div class="setting-container-body discord-setting">
-        <div class="title">
+        <div class="trainer-title">
             Discord для обучения
         </div>
-        <div class="discord-setting-body d-flex">
+        <div class="discord-setting-body">
             <div class="form-group">
                 <label>Вставьте ссылку на ваш Discord</label>
                 <div class="input">
@@ -28,19 +28,24 @@
 <script>
     import CabinetService from "../../../../../services/CabinetService";
     import Swal from 'sweetalert2'
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Discord",
-        props: ['discord'],
         data() {
             return {
                 discordVal: null,
                 load: false,
             }
         },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
+        },
         methods: {
             updateDiscord() {
-                if (!this.load){
+                if (!this.load) {
                     const form = new FormData();
                     form.append('discord', this.discordVal);
 
@@ -64,17 +69,24 @@
             }
         },
         mounted() {
-            this.discordVal = this.discord;
+            this.discordVal = this.user.discord;
         }
     }
 </script>
 
-<style scoped>
-    .discord-setting {
-        height: 11vw;
-    }
+<style scoped lang="scss">
+  .discord-setting {
+	max-height: 15vw;
+	padding-left: 2.5vw;
+	padding-right: 1.5vw;
+  }
 
-    .discord-setting-body {
-        padding: 0 2vw;
+  .discord-setting-body {
+	padding: 0;
+    margin-top: 2vw;
+
+    .form-group {
+      padding: 0;
     }
+  }
 </style>

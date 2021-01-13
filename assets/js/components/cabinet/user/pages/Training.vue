@@ -1,6 +1,8 @@
 <template>
     <div class="training-wrapper">
-        <cabinet-bottom-banner/>
+        <div class="banner-wrapper" v-if="user !== null && !user.isTrainer">
+            <cabinet-bottom-banner/>
+        </div>
         <div class="loader-wrapper" v-if="load">
             <small-loader/>
         </div>
@@ -88,7 +90,7 @@
 
 <style scoped lang="scss">
   .training-wrapper {
-	padding-top: 1vw;
+	margin-top: -1vw;
   }
 
   .loader-wrapper {
@@ -103,6 +105,10 @@
   .timetable-wrapper {
 	padding: 1vw;
 	width: 70vw;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
 
   .dark {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TrainerVideoRepository::class)
  */
-class TrainerVideo
+class TrainerVideo implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -18,7 +18,7 @@ class TrainerVideo
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=Teachers::class)
      */
     private $trainer;
 
@@ -62,5 +62,15 @@ class TrainerVideo
     public function setVideoUrl($videoUrl): void
     {
         $this->videoUrl = $videoUrl;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'videoUrl' => $this->getVideoUrl()
+        ];
     }
 }

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TrainerAchievementRepository::class)
  */
-class TrainerAchievement
+class TrainerAchievement implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -30,7 +30,7 @@ class TrainerAchievement
     /**
      * @ORM\Column(type="boolean")
      */
-    private $show;
+    private $isShow;
 
     /**
      * @ORM\ManyToOne(targetEntity=Teachers::class)
@@ -47,7 +47,7 @@ class TrainerAchievement
      */
     public function getShow()
     {
-        return $this->show;
+        return $this->isShow;
     }
 
     /**
@@ -55,7 +55,7 @@ class TrainerAchievement
      */
     public function setShow($show): void
     {
-        $this->show = $show;
+        $this->isShow = $show;
     }
 
     /**
@@ -104,5 +104,17 @@ class TrainerAchievement
     public function setAchievement($achievement): void
     {
         $this->achievement = $achievement;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'tournament' => $this->getTournament(),
+            'achievement' => $this->getAchievement(),
+            'show' => $this->getShow()
+        ];
     }
 }

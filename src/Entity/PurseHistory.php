@@ -8,10 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=PurseHistoryRepository::class)
  */
-class PurseHistory
+class PurseHistory implements \JsonSerializable
 {
-    private const
-        WORKPAY_MULTIPLIER = 1.1;
+    const SUCCESS_STATUS = 'success';
+
+    const CANCELED_STATUS = 'canceled';
+
+    const PENDING_STATUS = 'pending';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -26,25 +30,40 @@ class PurseHistory
     private $user;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $operation;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $datetime;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $amount;
+
+    /**
+     * @ORM\Column(type="string", options={"default": "pending"})
+     */
+    private $status;
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
+    /**
+     * @param User|null $user
+     * @return $this
+     */
     public function setUser(?User $user): self
     {
         $this->user = $user;
@@ -52,23 +71,18 @@ class PurseHistory
         return $this;
     }
 
-    public function getOperation(): ?int
-    {
-        return $this->operation;
-    }
-
-    public function setOperation(int $operation): self
-    {
-        $this->operation = $operation;
-
-        return $this;
-    }
-
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getDatetime(): ?\DateTimeInterface
     {
         return $this->datetime;
     }
 
+    /**
+     * @param \DateTimeInterface $datetime
+     * @return $this
+     */
     public function setDatetime(\DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
@@ -76,8 +90,50 @@ class PurseHistory
         return $this;
     }
 
-    public function getWorkPay()
+    /**
+     * @return mixed
+     */
+    public function getAmount()
     {
-        return ($this->getOperation()) / self::WORKPAY_MULTIPLIER;
+        return $this->amount;
+    }
+
+    /**
+     * @param mixed $amount
+     * @return PurseHistory
+     */
+    public function setAmount(int $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param $status
+     * @return $this
+     */
+    public function setStatus($status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'amount' => $this->getAmount(),
+            'status' => $this->getStatus(),
+            'date' => $this->getDatetime(),
+        ];
     }
 }

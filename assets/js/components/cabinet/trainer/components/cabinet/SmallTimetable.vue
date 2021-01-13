@@ -13,7 +13,7 @@
                             v-for="lesson in dayLessons"
                             :key="lesson.id"
                             :lesson="lesson"
-                            :is-trainer-cabinet-small="false"
+                            :is-trainer-cabinet-small="true"
                             :is-past="false">
                     </lesson-row>
                 </div>
@@ -68,6 +68,7 @@
 	  background-color: #eff0f0;
 	  border-radius: .5vw;
 	  padding: 1vw 1vw;
+	  min-height: 17.3vw;
 
 	  .lessons-row {
 		.date-day {

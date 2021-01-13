@@ -1,27 +1,26 @@
 <template>
     <div class="setting-container-body password-setting">
-        <div class="title">
+        <div class="trainer-title">
             Изменение пароля
         </div>
-        <div class="general-settings-body d-flex">
-            <div class="setting-col-1">
-                <div class="form-group">
-                    <label>Изменить пароль</label>
-                    <div class="input">
-                        <input type="password" v-model="password">
-                    </div>
+        <div class="password-body">
+            <div class="form-group">
+                <div class="input">
+                    <input type="password" placeholder="Старый пароль" v-model="old">
                 </div>
             </div>
-            <div class="setting-col-2">
-                <div class="form-group">
-                    <label>Введите пароль повторно</label>
-                    <div class="input">
-                        <input type="password" v-model="passwordConfirm">
-                    </div>
+            <div class="form-group">
+                <div class="input">
+                    <input type="password" placeholder="Новый пароль" v-model="password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input">
+                    <input type="password" placeholder="Повторите новый пароль" v-model="passwordConfirm">
                 </div>
             </div>
         </div>
-        <div class="bottom-save" @click="updatePassword" :class="{disable: load}">
+        <div class="bottom-save" @click="updatePassword" :class="{disable: load, update: !load && isUpdate}">
             Сохранить изменения
             <i class="fas fa-check"></i>
             <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -44,9 +43,11 @@
         name: "Password",
         data() {
             return {
+                old: null,
                 password: null,
                 passwordConfirm: null,
                 load: false,
+                isUpdate: false,
             }
         },
         methods: {
@@ -68,24 +69,27 @@
                 })
             },
             updatePassword() {
-                if (!this.load){
+                if (!this.load) {
                     if (this.password === null || this.password === '') {
                         return this.showError('Пароль не может быть пустым!')
                     }
                     if (this.password === this.passwordConfirm) {
                         const form = new FormData();
+
+                        form.append('passwordOld', this.old);
                         form.append('password', this.password);
 
                         this.load = true;
                         CabinetService.updateUser(form)
                             .then(data => {
                                 this.$store.commit('setUser', data)
-                                this.load = false;
 
                                 this.showSuccess();
+                                this.load = false;
                             })
                             .catch(({response}) => {
                                 this.load = false;
+
                                 this.showError(response.data.password)
                             })
                     } else {
@@ -97,8 +101,17 @@
     }
 </script>
 
-<style scoped>
-    .password-setting {
-        height: 11vw;
-    }
+<style scoped lang="scss">
+  .password-setting {
+	padding-left: 2.5vw;
+  }
+
+  .password-body {
+	margin-top: .5vw;
+	padding-right: 4.5vw;
+
+	.form-group {
+	  padding: 0;
+	}
+  }
 </style>

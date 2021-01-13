@@ -498,8 +498,34 @@ class LessonService extends EntityService
 
         /** @var Lessons $lesson */
         foreach ($lessons as $lesson) {
-            $earned += (int)$lesson->getCost();
+            /** @var Payment $payment */
+            $payment = $lesson->getPayment();
+
+            if (isset($payment) and $payment->getPaymentStatus() === Payment::STATUS_OK) {
+                $earned += (int)$lesson->getCost();
+            }
         }
         return $earned;
+    }
+
+    /**
+     * @param User $user
+     * @return Lessons[]
+     */
+    public function getByTeacher(User $user)
+    {
+        return $this->repository->findBy([
+            'trainer' => $user
+        ]);
+    }
+
+    /**
+     * @param User $trainer
+     * @param \DateTime $dateTime
+     * @return int|mixed|string
+     */
+    public function getByTrainerAndPaymentDateFrom(User $trainer, \DateTime $dateTime)
+    {
+        return $this->repository->getByTrainerAndPaymentDateFrom($trainer, $dateTime);
     }
 }

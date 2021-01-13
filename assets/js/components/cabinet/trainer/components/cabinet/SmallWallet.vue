@@ -10,7 +10,7 @@
                         {{title}}:
                     </div>
                     <div class="earned">
-                        {{earn.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' , maximumSignificantDigits: 1})}}
+                        {{decoratePrice(earn)}} p
                     </div>
                 </div>
             </div>
@@ -34,6 +34,19 @@
         computed: {
             walletPage() {
                 return `/${CabinetService.lang}/trainer/cabinet/wallet`;
+            }
+        },
+        methods: {
+            decoratePrice(price) {
+                const cost = price.toLocaleString(
+                    'ru-RU',
+                    {
+                        style: 'currency',
+                        currency: 'RUB' ,
+                        maximumSignificantDigits: 2
+                    }
+                );
+                return cost.substring(0, cost.length-1);
             }
         }
     }

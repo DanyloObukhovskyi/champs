@@ -1,298 +1,328 @@
 .setting .setting-container-body {
-    background-color: #eff0f0;
-    border-radius: .5vw;
-    padding: .7vw 1vw;
-    margin-right: 1vw;
+	background-color: #eff0f0;
+	border-radius: .5vw;
+	padding: .7vw 1vw;
+	margin-right: 1vw;
 }
 
 .setting .setting-container-body .title {
-    color: #9d9fa0;
-    font-size: 1.5vw;
-    font-weight: 600;
+	color: #9d9fa0;
+	font-size: 1.5vw;
+	font-weight: 600;
 }
 
-.dark .setting .setting-container-body .title {
-    color: white;
+.setting .setting-container-body .trainer-title {
+	font-size: 1.5vw;
+	font-weight: 600;
+}
+
+.dark .setting .setting-container-body .title,
+.dark .setting .setting-container-body .trainer-title {
+	color: white;
 }
 
 .setting .setting-container-body .setting-col-1 {
-    width: 40%;
-    padding: 0 2vw;
+	width: 40%;
+	padding: 0 1.5vw 0 2.5vw;
 }
 
 .setting .setting-container-body .setting-col-2 {
-    width: 60%;
-    padding: 0 2vw;
+	width: 60%;
+	padding: 0 2.5vw 0 1.5vw;
 }
 
 .setting .setting-container-body .form-group {
-    padding: 0 .5vw;
-    width: 100%;
+	padding: 0 .5vw;
+	width: 100%;
 }
 
 .setting .setting-container-body .form-group .input input,
 .setting .setting-container-body .form-group .select select {
-    width: 100%;
-    height: 2.3vw;
-    border: .1vw solid #ffbb96;
-    border-radius: .2vw;
-    background-color: transparent;
-    -moz-appearance: none; /* Firefox */
-    -webkit-appearance: none; /* Safari and Chrome */
-    appearance: none;
-    outline: unset;
-    padding-left: .3vw;
+	width: 100%;
+	height: 100%;
+	border: .1vw solid #ffbb96;
+	border-radius: .2vw;
+	background-color: transparent;
+	-moz-appearance: none; /* Firefox */
+	-webkit-appearance: none; /* Safari and Chrome */
+	appearance: none;
+	outline: unset;
+	padding-left: .3vw;
+	font-size: 1vw;
+}
+
+.setting .setting-container-body .form-group .input input::placeholder {
+	color: #9d9fa0;
+	padding-left: .5vw;
+}
+
+.setting .setting-container-body .form-group .input textarea {
+	resize: none;
+	width: 100%;
+	border: unset;
+	outline: unset;
+}
+
+.setting .setting-container-body .form-group .input textarea::placeholder {
+	color: #9d9fa0;
 }
 
 .setting .setting-container-body .form-group .select,
 .setting .setting-container-body .form-group .input {
-    background-color: white;
-    border-radius: .2vw;
+	background-color: white;
+	border-radius: .2vw;
+	height: 2.5vw;
+	display: flex;
 }
 
 .setting .setting-container-body .form-group .select::before {
-    font-family: "Font Awesome 5 Pro";
-    content: "\f0dd";
-    font-weight: 900;
-    font-size: .8vw;
-    position: absolute;
-    height: 2.3vw;
-    top: 0;
-    right: 0;
-    color: white;
-    background-color: #ff6d1d;
-    border-radius: 0 .2vw .2vw 0;
-    padding: .3vw;
-    padding-top: .5vw;
+	font-family: "Font Awesome 5 Pro";
+	content: "\f0dd";
+	font-weight: 900;
+	font-size: .8vw;
+	position: absolute;
+	height: 2.5vw;
+	top: 0;
+	right: 0;
+	color: white;
+	background-color: #ff6d1d;
+	border-radius: 0 .2vw .2vw 0;
+	padding: .3vw;
+	padding-top: .5vw;
 }
 
 .setting .setting-container-body .form-group label {
-    font-size: .8vw;
-    color: #adafb0;
-    margin-bottom: .5vw;
+	font-size: .8vw;
+	color: #adafb0;
+	margin-bottom: .5vw;
 }
 
 .setting .setting-container-body .form-group .button-save {
-    height: 2.3vw;
-    border: unset;
-    color: white;
-    background: #ff6d1d;
-    width: 100%;
-    margin-top: 2.5vw;
-    border-radius: .2vw;
-    outline: unset;
-    cursor: pointer;
-    font-size: .8vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	height: 2.3vw;
+	border: unset;
+	color: white;
+	background: #ff6d1d;
+	width: 100%;
+	margin-top: 2.5vw;
+	border-radius: .2vw;
+	outline: unset;
+	cursor: pointer;
+	font-size: .8vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 @keyframes update {
-    1% {
-        background-color: #39a900;
-    }
-    10% {
-        background-color: #39a900;
-    }
-    20% {
-        background-color: #39a900;
-    }
-    30% {
-        background-color: #39a900;
-    }
-    40% {
-        background-color: #39a900;
-    }
-    80% {
-        background-color: #39a900;
-    }
-    90% {
-        background-color: #ff6d1d;
-    }
-    100% {
-        background-color: #ff6d1d;
-    }
+	1% {
+		background-color: #39a900;
+	}
+	10% {
+		background-color: #39a900;
+	}
+	20% {
+		background-color: #39a900;
+	}
+	30% {
+		background-color: #39a900;
+	}
+	40% {
+		background-color: #39a900;
+	}
+	80% {
+		background-color: #39a900;
+	}
+	90% {
+		background-color: #ff6d1d;
+	}
+	100% {
+		background-color: #ff6d1d;
+	}
 }
 
 @keyframes update-text {
-    1% {
-        display: inline;
-        color: white;
-    }
-    10% {
-        color: white;
-    }
-    20% {
-        color: white;
-    }
-    30% {
-        color: white;
-    }
-    40% {
-        color: white;
-    }
-    80% {
-        color: white;
-    }
-    90% {
-        color: transparent;
-    }
-    99% {
-        color: transparent;
-    }
-    100% {
-        display: none;
-    }
+	1% {
+		display: inline;
+		color: white;
+	}
+	10% {
+		color: white;
+	}
+	20% {
+		color: white;
+	}
+	30% {
+		color: white;
+	}
+	40% {
+		color: white;
+	}
+	80% {
+		color: white;
+	}
+	90% {
+		color: transparent;
+	}
+	99% {
+		color: transparent;
+	}
+	100% {
+		display: none;
+	}
 }
 
 .setting .setting-container-body .form-group .button-save.update {
-    animation: update 3.5s;
+	animation: update 3.5s;
 }
 
 .setting .setting-container-body .form-group .button-save i {
-    margin-left: .5vw;
-    position: absolute;
-    right: 1vw;
-    color: transparent;
+	margin-left: .5vw;
+	position: absolute;
+	right: 1vw;
+	color: transparent;
 }
 
 .setting .setting-container-body .form-group .button-save.update i {
-    animation: update-text 3.5s;
+	animation: update-text 3.5s;
 }
 
 .setting .setting-container-body .form-group .button-save.disable {
-    opacity: .5;
-    cursor: progress;
+	opacity: .5;
+	cursor: progress;
 }
 
 .setting .setting-container-body .form-group .button-save svg {
-    margin-left: .5vw;
-    position: absolute;
-    right: 1vw;
-    width: 1vw;
-    height: 1vw;
-    background: none;
-    display: block;
-    shape-rendering: auto;
+	margin-left: .5vw;
+	position: absolute;
+	right: 1vw;
+	width: 1vw;
+	height: 1vw;
+	background: none;
+	display: block;
+	shape-rendering: auto;
 }
 
 .dark .setting .setting-container-body .form-group .button-save,
 .dark .setting .bottom-save {
-    border: .1vw solid white;
+	border: .1vw solid white;
 }
 
 .setting .setting-container-body .form-group .button-save:hover {
-    background-color: #ff8f2b;
+	background-color: #ff8f2b;
 }
 
 .setting .setting-container-body .multiselect .multiselect__tags {
-    height: 2.3vw;
-    border: .1vw solid #ffbb96;
-    border-radius: .2vw;
-    width: fit-content;
-    padding-right: 1.5vw;
-    min-width: 12.6vw;
+	height: 2.5vw;
+	border: .1vw solid #ffbb96;
+	border-radius: .2vw;
+	width: fit-content;
+	padding-right: 1.5vw;
+	min-width: 12.6vw;
 }
 
 .setting .setting-container-body .multiselect .multiselect__select {
-    height: 2.3vw;
-    width: 1vw;
-    padding: 0;
-    z-index: 1;
+	height: 2.5vw;
+	width: 1vw;
+	padding: 0;
+	z-index: 1;
 }
 
 .setting .setting-container-body .multiselect .multiselect__tags::before {
-    content: '';
-    position: absolute;
-    height: 2.3vw;
-    width: 1vw;
-    right: -.1vw;
-    background: #ff6d1d;
-    border: .1vw solid #ff6d1d;
-    border-radius: 0 .2vw .2vw 0;
+	content: '';
+	position: absolute;
+	height: 2.5vw;
+	width: 1vw;
+	right: -.1vw;
+	background: #ff6d1d;
+	border: .1vw solid #ff6d1d;
+	border-radius: 0 .2vw .2vw 0;
 }
 
 .setting .setting-container-body .multiselect .multiselect__tags .multiselect__single {
-    margin-bottom: 0;
-    background: transparent;
+	margin-bottom: 0;
+	background: transparent;
 }
 
 .setting .setting-container-body .multiselect .multiselect__input {
-    background: transparent;
+	background: transparent;
 }
 
 .multiselect {
-    box-sizing: content-box;
-    display: block;
-    position: relative;
-    width: fit-content;
-    min-height: 40px;
-    text-align: left;
-    color: #35495e;
+	box-sizing: content-box;
+	display: block;
+	position: relative;
+	width: fit-content;
+	min-height: 40px;
+	text-align: left;
+	color: #35495e;
 }
 
 .setting .setting-container-body .multiselect .multiselect__select:before {
-    font-family: "Font Awesome 5 Pro";
-    content: "\f0dd";
-    font-weight: 900;
-    font-size: .8vw;
-    position: absolute;
-    height: 2.3vw;
-    top: -.2vw;
-    right: .25vw;
-    color: white;
-    border: unset;
-    display: flex;
-    align-items: center;
-    margin: 0;
+	font-family: "Font Awesome 5 Pro";
+	content: "\f0dd";
+	font-weight: 900;
+	font-size: .8vw;
+	position: absolute;
+	height: 2.5vw;
+	top: -.2vw;
+	right: .25vw;
+	color: white;
+	border: unset;
+	display: flex;
+	align-items: center;
+	margin: 0;
+}
+
+.setting .setting-container-body .multiselect .multiselect__single {
+	font-size: 1vw;
 }
 
 .setting .setting-container-body .multiselect .multiselect__content-wrapper {
-    min-width: 12.6vw;
+	min-width: 12.6vw;
 }
 
 .setting .bottom-save {
-    color: white;
-    height: 2.3vw;
-    background: #ff6d1d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    border-radius: 0 0 .5vw .5vw;
-    cursor: pointer;
+	color: white;
+	height: 2.3vw;
+	background: #ff6d1d;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	bottom: 0;
+	border-radius: 0 0 .5vw .5vw;
+	cursor: pointer;
+	font-size: 1vw;
 }
 
-.setting .bottom-save.disable{
-    opacity: .5;
+.setting .bottom-save.disable {
+	opacity: .5;
 }
 
-.setting .bottom-save.update{
-    animation: update 3.5s;
+.setting .bottom-save.update {
+	animation: update 3.5s;
 }
 
 .setting .bottom-save:hover {
-    background-color: #ff8f2b;
+	background-color: #ff8f2b;
 }
 
 .setting .bottom-save svg {
-    width: 1vw;
-    position: absolute;
-    right: 1vw;
+	width: 1vw;
+	position: absolute;
+	right: 1vw;
 }
 
 .setting .bottom-save i {
-    position: absolute;
-    right: 1vw;
-    color: transparent;
-    font-size: 1vw;
+	position: absolute;
+	right: 1vw;
+	color: transparent;
+	font-size: 1vw;
 }
 
 
 .setting .bottom-save.update i {
-    animation: update-text 3.5s;
+	animation: update-text 3.5s;
 }

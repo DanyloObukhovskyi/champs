@@ -86,7 +86,7 @@
 	}
 
 	&:last-child {
-	  margin-bottom: 4vw;
+	  margin-bottom: 3vw;
 	}
   }
 </style>

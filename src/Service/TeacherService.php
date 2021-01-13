@@ -5,13 +5,39 @@ namespace App\Service;
 
 
 use App\Entity\Teachers;
+use App\Entity\TrainerAchievement;
 use App\Entity\TrainerLessonPrice;
+use App\Entity\TrainerVideo;
+use App\Repository\TeachersRepository;
+use Container1ORetry\getTrainerAchievementRepositoryService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TeacherService extends EntityService
 {
     protected $entity = Teachers::class;
 
+    /**
+     * @var TeachersRepository
+     */
     protected $repository;
+
+    /**
+     * @var TrainerAchievementService
+     */
+    protected $achievementService;
+
+    /**
+     * @var TrainerVideoService
+     */
+    protected $trainerVideoService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct($entityManager);
+
+        $this->achievementService = new TrainerAchievementService($entityManager);
+        $this->trainerVideoService = new TrainerVideoService($entityManager);
+    }
 
     /**
      * @param $id
@@ -36,6 +62,16 @@ class TeacherService extends EntityService
                 $availableCosts[] = $cost->jsonSerialize();
             }
         }
+        $achievements = $this->entityManager->getRepository(TrainerAchievement::class)
+            ->findBy([
+                'trainer' => $teacher
+            ]);
+
+        $videos =  $this->entityManager->getRepository(TrainerVideo::class)
+            ->findBy([
+                'trainer' => $teacher
+            ]);
+
         return [
             'id' => $teacher->getId(),
             'method' => $teacher->getMethod(),
@@ -44,7 +80,51 @@ class TeacherService extends EntityService
             'awards' => $teacher->getAwards(),
             'about' => $teacher->getAbout(),
             'globalElite' => $teacher->getGlobalElite(),
-            'costs' => $availableCosts
+            'costs' => $availableCosts,
+            'achievements' => $achievements,
+            'videos' => $videos
         ];
+    }
+
+    /**
+     * @param Teachers $teacher
+     * @param object $data
+     */
+    public function updateTrainer(Teachers $teacher, object $data)
+    {
+        if (isset($data->method)) {
+            $teacher->setMethod($data->method);
+        }
+        if (isset($data->achievements) and !empty($data->achievements)) {
+            $achievements = json_decode($data->achievements, false);
+
+            $achievementsEntities = $this->entityManager->getRepository(TrainerAchievement::class)
+                ->findBy([
+                    'trainer' => $teacher
+                ]);
+
+            foreach ($achievementsEntities as $achievement) {
+                $this->delete($achievement);
+            }
+            foreach ($achievements as $achievement) {
+                $this->achievementService->create($teacher, (object)$achievement);
+            }
+        }
+        if (isset($data->videos) and !empty($data->videos)) {
+            $videos = json_decode($data->videos, false);
+
+            $videosEntities = $this->entityManager->getRepository(TrainerAchievement::class)
+                ->findBy([
+                    'trainer' => $teacher
+                ]);
+
+            foreach ($videosEntities as $video) {
+                $this->delete($video);
+            }
+            foreach ($videos as $video) {
+                $this->trainerVideoService->create($teacher, $video->videoUrl);
+            }
+        }
+        return $this->save($teacher);
     }
 }

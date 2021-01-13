@@ -88,6 +88,11 @@ class Lessons
      */
     private $trainerNotice;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Payment::class, mappedBy="lesson")
+     */
+    private $payment;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -275,5 +280,21 @@ class Lessons
     public function setTrainerNotice($trainerNotice): void
     {
         $this->trainerNotice = $trainerNotice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayment()
+    {
+        return $this->payment;
+    }
+
+    /**
+     * @param mixed $payment
+     */
+    public function setPayment($payment): void
+    {
+        $this->payment = $payment;
     }
 }

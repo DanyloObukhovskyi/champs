@@ -76,10 +76,32 @@ class CabinetController extends AbstractController
      */
     public $scheduleService;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
+
+    /**
+     * @var ValidatorInterface
+     */
+    public $validator;
+
+    public const CABINET_TYPE_TRAINER = 'trainer';
+
+    public const CABINET_TYPE_USER = 'trainer';
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserPasswordEncoderInterface $passwordEncoder,
+        TranslatorInterface $translator,
+        ValidatorInterface $validator
+    )
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
+
+        $this->translator = $translator;
+        $this->validator = $validator;
 
         $this->timezoneService = new TimeZoneService();
         $this->youTubeService = new YouTubeService();
@@ -102,6 +124,13 @@ class CabinetController extends AbstractController
         if ($this->getUser() === null) {
             return $this->redirectToRoute('main');
         }
+        if ($type === self::CABINET_TYPE_TRAINER) {
+            /** @var User $user */
+            $user = $this->getUser();
+            if (!$user->getIsTrainer()) {
+                return $this->redirectToRoute('user_cabinet', ['type' => 'user']);
+            }
+        }
         return $this->render('templates/user.cabinet.html.twig', [
             'router' => 'cabinet',
             'type' => $type,
@@ -116,7 +145,8 @@ class CabinetController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        return $this->json($this->getUserData($user));
+
+        return $this->json(isset($user) ? $this->getUserData($user): null);
     }
 
     public function getUserData(User $user)
@@ -134,7 +164,7 @@ class CabinetController extends AbstractController
             }
         }
 
-        return [
+        $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'nickname' => $user->getNickname(),
@@ -149,6 +179,16 @@ class CabinetController extends AbstractController
             'isTrainer' => $user->getIsTrainer(),
             'level' => $userLvl
         ];
+
+        if ($user->getIsTrainer()) {
+            /** @var Teachers|NULL $teacher */
+            $teacher = $this->teacherService->findByUserId($user->getId());
+
+            if (isset($teacher)) {
+                $data['trainer'] = $this->teacherService->decorator($teacher);
+            }
+        }
+        return $data;
     }
 
     /**
@@ -314,7 +354,7 @@ class CabinetController extends AbstractController
     /**
      * @Route("/ajax/cabinet/update/user", name="user_cabinet_update")
      */
-    public function updateUserData(Request $request, ValidatorInterface $validator, TranslatorInterface $translator)
+    public function updateUserData(Request $request, ValidatorInterface $validator)
     {
         $data = (object)$request->request->all();
 
@@ -326,13 +366,13 @@ class CabinetController extends AbstractController
         $avatarError = null;
 
         if (!empty($data->email)) {
-            $error = $this->validationEmail($validator, $translator, $data->email, $user);
+            $error = $this->validationEmail($data->email, $user);
             if (isset($error)) {
                 $errors['email'] = $error;
             }
         }
         if (!empty($file)) {
-            $result = $this->validationAndUploadAvatar($validator, $file, $user);
+            $result = $this->validationAndUploadAvatar($file, $user);
 
             if (!empty($result['error'])) {
                 $errors['avatar'] = $result['error'];
@@ -341,7 +381,33 @@ class CabinetController extends AbstractController
             }
         }
         if (!empty($data->password)) {
-            $this->updateUserPassword($user, $data->password);
+            if ($user->getIsTrainer()) {
+                if (isset($data->passwordOld)) {
+                    $result = $this->passwordEncoder->isPasswordValid($user, $data->passwordOld);
+
+                    if (!$result) {
+                        $errors['password'] = $this->translator->trans('The password was entered incorrectly');
+                    } else {
+                        $error = $this->updateUserPassword($user, $data->password);
+                        if (isset($error)) {
+                            $errors['password'] = $error;
+                        }
+                    }
+                }
+            } else {
+                $error = $this->updateUserPassword($user, $data->password);
+                if (isset($error)) {
+                    $errors['password'] = $error;
+                }
+            }
+        }
+        if (isset($data->trainer)) {
+            /** @var Teachers|null $trainer */
+            $trainer = $this->teacherService->findByUserId($user->getId());
+
+            if (isset($trainer)) {
+                 $this->teacherService->updateTrainer($trainer, (object)$data->trainer);
+            }
         }
         if (empty($errors)) {
             $user = $this->userService->updateUser($user, $data);
@@ -352,20 +418,18 @@ class CabinetController extends AbstractController
     }
 
     /**
-     * @param $validator
-     * @param $translator
      * @param $email
      * @param null $user
      * @return |null
      */
-    public function validationEmail($validator, $translator, $email, $user = null)
+    public function validationEmail($email, $user = null)
     {
         $error = null;
 
         if (empty($user)) {
             $user = $this->getUser();
         }
-        $violations = $validator->validate(
+        $violations = $this->validator->validate(
             $email,
             new Email([])
         );
@@ -377,7 +441,7 @@ class CabinetController extends AbstractController
             $findUser = $this->userService->findByEmail($email, $user->getId());
 
             if (isset($findUser)) {
-                $error = $translator->trans('This email is already taken');
+                $error = $this->translator->trans('This email is already taken');
             }
         }
         return $error;
@@ -389,11 +453,11 @@ class CabinetController extends AbstractController
      * @param $user
      * @return array
      */
-    public function validationAndUploadAvatar($validator, $file, $user): array
+    public function validationAndUploadAvatar($file, $user): array
     {
         global $kernel;
 
-        $violations = $validator->validate(
+        $violations = $this->validator->validate(
             $file,
             new Image([])
         );
@@ -421,13 +485,20 @@ class CabinetController extends AbstractController
     /**
      * @param User $user
      * @param $password
+     * @return string|null
      */
-    public function updateUserPassword(User $user, $password): void
+    public function updateUserPassword(User $user, $password): ?string
     {
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+        $error = null;
+        if (strlen($password) >= 5) {
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        } else {
+            $error = $this->translator->trans('Password cannot be shorter than 5 characters');
+        }
+        return $error;
     }
 
     /**
@@ -591,6 +662,28 @@ class CabinetController extends AbstractController
         $date = new \DateTime($form->date);
 
         return $this->json($this->getTrainerScheduleDay($user, $date));
+    }
+
+    /**
+     * @Route("/cabinet/calendar/trainer/date/week", methods={"POST"})
+     */
+    public function viewCabinetScheduleWeek(Request $request)
+    {
+        $form = json_decode($request->getContent(), false);
+        /** @var User $user */
+        $user = $this->getUser();
+        $dateCarbon = Carbon::createFromFormat('d.m.Y', $form->date);
+
+        $date = $dateCarbon->startOfWeek();
+
+        $week = [];
+        for ($i = 0; $i < 7; $i++) {
+            $dateTime = new \DateTime($date->format('d.m.Y'));
+
+            $week[] = $this->getTrainerScheduleDay($user, $dateTime);
+            $date = $date->addDays(1);
+        }
+        return $this->json($week);
     }
 
     /**

@@ -15,7 +15,7 @@
                 <router-view></router-view>
             </div>
         </div>
-       <invite-modal/>
+        <invite-modal/>
     </div>
 </template>
 
@@ -34,28 +34,32 @@
     import Training from "../components/cabinet/user/pages/Training";
     import News from "../components/cabinet/user/pages/News";
     import Video from "../components/cabinet/user/pages/Video";
-    import Setting from "../components/cabinet/user/pages/Setting";
-    import {mapGetters} from "vuex";
+    import UserSetting from "../components/cabinet/user/pages/Setting";
+    import {mapActions, mapGetters} from "vuex";
     import InviteModal from "../components/cabinet/InviteModal";
     import TrainerCabinet from "../components/cabinet/trainer/pages/TrainerCabinet";
+    import Calendar from "../components/cabinet/trainer/pages/Calendar";
+    import TrainerSetting from "../components/cabinet/trainer/pages/Setting";
+    import Wallet from "../components/cabinet/trainer/pages/Wallet";
 
     const routes = [
-        { path: `/${CabinetService.lang}/user/cabinet/`, component: UserCabinet },
-        { path: `/${CabinetService.lang}/user/cabinet/training`, component: Training },
-        { path: `/${CabinetService.lang}/user/cabinet/news`, component: News },
-        { path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video },
-        { path: `/${CabinetService.lang}/user/cabinet/settings`, component: Setting },
+        {path: `/${CabinetService.lang}/user/cabinet/`, component: UserCabinet},
+        {path: `/${CabinetService.lang}/user/cabinet/training`, component: Training},
+        {path: `/${CabinetService.lang}/user/cabinet/news`, component: News},
+        {path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video},
+        {path: `/${CabinetService.lang}/user/cabinet/settings`, component: UserSetting},
 
-        { path: `/${CabinetService.lang}/trainer/cabinet/`, component: TrainerCabinet },
-        { path: `/${CabinetService.lang}/trainer/cabinet/training`, component: Training },
-        { path: `/${CabinetService.lang}/trainer/cabinet/news`, component: News },
-        { path: `/${CabinetService.lang}/trainer/cabinet/videos`, component: Video },
-        { path: `/${CabinetService.lang}/trainer/cabinet/settings`, component: Setting },
+        {path: `/${CabinetService.lang}/trainer/cabinet/`, component: TrainerCabinet},
+        {path: `/${CabinetService.lang}/trainer/cabinet/timetable`, component: Training},
+        {path: `/${CabinetService.lang}/trainer/cabinet/calendar`, component: Calendar},
+        {path: `/${CabinetService.lang}/trainer/cabinet/videos`, component: Video},
+        {path: `/${CabinetService.lang}/trainer/cabinet/settings`, component: TrainerSetting},
+        {path: `/${CabinetService.lang}/trainer/cabinet/wallet`, component: Wallet},
     ];
 
     export default {
         name: "CabinetPage",
-        router:  new VueRouter({
+        router: new VueRouter({
             routes,
             mode: 'history'
         }),
@@ -78,28 +82,37 @@
                 'loadUser'
             ]),
         },
+        methods: {
+            ...mapActions('cabinet/setting',[
+                'getRanks',
+                'getTimezones'
+            ])
+        },
         mounted() {
-            this.$store.dispatch('cabinet/setting/getRanks')
+            this.getRanks();
+            this.getTimezones();
         }
     }
 </script>
 
 <style scoped lang="scss">
-    .cabinet {
-        margin-top: .5vw;
-        margin-bottom: 3vw;
-    }
+  .cabinet {
+	margin-top: .5vw;
+	margin-bottom: 3vw;
+  }
 
-    .cabinet-body {
-        display: flex;
+  .cabinet-body {
+	display: flex;
+	overflow: hidden;
+	min-height: 45vw;
 
-        .left {
-            width: 14%;
-            margin-right: 2vw;
-        }
+	.left {
+	  width: 14%;
+	  margin-right: 3vw;
+	}
 
-        .right {
-            width: 85%;
-        }
-    }
+	.right {
+	  width: 85%;
+	}
+  }
 </style>

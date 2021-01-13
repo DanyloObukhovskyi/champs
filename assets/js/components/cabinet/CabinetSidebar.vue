@@ -128,6 +128,7 @@
 	padding-bottom: 1vw;
 	-webkit-animation: animation-translate-left 1500ms linear both;
 	animation: animation-translate-left 1500ms linear both;
+	min-height: 5vw;
 
 	.page {
 	  margin-bottom: .8vw;

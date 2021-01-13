@@ -1,0 +1,180 @@
+<template>
+    <div class="setting-container-body wallet-data">
+        <div class="d-flex justify-content-center align-items-center" v-if="load">
+            <small-loader />
+        </div>
+        <template v-else>
+            <div class="trainer-title">
+                Данные по кошельку
+            </div>
+            <div class="wallet-data-body">
+                <div class="wallet-data-wrapper">
+                    <div class="wallet-data-row">
+                        <div class="title">
+                            Баланс:
+                        </div>
+                        <div class="cost-wrapper">
+                            {{ decoratePrice(balance) }} p
+                        </div>
+                    </div>
+                    <div class="wallet-data-row">
+                        <div class="title">
+                            Доступно к выводу:
+                        </div>
+                        <div class="cost-wrapper">
+                            {{ decoratePrice(available) }} p
+                            <button class="purse-btn">
+                                Вывести
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="wallet-data-wrapper">
+                    <div class="wallet-data-row" v-for="(earn, title) in earned">
+                        <div class="title">
+                            {{ title }}:
+                        </div>
+                        <div class="cost-wrapper">
+                            {{ decoratePrice(earn) }} p
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="trainer-title">
+                История вывода средств
+            </div>
+            <div class="history">
+                <div class="history-row" v-for="history in slicedHistory">
+                    {{ decorateDate(history.date) }} <span>{{ history.amount }} &#8381;</span>
+                </div>
+                <div class="show-more" @click="showAllHistory = !showAllHistory">
+                    {{ showAllHistory ? 'Скрыть' : 'Показать все' }}
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+
+<script>
+    import {mapGetters} from "vuex";
+    import SmallLoader from "../../../../helpers/SmallLoader";
+
+    export default {
+        name: "WalletData",
+        components: {SmallLoader},
+        data() {
+            return {
+                showAllHistory: false
+            }
+        },
+        computed: {
+            ...mapGetters('cabinet/wallet', [
+                'balance',
+                'available',
+                'earned',
+                'transactionHistory'
+            ]),
+            slicedHistory() {
+                if (this.showAllHistory) {
+                    return this.transactionHistory;
+                } else {
+                    return this.transactionHistory.slice(0, 3);
+                }
+            }
+        },
+        methods: {
+            decoratePrice(price) {
+                const cost = price.toLocaleString(
+                    'ru-RU',
+                    {
+                        style: 'currency',
+                        currency: 'RUB',
+                        maximumSignificantDigits: 2
+                    }
+                );
+                return cost.substring(0, cost.length - 1);
+            },
+            decorateDate(date) {
+                const dateTime = new Date(date);
+
+                const day = dateTime.getDate() > 9 ? dateTime.getDate() : `0${dateTime.getDate()}`;
+                const month = dateTime.getMonth() > 9 ? dateTime.getMonth() : `0${dateTime.getMonth()}`;
+
+                return `${day}.${month}.${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`;
+            }
+        }
+    }
+</script>
+
+<style scoped lang="scss">
+  .wallet-data-body {
+	display: flex;
+	margin-left: 3vw;
+	margin-top: 1vw;
+	justify-content: space-between;
+	margin-right: 1vw;
+
+	.wallet-data-wrapper {
+	  height: 12vw;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: space-between;
+	  margin-bottom: 1vw;
+
+	  .wallet-data-row {
+		.title {
+		  font-size: 1.3vw;
+
+		  &:first-letter {
+			text-transform: uppercase;
+		  }
+		}
+
+		.cost-wrapper {
+		  color: #e16423;
+		  font-size: 1.7vw;
+		  font-weight: 600;
+		  margin-top: .7vw;
+
+		  .purse-btn {
+			font-size: 1vw;
+			color: white;
+			background: #ff6d1d;
+			outline: none;
+			cursor: pointer;
+			border: unset;
+			border-radius: .3vw;
+			margin-left: 1.5vw;
+			padding-bottom: .1vw;
+
+			&:hover {
+			  background: #ff7525;
+			}
+		  }
+		}
+	  }
+	}
+  }
+
+  .history {
+	margin-left: 3vw;
+	margin-top: .5vw;
+	color: #9d9fa0;
+
+	.history-row {
+	  font-size: 1vw;
+	  margin-top: 1vw;
+
+	  span {
+		margin-left: 3vw;
+	  }
+	}
+
+	.show-more {
+	  font-size: 1vw;
+	  margin-top: 1vw;
+	  color: #9d9fa0;
+	  cursor: pointer;
+	}
+  }
+</style>

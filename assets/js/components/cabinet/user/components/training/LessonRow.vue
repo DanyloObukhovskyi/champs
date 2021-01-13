@@ -4,7 +4,7 @@
             <div class="time">
                 {{ getLessonTime(lesson.dateFrom) }} - {{ getLessonTime(lesson.dateTo) }}
             </div>
-            <div class="trainer" :class="{'justify-content-center': !isTrainerCabinetSmall}" v-if="user !== null">
+            <div class="trainer" :class="{'justify-content-center': isTrainerCabinetSmall}" v-if="user !== null">
                 <template v-if="!user.isTrainer">
                     <div class="avatar">
                         <img :src="'/uploads/avatars/' + lesson.trainer.photo"
@@ -24,7 +24,10 @@
                     </div>
                 </template>
                 <div class="buttons" v-if="!isPast">
-                    <cabinet-button text-first="Чат с тренером" @click="showDiscordModal" v-if="!user.isTrainer">
+                    <cabinet-button
+                            :text-first="user.isTrainer ? 'Чат с учеником':'Чат с тренером'"
+                            @click="showDiscordModal"
+                            v-if="!isTrainerCabinetSmall">
                         <template v-slot:img>
                             <img src="/images/cabinet/user.png">
                         </template>
@@ -36,7 +39,7 @@
                     </cabinet-button>
                     <cabinet-button text-first="Занятие окончено?"
                                     @click="setConfirmed"
-                                    v-if="!(user.isTrainer && isConfirmed) && isTrainerCabinetSmall"
+                                    v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall"
                                     :text-second="finishLessonLabel">
                         <template v-slot:img>
                             <img src="/images/cabinet/arrow.png">
@@ -44,7 +47,7 @@
                     </cabinet-button>
                 </div>
                 <div class="buttons" v-else>
-                    <cabinet-button text-first="Подробнее" @click="toggleMoreDetail">
+                    <cabinet-button text-first="Подробнее" @click="toggleMoreDetail" >
                         <template v-slot:img>
                             <img src="/images/cabinet/inviteIcon.png">
                         </template>
@@ -52,7 +55,7 @@
                     <cabinet-button
                             @click="setConfirmed"
                             text-first="Занятие окончено"
-                            v-if="!(user.isTrainer && isConfirmed) && isTrainerCabinetSmall"
+                            v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall"
                             :text-second="finishLessonLabel">
                         <template v-slot:img>
                             <img src="/images/cabinet/arrow.png">
@@ -62,7 +65,7 @@
             </div>
         </div>
         <div class="lesson-bottom">
-            <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="!isTrainerCabinetSmall"/>
+            <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="isTrainerCabinetSmall"/>
             <send-review :lesson="lesson" v-if="showReview"/>
         </div>
     </div>
@@ -87,7 +90,7 @@
                 default: false,
             },
             isTrainerCabinetSmall: {
-                default: true
+                default: false
             }
         },
         components: {

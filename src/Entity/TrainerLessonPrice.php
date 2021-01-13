@@ -16,6 +16,12 @@ class TrainerLessonPrice implements \JsonSerializable
 
     public const ANALYTIC_TYPE = 'analytic';
 
+    public const PRICES = [
+        self::INDIVIDUAL_TYPE,
+        self::GROUP_TYPE,
+        self::INDIVIDUAL_TYPE
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
