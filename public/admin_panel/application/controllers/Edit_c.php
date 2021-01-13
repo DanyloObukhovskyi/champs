@@ -387,26 +387,23 @@ class Edit_c extends CI_Controller
             if (trim($_POST['edit']) == true && (int)$user_id == $this->UserID) {
                 $nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
                 $Email = (isset($_POST["Email"]) && !empty($_POST["Email"])) ? trim($_POST["Email"]) : '';
-
                 $new_passw = (isset($_POST["new_password"]) && !empty($_POST["new_password"])) ? trim($_POST["new_password"]) : '';
-                $new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
 
-                $about = (isset($_POST["about"]) && !empty($_POST["about"])) ? trim($_POST["about"]) : '';
+                $new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
                 $method = (isset($_POST["method"]) && !empty($_POST["method"])) ? trim($_POST["method"]) : '';
                 $game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
 
                 $twitch = (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
-                $stream_type = (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
                 $admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
                 $discord = (isset($_POST["discord"]) && !empty($_POST["discord"])) ? trim($_POST["discord"]) : '';
 
                 $delete_trainer = (isset($_POST["delete_trainer"]) && !empty($_POST["delete_trainer"])) ? trim($_POST["delete_trainer"]) : '';
-
                 $videos = (isset($_POST["videos"]) && !empty($_POST["videos"])) ? $_POST["videos"] : [];
                 $rank = (isset($_POST["rank"]) && !empty($_POST["rank"])) ? trim($_POST["rank"]) : '';
+
                 $achievements = (isset($_POST["achievements"]) && !empty($_POST["achievements"])) ? $_POST["achievements"] : [];
-                $is_provide_training = isset($_POST["is_provide_training"]);
                 $awards = (isset($_POST["awards"]) && !empty($_POST["awards"])) ? $_POST["awards"] : [];
+                
                 $trainings = (isset($_POST["training"]) && !empty($_POST["training"])) ? $_POST["training"] : [];
                 $prices = (isset($_POST["price"]) && !empty($_POST["price"])) ? $_POST["price"] : [];
                 $global_elite = isset($_POST["global_elite"]);
@@ -415,25 +412,10 @@ class Edit_c extends CI_Controller
                 foreach ($videos as $video) {
                     $this->trainer_video->create($id, $video);
                 }
-
-                foreach (Trainer_lesson_price_m::PRICE_TYPES as $type => $title){
-                    $this->trainer_lesson_price_m->create_or_update(
-                        $id,
-                        $type,
-                        $prices[$type] ?? 0,
-                        isset($trainings[$type])
-                    );
-                }
-
-                $this->trainer_achievement->delete_records($id);
-                foreach ($achievements as $achievement) {
-                    $this->trainer_achievement->create($id, $achievement);
-                }
                 $this->trainer_award_model->delete_records($id);
                 foreach ($awards as $award) {
                     $this->trainer_award_model->create($id, $award);
                 }
-
                 if (!empty($nickname) && !empty($Email)) {
                     $mask = "ROLE_USER";
                     $user_capabilities = array($mask);
@@ -468,16 +450,27 @@ class Edit_c extends CI_Controller
 
                     if (empty($delete_trainer)) {
                         $update_data = array();
-                        $update_data['about'] = $about;
                         $update_data['method'] = $method;
                         $update_data['twitch'] = $twitch;
-                        $update_data['stream_type'] = $stream_type;
                         $update_data['admin_percentage'] = $admin_percentage;
                         $update_data['global_elite'] = $global_elite;
 
-                        $this->edit_m->updateTeacher($id, $update_data);
-                    }
+                        $trainer_id = $this->edit_m->updateTeacher($id, $update_data);
 
+                        foreach (Trainer_lesson_price_m::PRICE_TYPES as $type => $title){
+                            $this->trainer_lesson_price_m->create_or_update(
+                                $trainer_id,
+                                $type,
+                                $prices[$type] ?? 0,
+                                isset($trainings[$type])
+                            );
+                        }
+
+                        $this->trainer_achievement->delete_records($trainer_id);
+                        foreach ($achievements as $achievement) {
+                            $this->trainer_achievement->create($trainer_id, $achievement);
+                        }
+                    }
                     if (isset($_FILES["userfile"])) {
                         if (!empty($_FILES["userfile"]["name"])) {
                             $config['upload_path'] = $this->config->item('upload_trainers-pic');
@@ -540,12 +533,14 @@ class Edit_c extends CI_Controller
             redirect($_SERVER["HTTP_REFERER"]);
             die();
         }
+        $trainer = $this->trainers_model->check_teacher_data($id);
+        $trainer = $trainer[0] ?? null;
 
         $roles = $data['user_info'][0]['roles'];
         $roles = json_decode($roles);
         $data['user_info'][0]['roles'] = $roles[0];
         $data['videos'] = $this->trainer_video->get_all_for_user($data['user_info'][0]['id']);
-        $data['achievements'] = $this->trainer_achievement->get_by_trainer_id($id);
+        $data['achievements'] = $this->trainer_achievement->get_by_trainer_id($trainer['id']);
         $data['imgs_url'] = $this->config->item('display_trainers-pic');
         $data['upload_url'] = $this->config->item('upload_trainers-pic');
         $data['current_u_can'] = $current_u_can;
@@ -554,7 +549,7 @@ class Edit_c extends CI_Controller
         $data['games'] = $this->game_m->get_all();
         $data['prices_types'] = Trainer_lesson_price_m::PRICE_TYPES;
 
-        $trainer_prices = $this->trainer_lesson_price_m->get_by_trainer_id($id);
+        $trainer_prices = $this->trainer_lesson_price_m->get_by_trainer_id($trainer['id']);
         $data['trainer_prices'] = [];
 
         foreach (Trainer_lesson_price_m::PRICE_TYPES as $type => $title){

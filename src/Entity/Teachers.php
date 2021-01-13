@@ -29,11 +29,6 @@ class Teachers
     private $userid;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $about;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $method;
@@ -42,11 +37,6 @@ class Teachers
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $twitch;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $streamType;
 
     /**
      * @ORM\ManyToMany(targetEntity=Award::class)
@@ -99,19 +89,7 @@ class Teachers
 
         return $this;
     }
-
-    public function getAbout(): ?string
-    {
-        return $this->about;
-    }
-
-    public function setAbout(?string $about): self
-    {
-        $this->about = $about;
-
-        return $this;
-    }
-
+    
     public function getMethod(): ?string
     {
         return $this->method;

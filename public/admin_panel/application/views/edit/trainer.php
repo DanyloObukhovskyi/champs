@@ -241,11 +241,6 @@
                                value="<?php print $user_info[0]['twitch']; ?>">
                     </div>
                     <label class="label" for="">Тип стрима</label>
-                    <div class="input mb-5" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="stream_type" id="stream_type"
-                               placeholder="" value="<?php print $user_info[0]['stream_type']; ?>"
-                               title="введите правильный" onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
-                    </div>
                     <div class="mb-15">
                         <img src="<?php print base_url("assets/icons/info.svg"); ?>"/>
                         <div class="info_txt">Формат поля - числовой</div>
@@ -267,7 +262,7 @@
                     </div>
                     <label class="label" for="">сколько текущий админ будет получать с ставки тренера в %</label>
                     <div class="input mb-5" id="input">
-                        <input required type="text" class="fw-600 input2_txt" name="admin_percentage"
+                        <input type="text" class="fw-600 input2_txt" name="admin_percentage"
                                id="admin_percentage " placeholder=""
                                value="<?php print $user_info[0]['admin_percentage']; ?>" title="введите правильный"
                                onkeyup="this.value = this.value.replace(/[^0-9\.,]/g, '')">
@@ -291,14 +286,6 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                </div>
-                <div class="col-item">
-                    <label class="label" for="">About</label>
-                    <div class=" mb-20" id="input">
-                    <textarea name="about" style="width: 100%; resize:none;" rows="7"
-                              required><?php print $user_info[0]['about']; ?></textarea>
-                    </div>
-
                 </div>
                 <div class="col-item">
                     <label class="label" for="">Метод</label>
@@ -353,7 +340,7 @@
                                     <div>
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" <?php echo $achievement['show'] ? 'checked' : ''; ?>
+                                                <input type="checkbox" <?php echo $achievement['is_show'] ? 'checked' : ''; ?>
                                                        onchange="selectAchievement()"
                                                        name="achievements[<?php echo $key; ?>][show]"/>
                                                 <span>Отображать в маркетплейсе</span>

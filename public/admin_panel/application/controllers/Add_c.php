@@ -19,7 +19,18 @@
 				redirect ('login/auth');
 				die();
 			}
-			$this->load->model(array ('add_m', 'users_model', 'edit_m', 'trainers_model'));
+			$this->load->model(array (
+			    'add_m',
+                'users_model',
+                'edit_m',
+                'trainers_model',
+                'award_model',
+                'game_m',
+                'trainer_lesson_price_m',
+                'trainer_video',
+                'trainer_achievement',
+                'trainer_award_model'
+                ));
 			$this->user_capabilities = $this->config->item('user_capabilities');
 		}
 		
@@ -344,26 +355,27 @@
 				redirect($this->config->item(base_url('404_override')));
 				die();
 			}
+
 			if(isset($_POST['add'])) {
 				if(trim($_POST['add']) == true  && (int)$user_id == $this->UserID) {
 					$nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
 					$Email = (isset($_POST["Email"]) && !empty($_POST["Email"])) ? trim($_POST["Email"]) : '';
-					
 					$new_passw = (isset($_POST["new_password"]) && !empty($_POST["new_password"])) ? trim($_POST["new_password"]) : '';
 					$new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
-					
-					$price =  (int)(isset($_POST["price"]) && !empty($_POST["price"])) ? trim($_POST["price"]) : '';
-					$video_url =  (isset($_POST["video_url"]) && !empty($_POST["video_url"])) ? trim($_POST["video_url"]) : '';
-					$about =  (isset($_POST["about"]) && !empty($_POST["about"])) ? trim($_POST["about"]) : '';
 					$method =  (isset($_POST["method"]) && !empty($_POST["method"])) ? trim($_POST["method"]) : '';
 					$game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
-					
+                    $global_elite = isset($_POST["global_elite"]);
 					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
-					$shorttitle =  (isset($_POST["shorttitle"]) && !empty($_POST["shorttitle"])) ? trim($_POST["shorttitle"]) : '';
-					$stream_type =  (isset($_POST["stream_type"]) && !empty($_POST["stream_type"])) ? trim($_POST["stream_type"]) : '';
 					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
-					
-					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw) && !empty($price)) {
+                    $videos = (isset($_POST["videos"]) && !empty($_POST["videos"])) ? $_POST["videos"] : [];
+                    $rank = (isset($_POST["rank"]) && !empty($_POST["rank"])) ? trim($_POST["rank"]) : '';
+                    $achievements = (isset($_POST["achievements"]) && !empty($_POST["achievements"])) ? $_POST["achievements"] : [];
+                    $awards = (isset($_POST["awards"]) && !empty($_POST["awards"])) ? $_POST["awards"] : [];
+                    $trainings = (isset($_POST["training"]) && !empty($_POST["training"])) ? $_POST["training"] : [];
+                    $prices = (isset($_POST["price"]) && !empty($_POST["price"])) ? $_POST["price"] : [];
+
+					if(!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw)) {
+
 						$mask = "ROLE_USER";
 						$user_capabilities = array($mask);
 						
@@ -372,10 +384,6 @@
 						$update_data['nickname'] = $nickname;
 						$update_data['email'] = $Email;
 						$update_data['istrainer'] = 1;
-						if(!empty($game)) {
-							$update_data['game'] = $game;
-						}
-						
 						if($new_passw == $new_passw_confirm) {
 							$this->load->model(array('Ion_auth_model'));
 							$update_data['password'] = $this->create_user_passw($new_passw);
@@ -385,6 +393,9 @@
 						}
 						
 						$update_data['roles'] = json_encode($user_capabilities);
+                        $update_data['game_id'] = (int)$game;
+                        $update_data['rang'] = $rank;
+
 						$where = array ("email" =>  $Email);
 						$check_user = $this->users_model->get_all($where, false, array(), array(), true, true);
 						if(!empty($check_user[0])) {
@@ -398,25 +409,41 @@
 						}
 						
 						$update_data = array();
-						$update_data['cost'] = $price;
-						$update_data['about'] = $about;
-						$update_data['videolink'] = $video_url;
 						$update_data['method'] = $method;
 						$update_data['userid'] = $created_id;
 						$update_data['twitch'] = $twitch;
-						$update_data['shorttitle'] = $shorttitle;
-						$update_data['stream_type'] = $stream_type;
 						$update_data['admin_percentage'] = $admin_percentage;
+                        $update_data['global_elite'] = $global_elite;
 						
 						$check_teacher =  $this->trainers_model->check_teacher_data($created_id);
 						if(!empty($check_teacher[0])) {
 							$check_teacher = $check_teacher[0];
-							if (isset($check_teacher['userid'])) {
-								$this->edit_m->updateTeacher($check_teacher['userid'], $update_data);
-							}
+
+                            $teacher_id = $this->edit_m->updateTeacher($check_teacher['userid'], $update_data);
 						} else {
-							$this->add_m->addTeacher($update_data);
+							$teacher_id = $this->add_m->addTeacher($update_data);
 						}
+                        $this->trainer_video->deleteRecords($created_id);
+                        foreach ($videos as $video) {
+                            $this->trainer_video->create($created_id, $video);
+                        }
+                        foreach (Trainer_lesson_price_m::PRICE_TYPES as $type => $title){
+                            $this->trainer_lesson_price_m->create_or_update(
+                                $teacher_id,
+                                $type,
+                                $prices[$type] ?? 0,
+                                isset($trainings[$type])
+                            );
+                        }
+
+                        $this->trainer_achievement->delete_records($created_id);
+                        foreach ($achievements as $achievement) {
+                            $this->trainer_achievement->create($teacher_id, $achievement);
+                        }
+                        $this->trainer_award_model->delete_records($created_id);
+                        foreach ($awards as $award) {
+                            $this->trainer_award_model->create($created_id, $award);
+                        }
 						
 						
 						
@@ -472,12 +499,18 @@
 				redirect ($this->config->item('login_Ok'));
 				die();
 			}
+            $data = [];
 			
 			$data['UserID']  = $this->UserID;
 			$data['user']  = $this->ion_auth->user()->row();
 			$data['current_u_can'] = $current_u_can;
 			$data['imgs_url'] = $this->config->item('upload_trainers-pic');
+            $data['awards'] = $this->award_model->get_all();
+            $data['trainer_awards'] = [];
+            $data['games'] = $this->game_m->get_all();
+            $data['prices_types'] = Trainer_lesson_price_m::PRICE_TYPES;
 			$data['output'] = $this->load->view('add/trainer', $data, true);
+
 			$this->load->view('layout/add', $data);
 		}
 		
@@ -503,7 +536,6 @@
 					$mask[1] = (isset($_POST["content-mn"])) ? "1" : '0';
 					$mask[2] = (isset($_POST["statistics-mn"])) ? "1" : '0';
 					$mask[3] = (isset($_POST["coach-mn"])) ? "1" : '0';
-					
 					if($mask == "0000") {
 						redirect ($_SERVER["HTTP_REFERER"]);
 						die();
@@ -529,12 +561,12 @@
 								
 								$update_data['roles'] = json_encode($user_capabilities);
 								$this->edit_m->updateAdmin($check_user['id'], $update_data);
+
 								redirect (base_url("c-admin/admin/edit/".$check_user['id']."/$this->UserID"));
 								die();
 							}
 						}
 					}
-					
 					$update_data = array();
 					
 					if(!empty($nickname)) {
