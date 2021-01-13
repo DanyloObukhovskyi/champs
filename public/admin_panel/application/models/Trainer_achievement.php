@@ -38,7 +38,7 @@ class Trainer_achievement extends CI_Model
         $this->db->insert($this->table, [
             'trainer_id' => $trainer_id,
             'tournament' => $achievement['event'],
-            'show' => isset($achievement['show']) ? 1: 0,
+            'is_show' => isset($achievement['show']) ? 1: 0,
             'achievement' => $achievement['achievement']
         ]);
     }

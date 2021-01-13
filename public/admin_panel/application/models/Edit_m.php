@@ -19,6 +19,8 @@
 			if($user_id > 0 && ! empty($update)) {
 				$this->db->where('id', $user_id);
 				$this->db->update($this->table['admins'], $update);
+
+                return $this->db->insert_id();
 			}
 		}
 		
@@ -26,6 +28,8 @@
 			if($user_id > 0 && ! empty($update)) {
 				$this->db->where('id', $user_id);
 				$this->db->update($this->table['users'], $update);
+
+                return $this->db->insert_id();
 			}
 		}
 		
@@ -33,6 +37,15 @@
 			if($user_id > 0 && ! empty($update)) {
 				$this->db->where('userid', $user_id);
 				$this->db->update($this->table['trainers'], $update);
+
+                $this->db->where('userid', $user_id);
+                $this->db->select(['id']);
+                $this->db->from($this->table['trainers']);
+
+                $result = $this->db->get();
+                $result = $result->result_array();
+
+                return $result[0]['id'] ?? null;
 			}
 		}
 		
@@ -42,6 +55,7 @@
 				$this->db->update($this->table['users'], array('photo' => $img_name));
 			}
 		}
+
 		public function update_news($post_id = 0, $update = array()) {
 			if($post_id > 0 && !empty($update)) {
 				$this->db->where('id', $post_id);
