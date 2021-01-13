@@ -110,6 +110,7 @@
 			
 			if($current_u_can[0] == "1" || $current_u_can[3] == "1" ) {
                 $this->delete_m->delete_trainer_lesson_price($trainer_id);
+                $this->delete_m->delete_trainer_achievements($trainer_id);
 				$this->delete_m->delete_trainer($trainer_id);
 				$this->delete_m->delete_trainer_as_teacher($trainer_id);
 
