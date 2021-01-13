@@ -26,3 +26,5 @@ trainings:
 earned:
   per this month: за этот месяц
   per previous month: за прошлый месяц
+Password cannot be shorter than 5 characters: Пароль не может быть короче 5 символов
+The password was entered incorrectly: Пароль введен не верно

@@ -34,24 +34,27 @@
     import Training from "../components/cabinet/user/pages/Training";
     import News from "../components/cabinet/user/pages/News";
     import Video from "../components/cabinet/user/pages/Video";
-    import Setting from "../components/cabinet/user/pages/Setting";
-    import {mapGetters} from "vuex";
+    import UserSetting from "../components/cabinet/user/pages/Setting";
+    import {mapActions, mapGetters} from "vuex";
     import InviteModal from "../components/cabinet/InviteModal";
     import TrainerCabinet from "../components/cabinet/trainer/pages/TrainerCabinet";
     import Calendar from "../components/cabinet/trainer/pages/Calendar";
+    import TrainerSetting from "../components/cabinet/trainer/pages/Setting";
+    import Wallet from "../components/cabinet/trainer/pages/Wallet";
 
     const routes = [
         {path: `/${CabinetService.lang}/user/cabinet/`, component: UserCabinet},
         {path: `/${CabinetService.lang}/user/cabinet/training`, component: Training},
         {path: `/${CabinetService.lang}/user/cabinet/news`, component: News},
         {path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video},
-        {path: `/${CabinetService.lang}/user/cabinet/settings`, component: Setting},
+        {path: `/${CabinetService.lang}/user/cabinet/settings`, component: UserSetting},
 
         {path: `/${CabinetService.lang}/trainer/cabinet/`, component: TrainerCabinet},
         {path: `/${CabinetService.lang}/trainer/cabinet/timetable`, component: Training},
         {path: `/${CabinetService.lang}/trainer/cabinet/calendar`, component: Calendar},
         {path: `/${CabinetService.lang}/trainer/cabinet/videos`, component: Video},
-        {path: `/${CabinetService.lang}/trainer/cabinet/settings`, component: Setting},
+        {path: `/${CabinetService.lang}/trainer/cabinet/settings`, component: TrainerSetting},
+        {path: `/${CabinetService.lang}/trainer/cabinet/wallet`, component: Wallet},
     ];
 
     export default {
@@ -79,8 +82,15 @@
                 'loadUser'
             ]),
         },
+        methods: {
+            ...mapActions('cabinet/setting',[
+                'getRanks',
+                'getTimezones'
+            ])
+        },
         mounted() {
-            this.$store.dispatch('cabinet/setting/getRanks')
+            this.getRanks();
+            this.getTimezones();
         }
     }
 </script>
@@ -98,7 +108,7 @@
 
 	.left {
 	  width: 14%;
-	  margin-right: 2vw;
+	  margin-right: 3vw;
 	}
 
 	.right {

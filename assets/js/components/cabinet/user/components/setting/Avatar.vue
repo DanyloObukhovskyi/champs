@@ -1,6 +1,9 @@
 <template>
     <div class="setting-container-body avatar-setting">
-        <div class="title">
+        <div class="trainer-title" v-if="user.isTrainer">
+            Фото
+        </div>
+        <div class="title" v-else>
             Аватарка
         </div>
         <div class="avatar-wrapper">
@@ -93,65 +96,64 @@
 </script>
 
 <style scoped lang="scss">
-    #avatar-upload-form {
-        display: none;
-    }
+  #avatar-upload-form {
+	display: none;
+  }
 
-    .avatar-wrapper {
-        .avatar {
-            display: flex;
-            justify-content: center;
-            margin-top: 3vw;
+  .avatar-wrapper {
+	.avatar {
+	  display: flex;
+	  justify-content: center;
+	  margin-top: 3vw;
 
-            .gradient {
-                width: 9vw;
-                height: 9vw;
-                border-radius: 50%;
-                padding: .2vw;
-                background: #ff6f1f;
-                background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-                background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-                background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+	  .gradient {
+		width: 9vw;
+		height: 9vw;
+		border-radius: 50%;
+		padding: .2vw;
+		background: #ff6f1f;
+		background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+		background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+		background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
 
-                img {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;
-                }
-            }
-        }
+		img {
+		  width: 100%;
+		  height: 100%;
+		  border-radius: 50%;
+		}
+	  }
+	}
 
-        .upload {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.5vw;
+	.upload {
+	  display: flex;
+	  justify-content: center;
+	  margin-top: 1.5vw;
 
-            label {
-                background: #ff6d1d;
-                font-size: 1vw;
-                height: 2.3vw;
-                width: 9.5vw;
-                color: white;
-                display: flex;
-                justify-content: center;
-                border-radius: .3vw;
-                align-items: center;
-                cursor: pointer;
-            }
+	  label {
+		background: #ff6d1d;
+		font-size: 1vw;
+		height: 2.3vw;
+		width: 9.5vw;
+		color: white;
+		display: flex;
+		justify-content: center;
+		border-radius: .3vw;
+		align-items: center;
+		cursor: pointer;
+	  }
 
-            label:hover {
-                background: #ff8f2b;
-            }
-        }
-    }
+	  label:hover {
+		background: #ff8f2b;
+	  }
+	}
+  }
 
-    .dark {
-        .upload {
-            label {
-                border: .1vw solid white;
-            }
-        }
-    }
-
+  .dark {
+	.upload {
+	  label {
+		border: .1vw solid white;
+	  }
+	}
+  }
 </style>

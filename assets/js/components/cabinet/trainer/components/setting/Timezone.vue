@@ -1,14 +1,21 @@
 <template>
-    <div class="setting-container-body discord-setting">
-        <div class="title">
-            Discord для обучения
+    <div class="setting-container-body timezone-setting">
+        <div class="trainer-title">
+            Часовой пояс
         </div>
-        <div class="discord-setting-body d-flex">
-            <div class="form-group">
-                <label>Вставьте ссылку на ваш Discord</label>
-                <div class="input">
-                    <input type="text" v-model="discordVal">
-                </div>
+        <div class="timezone-setting-body">
+            <div class="form-group timezone">
+                <label>Укажите часовой пояс для тренировок</label>
+                <multiselect
+                        v-model="timezone"
+                        :options="timezones"
+                        :multiple="false"
+                        group-values="zones"
+                        group-label="gmt"
+                        placeholder=""
+                        :group-select="false">
+                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                </multiselect>
             </div>
         </div>
         <div class="bottom-save" @click="updateDiscord" :class="{disable: load}">
@@ -28,21 +35,34 @@
 <script>
     import CabinetService from "../../../../../services/CabinetService";
     import Swal from 'sweetalert2'
+    import Multiselect from "vue-multiselect";
+    import {mapGetters} from "vuex";
 
     export default {
-        name: "Discord",
+        name: "Timezone",
         props: ['discord'],
+        components: {
+            Multiselect
+        },
         data() {
             return {
-                discordVal: null,
+                timezone: null,
                 load: false,
             }
         },
+        computed: {
+            ...mapGetters([
+                'user'
+            ]),
+            ...mapGetters('cabinet/setting/', [
+                'timezones'
+            ])
+        },
         methods: {
             updateDiscord() {
-                if (!this.load){
+                if (!this.load) {
                     const form = new FormData();
-                    form.append('discord', this.discordVal);
+                    form.append('timezone', this.timezone);
 
                     this.load = true;
                     CabinetService.updateUser(form)
@@ -64,17 +84,36 @@
             }
         },
         mounted() {
-            this.discordVal = this.discord;
+            this.timezone = this.user.timezone;
         }
     }
 </script>
 
-<style scoped>
-    .discord-setting {
-        height: 11vw;
-    }
+<style scoped lang="scss">
+  .timezone-setting {
+	height: 13vw;
+	padding-left: 2.5vw;
+	padding-right: 1.5vw;
+  }
 
-    .discord-setting-body {
-        padding: 0 2vw;
-    }
+  .timezone-setting-body {
+	padding: 0;
+	margin-top: 2vw;
+
+	.form-group.timezone{
+	  padding: 0;
+	}
+  }
+</style>
+
+<style lang="scss">
+  .timezone-setting-body {
+	.form-group{
+      &.timezone{
+		.multiselect__tags {
+		  width: 16vw;
+		}
+      }
+	}
+  }
 </style>

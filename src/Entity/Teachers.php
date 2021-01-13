@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TeachersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -76,6 +77,11 @@ class Teachers
      * @ORM\OneToMany(targetEntity=TrainerLessonPrice::class, mappedBy="trainer")
      */
     private $costs;
+
+    public function __construct()
+    {
+        $this->costs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -184,22 +190,6 @@ class Teachers
     public function setPayPal($payPal): void
     {
         $this->payPal = $payPal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsProvideTraining()
-    {
-        return $this->isProvideTraining;
-    }
-
-    /**
-     * @param mixed $isProvideTraining
-     */
-    public function setIsProvideTraining($isProvideTraining): void
-    {
-        $this->isProvideTraining = $isProvideTraining;
     }
 
     /**

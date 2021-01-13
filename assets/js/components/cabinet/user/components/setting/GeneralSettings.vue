@@ -1,6 +1,9 @@
 <template>
     <div class="setting-container-body general-settings">
-        <div class="title">
+        <div class="trainer-title" v-if="user.isTrainer">
+            Общие настройки
+        </div>
+        <div class="title" v-else>
             Общие настройки
         </div>
         <div class="general-settings-body d-flex">
@@ -76,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group timezone">
+                <div class="form-group timezone" v-if="!user.isTrainer">
                     <label>Часовой пояс</label>
                     <multiselect
                             v-model="timezone"
@@ -108,7 +111,6 @@
         },
         data() {
             return {
-                timezones: [],
                 timezone: null,
                 game: null,
                 name: null,
@@ -125,6 +127,7 @@
             ]),
             ...mapGetters('cabinet/setting', [
                 'ranks',
+                'timezones'
             ]),
             userRank() {
                 if (this.game !== null) {
@@ -164,12 +167,6 @@
             }
         },
         methods: {
-            getTimezones() {
-                CabinetService.getTimezones()
-                    .then(timezones => {
-                        this.timezones = timezones;
-                    })
-            },
             setUser() {
                 this.timezone = this.user.timezone;
                 this.game = this.user.game;
@@ -222,7 +219,6 @@
             }
         },
         mounted() {
-            this.getTimezones();
             this.setUser();
         }
     }

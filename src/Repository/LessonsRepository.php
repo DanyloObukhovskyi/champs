@@ -350,4 +350,21 @@ class LessonsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param User $trainer
+     * @param \DateTime $dateTime
+     * @return int|mixed|string
+     */
+    public function getByTrainerAndPaymentDateFrom(User $trainer, \DateTime $dateTime)
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.payment', 'p')
+            ->andWhere('l.trainer = :teacher')
+            ->andWhere('p.created_at <= :dateFrom')
+            ->setParameter('teacher', $trainer)
+            ->setParameter('dateFrom', $dateTime)
+            ->getQuery()
+            ->getResult();
+    }
 }

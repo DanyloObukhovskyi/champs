@@ -155,7 +155,7 @@ class UserService extends EntityService
         } else {
             $achievementsCriteria = [
                 'trainer' => $user->getTrainer(),
-                'show' => true
+                'isShow' => true
             ];
         }
         $achievements = $this->entityManager

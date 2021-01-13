@@ -1,17 +1,16 @@
 <template>
-    <div class="setting-container-body discord-setting">
-        <div class="title">
-            Discord для обучения
+    <div class="setting-container-body method-wrapper">
+        <div class="trainer-title">
+            Данные для карточки тренера
         </div>
-        <div class="discord-setting-body d-flex">
+        <div class="method-body d-flex">
             <div class="form-group">
-                <label>Вставьте ссылку на ваш Discord</label>
                 <div class="input">
-                    <input type="text" v-model="discordVal">
+                    <textarea v-model="method" placeholder="Методика обучения (подробная информация про услуги)*"></textarea>
                 </div>
             </div>
         </div>
-        <div class="bottom-save" @click="updateDiscord" :class="{disable: load}">
+        <div class="bottom-save" :class="{disable: load}" @click="save">
             Сохранить изменения
             <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
@@ -26,55 +25,80 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
     import CabinetService from "../../../../../services/CabinetService";
-    import Swal from 'sweetalert2'
+    import Swal from "sweetalert2";
 
     export default {
-        name: "Discord",
-        props: ['discord'],
+        name: "TrainingMethod",
         data() {
             return {
-                discordVal: null,
                 load: false,
+                method: '',
             }
         },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
+        },
         methods: {
-            updateDiscord() {
-                if (!this.load){
-                    const form = new FormData();
-                    form.append('discord', this.discordVal);
-
+            save() {
+                if (!this.load) {
                     this.load = true;
+                    const form = new FormData();
+
+                    form.append('trainer[method]', this.method);
+
                     CabinetService.updateUser(form)
                         .then(data => {
                             this.$store.commit('setUser', data)
 
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Дискорд сохранен!',
+                                title: 'Изменения были сохранены!',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
                             this.load = false;
                         })
-                        .catch(() => {
+                        .catch(({response: {data}}) => {
                             this.load = false;
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Упс...',
+                                text: data.email,
+                            })
                         })
                 }
             }
         },
         mounted() {
-            this.discordVal = this.discord;
+            this.method = this.user.trainer.method
         }
     }
 </script>
 
-<style scoped>
-    .discord-setting {
-        height: 11vw;
-    }
+<style scoped lang="scss">
+  .method-wrapper {
+	.method-body {
+      .form-group {
+		padding: 0 3vw;
 
-    .discord-setting-body {
-        padding: 0 2vw;
+        .input {
+		  margin-top: .8vw;
+		  margin-bottom: 1.5vw;
+		  border-radius: .5vw;
+		  padding: 0 .5vw;
+		  height: auto;
+
+          textarea {
+			min-height: 9vw;
+            font-size: 1vw;
+          }
+        }
+      }
     }
+  }
 </style>

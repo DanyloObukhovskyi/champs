@@ -16,6 +16,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class UserController extends AbstractController
 {
     use EntityManager;
@@ -45,7 +48,7 @@ class UserController extends AbstractController
     /**
      * User /ru/user/*
      *
-     * @Route("/ru/user/info/by-mail/{mail}", name="get_user_info_by_mail")
+     * @Route("/user/info/by-mail/{mail}", name="get_user_info_by_mail")
      */
     public function getUserInfoByMail($mail)
     {
@@ -65,7 +68,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/ru/{action}/user/video/{id}", methods={"POST"}, name="add_trainer_video")
+     * @Route("/{action}/user/video/{id}", methods={"POST"}, name="add_trainer_video")
      */
     public function addVideo(Request $request, $action, $id)
     {
@@ -98,7 +101,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/ru/get/auth", name="get.auth.user")
+     * @Route("/get/auth", name="get.auth.user")
      */
     public function getAuthUser()
     {
@@ -119,7 +122,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/ru/user/check/email")
+     * @Route("/user/check/email")
      */
     public function checkIsEmailValid(Request $request)
     {
