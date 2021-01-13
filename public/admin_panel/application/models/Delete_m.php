@@ -8,7 +8,14 @@
 	
 	class Delete_m extends CI_Model {
 		
-		private $table = array("users" => "user", "posts" => "news", "trainers" => "teachers", "admins" => "admins", "payments" => "payments");
+		private $table = array(
+		    "users" => "user",
+            "posts" => "news",
+            "trainers" => "teachers",
+            "admins" => "admins",
+            "payments" => "payments",
+            "trainer_lesson_price" => "trainer_lesson_price"
+        );
 		
 		public function __construct()
 		{
@@ -25,7 +32,21 @@
 			return false;
 		}
 
+		public function delete_trainer_lesson_price($id)
+        {
+            $this->db->where(array('id' => $id));
+            $this->db->from($this->table['users']);
 
+            $user = $this->db->get();
+            $user = $user->result_array()[0];
+
+            $this->db->where(array('userid' => $user['id']));
+            $this->db->from($this->table['trainers']);
+            $trainer = $this->db->get();
+            $trainer = $trainer->result_array()[0];
+
+            $this->db->delete($this->table['trainer_lesson_price'], array('trainer_id' => $trainer['id']));
+        }
 		
 		function delete_match($id=0) {
 			$id = (int) $id;
