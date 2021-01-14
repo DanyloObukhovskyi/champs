@@ -133,6 +133,7 @@ class UserController extends AbstractController
     }
 
     /**
+<<<<<<< HEAD
      * @Route("/generate/confirm/code")
      */
     public function generateEmailConfirmCode(Request $request, Swift_Mailer $mailer)
@@ -188,7 +189,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/check/email")
+     * @Route("/check/email")n
      */
     public function checkIsEmailValid(Request $request)
     {
