@@ -49,6 +49,7 @@ class RegistrationController extends AbstractController
 
             $user->setIsTrainer(0);
             $user->setPurse(0);
+            $user->setTimezone('Europe/Moscow');
 
             // Save
             $em = $this->getDoctrine()->getManager();

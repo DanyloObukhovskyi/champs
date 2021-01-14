@@ -122,7 +122,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/check/email")
+     * @Route("/check/email")
      */
     public function checkIsEmailValid(Request $request)
     {
