@@ -133,7 +133,7 @@ class PurseHistory implements \JsonSerializable
         return [
             'amount' => $this->getAmount(),
             'status' => $this->getStatus(),
-            'date' => $this->getDatetime(),
+            'date' => $this->getDatetime()->getTimestamp(),
         ];
     }
 }
