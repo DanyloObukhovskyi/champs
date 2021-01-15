@@ -111,7 +111,7 @@
                 const dateTime = new Date(date);
 
                 const day = dateTime.getDate() > 9 ? dateTime.getDate() : `0${dateTime.getDate()}`;
-                const month = dateTime.getMonth() > 9 ? dateTime.getMonth() : `0${dateTime.getMonth()}`;
+                const month = dateTime.getMonth() + 1 > 9 ? dateTime.getMonth() + 1: `0${dateTime.getMonth() + 1}`;
 
                 return `${day}.${month}.${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`;
             },
