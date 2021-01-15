@@ -78,7 +78,7 @@
         },
         methods: {
             parseDate(time) {
-                const date = new Date(time.replaceAll('.', '-'));
+                const date = new Date(time);
 
                 const year = date.getFullYear();
                 const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1: `0${date.getMonth() + 1}`;
