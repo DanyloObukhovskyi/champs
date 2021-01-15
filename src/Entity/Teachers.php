@@ -114,18 +114,6 @@ class Teachers
         return $this;
     }
 
-    public function getStreamType(): ?int
-    {
-        return $this->streamType;
-    }
-
-    public function setStreamType(?int $streamType): self
-    {
-        $this->streamType = $streamType;
-
-        return $this;
-    }
-
     /**
      * @return mixed
      */
