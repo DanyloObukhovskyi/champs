@@ -68,9 +68,13 @@ class WalletController extends AbstractController
         $user = $this->getUser();
 
         $earned = [];
-        $purseHistory = $this->walletService
+        $purseHistoryEntities = $this->walletService
             ->getPurseHistory($user);
 
+        $purseHistory = [];
+        foreach ($purseHistoryEntities as $historyEntity) {
+            $purseHistory[] = $historyEntity->jsonSerialize();
+        }
         $confirmedPayments = $this->walletService->getStudentsPaymentHistory($user, $translator);
         $balance = $this->walletService->getBalance($user);
         $available = $this->walletService->getAvailableToPurse($user);
