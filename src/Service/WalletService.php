@@ -155,7 +155,7 @@ class WalletService
             if (isset($lesson) and !empty($lesson->getStudent())) {
 
                 $studentsHistory[] = [
-                    'date' => $payment->getCreatedAt(),
+                    'date' => $payment->getCreatedAt()->getTimestamp(),
                     'cost' => $lesson->getCostWithPercentage(),
                     'student' => $this->userService->getUserData($lesson->getStudent()),
                     'lesson' => $this->lessonService->decorateLesson($lesson, $user, null, $translator),
