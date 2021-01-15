@@ -138,9 +138,15 @@ class WalletService
         return $available - $allPurseSum;
     }
 
+
     /**
      * @param User $user
+     * @param $translator
      * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function getStudentsPaymentHistory(User $user, $translator)
     {
