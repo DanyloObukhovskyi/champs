@@ -134,6 +134,22 @@ class Lessons
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCostWithPercentage(): ?int
+    {
+        $percentageMarkup = $_ENV['PERCENTAGE_MARKUP_LESSON'];
+
+        $cost = $this->cost;
+
+        if (isset($percentageMarkup)) {
+            $cost = ($this->cost / 100) * ($percentageMarkup + 100);
+        }
+        return $cost;
+    }
+
+
     public function getStatus(): ?int
     {
         return $this->status;

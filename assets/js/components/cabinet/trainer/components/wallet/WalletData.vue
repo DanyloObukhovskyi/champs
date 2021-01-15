@@ -1,7 +1,7 @@
 <template>
     <div class="setting-container-body wallet-data">
         <div class="d-flex justify-content-center align-items-center" v-if="load">
-            <small-loader />
+            <small-loader/>
         </div>
         <template v-else>
             <div class="trainer-title">
@@ -14,7 +14,9 @@
                             Баланс:
                         </div>
                         <div class="cost-wrapper">
-                            {{ decoratePrice(balance) }} p
+                            <span v-title="'Сумма, которая заработана, но находится в холде на 7 рабочих дней'">
+                                {{ decoratePrice(balance) }} p
+                            </span>
                         </div>
                     </div>
                     <div class="wallet-data-row">
@@ -22,8 +24,10 @@
                             Доступно к выводу:
                         </div>
                         <div class="cost-wrapper">
-                            {{ decoratePrice(available) }} p
-                            <button class="purse-btn">
+                            <span v-title="'Сумма, которую можно вывести'">
+                                 {{ decoratePrice(available) }} p
+                            </span>
+                            <button class="purse-btn" @click="checkout">
                                 Вывести
                             </button>
                         </div>
@@ -47,7 +51,7 @@
                 <div class="history-row" v-for="history in slicedHistory">
                     {{ decorateDate(history.date) }} <span>{{ history.amount }} &#8381;</span>
                 </div>
-                <div class="show-more" @click="showAllHistory = !showAllHistory">
+                <div class="show-more" @click="showAllHistory = !showAllHistory" v-if="transactionHistory.length > 3">
                     {{ showAllHistory ? 'Скрыть' : 'Показать все' }}
                 </div>
             </div>
@@ -58,6 +62,8 @@
 <script>
     import {mapGetters} from "vuex";
     import SmallLoader from "../../../../helpers/SmallLoader";
+    import WalletService from "../../../../../services/WalletService";
+    import Swal from "sweetalert2";
 
     export default {
         name: "WalletData",
@@ -75,24 +81,31 @@
                 'transactionHistory'
             ]),
             slicedHistory() {
-                if (this.showAllHistory) {
-                    return this.transactionHistory;
-                } else {
+                if (!this.showAllHistory && this.transactionHistory.length > 3) {
                     return this.transactionHistory.slice(0, 3);
+                } else {
+                    return this.transactionHistory;
                 }
             }
         },
         methods: {
+            showSuccess() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Заявка отправленна!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
             decoratePrice(price) {
                 const cost = price.toLocaleString(
                     'ru-RU',
                     {
                         style: 'currency',
                         currency: 'RUB',
-                        maximumSignificantDigits: 2
                     }
                 );
-                return cost.substring(0, cost.length - 1);
+                return cost.substring(0, cost.length - 5);
             },
             decorateDate(date) {
                 const dateTime = new Date(date);
@@ -101,6 +114,13 @@
                 const month = dateTime.getMonth() > 9 ? dateTime.getMonth() : `0${dateTime.getMonth()}`;
 
                 return `${day}.${month}.${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`;
+            },
+            checkout() {
+                WalletService.checkout()
+                    .then(data => {
+                        this.$store.dispatch('cabinet/wallet/getWalletData', data);
+                        this.showSuccess();
+                    })
             }
         }
     }
@@ -175,6 +195,12 @@
 	  margin-top: 1vw;
 	  color: #9d9fa0;
 	  cursor: pointer;
+	  transition: all .5s ease;
+	  width: 10vw;
+
+	  &:hover {
+		color: white;
+	  }
 	}
   }
 </style>

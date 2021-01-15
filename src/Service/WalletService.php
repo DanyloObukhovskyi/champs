@@ -28,6 +28,11 @@ class WalletService
      */
     public $lessonService;
 
+    /**
+     * @var UserService
+     */
+    public $userService;
+
     public function __construct()
     {
         global $kernel;
@@ -36,6 +41,7 @@ class WalletService
 
         $this->purseHistoryService = new PurseHistoryService($this->entityManager);
         $this->lessonService = new LessonService($this->entityManager);
+        $this->userService = new UserService($this->entityManager);
     }
 
     /**
@@ -88,7 +94,6 @@ class WalletService
         foreach ($payments as $payment) {
             $earnedAll += (int)$payment->getLesson()->getCost();
         }
-
         return $earnedAll - $allPurseSum;
     }
 
@@ -131,5 +136,33 @@ class WalletService
             $available += (int)$payment->getLesson()->getCost();
         }
         return $available - $allPurseSum;
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function getStudentsPaymentHistory(User $user, $translator)
+    {
+        $confirmedPayments = $this->getPaymentsByDate($user);
+
+        $studentsHistory = [];
+        /** @var Payment $payment */
+        foreach ($confirmedPayments as $payment) {
+
+            $lesson = $payment->getLesson();
+
+            if (isset($lesson) and !empty($lesson->getStudent())) {
+
+                $studentsHistory[] = [
+                    'date' => $payment->getCreatedAt(),
+                    'cost' => $lesson->getCostWithPercentage(),
+                    'student' => $this->userService->getUserData($lesson->getStudent()),
+                    'lesson' => $this->lessonService->decorateLesson($lesson, $user, null, $translator),
+                    'show' => false
+                ];
+            }
+        }
+        return $studentsHistory;
     }
 }

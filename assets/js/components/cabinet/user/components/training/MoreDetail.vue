@@ -289,6 +289,7 @@
 			.title {
 			  font-size: 1.096vw;
 			  font-weight: 600;
+              color: black;
 			}
 
 			.sub-title {
@@ -647,6 +648,12 @@
 				color: white;
 			  }
 			}
+
+            .more-detail-head {
+              .title {
+                color: white;
+              }
+            }
 
 			.more-detail-bottom {
 			  .note {

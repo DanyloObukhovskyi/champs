@@ -125,3 +125,8 @@ $route['c-admin/marketplace/banners'] = 'marketplace_c/index';
 $route['c-admin/ajax/marketplace/banners'] = 'marketplace_c/ajax';
 $route['c-admin/ajax/marketplace/banners/save'] = 'marketplace_c/save';
 $route['c-admin/marketplace/banners/delete/(:num)'] = 'marketplace_c/delete/$1';
+
+//trainers transactions
+$route['c-admin/trainers/transactions'] = 'trainer_transaction_c/index';
+$route['c-admin/ajax/trainers/transactions'] = 'trainer_transaction_c/ajax';
+$route['c-admin/ajax/trainers/transactions/save'] = 'trainer_transaction_c/save';

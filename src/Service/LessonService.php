@@ -45,6 +45,11 @@ class LessonService extends EntityService
      */
     protected $timezoneService;
 
+    /**
+     * @var UserService
+     */
+    protected $userService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -54,6 +59,7 @@ class LessonService extends EntityService
 
         $this->scheduleService = new ScheduleService($entityManager);
         $this->teacherService = new TeacherService($entityManager);
+        $this->userService = new UserService($entityManager);
     }
 
     /**
@@ -527,5 +533,83 @@ class LessonService extends EntityService
     public function getByTrainerAndPaymentDateFrom(User $trainer, \DateTime $dateTime)
     {
         return $this->repository->getByTrainerAndPaymentDateFrom($trainer, $dateTime);
+    }
+
+    /**
+     * @param Lessons $lesson
+     * @param $user
+     * @param $timezone
+     * @param $translator
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function decorateLesson(Lessons $lesson, $user, $timezone = null, $translator)
+    {
+        $trainer = $this->teacherService->findByUserId($lesson->getTrainer()->getId());
+
+        $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
+        if (empty($lesson->getDateTimeTo())) {
+            $dateTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('Y.m.d H');
+        } else {
+            $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
+        }
+
+        $timeOffset = 0;
+
+        if (!$user->getIsTrainer()) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            );
+            if ($gmtNumeric < 0) {
+                $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+            } else {
+                $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+            }
+            $timeOffset = $trainerTimezone - (int)$timezone;
+        }
+        $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
+        $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
+
+        $trainingTogetherCount = $this->getTrainingTogetherCount($lesson);
+        $decorateTrainer = $this->userService->decorator($lesson->getTrainer());
+
+        $month = $translator->trans($dateFrom->format('F'));
+
+        return [
+            'id' => $lesson->getId(),
+            'type' => $lesson->getType(),
+            'cost' => $lesson->getCost(),
+            'month' => $month,
+            'type' => $lesson->getType(),
+            'trainerNotice' => $lesson->getTrainerNotice(),
+            'typeRu' => $translator->trans('trainings.' . $lesson->getType()),
+            'dateFrom' => $dateFrom->format('Y.m.d H:i:s'),
+            'dateTo' => $dateTo->format('Y.m.d H:i:s'),
+            'trainerStatus' => $lesson->getTrainerStatus(),
+            'studentStatus' => $lesson->getStudentStatus(),
+            'trainingTogetherCount' => $trainingTogetherCount,
+            'trainer' => $decorateTrainer,
+            'student' => [
+                'id' => $lesson->getStudent()->getId(),
+                'nickname' => $lesson->getStudent()->getNickname(),
+                'photo' => $lesson->getStudent()->getPhoto(),
+            ]
+        ];
+    }
+
+    /**
+     * @param $date
+     * @param $timeOffset
+     * @return string
+     */
+    public function parseDateToUserTimezone($date, $timeOffset)
+    {
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom->setHour($dateFrom->hour + $timeOffset);
+
+        return $dateFrom;
     }
 }

@@ -6,9 +6,7 @@ use App\Entity\Lessons;
 use App\Entity\PurseHistory;
 use App\Entity\Review;
 use App\Entity\Schedule;
-use App\Entity\Schledule;
 use App\Entity\Teachers;
-use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
 use App\Message\EndLessonMail;
 use App\Message\PaymentLessonMail;
@@ -23,17 +21,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Swift_Mailer;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class LessonsController
- * @package App\Controller
+ * @Route("/{_locale}", requirements={"locale": "ru"})
  */
 class LessonsController extends AbstractController
 {
     /**
      * @var LessonService
      */
-    public $lessonsService;
+    public $lessonService;
 
     /**
      * @var ScheduleService
@@ -55,7 +53,7 @@ class LessonsController extends AbstractController
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->lessonsService = new LessonService($entityManager);
+        $this->lessonService = new LessonService($entityManager);
         $this->scheduleService = new ScheduleService($entityManager);
 
         $this->lessonTimeService = new LessonTimeService($entityManager);
@@ -65,7 +63,7 @@ class LessonsController extends AbstractController
     /**
      * Lessons /ru/lessons/*
      *
-     * @Route("/ru/lessons/set-status-ended/{form}", name="student_trainer_lesson_end")
+     * @Route("/lessons/set-status-ended/{form}", name="student_trainer_lesson_end")
      */
     public function setLessonEnd($form, Swift_Mailer $mailer)
     {
@@ -119,13 +117,13 @@ class LessonsController extends AbstractController
         $entityManager->persist($lesson);
         $entityManager->flush();
 
-        return $this->json($this->lessonsService->lessonDecorator($lesson));
+        return $this->json($this->lessonService->lessonDecorator($lesson));
     }
 
     /**
      * Lessons /ru/lessons/*
      *
-     * @Route("/ru/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
+     * @Route("/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
      */
     public function createNewLesson(Request $request, Swift_Mailer $mailer)
     {
@@ -141,7 +139,7 @@ class LessonsController extends AbstractController
         ]);
 
         if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS !== 0) {
-            return $this->json(['message' => 'Неверные данные!']);
+            return $this->json(['message' => 'Неверные данные!'], 422);
         }
 
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
@@ -167,10 +165,10 @@ class LessonsController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $lessons = $this->lessonsService
+        $lessons = $this->lessonService
             ->decorationLessonsForPayed($lessons);
 
-        [$lessonIds] = $this->lessonsService
+        [$lessonIds] = $this->lessonService
             ->createLessons(
                 $lessons,
                 $trainer,
@@ -178,7 +176,7 @@ class LessonsController extends AbstractController
                 $data->type
             );
 
-        $lessons = $this->lessonsService->getLessonsByIds($lessonIds);
+        $lessons = $this->lessonService->getLessonsByIds($lessonIds);
 
         foreach ($lessons as $lesson) {
             // Dispatch payment mail
@@ -190,14 +188,14 @@ class LessonsController extends AbstractController
     /**
      * Lessons /ru/lessons/finished/*
      *
-     * @Route("/ru/lesson/finished", methods={"GET","POST"}, name="finished.user.lessons")
+     * @Route("/lesson/finished", methods={"GET","POST"}, name="finished.user.lessons")
      */
     public function getFinishedUserLessons(Request $request)
     {
         $userId = $request->get('student_id', null);
         $trainerId = $request->get('trainer_id', null);
 
-        $lessons = $this->lessonsService->getEndedLessonsByTrainerAndUser($trainerId, $userId);
+        $lessons = $this->lessonService->getEndedLessonsByTrainerAndUser($trainerId, $userId);
 
         foreach ($lessons as $lesson) {
             $student = $this->getDoctrine()->getRepository(User::class)->find($userId);
@@ -218,12 +216,12 @@ class LessonsController extends AbstractController
     /**
      * Lessons /ru/lessons/cancel/*
      *
-     * @Route("/ru/lesson/cancel/{lessonId}", methods={"GET","POST"}, name="lesson.cancel")
+     * @Route("/lesson/cancel/{lessonId}", methods={"GET","POST"}, name="lesson.cancel")
      */
     public function cancelLesson($lessonId)
     {
         $trainer = $this->getUser();
-        $lesson = $this->lessonsService->find($lessonId);
+        $lesson = $this->lessonService->find($lessonId);
 
         if (isset($lesson)) {
             if (empty($trainer)) {
@@ -232,7 +230,7 @@ class LessonsController extends AbstractController
                 ]);
             }
             if ($trainer->getId() === $lesson->getTrainer()->getId()) {
-                $lesson = $this->lessonsService->setCanceled($lesson);
+                $lesson = $this->lessonService->setCanceled($lesson);
                 $lessonTimes = $this->lessonTimeService->getTimesByLesson($lesson);
 
                 /** @var Schedule $time */
@@ -243,5 +241,128 @@ class LessonsController extends AbstractController
             }
         }
         return $this->redirectToRoute('timetable_index');
+    }
+
+    /**
+     * @Route("/cabinet/lessons", name="user_cabinet_lessons")
+     */
+    public function getLessons(Request $request, TranslatorInterface $translator)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), false);
+
+        if (!$user->getIsTrainer()) {
+            $lessons = $this->getDoctrine()
+                ->getRepository(Lessons::class)
+                ->findByStudentId($user->getId());
+        } else {
+            $lessons = $this->getDoctrine()
+                ->getRepository(Lessons::class)
+                ->findByTrainerId($user->getId());
+        }
+        $parseLessons = $this->decorateLessons($lessons, $user, $data->timezone, $translator);
+
+        return $this->json($parseLessons);
+    }
+
+    /**
+     * @param $lessons
+     * @param $user
+     * @param $timezone
+     * @param $translator
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function decorateLessons($lessons, $user, $timezone, $translator)
+    {
+        $parseLessons = [];
+        /** @var Lessons $lesson */
+        foreach ($lessons as $lesson) {
+            $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
+            $timeOffset = 0;
+
+            if ($lesson->getDateTimeFrom() > new \DateTime()) {
+                $type = 'future';
+            } else {
+                $type = 'past';
+            }
+            $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
+
+            $dateRu = $this->dateTranslate($dateFrom, $translator);
+
+            $parseLessons[$type][$dateRu][] = $this->lessonService->decorateLesson($lesson, $user, $timezone, $translator);
+        }
+        return $parseLessons;
+    }
+
+    /**
+     * @param $date
+     * @param $timeOffset
+     * @return string
+     */
+    public function parseDateToUserTimezone($date, $timeOffset)
+    {
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom->setHour($dateFrom->hour + $timeOffset);
+
+        return $dateFrom;
+    }
+
+    /**
+     * @Route("/cabinet/get/first-lessons/and/earned", name="cabinet_get_first_lessons_and_earned")
+     */
+    public function getFirstLessonsAndEarned(TranslatorInterface $translator)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $lessons = [];
+        $earned = [];
+
+        $currentMonth = $translator->trans('earned.per this month');
+        $prevMonth = $translator->trans('earned.per previous month');
+
+        $earned[$currentMonth] = 0;
+        $earned[$prevMonth] = 0;
+
+        if (isset($user) and $user->getIsTrainer()) {
+            $lessonsEntities = $this->lessonService->getFutureByTeacher($user, 3);
+            $lessons = $this->lessonService->decorateLessons($lessonsEntities, $user, null, $translator);
+
+            $date = Carbon::now();
+            $date->setDay(1);
+
+            $datePrev = Carbon::now()->subMonth();
+            $datePrev->setDay(1);
+
+            $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
+            $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);
+        }
+
+        return $this->json(
+            compact(
+                'lessons',
+                'earned'
+            )
+        );
+    }
+
+    /**
+     * @param $date
+     * @param $translator
+     * @return string
+     */
+    public function dateTranslate($date, $translator)
+    {
+        $dateString = $translator->trans($date->format('l'));
+        $dateString .= ', ';
+        $dateString .= $date->format('d ');
+        $dateString .= $translator->trans($date->format('F'));
+
+        return $dateString;
     }
 }

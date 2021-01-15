@@ -78,7 +78,6 @@ class TeacherService extends EntityService
             'timeZone' => $teacher->getTimeZone(),
             'twitch' => $teacher->getTwitch(),
             'awards' => $teacher->getAwards(),
-            'about' => $teacher->getAbout(),
             'globalElite' => $teacher->getGlobalElite(),
             'costs' => $availableCosts,
             'achievements' => $achievements,

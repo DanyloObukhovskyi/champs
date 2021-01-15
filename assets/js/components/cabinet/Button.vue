@@ -22,6 +22,7 @@
             </div>
         </div>
         <div class="more-detail">
+            <slot name="more-detail"></slot>
         </div>
     </div>
 </template>

@@ -7,8 +7,10 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
+import 'v-title/lib/element-ui';
 
 import Vuex from 'vuex'
+
 import Store from "./store/Store";
 
 import LiveMatches from "./components/matches/LiveMatches";
@@ -47,6 +49,9 @@ if (token) {
     console.error('CSRF token not found');
 }
 Vue.use(Vuex);
+import VTitle from 'v-title';
+
+Vue.use(VTitle);
 
 Vue.component('live-matches', LiveMatches);
 Vue.component('upcoming-matches-home', UpcomingMatches);

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\PurseHistory;
 use App\Entity\Teachers;
 use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
@@ -12,8 +13,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
@@ -40,10 +44,16 @@ class WalletController extends AbstractController
      */
     public $translator;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    /**
+     * @var ValidatorInterface
+     */
+    public $validator;
+
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
+        $this->validator = $validator;
 
         $this->walletService = new WalletService();
         $this->lessonService = new LessonService($entityManager);
@@ -61,7 +71,7 @@ class WalletController extends AbstractController
         $purseHistory = $this->walletService
             ->getPurseHistory($user);
 
-        $confirmedPayments = $this->walletService->getPaymentsByDate($user);
+        $confirmedPayments = $this->walletService->getStudentsPaymentHistory($user, $translator);
         $balance = $this->walletService->getBalance($user);
         $available = $this->walletService->getAvailableToPurse($user);
 
@@ -89,7 +99,7 @@ class WalletController extends AbstractController
             'balance' => $balance,
             'available' => $available,
             'transactionHistory' => $purseHistory,
-            'studentsHistory' => [],
+            'studentsHistory' => $confirmedPayments,
             'lessonPrices' => $this->decorateTrainerPrices($prices),
             'wallet' => $trainer->getPayPal(),
             'isLessonCost' => $trainer->getIsLessonCost()
@@ -109,16 +119,18 @@ class WalletController extends AbstractController
                 'type' => $price,
                 'cost' =>  0,
                 'show' =>  false,
-                'title' =>  $this->translator->trans('trainings.'.$price)
+                'title' => $this->translator->trans('trainings.titles.'.$price),
+                'description' => $this->translator->trans('trainings.description.'.$price),
             ];
         }
         /** @var TrainerLessonPrice $price */
         foreach ($prices as $price) {
             $decoratePrices[$price->getLessonType()] = [
                 'type' => $price->getLessonType(),
-                'cost' =>  $price->getPriceWithoutPercentage(),
+                'cost' =>  $price->getPrice(),
                 'show' =>  $price->getIsActive(),
-                'title' =>  $this->translator->trans('trainings.'.$price->getLessonType())
+                'title' =>  $this->translator->trans('trainings.titles.'.$price->getLessonType()),
+                'description' => $this->translator->trans('trainings.description.'.$price->getLessonType()),
             ];
         }
         rsort($decoratePrices);
@@ -163,5 +175,64 @@ class WalletController extends AbstractController
             'isLessonCost' =>  $trainer->getIsLessonCost(),
             'lessonPrices' => $this->decorateTrainerPrices($trainer->getCosts())
         ]);
+    }
+
+    /**
+     * @Route ("/trainer/wallet/update/paypal")
+     */
+    public function updateTrainerPayPal(Request $request)
+    {
+        $data = json_decode($request->getContent(), false);
+        $user = $this->getUser();
+
+
+        /** @var User $user */
+        if (isset($data->payPal) and isset($user)) {
+            $violations = $this->validator->validate(
+                $data->payPal,
+                new Email([])
+            );
+            if ($violations->count() > 0) {
+                $message = $this->translator->trans('Paypal was specified in the wrong format');
+
+                return $this->json($message, 422);
+            }
+            /** @var Teachers $trainer */
+            $trainer = $this->entityManager
+                ->getRepository(Teachers::class)
+                ->findOneBy([
+                   'userid' => $user->getId()
+                ]);
+            if (isset($trainer)) {
+                $trainer->setPayPal($data->payPal);
+
+                $this->entityManager->persist($trainer);
+                $this->entityManager->flush();
+            }
+        }
+        return $this->json('ok');
+    }
+
+    /**
+     * @Route("/trainer/wallet/checkout")
+     */
+    public function walletCheckout(TranslatorInterface $translator)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (isset($user)) {
+            $available = $this->walletService->getAvailableToPurse($user);
+
+            $purse = new PurseHistory();
+            $purse->setUser($user);
+            $purse->setStatus(PurseHistory::PENDING_STATUS);
+            $purse->setAmount($available);
+            $purse->setDatetime(new \DateTime());
+
+            $this->entityManager->persist($purse);
+            $this->entityManager->flush();
+        }
+
+        return $this->index($translator);
     }
 }

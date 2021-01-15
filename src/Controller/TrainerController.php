@@ -5,13 +5,11 @@ namespace App\Controller;
 use App\Entity\Game;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\PurseHistory;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\UserService;
-use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,11 +25,28 @@ class TrainerController extends AbstractController
      */
     public $userService;
 
+    /**
+     * @var EntityManagerInterface
+     */
     public $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    /**
+     * @var ValidatorInterface
+     */
+    public $validator;
+
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
+
+    public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
+
+        $this->validator = $validator;
+        $this->translator = $translator;
+
         $this->userService = new UserService($entityManager);
     }
 
@@ -210,7 +225,7 @@ class TrainerController extends AbstractController
     /**
      * @Route("/trainer/paypall/{method}/{userId}", methods={"POST"}, name="trainer_paypall")
      */
-    public function trainerPayPall(Request $request, ValidatorInterface $validator, $method, $userId)
+    public function trainerPayPall(Request $request, $method, $userId)
     {
         $request = json_decode($request->getContent(), true);
 
@@ -226,7 +241,7 @@ class TrainerController extends AbstractController
                 $constraints = new Assert\Collection([
                     'payPal' => [new Assert\Email()],
                 ]);
-                $violations = $validator->validate($request, $constraints);
+                $violations = $this->validator->validate($request, $constraints);
 
                 $data = [];
 
