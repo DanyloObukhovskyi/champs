@@ -5,21 +5,29 @@
                 <wallet-data :load="load"/>
                 <lesson-price :load="load"/>
             </div>
+            <div class="setting-wrapper">
+                <students-history :load="load"/>
+                <wallet-container :load="load"/>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import WalletData from "../components/Wallet/WalletData";
-    import LessonPrice from "../components/Wallet/LessonPrice";
+    import WalletData from "../components/wallet/WalletData";
+    import LessonPrice from "../components/wallet/LessonPrice";
     import {mapGetters} from "vuex";
     import WalletService from "../../../../services/WalletService";
+    import StudentsHistory from "../components/wallet/StudentsHistory";
+    import WalletContainer from "../components/wallet/Wallet";
 
     export default {
         name: "Wallet",
         components: {
+            StudentsHistory,
             WalletData,
-            LessonPrice
+            LessonPrice,
+            WalletContainer
         },
         data() {
             return {

@@ -138,210 +138,6 @@ class CabinetController extends AbstractController
     }
 
     /**
-     * @Route("/auth/user/full", name="user_cabinet_ajax_full")
-     */
-    public function authUserFull()
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-
-        return $this->json(isset($user) ? $this->getUserData($user): null);
-    }
-
-    public function getUserData(User $user)
-    {
-        $userLvl = 0;
-
-        if (!empty($user->getGame())) {
-            $gameRank = $this->gameRankService->getByGameAndPoints(
-                $user->getGame(),
-                $user->getRang()
-            );
-            /** @var GameRank $gameRank */
-            if (isset($gameRank)) {
-                $userLvl = $gameRank->getRank();
-            }
-        }
-
-        $data = [
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'nickname' => $user->getNickname(),
-            'photo' => $user->getPhoto(),
-            'name' => $user->getName(),
-            'game' => $user->getGame(),
-            'rank' => $user->getRang(),
-            'family' => $user->getFamily(),
-            'discord' => $user->getDiscord(),
-            'purse' => $user->getPurse(),
-            'timezone' => $user->getTimezone(),
-            'isTrainer' => $user->getIsTrainer(),
-            'level' => $userLvl
-        ];
-
-        if ($user->getIsTrainer()) {
-            /** @var Teachers|NULL $teacher */
-            $teacher = $this->teacherService->findByUserId($user->getId());
-
-            if (isset($teacher)) {
-                $data['trainer'] = $this->teacherService->decorator($teacher);
-            }
-        }
-        return $data;
-    }
-
-    /**
-     * @Route("/cabinet/lessons", name="user_cabinet_lessons")
-     */
-    public function getLessons(Request $request, TranslatorInterface $translator)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        $data = json_decode($request->getContent(), false);
-
-        if (!$user->getIsTrainer()) {
-            $lessons = $this->getDoctrine()
-                ->getRepository(Lessons::class)
-                ->findByStudentId($user->getId());
-        } else {
-            $lessons = $this->getDoctrine()
-                ->getRepository(Lessons::class)
-                ->findByTrainerId($user->getId());
-        }
-        $parseLessons = $this->decorateLessons($lessons, $user, $data->timezone, $translator);
-
-        return $this->json($parseLessons);
-    }
-
-    /**
-     * @param $lessons
-     * @param $user
-     * @param $timezone
-     * @param $translator
-     * @return array
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function decorateLessons($lessons, $user, $timezone, $translator)
-    {
-        $parseLessons = [];
-        /** @var Lessons $lesson */
-        foreach ($lessons as $lesson) {
-            $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
-            $timeOffset = 0;
-
-            if ($lesson->getDateTimeFrom() > new \DateTime()) {
-                $type = 'future';
-            } else {
-                $type = 'past';
-            }
-            $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
-
-            $dateRu = $this->dateTranslate($dateFrom, $translator);
-
-            $parseLessons[$type][$dateRu][] = $this->decorateLesson($lesson, $user, $timezone, $translator);
-        }
-        return $parseLessons;
-    }
-
-    /**
-     * @param Lessons $lesson
-     * @param $user
-     * @param $timezone
-     * @param $translator
-     * @return array
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function decorateLesson(Lessons $lesson, $user, $timezone = null, $translator)
-    {
-        $trainer = $this->teacherService->findByUserId($lesson->getTrainer()->getId());
-
-        $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
-        if (empty($lesson->getDateTimeTo())) {
-            $dateTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('Y.m.d H');
-        } else {
-            $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
-        }
-
-        $timeOffset = 0;
-
-        if (!$user->getIsTrainer()) {
-            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-                $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
-            );
-            if ($gmtNumeric < 0) {
-                $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
-            } else {
-                $trainerTimezone = (int)gmdate("g", $gmtNumeric);
-            }
-            $timeOffset = $trainerTimezone - (int)$timezone;
-        }
-        $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
-        $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
-
-        $trainingTogetherCount = $this->lessonService->getTrainingTogetherCount($lesson);
-        $decorateTrainer = $this->userService->decorator($lesson->getTrainer());
-
-        $month = $translator->trans($dateFrom->format('F'));
-
-        return [
-            'id' => $lesson->getId(),
-            'type' => $lesson->getType(),
-            'cost' => $lesson->getCost(),
-            'month' => $month,
-            'type' => $lesson->getType(),
-            'trainerNotice' => $lesson->getTrainerNotice(),
-            'typeRu' => $translator->trans('trainings.' . $lesson->getType()),
-            'dateFrom' => $dateFrom->format('Y.m.d H:i:s'),
-            'dateTo' => $dateTo->format('Y.m.d H:i:s'),
-            'trainerStatus' => $lesson->getTrainerStatus(),
-            'studentStatus' => $lesson->getStudentStatus(),
-            'trainingTogetherCount' => $trainingTogetherCount,
-            'trainer' => $decorateTrainer,
-            'student' => [
-                'id' => $lesson->getStudent()->getId(),
-                'nickname' => $lesson->getStudent()->getNickname(),
-                'photo' => $lesson->getStudent()->getPhoto(),
-            ]
-        ];
-    }
-
-    /**
-     * @param $date
-     * @param $timeOffset
-     * @return string
-     */
-    public function parseDateToUserTimezone($date, $timeOffset)
-    {
-        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
-        $dateFrom->setHour($dateFrom->hour + $timeOffset);
-
-        return $dateFrom;
-    }
-
-
-    /**
-     * @param $date
-     * @param $translator
-     * @return string
-     */
-    public function dateTranslate($date, $translator)
-    {
-        $dateString = $translator->trans($date->format('l'));
-        $dateString .= ', ';
-        $dateString .= $date->format('d ');
-        $dateString .= $translator->trans($date->format('F'));
-
-        return $dateString;
-    }
-
-    /**
      * @Route("/ajax/cabinet/get/timezones", name="user_cabinet_timezones")
      */
     public function getTimezones()
@@ -414,7 +210,7 @@ class CabinetController extends AbstractController
         } else {
             return $this->json($errors, 422);
         }
-        return $this->json($this->getUserData($user));
+        return $this->json($this->userService->getUserData($user));
     }
 
     /**
@@ -539,7 +335,7 @@ class CabinetController extends AbstractController
             $this->entityManager->persist($lesson);
             $this->entityManager->flush();
         }
-        $parseLesson = $this->decorateLesson($lesson, $user, null, $translator);
+        $parseLesson = $this->lessonService->decorateLesson($lesson, $user, null, $translator);
 
         return $this->json($parseLesson);
     }
@@ -561,48 +357,9 @@ class CabinetController extends AbstractController
         $this->entityManager->persist($lesson);
         $this->entityManager->flush();
 
-        $parseLesson = $this->decorateLesson($lesson, $user, null, $translator);
+        $parseLesson = $this->lessonService->decorateLesson($lesson, $user, null, $translator);
 
         return $this->json($parseLesson);
-    }
-
-    /**
-     * @Route("/cabinet/get/first-lessons/and/earned", name="cabinet_get_first_lessons_and_earned")
-     */
-    public function getFirstLessonsAndEarned(TranslatorInterface $translator)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $lessons = [];
-        $earned = [];
-
-        $currentMonth = $translator->trans('earned.per this month');
-        $prevMonth = $translator->trans('earned.per previous month');
-
-        $earned[$currentMonth] = 0;
-        $earned[$prevMonth] = 0;
-
-        if (isset($user) and $user->getIsTrainer()) {
-            $lessonsEntities = $this->lessonService->getFutureByTeacher($user, 3);
-            $lessons = $this->decorateLessons($lessonsEntities, $user, null, $translator);
-
-            $date = Carbon::now();
-            $date->setDay(1);
-
-            $datePrev = Carbon::now()->subMonth();
-            $datePrev->setDay(1);
-
-            $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
-            $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);
-        }
-
-        return $this->json(
-            compact(
-                'lessons',
-                'earned'
-            )
-        );
     }
 
     /**

@@ -91,6 +91,14 @@ class TrainerLessonPrice implements \JsonSerializable
      */
     public function getPrice(): ?int
     {
+        return $this->price;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPriceWithPercentage(): ?int
+    {
         $percentageMarkup = $_ENV['PERCENTAGE_MARKUP_LESSON'];
 
         $cost = $this->price;
@@ -99,14 +107,6 @@ class TrainerLessonPrice implements \JsonSerializable
             $cost = ($this->price / 100) * ($percentageMarkup + 100);
         }
         return $cost;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPriceWithoutPercentage()
-    {
-        return $this->price;
     }
 
     /**
@@ -137,8 +137,8 @@ class TrainerLessonPrice implements \JsonSerializable
     {
         return [
             'lessonType' => $this->getLessonType(),
-            'price' => $this->getPrice(),
-            'priceWithoutPercentage' => $this->getPriceWithoutPercentage()
+            'price' => $this->getPriceWithPercentage(),
+            'priceWithoutPercentage' => $this->getPrice()
         ];
     }
 }

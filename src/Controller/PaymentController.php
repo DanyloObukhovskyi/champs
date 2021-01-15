@@ -54,7 +54,7 @@ class PaymentController extends AbstractController
 
         $cost = 0;
         foreach ($lessons as $lesson) {
-            $cost += (int)$lesson->getCost();
+            $cost += (int)$lesson->getCostWithPercentage();
         }
         $payment = $paymentService->createPayment($lessons, $cost, $_ENV['YANDEX_KASSA_RETURN_URL']);
 

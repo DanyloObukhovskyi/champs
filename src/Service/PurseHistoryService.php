@@ -44,6 +44,8 @@ class PurseHistoryService extends EntityService
     {
         return $this->repository->findBy([
             'user' => $user
+        ], [
+            'datetime' => 'desc'
         ]);
     }
 }

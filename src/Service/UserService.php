@@ -12,6 +12,7 @@ use App\Entity\Teachers;
 use App\Entity\TrainerAchievement;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\Game\GameRankService;
 use App\Service\News\NewsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -73,6 +74,11 @@ class UserService  extends EntityService
      */
     protected $teacherService;
 
+    /**
+     * @var GameRankService
+     */
+    protected $gameRankService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -80,6 +86,7 @@ class UserService  extends EntityService
         $this->trainerVideosService = new TrainerVideoService($entityManager);
         $this->reviewsService = new ReviewService($entityManager);
         $this->teacherService = new TeacherService($entityManager);
+        $this->gameRankService = new GameRankService($entityManager);
 
         $this->timeZoneService = new TimeZoneService();
     }
@@ -126,12 +133,9 @@ class UserService  extends EntityService
         {
             $trainer = new Teachers();
             $trainer->setUser($user->getId());
-            $trainer->setAbout("");
-            $trainer->setShorttitle("");
             $trainer->setMethod("");
 
-            $this->entityManager->persist($trainer);
-            $this->entityManager->flush();
+            $this->save($trainer);
         }
 
         $user->setTrainer($trainer);
@@ -505,5 +509,47 @@ class UserService  extends EntityService
     public function findByEmail(string $email, int $userId)
     {
         return $this->repository->findByEmail($email, $userId);
+    }
+
+    public function getUserData(User $user)
+    {
+        $userLvl = 0;
+
+        if (!empty($user->getGame())) {
+            $gameRank = $this->gameRankService->getByGameAndPoints(
+                $user->getGame(),
+                $user->getRang()
+            );
+            /** @var GameRank $gameRank */
+            if (isset($gameRank)) {
+                $userLvl = $gameRank->getRank();
+            }
+        }
+
+        $data = [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'nickname' => $user->getNickname(),
+            'photo' => $user->getPhoto(),
+            'name' => $user->getName(),
+            'game' => $user->getGame(),
+            'rank' => $user->getRang(),
+            'family' => $user->getFamily(),
+            'discord' => $user->getDiscord(),
+            'purse' => $user->getPurse(),
+            'timezone' => $user->getTimezone(),
+            'isTrainer' => $user->getIsTrainer(),
+            'level' => $userLvl
+        ];
+
+        if ($user->getIsTrainer()) {
+            /** @var Teachers|NULL $teacher */
+            $teacher = $this->teacherService->findByUserId($user->getId());
+
+            if (isset($teacher)) {
+                $data['trainer'] = $this->teacherService->decorator($teacher);
+            }
+        }
+        return $data;
     }
 }

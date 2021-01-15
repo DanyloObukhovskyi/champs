@@ -8,6 +8,7 @@ use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
 use App\Service\TrainerVideoService;
+use App\Service\UserService;
 use App\Traits\EntityManager;
 use App\Message\ConfirmCodeMail;
 use App\Service\ConfirmCodeService;
@@ -48,11 +49,18 @@ class UserController extends AbstractController
      */
     private $confirmCodeService;
 
+    /**
+     * @var UserService
+     */
+    private $userService;
+
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->trainerVideoService = new TrainerVideoService($this->getEntityManager());
         $this->confirmCodeService = new ConfirmCodeService($this->getEntityManager());
+        
+        $this->userService = new UserService($this->getEntityManager());
     }
 
     /**
@@ -201,5 +209,18 @@ class UserController extends AbstractController
         return isset($user) ?
             $this->json('Этот эмейл уже занят!', 422) :
             $this->json('ok');
+    }
+
+    /**
+     * @Route("/auth/user/full", name="user_cabinet_ajax_full")
+     */
+    public function authUserFull()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $userData = $this->userService->getUserData($user);
+
+        return $this->json(isset($user) ?$userData: null);
     }
 }

@@ -110,7 +110,7 @@
                         .then((data) => {
                             this.load = false;
                             if (data.ids) {
-                                window.location.assign('/ru/payment/pay/lesson?lessonIds=' + JSON.stringify(data.ids))
+                                window.location.assign(`/${MarketplaceService.lang}/payment/pay/lesson?lessonIds=` + JSON.stringify(data.ids))
                             } else {
                                 Swal.fire({
                                     icon: 'error',
