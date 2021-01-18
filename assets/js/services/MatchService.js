@@ -27,7 +27,7 @@ class MatchService extends Service{
     }
 
     getUpcomingMatches = (date) => {
-        return this.send(`main/matches`, date);
+        return this.send(`main/matches`, {date});
     }
 
     getMatchUrl = id => {

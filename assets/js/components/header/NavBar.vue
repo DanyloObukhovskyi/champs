@@ -16,9 +16,6 @@
                 <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">
                     Матчи
                 </a>
-                <a :href="eventsPage" class="pointer" :class="{active : router == 'events'}">
-                    События
-                </a>
                 <a href="/ru/statistics" class="pointer" :class="{active : router == 'statistics'}">
                     Статистика
                 </a>
@@ -333,12 +330,12 @@
 
     .header_nav .nav .menu a,
     .header_nav .nav .menu span {
-        font-size: .8vw;
-        display: block;
-        height: 100%;
-        padding: 0 1vw;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
+		font-size: 1vw;
+		height: 100%;
+		padding: 0 1vw;
+		color: #ffffff;
+		display: flex;
+		font-weight: 600;
+		align-items: center;
     }
 </style>

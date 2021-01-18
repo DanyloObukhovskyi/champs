@@ -154,7 +154,7 @@ class EventsController extends AbstractController
     }
 
     /**
-     * @Route("/digest")
+     * @Route("/digest", name="digest_events")
      */
     public function digestPage()
     {

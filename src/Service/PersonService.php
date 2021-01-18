@@ -160,9 +160,6 @@ class PersonService extends EntityService
             'person' => $person
         ]);
 
-        $this->imageService->setImage($person->getPhoto());
-        $image = $this->imageService->getImagePath();
-
         $flag = $person->getFlagIcon();
         $flagID = $person->getFlagIconId();
 
@@ -171,12 +168,13 @@ class PersonService extends EntityService
         }
         $this->imageService->setImage($flag);
         $flag = $this->imageService->getImagePath();
+
         $player = [
             'user_id' => $person->getId(),
             'rating' => isset($ratingPerson) ? $ratingPerson->getRating() : $person->getRating(),
             'nickname' => $person->getNick(),
             'fullname' => $person->getName(),
-            'image' => $image,
+            'image' => $person->getPhoto(),
             'flag' => $flag,
             'flag_id' => $flagID
         ];
