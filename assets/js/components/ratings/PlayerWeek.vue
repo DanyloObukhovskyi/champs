@@ -10,7 +10,7 @@
             </div>
             <div class="player-photo">
                 <div class="player-photo-grid">
-                    <img class="hex-grid__image" :src="player.image" alt="">
+                    <img class="hex-grid__image" :src="'/uploads/images/' + player.image" alt="">
                 </div>
             </div>
         </div>
