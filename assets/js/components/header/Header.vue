@@ -11,7 +11,8 @@
         <sub-nav-bar @setgame="setGame" :games="games">
         </sub-nav-bar>
         <login-modal
-                :show-first="router == 'mvp' ? 'registration': 'login'"
+                :token="token"
+                :show-first="router === 'mvp' || token ? 'registration': 'login'"
                 :show="showLogin">
         </login-modal>
     </header>
@@ -36,7 +37,8 @@
             'social',
             'isTrainer',
             'isAuthorize',
-            'router'
+            'router',
+            'token'
         ],
         data() {
             return {
@@ -76,6 +78,11 @@
             document.onscroll = function () {
                 self.isPageStart = window.pageYOffset === 0;
             }
+
+            if (this.token !== undefined && this.token !== null) {
+                this.showLoginModal();
+            }
+
             this.getGames();
             this.getAuthUser();
         }

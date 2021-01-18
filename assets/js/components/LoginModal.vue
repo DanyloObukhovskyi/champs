@@ -68,6 +68,9 @@
             showFirst: {
                 default: 'login'
             },
+            token: {
+                default: null
+            }
         },
         data(){
             return {
@@ -131,6 +134,9 @@
                 formData.append('user[password][second]', this.password);
                 formData.append('_csrf_token', axios._csrf_token);
 
+                if (this.token !== null) {
+                    formData.append('inviteToken', this.token);
+                }
                 axios.post('/ru/registration', formData)
                     .then((res) => {
                         if (res.data.error) {

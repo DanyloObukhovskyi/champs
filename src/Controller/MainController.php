@@ -42,15 +42,19 @@ class MainController extends DefController
     /**
      * @Route("/ru/", name="main")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         // get the login error if there is one
         $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $authenticationUtils->getLastUsername();
 
+        $token = $request->get('token');
+
         return $this->render('templates/home.html.twig', [
-            'router' => 'home',]);
+            'router' => 'home',
+            'token' => $token
+        ]);
     }
 
     public function prepareVideo($data = array())
