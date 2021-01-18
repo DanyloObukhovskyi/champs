@@ -80,7 +80,7 @@
             document.onscroll = function () {
                 self.isPageStart = window.pageYOffset === 0;
             }
-            if (this.token !== undefined && this.token !== null && this.token !== '' &&) {
+            if (this.token !== undefined && this.token !== null && this.token !== '') {
                 this.showLoginModal();
             }
             this.getGames();
