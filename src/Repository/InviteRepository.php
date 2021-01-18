@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Invite;
 use App\Entity\MvpTeam;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,6 +32,45 @@ class InviteRepository extends ServiceEntityRepository
             ->setParameter('team', $team)
             ->setParameter('token', $token)
             ->setParameter('date', $dateNow)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param User $user
+     * @return int|mixed|string
+     */
+    public function getCabinetInvite(User $user)
+    {
+        $date = new \DateTime();
+
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.type = :type')
+            ->andWhere('i.user = :user')
+            ->andWhere('i.availableAt >= :date')
+            ->setParameter('type', Invite::LOGIN_TYPE)
+            ->setParameter('user', $user)
+            ->setParameter('date', $date)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param string $token
+     * @return int|mixed|string|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByToken(string $token)
+    {
+        $date = new \DateTime();
+
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.availableAt >= :date')
+            ->andWhere('i.token = :token')
+            ->setParameter('date', $date)
+            ->setParameter('token', $token)
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }

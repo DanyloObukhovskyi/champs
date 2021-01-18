@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
 <head>
-    {% include 'google.analytics.html.twig' %}
+    {% if app.debug != true %}
+        {% include 'google.analytics.html.twig' %}
+    {% endif %}
     <meta charset="UTF-8"/>
     <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
     <meta name="color-scheme" content="dark light">
@@ -34,11 +36,16 @@
     <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
     {{ encore_entry_link_tags('app') }}
     {% block css %}{% endblock %}
-    {% include 'yandex.metric.html.twig' %}
+    {% if app.debug != true %}
+        {% include 'yandex.metric.html.twig' %}
+    {% endif %}
 </head>
 <body>
 <div id="app">
     <v-header
+            {% if token is defined %}
+                token="{{ token }}"
+            {% endif %}
             :social="{{setting.social|json_encode}}"
             router="{{ router }}"
             :is-trainer="{{ is_granted('IS_AUTHENTICATED_FULLY') and app.user.istrainer ? 'true': 'false' }}"

@@ -5,8 +5,10 @@ namespace App\Service;
 
 
 use App\Entity\Award;
+use App\Entity\Balance;
 use App\Entity\Game;
 use App\Entity\GameRank;
+use App\Entity\Invite;
 use App\Entity\Review;
 use App\Entity\Teachers;
 use App\Entity\TrainerAchievement;
@@ -79,15 +81,22 @@ class UserService  extends EntityService
      */
     protected $gameRankService;
 
+    /**
+     * @var InviteService
+     */
+    protected $inviteService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->trainerVideosService = new TrainerVideoService($entityManager);
         $this->reviewsService = new ReviewService($entityManager);
+
         $this->teacherService = new TeacherService($entityManager);
         $this->gameRankService = new GameRankService($entityManager);
 
+        $this->inviteService = new InviteService($entityManager);
         $this->timeZoneService = new TimeZoneService();
     }
 
@@ -511,6 +520,21 @@ class UserService  extends EntityService
         return $this->repository->findByEmail($email, $userId);
     }
 
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function getInviteLink(User $user)
+    {
+        $invite = $this->inviteService->getCabinetInvite($user);
+
+        return $_ENV['SITE_URL'].$this->inviteService->generateInviteLink($invite->getToken());
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
     public function getUserData(User $user)
     {
         $userLvl = 0;
@@ -526,6 +550,15 @@ class UserService  extends EntityService
             }
         }
 
+        $balance = [];
+        $balanceEntities = $this->entityManager->getRepository(Balance::class)
+            ->findBy(['user' => $user]);
+
+        /** @var Balance $balanceEntity */
+        foreach ($balanceEntities as $balanceEntity)
+        {
+            $balance[$balanceEntity->getType()] = $balanceEntity->getBalance();
+        }
         $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -539,7 +572,9 @@ class UserService  extends EntityService
             'purse' => $user->getPurse(),
             'timezone' => $user->getTimezone(),
             'isTrainer' => $user->getIsTrainer(),
-            'level' => $userLvl
+            'level' => $userLvl,
+            'invite' => $this->getInviteLink($user),
+            'balance' => $balance
         ];
 
         if ($user->getIsTrainer()) {

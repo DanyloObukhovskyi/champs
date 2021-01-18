@@ -7,11 +7,12 @@ use App\Entity\ConfirmCode;
 use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
+use App\Service\ConfirmCodeService;
 use App\Service\TrainerVideoService;
 use App\Service\UserService;
 use App\Traits\EntityManager;
 use App\Message\ConfirmCodeMail;
-use App\Service\ConfirmCodeService;
+use Doctrine\ORM\EntityManagerInterface;
 use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,8 +27,6 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserController extends AbstractController
 {
-    use EntityManager;
-
     private const ACTION_ADD = 'add';
 
     private const ACTION_DELETE = 'delete';
@@ -54,13 +53,20 @@ class UserController extends AbstractController
      */
     private $userService;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
         $this->passwordEncoder = $passwordEncoder;
-        $this->trainerVideoService = new TrainerVideoService($this->getEntityManager());
-        $this->confirmCodeService = new ConfirmCodeService($this->getEntityManager());
-        
-        $this->userService = new UserService($this->getEntityManager());
+
+        $this->entityManager = $entityManager;
+        $this->trainerVideoService = new TrainerVideoService($entityManager);
+
+        $this->userService = new UserService($entityManager);
+        $this->confirmCodeService = new ConfirmCodeService($entityManager);
     }
 
     /**
@@ -141,7 +147,6 @@ class UserController extends AbstractController
     }
 
     /**
-<<<<<<< HEAD
      * @Route("/generate/confirm/code")
      */
     public function generateEmailConfirmCode(Request $request, Swift_Mailer $mailer)
@@ -164,8 +169,7 @@ class UserController extends AbstractController
         $confirmCode = $this->confirmCodeService->getCode($user['email'] ?? '');
 
         if (isset($confirmCode)) {
-            if ((string)$confirmCode->getCode() === (string)$user['code'])
-            {
+            if ((string)$confirmCode->getCode() === (string)$user['code']) {
                 return $this->json('Код подтвержден!');
             }
         }
@@ -180,16 +184,16 @@ class UserController extends AbstractController
         $request = json_decode($request->getContent(), false);
 
         /** @var User|null $user */
-        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
-           'email' => $request->email
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([
+            'email' => $request->email
         ]);
 
-        if (!empty($request->nickname) and isset($user)){
+        if (!empty($request->nickname) and isset($user)) {
 
             $user->setNickname($request->nickname);
 
-            $this->getEntityManager()->persist($user);
-            $this->getEntityManager()->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
             return $this->json('ok');
         }
@@ -203,8 +207,8 @@ class UserController extends AbstractController
     {
         $email = $request->get('email');
 
-        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy([
-           'email' => $email
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([
+            'email' => $email
         ]);
         return isset($user) ?
             $this->json('Этот эмейл уже занят!', 422) :
@@ -219,8 +223,9 @@ class UserController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $userData = $this->userService->getUserData($user);
-
-        return $this->json(isset($user) ?$userData: null);
+        if (isset($user)) {
+            $userData = $this->userService->getUserData($user);
+        }
+        return $this->json(isset($user) ? $userData : null);
     }
 }

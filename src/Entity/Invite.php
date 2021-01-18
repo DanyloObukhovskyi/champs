@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Invite
 {
+    public const LOGIN_TYPE = 'login';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,6 +38,16 @@ class Invite
      * @ORM\Column(type="datetime")
      */
     private $availableAt;
+
+    /**
+     * @ORM\Column(type="string" , nullable=true)
+     */
+    private $type;
+
+    /**
+     * @ORM\ManyToOne (targetEntity=InvitePrize::class)
+     */
+    private $prize;
 
     /**
      * @return int|null
@@ -82,7 +94,7 @@ class Invite
      */
     public function generateToken()
     {
-        $this->token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $this->token = crypt(time(), '');
     }
 
     /**
@@ -115,5 +127,29 @@ class Invite
     public function setAvailableAt($availableAt): void
     {
         $this->availableAt = $availableAt;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrize()
+    {
+        return $this->prize;
+    }
+
+    /**
+     * @param mixed $prize
+     */
+    public function setPrize($prize): void
+    {
+        $this->prize = $prize;
     }
 }
