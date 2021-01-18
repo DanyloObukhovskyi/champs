@@ -54,6 +54,10 @@
     import RegistrationForm from "./login/RegistrationForm";
     import LoginForm from "./login/LoginForm";
     import CongratulationsForm from "./login/CongratulationsForm";
+    import Service from "../services/Service";
+    import {mapGetters} from "vuex";
+
+    const service = new Service();
 
     export default {
         name: "LoginModal",
@@ -72,7 +76,7 @@
                 default: null
             }
         },
-        data(){
+        data() {
             return {
                 error: false,
                 step: 'registration',
@@ -93,11 +97,11 @@
             'congratulation': CongratulationsForm
         },
         watch: {
-            show(){
+            show() {
                 this.step = this.showFirst;
             },
-            step(newStep){
-                if (newStep === 'finish'){
+            step(newStep) {
+                if (newStep === 'finish') {
                     this.authLogin();
                 }
             }
@@ -106,7 +110,7 @@
             setStep(step) {
                 this.step = step;
             },
-            authLogin(){
+            authLogin() {
                 let formData = new FormData();
 
                 formData.append('email', this.email);
@@ -118,7 +122,7 @@
                         if (res.data.error) {
                             this.error = true;
                         } else {
-                            if (this.redirect !== null){
+                            if (this.redirect !== null) {
                                 window.location.assign(this.redirect);
                             } else {
                                 window.location.reload();
@@ -126,13 +130,12 @@
                         }
                     })
             },
-            registration(){
+            registration() {
                 const formData = new FormData();
 
                 formData.append('user[email]', this.email);
                 formData.append('user[password][first]', this.password);
                 formData.append('user[password][second]', this.password);
-                formData.append('_csrf_token', axios._csrf_token);
 
                 if (this.token !== null) {
                     formData.append('inviteToken', this.token);
@@ -147,18 +150,18 @@
                         this.error = true;
                     })
             },
-            close(){
+            close() {
                 this.$store.dispatch('closeLogin');
             },
-            checkStep(step){
+            checkStep(step) {
                 return this.show && this.step === step;
             },
-            sendConfirmCode(){
+            sendConfirmCode() {
                 const formData = new FormData();
                 formData.append('email', this.email);
 
                 axios.post('/ru/generate/confirm/code', formData)
-            }
-        },
+            },
+        }
     }
 </script>

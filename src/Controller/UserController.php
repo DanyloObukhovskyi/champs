@@ -165,8 +165,7 @@ class UserController extends AbstractController
         $confirmCode = $this->confirmCodeService->getCode($user['email'] ?? '');
 
         if (isset($confirmCode)) {
-            if ((string)$confirmCode->getCode() === (string)$user['code'])
-            {
+            if ((string)$confirmCode->getCode() === (string)$user['code']) {
                 return $this->json('Код подтвержден!');
             }
         }
@@ -185,7 +184,7 @@ class UserController extends AbstractController
             'email' => $request->email
         ]);
 
-        if (!empty($request->nickname) and isset($user)){
+        if (!empty($request->nickname) and isset($user)) {
 
             $user->setNickname($request->nickname);
 
@@ -220,8 +219,9 @@ class UserController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $userData = $this->userService->getUserData($user);
-
-        return $this->json(isset($user) ?$userData: null);
+        if (isset($user)) {
+            $userData = $this->userService->getUserData($user);
+        }
+        return $this->json(isset($user) ? $userData : null);
     }
 }

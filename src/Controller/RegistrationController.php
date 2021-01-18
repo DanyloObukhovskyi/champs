@@ -68,7 +68,6 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
 
-
         $form = $this->createForm(UserType::class, $user,
             ['action' => $this->generateUrl('user_registration')]);
 
@@ -103,17 +102,19 @@ class RegistrationController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $userEntity = new User();
             // Encode the new users password
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPassword()));
-
+            $userEntity->setPassword($this->passwordEncoder->encodePassword($userEntity, $form->getData()->getPassword()));
+            $userEntity->setEmail($form->getData()->getEmail());
             // Set their role
-            $user->setRoles(['ROLE_USER']);
+            $userEntity->setRoles(['ROLE_USER']);
+            $userEntity->setIsTrainer(0);
 
-            $user->setIsTrainer(0);
-            $user->setPurse(0);
-            $user->setTimezone('Europe/Moscow');
+            $userEntity->setPurse(0);
+            $userEntity->setTimezone('Europe/Moscow');
 
-            $this->userService->save($user);
+            $this->entityManager->persist($userEntity);
+            $this->entityManager->flush();
 
             return $this->json([
                 'router' => 'main',

@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\Entity\Award;
+use App\Entity\Balance;
 use App\Entity\Game;
 use App\Entity\GameRank;
 use App\Entity\Invite;
@@ -350,6 +351,15 @@ class UserService extends EntityService
             }
         }
 
+        $balance = [];
+        $balanceEntities = $this->entityManager->getRepository(Balance::class)
+            ->findBy(['user' => $user]);
+
+        /** @var Balance $balanceEntity */
+        foreach ($balanceEntities as $balanceEntity)
+        {
+            $balance[$balanceEntity->getType()] = $balanceEntity->getBalance();
+        }
         $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -364,7 +374,8 @@ class UserService extends EntityService
             'timezone' => $user->getTimezone(),
             'isTrainer' => $user->getIsTrainer(),
             'level' => $userLvl,
-            'invite' => $this->getInviteLink($user)
+            'invite' => $this->getInviteLink($user),
+            'balance' => $balance
         ];
 
         if ($user->getIsTrainer()) {

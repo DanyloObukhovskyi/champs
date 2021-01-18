@@ -55,7 +55,9 @@
         },
         methods: {
             showLoginModal() {
-                this.$store.dispatch('showLogin');
+                if (this.user === null) {
+                    this.$store.dispatch('showLogin');
+                }
             },
             setGame(game) {
                 this.$store.commit('setGame', game)
@@ -78,11 +80,9 @@
             document.onscroll = function () {
                 self.isPageStart = window.pageYOffset === 0;
             }
-
-            if (this.token !== undefined && this.token !== null) {
+            if (this.token !== undefined && this.token !== null && this.token !== '' &&) {
                 this.showLoginModal();
             }
-
             this.getGames();
             this.getAuthUser();
         }
