@@ -28,12 +28,7 @@ class Invite
      * @ORM\Column(type="string")
      */
     private $token;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=MvpTeam::class)
-     */
-    private $team;
-
+    
     /**
      * @ORM\Column(type="datetime")
      */
