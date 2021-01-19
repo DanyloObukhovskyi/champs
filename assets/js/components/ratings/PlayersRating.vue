@@ -16,8 +16,8 @@
                 </div>
                 <div class="player w-100 d-flex">
                     <div class="photo d-flex align-items-center">
-                        <div>
-                            <img :class="{'w-100': player.image === null}"
+                        <div class="player-photo">
+                            <img :class="{'photo': player.image !== null}"
                                  :src="player.image !== null ? '/uploads/images/' + player.image: '/images/noLogo.png'"
                                  @error="player.image = null">
                         </div>
@@ -210,7 +210,14 @@
 		position: absolute;
 	}
 
-	.players-rating .players-rating-body .players-rating-row .photo img {
+	.players-rating .players-rating-body .players-rating-row .photo .player-photo {
+		width: 4vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+	}
+
+	.players-rating .players-rating-body .players-rating-row .photo .player-photo img.photo{
 		width: 4vw;
 	}
 
