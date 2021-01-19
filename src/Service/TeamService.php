@@ -161,13 +161,15 @@ class TeamService extends EntityService
 
         $players = [];
         /** @var Player $playerEntity */
-        foreach ($playersEntities as $playerEntity) {
-            $players[] = $playerEntity->getPerson();
+        foreach ($playersEntities as $playerEntity){
+            if (!empty($playerEntity->getPerson())) {
+                $players[] = $playerEntity->getPerson()->jsonSerialize();
+            }
         }
         return [
-            'id' => $team->getId(),
-            'name' => $team->getName(),
-            'logo' => $this->imageService->getImagePath(),
+            'id'      => $team->getId(),
+            'name'    => $team->getName(),
+            'logo'    => $this->imageService->getImagePath(),
             'players' => $players
         ];
     }
