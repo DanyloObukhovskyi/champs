@@ -86,7 +86,7 @@ class News
     private $views;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity=Game::class)
      */
     private $game;
 
