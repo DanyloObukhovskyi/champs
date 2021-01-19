@@ -117,7 +117,6 @@ class MatchesController extends AbstractController
 
         $matches = $this->matchService->getMatchesByType($filters, $type, $page);
         $matches = $this->matchService->matchesDecorator($matches);
-
         $counts = [];
 
         foreach (MatchService::MATCH_TYPES as $type) {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
  */
-class Player
+class Player implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -73,5 +73,14 @@ class Player
         $this->start_at = $start_at;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'start_at' => $this->getStartAt(),
+            'team' => $this->getTeam(),
+        ];
     }
 }

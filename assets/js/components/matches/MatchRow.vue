@@ -16,20 +16,26 @@
                     </div>
                     <img :src="match.teamA.logo">
                 </div>
-                <div class="teamA w-50 d-flex align-items-center" v-else>
-                    <img src="/images/noLogo.png">
+                <div class="teamA w-50 d-flex justify-content-end align-items-center" v-else>
                     <div class="team-name">
                         ???
                     </div>
+                    <img src="/images/noLogo.png">
                 </div>
-                <div class="score" v-if="showScore" :class="getScoreClass(match.teamA.score, match.teamB.score)">
+                <div class="score" v-if="showScore && match.teamA !== null" :class="getScoreClass(match.teamA.score, match.teamB.score)">
                     {{match.teamA.score}}
+                </div>
+                <div class="score" v-else-if="showScore">
+                    0
                 </div>
                 <div class="vs">
                     <img src="/images/matches/vs.png">
                 </div>
-                <div class="score" v-if="showScore" :class="getScoreClass(match.teamB.score, match.teamA.score)">
+                <div class="score" v-if="showScore && match.teamB !== null" :class="getScoreClass(match.teamB.score, match.teamA.score)">
                     {{match.teamB.score}}
+                </div>
+                <div class="score" v-else-if="showScore">
+                    0
                 </div>
                 <div class="teamB w-50 d-flex align-items-center" v-if="match.teamB">
                     <img :src="match.teamB.logo">
