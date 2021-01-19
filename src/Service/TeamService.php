@@ -177,7 +177,9 @@ class TeamService extends EntityService
         $players = [];
         /** @var Player $playerEntity */
         foreach ($playersEntities as $playerEntity){
-            $players[] = $playerEntity->getPerson();
+            if (!empty($playerEntity->getPerson())) {
+                $players[] = $playerEntity->getPerson()->jsonSerialize();
+            }
         }
         return [
             'id'      => $team->getId(),
