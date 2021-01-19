@@ -1,9 +1,9 @@
 <template>
     <div class="hot-news-wrapper">
         <a :href="`/ru/news/${news.id}-${news.url}`" class="hot-news d-block" v-for="news in news">
-            <div class="align-items-center d-flex hot-news-title">
-                <div class="game-logo" v-if="news.game !== null">
-                    <img :src="'/images/news/' + gamesIcons[news.game]">
+            <div class="d-flex hot-news-title">
+                <div class="game-logo" v-if="news.game !== null && news.game.newsIcon !== null">
+                    <img :src="'/uploads/games/' + news.game.newsIcon">
                 </div>
                 <div class="title">
                     {{news.title}}

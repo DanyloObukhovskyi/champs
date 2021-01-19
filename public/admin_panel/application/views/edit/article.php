@@ -21,7 +21,7 @@
 	</aside>
 	<!--- ---->
 	<?php
-		
+
 		$params = '';
 		if (!empty($sort_fields)) {
 			$params = array();
@@ -32,7 +32,7 @@
 			$params = '?' . $params;
 		}
 		$Type = "Статья";
-		
+
 		$show1 = "dnn";
 		$show2 = "dnn";
 		$show3 = "dnn";
@@ -42,8 +42,8 @@
 		$show7 = "dnn";
 		$show8 = "dnn";
 		$show9 = "dnn";
-		
-		
+
+
 		if($post_fields["type"] == "1") {
 			$Type = "Трансфер";
 			$show1 = "";
@@ -125,7 +125,7 @@
 			</script>
 			<?php
 		}
-	
+
 	?>
 	<div class="main-content">
 		<h1 class="main-title">Редактировать новость</h1>
@@ -149,7 +149,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div id="b1" class="main-post-editor-edit z <?php print $show1; ?>">
 			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -173,9 +173,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                         <option value="">По умолчанию</option>
-                        <?php foreach ($games as $key => $game): ?>
-                            <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                                <?php echo $game;?>
+                        <?php foreach ($games as $game): ?>
+                            <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                                <?php echo $game['name'];?>
                             </option>
                         <?php endforeach; ?>
                 </select>
@@ -195,10 +195,10 @@
 				<button type="submit" class="main-post-button-edit">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b2" class="main-post-editor-edit z <?php print $show2; ?>">
 			<span class="editor-edit">Заголовок поста</span>
-			
+
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
 				<input type="hidden" value="true" name="edit">
 				<input type="hidden" value="2" name="post_type">
@@ -219,13 +219,13 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-			
+
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" name="userfile" style="opacity: 0"/>
@@ -241,7 +241,7 @@
 				<button type="submit" class="main-post-button-edit">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b3" class="z <?php print $show3; ?>">
 			<span class="editor-title_post">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -250,7 +250,7 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title" placeholder="Имя поста" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" value="<?php print $post_fields['url']; ?>">
-				
+
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
                 <input type="text"
                        id="tags"
@@ -265,16 +265,16 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
-					
+
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
 								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" name="userfile" style="opacity: 0"/>
@@ -297,7 +297,7 @@
 				<button type="submit" class="main-post-button-edit edit-btn-upload-video">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b4" class="main-post-editor-edit z <?php print $show4; ?>">
 			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -320,9 +320,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -341,7 +341,7 @@
 				<button type="submit" class="main-post-button-edit">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b5" class="main-post-editor-edit z <?php print $show5; ?>">
 			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -364,9 +364,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -385,7 +385,7 @@
 				<button type="submit" class="main-post-button-edit">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b6" class="main-post-editor-edit z <?php print $show6; ?>">
 			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -408,9 +408,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -429,7 +429,7 @@
 				<button type="submit" class="main-post-button-edit">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b7" class="main-post-editor-edit z <?php print $show7; ?>">
 			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -452,9 +452,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -473,7 +473,7 @@
 				<button type="submit" class="main-post-button-edit">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b8" class="z <?php print $show8; ?>">
 			<span class="editor-title_post">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -495,9 +495,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -505,7 +505,7 @@
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
 						<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker8" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
-						
+
 						<div class="change-editor-edit-ban">
 							<div class="changePass change-img-edit btn-editor-video" style="display: block;">
 								<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file"  name="userfile" style="opacity: 0"/>
@@ -528,7 +528,7 @@
 				<button type="submit" class="main-post-button-edit edit-btn-upload-video">Сохранить и Загрузить</button>
 			</form>
 		</div>
-		
+
 		<div id="b9" class="z <?php print $show9; ?>">
 			<span class="editor-title_post">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
@@ -551,9 +551,9 @@
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
-                    <?php foreach ($games as $key => $game): ?>
-                        <option value="<?php echo $key;?>" <?php echo $post_fields['game'] === $key? 'selected': ''; ?>>
-                            <?php echo $game;?>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>" <?php echo $post_fields['game_id'] === $game['id']? 'selected': ''; ?>>
+                            <?php echo $game['name'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -595,7 +595,7 @@
 				lang:'ru',
 			});
 		}
-		
+
 	} );
 	window.addEventListener('load', function() {
 		var inputs = document.querySelectorAll('input[type="file"]');
@@ -613,7 +613,7 @@
 					$("#imges_preview9").empty();
 					if (this.files && this.files[0]) {
 						var files = this.files.length-1;
-						
+
 						for(var i = 0; i <= files; i++) {
 							var url = URL.createObjectURL(this.files[i]);
 							if (this.files[i].type != "image/jpg" && this.files[i].type != "image/jpeg" && this.files[i].type != "image/png") {
@@ -624,9 +624,9 @@
 							img.style.cssText = 'width:110px;height:90px;padding:10px';
 							$("#imges_preview").append(img);
 						};
-						
+
 					}
-					
+
 				} if(current_type == 8){
 					var url = URL.createObjectURL(this.files[0]);
 					$("#img_preview1").attr("src", url);

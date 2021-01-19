@@ -241,7 +241,7 @@ class Edit_c extends CI_Controller
                     $update_data['updated_at'] = date("Y-m-d H:i:s");
                     $update_data['date'] = (!empty($post_date)) ? $post_date : date("Y-m-d H:i:s");
                     $update_data['type'] = $post_type;
-                    $update_data['game'] = $post_game;
+                    $update_data['game_id'] = $post_game;
 
                     $this->edit_m->update_news($post_id, $update_data);
                     redirect(base_url('c-admin/post/edit/' . $post_id . "/" . $this->UserID));
@@ -266,7 +266,6 @@ class Edit_c extends CI_Controller
         $tags = $this->post_tags_model->get_by_post_id($post_id);
         $data['tags'] = $this->post_tags_model->tags_to_string($tags);
 
-        $data['games'] = $this->posts_model->games;
         $this->load->model(array('posts_model'));
         $where = array("id" => $post_id);
         $data['post_fields'] = $this->posts_model->get_all(
@@ -279,8 +278,10 @@ class Edit_c extends CI_Controller
             redirect($_SERVER["HTTP_REFERER"]);
             die();
         }
+        $data['games'] = $this->game_m->get_all();
         $data['current_u_can'] = $current_u_can;
         $data['imgs_url'] = $this->config->item('display_article-pic');
+
         $data['output'] = $this->load->view('edit/article', $data, true);
         $this->load->view('layout/edit', $data);
     }

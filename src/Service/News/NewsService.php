@@ -56,7 +56,6 @@ class NewsService extends EntityService
                 ]);
             $bookmark = isset($newsBookmark);
         }
-
         return [
             'id' => $news->getId(),
             'title' => $news->getTitle(),
