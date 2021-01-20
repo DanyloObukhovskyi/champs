@@ -22,7 +22,8 @@ class Event_c extends CI_Controller
         $this->load->model(array(
             'users_model',
             'event_model',
-            'flag_model'
+            'flag_model',
+            'game_m'
         ));
     }
 
@@ -63,6 +64,8 @@ class Event_c extends CI_Controller
         $data = [];
         $event = $this->event_model->get_by_id($id);
         $data['images_url'] = $this->config->item('display_event-pic');
+        $data['statuses'] = Event_model::STATUSES;
+        $data['games'] = $this->game_m->get_all();
 
         if (isset($event)) {
             $data['event'] = $event;
@@ -79,11 +82,11 @@ class Event_c extends CI_Controller
             $upload_data['flag_icon_id'] = !empty($_POST['flag_icon_id']) ? $_POST['flag_icon_id'] : null;
             $upload_data['started_at'] = isset($_POST['started_at']) ? $_POST['started_at'] : null;
             $upload_data['ended_at'] = isset($_POST['ended_at']) ? $_POST['ended_at'] : null;
+            $upload_data['status'] = isset($_POST['status']) ? $_POST['status'] : null;
+            $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
 
             $upload_data['image'] = null;
             $upload_data['image_header'] = null;
-
-            $upload_data['views'] = 0;
 
             if (isset($upload_data['started_at'])) {
                 $upload_data['started_at'] = (new DateTime($upload_data['started_at']))->format('Y-m-d');
@@ -113,6 +116,8 @@ class Event_c extends CI_Controller
         $data['images_url'] = $this->config->item('display_event-pic');
 
         $data['flags'] = $this->flag_model->get_all();
+        $data['statuses'] = Event_model::STATUSES;
+        $data['games'] = $this->game_m->get_all();
 
         if (isset($_POST['create'])) {
             $upload_data = [];
@@ -124,6 +129,8 @@ class Event_c extends CI_Controller
             $upload_data['flag_icon_id'] = !empty($_POST['flag_icon_id']) ? $_POST['flag_icon_id'] : null;
             $upload_data['started_at'] = isset($_POST['started_at']) ? $_POST['started_at'] : null;
             $upload_data['ended_at'] = isset($_POST['ended_at']) ? $_POST['ended_at'] : null;
+            $upload_data['status'] = isset($_POST['status']) ? $_POST['status'] : null;
+            $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
 
             $upload_data['image'] = null;
             $upload_data['image_header'] = null;
