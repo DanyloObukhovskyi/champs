@@ -1,23 +1,33 @@
 <?php
 
 
-class Game_m extends CI_Model
+class Event_model extends CI_Model
 {
-    private $table = "game";
+    private $table = "event";
 
     public function create($data)
     {
-        return $this->db->insert($this->table, $data);
+        $this->db->insert($this->table, $data);
+
+        return $this->db->insert_id();
     }
 
-    public function get_all()
+    public function update($id, $update)
+    {
+        $this->db->where('id', $id);
+
+        return $this->db->update($this->table, $update);
+    }
+
+    public function get_by_id($id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('id', $id);
 
         $result = $this->db->get();
 
-        return $result->result_array();
+        return $result->result_array()[0] ?? null;
     }
 
     public function get_paginate($is_count, $offset = 0, $length = null)
@@ -35,16 +45,5 @@ class Game_m extends CI_Model
         else {
             return $result->result_array();
         }
-    }
-
-    public function update($update)
-    {
-        $this->db->where('id', $update['id']);
-        $this->db->update($this->table, $update);
-    }
-
-    public function delete($id)
-    {
-        $this->db->delete($this->table, array('id' => $id));
     }
 }

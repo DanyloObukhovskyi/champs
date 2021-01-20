@@ -8,6 +8,7 @@ $config['upload_banner-pic']          = "/var/www/public_html/champsprowebsite/p
 $config['upload_trainers_awards-pic'] = '/var/www/public_html/champsprowebsite/public/uploads/trainers_awards/';
 $config['upload_game-pic']            = "/var/www/public_html/champsprowebsite/public/uploads/games/";
 $config['upload_marketplace_banner-pic'] = "/var/www/public_html/champsprowebsite/public/uploads/marketplace/";
+$config['upload_event-pic']           = "/var/www/public_html/champsprowebsite/public/uploads/images/";
 
 $config['display_article-pic']        = "https://champs.pro/images/temp/news/";
 $config['display_profile-pic']        = "https://champs.pro/uploads/avatars/";
@@ -19,3 +20,4 @@ $config['display_trainers_awards-pic']= "https://champs.pro/uploads/trainers_awa
 $config['display_rank-pic']           = "https://champs.pro/images/ranks/";
 $config['display_game-pic']           = "https://champs.org/uploads/games/";
 $config['display_marketplace_banner-pic'] = "https://champs.pro/uploads/marketplace/";
+$config['display_event-pic']          = "https://champs.pro/uploads/images/";

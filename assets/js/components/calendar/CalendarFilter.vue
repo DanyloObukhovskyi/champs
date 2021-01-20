@@ -4,7 +4,7 @@
             <div class="date-calendar" @click="dateFromView = !dateFromView, dateToView = false">
                 <i class="fas fa-calendar-alt"></i>
             </div>
-            <div>
+            <div @click="dateFromView = !dateFromView, dateToView = false">
                 От {{dateFrom}}
             </div>
             <calendar @date="setFromDate" v-show="dateFromView" :date="dateFrom"/>
@@ -13,7 +13,7 @@
             <div class="date-calendar" @click="dateToView = !dateToView, dateFromView = false">
                 <i class="fas fa-calendar-alt"></i>
             </div>
-            <div>
+            <div @click="dateToView = !dateToView, dateFromView = false">
                 До {{dateTo}}
             </div>
             <calendar @date="setToDate" v-show="dateToView" :date="dateTo"/>

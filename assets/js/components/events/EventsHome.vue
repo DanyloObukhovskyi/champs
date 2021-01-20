@@ -1,7 +1,7 @@
 <template>
     <div class="events-home">
         <div class="events-home-header">
-            <lamp-header title="События" :link="digestPage" link-description="Все события"></lamp-header>
+            <lamp-header title="Дайджест турниров" :link="digestPage" link-description="Все события"></lamp-header>
         </div>
         <div class="d-flex justify-content-center align-items-center p-5" v-if="load">
             <small-loader/>
