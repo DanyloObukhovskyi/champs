@@ -22,21 +22,42 @@
                     </div>
                     <img src="/images/noLogo.png">
                 </div>
-                <div class="score" v-if="showScore && match.teamA !== null" :class="getScoreClass(match.teamA.score, match.teamB.score)">
-                    {{match.teamA.score}}
-                </div>
-                <div class="score" v-else-if="showScore">
-                    0
-                </div>
-                <div class="vs">
-                    <img src="/images/matches/vs.png">
-                </div>
-                <div class="score" v-if="showScore && match.teamB !== null" :class="getScoreClass(match.teamB.score, match.teamA.score)">
-                    {{match.teamB.score}}
-                </div>
-                <div class="score" v-else-if="showScore">
-                    0
-                </div>
+                <template v-if="!isPast">
+                    <div class="score" v-if="showScore && match.teamA !== null" :class="getScoreClass(match.teamA.score, match.teamB.score)">
+                        {{match.teamA.score}}
+                    </div>
+                    <div class="score" v-else-if="showScore">
+                        0
+                    </div>
+                    <div class="vs">
+                        <img src="/images/matches/vs.png">
+                    </div>
+                    <div class="score" v-if="showScore && match.teamB !== null" :class="getScoreClass(match.teamB.score, match.teamA.score)">
+                        {{match.teamB.score}}
+                    </div>
+                    <div class="score" v-else-if="showScore">
+                        0
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="scores">
+                        <div class="score" v-if="showScore && match.teamA !== null" :class="getScoreClass(match.teamA.score, match.teamB.score)">
+                            {{match.teamA.score}}
+                        </div>
+                        <div class="score" v-else-if="showScore">
+                            0
+                        </div>
+                        <div class="vs">
+                            :
+                        </div>
+                        <div class="score" v-if="showScore && match.teamB !== null" :class="getScoreClass(match.teamB.score, match.teamA.score)">
+                            {{match.teamB.score}}
+                        </div>
+                        <div class="score" v-else-if="showScore">
+                            0
+                        </div>
+                    </div>
+                </template>
                 <div class="teamB w-50 d-flex align-items-center" v-if="match.teamB">
                     <img :src="match.teamB.logo">
                     <div class="team-name">
@@ -68,10 +89,17 @@
 
     export default {
         name: "MatchRow",
-        props: [
-            'match',
-            'showScore'
-        ],
+        props: {
+            match: {
+                default: null
+            },
+            showScore: {
+                default: false
+            },
+            isPast: {
+                default: false
+            }
+        },
         computed: {
             matchUrl() {
                 return matchService.getMatchUrl(this.match.match_id)
@@ -145,6 +173,28 @@
         font-style: italic;
         font-size: 2vw;
         font-weight: 600;
+    }
+
+    .scores {
+        display: flex;
+    }
+
+    .scores .score {
+		color: white;
+		padding: 0 .5vw;
+		font-size: 1vw;
+		font-weight: 600;
+		font-style: unset;
+    }
+
+	.scores .vs {
+		color: white;
+		padding: 0;
+		font-size: 1vw;
+		font-weight: 600;
+		font-style: unset;
+		margin-left: -.3vw;
+		margin-right: -.3vw;
     }
 
     .teamA img {

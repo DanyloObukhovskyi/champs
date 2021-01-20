@@ -31,12 +31,18 @@ class TeacherService extends EntityService
      */
     protected $trainerVideoService;
 
+    /**
+     * @var TrainerVideoService
+     */
+    protected $trainerVideosService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
 
         $this->achievementService = new TrainerAchievementService($entityManager);
         $this->trainerVideoService = new TrainerVideoService($entityManager);
+        $this->trainerVideosService = new TrainerVideoService($entityManager);
     }
 
     /**
@@ -57,15 +63,24 @@ class TeacherService extends EntityService
         $availableCosts = [];
 
         /** @var TrainerLessonPrice $cost */
-        foreach ($teacher->getCosts() as $cost) {
-            if ($cost->getIsActive()) {
-                $availableCosts[] = $cost;
+        foreach ($teacher->getCosts() as $cost){
+            if($cost->getIsActive()){
+                $availableCosts[] = $cost->jsonSerialize();
             }
         }
         $achievements = $this->entityManager->getRepository(TrainerAchievement::class)
             ->findBy([
                 'trainer' => $teacher
             ]);
+        $achievementsArray = [];
+
+        /** @var TrainerAchievement $achievement */
+        foreach ($achievements as $achievement){
+            $achievementsArray[] = [
+                'tournament' => $achievement->getTournament(),
+                'achievement' => $achievement->getAchievement()
+            ];
+        }
 
         $videos =  $this->entityManager->getRepository(TrainerVideo::class)
             ->findBy([
@@ -80,8 +95,8 @@ class TeacherService extends EntityService
             'awards' => $teacher->getAwards(),
             'globalElite' => $teacher->getGlobalElite(),
             'costs' => $availableCosts,
-            'achievements' => $achievements,
-            'videos' => $videos
+            'achievements' => $achievementsArray,
+            'videos' =>  $this->trainerVideosService->decorator($videos)
         ];
     }
 

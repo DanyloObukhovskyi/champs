@@ -38,6 +38,22 @@
 			?>
 			<i class="input-icon icon icon-search"></i>
 		</div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation"
+                class="<?php echo 'all' === $price_type ? 'active': ''?>">
+                <a href="<?php echo base_url("c-admin/trainers/all/page/1"); ?>">
+                    Все
+                </a>
+            </li>
+            <?php foreach ($prices as $type => $label):?>
+            <li role="presentation"
+                class="<?php echo $type === $price_type ? 'active': ''?>">
+                <a href="<?php echo base_url("c-admin/trainers/$type/page/1"); ?>">
+                    <?php echo $label?>
+                </a>
+            </li>
+            <?php endforeach;?>
+        </ul>
 		<div class="relative">
 			<table class="new-table">
 				<thead>

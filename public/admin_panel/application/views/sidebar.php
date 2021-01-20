@@ -9,7 +9,7 @@
         <a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a>
     </li>
     <li class="<?php echo 'trainers' === $activePath ? 'active': ''?>">
-        <a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a>
+        <a href="<?php echo base_url('c-admin/trainers/all/page/1'); ?>">Тренера</a>
     </li>
     <li class="<?php echo 'payments' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a>
