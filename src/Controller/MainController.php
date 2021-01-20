@@ -10,11 +10,13 @@ use App\Service\Event\EventService;
 use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
 use App\Service\RatingPersonService;
+use App\Service\YouTubeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class MainController extends DefController
 {
@@ -28,6 +30,8 @@ class MainController extends DefController
 
     public $ratingPersonService;
 
+    public $youTubeService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -37,6 +41,7 @@ class MainController extends DefController
 
         $this->eventService = new EventService($entityManager);
         $this->ratingPersonService = new RatingPersonService($entityManager);
+        $this->youTubeService = new YouTubeService();
     }
 
     /**
@@ -177,55 +182,23 @@ class MainController extends DefController
     /**
      * @Route("/ru/main/video/news")
      */
-    public function getVideoNews()
+    public function getVideoNews(TranslatorInterface $translator)
     {
-        $livesItems = [
-            [
-                'id' => 1,
-                'video_id' => "Nz3_Vg5GBio",
-                'video_type' => 0,
-                'logo' => "",
-                'title' => "ТОП 5 мобильных игр | Champs | Hino",
-            ],
-            [
-                'id' => 2,
-                'video_id' => "1NnA3hbwqRY",
-                'video_type' => 0,
-                'logo' => "",
-                'title' => "ММОшим / Champs / ModirDred",
-            ],
-            [
-                'id' => 3,
-                'video_id' => "Lmz9itL7sqs",
-                'video_type' => 0,
-                'logo' => "",
-                'title' => "Новости недели / Hino x ModirDred / Champs",
-            ],
-            [
-                'id' => 4,
-                'video_id' => "cwd6zSjKEW4",
-                'video_type' => 0,
-                'logo' => "",
-                'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
-            ],
-        ];
-        /*
-        * stream - news type - 8
-        * video - news type - 3
-        */
-        $VideoData = $this->entityManager
-            ->getRepository(News::class)
-            ->findBy(['type' => [8, 3]], ['date' => 'DESC'], 10, 0); //8 - stream; 3 - video
-
-        $VideoItems = $this->prepareVideo($VideoData);
-
-        if (count($VideoItems) < 4) {
-            $ij = 4 - (4 - count($VideoItems));
-            for ($ij; $ij < 4; $ij++) {
-                $VideoItems[$ij] = $livesItems[$ij];
-            }
+        try {
+            $videos = $this->youTubeService->getVideoList(10);
+        } catch (\Exception $e) {
+            $videos = [];
         }
-        return $this->json($VideoItems);
+        $parseVideos = [];
+
+        foreach ($videos as $video) {
+            $month = $translator->trans($video['date']->format('F'));
+            $date = $video['date']->format('d ') . $month . $video['date']->format(' Y');
+
+            $video['date'] = $date;
+            $parseVideos[] = $video;
+        }
+        return $this->json($parseVideos);
     }
 
     /**

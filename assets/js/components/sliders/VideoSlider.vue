@@ -5,11 +5,12 @@
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                     <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
-                        <a target="_blank" :href="'https://www.youtube.com/watch?v=' + video.video_id">
-                            <img :src="video.video_id ? getVideoLogo(video.video_id): 'images/temp/news/' + video.logo"
-                                 class="logo videoBox"
-                                 alt="Video"/>
-                        </a>
+                        <iframe :src="'https://www.youtube.com/embed/' + video.videoId"
+                                class="logo videoBox"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
                     </div>
                     <div class="title">
                         {{video.title}}
@@ -33,6 +34,7 @@
     import LampHeader from "../helpers/LampHeader";
     import 'vue-slick-carousel/dist/vue-slick-carousel.css'
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+    import CabinetService from "../../services/CabinetService";
 
     export default {
         name: "VideoSlider",
@@ -56,9 +58,9 @@
         },
         methods: {
             getVideoNews() {
-                axios.post('/ru/main/video/news')
-                    .then(({data}) => {
-                        this.videos = data;
+                CabinetService.getVideos()
+                    .then(videos => {
+                        this.videos = videos;
                     })
             },
             getVideoLogo(videoId) {
@@ -95,6 +97,11 @@
         overflow: hidden;
         max-height: 14vw;
         position: relative;
+    }
+
+	.video-slider .slider-body .carousel-item .preview iframe {
+		width: 25vw;
+		height: 15vw;
     }
 
     .video-slider .slider-body .carousel-item .preview::after {
