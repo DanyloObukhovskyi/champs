@@ -108,11 +108,15 @@
                 this.filters[name] = value;
             },
             getTrainers() {
-                if (!this.load){
+                if (!this.load && !this.loadAllTrainers){
                     this.load = true;
 
                     MarketplaceService.getTrainers(this.game, this.trainers.length,  this.filters)
                         .then(data => {
+                            if (data.trainers.length === 0)
+                            {
+                                this.loadAllTrainers = true;
+                            }
                             for (let trainer of data.trainers){
                                 const searchTrainer = this.trainers.find(t => t.id === trainer.id)
                                 if (!searchTrainer){

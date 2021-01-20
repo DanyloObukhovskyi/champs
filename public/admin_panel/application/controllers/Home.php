@@ -20,7 +20,7 @@
 				redirect('login/auth');
 				die();
 			}
-			$this->load->model(['users_model', 'setting_model']);
+			$this->load->model(['users_model', 'setting_model', 'trainer_lesson_price_m']);
 			$this->user_capabilities = $this->config->item('user_capabilities');
 		}
 		
@@ -253,7 +253,9 @@
 			}
 		}
 
-		public function trainers($page = 0) {
+		public function trainers($type = 'individual', $page = 0) {
+
+		    $trainingType = $type;
 			$current_u_can = $this->users_model->get_capabilities($this->UserID);
 			if(isset($current_u_can[0]["roles"])) {
 				$current_u_can = json_decode($current_u_can[0]["roles"]);
@@ -290,7 +292,7 @@
 				}
 			
 				$offset = $this->post_per_page * $page;
-				$posts_count = $this->trainers_model->get_all_trainers($where, true);
+				$posts_count = $this->trainers_model->get_all_trainers($where, $trainingType, true);
 			
 				$config = $this->config->item('pagination');
 				$config['base_url'] = site_url('c-admin/posts/page/');
@@ -311,7 +313,7 @@
 				$data['sort_email'] = isset($sort['email']) ? $sort['email'] : '';
 				$data['sort_type'] = isset($sort['roles']) ? $sort['roles'] : '';
 //			    $sort = array_merge(array('id' => 'ASC'), $sort);
-				$data['users'] = $this->trainers_model->get_all_trainers($where, false, $sort, array($offset, $this->post_per_page), true);
+				$data['users'] = $this->trainers_model->get_all_trainers($where, $trainingType, false, $sort, array($offset, $this->post_per_page), true);
 
 			
 				foreach($data['users'] as $key =>&$user_data) {
@@ -322,6 +324,9 @@
 //			    $data['users'] = $users;
 				$data['current_u_can'] = $current_u_can;
 				$data['imgs_url'] = $this->config->item('display_trainers-pic');
+				$data['prices'] = Trainer_lesson_price_m::PRICE_TYPES;
+				$data['price_type'] = $type;
+
 				$data['output'] = $this->load->view('home/trainers', $data, true);
 				$this->load->view('layout/home', $data);
 			} else {

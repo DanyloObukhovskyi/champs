@@ -87,14 +87,12 @@
         font-size: 1vw;
     }
     .teams-filter{
-        display: flex;
-        margin-top: 1vw;
-        margin-left: -.5vw;
-        margin-left: .4vw;
-        margin-right: -.5vw;
+		display: flex;
+		margin-top: 1vw;
+		margin-right: .5vw;
     }
     .filter-icon{
-        width: 4vw;
+        width: 3vw;
         cursor: pointer;
         height: 3vw;
         background: rgb(255, 183, 73);

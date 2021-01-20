@@ -309,7 +309,7 @@
                     <label class="label" for="">Достижения</label>
                     <div class="achievements">
                         <?php foreach ($achievements as $key => $achievement): ?>
-                            <div class="achievement_input" id="achievement_<?php echo $key; ?>">
+                            <div class="achievement_input" id="achievement_<?php echo $key; ?>" data-key="<?php echo $key + 1; ?>">
                                 <div class="achievement_input_wrapper">
                                     <div class="col-item">
                                         <label class="label" for="">Событие</label>

@@ -374,8 +374,6 @@ class Edit_c extends CI_Controller
 
     public function trainer($id = 0, $user_id = 0)
     {
-        $game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
-
         $current_u_can = $this->users_model->get_capabilities($this->UserID);
         if (isset($current_u_can[0]["roles"])) {
             $current_u_can = json_decode($current_u_can[0]["roles"]);
@@ -528,12 +526,13 @@ class Edit_c extends CI_Controller
         $sort = array();
         $offset = 0;
         $where = array("id" => $id);
-        $data['user_info'] = $this->trainers_model->get_all_trainers($where, false, $sort, array($offset, 1), true, true);
+        $data['user_info'] = $this->trainers_model->get_all_trainers($where, 'all', false, $sort, array($offset, 1), true, true);
 
         if (empty($data["user_info"])) {
             redirect($_SERVER["HTTP_REFERER"]);
             die();
         }
+
         $trainer = $this->trainers_model->check_teacher_data($id);
         $trainer = $trainer[0] ?? null;
 

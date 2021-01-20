@@ -6,17 +6,20 @@
                           :types="matchTypes"
                           :selected="selectMatchesType">
             </tense-select>
-            <filters @setFilter="setFilter" v-bind="filters"/>
+            <div class="d-flex justify-content-between" style="margin-left: .5vw;">
+                <filters @setFilter="setFilter" v-bind="filters"/>
+            </div>
         </div>
         <div class="matches-body">
             <div v-for="day in matches">
                 <div class="date">
-                    {{day.date}}
+                    {{ day.date }}
                 </div>
                 <match-row
                         :key="index"
                         :show-score="match.isLive || selectMatchesType === 'past'"
                         :match="match"
+                        :is-past="selectMatchesType === 'past'"
                         v-for="(match, index) in day.items">
                 </match-row>
             </div>
@@ -74,15 +77,23 @@
                 this.getMatches();
             },
             'filters.dateFrom': function () {
+                this.page = 1;
+                this.matches = [];
                 this.getMatches();
             },
             'filters.dateTo': function () {
+                this.page = 1;
+                this.matches = [];
                 this.getMatches();
             },
             'filters.teamA': function () {
+                this.page = 1;
+                this.matches = [];
                 this.getMatches();
             },
             'filters.teamB': function () {
+                this.page = 1;
+                this.matches = [];
                 this.getMatches();
             },
         },
@@ -96,22 +107,22 @@
         },
         methods: {
             getMatches() {
-                if (!this.load && !this.isLoadAll){
+                if (!this.load && !this.isLoadAll) {
                     this.load = true;
                     matchService.getMatches(this.selectMatchesType, this.page, this.filters)
                         .then(data => {
                             this.counts = data.counts;
 
-                            for (let key in data.matches){
+                            for (let key in data.matches) {
                                 const matches = data.matches[key];
 
                                 const matchesDay = this.matches.find(
                                     match => match.date === matches.date
                                 )
-                                if (matchesDay !== undefined){
+                                if (matchesDay !== undefined) {
                                     this.matches = this.matches.map(match => {
-                                        if (match.date === matches.date){
-                                            for(let item of matches.items){
+                                        if (match.date === matches.date) {
+                                            for (let item of matches.items) {
                                                 match.items.push(item)
                                             }
                                         }
@@ -147,7 +158,7 @@
             this.getMatches();
             this.scrollEventTrigger();
 
-            if (this.type && this.matchTypes[this.type]){
+            if (this.type && this.matchTypes[this.type]) {
                 this.selectMatchesType = this.type;
             }
         }
@@ -155,25 +166,25 @@
 </script>
 
 <style scoped>
-    .matches {
-        margin-bottom: 4vw;
-    }
+	.matches {
+		margin-bottom: 4vw;
+	}
 
-    .matches .title h3 {
-        font-size: 2vw;
-        text-align: center;
-        color: black;
-    }
+	.matches .title h3 {
+		font-size: 2vw;
+		text-align: center;
+		color: black;
+	}
 
-    .dark .matches .title h3 {
-        color: white;
-    }
+	.dark .matches .title h3 {
+		color: white;
+	}
 
-    .matches .matches-body .date {
-        font-size: 2vw;
-    }
+	.matches .matches-body .date {
+		font-size: 2vw;
+	}
 
-    .dark .matches .matches-body .date {
-        color: white;
-    }
+	.dark .matches .matches-body .date {
+		color: white;
+	}
 </style>

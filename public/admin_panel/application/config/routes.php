@@ -74,7 +74,7 @@ $route['c-admin/user/delete/(:num)/(:num)'] = 'delete_c/user/$1/$2';
 $route['c-admin/user/add/(:num)'] = 'add_c/user/$1';
 
 //trainers' pages
-$route['c-admin/trainers/page/(:num)'] = 'home/trainers/$1';
+$route['c-admin/trainers/(:any)/page/(:num)'] = 'home/trainers/$1/$2';
 $route['c-admin/trainer/edit/(:num)/(:num)'] = 'edit_c/trainer/$1/$2';
 $route['c-admin/trainer/delete/(:num)/(:num)'] = 'delete_c/trainer/$1/$2';
 $route['c-admin/trainer/add/(:num)'] = 'add_c/trainer/$1';
