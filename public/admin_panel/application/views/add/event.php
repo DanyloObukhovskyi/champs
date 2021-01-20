@@ -93,6 +93,30 @@
                                placeholder="select date">
                     </div>
                 </div>
+                <label class="label" for="">Статус</label>
+                <select name="status" style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($statuses as $key => $status): ?>
+                        <?php if ($event['status'] === $key): ?>
+                            <option selected value="<?php echo $key ?>"><?php echo $status ?></option>
+                        <?php else: ?>
+                            <option value="<?php echo $key ?>"><?php echo $status ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+                <label class="label" for="">Игра</label>
+                <select name="game_id" style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <?php if ($event['game_id'] === $game['id']): ?>
+                            <option selected value="<?php echo $game['id'] ?>"><?php echo $game['name'] ?></option>
+                        <?php else: ?>
+                            <option value="<?php echo $game['id'] ?>"><?php echo $game['name'] ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
                 <div>
                     <div class="change-editor-edit-ban file-input" style="display: block;">
                         <div class="image_preview">

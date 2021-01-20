@@ -5,6 +5,15 @@ class Event_model extends CI_Model
 {
     private $table = "event";
 
+    const STATUS_ALL = 'all';
+
+    const STATUS_PRO = 'pro';
+
+    const STATUSES = [
+        self::STATUS_PRO => 'PRO',
+        self::STATUS_ALL => 'ВСЕ'
+    ];
+
     public function create($data)
     {
         $this->db->insert($this->table, $data);
@@ -41,8 +50,7 @@ class Event_model extends CI_Model
         $result = $this->db->get();
         if ($is_count) {
             return $result->num_rows();
-        }
-        else {
+        } else {
             return $result->result_array();
         }
     }

@@ -15,6 +15,10 @@ use Symfony\Component\Validator\Constraints\DateTime;
  */
 class Event implements \JsonSerializable
 {
+    const STATUS_ALL = 'all';
+
+    const STATUS_PRO = 'pro';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -111,6 +115,16 @@ class Event implements \JsonSerializable
      * @ORM\OneToMany(targetEntity=EventBracket::class, mappedBy="event")
      */
     private $tournamentBrackets;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Game::class)
+     */
+    private $game;
 
     public function __construct()
     {
@@ -364,5 +378,37 @@ class Event implements \JsonSerializable
             'location' => $this->getLocation(),
             'flag' => $this->getFlagIcon(),
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param mixed $game
+     */
+    public function setGame($game): void
+    {
+        $this->game = $game;
     }
 }
