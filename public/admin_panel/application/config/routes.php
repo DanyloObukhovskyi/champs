@@ -130,3 +130,10 @@ $route['c-admin/marketplace/banners/delete/(:num)'] = 'marketplace_c/delete/$1';
 $route['c-admin/trainers/transactions'] = 'trainer_transaction_c/index';
 $route['c-admin/ajax/trainers/transactions'] = 'trainer_transaction_c/ajax';
 $route['c-admin/ajax/trainers/transactions/save'] = 'trainer_transaction_c/save';
+
+//events
+$route['c-admin/events'] = 'event_c/index';
+$route['c-admin/ajax/events'] = 'event_c/ajax';
+$route['c-admin/events/create'] = 'event_c/create';
+$route['c-admin/events/edit/(:num)'] = 'event_c/edit/$1';
+$route['c-admin/events/delete/(:num)'] = 'event_c/delete/$1';

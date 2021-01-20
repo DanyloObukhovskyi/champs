@@ -38,4 +38,7 @@
     <li class="<?php echo 'trainers/transactions' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/trainers/transactions'); ?>">Выплаты тренерам</a>
     </li>
+    <li class="<?php echo 'events' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/events'); ?>">События</a>
+    </li>
 </ul>

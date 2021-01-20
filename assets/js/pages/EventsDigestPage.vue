@@ -262,8 +262,8 @@
             setPage(page) {
                 this.page = page;
             },
-            setFilter(data) {
-                this.filters[data.filter] = data.value;
+            setFilter(filter, value) {
+                this.filters[filter] = value;
             },
         },
         mounted() {
