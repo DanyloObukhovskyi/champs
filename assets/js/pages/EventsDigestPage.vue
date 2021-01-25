@@ -97,7 +97,7 @@
                     :click-handler="setPage"
                     prev-text="Prev"
                     next-text="Next"
-                    container-class="matches-pagination">
+                    container-class="pagination">
             </paginate>
         </div>
     </div>
@@ -279,6 +279,8 @@
 </script>
 
 <style scoped>
+	@import '../../css/pagination.css';
+
     .events-digest .banners {
         margin-bottom: 1vw;
     }

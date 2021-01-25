@@ -11,7 +11,11 @@
                             <input type="text" placeholder="Событие" v-model="trainerAchievement.tournament">
                         </div>
                         <div class="input">
-                            <input type="text" placeholder="Место\Достижение" v-model="trainerAchievement.achievement">
+                            <input type="text"
+                                   placeholder="Место\Достижение"
+                                   v-model="trainerAchievement.achievement"
+                                   title-max-width="500"
+                                   v-title="'Введите числовой формат места или часть в которую вы пробились, если вы заняли место на турнире, то напишите ваше место в числовом формате и слово место.'">
                             <div class="buttons-group">
                                 <button class="plus" @click="removeAchievement(trainerAchievement)">
                                     <img src="/images/minus.png">

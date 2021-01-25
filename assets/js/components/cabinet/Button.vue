@@ -107,12 +107,20 @@
 	}
 
 	.more-detail {
-	  transition: all .3s ease-in-out;
+	  transition: all .5s ease-in-out;
 	  background-color: #aeaeae;
 	  display: flex;
 	  justify-content: center;
 	  align-items: center;
-	  width: 25%;
+	  width: 16%;
+	  height: 2.1vw;
+	  margin-top: .01vw;
+	  margin-left: -.1vw;
+
+	  i {
+		color: white;
+		font-size: .7vw;
+	  }
 	}
 
 	&:hover {
@@ -156,8 +164,20 @@
 	  }
 
 	  .more-detail {
-		transition: all .3s ease-in-out;
+		transition: all .5s ease-in-out;
 		background-color: #171a1b;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 16%;
+		height: 2.1vw;
+		margin-top: .01vw;
+		margin-left: -.1vw;
+
+		i {
+		  color: #555a5c;
+		  font-size: .7vw;
+		}
 	  }
 
 	  &:hover {

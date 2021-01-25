@@ -5,7 +5,7 @@
                 <div class="preview">
                     <iframe allowfullscreen
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            :src="'https://www.youtube.com/embed/' + video"
+                            :src="'https://www.youtube.com/embed/' + video.videoId"
                             frameborder="0">
                     </iframe>
                 </div>

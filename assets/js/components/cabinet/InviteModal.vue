@@ -22,28 +22,28 @@
                             Монеты будут зачислены на ваш аккаунт
                         </p>
                         <p>
-                            За каждого привлеченного друга при условии, что он перейдет
+                            За каждого привлеченного друга при условии,
                         </p>
                         <p>
-                            по ссылке и вступит в группу ВКонтакте.
+                            что он перейдет по ссылке и вступит в группу ВКонтакте.
                         </p>
                     </div>
                     <div class="invite-link">
                         <div class="input-wrapper">
                             <div class="input">
-                                <input type="text" id="invite-link" :value="user.invite">
+                                <input type="text" id="invite-link" :value="user !== null ? user.invite : ''">
                             </div>
                             <button @click="addToClipboard" class="btn-copy">
-                                Скопировать ссылку
+                                Копировать ссылку
                             </button>
-                        </div>
-                        <div class="vk-wrapper">
-                            <img src="/images/cabinet/vk.png" alt="">
                         </div>
                     </div>
                     <div class="description-bottom">
                         <i class="far fa-clock" aria-hidden="true"></i>
                         После выполнения данных действий, отпишитесь в лс модератору группы ВК
+                        <a :href="vkLink" target="_blank" class="vk-wrapper">
+                            <img src="/images/cabinet/vk.png">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -53,9 +53,15 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import CabinetService from "../../services/CabinetService";
 
     export default {
         name: "InviteModal",
+        data() {
+            return {
+                vkLink: null
+            }
+        },
         computed: {
             ...mapGetters([
                 'user'
@@ -68,6 +74,15 @@
                 copyText.select();
                 document.execCommand("copy");
             },
+            getVKLink() {
+                CabinetService.getVkInviteLink()
+                    .then(link => {
+                        this.vkLink = link;
+                    })
+            }
+        },
+        mounted() {
+            this.getVKLink();
         }
     }
 </script>
@@ -105,7 +120,6 @@
 			.coin-wrapper {
 			  img {
 				width: 6vw;
-				margin-right: 1.5vw;
 			  }
 			}
 		  }
@@ -122,13 +136,17 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-end;
+            width: 100%;
+			margin-top: 1.5vw;
 
 			.input-wrapper {
 			  display: flex;
 			  margin-bottom: .5vw;
+			  justify-content: space-between;
+			  width: 100%;
 
 			  input {
-				width: 8.5vw;
+				width: 16vw;
 				height: 1.8vw;
 				border: .1vw solid #ffbb96;
 				border-radius: .2vw;
@@ -137,22 +155,6 @@
 				appearance: none;
 				outline: unset;
 				padding-left: .3vw;
-			  }
-			}
-
-			.vk-wrapper {
-			  transition: width .5s ease-in-out;
-			  height: 4.1vw;
-
-			  img {
-				width: 4vw;
-				margin-right: 2.4vw;
-
-				&:hover {
-				  width: 4.2vw;
-				  margin-right: 2.3vw;
-				  margin-bottom: -.1vw;
-				}
 			  }
 			}
 
@@ -170,6 +172,11 @@
 			  display: flex;
 			  align-items: center;
 			  justify-content: center;
+              transition: all .2s ease;
+
+              &:hover {
+				background: #ff6f00;
+              }
 			}
 		  }
 
@@ -178,6 +185,24 @@
 			color: #9d9fa0;
 			margin-bottom: .5vw;
 			margin-top: .35vw;
+			display: flex;
+			align-items: center;
+
+			.vk-wrapper {
+			  height: 1.6vw;
+
+			  img {
+				width: 1.5vw;
+				margin-left: .2vw;
+                cursor: pointer;
+				transition: width .1s ease-in-out;
+
+				&:hover {
+				  width: 1.55vw;
+				  margin-bottom: -.1vw;
+				}
+			  }
+			}
 		  }
 		}
 	  }

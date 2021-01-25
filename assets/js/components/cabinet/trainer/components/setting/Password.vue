@@ -108,7 +108,7 @@
 
   .password-body {
 	margin-top: .5vw;
-	padding-right: 4.5vw;
+	padding-right: 2.5vw;
 
 	.form-group {
 	  padding: 0;

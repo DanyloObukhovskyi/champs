@@ -76,7 +76,7 @@
 
 <style scoped lang="scss">
   .discord-setting {
-	max-height: 15vw;
+	height: 13vw;
 	padding-left: 2.5vw;
 	padding-right: 1.5vw;
   }
