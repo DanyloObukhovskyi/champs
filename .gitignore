@@ -32,5 +32,6 @@
 ###> Encore
 /public/build/*
 yarn.lock
+package-lock.json
 ###< Encore
 
