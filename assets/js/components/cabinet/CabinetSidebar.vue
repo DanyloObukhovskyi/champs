@@ -1,5 +1,5 @@
 <template>
-    <div class="cabinet-sidebar" v-if="user !== null">
+    <div class="cabinet-sidebar" v-if="user !== null" :class="{'fixed': isFixed}" :style="{top: `${marginTop}px`}">
         <div class="page" v-for="page in pages">
             <router-link
                     :to="getPageLink(page.code)">
@@ -86,7 +86,9 @@
         data() {
             return {
                 userPages: USER_PAGES,
-                trainingPages: TRAINING_PAGES
+                trainingPages: TRAINING_PAGES,
+                isFixed: false,
+                marginTop: 0
             }
         },
         computed: {
@@ -120,6 +122,7 @@
   @import '../../../css/animations.css';
 
   #layout .cabinet-sidebar {
+	width: 11.5vw;
 	margin-top: 1vw;
 	height: 100%;
 	background-color: #eff0f0;
@@ -129,6 +132,10 @@
 	-webkit-animation: animation-translate-left 1500ms linear both;
 	animation: animation-translate-left 1500ms linear both;
 	min-height: 5vw;
+
+    &.fixed {
+      position: fixed;
+    }
 
 	.page {
 	  margin-bottom: .8vw;

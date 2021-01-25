@@ -4,7 +4,7 @@
             Расписание
         </div>
         <div class="timetable-wrapper">
-            <div class="timetable-body">
+            <div class="timetable-body" v-if="lessons && lessons.length > 0">
                 <div class="lessons-row" v-for="(dayLessons, day) in lessons">
                     <div class="date-day">
                         {{ day }}
@@ -16,6 +16,11 @@
                             :is-trainer-cabinet-small="true"
                             :is-past="false">
                     </lesson-row>
+                </div>
+            </div>
+            <div class="timetable-body d-flex justify-content-center align-items-center" v-else>
+                <div class="sorry">
+                    Ксожалению на данный момент у вас нет тренировок в рассписание.
                 </div>
             </div>
             <div class="show-more">
@@ -78,6 +83,12 @@
 		  padding: .5vw;
 		}
 	  }
+
+      .sorry {
+		margin-right: 2vw;
+		color: #9d9fa0;
+		font-size: 1vw;
+      }
 	}
 
 	.show-more {
@@ -110,14 +121,14 @@
   }
 
   .dark {
-    .timetable {
+	.timetable {
 	  .timetable-body {
-		background: rgb(61,65,70);
-		background: -moz-linear-gradient(90deg, rgba(61,65,70,1) 0%, rgba(37,40,42,1) 100%);
-		background: -webkit-linear-gradient(90deg, rgba(61,65,70,1) 0%, rgba(37,40,42,1) 100%);
-		background: linear-gradient(90deg, rgba(61,65,70,1) 0%, rgba(37,40,42,1) 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d4146",endColorstr="#25282a",GradientType=1);
+		background: rgb(61, 65, 70);
+		background: -moz-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 100%);
+		background: -webkit-linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 100%);
+		background: linear-gradient(90deg, rgba(61, 65, 70, 1) 0%, rgba(37, 40, 42, 1) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d4146", endColorstr="#25282a", GradientType=1);
 	  }
-    }
+	}
   }
 </style>

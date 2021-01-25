@@ -331,7 +331,7 @@ class LessonsController extends AbstractController
 
         if (isset($user) and $user->getIsTrainer()) {
             $lessonsEntities = $this->lessonService->getFutureByTeacher($user, 3);
-            $lessons = $this->lessonService->decorateLessons($lessonsEntities, $user, null, $translator);
+            $lessons = $this->decorateLessons($lessonsEntities, $user, null, $translator);
 
             $date = Carbon::now();
             $date->setDay(1);

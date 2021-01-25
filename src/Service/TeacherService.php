@@ -78,7 +78,8 @@ class TeacherService extends EntityService
         foreach ($achievements as $achievement){
             $achievementsArray[] = [
                 'tournament' => $achievement->getTournament(),
-                'achievement' => $achievement->getAchievement()
+                'achievement' => $achievement->getAchievement(),
+                'show' => $achievement->getShow()
             ];
         }
 

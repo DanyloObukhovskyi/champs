@@ -36,6 +36,11 @@
                         <template v-slot:img>
                             <img src="/images/cabinet/inviteIcon.png">
                         </template>
+                        <template v-slot:more-detail>
+                            <img src="/images/events/check.png"
+                                 v-if="user.isTrainer && (lesson.trainerNotice !== null && lesson.trainerNotice !== '') ">
+                            <i class="fas fa-chevron-down" v-else></i>
+                        </template>
                     </cabinet-button>
                     <cabinet-button text-first="Занятие окончено?"
                                     @click="setConfirmed"
@@ -50,6 +55,10 @@
                     <cabinet-button text-first="Подробнее" @click="toggleMoreDetail" >
                         <template v-slot:img>
                             <img src="/images/cabinet/inviteIcon.png">
+                        </template>
+                        <template v-slot:more-detail>
+                            <img src="/images/events/check.png" v-if="user.isTrainer && lesson.trainerNotice !== null">
+                            <i class="fas fa-chevron-down" v-else></i>
                         </template>
                     </cabinet-button>
                     <cabinet-button
@@ -246,11 +255,16 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 45%;
 		max-width: 70%;
 
 		.button {
 		  margin-right: 1vw;
+
+          .more-detail {
+            img {
+			  width: 1vw;
+            }
+          }
 		}
 	  }
 	}

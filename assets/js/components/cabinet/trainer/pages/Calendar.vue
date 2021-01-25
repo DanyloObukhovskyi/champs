@@ -7,6 +7,9 @@
             <div class="timetables lessons" style="opacity: 1;">
                 <div class="controll mt-3">
                     <div class="dates">
+                        <div class="arrow" @click="setDate(-7)">
+                            <i class="fas fa-caret-left"></i>
+                        </div>
                         <div class="dt" v-if="week.length > 0">
                             <span>
                                 {{ weekStart }}
@@ -15,9 +18,6 @@
                             <span>
                                 {{ weekEnd }}
                             </span>
-                        </div>
-                        <div class="arrow" @click="setDate(-7)">
-                            <i class="fas fa-caret-left"></i>
                         </div>
                         <div class="arrow" @click="setDate(7)">
                             <i class="fas fa-caret-right"></i>
@@ -308,7 +308,6 @@
 	.lessons .controll .dates .arrow {
 		width: 1.3vw;
 		height: 1.3vw;
-		margin-left: 1vw;
 		display: flex;
 		align-items: center;
 		justify-content: center;

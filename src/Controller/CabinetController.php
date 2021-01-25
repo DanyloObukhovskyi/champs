@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\GameRank;
 use App\Entity\Lessons;
 use App\Entity\Schedule;
+use App\Entity\Setting;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\Game\GameRankService;
 use App\Service\LessonService;
 use App\Service\ScheduleService;
+use App\Service\Setting\SettingService;
 use App\Service\TeacherService;
 use App\Service\TimeZoneService;
 use App\Service\UserService;
@@ -86,9 +88,14 @@ class CabinetController extends AbstractController
      */
     public $validator;
 
+    /**
+     * @var SettingService ]
+     */
+    public $settingService;
+
     public const CABINET_TYPE_TRAINER = 'trainer';
 
-    public const CABINET_TYPE_USER = 'trainer';
+    public const CABINET_TYPE_USER = 'user';
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -113,6 +120,7 @@ class CabinetController extends AbstractController
         $this->gameRankService = new GameRankService($entityManager);
 
         $this->scheduleService = new ScheduleService($entityManager);
+        $this->settingService = new SettingService($entityManager);
     }
 
 
@@ -458,5 +466,21 @@ class CabinetController extends AbstractController
             $schedule = $this->scheduleService->createDay($trainer->getId(), $date);
         }
         return $schedule;
+    }
+
+    /**
+     * @Route("/cabinet/vk/invite/link")
+     */
+    public function getVkInviteLink()
+    {
+
+        /** @var Setting|null $setting */
+        $setting = $this->settingService->get('inviteVkLink');
+
+        $vkLink = null;
+        if (isset($setting)) {
+            $vkLink = $setting->getValue();
+        }
+        return $this->json($vkLink);
     }
 }
