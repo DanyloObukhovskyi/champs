@@ -35,6 +35,9 @@
     <li class="<?php echo 'marketplace/banners' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/marketplace/banners'); ?>">Банеры маркетплейса</a>
     </li>
+    <li class="<?php echo 'trainers/banners' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/trainers/banners'); ?>">Банеры тренера</a>
+    </li>
     <li class="<?php echo 'trainers/transactions' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/trainers/transactions'); ?>">Выплаты тренерам</a>
     </li>

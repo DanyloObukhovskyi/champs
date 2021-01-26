@@ -103,7 +103,7 @@
                     })
             },
             updateReviews() {
-                MarketplaceService.getTrainerReviews(this.trainer.id)
+                MarketplaceService.getTrainerReviews(this.trainerId)
                     .then(data => {
                         this.trainer.reviews = data.reviews;
                         this.trainer.reviewCount = data.reviewCount;
@@ -112,7 +112,7 @@
                     })
             },
             getBanner() {
-                MarketplaceService.getTrainerBanner()
+                MarketplaceService.getTrainerBanner(this.trainerId)
                     .then(data => {
                         this.banner = data;
                     })

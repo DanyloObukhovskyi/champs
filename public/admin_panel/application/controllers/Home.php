@@ -585,19 +585,6 @@
             }
             $data['social'] = $this->setting_model->get_social();
             $data['settings'] = $settings;
-
-            $data['marketplaceBanner']['image'] = $this->setting_model->get_by_key('marketplaceBanner')[0] ?? null;
-            $data['marketplaceBanner']['text'] = $this->setting_model->get_by_key('marketplaceBannerText')[0] ?? null;
-            $data['marketplaceBanner']['title'] = $this->setting_model->get_by_key('marketplaceBannerTitle')[0] ?? null;
-            $data['marketplaceBanner']['links'] = [];
-
-            foreach (Setting_model::MARKETPLACE_BANNER_LINKS as $link){
-                $bannerLink =  $this->setting_model->get_by_key($link)[0] ?? null;
-
-                if (isset($bannerLink)){
-                    $data['marketplaceBanner']['links'][] = $bannerLink;
-                }
-            }
             $data['images_path'] = $this->config->item('display_banner-pic');
             $data['current_u_can'] = $current_u_can;
             $data['output'] = $this->load->view('home/settings', $data, true);

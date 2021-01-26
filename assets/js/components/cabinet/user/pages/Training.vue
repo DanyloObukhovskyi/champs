@@ -6,18 +6,16 @@
         <div class="loader-wrapper" v-if="load">
             <small-loader/>
         </div>
-        <div class="timetable-wrapper">
+        <div class="timetable-wrapper" v-if="!load && showFuture">
             <timetable
-                    v-if="!load && showFuture"
                     :lessons="lessons.future">
                 <template v-slot:title>
                     Расписание
                 </template>
             </timetable>
         </div>
-        <div class="timetable-wrapper">
+        <div class="timetable-wrapper" v-if="!load && showPast">
             <timetable
-                    v-if="!load && showPast"
                     :lessons="lessons.past"
                     :is-past="true">
                 <template v-slot:title>
@@ -106,9 +104,9 @@
 	padding: 1vw;
 	width: 70vw;
 
-    &:last-child {
-      padding-bottom: 0;
-    }
+	&:last-child {
+	  padding-bottom: 0;
+	}
   }
 
   .dark {

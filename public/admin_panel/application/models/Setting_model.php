@@ -15,19 +15,6 @@ class Setting_model extends CI_Model
         'instagram',
     ];
 
-    public const MARKETPLACE_BANNER = [
-        'marketplaceBanner',
-        'marketplaceBannerTitle',
-        'marketplaceBannerText',
-    ];
-
-    public const MARKETPLACE_BANNER_LINKS = [
-        'marketplaceBannerVk',
-        'marketplaceBannerYoutube',
-        'marketplaceBannerTelegram',
-        'marketplaceBannerTwitch'
-    ];
-
     public const TRAININGS_DESCRIPTION = [
         'trainingIndividualTitle',
         'trainingIndividualText',
@@ -87,9 +74,7 @@ class Setting_model extends CI_Model
         $this->db->where_not_in('key',
             array_merge(
             self::SOCIAL,
-            self::MARKETPLACE_BANNER,
                 self::TRAININGS_DESCRIPTION,
-                self::MARKETPLACE_BANNER_LINKS
             )
         );
 
