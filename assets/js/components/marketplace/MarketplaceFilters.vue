@@ -143,6 +143,7 @@
 		  border: none;
 		  text-indent: .5vw;
 		  background-color: transparent;
+          color: black;
 
 		  &::placeholder {
 			color: black;
