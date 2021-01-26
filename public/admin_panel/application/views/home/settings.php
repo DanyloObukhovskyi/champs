@@ -85,51 +85,6 @@
                     <textarea name="setting[<?php echo $setting['description']['key']?>]"><?php echo $setting['description']['value']?></textarea>
                 </div>
             <?php endforeach;?>
-            <?php if(isset($marketplaceBanner)):?>
-                <h1 class="main-title">Баннер маркетплейса</h1>
-                <label class="label" for=""><?php echo $marketplaceBanner['title']['title']?></label>
-                <div class="input mb-5">
-                    <input type="text"
-                           class="fw-600 input2_txt"
-                           name="setting[<?php echo $marketplaceBanner['title']['key']?>]"
-                           value="<?php echo $marketplaceBanner['title']['value']?>">
-                </div>
-                <?php foreach ($marketplaceBanner['links'] as $link):?>
-                    <label class="label" for=""><?php echo $link['title']?></label>
-                    <div class="input mb-5">
-                        <input type="text"
-                               class="fw-600 input2_txt"
-                               name="setting[<?php echo $link['key']?>]"
-                               value="<?php echo $link['value']?>">
-                    </div>
-                <?php endforeach;?>
-                <label class="label" for=""><?php echo $marketplaceBanner['text']['title']?></label>
-                <div class="text-redactor">
-                    <textarea name="setting[<?php echo $marketplaceBanner['text']['key']?>]"><?php echo $marketplaceBanner['text']['value']?></textarea>
-                </div>
-                <label class="label" for=""><?php echo $marketplaceBanner['image']['title']?></label>
-                <div class="form-group">
-                    <div class="changePass mt-25" style="display: inline-block;">
-                        <div class="changePassBTN mt-5">
-                            <input type="file" name="marketplace_banner" style="opacity: 0"/>
-                            <div class="changePassBTN" style="margin-top: -17px !important;"> загрузить фото
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uploadImgTxT" style="display: none;" id="upload_data">
-                        <div class="txt-orange uploadImgTxT ml-10" id="img_name"></div>
-                        <div class="txt-orange uploadImgTxT  ml-10 rmo_close"></div>
-                    </div>
-                </div>
-                <div class="col-item w-100">
-                    <label class="label" style="font-size: 12px; margin-top: 30px;" for=""><img
-                            style="top: 3px;" class="search-img"
-                            src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
-                    <div class="mb-10 slide-preview" style="display: flex; justify-content: center;">
-                        <img class="preview preview_image" id="marketplace_banner_preview" src="<?php echo $images_path.$marketplaceBanner['image']['value']?>" style="margin: 0;">
-                    </div>
-                </div>
-            <?php endif; ?>
             <div class="flex">
                 <a href="">
                     <button class="btn btn-orange mt-15 mr-10">Сохранить</button>
@@ -144,21 +99,6 @@
     const marketplaceBannerPreview = document.getElementById('marketplace_banner_preview');
 
     $(document).on('DOMContentLoaded', function () {
-        document.querySelector('input[name="marketplace_banner"]').addEventListener('change', function () {
-            if (this.files && this.files[0]) {
-                const url = URL.createObjectURL(this.files[0]);
-
-                if (this.files[0].type != "image/jpg"
-                    && this.files[0].type != "image/jpeg"
-                    && this.files[0].type != "image/svg+xml"
-                    && this.files[0].type != "image/png") {
-                    return;
-                }
-                marketplaceBannerPreview.src = url;
-                marketplaceBannerPreview.style.width = '100%';
-            }
-        });
-
         tinymce.init({
             selector: '.text-redactor textarea',
             plugins: 'save',

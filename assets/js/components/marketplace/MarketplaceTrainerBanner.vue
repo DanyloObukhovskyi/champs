@@ -3,13 +3,13 @@
         <div class="left">
             <div id="banner-description">
                 <div class="title">
-                    {{banner.title.value}}
+                    {{banner.title}}
                 </div>
-                <div class="text" v-html="banner.text.value">
+                <div class="text" v-html="banner.text">
                 </div>
             </div>
             <div class="trainer-social">
-                <a :href="banner.links.vk ? banner.links.vk.value : null">
+                <a :href="banner.links.vk ? banner.links.vk : null">
                     <div class="icon">
                         <img src="/images/marketplace/vk.svg">
                     </div>
@@ -17,7 +17,7 @@
                         CHAMPS_PRO
                     </div>
                 </a>
-                <a :href="banner.links.youtube ? banner.links.youtube.value : null">
+                <a :href="banner.links.youtube ? banner.links.youtube : null">
                     <div class="icon">
                         <img src="/images/marketplace/youtube.svg">
                     </div>
@@ -25,7 +25,7 @@
                         CHAMPSPRO
                     </div>
                 </a>
-                <a :href="banner.links.telegram ? banner.links.telegram.value : null">
+                <a :href="banner.links.telegram ? banner.links.telegram : null">
                     <div class="icon">
                         <img src="/images/marketplace/telegram.svg">
                     </div>
@@ -33,7 +33,7 @@
                         CHAMPS_PRO
                     </div>
                 </a>
-                <a :href="banner.links.twitch ? banner.links.twitch.value : null">
+                <a :href="banner.links.twitch ? banner.links.twitch : null">
                     <div class="icon">
                         <img src="/images/marketplace/twitch.svg">
                     </div>
@@ -59,7 +59,7 @@
                     'background-image': 'url("/images/marketplace/trainerBanner.png")'
                 }
                 if (this.banner !== null) {
-                    style['background-image'] = `url("/uploads/banners/${this.banner.image.value}")`;
+                    style['background-image'] = `url("/uploads/marketplace/${this.banner.img}")`;
                 }
                 return style;
             }

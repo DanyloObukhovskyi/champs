@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Service\Setting\SettingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,8 +19,11 @@ class SettingController extends AbstractController
      */
     public $settingService;
 
+    public $entityManager;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
         $this->settingService = new SettingService($entityManager);
     }
 
@@ -40,21 +44,5 @@ class SettingController extends AbstractController
             ];
         }
         return $this->json($descriptions);
-    }
-
-    /**
-     * @Route("/ajax/setting/trainer/banner", name="setting_trainer_banner")
-     */
-    public function trainerPageBanner()
-    {
-        $banner = [];
-        foreach (SettingService::TRAINER_BANNER_LINKS as $link => $key) {
-            $banner['links'][$link] = $this->settingService->get($key);
-        }
-        $banner['title'] = $this->settingService->get(SettingService::TRAINER_BANNER['title']);
-        $banner['text'] = $this->settingService->get(SettingService::TRAINER_BANNER['text']);
-        $banner['image'] = $this->settingService->get(SettingService::TRAINER_BANNER['image']);
-
-        return $this->json($banner);
     }
 }

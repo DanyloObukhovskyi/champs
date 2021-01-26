@@ -68,8 +68,8 @@ class MarketplaceService extends Service{
         return this.send(`games/banners`)
     }
 
-    getTrainerBanner = () => {
-        return this.send(`ajax/setting/trainer/banner`)
+    getTrainerBanner = (id) => {
+        return this.send(`ajax/setting/trainer/banner/${id}`)
     }
 }
 

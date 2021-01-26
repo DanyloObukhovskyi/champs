@@ -92,6 +92,7 @@
 		padding: .15vw 1vw .3vw 1vw;
 		cursor: pointer;
 		background: transparent;
+        color: #0a0a0a;
 	  }
 
 	  button.active {
@@ -141,6 +142,7 @@
 		  outline: unset;
 		  border: none;
 		  text-indent: .5vw;
+		  background-color: transparent;
 
 		  &::placeholder {
 			color: black;
