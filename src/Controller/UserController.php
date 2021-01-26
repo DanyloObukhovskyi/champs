@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Charactristics;
 use App\Entity\ConfirmCode;
+use App\Entity\ReferralLink;
 use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
@@ -225,6 +226,18 @@ class UserController extends AbstractController
 
         if (isset($user)) {
             $userData = $this->userService->getUserData($user);
+        }
+        /** @var ReferralLink $inviteLink */
+        $inviteLink = $this->entityManager
+            ->getRepository(ReferralLink::class)
+            ->findOneBy([
+                'game' => $user->getGame()
+            ]);
+
+        $userData['inviteVk'] = null;
+
+        if (isset($inviteLink)) {
+            $userData['inviteVk'] = $inviteLink->getLink();
         }
         return $this->json(isset($user) ? $userData : null);
     }
