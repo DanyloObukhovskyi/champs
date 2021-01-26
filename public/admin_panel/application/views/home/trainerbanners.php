@@ -89,9 +89,6 @@
                                         <div class="" id="input">
                                             <textarea style="width: 100%" name="text" rows="10" class="w-100">{{edit !== null ? edit.text: ''}}</textarea>
                                         </div>
-                                        <div class="input mb-5">
-                                            <input name="img" @change="addShowBannerUploadImage($event.target)" type="file" class="fw-600 input2_txt">
-                                        </div>
                                         <div>
                                             <label style="font-size: 17px; color: #00000085;" class="label" for="">Ссылки</label>
                                         </div>
