@@ -40,7 +40,7 @@ class Marketplace_c extends CI_Controller
     public function marketplace_banners_ajax()
     {
         $data = [
-            'games' => [],
+            'banners' => [],
             'banners_count' => 0,
             'limit' => $this->banners_per_page
         ];
@@ -96,16 +96,12 @@ class Marketplace_c extends CI_Controller
             }
 
             $data['img'] = $fileName;
-
-            if (isset($_POST['id'])) {
-                $this->marketplace_banner_m->update($data);
-            } else {
-                $this->marketplace_banner_m->create($data);
-            }
         }
 
         if (isset($_POST['id'])) {
             $this->marketplace_banner_m->update($data);
+        } else {
+            $this->marketplace_banner_m->create($data);
         }
     }
 

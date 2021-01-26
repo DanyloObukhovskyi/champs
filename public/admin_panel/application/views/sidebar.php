@@ -44,4 +44,7 @@
     <li class="<?php echo 'events' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/events'); ?>">События</a>
     </li>
+    <li class="<?php echo 'referral' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/referral'); ?>">Реферрал</a>
+    </li>
 </ul>

@@ -89,8 +89,8 @@ $route['c-admin/admin/delete/(:num)/(:num)'] = 'delete_c/admin/$1/$2';
 $route['c-admin/admin/add/(:num)'] = 'add_c/admin/$1';
 
 $route['c-admin/upload_img/(:num)'] = 'upload_img/index/$1';
-	
-$route['c-admin/ajax/update'] = 'handle_a_request';	
+
+$route['c-admin/ajax/update'] = 'handle_a_request';
 $route['c-admin/ajax/check'] = 'handle_a_request/check';
 $route['c-admin/refund/(:num)'] = 'refund_c/index/$1';
 
@@ -126,6 +126,18 @@ $route['c-admin/ajax/marketplace/banners'] = 'marketplace_c/ajax';
 $route['c-admin/ajax/marketplace/banners/save'] = 'marketplace_c/save';
 $route['c-admin/marketplace/banners/delete/(:num)'] = 'marketplace_c/delete/$1';
 
+//marketplace banners
+$route['c-admin/marketplace/banners'] = 'marketplace_c/marketplace_banners';
+$route['c-admin/ajax/marketplace/banners'] = 'marketplace_c/marketplace_banners_ajax';
+$route['c-admin/ajax/marketplace/banners/save'] = 'marketplace_c/marketplace_banners_save';
+$route['c-admin/marketplace/banners/delete/(:num)'] = 'marketplace_c/marketplace_banners_delete/$1';
+
+//trainers banners
+$route['c-admin/trainers/banners'] = 'marketplace_c/trainers_banners';
+$route['c-admin/ajax/trainers/banners'] = 'marketplace_c/trainers_banners_ajax';
+$route['c-admin/ajax/trainers/banners/save'] = 'marketplace_c/trainers_banners_save';
+$route['c-admin/trainers/banners/delete/(:num)'] = 'marketplace_c/trainers_banners_delete/$1';
+
 //trainers transactions
 $route['c-admin/trainers/transactions'] = 'trainer_transaction_c/index';
 $route['c-admin/ajax/trainers/transactions'] = 'trainer_transaction_c/ajax';
@@ -137,3 +149,9 @@ $route['c-admin/ajax/events'] = 'event_c/ajax';
 $route['c-admin/events/create'] = 'event_c/create';
 $route['c-admin/events/edit/(:num)'] = 'event_c/edit/$1';
 $route['c-admin/events/delete/(:num)'] = 'event_c/delete/$1';
+
+//referral
+$route['c-admin/referral'] = 'referral_c/index';
+$route['c-admin/ajax/referral'] = 'referral_c/ajax';
+$route['c-admin/ajax/referral/save'] = 'referral_c/save';
+$route['c-admin/referral/delete/(:num)'] = 'referral_c/delete/$1';

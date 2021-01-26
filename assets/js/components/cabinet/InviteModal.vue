@@ -41,7 +41,7 @@
                     <div class="description-bottom">
                         <i class="far fa-clock" aria-hidden="true"></i>
                         После выполнения данных действий, отпишитесь в лс модератору группы ВК
-                        <a :href="vkLink" target="_blank" class="vk-wrapper">
+                        <a :href="user.inviteVk" target="_blank" class="vk-wrapper">
                             <img src="/images/cabinet/vk.png">
                         </a>
                     </div>
@@ -57,11 +57,6 @@
 
     export default {
         name: "InviteModal",
-        data() {
-            return {
-                vkLink: null
-            }
-        },
         computed: {
             ...mapGetters([
                 'user'
@@ -73,16 +68,7 @@
 
                 copyText.select();
                 document.execCommand("copy");
-            },
-            getVKLink() {
-                CabinetService.getVkInviteLink()
-                    .then(link => {
-                        this.vkLink = link;
-                    })
             }
-        },
-        mounted() {
-            this.getVKLink();
         }
     }
 </script>
@@ -146,15 +132,17 @@
 			  width: 100%;
 
 			  input {
-				width: 16vw;
-				height: 1.8vw;
-				border: .1vw solid #ffbb96;
-				border-radius: .2vw;
-				-moz-appearance: none;
-				-webkit-appearance: none;
-				appearance: none;
-				outline: unset;
-				padding-left: .3vw;
+                width: 16vw;
+                height: 1.8vw;
+                border: .1vw solid #ffbb96;
+                border-radius: .2vw;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                appearance: none;
+                outline: unset;
+                padding-left: .3vw;
+                background: white;
+                color: black;
 			  }
 			}
 
@@ -175,7 +163,7 @@
               transition: all .2s ease;
 
               &:hover {
-				background: #ff6f00;
+				background: #ff3c00;
               }
 			}
 		  }

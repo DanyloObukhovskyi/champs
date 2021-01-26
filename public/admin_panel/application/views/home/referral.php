@@ -20,7 +20,7 @@
         width: 100%;
     }
 
-    w-100 {
+    .w-100 {
         width: 100%;
     }
 
@@ -40,12 +40,12 @@
         </div>
     <?php } ?>
     <aside>
-        <?php $activePath = 'trainers/banners' ?>
+        <?php $activePath = 'referral' ?>
         <?php require_once APPPATH . 'views/sidebar.php' ?>
     </aside>
 
     <div class="main-content">
-        <h1 class="main-title">Баннеры тренеров</h1>
+        <h1 class="main-title">Реферрал</h1>
 
         <div class="relative">
             <div id="app">
@@ -64,13 +64,6 @@
                             <div class="modal-body">
                                 <form name="saveBanner">
                                     <div class="col-item">
-                                        <label class="label" for="">Изображение</label>
-                                        <div v-if="imageSrc !== null">
-                                            <img :src="imageSrc" style="width: 44px; margin-bottom: 15px; margin-top: 15px;">
-                                        </div>
-                                        <div class="input mb-5" id="input">
-                                            <input name="img" @change="addShowBannerUploadImage($event.target)" type="file" class="fw-600 input2_txt">
-                                        </div>
                                         <label class="label" for="">Игра</label>
                                         <div class="input mb-5" id="input">
                                             <select name="game" class="fw-600 input2_txt form-control">
@@ -85,22 +78,14 @@
                                         <div class="input mb-5" id="input">
                                             <input name="title" type="text" :value="edit !== null ? edit.title: ''" class="fw-600 input2_txt">
                                         </div>
-                                        <label class="label" for="">Текст</label>
-                                        <div class="" id="input">
-                                            <textarea style="width: 100%" name="text" rows="10" class="w-100">{{edit !== null ? edit.text: ''}}</textarea>
+                                        <label class="label" for="">Код</label>
+                                        <div class="input mb-5" id="input">
+                                            <input name="type" type="text" :value="edit !== null ? edit.type: ''" class="fw-600 input2_txt">
                                         </div>
-                                        <div class="input mb-5">
-                                            <input name="img" @change="addShowBannerUploadImage($event.target)" type="file" class="fw-600 input2_txt">
+                                        <label class="label" for="">Ссылка</label>
+                                        <div class="input mb-5" id="input">
+                                            <input name="link" type="text" :value="edit !== null ? edit.link: ''" class="fw-600 input2_txt">
                                         </div>
-                                        <div>
-                                            <label style="font-size: 17px; color: #00000085;" class="label" for="">Ссылки</label>
-                                        </div>
-                                        <template v-for="(title, type) in linkTypes">
-                                            <label class="label" for="">{{title}}</label>
-                                            <div class="input mb-5">
-                                                <input :name="`links[${type}]`" :placeholder="title" type="text" :value="getLinkByType(type)" class="fw-600 input2_txt">
-                                            </div>
-                                        </template>
                                     </div>
                                 </form>
                             </div>
@@ -121,13 +106,13 @@
                                     id
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    Баннер
-                                </td>
-                                <td class="js-expand-table-item pointer">
                                     Игра
                                 </td>
                                 <td class="js-expand-table-item pointer">
                                     Заголовок
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    Ссылка
                                 </td>
                                 <td class="js-expand-table-item pointer">
                                     Опции
@@ -135,27 +120,27 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="banner in banners">
+                            <tr v-for="item in links">
                                 <td>
-                                    {{banner.id}}
+                                    {{item.id}}
+                                </td>
+                                <td>
+                                    {{item.game.name}}
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    <img :src="imagesPath + banner.img">
+                                    {{item.title}}
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    {{banner.game.name}}
-                                </td>
-                                <td class="js-expand-table-item pointer">
-                                    {{banner.title}}
+                                    {{item.link}}
                                 </td>
                                 <td class="t-a-r pr-15">
                                     <button class="pointer btn btn-dark-blue btn-small"
                                             data-toggle="modal"
                                             data-target="#addModal"
-                                            @click="clearForm, edit = banner, imageSrc = `${imagesPath}${banner.img}`">
+                                            @click="clearForm, edit = item">
                                         Редактировать
                                     </button>
-                                    <a :href="'<?php echo site_url('c-admin/trainers/banners/delete/'); ?>' + banner.id"
+                                    <a :href="'<?php echo site_url('c-admin/links/delete/'); ?>' + item.id"
                                        class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">
                                         Удалить
                                     </a>
@@ -203,14 +188,11 @@
         data() {
             return {
                 page: 1,
-                banners: [],
+                links: [],
                 edit: null,
-                imageSrc: null,
                 count: 0,
                 limit: 0,
-                imagesPath: '<?php echo $images_url; ?>',
-                message: null,
-                linkTypes: {}
+                message: null
             }
         },
         watch: {
@@ -234,31 +216,16 @@
             }
         },
         methods: {
-            addShowBannerUploadImage(input) {
-                if (input.files && input.files[0]) {
-                    const url = URL.createObjectURL(input.files[0]);
-
-                    if (input.files[0].type != "image/jpg"
-                        && input.files[0].type != "image/jpeg"
-                        && input.files[0].type != "image/svg+xml"
-                        && input.files[0].type != "image/png") {
-
-                        return;
-                    }
-                    this.imageSrc = url
-                }
-            },
             getBanners() {
                 const form = new FormData();
 
                 form.append('page', this.page)
 
-                axios.post('<?php echo base_url('c-admin/ajax/trainers/banners');?>', form)
+                axios.post('<?php echo base_url('c-admin/ajax/referral');?>', form)
                     .then(({data}) => {
-                        this.banners = data.banners;
-                        this.count = data.banners_count;
+                        this.links = data.links;
+                        this.count = data.links_count;
                         this.limit = data.limit;
-                        this.linkTypes = data.link_types
                     })
             },
             clearForm() {
@@ -271,7 +238,7 @@
                 if (this.edit !== null){
                     form.append('id', this.edit.id)
                 }
-                axios.post('<?php echo base_url('c-admin/ajax/trainers/banners/save');?>', form)
+                axios.post('<?php echo base_url('c-admin/ajax/referral/save');?>', form)
                     .then(() => {
                         this.getBanners()
                         document.forms.saveBanner.reset();
@@ -288,14 +255,6 @@
             nextPage() {
                 if (this.gamesCount > this.page) {
                     this.page = this.page + 1;
-                }
-            },
-            getLinkByType(type) {
-                if (this.edit !== null) {
-                    const link = this.edit.links.find(e => e.type === type)
-                    if (link) {
-                        return link.link;
-                    }
                 }
             }
         },

@@ -45,7 +45,7 @@
     </aside>
 
     <div class="main-content">
-        <h1 class="main-title">Игры</h1>
+        <h1 class="main-title">Баннеры маркетплейсы</h1>
 
         <div class="relative">
             <div id="app">
