@@ -43,6 +43,7 @@
 	border: .1vw solid #ffbb96;
 	border-radius: .2vw;
 	background-color: transparent;
+	color: black;
 	-moz-appearance: none; /* Firefox */
 	-webkit-appearance: none; /* Safari and Chrome */
 	appearance: none;

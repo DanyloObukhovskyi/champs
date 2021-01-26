@@ -6,7 +6,8 @@
         <div class="method-body d-flex">
             <div class="form-group">
                 <div class="input">
-                    <textarea v-model="method" placeholder="Методика обучения (подробная информация про услуги)*"></textarea>
+                    <textarea v-model="method"
+                              placeholder="Методика обучения (подробная информация про услуги)*"></textarea>
                 </div>
             </div>
         </div>
@@ -25,80 +26,82 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
-    import CabinetService from "../../../../../services/CabinetService";
-    import Swal from "sweetalert2";
+import {mapGetters} from "vuex";
+import CabinetService from "../../../../../services/CabinetService";
+import Swal from "sweetalert2";
 
-    export default {
-        name: "TrainingMethod",
-        data() {
-            return {
-                load: false,
-                method: '',
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'user'
-            ])
-        },
-        methods: {
-            save() {
-                if (!this.load) {
-                    this.load = true;
-                    const form = new FormData();
-
-                    form.append('trainer[method]', this.method);
-
-                    CabinetService.updateUser(form)
-                        .then(data => {
-                            this.$store.commit('setUser', data)
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Изменения были сохранены!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.load = false;
-                        })
-                        .catch(({response: {data}}) => {
-                            this.load = false;
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: data.email,
-                            })
-                        })
-                }
-            }
-        },
-        mounted() {
-            this.method = this.user.trainer.method
+export default {
+    name: "TrainingMethod",
+    data() {
+        return {
+            load: false,
+            method: '',
         }
+    },
+    computed: {
+        ...mapGetters([
+            'user'
+        ])
+    },
+    methods: {
+        save() {
+            if (!this.load) {
+                this.load = true;
+                const form = new FormData();
+
+                form.append('trainer[method]', this.method);
+
+                CabinetService.updateUser(form)
+                    .then(data => {
+                        this.$store.commit('setUser', data)
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Изменения были сохранены!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.load = false;
+                    })
+                    .catch(({response: {data}}) => {
+                        this.load = false;
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: data.email,
+                        })
+                    })
+            }
+        }
+    },
+    mounted() {
+        this.method = this.user.trainer.method
     }
+}
 </script>
 
 <style scoped lang="scss">
-  .method-wrapper {
-	.method-body {
-      .form-group {
-		padding: 0 3vw;
+.method-wrapper {
+  .method-body {
+    .form-group {
+      padding: 0 3vw;
 
-        .input {
-		  margin-top: .8vw;
-		  margin-bottom: 1.5vw;
-		  border-radius: .5vw;
-		  padding: 0 .5vw;
-		  height: auto;
+      .input {
+        margin-top: .8vw;
+        margin-bottom: 1.5vw;
+        border-radius: .5vw;
+        padding: 0 .5vw;
+        height: auto;
 
-          textarea {
-			min-height: 9vw;
-            font-size: 1vw;
-          }
+        textarea {
+          min-height: 9vw;
+          font-size: 1vw;
+          background-color: transparent;
+          color: black;
         }
       }
     }
   }
+}
 </style>
