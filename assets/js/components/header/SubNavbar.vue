@@ -10,7 +10,7 @@
             </div>
             <div class="timezone">
                 <i class="far fa-clock"></i>
-                GMT+3
+                 {{user !== null && user.gmt !== null ? user.gmt : 'GMT+3'}}
             </div>
             <div class="games d-flex">
                 <div class="cs d-flex align-items-center" v-for="game in games" @click="setGame(game.code)">
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         name: "SubNavbar",
         props: ['games'],
@@ -51,6 +53,9 @@
             }
         },
         computed: {
+            ...mapGetters([
+                'user'
+            ]),
             isPageStart() {
                 return this.$parent.isPageStart;
             }

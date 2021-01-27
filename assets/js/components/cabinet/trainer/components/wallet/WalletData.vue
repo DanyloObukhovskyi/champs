@@ -27,7 +27,10 @@
                             <span v-title="'Сумма, которую можно вывести'">
                                  {{ decoratePrice(available) }} p
                             </span>
-                            <button class="purse-btn" @click="checkout">
+                            <button class="purse-btn" @click="checkout" v-if="available > 0">
+                                Вывести
+                            </button>
+                            <button class="purse-btn disable" v-else>
                                 Вывести
                             </button>
                         </div>
@@ -170,6 +173,11 @@
 			&:hover {
 			  background: #ff7525;
 			}
+
+            &.disable {
+              background: #6b6b6b;
+              cursor: not-allowed;
+            }
 		  }
 		}
 	  }

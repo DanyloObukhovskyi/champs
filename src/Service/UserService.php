@@ -149,10 +149,9 @@ class UserService extends EntityService
 
         $trainerGame = $user->getGame();
 
-        $timezone = $trainer->getTimeZone();
-        if (!empty($timezone)) {
+        if (!empty($user->getTimeZone())) {
             [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
-                ->getGmtTimezoneString($trainer->getTimeZone());
+                ->getGmtTimezoneString($user->getTimeZone());
         } else {
             [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
                 ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
@@ -292,6 +291,7 @@ class UserService extends EntityService
             $user->setRang($data->rank);
         }
         if (isset($data->game)) {
+            /** @var Game|NULL $game */
             $game = $this->entityManager->getRepository(Game::class)
                 ->findOneBy(['code' => $data->game]);
 
@@ -347,7 +347,7 @@ class UserService extends EntityService
             );
             /** @var GameRank $gameRank */
             if (isset($gameRank)) {
-                $userLvl = $gameRank->getRank();
+                $userLvl = $gameRank;
             }
         }
 
@@ -360,22 +360,29 @@ class UserService extends EntityService
         {
             $balance[$balanceEntity->getType()] = $balanceEntity->getBalance();
         }
+
+        [$gmt] = $this->timeZoneService
+            ->getGmtTimezoneString(
+                $user->getTimezone() ?? User::DEFAULT_TIMEZONE
+            );
+
         $data = [
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'nickname' => $user->getNickname(),
-            'photo' => $user->getPhoto(),
-            'name' => $user->getName(),
-            'game' => $user->getGame(),
-            'rank' => $user->getRang(),
-            'family' => $user->getFamily(),
-            'discord' => $user->getDiscord(),
-            'purse' => $user->getPurse(),
-            'timezone' => $user->getTimezone(),
+            'id'        => $user->getId(),
+            'email'     => $user->getEmail(),
+            'nickname'  => $user->getNickname(),
+            'photo'     => $user->getPhoto(),
+            'name'      => $user->getName(),
+            'game'      => $user->getGame(),
+            'rank'      => $user->getRang(),
+            'family'    => $user->getFamily(),
+            'discord'   => $user->getDiscord(),
+            'purse'     => $user->getPurse(),
+            'timezone'  => $user->getTimezone(),
             'isTrainer' => $user->getIsTrainer(),
-            'level' => $userLvl,
-            'invite' => $this->getInviteLink($user),
-            'balance' => $balance
+            'gmt'       => $gmt,
+            'level'     => $userLvl,
+            'invite'    => $this->getInviteLink($user),
+            'balance'   => $balance
         ];
 
         if ($user->getIsTrainer()) {

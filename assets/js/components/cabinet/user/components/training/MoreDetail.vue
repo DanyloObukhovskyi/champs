@@ -326,6 +326,7 @@
 				appearance: none;
 				outline: unset;
 				padding-left: .3vw;
+                background: white;
 			  }
 			}
 
@@ -411,6 +412,8 @@
 				border: 0.1vw solid rgb(255, 187, 150);
 				border-radius: 0.2vw;
 				resize: none;
+                background: white;
+                color: black;
 			  }
 
 			  .send-btn {

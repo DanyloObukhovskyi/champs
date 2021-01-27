@@ -13,6 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    public const DEFAULT_TIMEZONE = 'Europe/Moscow';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

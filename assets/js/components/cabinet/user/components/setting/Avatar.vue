@@ -110,7 +110,7 @@
 		width: 9vw;
 		height: 9vw;
 		border-radius: 50%;
-		padding: .2vw;
+        padding: .25vw;
 		background: #ff6f1f;
 		background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
 		background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);

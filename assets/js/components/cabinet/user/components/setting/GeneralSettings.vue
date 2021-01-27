@@ -180,7 +180,21 @@
                 this.rank = this.user.rank;
                 this.rankString = this.user.rankString;
             },
+            showError(message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Упс...',
+                    text: message,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
             save() {
+                if (this.user.isTrainer) {
+                    if (this.user.timezone === null || this.user.timezone === '') {
+                        return this.showError('Для начала укажите таймзону!')
+                    }
+                }
                 if (!this.load) {
                     this.load = true;
                     const form = new FormData();

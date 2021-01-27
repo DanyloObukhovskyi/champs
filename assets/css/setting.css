@@ -242,10 +242,12 @@
 .setting .setting-container-body .multiselect .multiselect__tags .multiselect__single {
 	margin-bottom: 0;
 	background: transparent;
+	color: black;
 }
 
 .setting .setting-container-body .multiselect .multiselect__input {
 	background: transparent;
+	color: black;
 }
 
 .multiselect {

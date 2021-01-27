@@ -111,7 +111,7 @@ class RegistrationController extends AbstractController
             $userEntity->setIsTrainer(0);
 
             $userEntity->setPurse(0);
-            $userEntity->setTimezone('Europe/Moscow');
+            $userEntity->setTimezone(User::DEFAULT_TIMEZONE);
 
             $this->entityManager->persist($userEntity);
             $this->entityManager->flush();
