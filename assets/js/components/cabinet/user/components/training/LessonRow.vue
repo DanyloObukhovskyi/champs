@@ -134,7 +134,7 @@
                     }
                 }
                 if (this.isConfirmed) {
-                    label = 'Оставьте отзыв';
+                    label = 'Оставьте комментарий';
                 }
                 return label;
             },
@@ -237,6 +237,7 @@
 		background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
 		background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
 		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+        display: flex;
 
 		img {
 		  width: 100%;

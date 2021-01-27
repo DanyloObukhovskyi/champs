@@ -101,9 +101,11 @@ class TeacherService extends EntityService
         ];
     }
 
+
     /**
      * @param Teachers $teacher
      * @param object $data
+     * @return mixed
      */
     public function updateTrainer(Teachers $teacher, object $data)
     {
@@ -128,7 +130,7 @@ class TeacherService extends EntityService
         if (isset($data->videos) and !empty($data->videos)) {
             $videos = json_decode($data->videos, false);
 
-            $videosEntities = $this->entityManager->getRepository(TrainerAchievement::class)
+            $videosEntities = $this->entityManager->getRepository(TrainerVideo::class)
                 ->findBy([
                     'trainer' => $teacher
                 ]);

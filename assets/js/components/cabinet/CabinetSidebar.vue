@@ -4,12 +4,14 @@
             <router-link
                     :to="getPageLink(page.code)">
                 <img :src="'/images/cabinet/' + page.icon">
+                <img :src="'/images/cabinet/' + page.iconActive" class="active">
                 {{ page.name }}
             </router-link>
         </div>
         <div class="page">
             <a :href="logoutUrl">
                 <img src="/images/cabinet/logout.png">
+                <img src="/images/cabinet/logoutActive.png" class="active">
                 Выйти
             </a>
         </div>
@@ -24,32 +26,38 @@
         {
             name: 'Личный кабинет',
             code: '',
-            icon: 'cabinetIcon.png'
+            icon: 'cabinetIcon.png',
+            iconActive: 'cabinetIconActive.png',
         },
         {
             name: 'Обучение',
             code: 'training',
-            icon: 'trainingIcon.png'
+            icon: 'trainingIcon.png',
+            iconActive: 'trainingIconActive.png',
         },
         {
             name: 'Турниры Champs',
             code: 'tournaments',
-            icon: 'tournamentsIcon.png'
+            icon: 'tournamentsIcon.png',
+            iconActive: 'tournamentsIconActive.png',
         },
         {
             name: 'Новости',
             code: 'news',
-            icon: 'newsIcon.png'
+            icon: 'newsIcon.png',
+            iconActive: 'newsIconActive.png',
         },
         {
             name: 'Видео',
             code: 'videos',
-            icon: 'videosIcon.png'
+            icon: 'videosIcon.png',
+            iconActive: 'videosIconActive.png',
         },
         {
             name: 'Настройки',
             code: 'settings',
-            icon: 'settingsIcon.png'
+            icon: 'settingsIcon.png',
+            iconActive: 'settingsIconActive.png',
         }
     ];
 
@@ -57,27 +65,32 @@
         {
             name: 'Личный кабинет',
             code: '',
-            icon: 'cabinetIcon.png'
+            icon: 'cabinetIcon.png',
+            iconActive: 'cabinetIconActive.png',
         },
         {
             name: 'Расписание',
             code: 'timetable',
-            icon: 'timetable.png'
+            icon: 'timetable.png',
+            iconActive: 'trainingIconActive.png',
         },
         {
             name: 'Календарь',
             code: 'calendar',
-            icon: 'calendar.png'
+            icon: 'calendar.png',
+            iconActive: 'calendarIconActive.png',
         },
         {
             name: 'Кошелек',
             code: 'wallet',
-            icon: 'wallet.png'
+            icon: 'wallet.png',
+            iconActive: 'walletIconActive.png',
         },
         {
             name: 'Настройки',
             code: 'settings',
-            icon: 'settingsIcon.png'
+            icon: 'settingsIcon.png',
+            iconActive: 'settingsIconActive.png',
         }
     ];
 
@@ -156,16 +169,36 @@
 		  margin-left: 1.2vw;
 		  margin-right: 1vw;
 		  width: 1vw;
+
+          &.active {
+            display: none;
+          }
 		}
 
 		&.router-link-exact-active {
 		  background-color: #ff6d1d;
 		  color: white;
+
+          img {
+            display: none;
+
+            &.active {
+              display: unset;
+            }
+          }
 		}
 
 		&:hover {
 		  background-color: #ff6d1d;
 		  color: white;
+
+          img {
+            display: none;
+
+            &.active {
+              display: unset;
+            }
+          }
 		}
 	  }
 	}

@@ -96,21 +96,24 @@ class ScheduleController extends AbstractController
 
         $isStudent = !empty($this->getUser()) ? (int)$this->getUser()->getId() !== (int)$userId : true;
 
-        /** @var Teachers $trainer */
-        $trainer = $this->entityManager->getRepository(Teachers::class)->findOneBy([
-            'userid' => $userId
-        ]);
+        $trainerUser = $this->entityManager
+            ->getRepository(User::class)
+            ->find($userId);
 
         $userTimezone = $form->timezone;
 
-        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
-        );
-        if ($gmtNumeric < 0) {
-            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
-        } else {
-            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($user->getTimezone() !== null) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $trainerUser->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            );
+            $userTimezone = $gmtNumeric / 60 / 60;
         }
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainerUser->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        $trainerTimezone = $gmtNumeric / 60 / 60;
 
         $timeOffset = $trainerTimezone - $userTimezone;
         $schedule = $this->scheduleService

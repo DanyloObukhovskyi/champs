@@ -100,6 +100,9 @@
                 })
             },
             updateAchievements() {
+                if (this.user.timezone === null || this.user.timezone === '') {
+                    return this.showError('Для начала укажите таймзону!')
+                }
                 const form = new FormData();
 
                 form.append(`trainer[achievements]`, JSON.stringify(this.achievements));

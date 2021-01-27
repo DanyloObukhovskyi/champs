@@ -6,11 +6,14 @@
                     <img :src="'/uploads/avatars/' + user.photo" alt="avatar"
                          @error="$event.target.src = '/images/noLogo.png'">
                 </div>
-                <div class="lvl">
+                <div class="lvl" v-if="user.level == null">
                     <span>
-                        {{user.level}}
+                        0
                     </span>
                     <img src="/images/cabinet/csLvl.png" alt="lvl">
+                </div>
+                <div class="lvl" v-else>
+                    <img :src="'/images/ranks/' + user.level.icon" alt="lvl">
                 </div>
             </div>
             <div class="nickname">

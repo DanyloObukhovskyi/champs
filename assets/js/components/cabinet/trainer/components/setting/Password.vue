@@ -38,6 +38,7 @@
 <script>
     import Swal from 'sweetalert2'
     import CabinetService from "../../../../../services/CabinetService";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Password",
@@ -49,6 +50,11 @@
                 load: false,
                 isUpdate: false,
             }
+        },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
         },
         methods: {
             showSuccess() {
@@ -69,6 +75,9 @@
                 })
             },
             updatePassword() {
+                if (this.user.timezone === null || this.user.timezone === '') {
+                    return this.showError('Для начала укажите таймзону!')
+                }
                 if (!this.load) {
                     if (this.password === null || this.password === '') {
                         return this.showError('Пароль не может быть пустым!')
