@@ -41,7 +41,7 @@
                     <div class="description-bottom">
                         <i class="far fa-clock" aria-hidden="true"></i>
                         После выполнения данных действий, отпишитесь в лс модератору группы ВК
-                        <a :href="user.inviteVk" target="_blank" class="vk-wrapper">
+                        <a :href="user !== null ? user.inviteVk: ''" target="_blank" class="vk-wrapper">
                             <img src="/images/cabinet/vk.png">
                         </a>
                     </div>

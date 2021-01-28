@@ -14,6 +14,7 @@
     import CabinetVideoSlider from "../components/cabinet/CabinetVideoSlider";
     import CabinetBottomBanner from "../../CabinetBottomBanner";
     import {mapGetters} from "vuex";
+    import CabinetService from "../../../../services/CabinetService";
 
     export default {
         name: "UserCabinet",
@@ -28,14 +29,9 @@
                 banner: null,
             }
         },
-        computed: {
-            ...mapGetters([
-                'loadUser'
-            ]),
-        },
         methods: {
             getFirstBanner() {
-                MarketplaceService.getTrainerBanner()
+                CabinetService.getUserBanner()
                     .then(data => {
                         this.banner = data;
                     })

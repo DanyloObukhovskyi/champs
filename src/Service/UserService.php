@@ -537,7 +537,7 @@ class UserService  extends EntityService
      */
     public function getUserData(User $user)
     {
-        $userLvl = 0;
+        $userLvl = null;
 
         if (!empty($user->getGame())) {
             $gameRank = $this->gameRankService->getByGameAndPoints(

@@ -17,8 +17,10 @@
             </div>
             <div class="bottom">
                 <div class="image">
-                    <img src="/images/cabinet/questBannerDota.png" v-if="user.game === 'dota'">
-                    <img src="/images/cabinet/questBannerCs.png" v-else>
+                    <img src="/images/cabinet/questBannerDota.png"
+                         v-if="user.game !== null && user.game.code === 'dota'">
+                    <img src="/images/cabinet/questBannerCs.png"
+                         v-else>
                 </div>
                 <div class="sub-title">
                     <div class="first">
