@@ -27,7 +27,7 @@ class GameRankRepository extends ServiceEntityRepository
             ->orWhere('g.pointsTo is null')
             ->andWhere('g.pointsFrom <= :points')
             ->andWhere('g.game = :game')
-            ->setParameter('points', $points)
+            ->setParameter('points', (int)$points)
             ->setParameter('game', $game)
             ->orderBy('g.id', 'DESC')
             ->setMaxResults(1)

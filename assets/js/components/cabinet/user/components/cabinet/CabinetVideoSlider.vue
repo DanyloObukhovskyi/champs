@@ -262,9 +262,9 @@
         top: 0;
         left: 0;
         width: 13vw;
-        height: 7.2vw;
-        z-index: 1;
+        height: 7.3vw;
         background: linear-gradient(90deg, rgba(116, 118, 121, 0.9248074229691877) 43%, rgba(116, 118, 121, 0) 100%);
+        z-index: 10;
     }
 
     .video-slider.cabinet-video-slider .slider-body::after {
@@ -273,8 +273,9 @@
         top: 0;
         right: 0;
         width: 13vw;
-        height: 7.2vw;
+        height: 7.3vw;
         background: linear-gradient(90deg, rgba(116, 118, 121, 0) 0%, rgba(116, 118, 121, 0.9248074229691877) 58%);
+        z-index: 10;
     }
 
     .dark .video-slider.cabinet-video-slider .slider-body::before {

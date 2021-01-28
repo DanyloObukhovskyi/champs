@@ -69,6 +69,10 @@ class CabinetService extends Service {
     getVkInviteLink = () => {
         return this.send('cabinet/vk/invite/link')
     }
+
+    getUserBanner = () => {
+        return this.send(`ajax/setting/user/banner`)
+    }
 }
 
 export default new CabinetService();
