@@ -1,5 +1,5 @@
 <template>
-    <div class="cabinet-first-banner">
+    <div class="cabinet-first-banner" v-if="banner !== null">
         <div class="left">
             <div id="banner-description">
                 <div class="title">
@@ -50,9 +50,26 @@
 </template>
 
 <script>
+import CabinetService from "../../../../../services/CabinetService";
+
 export default {
     name: "CabinetFirstBanner",
-    props: ['banner'],
+    data() {
+        return {
+            banner: null
+        }
+    },
+    methods: {
+        getFirstBanner() {
+            CabinetService.getUserBanner()
+                .then(data => {
+                    this.banner = data;
+                })
+        },
+    },
+    mounted() {
+        this.getFirstBanner();
+    }
 }
 </script>
 

@@ -37,68 +37,72 @@
 </template>
 
 <script>
-    import Swal from 'sweetalert2'
-    import CabinetService from "../../../../../services/CabinetService";
+import Swal from 'sweetalert2'
+import CabinetService from "../../../../../services/CabinetService";
 
-    export default {
-        name: "Password",
-        data() {
-            return {
-                password: null,
-                passwordConfirm: null,
-                load: false,
-            }
+export default {
+    name: "Password",
+    data() {
+        return {
+            password: null,
+            passwordConfirm: null,
+            load: false,
+        }
+    },
+    methods: {
+        showSuccess() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Пароль сохранен!',
+                showConfirmButton: false,
+                timer: 1500
+            })
         },
-        methods: {
-            showSuccess() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Пароль сохранен!',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            },
-            showError(message) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Упс...',
-                    text: message,
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            },
-            updatePassword() {
-                if (!this.load){
-                    if (this.password === null || this.password === '') {
-                        return this.showError('Пароль не может быть пустым!')
-                    }
-                    if (this.password === this.passwordConfirm) {
-                        const form = new FormData();
-                        form.append('password', this.password);
+        showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Упс...',
+                text: message,
+                showConfirmButton: false,
+                timer: 1500
+            })
+        },
+        updatePassword() {
+            if (!this.load) {
+                if (this.password === null || this.password === '') {
+                    return this.showError('Пароль не может быть пустым!')
+                }
+                if (this.password === this.passwordConfirm) {
+                    const form = new FormData();
+                    form.append('password', this.password);
 
-                        this.load = true;
-                        CabinetService.updateUser(form)
-                            .then(data => {
-                                this.$store.commit('setUser', data)
-                                this.load = false;
+                    this.load = true;
+                    CabinetService.updateUser(form)
+                        .then(data => {
+                            this.$store.commit('setUser', data)
+                            this.load = false;
 
-                                this.showSuccess();
-                            })
-                            .catch(({response}) => {
-                                this.load = false;
-                                this.showError(response.data.password)
-                            })
-                    } else {
-                        this.showError('Пароли не совпадают!')
-                    }
+                            this.showSuccess();
+                        })
+                        .catch(({response}) => {
+                            this.load = false;
+                            this.showError(response.data.password)
+                        })
+                } else {
+                    this.showError('Пароли не совпадают!')
                 }
             }
         }
     }
+}
 </script>
 
-<style scoped>
-    .password-setting {
-        height: 11vw;
-    }
+<style scoped lang="scss">
+.password-setting {
+  height: 13vw;
+
+  .general-settings-body {
+    margin-top: 2.1vw;
+  }
+}
 </style>

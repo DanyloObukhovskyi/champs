@@ -6,6 +6,8 @@ namespace App\Service;
 
 use App\Entity\Award;
 use App\Entity\Balance;
+use App\Entity\City;
+use App\Entity\Country;
 use App\Entity\Game;
 use App\Entity\GameRank;
 use App\Entity\Invite;
@@ -290,13 +292,13 @@ class UserService extends EntityService
         if (isset($data->rank)) {
             $user->setRang($data->rank);
         }
-        if (isset($data->game)) {
-            /** @var Game|NULL $game */
-            $game = $this->entityManager->getRepository(Game::class)
+        if (!empty($data->game)) {
+            /** @var Game|NULL $gameEntity */
+            $gameEntity = $this->entityManager->getRepository(Game::class)
                 ->findOneBy(['code' => $data->game]);
 
-            if (isset($game)) {
-                $user->setGame($game);
+            if (isset($gameEntity)) {
+                $user->setGame($gameEntity);
             }
         }
         if (isset($data->timezone)) {
@@ -307,6 +309,46 @@ class UserService extends EntityService
         }
         if (isset($data->discord)) {
             $user->setDiscord($data->discord);
+        }
+        if (isset($data->gender)) {
+            $user->setGender($data->gender);
+        }
+        if (isset($data->bdate)) {
+            try {
+                $date = new \DateTime($data->bdate);
+
+                $user->setBday($date);
+            } catch (\Exception $e) {
+
+            }
+        }
+        if (isset($data->countryId)) {
+            $country = $this->entityManager
+                ->getRepository(Country::class)
+                ->find($data->countryId);
+
+            if (isset($country)) {
+                $user->setCountry($country);
+            }
+        }
+        if (isset($data->cityId)) {
+            $city = $this->entityManager
+                ->getRepository(City::class)
+                ->find($data->cityId);
+
+            if (isset($city)) {
+                $user->setCity($city);
+            }
+        }
+        if (isset($data->additionallyGame)) {
+            /** @var Game|NULL $gameEntity */
+            $gameEntity = $this->entityManager->getRepository(Game::class)
+                ->findOneBy(['code' => $data->additionallyGame]);
+
+            $user->setAdditionallyGame($gameEntity);
+        }
+        if (isset($data->additionallyRank)) {
+            $user->setAdditionallyRank($data->additionallyRank);
         }
         return $this->save($user);
     }
@@ -329,7 +371,7 @@ class UserService extends EntityService
     {
         $invite = $this->inviteService->getCabinetInvite($user);
 
-        return $_ENV['SITE_URL'].$this->inviteService->generateInviteLink($invite->getToken());
+        return $_ENV['SITE_URL'] . $this->inviteService->generateInviteLink($invite->getToken());
     }
 
     /**
@@ -356,8 +398,7 @@ class UserService extends EntityService
             ->findBy(['user' => $user]);
 
         /** @var Balance $balanceEntity */
-        foreach ($balanceEntities as $balanceEntity)
-        {
+        foreach ($balanceEntities as $balanceEntity) {
             $balance[$balanceEntity->getType()] = $balanceEntity->getBalance();
         }
 
@@ -366,23 +407,34 @@ class UserService extends EntityService
                 $user->getTimezone() ?? User::DEFAULT_TIMEZONE
             );
 
+        $bdate = null;
+
+        if (!empty($user->getBday())) {
+            $bdate = $user->getBday()->format('d.m.Y');
+        }
         $data = [
-            'id'        => $user->getId(),
-            'email'     => $user->getEmail(),
-            'nickname'  => $user->getNickname(),
-            'photo'     => $user->getPhoto(),
-            'name'      => $user->getName(),
-            'game'      => $user->getGame(),
-            'rank'      => $user->getRang(),
-            'family'    => $user->getFamily(),
-            'discord'   => $user->getDiscord(),
-            'purse'     => $user->getPurse(),
-            'timezone'  => $user->getTimezone(),
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'nickname' => $user->getNickname(),
+            'photo' => $user->getPhoto(),
+            'name' => $user->getName(),
+            'game' => $user->getGame(),
+            'rank' => $user->getRang(),
+            'family' => $user->getFamily(),
+            'discord' => $user->getDiscord(),
+            'purse' => $user->getPurse(),
+            'timezone' => $user->getTimezone(),
             'isTrainer' => $user->getIsTrainer(),
-            'gmt'       => $gmt,
-            'level'     => $userLvl,
-            'invite'    => $this->getInviteLink($user),
-            'balance'   => $balance
+            'gmt' => $gmt,
+            'level' => $userLvl,
+            'invite' => $this->getInviteLink($user),
+            'balance' => $balance,
+            'additionallyGame' => $user->getAdditionallyGame(),
+            'additionallyRank' => $user->getAdditionallyRank(),
+            'city' => $user->getCity(),
+            'country' => $user->getCountry(),
+            'gender' => $user->getGender(),
+            'bdate' => $bdate
         ];
 
         if ($user->getIsTrainer()) {

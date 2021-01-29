@@ -54,7 +54,6 @@
 
 .setting .setting-container-body .form-group .input input::placeholder {
 	color: #9d9fa0;
-	padding-left: .5vw;
 }
 
 .setting .setting-container-body .form-group .input textarea {
@@ -255,7 +254,6 @@
 	display: block;
 	position: relative;
 	width: fit-content;
-	min-height: 40px;
 	text-align: left;
 	color: #35495e;
 }
@@ -282,6 +280,19 @@
 
 .setting .setting-container-body .multiselect .multiselect__content-wrapper {
 	min-width: 12.6vw;
+}
+
+.setting .setting-container-body .multiselect .multiselect__spinner {
+	position: absolute;
+	right: 1vw;
+	width: 48px;
+	background: transparent;
+	display: flex;
+	height: 100%;
+}
+
+.setting .setting-container-body .multiselect .multiselect__tags .multiselect__placeholder {
+	font-size: .8vw;
 }
 
 .setting .bottom-save {

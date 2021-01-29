@@ -115,6 +115,30 @@ class User implements UserInterface
      * @ORM\Column(type="string", options={"default" : "Europe/Moscow"})
      */
     private $timezone;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $gender;
+    /**
+     * @ORM\Column(type="date", length=255, nullable=true)
+     */
+    private $bday;
+    /**
+     * @ORM\ManyToOne(targetEntity=Game::class)
+     */
+    private $additionallyGame;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $additionallyRank;
+    /**
+     * @ORM\ManyToOne(targetEntity=Country::class)
+     */
+    private $country;
+    /**
+     * @ORM\ManyToOne(targetEntity=City::class)
+     */
+    private $city;
 
     public function __construct()
     {
@@ -518,5 +542,101 @@ class User implements UserInterface
     public function setTimezone($timezone): void
     {
         $this->timezone = $timezone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBday()
+    {
+        return $this->bday;
+    }
+
+    /**
+     * @param mixed $bday
+     */
+    public function setBday($bday): void
+    {
+        $this->bday = $bday;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param mixed $city
+     */
+    public function setCity($city): void
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdditionallyGame()
+    {
+        return $this->additionallyGame;
+    }
+
+    /**
+     * @param mixed $additionallyGame
+     */
+    public function setAdditionallyGame($additionallyGame): void
+    {
+        $this->additionallyGame = $additionallyGame;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdditionallyRank()
+    {
+        return $this->additionallyRank;
+    }
+
+    /**
+     * @param mixed $additionallyRank
+     */
+    public function setAdditionallyRank($additionallyRank): void
+    {
+        $this->additionallyRank = $additionallyRank;
     }
 }
