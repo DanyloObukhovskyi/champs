@@ -182,7 +182,6 @@
                 this.date = new Date(timestamp)
             },
             setTime(date, time) {
-
                 CabinetService.setTrainerDayTime(date, {from: time})
                     .then((times) => {
                         this.week = this.week.map(day => {

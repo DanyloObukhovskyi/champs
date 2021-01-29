@@ -1,6 +1,6 @@
 <template>
     <div class="cabinet-wrapper">
-        <cabinet-first-banner v-if="banner !== null" :banner="banner"/>
+        <cabinet-first-banner/>
         <cabinet-second-banner v-if="!loadUser"/>
         <cabinet-video-slider/>
         <cabinet-bottom-banner v-if="!loadUser"/>
@@ -24,22 +24,11 @@
             CabinetFirstBanner,
             CabinetVideoSlider
         },
-        data() {
-            return {
-                banner: null,
-            }
-        },
-        methods: {
-            getFirstBanner() {
-                CabinetService.getUserBanner()
-                    .then(data => {
-                        this.banner = data;
-                    })
-            },
-        },
-        mounted() {
-            this.getFirstBanner();
-        }
+       computed: {
+            ...mapGetters([
+                'loadUser'
+            ])
+       }
     }
 </script>
 

@@ -37,123 +37,123 @@
 
 
 <script>
-    import {mapGetters} from "vuex";
-    import CabinetService from "../../../../../services/CabinetService";
-    import Swal from 'sweetalert2'
+import {mapGetters} from "vuex";
+import CabinetService from "../../../../../services/CabinetService";
+import Swal from 'sweetalert2'
 
-    export default {
-        name: "Avatar",
-        data() {
-            return {
-                load: false,
-                isUpdate: false,
-                previewImage: null,
+export default {
+    name: "Avatar",
+    data() {
+        return {
+            load: false,
+            isUpdate: false,
+            previewImage: null,
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'user',
+        ]),
+    },
+    methods: {
+        updateAvatar() {
+            if (!this.load) {
+                const form = new FormData(document.forms.uploadAvatar);
+
+                this.load = true;
+                CabinetService.updateUser(form)
+                    .then(user => {
+                        this.$store.commit('setUser', user);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Аватар сохранен!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.load = false;
+                    })
+                    .catch(({response: {data}}) => {
+                        this.load = false;
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: data.avatar,
+                        })
+                    })
             }
         },
-        computed: {
-            ...mapGetters([
-                'user',
-            ]),
+        setPreviewImage() {
+            const input = document.querySelector('#avatar-upload-form');
+
+            if (input.files && input.files[0]) {
+                this.previewImage = URL.createObjectURL(input.files[0]);
+            }
         },
-        methods: {
-            updateAvatar() {
-                if (!this.load) {
-                    const form = new FormData(document.forms.uploadAvatar);
-
-                    this.load = true;
-                    CabinetService.updateUser(form)
-                        .then(user => {
-                            this.$store.commit('setUser', user);
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Аватар сохранен!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.load = false;
-                        })
-                        .catch(({response: {data}}) => {
-                            this.load = false;
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: data.avatar,
-                            })
-                        })
-                }
-            },
-            setPreviewImage() {
-                const input = document.querySelector('#avatar-upload-form');
-
-                if (input.files && input.files[0]) {
-                    this.previewImage = URL.createObjectURL(input.files[0]);
-                }
-            },
-        }
     }
+}
 </script>
 
 <style scoped lang="scss">
-  #avatar-upload-form {
-	display: none;
+#avatar-upload-form {
+  display: none;
+}
+
+.avatar-wrapper {
+  .avatar {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vw;
+
+    .gradient {
+      width: 9vw;
+      height: 9vw;
+      border-radius: 50%;
+      padding: .25vw;
+      background: #ff6f1f;
+      background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+      background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+      background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
   }
 
-  .avatar-wrapper {
-	.avatar {
-	  display: flex;
-	  justify-content: center;
-	  margin-top: 3vw;
+  .upload {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5vw;
 
-	  .gradient {
-		width: 9vw;
-		height: 9vw;
-		border-radius: 50%;
-        padding: .25vw;
-		background: #ff6f1f;
-		background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-		background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-		background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+    label {
+      background: #ff6d1d;
+      font-size: 1vw;
+      height: 2.3vw;
+      width: 9.5vw;
+      color: white;
+      display: flex;
+      justify-content: center;
+      border-radius: .3vw;
+      align-items: center;
+      cursor: pointer;
+    }
 
-		img {
-		  width: 100%;
-		  height: 100%;
-		  border-radius: 50%;
-		}
-	  }
-	}
-
-	.upload {
-	  display: flex;
-	  justify-content: center;
-	  margin-top: 1.5vw;
-
-	  label {
-		background: #ff6d1d;
-		font-size: 1vw;
-		height: 2.3vw;
-		width: 9.5vw;
-		color: white;
-		display: flex;
-		justify-content: center;
-		border-radius: .3vw;
-		align-items: center;
-		cursor: pointer;
-	  }
-
-	  label:hover {
-		background: #ff8f2b;
-	  }
-	}
+    label:hover {
+      background: #ff8f2b;
+    }
   }
+}
 
-  .dark {
-	.upload {
-	  label {
-		border: .1vw solid white;
-	  }
-	}
+.dark {
+  .upload {
+    label {
+      border: .1vw solid white;
+    }
   }
+}
 </style>
