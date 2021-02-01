@@ -8,6 +8,7 @@ use App\Entity\Teachers;
 use App\Entity\TrainerAchievement;
 use App\Entity\TrainerLessonPrice;
 use App\Entity\TrainerVideo;
+use App\Entity\User;
 use App\Repository\TeachersRepository;
 use Container1ORetry\getTrainerAchievementRepositoryService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,7 +69,8 @@ class TeacherService extends EntityService
                 $availableCosts[] = $cost->jsonSerialize();
             }
         }
-        $achievements = $this->entityManager->getRepository(TrainerAchievement::class)
+        $achievements = $this->entityManager
+            ->getRepository(TrainerAchievement::class)
             ->findBy([
                 'trainer' => $teacher
             ]);
@@ -83,10 +85,16 @@ class TeacherService extends EntityService
             ];
         }
 
-        $videos =  $this->entityManager->getRepository(TrainerVideo::class)
+        $videos =  $this->entityManager
+            ->getRepository(TrainerVideo::class)
             ->findBy([
                 'trainer' => $teacher
             ]);
+
+        /** @var User $user */
+        $user = $this->entityManager
+            ->getRepository(User::class)
+            ->find($teacher->getUserId());
 
         return [
             'id' => $teacher->getId(),
@@ -94,9 +102,10 @@ class TeacherService extends EntityService
             'timeZone' => $teacher->getTimeZone(),
             'twitch' => $teacher->getTwitch(),
             'awards' => $teacher->getAwards(),
-            'globalElite' => $teacher->getGlobalElite(),
+            'globalElite' => $user->isGlobalElite(),
             'costs' => $availableCosts,
             'achievements' => $achievementsArray,
+            'isLessonCost' => $teacher->getIsLessonCost(),
             'videos' =>  $this->trainerVideosService->decorator($videos)
         ];
     }

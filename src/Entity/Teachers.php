@@ -59,11 +59,6 @@ class Teachers
     private $isLessonCost;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : false})
-     */
-    private $globalElite;
-
-    /**
      * @ORM\OneToMany(targetEntity=TrainerLessonPrice::class, mappedBy="trainer")
      */
     private $costs;
@@ -196,21 +191,5 @@ class Teachers
     public function setIsLessonCost($isLessonCost): void
     {
         $this->isLessonCost = $isLessonCost;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGlobalElite()
-    {
-        return $this->globalElite;
-    }
-
-    /**
-     * @param mixed $globalElite
-     */
-    public function setGlobalElite($globalElite): void
-    {
-        $this->globalElite = $globalElite;
     }
 }

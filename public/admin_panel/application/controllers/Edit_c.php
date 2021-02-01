@@ -405,7 +405,6 @@ class Edit_c extends CI_Controller
                 
                 $trainings = (isset($_POST["training"]) && !empty($_POST["training"])) ? $_POST["training"] : [];
                 $prices = (isset($_POST["price"]) && !empty($_POST["price"])) ? $_POST["price"] : [];
-                $global_elite = isset($_POST["global_elite"]);
 
                 $this->trainer_video->deleteRecords($id);
                 foreach ($videos as $video) {
@@ -452,7 +451,6 @@ class Edit_c extends CI_Controller
                         $update_data['method'] = $method;
                         $update_data['twitch'] = $twitch;
                         $update_data['admin_percentage'] = $admin_percentage;
-                        $update_data['global_elite'] = $global_elite;
 
                         $trainer_id = $this->edit_m->updateTeacher($id, $update_data);
 

@@ -59,11 +59,11 @@
                     :cost="cost.price">
             </trainer-cost-button>
         </div>
-        <div class="description" v-show="show && type !== null">
+        <div class="description" v-show="trainingType !== null">
             <p class="title">
-                {{ description[type] ? description[type].title : '' }}
+                {{ description[trainingType] ? description[trainingType].title : '' }}
             </p>
-            <div class="text" v-html="description[type] ? description[type].text: ''">
+            <div class="text" v-html="description[trainingType] ? description[trainingType].text: ''">
             </div>
         </div>
         <div class="trainer-footer">
@@ -125,7 +125,7 @@
                 type: null,
                 rankIconError: false,
                 trainingTypes: {
-                    individual: 'Идивидуальная',
+                    individual: 'Идивидуальная тренировка',
                     group: 'Груповая тренировка',
                     analytic: 'Анализ видео',
                 }
@@ -151,7 +151,14 @@
                 this.$emit('setTrainingType', type)
             },
             getTrainingTypeTitle(type) {
-                return this.trainingTypes[type];
+                let str = this.trainingTypes[type];
+
+                if (this.trainer.trainer.isLessonCost) {
+                    str += ' 1 час';
+                } else {
+                    str += ' 3 часа';
+                }
+                return str;
             }
         },
     }
@@ -308,20 +315,19 @@
 	  }
 
 	  .price-row {
-
 		&.active {
 		  background: url(/images/marketplace/priceBackgroundHover.png);
 		  background-position: center;
 		  background-size: cover;
 		  color: white;
 
-		  .background {
-			i {
-			  color: white;
-			  font-size: 1vw;
-			  cursor: pointer;
-			}
-		  }
+          .background {
+            i {
+              color: white;
+              font-size: 1vw;
+              cursor: pointer;
+            }
+          }
 		}
 
 		cursor: pointer;

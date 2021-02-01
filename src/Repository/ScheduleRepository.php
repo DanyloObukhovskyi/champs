@@ -41,6 +41,19 @@ class ScheduleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAvailableByTrainerAndDate($trainer, $date)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.trainer = :trainer')
+            ->andWhere('s.date = :date')
+            ->andWhere('s.status = 1')
+            ->setParameter('trainer', $trainer)
+            ->setParameter('date', $date)
+            ->orderBy('s.time', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param User $trainer
      * @param $date

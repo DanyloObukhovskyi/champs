@@ -13,7 +13,9 @@
                  {{user !== null && user.gmt !== null ? user.gmt : 'GMT+3'}}
             </div>
             <div class="games d-flex">
-                <div class="cs d-flex align-items-center" v-for="game in games" @click="setGame(game.code)">
+                <div class="cs d-flex align-items-center" v-for="game in games"
+                     v-if="game.active"
+                     @click="setGame(game.code)">
                     <img :src="`/uploads/games/${game.sidebarIcon}`">
                     {{game.name}}
                 </div>

@@ -31,9 +31,14 @@ class ScheduleService extends EntityService
      * @param string $date
      * @return mixed
      */
-    public function findByTrainerAndDate(int $teacherId, string $date)
+    public function findByTrainerAndDate(User $teacher, string $date)
     {
-        return $this->repository->findByTrainerAndDate($teacherId, $date);
+        return $this->repository->findByTrainerAndDate($teacher, $date);
+    }
+
+    public function findAvailableByTrainerAndDate(User $teacher, string $date)
+    {
+        return $this->repository->findAvailableByTrainerAndDate($teacher, $date);
     }
 
     /**

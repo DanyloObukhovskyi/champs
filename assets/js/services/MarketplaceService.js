@@ -71,6 +71,10 @@ class MarketplaceService extends Service{
     getTrainerBanner = (id) => {
         return this.send(`ajax/setting/trainer/banner/${id}`)
     }
+
+    getTrainerAvailableTrainingDatesForMonth = (trainerId, date) => {
+        return this.send(`calendar/available/training/dates/for/month/${trainerId}`, {date});
+    }
 }
 
 export default new MarketplaceService();

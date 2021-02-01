@@ -42,6 +42,11 @@ class Game implements \JsonSerializable
      */
     private $newsIcon;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $active;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,7 +143,24 @@ class Game implements \JsonSerializable
             'code' => $this->getCode(),
             'logo' => $this->getLogo(),
             'newsIcon' => $this->getNewsIcon(),
-            'sidebarIcon' => $this->getSidebarIcon()
+            'sidebarIcon' => $this->getSidebarIcon(),
+            'active' => $this->getActive()
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active): void
+    {
+        $this->active = $active;
     }
 }

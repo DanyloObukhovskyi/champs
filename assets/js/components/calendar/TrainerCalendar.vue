@@ -28,7 +28,7 @@
             <div class="day sel"
                  v-for="d in monthDays"
                  @click="setDay(d)"
-                 :class="[+day === +d ? 'active' : '']">
+                 :class="[+day === +d ? 'active' : '', availableDates.hasOwnProperty(`${d}`) && availableDates[`${d}`] ? 'green': '']">
                 <span>
                     {{ d }}
                 </span>
@@ -43,323 +43,366 @@
 </template>
 
 <script>
-    const MONTHS = [
-        'Январь',
-        'Февраль',
-        'Март',
-        'Апрель',
-        'Май',
-        'Июнь',
-        'Июль',
-        'Август',
-        'Сентябрь',
-        'Октрябрь',
-        'Ноябрь',
-        'Декабрь'
-    ];
+const MONTHS = [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октрябрь',
+    'Ноябрь',
+    'Декабрь'
+];
 
-    const MONTHS_PARSE = [
-        'января',
-        'февраля',
-        'марта',
-        'апреля',
-        'мая',
-        'июня',
-        'июля',
-        'августа',
-        'сентября',
-        'октрября',
-        'ноября',
-        'декабря'
-    ];
+const MONTHS_PARSE = [
+    'января',
+    'февраля',
+    'марта',
+    'апреля',
+    'мая',
+    'июня',
+    'июля',
+    'августа',
+    'сентября',
+    'октрября',
+    'ноября',
+    'декабря'
+];
 
-    const WEEK_DAYS = [
-        'Пн',
-        'Вт',
-        'Ср',
-        'Чт',
-        'Пт',
-        'Сб',
-        'Вс'
-    ];
+const WEEK_DAYS = [
+    'Пн',
+    'Вт',
+    'Ср',
+    'Чт',
+    'Пт',
+    'Сб',
+    'Вс'
+];
 
-    export default {
-        name: "TrainerCalendar",
-        props: {
-            date: String
-        },
-        data: function () {
-            return {
-                month: 0,
-                monthView: false,
-                year: 2020,
-                days: 0,
-                day: 0,
-                months: MONTHS,
-                weeks: WEEK_DAYS
-            };
-        },
-        watch: {},
-        computed: {
-            monthDays() {
-                const date = new Date(this.year, this.month, 32);
-
-                return 32 - date.getDate();
-            },
-            prevMonthDays() {
-                const date = new Date(this.year, this.month, 1);
-                let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
-
-                const prevMonthDaysCount = day < 0 ? 0 : day;
-
-                const prevMonth = new Date(this.year, this.month - 1, 0);
-
-                let prevDay = prevMonth.getDate();
-
-                const prevDays = [];
-                for (let i = 0; i < prevMonthDaysCount; i++) {
-                    prevDays.push(prevDay)
-                    prevDay--;
-                }
-                return prevDays;
-            },
-            nextMonthDays() {
-                return 35 - this.monthDays - this.prevMonthDays.length;
-            },
-            dateRu() {
-                return `${this.day} ${MONTHS_PARSE[this.month]} ${this.year}`;
-            }
-        },
-        methods: {
-            setDay(day) {
-                const date = day < 10 ? '0' + day : day;
-                const month = this.month < 10 ? '0' + (this.month + 1) : this.month + 1;
-
-                this.$emit('date', `${date}.${month}.${this.year}`);
-
-                this.day = day < 10 ? '0' + day : day;
-            },
-            prevMonth() {
-                if (this.month === 0) {
-                    this.month = 11;
-                    this.year--;
-                } else {
-                    this.month--;
-                }
-                this.setDay(1)
-            },
-            nextMonth() {
-                if (this.month === 11) {
-                    this.month = 0;
-                    this.year++;
-                } else {
-                    this.month++;
-                }
-                this.setDay(1)
-            }
-        },
-        created() {
-            const date = this.date.split('.');
-
-            this.day = Math.abs(date[0]);
-            this.month = Math.abs(date[1]) - 1;
-            this.year = date[2];
+export default {
+    name: "TrainerCalendar",
+    props: {
+        date: String,
+        availableDates: {
+            default: {}
         }
+    },
+    data: function () {
+        return {
+            month: 0,
+            monthView: false,
+            year: 2020,
+            days: 0,
+            day: 0,
+            months: MONTHS,
+            weeks: WEEK_DAYS
+        };
+    },
+    watch: {},
+    computed: {
+        monthDays() {
+            const date = new Date(this.year, this.month, 32);
+
+            return 32 - date.getDate();
+        },
+        prevMonthDays() {
+            const date = new Date(this.year, this.month, 1);
+            let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
+
+            const prevMonthDaysCount = day < 0 ? 0 : day;
+
+            const prevMonth = new Date(this.year, this.month - 1, 0);
+
+            let prevDay = prevMonth.getDate();
+
+            const prevDays = [];
+            for (let i = 0; i < prevMonthDaysCount; i++) {
+                prevDays.push(prevDay)
+                prevDay--;
+            }
+            return prevDays;
+        },
+        nextMonthDays() {
+            return 35 - this.monthDays - this.prevMonthDays.length;
+        },
+        dateRu() {
+            return `${this.day} ${MONTHS_PARSE[this.month]} ${this.year}`;
+        }
+    },
+    methods: {
+        setDay(day) {
+            const date = day < 10 ? '0' + day : day;
+            const month = this.month < 10 ? '0' + (this.month + 1) : this.month + 1;
+
+            this.$emit('date', `${date}.${month}.${this.year}`);
+
+            this.day = day < 10 ? '0' + day : day;
+        },
+        prevMonth() {
+            if (this.month === 0) {
+                this.month = 11;
+                this.year--;
+            } else {
+                this.month--;
+            }
+            this.setDay(1)
+        },
+        nextMonth() {
+            if (this.month === 11) {
+                this.month = 0;
+                this.year++;
+            } else {
+                this.month++;
+            }
+            this.setDay(1)
+        }
+    },
+    created() {
+        const date = this.date.split('.');
+
+        this.day = Math.abs(date[0]);
+        this.month = Math.abs(date[1]) - 1;
+        this.year = date[2];
     }
+}
 </script>
 
 <style scoped lang="scss">
+.trainer-calendar {
+  margin-top: 1vw;
+  border-radius: 0;
+
+  .title {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .prev {
+      cursor: pointer;
+      height: 2.5vw;
+      width: 1.5vw;
+      clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+      background-color: #aeaeae;
+      margin-right: .1vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      i {
+        color: white;
+        font-size: .8vw;
+      }
+
+      &:hover {
+        opacity: .5;
+      }
+    }
+
+    .next {
+      cursor: pointer;
+      clip-path: polygon(0 0, 100% 25%, 100% 75%, 0% 100%);
+      height: 2.5vw;
+      width: 1.5vw;
+      background-color: #aeaeae;
+      margin-left: .1vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      i {
+        color: white;
+        font-size: .8vw;
+      }
+
+      &:hover {
+        opacity: .5;
+      }
+    }
+
+    .date {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      font-size: .9vw;
+
+      .month {
+        margin-right: .5vw;
+      }
+    }
+  }
+
+  .weeks {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding-top: 1vw;
+    padding-bottom: 0.3vw;
+
+    .week {
+      flex-shrink: 0;
+      width: 14.2%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9vw;
+      color: #5c6b79;
+    }
+  }
+
+  .days {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .day {
+      flex-shrink: 0;
+      width: 14.2%;
+      padding: .1vw;
+
+      &.green {
+        span {
+          min-height: 2.5vw;
+          max-height: 3.5vw;
+          color: white;
+          background-color: #6cff1d;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.7vw;
+          display: flex;
+          padding: 34% 0;
+
+          &:hover {
+            background-color: #6cff1d;
+            color: #FFFFFF;
+            cursor: pointer;
+          }
+        }
+      }
+
+      span {
+        min-height: 2.5vw;
+        max-height: 3.5vw;
+        color: white;
+        background-color: #aeaeae;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7vw;
+        display: flex;
+        padding: 34% 0;
+
+        &:hover {
+          background-color: #FF6D1D;
+          color: #FFFFFF;
+          cursor: pointer;
+        }
+      }
+
+      &.active {
+        span {
+          background-color: #FF6D1D;
+          color: #FFFFFF;
+        }
+      }
+
+      &.disable {
+        span {
+          color: #6b6d6f;
+
+          &:hover {
+            color: #c9c9c9;
+            background-color: #aeaeae;
+          }
+        }
+      }
+    }
+  }
+}
+
+.dark {
   .trainer-calendar {
-	margin-top: 1vw;
-	border-radius: 0;
+    .title {
+      .prev {
+        background-color: #2d3135;
 
-	.title {
-	  width: 100%;
-	  display: flex;
-	  flex-direction: row;
-	  align-items: center;
+        &:hover {
+          opacity: .5;
+        }
+      }
 
-	  .prev {
-		cursor: pointer;
-		height: 2.5vw;
-		width: 1.5vw;
-		clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
-		background-color: #aeaeae;
-		margin-right: .1vw;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+      .next {
+        background-color: #2d3135;
 
-		i {
-		  color: white;
-		  font-size: .8vw;
-		}
+        &:hover {
+          opacity: .5;
+        }
+      }
 
-		&:hover {
-		  opacity: .5;
-		}
-	  }
+      .date {
+        .month,
+        .year {
+          color: white;
+        }
+      }
+    }
 
-	  .next {
-		cursor: pointer;
-		clip-path: polygon(0 0, 100% 25%, 100% 75%, 0% 100%);
-		height: 2.5vw;
-		width: 1.5vw;
-		background-color: #aeaeae;
-		margin-left: .1vw;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+    .days {
+      .day {
+        &.green {
+          span {
+            min-height: 2.5vw;
+            max-height: 3.5vw;
+            color: white;
+            background-color: #6cff1d;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7vw;
+            display: flex;
+            padding: 34% 0;
 
-		i {
-		  color: white;
-		  font-size: .8vw;
-		}
+            &:hover {
+              background-color: #6cff1d;
+              color: #FFFFFF;
+              cursor: pointer;
+            }
+          }
+        }
 
-		&:hover {
-		  opacity: .5;
-		}
-	  }
+        span {
+          color: white;
+          background-color: #2d3135;
 
-	  .date {
-		display: flex;
-		justify-content: center;
-		width: 100%;
-		font-size: .9vw;
+          &:hover {
+            background-color: #FF6D1D;
+            color: #FFFFFF;
+            cursor: pointer;
+          }
+        }
 
-		.month {
-		  margin-right: .5vw;
-		}
-	  }
-	}
+        &.active {
+          span {
+            background-color: #FF6D1D;
+            color: #FFFFFF;
+          }
+        }
 
-	.weeks {
-	  width: 100%;
-	  display: flex;
-	  flex-direction: row;
-	  padding-top: 1vw;
-	  padding-bottom: 0.3vw;
+        &.disable {
+          span {
+            color: #67696b;
 
-	  .week {
-		flex-shrink: 0;
-		width: 14.2%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.9vw;
-		color: #5c6b79;
-	  }
-	}
-
-	.days {
-	  width: 100%;
-	  display: flex;
-	  flex-direction: row;
-	  flex-wrap: wrap;
-
-	  .day {
-		flex-shrink: 0;
-		width: 14.2%;
-		padding: .1vw;
-
-		span {
-		  min-height: 2.5vw;
-		  max-height: 3.5vw;
-		  color: white;
-		  background-color: #aeaeae;
-		  align-items: center;
-		  justify-content: center;
-		  font-size: 0.7vw;
-		  display: flex;
-		  padding: 34% 0;
-
-		  &:hover {
-			background-color: #FF6D1D;
-			color: #FFFFFF;
-			cursor: pointer;
-		  }
-		}
-
-		&.active {
-		  span {
-			background-color: #FF6D1D;
-			color: #FFFFFF;
-		  }
-		}
-
-		&.disable {
-		  span {
-			color: #6b6d6f;
-
-			&:hover {
-			  color: #c9c9c9;
-			  background-color: #aeaeae;
-			}
-		  }
-		}
-	  }
-	}
+            &:hover {
+              color: #67696b;
+              background-color: #2d3135;
+            }
+          }
+        }
+      }
+    }
   }
-
-  .dark {
-	.trainer-calendar {
-	  .title {
-		.prev {
-		  background-color: #2d3135;
-
-		  &:hover {
-			opacity: .5;
-		  }
-		}
-
-		.next {
-		  background-color: #2d3135;
-
-		  &:hover {
-			opacity: .5;
-		  }
-		}
-
-		.date {
-		  .month,
-		  .year {
-			color: white;
-		  }
-		}
-	  }
-
-	  .days {
-		.day {
-		  span {
-			color: white;
-			background-color: #2d3135;
-
-			&:hover {
-			  background-color: #FF6D1D;
-			  color: #FFFFFF;
-			  cursor: pointer;
-			}
-		  }
-
-		  &.active {
-			span {
-			  background-color: #FF6D1D;
-			  color: #FFFFFF;
-			}
-		  }
-
-		  &.disable {
-			span {
-			  color: #67696b;
-
-			  &:hover {
-				color: #67696b;
-				background-color: #2d3135;
-			  }
-			}
-		  }
-		}
-	  }
-	}
-  }
+}
 </style>

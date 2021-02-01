@@ -18,7 +18,12 @@
                     <div class="trainer-calendar-title">
                         Выберете дату
                     </div>
-                    <trainer-calendar ref="calendar" v-if="date !== null" :date="date" @date="setDate"/>
+                    <trainer-calendar
+                            ref="calendar"
+                            v-if="date !== null"
+                            :date="date"
+                            :available-dates="availableDates"
+                            @date="setDate"/>
                 </div>
             </div>
             <div class="right-box">
@@ -60,6 +65,7 @@
                 :lessons="times"
                 :date="date"
                 :selected-time="resultTime"
+                :selected-length="times.filter(t => t.status === 2).length"
                 :training-type="trainingType">
         </trainer-confirm-payment>
     </div>
@@ -71,6 +77,7 @@
     import MarketplaceService from "../../services/MarketplaceService";
     import SmallLoader from "../helpers/SmallLoader";
     import TrainerConfirmPayment from "./TrainerConfirmPayment";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "TrainerTimetable",
@@ -90,7 +97,7 @@
                 date: null,
                 load: false,
                 times: [],
-                user: null
+                availableDates: {}
             }
         },
         watch: {
@@ -99,6 +106,9 @@
             }
         },
         computed: {
+            ...mapGetters([
+                'user'
+            ]),
             resultTime() {
                 let str = null;
                 let selectedTimes = this.selectedTime
@@ -147,10 +157,19 @@
             setDate(date) {
                 this.date = date;
             },
+            getAvailableDates() {
+                this.loadAvailableDates = true;
+                MarketplaceService
+                    .getTrainerAvailableTrainingDatesForMonth(this.trainer.id, this.date)
+                    .then(dates => {
+                        this.availableDates = dates;
+                    })
+            },
             getTimes() {
                 this.load = true;
 
-                MarketplaceService.getTrainerScheduleDay(this.trainer.id, this.date)
+                MarketplaceService
+                    .getTrainerScheduleDay(this.trainer.id, this.date)
                     .then(times => {
                         const timesParse = [];
 
@@ -166,6 +185,8 @@
                         }
                         this.times = timesParse;
                         this.load = false;
+
+                        this.getAvailableDates();
                     })
             },
             setTime(time) {
@@ -191,11 +212,9 @@
             this.date = `${day}.${month}.${date.getFullYear()}`;
 
             this.getTimes()
+            this.getAvailableDates();
 
-            MarketplaceService.getAuthUser()
-                .then(user => {
-                    this.user = user;
-                })
+            window.test = this;
         }
     }
 </script>
