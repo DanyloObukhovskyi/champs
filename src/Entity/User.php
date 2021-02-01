@@ -752,4 +752,21 @@ class User implements UserInterface
     {
         $this->additionallyRank = $additionallyRank;
     }
+
+    /**
+     * @return bool
+     */
+    public function isGlobalElite(): bool
+    {
+        $result = false;
+        /** @var Game $game */
+        $game = $this->getGame();
+
+        if (isset($game) and $game->getCode() === 'cs') {
+            if ((int)$this->getRang() >= $_ENV['ELO_FOR_GLOBAL_ELITE']) {
+                $result = true;
+            }
+        }
+        return $result;
+    }
 }

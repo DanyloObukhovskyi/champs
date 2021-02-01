@@ -8,6 +8,7 @@ use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\ScheduleService;
 use App\Service\TimeZoneService;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -120,5 +121,49 @@ class ScheduleController extends AbstractController
             ->createDay($userId, $date, $timeOffset, $isStudent);
 
         return $this->json($schedule);
+    }
+
+    /**
+     * Schedule /calendar/*
+     *
+     * @Route("/calendar/available/training/dates/for/month/{trainerId}", methods={"POST"})
+     */
+    public function getTrainerAvailableTrainingDatesForMonth(Request $request, $trainerId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $trainer = $this->entityManager
+            ->getRepository(User::class)
+            ->find($trainerId);
+
+        $availableDates = [];
+        if (isset($request->date) and isset($trainer)) {
+            $date = Carbon::createFromFormat('d.m.Y', $request->date);
+            $date->setDay(1);
+
+            $to = Carbon::createFromFormat('d.m.Y', $request->date);
+            $to->setDay($to->daysInMonth);
+
+
+            if ($date->diffInDays(Carbon::now()) > 0) {
+                for ($day = 1; $day <= $date->daysInMonth; $day++) {
+                    $date->setDay($day);
+
+                    $schedules = $this->scheduleService
+                        ->findAvailableByTrainerAndDate(
+                            $trainer,
+                            $date->format('Y-m-d')
+                        );
+
+                    if (empty($schedules)) {
+                        $availableDates[$day] = false;
+                    } else {
+                        $availableDates[$day] = true;
+                    }
+                }
+            }
+        }
+
+        return $this->json($availableDates);
     }
 }

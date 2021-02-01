@@ -364,7 +364,6 @@
 					$new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
 					$method =  (isset($_POST["method"]) && !empty($_POST["method"])) ? trim($_POST["method"]) : '';
 					$game = (isset($_POST["game"]) && !empty($_POST["game"])) ? trim($_POST["game"]) : '';
-                    $global_elite = isset($_POST["global_elite"]);
 					$twitch =  (isset($_POST["twitch"]) && !empty($_POST["twitch"])) ? trim($_POST["twitch"]) : '';
 					$admin_percentage = (isset($_POST["admin_percentage"]) && !empty($_POST["admin_percentage"])) ? trim($_POST["admin_percentage"]) : '';
                     $videos = (isset($_POST["videos"]) && !empty($_POST["videos"])) ? $_POST["videos"] : [];
@@ -413,7 +412,6 @@
 						$update_data['userid'] = $created_id;
 						$update_data['twitch'] = $twitch;
 						$update_data['admin_percentage'] = $admin_percentage;
-                        $update_data['global_elite'] = $global_elite;
 						
 						$check_teacher =  $this->trainers_model->check_teacher_data($created_id);
 						if(!empty($check_teacher[0])) {

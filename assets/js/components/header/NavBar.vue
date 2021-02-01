@@ -32,7 +32,7 @@
                     MVP
                 </a>
             </div>
-            <social :social="social"></social>
+<!--            <social :social="social"></social>-->
             <div class="login-wrapper">
                 <div class="login">
                     <a :href="`/${lang}/${isTrainer ? 'trainer': 'user'}/cabinet`"
