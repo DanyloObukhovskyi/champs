@@ -85,6 +85,13 @@
                     <textarea name="setting[<?php echo $setting['description']['key']?>]"><?php echo $setting['description']['value']?></textarea>
                 </div>
             <?php endforeach;?>
+            <h1 class="main-title">Текст на страница политики</h1>
+            <?php foreach ($terms as $setting):?>
+                <label class="label" for=""><?php echo $setting['title']?></label>
+                <div class="text-redactor">
+                    <textarea name="setting[<?php echo $setting['key']?>]"><?php echo $setting['value']?></textarea>
+                </div>
+            <?php endforeach;?>
             <div class="flex">
                 <a href="">
                     <button class="btn btn-orange mt-15 mr-10">Сохранить</button>

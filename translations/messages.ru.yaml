@@ -22,7 +22,7 @@ This email is already taken: Этот эмейл уже занят!
 trainings:
   titles:
     individual: Индивидуальная тренировка
-    group: Груповая тренировка
+    group: Групповая тренировка
     analytic: Анализ реплея
   description:
     individual: Укажите стоимость тренировки в рублях за индивидуальное занятие с учеником.

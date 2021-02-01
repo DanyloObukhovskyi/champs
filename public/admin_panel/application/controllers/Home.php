@@ -587,6 +587,8 @@
             $data['settings'] = $settings;
             $data['images_path'] = $this->config->item('display_banner-pic');
             $data['current_u_can'] = $current_u_can;
+            $data['terms'] = $this->setting_model->get_terms();
+
             $data['output'] = $this->load->view('home/settings', $data, true);
 
             $this->load->view('layout/home', $data);

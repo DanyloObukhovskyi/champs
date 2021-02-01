@@ -7,6 +7,7 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
+import '../css/sweet-alert.css';
 import 'v-title/lib/element-ui';
 
 import Vuex from 'vuex'
