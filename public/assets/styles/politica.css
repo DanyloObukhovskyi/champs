@@ -1,5 +1,7 @@
 .politica{
   width: 100%;
+  margin-top: 8vw;
+  margin-bottom: 4vw;
 }
 .politica .container{
   width: 70%;
@@ -7,9 +9,9 @@
   padding-bottom: 1vw;
 }
 .politica .container .title{
-  font-size: 1.2vw;
   font-weight: 500;
   padding: 2vw 0;
+  font-size: 1.2vw;
 }
 .politica .container p{
   font-size: 0.9vw;

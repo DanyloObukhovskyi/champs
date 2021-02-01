@@ -15,6 +15,16 @@ class Setting_model extends CI_Model
         'instagram',
     ];
 
+    public const TERMS_PAGES = [
+        'cookiePolicy',
+        'privacyPolicy',
+        'termsOfUse',
+        'conditionsForOrderingWorkouts',
+        'offerPolicy',
+        'offerPolicyTrainer',
+        'concursRegulation',
+    ];
+
     public const TRAININGS_DESCRIPTION = [
         'trainingIndividualTitle',
         'trainingIndividualText',
@@ -75,6 +85,7 @@ class Setting_model extends CI_Model
             array_merge(
             self::SOCIAL,
                 self::TRAININGS_DESCRIPTION,
+                self::TERMS_PAGES
             )
         );
 
@@ -87,5 +98,17 @@ class Setting_model extends CI_Model
     {
         $this->db->where('key', $key);
         $this->db->update($this->table, ['value' => $value]);
+    }
+
+    public function get_terms()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where_in('key',
+            self::TERMS_PAGES
+        );
+        $result = $this->db->get();
+
+        return $result->result_array();
     }
 }

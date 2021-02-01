@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="help d-flex">
-            <a href="">
+            <a href="https://discord.com/invite/tG4D2Wt" target="_blank">
                 <svg class="discord" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                      aria-hidden="true"
                      focusable="false"
@@ -36,7 +36,7 @@
             <a href="">
                 <i class="far fa-question-circle zendesk"></i>
             </a>
-            <a href="">
+            <a href="mailto:support@champs.pro" target="_blank">
                 <i class="fas fa-envelope letter"></i>
             </a>
         </div>

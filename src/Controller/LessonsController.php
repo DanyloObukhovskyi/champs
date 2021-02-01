@@ -130,6 +130,9 @@ class LessonsController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent(), false);
 
+        /** @var User $authUser */
+        $authUser = $this->getUser();
+
         /** @var User $trainer */
         $trainer = $entityManager->getRepository(User::class)->find($data->trainer_id);
 
@@ -143,14 +146,26 @@ class LessonsController extends AbstractController
         }
 
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-            $trainerEntity->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
         if ($gmtNumeric < 0) {
             $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
         } else {
             $trainerTimezone = (int)gmdate("g", $gmtNumeric);
         }
-        $timeOffset = $trainerTimezone - (int)$data->timezone;
+        if ($authUser->getTimezone() !== null) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $authUser->getTimeZone()
+            );
+            if ($gmtNumeric < 0) {
+                $userTimezone = -(int)gmdate("g", $gmtNumeric);
+            } else {
+                $userTimezone = (int)gmdate("g", $gmtNumeric);
+            }
+        } else {
+            $userTimezone = (int)$data->timezone;
+        }
+        $timeOffset = $trainerTimezone - $userTimezone;
 
         $lessons = [];
         foreach ($data->lessons as $lesson) {

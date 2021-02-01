@@ -126,7 +126,7 @@
                 rankIconError: false,
                 trainingTypes: {
                     individual: 'Идивидуальная тренировка',
-                    group: 'Груповая тренировка',
+                    group: 'Групповая тренировка',
                     analytic: 'Анализ видео',
                 }
             }

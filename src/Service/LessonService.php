@@ -150,7 +150,8 @@ class LessonService extends EntityService
 
                     $lesson = new Lessons();
                     /** @var Teachers $trainerEntity */
-                    $trainerEntity = $this->entityManager->getRepository(Teachers::class)
+                    $trainerEntity = $this->entityManager
+                        ->getRepository(Teachers::class)
                         ->findByUserId($trainer->getId());
 
                     $lessonsCount = count($lessonTimes);
@@ -189,7 +190,6 @@ class LessonService extends EntityService
                         $lessonTime->setTrainerTime($schedule);
 
                         $this->save($lessonTime);
-
                         $schedule->setStatus(Schedule::TIME_STATUS_RESERVED);
                         $this->save($schedule);
                     }

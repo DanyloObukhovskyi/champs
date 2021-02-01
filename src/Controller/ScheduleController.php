@@ -92,6 +92,7 @@ class ScheduleController extends AbstractController
     public function viewScheduleDay(Request $request)
     {
         $form = json_decode($request->getContent(), false);
+
         $userId = $form->trainerId;
         $date = new \DateTime($form->date);
 
@@ -144,8 +145,7 @@ class ScheduleController extends AbstractController
             $to = Carbon::createFromFormat('d.m.Y', $request->date);
             $to->setDay($to->daysInMonth);
 
-
-            if ($date->diffInDays(Carbon::now()) > 0) {
+            if ($date->format('Y.m') >= Carbon::now()->format('Y.m')) {
                 for ($day = 1; $day <= $date->daysInMonth; $day++) {
                     $date->setDay($day);
 

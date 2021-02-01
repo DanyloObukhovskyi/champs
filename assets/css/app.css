@@ -6,6 +6,7 @@ body {
 .dark body {
     background: #35393e;
     transition: all .5s ease-in-out;
+    color: white;
 }
 
 #layout .page{
