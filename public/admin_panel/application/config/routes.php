@@ -155,3 +155,9 @@ $route['c-admin/referral'] = 'referral_c/index';
 $route['c-admin/ajax/referral'] = 'referral_c/ajax';
 $route['c-admin/ajax/referral/save'] = 'referral_c/save';
 $route['c-admin/referral/delete/(:num)'] = 'referral_c/delete/$1';
+
+//comments
+$route['c-admin/comments'] = 'comments_c/index';
+$route['c-admin/ajax/comments'] = 'comments_c/ajax';
+$route['c-admin/ajax/comments/save'] = 'comments_c/save';
+$route['c-admin/comments/delete/(:any)/(:num)'] = 'comments_c/delete/$1/$2';

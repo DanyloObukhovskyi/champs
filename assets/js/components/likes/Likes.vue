@@ -9,10 +9,14 @@
         <div class="like">
             <img v-if="!isLiked" src="/images/news/like.svg" @click="setLike">
             <img v-else src="/images/news/likeActive.png">
+
+            <img class="active" src="/images/news/likeHover.png">
         </div>
         <div class="dislike">
             <img v-if="!isDisliked" src="/images/news/dislike.svg" @click="setDislike">
             <img v-else src="/images/news/dislikeActive.png">
+
+            <img class="active" src="/images/news/dislikeHover.png">
         </div>
         <span class="likes-count-two">
             {{likes}} нравится
@@ -91,6 +95,26 @@
     }
 
     .likes .like img,
+    .likes .dislike img {
+        width: 1.2vw;
+        margin-right: .3vw;
+        cursor: pointer;
+    }
+    .likes .like img.active,
+    .likes .dislike img.active {
+        display: none;
+    }
+
+    .likes .like:hover img,
+    .likes .dislike:hover img{
+        display: none;
+    }
+
+    .likes .like:hover img.active,
+    .likes .dislike:hover img.active{
+        display: unset;
+    }
+
     .likes .dislike img {
         width: 1.2vw;
         margin-right: .3vw;
