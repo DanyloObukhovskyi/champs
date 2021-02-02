@@ -47,4 +47,7 @@
     <li class="<?php echo 'referral' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/referral'); ?>">Реферрал</a>
     </li>
+    <li class="<?php echo 'comments' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/comments'); ?>">Коментарии и отзывы</a>
+    </li>
 </ul>
