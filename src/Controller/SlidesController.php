@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SlidesController extends AbstractController
 {
-
     public $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -46,6 +45,23 @@ class SlidesController extends AbstractController
                 'type' => Slide::HOME_TYPE
             ]);
 
+        return $this->json($slides);
+    }
+
+    /**
+     * @Route("/get/home/slides/{game}")
+     */
+    public function homeGame($game): Response
+    {
+        $slides = [];
+
+        if ($game === 'cs') {
+            $slides = $this->entityManager
+                ->getRepository(Slide::class)
+                ->findBy([
+                    'type' => Slide::CS_HOME_TYPE
+                ]);
+        }
         return $this->json($slides);
     }
 }

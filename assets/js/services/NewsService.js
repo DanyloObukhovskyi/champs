@@ -48,6 +48,10 @@ class NewsService extends Service {
     getUserBookmarkNews = () => {
         return this.send(`news/user/bookmark`);
     }
+
+    getTopNews = () => {
+        return this.send(`news/top/five`);
+    }
 }
 
 export default new NewsService();

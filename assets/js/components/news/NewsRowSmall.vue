@@ -49,7 +49,7 @@ import Swal from 'sweetalert2'
 import NewsService from "../../services/NewsService";
 
 export default {
-    name: "NewsRow",
+    name: "NewsRowSmall",
     props: ['news', 'className'],
     computed: {
         lang() {
@@ -147,14 +147,10 @@ export default {
     -webkit-animation: animation-translate-bottom 1500ms linear both;
     animation: animation-translate-bottom 1500ms linear both;
     background-position: center;
-    height: 100%;
+    height: 50%;
     background-size: 100%;
     background-position: top;
     transition: all .5s ease-in-out;
-}
-
-.article.h-25vw .article-wrapper {
-    height: 25vw;
 }
 
 .article:hover {
@@ -173,9 +169,13 @@ export default {
 }
 
 .article-wrapper {
-    height: 18vw;
+    height: 10vw;
     background: rgb(255, 255, 255);
     background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 0) 65%);
+}
+
+.article-wrapper {
+    height: 85%;
 }
 
 .article-wrapper .bookmark {
@@ -216,12 +216,12 @@ export default {
 }
 
 .article-wrapper .news-data .title {
-    font-size: 1.5vw;
+    font-size: 1vw;
     color: black;
 }
 
 .article-wrapper .news-data .description {
-    font-size: 1vw;
+    font-size: .7vw;
     color: #46484a;
 }
 
@@ -229,14 +229,6 @@ export default {
 .dark .article-wrapper .news-data .description,
 .dark .author-data .activity {
     color: white;
-}
-
-.article:nth-child(1n) {
-    margin-right: .6vw;
-}
-
-.article:nth-child(2n) {
-    margin-left: .6vw;
 }
 
 .article .author-data {
@@ -264,7 +256,7 @@ export default {
 }
 
 .article .author-data {
-    padding: 1vw;
+    padding: .5vw 1vw;
     font-size: .8vw;
 }
 

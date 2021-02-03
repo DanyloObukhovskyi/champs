@@ -105,12 +105,6 @@
             }
         },
         methods: {
-            getGameImage(game) {
-                if (this.gamesIcons.hasOwnProperty(game)) {
-                    return this.gamesIcons[game];
-                }
-                return null;
-            },
             pageUp() {
                 let t;
                 const top = Math.max(

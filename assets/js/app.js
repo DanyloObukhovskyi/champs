@@ -38,6 +38,7 @@ import MarketplaceTrainerPage from "./pages/MarketplaceTrainerPage";
 import HomePage from "./pages/HomePage";
 import CabinetPage from "./pages/CabinetPage";
 import Header from "./components/header/Header";
+import CsHomePage from "./pages/CsHomePage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -78,6 +79,7 @@ Vue.component('home-slider', HomeSlider);
 Vue.component('home-page', HomePage);
 Vue.component('cabinet-page', CabinetPage);
 Vue.component('v-header', Header);
+Vue.component('cs-home-page', CsHomePage);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

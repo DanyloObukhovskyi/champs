@@ -113,4 +113,14 @@ class NewsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getTopNews()
+    {
+        return $this->createQueryBuilder("n")
+            ->orderBy('n.date', 'DESC')
+            ->andWhere('n.isTop = 1')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -442,4 +442,18 @@ class NewsController extends AbstractController
         }
         return $this->json($news);
     }
+
+    /**
+     * @Route("/news/top/five")
+     */
+    public function getTopNews()
+    {
+        $news = [];
+        $newsEntities = $this->newsService->getTopNews();
+
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        return $this->json($news);
+    }
 }

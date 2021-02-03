@@ -7,6 +7,8 @@ class Slide_model extends CI_Model
 
     public const HOME_TYPE = 'home';
 
+    public const HOME_CS_TYPE = 'homeCs';
+
     public const GENERAL_TYPE = 'general';
 
     public function get_all_slides()

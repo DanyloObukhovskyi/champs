@@ -151,11 +151,14 @@
 		</div>
 
 		<div id="b1" class="main-post-editor-edit z <?php print $show1; ?>">
-			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="1" name="post_type">
-				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
+                <input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
@@ -197,10 +200,12 @@
 		</div>
 
 		<div id="b2" class="main-post-editor-edit z <?php print $show2; ?>">
-			<span class="editor-edit">Заголовок поста</span>
-
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="2" name="post_type">
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
@@ -243,9 +248,12 @@
 		</div>
 
 		<div id="b3" class="z <?php print $show3; ?>">
-			<span class="editor-title_post">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="3" name="post_type">
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title" placeholder="Имя поста" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>
@@ -299,9 +307,12 @@
 		</div>
 
 		<div id="b4" class="main-post-editor-edit z <?php print $show4; ?>">
-			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="4" name="post_type">
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
@@ -343,9 +354,12 @@
 		</div>
 
 		<div id="b5" class="main-post-editor-edit z <?php print $show5; ?>">
-			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="5" name="post_type">
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
@@ -387,9 +401,12 @@
 		</div>
 
 		<div id="b6" class="main-post-editor-edit z <?php print $show6; ?>">
-			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="6" name="post_type">
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
@@ -431,9 +448,12 @@
 		</div>
 
 		<div id="b7" class="main-post-editor-edit z <?php print $show7; ?>">
-			<span class="editor-edit">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="7" name="post_type">
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
@@ -475,9 +495,12 @@
 		</div>
 
 		<div id="b8" class="z <?php print $show8; ?>">
-			<span class="editor-title_post">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="8" name="post_type">
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title"  placeholder="Имя поста" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>
@@ -530,9 +553,12 @@
 		</div>
 
 		<div id="b9" class="z <?php print $show9; ?>">
-			<span class="editor-title_post">Заголовок поста</span>
 			<form class="editor-edit-form" action="<?php print base_url("c-admin/post/edit/".$post_fields['id']."/".$UserID); ?>" method="post" enctype="multipart/form-data">
-				<input type="hidden" value="true" name="edit">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top" <?php print $post_fields['is_top'] ? 'checked': ''; ?>>
+                <div></div>
+                <span class="editor-edit">Заголовок поста</span>
+                <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="9" name="post_type">
 				<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="Имя поста" name="post_title"  value="<?php print $post_fields['title']; ?>">
 				<div class="editor-title_post">URL поста</div>

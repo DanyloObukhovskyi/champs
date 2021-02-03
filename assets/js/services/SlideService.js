@@ -9,6 +9,10 @@ class SlideService extends Service{
     getHomeSlides = () => {
         return this.send('get/home/slides');
     }
+
+    getCsHomeSlides = () => {
+        return this.send('get/home/slides/cs');
+    }
 }
 
 export default new SlideService();

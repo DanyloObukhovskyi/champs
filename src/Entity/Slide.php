@@ -14,6 +14,8 @@ class Slide
 
     public const GENERAL_TYPE = 'general';
 
+    public const CS_HOME_TYPE = 'homeCs';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
