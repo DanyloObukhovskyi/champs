@@ -199,4 +199,9 @@ class NewsService extends EntityService
     {
         return $this->entityManager->getRepository(NewsLike::class)->getCount($news);
     }
+
+    public function getTopNews()
+    {
+        return $this->repository->getTopNews();
+    }
 }

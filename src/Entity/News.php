@@ -100,6 +100,11 @@ class News
      */
     private $likes;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isTop;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -282,5 +287,21 @@ class News
     public function setLikes($likes): void
     {
         $this->likes = $likes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsTop()
+    {
+        return $this->isTop;
+    }
+
+    /**
+     * @param mixed $isTop
+     */
+    public function setIsTop($isTop): void
+    {
+        $this->isTop = $isTop;
     }
 }

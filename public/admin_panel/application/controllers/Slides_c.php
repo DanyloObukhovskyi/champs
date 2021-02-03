@@ -78,7 +78,8 @@ class Slides_c extends CI_Controller
         $data['slides'] = $this->slide_model->get_all_slides();
         $data['types'] = [
             Slide_model::HOME_TYPE => 'Главная',
-            Slide_model::GENERAL_TYPE => 'Общие'
+            Slide_model::HOME_CS_TYPE => 'Главная CS:GO',
+            Slide_model::GENERAL_TYPE => 'Общие',
         ];
 
         $data['output'] = $this->load->view('home/slides', $data, true);

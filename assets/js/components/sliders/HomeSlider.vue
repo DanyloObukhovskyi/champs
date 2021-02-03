@@ -42,7 +42,7 @@
         },
         methods: {
             getSlides() {
-                SlideService.getHomeSlides()
+                SlideService.getCsHomeSlides()
                     .then(banners => {
                         this.banners = banners;
                         this.load = false

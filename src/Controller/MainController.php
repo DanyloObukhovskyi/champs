@@ -3,12 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Entity\Match;
-use App\Entity\News;
-use App\Entity\Result;
+use App\Entity\{Result, Match};
 use App\Service\Event\EventService;
 use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
+use App\Service\News\NewsTagService;
 use App\Service\RatingPersonService;
 use App\Service\YouTubeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,19 +17,45 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class MainController extends DefController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     public $entityManager;
 
+    /**
+     * @var MatchService
+     */
     public $matchService;
 
+    /**
+     * @var NewsService
+     */
     public $newsService;
 
+    /**
+     * @var EventService
+     */
     public $eventService;
 
+    /**
+     * @var RatingPersonService
+     */
     public $ratingPersonService;
 
+    /**
+     * @var YouTubeService
+     */
     public $youTubeService;
+
+    /**
+     * @var NewsTagService
+     */
+    public $newsTagService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -41,11 +66,13 @@ class MainController extends DefController
 
         $this->eventService = new EventService($entityManager);
         $this->ratingPersonService = new RatingPersonService($entityManager);
+
         $this->youTubeService = new YouTubeService();
+        $this->newsTagService = new NewsTagService($entityManager);
     }
 
     /**
-     * @Route("/ru/", name="main")
+     * @Route("/", name="main")
      */
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
@@ -56,9 +83,22 @@ class MainController extends DefController
 
         $token = $request->get('token');
 
+        $popularTags = $this->newsTagService->popularTags(5);
+
         return $this->render('templates/home.html.twig', [
             'router' => 'home',
-            'token' => $token
+            'token' => $token,
+            'popularTags' => $popularTags
+        ]);
+    }
+
+    /**
+     * @Route("/{game}", requirements={"game": "cs"})
+     */
+    public function gameHome($game): Response
+    {
+        return $this->render("templates/home/$game.html.twig", [
+            'router' => 'home',
         ]);
     }
 
@@ -112,30 +152,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/main/matches")
-     */
-    public function getMainMatches(Request $request)
-    {
-        $request = json_decode($request->getContent(), false);
-        $date = !empty($request->date) ? new \DateTime($request->date) : new \DateTime();
-
-        $matches = $this->entityManager
-            ->getRepository(Match::class)
-            ->findMatchesByDate($date);
-
-        $matchesParse = [];
-        foreach ($matches as $match) {
-            $matchesParse[] = $this->matchService->matchDecorator($match);
-        }
-
-        return $this->json([
-            'dateRu' => NewsService::replaceMonth($date->format('d F')),
-            'matches' => $matchesParse
-        ]);
-    }
-
-    /**
-     * @Route("/ru/main/results")
+     * @Route("/main/results")
      */
     public function getMainResults()
     {
@@ -153,20 +170,21 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/main/live/matches")
+     * @Route("/main/live/matches")
      */
     public function getMainLiveMatches()
     {
         $matches = $this->entityManager
             ->getRepository(Match::class)
             ->findBy(['live' => 1], ['id' => 'DESC'], 6);
+
         $matchesItems = $this->matchService->matchesDecorator($matches);
 
         return $this->json($matchesItems);
     }
 
     /**
-     * @Route("/ru/main/news")
+     * @Route("/main/news")
      */
     public function getMainNews()
     {
@@ -180,7 +198,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/main/video/news")
+     * @Route("/main/video/news")
      */
     public function getVideoNews(TranslatorInterface $translator)
     {
@@ -202,7 +220,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/main/events")
+     * @Route("/main/events")
      */
     public function getMainRatingPlayers()
     {
@@ -217,7 +235,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/404", name="notFound")
+     * @Route("/404", name="notFound")
      */
     public function notFound()
     {
@@ -225,7 +243,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/setcookies", name="main_setcookies")
+     * @Route("/setcookies", name="main_setcookies")
      */
     public function setcookies()
     {
@@ -234,7 +252,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/map", name="map_index")
+     * @Route("/map", name="map_index")
      */
     public function index()
     {
@@ -248,7 +266,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/service_agreement", name="service_agreement_index")
+     * @Route("/service_agreement", name="service_agreement_index")
      */
     public function service_agreement()
     {
@@ -259,5 +277,4 @@ class MainController extends DefController
             ]
         ]);
     }
-
 }

@@ -35,7 +35,7 @@ class Edit_c extends CI_Controller
         ));
     }
 
-    public function gallery($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = "", $post_id = 0)
+    public function gallery($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = "", $post_id = 0, $post_is_top = null)
     {
         if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
@@ -54,7 +54,8 @@ class Edit_c extends CI_Controller
             $update_data['updated_at'] = date("Y-m-d H:i:s");
             $update_data['date'] = (!empty($post_date)) ? $post_date : date("Y-m-d H:i:s");
             $update_data['type'] = $post_type;
-            $update_data['game'] = $post_game;
+            $update_data['game_id'] = $post_game;
+            $update_data['is_top'] = $post_is_top;
 
             $this->edit_m->update_news($post_id, $update_data);
             redirect(base_url('c-admin/post/edit/' . $post_id . "/" . $this->UserID));
@@ -65,7 +66,7 @@ class Edit_c extends CI_Controller
         }
     }
 
-    public function stream($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = '', $post_id = 0)
+    public function stream($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = '', $post_id = 0, $post_is_top = null)
     {
         if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
@@ -80,7 +81,8 @@ class Edit_c extends CI_Controller
             $update_data['updated_at'] = date("Y-m-d H:i:s");
             $update_data['date'] = (!empty($post_date)) ? $post_date : date("Y-m-d H:i:s");
             $update_data['type'] = $post_type;
-            $update_data['game'] = $post_game;
+            $update_data['game_id'] = $post_game;
+            $update_data['is_top'] = $post_is_top;
 
             $created_id = $this->edit_m->update_news($post_id, $update_data);
             redirect(base_url('c-admin/post/edit/' . $post_id . "/" . $this->UserID));
@@ -91,7 +93,7 @@ class Edit_c extends CI_Controller
         }
     }
 
-    public function video($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = "", $post_id = 0)
+    public function video($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = "", $post_id = 0, $post_is_top = null)
     {
         if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
@@ -106,7 +108,8 @@ class Edit_c extends CI_Controller
             $update_data['updated_at'] = date("Y-m-d H:i:s");
             $update_data['date'] = (!empty($post_date)) ? $post_date : date("Y-m-d H:i:s");
             $update_data['type'] = $post_type;
-            $update_data['game'] = $post_game;
+            $update_data['game_id'] = $post_game;
+            $update_data['is_top'] = $post_is_top;
 
             $this->edit_m->update_news($post_id, $update_data);
             redirect(base_url('c-admin/post/edit/' . $post_id . "/" . $this->UserID));
@@ -136,7 +139,7 @@ class Edit_c extends CI_Controller
                 $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
                 $post_tags = (!empty($_POST["tags"])) ? explode(',', trim($_POST["tags"])) : [];
                 $post_game = (isset($_POST["game"])) ? trim($_POST["game"]) : '';
-
+                $post_is_top = (isset($_POST["is_top"])) and trim($_POST["is_top"]) === 'on' ? 1  : 0;
 
                 $this->post_tags_model->delete_by_post_id($post_id);
 
@@ -186,7 +189,7 @@ class Edit_c extends CI_Controller
                             }
 
 
-                            $this->gallery($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id);
+                            $this->gallery($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
                             redirect($_SERVER["HTTP_REFERER"]);
                             die();
                         }
@@ -225,12 +228,12 @@ class Edit_c extends CI_Controller
                     }
 
                     if ($post_type == 8) {
-                        $this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id);
+                        $this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
                         redirect($_SERVER["HTTP_REFERER"]);
                         die();
                     }
                     if ($post_type == 3) {
-                        $this->video($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id);
+                        $this->video($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
                         redirect($_SERVER["HTTP_REFERER"]);
                         die();
                     }
@@ -242,6 +245,7 @@ class Edit_c extends CI_Controller
                     $update_data['date'] = (!empty($post_date)) ? $post_date : date("Y-m-d H:i:s");
                     $update_data['type'] = $post_type;
                     $update_data['game_id'] = $post_game;
+                    $update_data['is_top'] = $post_is_top;
 
                     $this->edit_m->update_news($post_id, $update_data);
                     redirect(base_url('c-admin/post/edit/' . $post_id . "/" . $this->UserID));

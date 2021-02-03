@@ -10,14 +10,16 @@
             </div>
             <div class="timezone">
                 <i class="far fa-clock"></i>
-                 {{user !== null && user.gmt !== null ? user.gmt : 'GMT+3'}}
+                {{ user !== null && user.gmt !== null ? user.gmt : 'GMT+3' }}
             </div>
             <div class="games d-flex">
                 <div class="cs d-flex align-items-center" v-for="game in games"
                      v-if="game.active"
                      @click="setGame(game.code)">
-                    <img :src="`/uploads/games/${game.sidebarIcon}`">
-                    {{game.name}}
+                    <a :href="'/ru/' + game.code">
+                        <img :src="`/uploads/games/${game.sidebarIcon}`">
+                        {{ game.name }}
+                    </a>
                 </div>
             </div>
         </div>
@@ -44,218 +46,225 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 
-    export default {
-        name: "SubNavbar",
-        props: ['games'],
-        data() {
-            return {
-                theme: null,
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'user'
-            ]),
-            isPageStart() {
-                return this.$parent.isPageStart;
-            }
-        },
-        methods: {
-            setGame(game) {
-                this.$emit('setgame', game)
-            },
-            setTheme(themeName) {
-                localStorage.setItem('theme', themeName);
-                document.documentElement.className = themeName;
-            },
-            toggleTheme() {
-                if (this.theme === 'dark') {
-                    this.setTheme('light');
-                } else {
-                    this.setTheme('dark');
-                }
-                this.theme = localStorage.getItem('theme');
-            },
-            setDefaultTheme() {
-                if (localStorage.getItem('theme') === null) {
-                    this.setTheme('light');
-                } else {
-                    this.setTheme(localStorage.getItem('theme'));
-                }
-                this.theme = localStorage.getItem('theme');
-            },
-        },
-        mounted() {
-            this.setDefaultTheme()
+export default {
+    name: "SubNavbar",
+    props: ['games'],
+    data() {
+        return {
+            theme: null,
         }
+    },
+    computed: {
+        ...mapGetters([
+            'user'
+        ]),
+        isPageStart() {
+            return this.$parent.isPageStart;
+        }
+    },
+    methods: {
+        setGame(game) {
+            this.$emit('setgame', game);
+        },
+        setTheme(themeName) {
+            localStorage.setItem('theme', themeName);
+            document.documentElement.className = themeName;
+        },
+        toggleTheme() {
+            if (this.theme === 'dark') {
+                this.setTheme('light');
+            } else {
+                this.setTheme('dark');
+            }
+            this.theme = localStorage.getItem('theme');
+        },
+        setDefaultTheme() {
+            if (localStorage.getItem('theme') === null) {
+                this.setTheme('light');
+            } else {
+                this.setTheme(localStorage.getItem('theme'));
+            }
+            this.theme = localStorage.getItem('theme');
+        },
+    },
+    mounted() {
+        this.setDefaultTheme()
     }
+}
 </script>
 
 <style scoped>
-    .sub-nav {
-        z-index: 5;
-        top: 3.8vw;
-        background: white;
-        height: 2.7vw;
-        transition: all .3s ease-in-out;
-    }
+.sub-nav {
+    z-index: 5;
+    top: 3.8vw;
+    background: white;
+    height: 2.7vw;
+    transition: all .3s ease-in-out;
+}
 
-    .dark .sub-nav {
-        background: #26292c;
-    }
+.dark .sub-nav {
+    background: #26292c;
+}
 
-    .dark .theme-toggle .toggler {
-        border: 2px solid #2d3135;
-    }
+.dark .theme-toggle .toggler {
+    border: 2px solid #2d3135;
+}
 
-    .theme-toggle .toggler {
-        padding: .25vw;
-        height: 1.6vw;
-        width: 2.5vw;
-        border-radius: 99px;
-        cursor: pointer;
-        font-weight: 400;
-        vertical-align: middle;
-        border: 2px solid #e5e5e5;
-        transition: background-color .4s ease, border-color .4s ease, padding-left .4s ease;
-        background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9InBvZGxvemhrYSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjUwJSIgeDI9IjEwMCUiIHkyPSI1MCUiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzYzQxNDYiIHN0b3Atb3BhY2l0eT0iMSIgLz4KPHN0b3Agb2Zmc2V0PSIyNS40Mzk0NTMlIiBzdG9wLWNvbG9yPSIjM2EzZjQ0IiBzdG9wLW9wYWNpdHk9IjEiIC8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzM1MzkzZSIgc3RvcC1vcGFjaXR5PSIwIiAvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI3BvZGxvemhrYSkiIC8+PC9zdmc+), #202225;
-        background: -moz-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-        background: -o-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-        background: -webkit-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-        background: -webkit-gradient(linear, left top, right top, color-stop(0, #3c4146), color-stop(25.439453%, #3a3f44), to(rgba(53, 57, 62, 0.0))), #202225;
-        background: -webkit-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-        background: -moz-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-        background: -o-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-        background: linear-gradient(90deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
-    }
+.theme-toggle .toggler {
+    padding: .25vw;
+    height: 1.6vw;
+    width: 2.5vw;
+    border-radius: 99px;
+    cursor: pointer;
+    font-weight: 400;
+    vertical-align: middle;
+    border: 2px solid #e5e5e5;
+    transition: background-color .4s ease, border-color .4s ease, padding-left .4s ease;
+    background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9InBvZGxvemhrYSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjUwJSIgeDI9IjEwMCUiIHkyPSI1MCUiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzYzQxNDYiIHN0b3Atb3BhY2l0eT0iMSIgLz4KPHN0b3Agb2Zmc2V0PSIyNS40Mzk0NTMlIiBzdG9wLWNvbG9yPSIjM2EzZjQ0IiBzdG9wLW9wYWNpdHk9IjEiIC8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzM1MzkzZSIgc3RvcC1vcGFjaXR5PSIwIiAvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI3BvZGxvemhrYSkiIC8+PC9zdmc+), #202225;
+    background: -moz-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+    background: -o-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+    background: -webkit-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+    background: -webkit-gradient(linear, left top, right top, color-stop(0, #3c4146), color-stop(25.439453%, #3a3f44), to(rgba(53, 57, 62, 0.0))), #202225;
+    background: -webkit-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+    background: -moz-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+    background: -o-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+    background: linear-gradient(90deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+}
 
-    .theme-toggle .toggler::before {
-        display: inline-block;
-        width: .8vw;
-        height: .8vw;
-        background-color: white;
-        content: "";
-        text-align: center;
-        vertical-align: top;
-        line-height: 1.2vw;
-        border-radius: 99px;
-    }
+.theme-toggle .toggler::before {
+    display: inline-block;
+    width: .8vw;
+    height: .8vw;
+    background-color: white;
+    content: "";
+    text-align: center;
+    vertical-align: top;
+    line-height: 1.2vw;
+    border-radius: 99px;
+}
 
-    .theme-toggle .toggler.active {
-        padding-left: 1.1vw !important;
-    }
+.theme-toggle .toggler.active {
+    padding-left: 1.1vw !important;
+}
 
-    .theme-toggle .toggler.active::before {
-        background-color: #fff;
-        content: "";
-    }
+.theme-toggle .toggler.active::before {
+    background-color: #fff;
+    content: "";
+}
 
-    .ml-8 {
-        margin-left: 8vw;
-    }
+.ml-8 {
+    margin-left: 8vw;
+}
 
-    .mr-8 {
-        margin-right: 8vw;
-    }
+.mr-8 {
+    margin-right: 8vw;
+}
 
-    .pl-7 {
-        padding-left: 7vw;
-    }
+.pl-7 {
+    padding-left: 7vw;
+}
 
-    .pl-8_5 {
-        padding-right: 8.5vw;
-    }
+.pl-8_5 {
+    padding-right: 8.5vw;
+}
 
-    .pl-10 {
-        padding-left: 10vw;
-    }
+.pl-10 {
+    padding-left: 10vw;
+}
 
-    .top-3 {
-        top: 2.8vw;
-    }
+.top-3 {
+    top: 2.8vw;
+}
 
-    .sun {
-        color: #ff6d1d;
-        font-size: .8vw;
-        margin-right: .3vw;
-    }
+.sun {
+    color: #ff6d1d;
+    font-size: .8vw;
+    margin-right: .3vw;
+}
 
-    .moon {
-        color: #8298ac;
-        font-size: .8vw;
-        margin-left: .3vw;
-    }
+.moon {
+    color: #8298ac;
+    font-size: .8vw;
+    margin-left: .3vw;
+}
 
-    .timezone {
-        margin-top: .2vw;
-        color: #b7b9ba;
-        font-size: .9vw;
-        margin-left: 1vw;
-        cursor: pointer;
-    }
+.timezone {
+    margin-top: .2vw;
+    color: #b7b9ba;
+    font-size: .9vw;
+    margin-left: 1vw;
+    cursor: pointer;
+}
 
-    .games {
-        margin-left: 3vw;
-        font-size: .9vw;
-        color: #ff6d1d;
-    }
+.games {
+    margin-left: 3vw;
+    font-size: .9vw;
+    color: #ff6d1d;
+}
 
-    .games  img{
-        width: 1vw;
-        margin-right: .3vw;
-    }
+.games a {
+    color: #ff6d1d;
+}
 
-    .games div {
-        cursor: pointer;
-        margin-right: 1.4vw;
-    }
+.games img {
+    width: 1vw;
+    margin-right: .3vw;
+}
 
-    .help{
-        margin-top: .5vw;
-    }
+.games div {
+    cursor: pointer;
+    margin-right: 1.4vw;
+}
 
-    .help img {
-        margin-right: .5vw;
-    }
-    .help a{
-        margin-right: .7vw;
-    }
+.help {
+    margin-top: .5vw;
+}
 
-    .help a .zendesk{
-        font-size: 1.2vw;
-        margin-top: .3vw;
-        color: black;
-    }
-    .help a .letter{
-        font-size: 1.5vw;
-        margin-top: .2vw;
-        color: black;
-    }
-    .dark .help a .zendesk,  .dark .help a .letter {
-        color: white;
-    }
+.help img {
+    margin-right: .5vw;
+}
 
-    .help a .discord {
-        margin-top: .1vw;
-        width: 1.6vw;
-    }
+.help a {
+    margin-right: .7vw;
+}
 
-    .help a .discord {
-        fill: rgba(0, 0, 0, 0);
-    }
+.help a .zendesk {
+    font-size: 1.2vw;
+    margin-top: .3vw;
+    color: black;
+}
 
-    .dark .help a .discord {
-        margin-top: .1vw;
-        width: 1.6vw;
-    }
+.help a .letter {
+    font-size: 1.5vw;
+    margin-top: .2vw;
+    color: black;
+}
 
-    .dark .help a .discord path {
-        fill: white;
-    }
+.dark .help a .zendesk, .dark .help a .letter {
+    color: white;
+}
 
-    .help a letter {
-        width: 1.5vw;
-    }
+.help a .discord {
+    margin-top: .1vw;
+    width: 1.6vw;
+}
+
+.help a .discord {
+    fill: rgba(0, 0, 0, 0);
+}
+
+.dark .help a .discord {
+    margin-top: .1vw;
+    width: 1.6vw;
+}
+
+.dark .help a .discord path {
+    fill: white;
+}
+
+.help a letter {
+    width: 1.5vw;
+}
 </style>

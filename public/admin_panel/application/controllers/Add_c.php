@@ -125,6 +125,7 @@
 					$post_type = (isset($_POST["post_type"])) ? trim($_POST["post_type"]): '';
 					$post_url = (isset($_POST["post_url"])) ? trim($_POST["post_url"]): '';
 					$post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]): '';
+					$post_is_top = (isset($_POST['is_top']));
 					if($post_type == 9) {
 						if(!empty($post_title) && !empty($post_type) && !empty($post_url)) {
 							$article_img = array();
