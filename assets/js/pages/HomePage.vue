@@ -144,7 +144,7 @@ export default {
         scrollEventTrigger() {
             const self = this;
             window.onscroll = () => {
-                const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+                const scrollable = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
 
                 if (scrollable <= 10) {
                     self.getNews()
@@ -163,6 +163,12 @@ export default {
 </script>
 
 <style scoped>
+.news-wrapper {
+    background: url(/images/home/background2.png) no-repeat;
+    background-position: bottom;
+    background-size: 100%;
+}
+
 .news-wrapper .left {
     width: 25%;
     margin-top: 1vw;
