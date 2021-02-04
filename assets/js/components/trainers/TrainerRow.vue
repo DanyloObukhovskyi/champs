@@ -52,7 +52,8 @@
                     v-for="(cost, trainingType) in trainer.trainer.costs"
                     @toggleDescription="toggleDescription"
                     :key="trainingType"
-                    :label="getTrainingTypeTitle(cost.lessonType)"
+                    :trainer="trainer"
+                    :label="trainingTypes[cost.lessonType]"
                     :type="cost.lessonType"
                     :show="type === cost.lessonType"
                     :active="type === cost.lessonType"
@@ -186,16 +187,6 @@ export default {
                     }
                 })
             }
-        },
-        getTrainingTypeTitle(type) {
-            let str = this.trainingTypes[type];
-
-            if (this.trainer.trainer.isLessonCost) {
-                str += ' 1 час';
-            } else {
-                str += ' 3 часа';
-            }
-            return str;
         },
     }
 }
