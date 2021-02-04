@@ -6,7 +6,12 @@
                     {{ label }}
                 </div>
                 <div class="price">
-                    {{ cost }} RUB
+                    <span>
+                        {{ cost }} RUB
+                    </span>
+                    <span>
+                        {{ lessonHoursCount }}
+                    </span>
                 </div>
             </div>
             <i class="fas fa-sort-down" :class="{active: active}" v-if="!show"></i>
@@ -18,14 +23,26 @@
 <script>
 export default {
     name: "TrainerCostButton",
-    props: ['type', 'cost', 'label', 'show', 'active'],
+    props: ['type', 'cost', 'label', 'show', 'active' , 'trainer'],
+    computed: {
+        lessonHoursCount() {
+            let str = '';
+
+            if (this.trainer.trainer.isLessonCost) {
+                str += ' 1 час';
+            } else {
+                str += ' 3 часа';
+            }
+            return str;
+        }
+    },
     methods: {
         toggleDescription() {
             this.$emit('toggleDescription', {
                 show: !this.show,
                 type: this.type
             })
-        }
+        },
     }
 }
 </script>
@@ -89,6 +106,8 @@ export default {
       font-size: 1.2vw;
       color: #28a745;
       font-weight: 700;
+      display: flex;
+      justify-content: space-between;
     }
 
     i {

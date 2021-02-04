@@ -60,6 +60,8 @@
             </trainer-cost-button>
         </div>
         <div class="description" v-show="trainingType !== null">
+            <div class="arrow" :style="descriptionArrowStyle">
+            </div>
             <p class="title">
                 {{ description[trainingType] ? description[trainingType].title : '' }}
             </p>
@@ -122,13 +124,19 @@
         data() {
             return {
                 show: false,
-                type: null,
+                type: 'individual',
                 rankIconError: false,
                 trainingTypes: {
                     individual: 'Идивидуальная тренировка',
                     group: 'Групповая тренировка',
                     analytic: 'Анализ видео',
-                }
+                },
+                descriptionArrowStyle: {}
+            }
+        },
+        watch: {
+            type() {
+                this.setDescriptionArrowStyle();
             }
         },
         computed: {
@@ -142,6 +150,31 @@
             }
         },
         methods: {
+            setDescriptionArrowStyle() {
+                const self = this;
+
+                const buttonsLength = self.trainer.trainer.costs.length;
+                let buttonNum = null;
+
+                for (let i = 0; i < buttonsLength; i++) {
+                    if (self.trainer.trainer.costs[i].lessonType === self.type) {
+                        buttonNum = i + 1;
+                    }
+                }
+                if (buttonNum !== null) {
+                    switch (buttonNum) {
+                        case 1 :
+                            self.descriptionArrowStyle.left = '13vw';
+                            break;
+                        case 2 :
+                            self.descriptionArrowStyle.left = '41.5vw';
+                            break;
+                        case 3 :
+                            self.descriptionArrowStyle.left = '70vw';
+                            break;
+                    }
+                }
+            },
             toggleDescription({type}) {
                 if (this.type === type) {
                     this.show = !this.show;
@@ -161,6 +194,9 @@
                 return str;
             }
         },
+        mounted() {
+            this.setDescriptionArrowStyle()
+        }
     }
 </script>
 
@@ -441,17 +477,6 @@
 	  margin-top: 1vw;
 	  margin-bottom: 1vw;
 
-	  &::before {
-		content: "";
-		border: solid transparent;
-		position: absolute;
-		bottom: 100%;
-		left: 20%;
-		border-bottom-color: #eee;
-		border-width: 9;
-		margin-left: -9px;
-	  }
-
 	  .title {
 		color: #ff6d1d;
 		font-size: 1.5vw;
@@ -474,6 +499,15 @@
 		margin-left: -1vw;
 		margin-bottom: 0;
 	  }
+
+      .arrow {
+        position: absolute;
+        top: -.5vw;
+        width: 1.5vw;
+        height: .5vw;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        background-color: #ff6d1d;
+      }
 	}
   }
 

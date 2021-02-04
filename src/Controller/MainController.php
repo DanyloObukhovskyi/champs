@@ -93,6 +93,27 @@ class MainController extends DefController
     }
 
     /**
+     * @Route("//")
+     */
+    public function redirectToLogin(AuthenticationUtils $authenticationUtils, Request $request): Response
+    {
+        // get the login error if there is one
+        $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $authenticationUtils->getLastUsername();
+
+        $token = $request->get('token');
+
+        $popularTags = $this->newsTagService->popularTags(5);
+        
+        return $this->render('templates/home.html.twig', [
+            'router' => 'home',
+            'token' => $token,
+            'popularTags' => $popularTags
+        ]);
+    }
+
+    /**
      * @Route("/{game}", requirements={"game": "cs"})
      */
     public function gameHome($game): Response
