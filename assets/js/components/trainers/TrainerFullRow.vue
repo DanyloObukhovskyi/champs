@@ -52,9 +52,10 @@
                     v-for="(cost, type) in trainer.trainer.costs"
                     @toggleDescription="toggleDescription"
                     :key="type"
-                    :label="getTrainingTypeTitle(cost.lessonType)"
+                    :label="trainingTypes[cost.lessonType]"
                     :type="cost.lessonType"
                     :show="show"
+                    :trainer="trainer"
                     :active="trainingType === cost.lessonType"
                     :cost="cost.price">
             </trainer-cost-button>
@@ -182,16 +183,6 @@
                     this.type = type;
                 }
                 this.$emit('setTrainingType', type)
-            },
-            getTrainingTypeTitle(type) {
-                let str = this.trainingTypes[type];
-
-                if (this.trainer.trainer.isLessonCost) {
-                    str += ' 1 час';
-                } else {
-                    str += ' 3 часа';
-                }
-                return str;
             }
         },
         mounted() {

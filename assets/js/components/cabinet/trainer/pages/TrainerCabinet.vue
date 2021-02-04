@@ -69,6 +69,7 @@
 	display: flex;
 	padding: 0 2vw;
 	width: 100%;
+    margin-top: -.5vw;
 
 	.left {
 	  width: 65%;

@@ -8,6 +8,7 @@
                 @inputEmail="(value) => {email = value;}"
                 @inputPassword="(value) => {password = value;}"
                 :error="error"
+                :error-message="errorMessage"
                 :email="email"
                 :password="password">
             <slot></slot>
@@ -49,119 +50,114 @@
 </template>
 
 <script>
-    import NicknameForm from "./login/NicknameForm";
-    import ConfirmCodeForm from "./login/ConfirmCodeForm";
-    import RegistrationForm from "./login/RegistrationForm";
-    import LoginForm from "./login/LoginForm";
-    import CongratulationsForm from "./login/CongratulationsForm";
-    import Service from "../services/Service";
-    import {mapGetters} from "vuex";
+import NicknameForm from "./login/NicknameForm";
+import ConfirmCodeForm from "./login/ConfirmCodeForm";
+import RegistrationForm from "./login/RegistrationForm";
+import LoginForm from "./login/LoginForm";
+import CongratulationsForm from "./login/CongratulationsForm";
+import Service from "../services/Service";
+import {mapGetters} from "vuex";
 
-    const service = new Service();
+const service = new Service();
 
-    export default {
-        name: "LoginModal",
-        inject: [
-            'config'
-        ],
-        props: {
-            show: Boolean,
-            redirect: {
-                default: null
-            },
-            showFirst: {
-                default: 'login'
-            },
-            token: {
-                default: null
-            }
+export default {
+    name: "LoginModal",
+    inject: [
+        'config'
+    ],
+    props: {
+        show: Boolean,
+        showFirst: {
+            default: 'login'
         },
-        data() {
-            return {
-                error: false,
-                step: 'registration',
-                email: null,
-                password: null,
-                check: false,
-                confirmCode: null,
-                codeConfirmed: false,
-                errorMessage: null,
-                successMessage: null,
-            }
+        token: {
+            default: null
+        }
+    },
+    data() {
+        return {
+            error: false,
+            step: 'registration',
+            email: null,
+            password: null,
+            check: false,
+            confirmCode: null,
+            codeConfirmed: false,
+            errorMessage: null,
+            successMessage: null,
+        }
+    },
+    components: {
+        'nick-name': NicknameForm,
+        'confirm-code': ConfirmCodeForm,
+        'registration': RegistrationForm,
+        'login': LoginForm,
+        'congratulation': CongratulationsForm
+    },
+    watch: {
+        show() {
+            this.step = this.showFirst;
         },
-        components: {
-            'nick-name': NicknameForm,
-            'confirm-code': ConfirmCodeForm,
-            'registration': RegistrationForm,
-            'login': LoginForm,
-            'congratulation': CongratulationsForm
-        },
-        watch: {
-            show() {
-                this.step = this.showFirst;
-            },
-            step(newStep) {
-                if (newStep === 'finish') {
-                    this.authLogin();
-                }
-            }
-        },
-        methods: {
-            setStep(step) {
-                this.step = step;
-            },
-            authLogin() {
-                let formData = new FormData();
-
-                formData.append('email', this.email);
-                formData.append('password', this.password);
-                formData.append('_csrf_token', axios._csrf_token);
-
-                axios.post('/ru/login', formData)
-                    .then((res) => {
-                        if (res.data.error) {
-                            this.error = true;
-                        } else {
-                            if (this.redirect !== null) {
-                                window.location.assign(this.redirect);
-                            } else {
-                                window.location.reload();
-                            }
-                        }
-                    })
-            },
-            registration() {
-                const formData = new FormData();
-
-                formData.append('user[email]', this.email);
-                formData.append('user[password][first]', this.password);
-                formData.append('user[password][second]', this.password);
-
-                if (this.token !== null) {
-                    formData.append('inviteToken', this.token);
-                }
-                axios.post('/ru/registration', formData)
-                    .then((res) => {
-                        if (res.data.error) {
-                            this.error = true;
-                        }
-                    })
-                    .catch(() => {
-                        this.error = true;
-                    })
-            },
-            close() {
-                this.$store.dispatch('closeLogin');
-            },
-            checkStep(step) {
-                return this.show && this.step === step;
-            },
-            sendConfirmCode() {
-                const formData = new FormData();
-                formData.append('email', this.email);
-
-                axios.post('/ru/generate/confirm/code', formData)
+        step(newStep) {
+            if (newStep === 'finish') {
+                this.authLogin();
             }
         }
+    },
+    methods: {
+        setStep(step) {
+            this.step = step;
+        },
+        authLogin() {
+            let formData = new FormData();
+
+            formData.append('email', this.email);
+            formData.append('password', this.password);
+            formData.append('_csrf_token', axios._csrf_token);
+            formData.append('ajax', 1);
+
+            axios.post('/ru/login', formData)
+                .then((res) => {
+                    window.location.reload();
+                })
+                .catch(({response}) => {
+                    this.error = true;
+
+                    this.errorMessage = response.data;
+                })
+        },
+        registration() {
+            const formData = new FormData();
+
+            formData.append('user[email]', this.email);
+            formData.append('user[password][first]', this.password);
+            formData.append('user[password][second]', this.password);
+
+            if (this.token !== null) {
+                formData.append('inviteToken', this.token);
+            }
+            axios.post('/ru/registration', formData)
+                .then((res) => {
+                    if (res.data.error) {
+                        this.error = true;
+                    }
+                })
+                .catch(() => {
+                    this.error = true;
+                })
+        },
+        close() {
+            this.$store.dispatch('closeLogin');
+        },
+        checkStep(step) {
+            return this.show && this.step === step;
+        },
+        sendConfirmCode() {
+            const formData = new FormData();
+            formData.append('email', this.email);
+
+            axios.post('/ru/generate/confirm/code', formData)
+        }
     }
+}
 </script>

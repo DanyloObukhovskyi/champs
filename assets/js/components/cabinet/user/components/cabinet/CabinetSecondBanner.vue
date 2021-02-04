@@ -271,7 +271,7 @@ export default {
     background-color: #eff0f0;
     border-radius: .5vw;
     height: 16vw;
-    padding: 1vw;
+    padding: 1.5vw 1vw;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -279,9 +279,9 @@ export default {
 
     .title {
       color: #000000;
-      font-size: 1.2vw;
+      font-size: 1.4vw;
       font-weight: 500;
-      line-height: 1.5vw;
+      line-height: 1.7vw;
 
       span {
         color: #ff6d1d;
@@ -295,7 +295,7 @@ export default {
 
       img {
         border-radius: .5vw .5vw 0 0;
-        width: 13vw;
+        width: 15.5vw;
       }
 
       .play {

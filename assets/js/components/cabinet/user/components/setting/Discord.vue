@@ -71,7 +71,7 @@
 
 <style scoped>
     .discord-setting {
-        height: 13vw;
+        height: 14vw;
     }
 
     .discord-setting-body {

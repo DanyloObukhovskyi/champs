@@ -42,14 +42,19 @@
                         <div>
                             {{ selectedTime }}
                         </div>
-                        <div class="price">
+                    </div>
+                    <div class="time">
+                        <div>
                             {{ selectedLength * getPrice }} RUB
                         </div>
                     </div>
                     <div class="description">
                         <i class="far fa-clock" aria-hidden="true"></i>
                         Время указано в соответствии с вашим часовым поясом
-                        <span class="timezone">
+                        <span class="timezone" v-if="user !== null">
+                            {{user.timezone}} {{user.gmt}}
+                        </span>
+                        <span class="timezone" v-else>
                             Europe/Moscow GMT +3:00
                         </span>
                     </div>
@@ -74,6 +79,7 @@ import MarketplaceService from "../../services/MarketplaceService";
 import Swal from 'sweetalert2'
 import SmallLoader from "../helpers/SmallLoader";
 import Service from "../../services/Service";
+import {mapGetters} from "vuex";
 
 const TRAINING_TYPES = {
     individual: 'Индивидуальная тренировка',
@@ -100,6 +106,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters([
+            'user'
+        ]),
         whatTheOfferLink() {
             const service = new Service();
 

@@ -9,18 +9,18 @@
                     Вход в личный кабинет
                 </div>
                 <div class="login_input">
-                    <input type="email" @input="$emit('inputEmail', $event.target.value)"/>
+                    <input type="text" @input="$emit('inputEmail', $event.target.value)" required/>
                     <span>Адрес электронной почты</span>
                 </div>
                 <div class="login_input">
-                    <input type="password" @input="$emit('inputPassword', $event.target.value)"/>
+                    <input type="password" @input="$emit('inputPassword', $event.target.value)" required/>
                     <span>Пароль</span>
                 </div>
                 <div class="send" @click="$emit('authLogin')">
                     Войти
                 </div>
-                <div class="error" v-if="error">
-                    Неправильный логин или пароль
+                <div class="error" v-if="errorMessage !== null">
+                    {{ errorMessage }}
                 </div>
                 <div class="subtext">Или войдите с помощью</div>
                 <div class="alternate">
@@ -60,18 +60,312 @@
 </template>
 
 <script>
-    export default {
-        name: "LoginForm",
-        inject: [
-            'config'
-        ],
-        props: [
-            'error'
-        ],
-        computed: {
-            steamLoginLink() {
-                return this.config.STEAM_LOGIN_LINK;
-            }
-        },
-    }
+export default {
+    name: "LoginForm",
+    inject: [
+        'config'
+    ],
+    props: [
+        'error',
+        'errorMessage'
+    ],
+    computed: {
+        steamLoginLink() {
+            return this.config.STEAM_LOGIN_LINK;
+        }
+    },
+}
 </script>
+
+<style>
+.login_form {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login_form .login_req {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.login_form .login_block {
+    width: 22vw;
+    height: auto;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1.5vw 0;
+    box-shadow: 0 0.3vw 0.4vw rgba(0, 0, 0, 0.25);
+    z-index: 5;
+}
+
+.login_form .login_block .logotype {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.login_form .login_block .logotype img {
+    width: 8vw;
+    height: 3vw;
+}
+
+.login_form .login_block .login_title {
+    width: 100%;
+    text-align: center;
+    padding: 1vw 0;
+    color: #111111;
+    font-size: 1.1vw;
+    font-weight: 500;
+}
+
+.login_form .login_block .login_check {
+    width: 70%;
+    margin: 0.1vw auto;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 1vw;
+}
+
+.login_form .login_block .login_check span {
+    padding-left: 0.7vw;
+    padding-top: 0.3vw;
+}
+
+.login_form .login_block .login_check a {
+    margin-left: 0vw;
+    font-size: 0.8vw;
+    color: black;
+}
+
+.login_form .login_block .login_check input[type="checkbox"] {
+    position: relative;
+    top: 0.5vw;
+    width: 1vw;
+    height: 1vw;
+    -webkit-appearance: none;
+    outline: none;
+    transition: 0.5s;
+}
+
+.login_form .login_block .login_check input[type="checkbox"]:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #262626;
+    box-sizing: border-box;
+    transition: 0.5s;
+}
+
+.login_form .login_block .login_check input:checked[type="checkbox"]:before {
+    border-left: none;
+    border-top: none;
+    width: 0.75vw;
+    border-color: #0f0;
+    transform: rotate(45deg) translate(5px, -5px);
+}
+
+.login_form .login_block .login_input {
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 1.1vw;
+}
+
+.login_form .login_block .login_input input {
+    width: 100%;
+    height: 2.2vw;
+    border: 0;
+    border-bottom: 0.04vw solid #bdbdbd;
+    font-size: 0.8vw;
+    outline: none;
+    z-index: 2;
+    background-color: transparent;
+    transition: 0.3s;
+    color: #000000;
+    font-weight: 500;
+}
+
+.login_form .login_block .login_input span {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-size: 0.8vw;
+    color: #828282;
+    transition: 0.3s;
+}
+
+.login_form .login_block .login_input input:focus {
+    border-bottom: 0.04vw solid #000000;
+}
+
+.login_form .login_block .login_input input:focus ~ span {
+    bottom: 60%;
+    font-size: 0.65vw;
+}
+
+.login_form .login_block .login_input input:valid ~ span {
+    bottom: 60%;
+    font-size: 0.65vw;
+}
+
+.login_form .login_block .send {
+    width: 70%;
+    margin: 0 auto;
+    background-color: #ff6d1d;
+    color: #fff;
+    text-align: center;
+    font-size: 0.8vw;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 0.5vw 0;
+    margin-top: 1.5vw;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login_form .login_block .send:hover {
+    opacity: 0.5;
+}
+
+.login_form .login_block .error {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    font-size: 0.8vw;
+    padding: 1vw 0;
+}
+
+.login_form .login_block .subtext {
+    width: 100%;
+    text-align: center;
+    font-size: 0.8vw;
+    color: #000000;
+    padding: 1vw 0;
+}
+
+.login_form .login_block .alternate {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login_form .login_block .alternate a {
+    cursor: pointer;
+}
+
+.login_form .login_block .alternate img {
+    height: 2.3vw;
+    margin: 0 0.5vw;
+    transition: 0.3s;
+}
+
+.login_form .login_block .alternate a:nth-child(2) img {
+    height: 3vw;
+}
+
+.login_form .login_block .alternate a:hover img {
+    opacity: 0.5;
+}
+
+.login_form .login_block .links {
+    width: 100%;
+    padding-top: 1vw;
+}
+
+.login_form .login_block .links div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login_form .login_block .links div:nth-child(2) {
+    margin-top: 0.5vw;
+}
+
+.login_form .login_block .links span {
+    color: #000000;
+    font-size: 0.8vw;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.login_form .login_block .links span:hover {
+    text-decoration: none;
+}
+
+.login_form .login_block .closed {
+    position: absolute;
+    right: 1vw;
+    top: 1vw;
+    cursor: pointer;
+}
+
+.login_form .login_block .closed svg {
+    width: 0.7vw;
+    height: 0.7vw;
+}
+
+.login_form .login_block .closed:hover {
+    opacity: 0.5;
+}
+
+.login_form .login_req_block {
+    width: 17vw;
+    height: auto;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1.5vw 0;
+    box-shadow: 0 0.3vw 0.4vw rgba(0, 0, 0, 0.25);
+    padding: 3vw 2vw;
+}
+
+.login_form .login_req_block .item {
+    width: 100%;
+    display: flex;
+    margin-top: 1vw;
+}
+
+.login_form .login_req_block .item:nth-child(1) {
+    margin-top: 0;
+}
+
+.login_form .login_req_block .item div:nth-child(1) {
+    width: 0.3vw;
+    height: 0.3vw;
+    margin-right: 0.4vw;
+    background-color: #ff6d1d;
+    flex-shrink: 0;
+    margin-top: 0.5vw;
+}
+
+.login_form .login_req_block .item div:nth-child(2) {
+    width: 100%;
+    font-size: 0.75vw;
+    color: #111111;
+}
+</style>

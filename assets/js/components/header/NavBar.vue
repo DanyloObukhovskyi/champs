@@ -175,7 +175,7 @@
     }
 
     .start {
-        width: 9vw;
+        width: 7.5vw;
         height: 6.5vw;
     }
 
@@ -212,7 +212,7 @@
 
     .login-wrapper {
         height: 100%;
-        width: 12%;
+        width: 8vw;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -338,7 +338,7 @@
 		padding: 0 1vw;
 		color: #ffffff;
 		display: flex;
-		font-weight: 600;
+		font-weight: 100;
 		align-items: center;
     }
 </style>

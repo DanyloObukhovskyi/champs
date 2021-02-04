@@ -47,10 +47,6 @@ export default {
 
 <style scoped lang="scss">
 .setting {
-  .setting-body {
-    margin-top: 1vw;
-  }
-
   .setting-wrapper {
     .avatar-discord-wrapper {
       margin-right: 1vw;

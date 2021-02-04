@@ -13,7 +13,7 @@
                     <img src="/images/cabinet/csLvl.png" alt="lvl">
                 </div>
                 <div class="lvl" v-else>
-                    <img :src="'/images/ranks/' + user.level.icon" alt="lvl">
+                    <img :src="'/images/ranks/' + user.level.icon" alt="lvl" :class="{dota: user.game !== null && user.game.code === 'dota'}">
                 </div>
             </div>
             <div class="nickname">
@@ -90,6 +90,11 @@
                 img {
                     width: 2vw;
                     height: 2vw;
+
+                    &.dota {
+                      width: 2.6vw;
+                      height: 2.6vw;
+                    }
                 }
             }
         }
