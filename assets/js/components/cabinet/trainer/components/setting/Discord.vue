@@ -88,7 +88,7 @@
 
 <style scoped lang="scss">
   .discord-setting {
-	height: 13vw;
+    height: 14vw;
 	padding-left: 2.5vw;
 	padding-right: 1.5vw;
   }

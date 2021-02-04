@@ -20,7 +20,7 @@
             </div>
             <div class="timetable-body d-flex justify-content-center align-items-center" v-else>
                 <div class="sorry">
-                    Ксожалению на данный момент у вас нет тренировок в рассписание.
+                    К сожалению, на данный момент у вас нет тренировок в рассписание.
                 </div>
             </div>
             <div class="show-more">

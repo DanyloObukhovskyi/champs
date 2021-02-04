@@ -19,195 +19,200 @@
 </template>
 
 <script>
-    import CabinetService from "../../services/CabinetService";
-    import {mapGetters} from "vuex";
+import CabinetService from "../../services/CabinetService";
+import {mapGetters} from "vuex";
 
-    const USER_PAGES = [
-        {
-            name: 'Личный кабинет',
-            code: '',
-            icon: 'cabinetIcon.png',
-            iconActive: 'cabinetIconActive.png',
-        },
-        {
-            name: 'Обучение',
-            code: 'training',
-            icon: 'trainingIcon.png',
-            iconActive: 'trainingIconActive.png',
-        },
-        {
-            name: 'Турниры Champs',
-            code: 'tournaments',
-            icon: 'tournamentsIcon.png',
-            iconActive: 'tournamentsIconActive.png',
-        },
-        {
-            name: 'Новости',
-            code: 'news',
-            icon: 'newsIcon.png',
-            iconActive: 'newsIconActive.png',
-        },
-        {
-            name: 'Видео',
-            code: 'videos',
-            icon: 'videosIcon.png',
-            iconActive: 'videosIconActive.png',
-        },
-        {
-            name: 'Настройки',
-            code: 'settings',
-            icon: 'settingsIcon.png',
-            iconActive: 'settingsIconActive.png',
+const USER_PAGES = [
+    {
+        name: 'Личный кабинет',
+        code: '',
+        icon: 'cabinetIcon.png',
+        iconActive: 'cabinetIconActive.png',
+    },
+    {
+        name: 'Обучение',
+        code: 'training',
+        icon: 'trainingIcon.png',
+        iconActive: 'trainingIconActive.png',
+    },
+    {
+        name: 'Турниры Champs',
+        code: 'tournaments',
+        icon: 'tournamentsIcon.png',
+        iconActive: 'tournamentsIconActive.png',
+    },
+    {
+        name: 'Новости',
+        code: 'news',
+        icon: 'newsIcon.png',
+        iconActive: 'newsIconActive.png',
+    },
+    {
+        name: 'Видео',
+        code: 'videos',
+        icon: 'videosIcon.png',
+        iconActive: 'videosIconActive.png',
+    },
+    {
+        name: 'Настройки',
+        code: 'settings',
+        icon: 'settingsIcon.png',
+        iconActive: 'settingsIconActive.png',
+    }
+];
+
+const TRAINING_PAGES = [
+    {
+        name: 'Личный кабинет',
+        code: '',
+        icon: 'cabinetIcon.png',
+        iconActive: 'cabinetIconActive.png',
+    },
+    {
+        name: 'Расписание',
+        code: 'timetable',
+        icon: 'timetable.png',
+        iconActive: 'trainingIconActive.png',
+    },
+    {
+        name: 'Календарь',
+        code: 'calendar',
+        icon: 'calendar.png',
+        iconActive: 'calendarIconActive.png',
+    },
+    {
+        name: 'Кошелек',
+        code: 'wallet',
+        icon: 'wallet.png',
+        iconActive: 'walletIconActive.png',
+    },
+    {
+        name: 'Настройки',
+        code: 'settings',
+        icon: 'settingsIcon.png',
+        iconActive: 'settingsIconActive.png',
+    }
+];
+
+export default {
+    name: "CabinetSidebar",
+    data() {
+        return {
+            userPages: USER_PAGES,
+            trainingPages: TRAINING_PAGES,
+            isFixed: false,
+            marginTop: 0
         }
-    ];
-
-    const TRAINING_PAGES = [
-        {
-            name: 'Личный кабинет',
-            code: '',
-            icon: 'cabinetIcon.png',
-            iconActive: 'cabinetIconActive.png',
+    },
+    computed: {
+        logoutUrl() {
+            return CabinetService.logoutUrl;
         },
-        {
-            name: 'Расписание',
-            code: 'timetable',
-            icon: 'timetable.png',
-            iconActive: 'trainingIconActive.png',
-        },
-        {
-            name: 'Календарь',
-            code: 'calendar',
-            icon: 'calendar.png',
-            iconActive: 'calendarIconActive.png',
-        },
-        {
-            name: 'Кошелек',
-            code: 'wallet',
-            icon: 'wallet.png',
-            iconActive: 'walletIconActive.png',
-        },
-        {
-            name: 'Настройки',
-            code: 'settings',
-            icon: 'settingsIcon.png',
-            iconActive: 'settingsIconActive.png',
-        }
-    ];
-
-    export default {
-        name: "CabinetSidebar",
-        data() {
-            return {
-                userPages: USER_PAGES,
-                trainingPages: TRAINING_PAGES,
-                isFixed: false,
-                marginTop: 0
+        pages() {
+            if (this.user.isTrainer) {
+                return this.trainingPages;
+            } else {
+                return this.userPages;
             }
         },
-        computed: {
-            logoutUrl() {
-                return CabinetService.logoutUrl;
-            },
-            pages() {
-                if (this.user.isTrainer) {
-                    return this.trainingPages;
-                } else {
-                    return this.userPages;
-                }
-            },
-            ...mapGetters([
-                'user'
-            ])
-        },
-        methods: {
-            getPageLink(code) {
-                let type = 'user';
-                if (this.user.isTrainer) {
-                    type = 'trainer';
-                }
-                return `/${CabinetService.lang}/${type}/cabinet/${code}`;
+        ...mapGetters([
+            'user'
+        ])
+    },
+    methods: {
+        getPageLink(code) {
+            let type = 'user';
+            if (this.user.isTrainer) {
+                type = 'trainer';
             }
+            return `/${CabinetService.lang}/${type}/cabinet/${code}`;
         }
     }
+}
 </script>
 
 <style scoped lang="scss">
-  @import '../../../css/animations.css';
+@import '../../../css/animations.css';
 
-  #layout .cabinet-sidebar {
-	width: 11.5vw;
-	margin-top: 1vw;
-	height: 100%;
-	background-color: #eff0f0;
-	transition: background-color .5s ease-in-out;
-	padding-top: 1vw;
-	padding-bottom: 1vw;
-	-webkit-animation: animation-translate-left 1500ms linear both;
-	animation: animation-translate-left 1500ms linear both;
-	min-height: 5vw;
+#layout .cabinet-sidebar {
+  border-radius: .3vw .3vw 0 0;
+  width: 11.5vw;
+  margin-top: 1vw;
+  height: 100%;
+  padding-top: 1vw;
+  padding-bottom: 1vw;
+  -webkit-animation: animation-translate-left 1500ms linear both;
+  animation: animation-translate-left 1500ms linear both;
+  min-height: 5vw;
 
-    &.fixed {
-      position: fixed;
-    }
+  .cabinet-sidebar-wrapper {
+    background-color: #eff0f0;
+    transition: background-color .5s ease-in-out;
+    height: 100%;
+  }
 
-	.page {
-	  margin-bottom: .8vw;
-	  font-size: .8vw;
-	  display: flex;
-	  align-items: center;
-	  cursor: pointer;
-	  padding-top: 0;
+  &.fixed {
+    position: fixed;
+  }
 
-	  a {
-		color: #9d9fa0;
-		width: 100%;
-		padding: .2vw;
-		border-radius: 0 .5vw .5vw 0;
-		transition: all .2s ease-in-out;
+  .page {
+    margin-bottom: .8vw;
+    font-size: .8vw;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-top: 0;
 
-		img {
-		  margin-left: 1.2vw;
-		  margin-right: 1vw;
-		  width: 1vw;
+    a {
+      color: #9d9fa0;
+      width: 100%;
+      padding: .2vw;
+      border-radius: 0 .5vw .5vw 0;
+      transition: all .2s ease-in-out;
+
+      img {
+        margin-left: 1.2vw;
+        margin-right: 1vw;
+        width: 1vw;
+
+        &.active {
+          display: none;
+        }
+      }
+
+      &.router-link-exact-active {
+        background-color: #ff6d1d;
+        color: white;
+
+        img {
+          display: none;
 
           &.active {
-            display: none;
+            display: unset;
           }
-		}
+        }
+      }
 
-		&.router-link-exact-active {
-		  background-color: #ff6d1d;
-		  color: white;
+      &:hover {
+        background-color: #ff6d1d;
+        color: white;
 
-          img {
-            display: none;
+        img {
+          display: none;
 
-            &.active {
-              display: unset;
-            }
+          &.active {
+            display: unset;
           }
-		}
-
-		&:hover {
-		  background-color: #ff6d1d;
-		  color: white;
-
-          img {
-            display: none;
-
-            &.active {
-              display: unset;
-            }
-          }
-		}
-	  }
-	}
+        }
+      }
+    }
   }
+}
 
-  .dark #layout {
-	.cabinet-sidebar {
-	  background-color: #1e2123;
-	  color: white;
-	}
+.dark #layout {
+  .cabinet-sidebar {
+    background-color: #1e2123;
+    color: white;
   }
+}
 </style>

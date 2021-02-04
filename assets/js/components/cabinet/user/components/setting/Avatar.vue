@@ -1,5 +1,5 @@
 <template>
-    <div class="setting-container-body avatar-setting">
+    <div id="avatar" class="setting-container-body avatar-setting">
         <div class="trainer-title" v-if="user.isTrainer">
             Фото
         </div>
@@ -150,6 +150,16 @@ export default {
 }
 
 .dark {
+  #avatar.setting-container-body.avatar-setting {
+    background: #25282a;
+    background: -moz-linear-gradient(90deg, #25282a 0%, #3d4146 100%);
+    background: -webkit-linear-gradient(
+                    90deg, #25282a 0%, #3d4146 100%);
+    background: linear-gradient(
+                    90deg, #25282a 0%, #3d4146 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#3d4146", GradientType=1);
+  }
+
   .upload {
     label {
       border: .1vw solid white;

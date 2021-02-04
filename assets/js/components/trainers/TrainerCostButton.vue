@@ -1,7 +1,7 @@
 <template>
     <div class="price-row price-button" @click="toggleDescription" :class="{active: active}">
         <div class="background">
-            <div>
+            <div class="cost-wrapper">
                 <div class="type">
                     {{ label }}
                 </div>
@@ -98,7 +98,7 @@ export default {
     width: 100%;
 
     .type {
-      font-size: .9vw;
+      font-size: 1.067vw;
       font-weight: 600;
     }
 
@@ -118,6 +118,10 @@ export default {
       &.active {
         color: white;
       }
+    }
+
+    .cost-wrapper {
+      width: 90%;
     }
   }
 }

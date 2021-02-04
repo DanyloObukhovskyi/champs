@@ -104,7 +104,7 @@
                             :searchable="true"
                             :loading="loadCities"
                             @search-change="getCities"
-                            placeholder="Выберете из списка">
+                            placeholder="Введите название">
                     </multiselect>
                 </div>
                 <div class="ranks">
@@ -323,7 +323,6 @@ export default {
                             icon: 'success',
                             title: 'Изменения были сохранены!',
                             showConfirmButton: false,
-                            timer: 1500
                         })
                         this.load = false;
                     })
@@ -384,7 +383,7 @@ export default {
 }
 
 .general-settings-body {
-  margin: 1.5vw .1vw 4vw .1vw;
+  margin: 1.5vw .1vw 3vw .1vw;
 }
 
 .ranks {

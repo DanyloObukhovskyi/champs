@@ -106,7 +106,7 @@ class ScheduleController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
-        if ($user->getTimezone() !== null) {
+        if (isset($user) && $user->getTimezone() !== null) {
             [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
                 $trainerUser->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
             );
@@ -118,6 +118,7 @@ class ScheduleController extends AbstractController
         $trainerTimezone = $gmtNumeric / 60 / 60;
 
         $timeOffset = $trainerTimezone - $userTimezone;
+
         $schedule = $this->scheduleService
             ->createDay($userId, $date, $timeOffset, $isStudent);
 

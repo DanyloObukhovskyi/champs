@@ -126,6 +126,10 @@ export default {
   padding: 1vw;
   width: 70vw;
 
+  &:first-child {
+    padding-top: 0;
+  }
+
   &:last-child {
     padding-bottom: 0;
   }

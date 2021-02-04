@@ -71,7 +71,7 @@
 
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Дискорд сохранен!',
+                                title: 'Часовой пояс сохранен!',
                                 showConfirmButton: false,
                                 timer: 1500
                             })

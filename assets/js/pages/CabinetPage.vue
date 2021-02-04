@@ -174,6 +174,7 @@
 	.left {
 	  width: 14%;
 	  margin-right: 3vw;
+      min-width: 11.5vw;
 	}
 
 	.right {
