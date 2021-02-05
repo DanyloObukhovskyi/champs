@@ -153,6 +153,10 @@ export default {
     transition: all .5s ease-in-out;
 }
 
+.article.h-25vw .article-wrapper {
+    height: 25vw;
+}
+
 .article:hover {
     background-size: 130%;
     background-position: top;
@@ -213,6 +217,7 @@ export default {
 
 .article-wrapper .news-data .title {
     font-size: 1.5vw;
+    font-weight: 800;
     color: black;
 }
 

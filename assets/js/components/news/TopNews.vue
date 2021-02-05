@@ -8,7 +8,7 @@
                                 v-for="(n, i) in item"
                                 :key="i"
                                 :news="n"
-                                :class="'height9vw'"
+                                class="height9vw"
                                 @setBookmark="() => n.bookmark = !n.bookmark">
                         </news-row-small>
                     </div>
@@ -16,7 +16,7 @@
                 <news-row
                         v-else
                         :news="item"
-                        :class="getClass(i, y) + ' h-25vw'"
+                        :class="getClass(i, y)"
                         @setBookmark="() => item.bookmark = !item.bookmark">
                 </news-row>
             </template>
@@ -59,7 +59,6 @@ export default {
                     news[1].push(this.news[i])
                 }
             }
-            console.log(news)
             return news;
         },
     },
@@ -84,6 +83,9 @@ export default {
                     className = 'w-40'
                 }
             }
+            if (index === 0) {
+                className += ' h-25vw';
+            }
             return className;
         },
     },
@@ -100,7 +102,7 @@ export default {
 }
 
 .news .news-small-wrapper {
-    height: 21.2vw;
+    height: 28.2vw;
 }
 
 .news .news-small-wrapper .article .article-wrapper {
