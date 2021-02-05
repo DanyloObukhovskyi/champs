@@ -9,21 +9,21 @@ body {
     color: white;
 }
 
-#layout .page{
+#layout .page {
     padding-top: 7vw;
 }
 
-.home{
+.home {
     background: url(/images/home/background.png) no-repeat;
     background-size: 100%;
 }
 
-.home .video-slider-container{
+.home .video-slider-container {
     overflow: hidden;
     width: 100%;
 }
 
-.home .video-slider-container .slick-list{
+.home .video-slider-container .slick-list {
     overflow: inherit;
 }
 
@@ -47,7 +47,7 @@ body {
     background-size: 35%;
 }
 
-.dark .home{
+.dark .home {
     background: url(/images/home/backgroundBlack.png) no-repeat;
     background-size: 100%;
 }
@@ -64,18 +64,19 @@ body {
     width: 8vw;
 }
 
-.dark .fa-arrow-right{
+.dark .fa-arrow-right {
     color: white;
 }
+
 /*
  Footer
 */
 .footer {
-    background: rgb(51,56,61);
-    background: -moz-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-    background: -webkit-radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-    background: radial-gradient(circle, rgba(51,56,61,1) 16%, rgba(45,49,53,1) 61%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d",endColorstr="#2d3135",GradientType=1);
+    background: rgb(51, 56, 61);
+    background: -moz-radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+    background: -webkit-radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+    background: radial-gradient(circle, rgba(51, 56, 61, 1) 16%, rgba(45, 49, 53, 1) 61%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#33383d", endColorstr="#2d3135", GradientType=1);
 }
 
 .footer .section {
@@ -127,7 +128,7 @@ body {
     color: #9d9fa0;
 }
 
-.arrow-up::before{
+.arrow-up::before {
     content: '';
     position: absolute;
     height: 1.5vw;
@@ -210,20 +211,21 @@ body {
     color: #778b9c;
 }
 
-.navigation a{
+.navigation a {
     font-size: 1vw;
     color: #5c6b79;
 }
 
-.navigation span{
+.navigation span {
     font-size: 1vw;
     color: #989898;
 }
 
-.navigation i{
+.navigation i {
     font-size: .7vw;
 }
-.home .banner-text{
+
+.home .banner-text {
     position: absolute;
     z-index: 1;
     font-size: 2.3vw;
@@ -232,4 +234,8 @@ body {
     width: 60%;
     font-weight: 800;
     color: white;
+}
+
+.swal2-container.swal2-center.swal2-backdrop-show {
+    overflow-y: scroll !important;
 }
