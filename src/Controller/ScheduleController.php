@@ -102,22 +102,28 @@ class ScheduleController extends AbstractController
             ->getRepository(User::class)
             ->find($userId);
 
-        $userTimezone = $form->timezone;
+        $authUser = $this->getUser();
 
-        /** @var User $user */
-        $user = $this->getUser();
-        if (isset($user) && $user->getTimezone() !== null) {
-            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService
-                ->getGmtTimezoneString(
-                    $user->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
-                );
-            $userTimezone = $gmtNumeric / 60 / 60;
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainerUser->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        if ($gmtNumeric < 0) {
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
         }
-        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService
-            ->getGmtTimezoneString(
-                $trainerUser->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        if (isset($authUser) && $authUser->getTimezone() !== null) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $authUser->getTimeZone()
             );
-        $trainerTimezone = $gmtNumeric / 60 / 60;
+            if ($gmtNumeric < 0) {
+                $userTimezone = -(int)gmdate("g", $gmtNumeric);
+            } else {
+                $userTimezone = (int)gmdate("g", $gmtNumeric);
+            }
+        } else {
+            $userTimezone = (int)$form->timezone;
+        }
 
         if ($trainerTimezone < 0 and $userTimezone < 0) {
             $timeOffset = $trainerTimezone + abs($userTimezone);
