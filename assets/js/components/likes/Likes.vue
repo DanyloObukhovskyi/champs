@@ -6,16 +6,16 @@
         <div class="likes-count-first">
             {{ likes }}
         </div>
-        <div class="like">
-            <img v-if="!isLiked" src="/images/news/like.svg" @click="setLike">
+        <div class="like" @click="setLike">
+            <img v-if="!isLiked" src="/images/news/like.svg">
             <img v-else src="/images/news/likeActive.png">
 
             <svg class="active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 18">
                 <path d="M363.1,1561.75H360.62a0.614,0.614,0,0,0-.62.61v11.03a0.613,0.613,0,0,0,.62.61H363.1a0.614,0.614,0,0,0,.621-0.61v-11.03A0.615,0.615,0,0,0,363.1,1561.75Zm14.35,0c-0.1-.02-4.777,0-4.777,0l0.653-1.76c0.451-1.22.159-3.08-1.092-3.74a2.158,2.158,0,0,0-1.435-.2,1,1,0,0,0-.632.46,2.575,2.575,0,0,0-.2.87,3.724,3.724,0,0,1-1.052,1.99c-0.963.93-3.955,3.6-3.955,3.6v9.8H375.3A10.474,10.474,0,0,0,377.451,1561.75Z" transform="translate(-360 -1556)"/>
             </svg>
         </div>
-        <div class="dislike">
-            <img v-if="!isDisliked" src="/images/news/dislike.svg" @click="setDislike">
+        <div class="dislike" @click="setDislike">
+            <img v-if="!isDisliked" src="/images/news/dislike.svg">
             <img v-else src="/images/news/dislikeActive.png">
 
             <svg class="active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 18">
@@ -99,7 +99,6 @@ export default {
     align-items: center;
 }
 
-
 .likes .like img,
 .likes .dislike img {
     width: 1.2vw;
@@ -126,8 +125,11 @@ export default {
 .likes .like:hover .active,
 .likes .dislike:hover .active {
     display: unset;
-    width: 2vw;
+    width: 1.2vw;
     cursor: pointer;
+    margin-top: .5vw;
+    margin-right: .3vw;
+    height: 1.2vw;
 }
 
 .likes .dislike img {
@@ -180,6 +182,15 @@ export default {
     margin-right: 0;
     margin-bottom: .4vw;
     width: 2vw;
+}
+
+.widget .likes .like:hover .active,
+.widget .likes .dislike:hover .active {
+    display: unset;
+    width: 2vw;
+    cursor: pointer;
+    height: 2vw;
+    margin-top: 0;
 }
 
 .widget .likes .likes-count-first {

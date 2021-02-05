@@ -66,6 +66,7 @@
     import Calendar from "../components/cabinet/trainer/pages/Calendar";
     import TrainerSetting from "../components/cabinet/trainer/pages/Setting";
     import Wallet from "../components/cabinet/trainer/pages/Wallet";
+    import RankingService from "../services/RankingService";
 
     const routes = [
         {path: `/${CabinetService.lang}/user/cabinet/`, component: UserCabinet},
@@ -162,10 +163,8 @@
         mounted() {
             this.initScroll()
 
-            CabinetService.getTimezones()
-                .then(timezones => {
-                    this.$store.dispatch('cabinet/setting/getTimezones', timezones)
-                })
+            this.getRanks();
+            this.getTimezones();
         }
     }
 </script>

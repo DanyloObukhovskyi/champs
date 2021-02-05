@@ -175,7 +175,7 @@ export default {
 }
 
 .article-wrapper {
-    height: 79%;
+    height: 85%;
 }
 
 .article-wrapper .bookmark {
@@ -217,6 +217,7 @@ export default {
 
 .article-wrapper .news-data .title {
     font-size: 1vw;
+    font-weight: 800;
     color: black;
 }
 

@@ -20,6 +20,20 @@
         <div class="news-wrapper">
             <div class="ml-8 mr-8 p-0 d-flex">
                 <div class="left">
+                    <template v-if="filters.tags.length > 0">
+                        <div class="tags">
+                            <div class="d-flex title">
+                                ТЕГИ
+                            </div>
+                            <button
+                                    @click="removeTag(tag)"
+                                    class="tag"
+                                    v-for="tag in filters.tags">
+                                {{tag}}
+                                <i class="fas fa-times ml-1"></i>
+                            </button>
+                        </div>
+                    </template>
                     <lamp-header title="Горячие новости"/>
                     <div class="news">
                         <hot-news :news="hotNews"/>
@@ -27,7 +41,7 @@
                 </div>
                 <div class="right">
                     <div class="tags">
-                        <a class="tag" v-for="tag in popularTags">
+                        <a class="tag" v-for="tag in popularTags" @click="addTag(tag)">
                             {{ tag }}
                         </a>
                     </div>
@@ -36,6 +50,7 @@
                                 v-for="(item, y) in news"
                                 :key="y"
                                 :news="item"
+                                @addTag="addTag"
                                 :class-name="getClass(i, y)"
                                 @setBookmark="() => item.bookmark = !item.bookmark">
                         </news-row>
@@ -92,6 +107,26 @@ export default {
                 texts: [],
             }
         }
+    },
+    watch: {
+        "filters.tags": function () {
+            this.reload()
+        },
+        "filters.titles": function () {
+            this.reload()
+        },
+        "filters.texts": function () {
+            this.reload()
+        },
+        "filters.dateFrom": function () {
+            this.reload()
+        },
+        "filters.dateTo": function () {
+            this.reload()
+        },
+        "filters.search": function () {
+            this.reload()
+        },
     },
     computed: {
         newsSorted() {
@@ -151,6 +186,32 @@ export default {
                 }
             }
         },
+        removeTag(tag) {
+            this.filters.tags = this.filters.tags.filter(t => t !== tag);
+        },
+        addTag(tag) {
+            const findTags = this.filters.tags.find(t => t === tag)
+            if (!findTags) {
+                this.filters.tags.push(tag);
+            } else {
+                this.filters.tags = this.filters.tags.filter(t => t !== tag)
+            }
+        },
+        reload() {
+            this.news = [];
+            this.isLoadAll = false;
+
+            this.pageUp();
+            this.getNews();
+        },
+        pageUp() {
+            const newsWrapper = document.querySelector('.news-wrapper');
+
+            newsWrapper.scrollTo({
+                top: 100,
+                behavior: 'smooth'
+            });
+        }
     },
     mounted() {
         this.getHotNews();
@@ -216,8 +277,8 @@ export default {
     background: #ff6d1d;
     border-radius: .2vw;
     border: none;
-    margin-right: .5vw;
     cursor: pointer;
+    margin: .1vw;
 }
 
 .tags .tag:hover {
