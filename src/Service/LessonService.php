@@ -189,8 +189,8 @@ class LessonService extends EntityService
                         $lessonTime->setLesson($lesson);
                         $lessonTime->setTrainerTime($schedule);
 
-                        $this->save($lessonTime);
                         $schedule->setStatus(Schedule::TIME_STATUS_RESERVED);
+                        $this->save($lessonTime);
                         $this->save($schedule);
                     }
 

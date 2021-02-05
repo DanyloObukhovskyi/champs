@@ -144,12 +144,7 @@ export default {
   -webkit-animation: animation-translate-left 1500ms linear both;
   animation: animation-translate-left 1500ms linear both;
   min-height: 5vw;
-
-  .cabinet-sidebar-wrapper {
-    background-color: #eff0f0;
-    transition: background-color .5s ease-in-out;
-    height: 100%;
-  }
+  background-color: #eff0f0;
 
   &.fixed {
     position: fixed;

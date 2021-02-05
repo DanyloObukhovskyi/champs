@@ -113,9 +113,13 @@
                 'getTimezones'
             ]),
             initScroll() {
+                const self = this;
+
                 document.addEventListener("DOMContentLoaded", function () {
                     window.onscroll = () => {
                         const sidebar = document.querySelector('.cabinet-sidebar');
+
+                        const sidebarHeight = $(document).height() - window.scrollY;
 
                         const userCardPosition = document
                             .querySelector('.card-user')
@@ -136,6 +140,12 @@
                             sidebar.style.position = 'fixed';
                             sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
 
+                            if (self.user !== null && self.user.isTrainer) {
+                                sidebar.style.height =  `calc(${sidebarHeight}px - 29.7vw)`;
+                            } else {
+                                sidebar.style.height =  `calc(${sidebarHeight}px - 30.5vw)`;
+                            }
+
                             invite.style.position = 'fixed';
                             invite.style.top = `calc(${header.height + subNav.height + 'px'} - 1vw)`;
                         } else {
@@ -150,10 +160,12 @@
             },
         },
         mounted() {
-            this.getRanks();
-            this.getTimezones();
-
             this.initScroll()
+
+            CabinetService.getTimezones()
+                .then(timezones => {
+                    this.$store.dispatch('cabinet/setting/getTimezones', timezones)
+                })
         }
     }
 </script>
