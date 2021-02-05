@@ -175,7 +175,7 @@ export default {
 }
 
 .article-wrapper {
-    height: 85%;
+    height: 79%;
 }
 
 .article-wrapper .bookmark {

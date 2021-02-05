@@ -100,7 +100,7 @@ export default {
 }
 
 .news .news-small-wrapper {
-    height: 28.2vw;
+    height: 21.2vw;
 }
 
 .news .news-small-wrapper .article .article-wrapper {
