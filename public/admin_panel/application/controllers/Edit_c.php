@@ -266,6 +266,7 @@ class Edit_c extends CI_Controller
 
         $data['UserID'] = $this->UserID;
         $data['user'] = $this->ion_auth->user()->row();
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $tags = $this->post_tags_model->get_by_post_id($post_id);
         $data['tags'] = $this->post_tags_model->tags_to_string($tags);
@@ -373,6 +374,8 @@ class Edit_c extends CI_Controller
         $data['upload_url'] = $this->config->item('upload_profile-pic');
         $data['current_u_can'] = $current_u_can;
         $data['output'] = $this->load->view('edit/user', $data, true);
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
         $this->load->view('layout/edit', $data);
     }
 
@@ -550,6 +553,7 @@ class Edit_c extends CI_Controller
         $data['trainer_awards'] = [];
         $data['games'] = $this->game_m->get_all();
         $data['prices_types'] = Trainer_lesson_price_m::PRICE_TYPES;
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $trainer_prices = $this->trainer_lesson_price_m->get_by_trainer_id($trainer['id']);
         $data['trainer_prices'] = [];
@@ -629,6 +633,8 @@ class Edit_c extends CI_Controller
         $roles = json_decode($roles);
         $data['user_info'][0]['roles'] = $roles[0];
         $data['current_u_can'] = $current_u_can;
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
         $data['output'] = $this->load->view('edit/admin', $data, true);
         $this->load->view('layout/edit', $data);
     }
