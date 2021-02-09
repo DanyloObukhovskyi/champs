@@ -44,10 +44,12 @@
 					$output = $this->load->view("auth/Auth", $this->data, true);
 					$this->load->view('layout/auth', array(
 							'output' => $output,
-							'top_menu' => false)
+							'top_menu' => false
+                        )
 					);
 					return;
 				}
+
 				if($current_u_can[0] == "1") {
 					redirect($this->config->item('admin_login'), 'refresh');
 				} elseif($current_u_can[1] == "1") {
