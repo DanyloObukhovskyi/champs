@@ -12,13 +12,25 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ScheduleService extends EntityService
 {
+    /**
+     * @var string
+     */
     protected $entity = Schedule::class;
 
-    /** @var ScheduleRepository */
+    /**
+     * @var ScheduleRepository
+     */
     protected $repository;
 
+    /**
+     * @var TimeZoneService
+     */
     protected $timezoneService;
 
+    /**
+     * ScheduleService constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -49,7 +61,7 @@ class ScheduleService extends EntityService
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function createDay($userId, $date, int $timeOffset = 0, bool $isStudent = false)
+    public function createDay($userId, $date, int $timeOffset = 0, bool $isStudent = true)
     {
         $trainer = $this->entityManager
             ->getRepository(User::class)
@@ -81,12 +93,16 @@ class ScheduleService extends EntityService
                     $carbonDayDate->format("Y-m-d"),
                     $carbonDayDate->hour
                 );
-            if (isset($scheduleEntity)) {
-                $carbonNow = Carbon::now();
-                $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
+            $carbonNow = Carbon::now();
+            $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
 
-                if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0 and $isStudent) {
-                    $status = 0;
+            if (isset($scheduleEntity)) {
+                if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0) {
+                    if ($isStudent) {
+                        $status = Schedule::TIME_STATUS_BLOCK;
+                    } else {
+                        $status = Schedule::TIME_STATUS_RESERVED;
+                    }
                 } else {
                     $status = $scheduleEntity->getStatus();
                 }
@@ -96,15 +112,23 @@ class ScheduleService extends EntityService
                     'status' => $status
                 ];
             } else {
+                if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0) {
+                    if ($isStudent) {
+                        $status = Schedule::TIME_STATUS_BLOCK;
+                    } else {
+                        $status = Schedule::TIME_STATUS_RESERVED;
+                    }
+                } else {
+                    $status = 0;
+                }
                 $schedules[] = [
                     'date' => $scheduleDayDate->format("Y-m-d"),
                     'time' => $scheduleDayDate->hour,
-                    'status' => 0
+                    'status' => $status
                 ];
             }
             $carbonDayDate->addHour(1);
         }
-
         $scheduleCollect = [];
         foreach ($schedules as $schedule) {
             $timeFrom = $schedule['time'] < 10 ? "0" . $schedule['time'] : $schedule['time'];

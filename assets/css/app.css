@@ -1,6 +1,7 @@
 body {
     font-family: 'Exo 2', sans-serif;
     background: #f8f8f8;
+    overflow: scroll !important;
 }
 
 .dark body {
@@ -234,8 +235,4 @@ body {
     width: 60%;
     font-weight: 800;
     color: white;
-}
-
-.swal2-container.swal2-center.swal2-backdrop-show {
-    overflow-y: scroll !important;
 }

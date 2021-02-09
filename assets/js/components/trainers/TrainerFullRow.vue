@@ -60,7 +60,7 @@
                     :cost="cost.price">
             </trainer-cost-button>
         </div>
-        <div class="description" v-show="trainingType !== null">
+        <div class="description" v-show="trainingType !== null && trainingType !== undefined">
             <div class="arrow" :style="descriptionArrowStyle">
             </div>
             <p class="title">
@@ -125,7 +125,7 @@
         data() {
             return {
                 show: false,
-                type: 'individual',
+                type: null,
                 rankIconError: false,
                 trainingTypes: {
                     individual: 'Идивидуальная тренировка',
@@ -186,6 +186,8 @@
             }
         },
         mounted() {
+            this.type = this.trainingType;
+
             this.setDescriptionArrowStyle()
         }
     }

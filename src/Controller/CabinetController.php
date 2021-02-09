@@ -210,7 +210,7 @@ class CabinetController extends AbstractController
             $trainer = $this->teacherService->findByUserId($user->getId());
 
             if (isset($trainer)) {
-                 $this->teacherService->updateTrainer($trainer, (object)$data->trainer);
+                $this->teacherService->updateTrainer($trainer, (object)$data->trainer);
             }
         }
         if (empty($errors)) {
@@ -463,7 +463,12 @@ class CabinetController extends AbstractController
 
         $schedule = [];
         if (isset($user)) {
-            $schedule = $this->scheduleService->createDay($trainer->getId(), $date);
+            $schedule = $this->scheduleService->createDay(
+                $trainer->getId(),
+                $date,
+                0,
+                false
+            );
         }
         return $schedule;
     }

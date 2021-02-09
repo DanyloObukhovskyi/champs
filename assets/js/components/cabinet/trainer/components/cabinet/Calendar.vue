@@ -59,7 +59,7 @@
     import CabinetService from "../../../../../services/CabinetService";
 
     export default {
-        name: "Calendar",
+        zname: "Calendar",
         data() {
             return {
                 date: null,

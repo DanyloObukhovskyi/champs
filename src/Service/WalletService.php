@@ -3,6 +3,7 @@
 
 namespace App\Service;
 
+use App\Service\Payment\PaymentService;
 use Carbon\Carbon;
 use DateTime;
 use App\Entity\Lessons;
@@ -33,6 +34,11 @@ class WalletService
      */
     public $userService;
 
+    /**
+     * @var PaymentService
+     */
+    public $paymentService;
+
     public function __construct()
     {
         global $kernel;
@@ -42,6 +48,7 @@ class WalletService
         $this->purseHistoryService = new PurseHistoryService($this->entityManager);
         $this->lessonService = new LessonService($this->entityManager);
         $this->userService = new UserService($this->entityManager);
+        $this->paymentService = new PaymentService($this->entityManager);
     }
 
     /**
@@ -152,13 +159,22 @@ class WalletService
     {
         $confirmedPayments = $this->getPaymentsByDate($user);
 
-        $studentsHistory = [];
+        $studentsHistoryIds = [];
+
         /** @var Payment $payment */
         foreach ($confirmedPayments as $payment) {
+            $studentsHistoryIds[] = $payment->getId();
+        }
+        $payments = $this->paymentService->findByIds($studentsHistoryIds);
 
+        $studentsHistory = [];
+
+        foreach ($payments as $payment) {
             $lesson = $payment->getLesson();
 
             if (isset($lesson) and !empty($lesson->getStudent())) {
+
+                $studentsHistoryIds[] = $payment->getId();
 
                 $studentsHistory[] = [
                     'date' => $payment->getCreatedAt()->format('Y-m-d H:i:s'),

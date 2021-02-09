@@ -7,12 +7,16 @@ namespace App\Service\Payment;
 use App\Entity\LessonsPayment;
 use App\Entity\LessonTime;
 use App\Entity\Payment;
+use App\Repository\PaymentRepository;
 use App\Service\EntityService;
 
 class PaymentService extends EntityService
 {
     protected $entity = Payment::class;
 
+    /**
+     * @var PaymentRepository
+     */
     protected $repository;
 
     public function getPaymentWithinThirtyMinutes()
@@ -44,5 +48,10 @@ class PaymentService extends EntityService
     public function getByTeacherAndDate($teacher, $datetime)
     {
         return $this->repository->getByTeacherAndDate($teacher, $datetime);
+    }
+
+    public function findByIds(array $paymentsIds)
+    {
+        return $this->repository->findByIds($paymentsIds);
     }
 }

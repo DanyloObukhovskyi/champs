@@ -54,6 +54,7 @@
   .setting-body {
 	-webkit-animation: animation-translate-right 1500ms linear both;
 	animation: animation-translate-right 1500ms linear both;
+    margin-bottom: -1vw;
   }
 
   .setting-wrapper {
