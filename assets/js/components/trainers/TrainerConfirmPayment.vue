@@ -45,7 +45,7 @@
                     </div>
                     <div class="time">
                         <div>
-                            {{ selectedLength * getPrice }} RUB
+                            Итого к оплате {{ selectedLength * getPrice }} RUB
                         </div>
                     </div>
                     <div class="description">

@@ -59,7 +59,7 @@ class MarketplaceController extends AbstractController
         return $this->render('templates/marketplace.trainer.html.twig', [
             'trainer' => $trainer,
             'router' => 'marketplace',
-            'type' => $request->get('type') ?? TrainerLessonPrice::INDIVIDUAL_TYPE
+            'type' => $request->get('type') ?? null
         ]);
     }
 }

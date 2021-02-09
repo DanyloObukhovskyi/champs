@@ -16,7 +16,8 @@
                     </a>
                 </div>
             </div>
-            <div class="video-wrapper dota" v-if="user !== null && user.game === 'dota'">
+            <div class="video-wrapper dota"
+                 v-if="user !== null && user.game !== null && user.game.code === 'dota'">
                 <div class="video">
                     <img src="/images/cabinet/videoDota.png">
                 </div>
@@ -33,7 +34,8 @@
                 </div>
             </div>
             <div class="background-solder">
-                <img src="/images/cabinet/secondBannerDota.png" v-if="user !== null && user.game === 'dota'">
+                <img src="/images/cabinet/secondBannerDota.png"
+                     v-if="user !== null && user.game !== null && user.game.code === 'dota'">
                 <img src="/images/cabinet/secondBannerCs.png" v-else>
             </div>
         </div>
@@ -47,7 +49,8 @@
                 </div>
             </div>
             <a :href="marketplacePage" class="video">
-                <img src="/images/cabinet/analyticBannerDota.png" v-if="user !== null && user.game === 'dota'">
+                <img src="/images/cabinet/analyticBannerDota.png"
+                     v-if="user !== null && user.game !== null && user.game.code === 'dota'">
                 <img src="/images/cabinet/analyticBannerCs.png" v-else>
                 <img class="play" src="/images/cabinet/playIcon.png">
             </a>

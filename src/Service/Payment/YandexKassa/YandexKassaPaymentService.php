@@ -40,7 +40,7 @@ class YandexKassaPaymentService extends EntityService
 
     protected $entity = Payment::class;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct($entityManager)
     {
         $this->merchant_id = $_ENV['YANDEX_KASSA_ID'];
         $this->secret = $_ENV['YANDEX_KASSA_SECRET'];
@@ -65,7 +65,7 @@ class YandexKassaPaymentService extends EntityService
                     ],
                     'confirmation' => [
                         'type' => 'redirect',
-                        'return_url' => $redirect . $lessonsId,
+                        'return_url' => $redirect,
                     ],
                     'capture' => true,
                     'description' => $description,

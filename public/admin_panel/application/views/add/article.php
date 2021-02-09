@@ -63,6 +63,26 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10 " type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="date" name="post_date" id="datepicker1" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -88,6 +108,26 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker2" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -112,6 +152,26 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" name="post_title" placeholder="Имя поста">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker3" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
@@ -153,6 +213,26 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker4" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -179,6 +259,26 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker5" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -205,6 +305,26 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker6" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -229,6 +349,26 @@
 				<input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
 				<div class="editor-edit mt-10">URL поста</div>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker7" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date">
 				<div class="change-editor-edit-ban">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
@@ -253,6 +393,26 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="Имя поста" name="post_title">
 				<div class="editor-title_post">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Файл Видео</div>
@@ -291,6 +451,26 @@
 				<input class="editor_input_nd input-video-upload-editor" type="text" placeholder="Имя поста"  name="post_title">
 				<div class="editor-title_post mt-10">URL поста</div>
 				<input class="editor_input_nd input-video-upload-editor mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <div class="editor-edit mt-10">Теги</div>
+                <input type="text"
+                       id="tags"
+                       class="editor-edit-form-input mt-5 mb-10"
+                       data-role="tagsinput"
+                       name="tags"
+                       value=""
+                       style="max-width: 200px; cursor: pointer; display: block;"
+                       placeholder="input tags">
+                <div class="editor-edit mt-10">Игра</div>
+                <select name="game"
+                        style="max-width: 200px; cursor: pointer; display: block;"
+                        class="editor-edit-form-input mt-5 mb-10">
+                    <option value="">По умолчанию</option>
+                    <?php foreach ($games as $game): ?>
+                        <option value="<?php echo $game['id'];?>">
+                            <?php echo $game['name'];?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 				<div class="wrapper-editor-preview-form">
 					<div class="wrapper-editor-preview-form-left">
 						<div class="editor-title_post">Фотогалерея</div>

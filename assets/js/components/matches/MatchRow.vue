@@ -79,6 +79,7 @@
                 <div class="play-wrapper">
                     <i class="fa fa-play-circle" aria-hidden="true"></i>
                 </div>
+                Прямая трансляция
             </div>
         </a>
     </div>
@@ -230,8 +231,10 @@
         width: 24%;
         display: flex;
         justify-content: center;
-        padding-left: 10%;
+        margin-right: .5vw;
         font-size: .8vw;
+        align-items: center;
+        color: #ff6d1d;
     }
 
     .play .play-wrapper {

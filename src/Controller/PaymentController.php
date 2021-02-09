@@ -48,9 +48,13 @@ class PaymentController extends AbstractController
         $lessonIds = json_decode($lessonIds);
 
         /** @var Lessons[] $lessons */
-        $lessons = $this->getDoctrine()->getRepository(Lessons::class)->findByIds($lessonIds);
+        $lessons = $this->getDoctrine()
+            ->getRepository(Lessons::class)
+            ->findByIds($lessonIds);
 
-        $paymentService = new YandexKassaPaymentService($this->getDoctrine()->getManager());
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $paymentService = new YandexKassaPaymentService($entityManager);
 
         $cost = 0;
         foreach ($lessons as $lesson) {

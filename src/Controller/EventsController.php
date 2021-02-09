@@ -122,7 +122,8 @@ class EventsController extends AbstractController
     public function getEvent($id)
     {
         /** @var Event $event */
-        $event = $this->entityManager->getRepository(Event::class)
+        $event = $this->entityManager
+            ->getRepository(Event::class)
             ->find($id);
 
         $matches = $this->matchService->findByEvent($event);

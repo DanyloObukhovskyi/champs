@@ -105,6 +105,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.setting-container-body.students-history {
+  margin-bottom: .25vw;
+}
+
 .show-more {
   margin-left: 2.5vw;
   color: #a2a4a5;

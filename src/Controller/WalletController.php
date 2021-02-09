@@ -79,6 +79,7 @@ class WalletController extends AbstractController
         $balance = $this->walletService->getBalance($user);
         $available = $this->walletService->getAvailableToPurse($user);
 
+
         $currentMonth = $translator->trans('earned.per this month');
         $prevMonth = $translator->trans('earned.per previous month');
 

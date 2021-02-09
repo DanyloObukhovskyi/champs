@@ -155,7 +155,7 @@
                     </div>
                 </div>
                 <div class="table">
-                    {{setting.get('cookiePolicy') is not null ? setting.get('cookiePolicy').value : ''}}
+                    {{setting.get('cookiePolicy') is not null ? setting.get('cookiePolicy').value|raw : ''}}
                 </div>
             </div>
         </div>

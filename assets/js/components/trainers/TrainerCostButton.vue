@@ -98,7 +98,7 @@ export default {
     width: 100%;
 
     .type {
-      font-size: 1.067vw;
+      font-size: 1vw;
       font-weight: 600;
     }
 

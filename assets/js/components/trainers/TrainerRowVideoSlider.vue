@@ -73,15 +73,43 @@ export default {
 
   .slick-prev {
     &::before {
-      content: '';
-      background: url('/images/backOrange.svg');
-      background-repeat: no-repeat;
-      background-size: cover;
       width: 1.5vw;
-      display: block;
       height: 3.5vw;
       right: -75%;
       position: absolute;
+      transition: all .2s ease;
+      opacity: 1;
+      font-family: FontAwesome;
+      content: "\f053";
+      color: white;
+      clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%);
+      font-size: 1vw;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      background: rgb(254, 121, 36);
+      background: -moz-linear-gradient(90deg, rgba(254, 121, 36, 1) 0%, rgba(255, 179, 71, 1) 100%);
+      background: -webkit-linear-gradient(90deg, rgba(254, 121, 36, 1) 0%, rgba(255, 179, 71, 1) 100%);
+      background: linear-gradient(90deg, rgba(254, 121, 36, 1) 0%, rgba(255, 179, 71, 1) 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fe7924", endColorstr="#ffb347", GradientType=1);
+    }
+
+    &:hover::before {
+      transition: all .2s ease;
+      opacity: 1;
+      font-family: FontAwesome;
+      content: "\f053";
+      clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%);
+      width: 1.5vw;
+      height: 3.5vw;
+      font-size: 1vw;
+      right: -75%;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      color: #ff6d1d;
+      background: white;
+
     }
 
     .video-slider {
@@ -96,13 +124,39 @@ export default {
     margin-right: .8vw;
 
     &::before {
-      content: '';
-      background: url("/images/nextOrange.svg");
-      background-repeat: no-repeat;
-      background-size: cover;
       width: 1.5vw;
-      display: block;
       height: 3.5vw;
+      transition: all .2s ease;
+      opacity: 1;
+      font-family: FontAwesome;
+      content: "\f054";
+      color: white;
+      clip-path: polygon(0 0, 100% 30%, 100% 70%, 0% 100%);
+      font-size: 1vw;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      background: rgb(255, 179, 71);
+      background: -moz-linear-gradient(90deg, rgba(255, 179, 71, 1) 0%, rgba(254, 121, 36, 1) 100%);
+      background: -webkit-linear-gradient(90deg, rgba(255, 179, 71, 1) 0%, rgba(254, 121, 36, 1) 100%);
+      background: linear-gradient(90deg, rgba(255, 179, 71, 1) 0%, rgba(254, 121, 36, 1) 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffb347", endColorstr="#fe7924", GradientType=1);
+    }
+
+    &:hover::before {
+      transition: all .2s ease;
+      opacity: 1;
+      font-family: FontAwesome;
+      content: "\f054";
+      color: #ff6d1d;
+      clip-path: polygon(0 0, 100% 30%, 100% 70%, 0% 100%);
+      width: 1.5vw;
+      height: 3.5vw;
+      font-size: 1vw;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      background: white;
     }
   }
 

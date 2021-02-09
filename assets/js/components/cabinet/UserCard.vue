@@ -19,6 +19,9 @@
             <div class="nickname">
                 {{user.nickname}}
             </div>
+            <div class="trainer" v-if="user.isTrainer">
+                Тренер
+            </div>
         </div>
     </div>
 </template>
@@ -38,6 +41,12 @@
 
 <style scoped lang="scss">
     @import '../../../css/animations.css';
+
+    .trainer {
+      font-size: .9vw;
+      color: #ff6d1d;
+      font-weight: 600;
+    }
 
     .card-user {
         -webkit-animation: animation-translate-left 1500ms linear both;

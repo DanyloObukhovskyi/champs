@@ -135,7 +135,8 @@ export default {
 @import '../../../css/animations.css';
 
 #layout .cabinet-sidebar {
-  border-radius: .3vw .3vw 0 0;
+  min-height: 15.7vw;
+  border-radius: .3vw;
   width: 11.5vw;
   margin-top: 1vw;
   height: 100%;
@@ -143,7 +144,6 @@ export default {
   padding-bottom: 1vw;
   -webkit-animation: animation-translate-left 1500ms linear both;
   animation: animation-translate-left 1500ms linear both;
-  min-height: 5vw;
   background-color: #eff0f0;
 
   &.fixed {
@@ -206,6 +206,7 @@ export default {
 
 .dark #layout {
   .cabinet-sidebar {
+    min-height: 15.7vw;
     background-color: #1e2123;
     color: white;
   }
