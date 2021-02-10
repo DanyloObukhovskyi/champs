@@ -87,7 +87,7 @@
                                         </div>
                                         <label class="label" for="">Текст</label>
                                         <div class="" id="input">
-                                            <textarea style="width: 100%" name="text" rows="10" class="w-100">{{edit !== null ? edit.text: ''}}</textarea>
+                                            <textarea style="width: 100%" name="text" rows="10" class="text-redactor"></textarea>
                                         </div>
                                         <div>
                                             <label style="font-size: 17px; color: #00000085;" class="label" for="">Ссылки</label>
@@ -149,7 +149,7 @@
                                     <button class="pointer btn btn-dark-blue btn-small"
                                             data-toggle="modal"
                                             data-target="#addModal"
-                                            @click="clearForm, edit = banner, imageSrc = `${imagesPath}${banner.img}`">
+                                            @click="clearForm, setEditBanner(banner), imageSrc = `${imagesPath}${banner.img}`">
                                         Редактировать
                                     </button>
                                     <a :href="'<?php echo site_url('c-admin/trainers/banners/delete/'); ?>' + banner.id"
@@ -194,6 +194,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5/tinymce.min.js"></script>
 <script>
     const games = new Vue({
         el: '#app',
@@ -260,6 +261,7 @@
             },
             clearForm() {
                 document.forms.saveBanner.reset();
+                tinymce.activeEditor.setContent('')
                 this.imageSrc = null;
             },
             save() {
@@ -268,6 +270,8 @@
                 if (this.edit !== null){
                     form.append('id', this.edit.id)
                 }
+                form.append('text',  tinymce.activeEditor.getContent());
+
                 axios.post('<?php echo base_url('c-admin/ajax/trainers/banners/save');?>', form)
                     .then(() => {
                         this.getBanners()
@@ -294,10 +298,36 @@
                         return link.link;
                     }
                 }
-            }
+            },
+            initRedactor() {
+                return tinymce.init({
+                    selector: 'textarea.text-redactor',
+                    plugins: 'save',
+                    toolbar: 'save | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+                    toolbar_sticky: true,
+                    autosave_ask_before_unload: false,
+                    autosave_interval: '0.5s',
+                    autosave_prefix: '{path}{query}-{id}-',
+                    image_advtab: true,
+                    template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+                    template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+                    height: 175,
+                    image_caption: false,
+                    quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+                    noneditable_noneditable_class: 'mceNonEditable',
+                    toolbar_mode: 'sliding',
+                    contextmenu: 'link image imagetools table',
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                });
+            },
+            setEditBanner(banner) {
+                this.edit = banner;
+                tinymce.activeEditor.setContent(banner.text)
+            },
         },
         mounted() {
             this.getBanners();
+            this.initRedactor();
         }
     })
 </script>

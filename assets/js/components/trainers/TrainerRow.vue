@@ -488,3 +488,55 @@ export default {
   }
 }
 </style>
+
+<style lang="scss">
+.trainer-row {
+  .description {
+    p {
+      margin: 0;
+    }
+
+    ul > li {
+      list-style: none;
+    }
+
+    p:not(.MsoNormal) > span:first-child {
+      color: rgba(0, 0, 0, 0);
+    }
+
+    p:not([class]) > span:first-child {
+      color: black;
+    }
+
+    p:not(.MsoNormal) > span:first-child > span {
+      color: black;
+    }
+  }
+}
+
+.dark {
+  .trainer-row {
+    .description {
+      p {
+        margin: 0;
+      }
+
+      ul > li {
+        list-style: none;
+      }
+
+      p:not(.MsoNormal) > span:first-child {
+        color: rgba(0, 0, 0, 0);
+      }
+
+      p:not([class]) > span:first-child {
+        color: white;
+      }
+
+      p:not(.MsoNormal) > span:first-child > span {
+        color: white;
+      }
+    }
+  }
+}
+</style>

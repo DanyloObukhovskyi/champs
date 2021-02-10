@@ -259,6 +259,8 @@ class Add_c extends CI_Controller
         $data['user'] = $this->ion_auth->user()->row();
         $data['current_u_can'] = $current_u_can;
         $data['games'] = $this->game_m->get_all();
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
         $data['output'] = $this->load->view('add/article', $data, true);
         $this->load->view('layout/add', $data);
     }
@@ -356,6 +358,8 @@ class Add_c extends CI_Controller
             $data['UserID'] = $this->UserID;
             $data['user'] = $this->ion_auth->user()->row();
             $data['current_u_can'] = $current_u_can;
+            $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
             $data['output'] = $this->load->view('add/user', $data, true);
             $this->load->view('layout/add', $data);
         }
@@ -526,6 +530,8 @@ class Add_c extends CI_Controller
         $data['trainer_awards'] = [];
         $data['games'] = $this->game_m->get_all();
         $data['prices_types'] = Trainer_lesson_price_m::PRICE_TYPES;
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
         $data['output'] = $this->load->view('add/trainer', $data, true);
 
         $this->load->view('layout/add', $data);
@@ -631,6 +637,7 @@ class Add_c extends CI_Controller
         $data['UserID'] = $this->UserID;
         $data['user'] = $this->ion_auth->user()->row();
         $data['current_u_can'] = $current_u_can;
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
         $data['output'] = $this->load->view('add/admin', $data, true);
         $this->load->view('layout/add', $data);
     }
