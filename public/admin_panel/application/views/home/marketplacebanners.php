@@ -27,6 +27,7 @@
     tbody img {
         width: 50px;
     }
+
     .tox.tox-tinymce.tox-tinymce--toolbar-sticky-off {
         margin: 0;
     }
@@ -52,11 +53,13 @@
 
         <div class="relative">
             <div id="app">
-                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">{{edit !== null ? `Редактировать баннер №${edit.id}`: 'Добавить баннер' }}</h5>
+                                <h5 class="modal-title">
+                                    {{edit !== null ? `Редактировать баннер №${edit.id}` : 'Добавить баннер' }}</h5>
                                 <div class="alert alert-success" role="alert" v-if="message !== null">
                                     {{message}}
                                     <button type="button" class="close" @click="message = null">
@@ -69,34 +72,40 @@
                                     <div class="col-item">
                                         <label class="label" for="">Изображение (1080 x 460)</label>
                                         <div v-if="imageSrc !== null">
-                                            <img :src="imageSrc" style="width: 50%; margin-bottom: 15px; margin-top: 15px;">
+                                            <img :src="imageSrc"
+                                                 style="width: 50%; margin-bottom: 15px; margin-top: 15px;">
                                         </div>
                                         <div class="input mb-5" id="input">
-                                            <input name="img" @change="addShowBannerUploadImage($event.target)" type="file" class="fw-600 input2_txt">
+                                            <input name="img" @change="addShowBannerUploadImage($event.target)"
+                                                   type="file" class="fw-600 input2_txt">
                                         </div>
                                         <label class="label" for="">Игра</label>
                                         <div class="input mb-5" id="input">
                                             <select name="game" class="fw-600 input2_txt form-control">
-                                                <?php foreach ($games as $game):?>
-                                                    <option value="<?php echo $game['id']?>">
-                                                        <?php echo $game['name']?>
+                                                <?php foreach ($games as $game): ?>
+                                                    <option value="<?php echo $game['id'] ?>">
+                                                        <?php echo $game['name'] ?>
                                                     </option>
-                                                <?php endforeach;?>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <label class="label" for="">Заголовок</label>
                                         <div class="input mb-5" id="input">
-                                            <input name="title" type="text" :value="edit !== null ? edit.title: ''" class="fw-600 input2_txt">
+                                            <input name="title" type="text" :value="edit !== null ? edit.title: ''"
+                                                   class="fw-600 input2_txt">
                                         </div>
                                         <label class="label" for="">Текст</label>
                                         <div class="" id="input">
-                                            <textarea style="width: 100%" name="text" rows="10" class="text-redactor"></textarea>
+                                            <textarea style="width: 100%" name="text" rows="10"
+                                                      class="text-redactor"></textarea>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="clearForm">Отмена</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="clearForm">
+                                    Отмена
+                                </button>
                                 <button type="button" class="btn btn-primary" @click="save">Сохранить</button>
                             </div>
                         </div>
@@ -156,10 +165,10 @@
                         </table>
                         <div class="flex">
                             <button
-                                data-toggle="modal"
-                                data-target="#addModal"
-                                @click="clearForm"
-                                class="btn btn-orange mt-15 mr-10 fw-400">
+                                    data-toggle="modal"
+                                    data-target="#addModal"
+                                    @click="clearForm"
+                                    class="btn btn-orange mt-15 mr-10 fw-400">
                                 Добавить
                             </button>
                         </div>
@@ -218,8 +227,8 @@
             pages() {
                 const pages = [];
 
-                for (let i = 0; i <= this.pagesCount; i++){
-                    if (i !== 0){
+                for (let i = 0; i <= this.pagesCount; i++) {
+                    if (i !== 0) {
                         pages.push(i);
                     }
                 }
@@ -253,7 +262,7 @@
                                 input.value = '';
                                 banners.imageSrc = null;
 
-                                if(banners.edit !== null && banners.edit.img !== null) {
+                                if (banners.edit !== null && banners.edit.img !== null) {
                                     banners.imageSrc = `${banners.imagesPath}${banners.edit.img}`;
                                 }
 
@@ -268,7 +277,7 @@
                                 input.value = '';
                                 banners.imageSrc = null;
 
-                                if(banners.edit !== null && banners.edit.img !== null) {
+                                if (banners.edit !== null && banners.edit.img !== null) {
                                     banners.imageSrc = `${banners.imagesPath}${banners.edit.img}`;
                                 }
 
@@ -304,10 +313,10 @@
             save() {
                 const form = new FormData(document.forms.saveBanner);
 
-                if (this.edit !== null){
+                if (this.edit !== null) {
                     form.append('id', this.edit.id)
                 }
-                form.append('text',  tinymce.activeEditor.getContent());
+                form.append('text', tinymce.activeEditor.getContent());
 
                 axios.post('<?php echo base_url('c-admin/ajax/marketplace/banners/save');?>', form)
                     .then(() => {
