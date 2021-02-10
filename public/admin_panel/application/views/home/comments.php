@@ -130,9 +130,6 @@
                                     {{comment.comment}}
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    {{comment.comment}}
-                                </td>
-                                <td class="js-expand-table-item pointer">
                                     <a v-if="currentTab === 'reviews'"
                                        :href="'<?php print base_url("c-admin/trainer/edit/"); ?>' + comment.trainer_id + '<?php echo '/' . $auth_id?>'">
                                         Смoтреть
@@ -145,6 +142,9 @@
                                        :href="'<?php print base_url("c-admin/post/edit/"); ?>' + comment.news_id + '<?php echo '/' . $auth_id?>'">
                                         Смoтреть
                                     </a>
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    {{comment.created_at}}
                                 </td>
                                 <td class="t-a-r pr-15">
                                     <button class="btn btn-dark-blue btn-small"
