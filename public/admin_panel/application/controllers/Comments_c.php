@@ -72,6 +72,7 @@ class Comments_c extends CI_Controller
                         $data['comments'][] = [
                             'id' => $comment['id'],
                             'user_id' => $comment['student_id'],
+                            'trainer_id' => $comment['trainer_id'],
                             'comment' => $comment['comment'],
                             'created_at' => $comment['created_at']
                         ];
