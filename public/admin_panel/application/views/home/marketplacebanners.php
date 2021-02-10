@@ -253,6 +253,10 @@
                                 input.value = '';
                                 banners.imageSrc = null;
 
+                                if(banners.edit !== null && banners.edit.img !== null) {
+                                    banners.imageSrc = `${banners.imagesPath}${banners.edit.img}`;
+                                }
+
                                 return Swal.fire({
                                     icon: 'error',
                                     title: 'Упс...',
@@ -263,6 +267,10 @@
                             if (this.height > 460) {
                                 input.value = '';
                                 banners.imageSrc = null;
+
+                                if(banners.edit !== null && banners.edit.img !== null) {
+                                    banners.imageSrc = `${banners.imagesPath}${banners.edit.img}`;
+                                }
 
                                 return Swal.fire({
                                     icon: 'error',
