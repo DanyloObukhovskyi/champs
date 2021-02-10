@@ -1,3 +1,12 @@
+<?php
+
+    $siteUrl = $this->config->item('site_url');
+
+    if (empty($siteUrl)) {
+        $siteUrl = 'https://champs.pro/';
+    }
+    $matchUrl = $siteUrl . 'ru/matches/';
+?>
 <style>
     .slide-preview {
         width: 100%;
@@ -94,6 +103,11 @@
                                     Текст коментария
                                 </td>
                                 <td class="js-expand-table-item pointer">
+                                    {{currentTab === 'reviews' ? 'Тренер' : ''}}
+                                    {{currentTab === 'news' ? 'Новость' : ''}}
+                                    {{currentTab === 'matches' ? 'Матч' : ''}}
+                                </td>
+                                <td class="js-expand-table-item pointer">
                                     Дата
                                 </td>
                                 <td class="js-expand-table-item pointer">
@@ -116,7 +130,21 @@
                                     {{comment.comment}}
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    {{comment.created_at}}
+                                    {{comment.comment}}
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    <a v-if="currentTab === 'reviews'"
+                                       :href="'<?php print base_url("c-admin/trainer/edit/"); ?>' + comment.trainer_id + '<?php echo '/' . $auth_id?>'">
+                                        Смoтреть
+                                    </a>
+                                    <a v-if="currentTab === 'matches'"
+                                       :href="'<?php print $matchUrl; ?>' + comment.match_id">
+                                        Смoтреть
+                                    </a>
+                                    <a v-if="currentTab === 'news'"
+                                       :href="'<?php print base_url("c-admin/post/edit/"); ?>' + comment.news_id + '<?php echo '/' . $auth_id?>'">
+                                        Смoтреть
+                                    </a>
                                 </td>
                                 <td class="t-a-r pr-15">
                                     <button class="btn btn-dark-blue btn-small"
