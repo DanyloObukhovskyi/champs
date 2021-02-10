@@ -67,9 +67,9 @@
                             <div class="modal-body">
                                 <form name="saveBanner">
                                     <div class="col-item">
-                                        <label class="label" for="">Изображение</label>
+                                        <label class="label" for="">Изображение (1080 x 460)</label>
                                         <div v-if="imageSrc !== null">
-                                            <img :src="imageSrc" style="width: 44px; margin-bottom: 15px; margin-top: 15px;">
+                                            <img :src="imageSrc" style="width: 50%; margin-bottom: 15px; margin-top: 15px;">
                                         </div>
                                         <div class="input mb-5" id="input">
                                             <input name="img" @change="addShowBannerUploadImage($event.target)" type="file" class="fw-600 input2_txt">
@@ -189,8 +189,10 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
 <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5/tinymce.min.js"></script>
+<script src="sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script>
 <script>
-    const games = new Vue({
+    const banners = new Vue({
         el: '#app',
         data() {
             return {
@@ -240,7 +242,38 @@
 
                         return;
                     }
-                    this.imageSrc = url
+
+                    let file, img;
+
+                    if ((file = input.files[0])) {
+                        img = new Image();
+                        img.onload = function () {
+
+                            if (this.width > 1080) {
+                                input.value = '';
+                                banners.imageSrc = null;
+
+                                return Swal.fire({
+                                    icon: 'error',
+                                    title: 'Упс...',
+                                    text: 'Ширина изображения привышает 1080 пикселей!',
+                                })
+                            }
+
+                            if (this.height > 460) {
+                                input.value = '';
+                                banners.imageSrc = null;
+
+                                return Swal.fire({
+                                    icon: 'error',
+                                    title: 'Упс...',
+                                    text: 'Высота изображения привышает 460 пикселей!',
+                                })
+                            }
+                            banners.imageSrc = url;
+                        };
+                        img.src = window.URL.createObjectURL(file);
+                    }
                 }
             },
             getBanners() {
