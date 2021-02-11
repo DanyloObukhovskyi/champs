@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .about-page {
   padding: 0 10vw;
   display: flex;
@@ -29,6 +29,7 @@ export default {
     p {
       margin-bottom: 2vw;
       font-size: 1.1vw;
+
 
       &:last-child {
         margin-bottom: 0;
