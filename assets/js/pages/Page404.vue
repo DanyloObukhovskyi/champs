@@ -67,6 +67,33 @@ export default {
     padding: .5vw 1.5vw .5vw 1.5vw;
     border-radius: .3vw;
     font-size: 1vw;
+    transition: all .2s ease;
+
+    &:hover {
+      background: #ff8533;
+    }
+  }
+}
+
+.dark {
+  .bottom-404 {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vw;
+
+    a {
+      background: #ff6d1d;
+      color: white;
+      padding: .5vw 1.5vw .5vw 1.5vw;
+      border-radius: .3vw;
+      font-size: 1vw;
+      border: .1vw solid white;
+      transition: all .2s ease;
+
+      &:hover {
+        background: #ff8533;
+      }
+    }
   }
 }
 </style>
