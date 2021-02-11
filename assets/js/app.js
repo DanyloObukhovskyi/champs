@@ -46,6 +46,7 @@ import CabinetPage from "./pages/CabinetPage";
 import Header from "./components/header/Header";
 import CsHomePage from "./pages/CsHomePage";
 import Page404 from "./pages/Page404";
+import About from "./pages/About";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -92,6 +93,7 @@ Vue.component('cabinet-page', CabinetPage);
 Vue.component('v-header', Header);
 Vue.component('cs-home-page', CsHomePage);
 Vue.component('page-404', Page404);
+Vue.component('about', About);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

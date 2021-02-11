@@ -32,7 +32,7 @@ export default {
 
 <style scoped lang="scss">
 .page-404 {
-  margin-top: 11vw;
+  margin-top: 5vw;
   margin-bottom: 3vw;
 }
 

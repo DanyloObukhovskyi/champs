@@ -92,6 +92,12 @@
                     <textarea name="setting[<?php echo $setting['key']?>]"><?php echo $setting['value']?></textarea>
                 </div>
             <?php endforeach;?>
+            <?php if (isset($about)):?>
+                <label class="label" for=""><?php echo $about['title']?></label>
+                <div class="text-redactor">
+                    <textarea name="setting[<?php echo $about['key']?>]"><?php echo $about['value']?></textarea>
+                </div>
+            <?php endif;?>
             <div class="flex">
                 <a href="">
                     <button class="btn btn-orange mt-15 mr-10">Сохранить</button>
