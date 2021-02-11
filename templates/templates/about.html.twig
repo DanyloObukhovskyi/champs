@@ -14,6 +14,10 @@
                 </span>
             </div>
         </div>
-        <about about="{{setting.get('about') is not null ? setting.get('about').value : ''}}"/>
+        <about>
+            <template v-slot:about>
+                {{setting.get('about') is not null ? setting.get('about').value|raw : ''}}
+            </template>
+        </about>
     </div>
 {% endblock %}
