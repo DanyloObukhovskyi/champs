@@ -1,6 +1,7 @@
 <template>
     <div class="about-page">
-        <div class="text-wrapper" v-html="about">
+        <div class="text-wrapper">
+            <slot name="about"></slot>
         </div>
         <img src="/images/Champs_Logo_About.png"/>
     </div>
@@ -9,9 +10,6 @@
 <script>
 export default {
     name: "About",
-    props: [
-        'about'
-    ]
 }
 </script>
 

@@ -98,6 +98,12 @@
                     <textarea name="setting[<?php echo $about['key']?>]"><?php echo $about['value']?></textarea>
                 </div>
             <?php endif;?>
+            <?php if (isset($vacancies)):?>
+                <label class="label" for=""><?php echo $vacancies['title']?></label>
+                <div class="text-redactor">
+                    <textarea name="setting[<?php echo $vacancies['key']?>]"><?php echo $vacancies['value']?></textarea>
+                </div>
+            <?php endif;?>
             <div class="flex">
                 <a href="">
                     <button class="btn btn-orange mt-15 mr-10">Сохранить</button>
@@ -114,7 +120,7 @@
     $(document).on('DOMContentLoaded', function () {
         tinymce.init({
             selector: '.text-redactor textarea',
-            plugins: 'save',
+            plugins: 'save | link',
             toolbar: 'save | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
             toolbar_sticky: true,
             autosave_ask_before_unload: false,

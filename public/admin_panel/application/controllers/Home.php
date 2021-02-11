@@ -581,6 +581,7 @@ class Home extends CI_Controller
         $data['images_path'] = $this->config->item('display_banner-pic');
         $data['current_u_can'] = $current_u_can;
         $data['terms'] = $this->setting_model->get_terms();
+        $data['vacancies'] = $this->setting_model->get_by_key(Setting_model::VACANCIES)[0] ?? null;
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['output'] = $this->load->view('home/settings', $data, true);

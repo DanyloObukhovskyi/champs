@@ -57,6 +57,8 @@ class Setting_model extends CI_Model
 
     public const ABOUT = 'about';
 
+    public const VACANCIES = 'vacancies';
+
     public function get_social()
     {
         $this->db->select('*');
@@ -85,10 +87,11 @@ class Setting_model extends CI_Model
         $this->db->from($this->table);
         $this->db->where_not_in('key',
             array_merge(
-            self::SOCIAL,
+                self::SOCIAL,
                 self::TRAININGS_DESCRIPTION,
                 self::TERMS_PAGES,
-                [self::ABOUT]
+                [self::ABOUT],
+                [self::VACANCIES]
             )
         );
 
