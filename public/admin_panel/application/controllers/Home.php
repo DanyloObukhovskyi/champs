@@ -576,6 +576,7 @@ class Home extends CI_Controller
             ];
         }
         $data['social'] = $this->setting_model->get_social();
+        $data['about'] = $this->setting_model->get_by_key(Setting_model::ABOUT)[0] ?? null;
         $data['settings'] = $settings;
         $data['images_path'] = $this->config->item('display_banner-pic');
         $data['current_u_can'] = $current_u_can;

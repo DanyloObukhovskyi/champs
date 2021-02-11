@@ -55,6 +55,8 @@ class Setting_model extends CI_Model
         'analytic' => self::TRAINING_ANALYTICS
     ];
 
+    public const ABOUT = 'about';
+
     public function get_social()
     {
         $this->db->select('*');
@@ -85,7 +87,8 @@ class Setting_model extends CI_Model
             array_merge(
             self::SOCIAL,
                 self::TRAININGS_DESCRIPTION,
-                self::TERMS_PAGES
+                self::TERMS_PAGES,
+                [self::ABOUT]
             )
         );
 
