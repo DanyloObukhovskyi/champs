@@ -11,7 +11,7 @@ import '../css/sweet-alert.css';
 import 'v-title/lib/element-ui';
 
 import Vuex from 'vuex'
-
+import VTitle from 'v-title';
 import Store from "./store/Store";
 
 import MvpPage from "./components/mvp/cabinet/MvpPage";
@@ -45,6 +45,7 @@ import HomePage from "./pages/HomePage";
 import CabinetPage from "./pages/CabinetPage";
 import Header from "./components/header/Header";
 import CsHomePage from "./pages/CsHomePage";
+import Page404 from "./pages/Page404";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -56,9 +57,8 @@ if (token) {
 } else {
     console.error('CSRF token not found');
 }
-Vue.use(Vuex);
-import VTitle from 'v-title';
 
+Vue.use(Vuex);
 Vue.use(VTitle);
 
 Vue.component('mvp-main', MvpMain)
@@ -91,6 +91,7 @@ Vue.component('home-page', HomePage);
 Vue.component('cabinet-page', CabinetPage);
 Vue.component('v-header', Header);
 Vue.component('cs-home-page', CsHomePage);
+Vue.component('page-404', Page404);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
