@@ -44,6 +44,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 .contact-page {
   width: 100%;
   display: flex;
@@ -146,4 +147,5 @@ export default {
     }
   }
 }
+
 </style>
