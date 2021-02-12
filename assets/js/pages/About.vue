@@ -18,11 +18,11 @@ export default {
   padding: 0 10vw;
   display: flex;
   align-items: center;
-  height: 40vw;
+  height: 30vw;
 
   .text-wrapper {
     margin: 0 5vw;
-    color: #a3a5a6;
+    color: black;
 
     p {
       margin-bottom: 2vw;
@@ -39,6 +39,36 @@ export default {
     opacity: .5;
     height: 17vw;
     margin-right: 3vw;
+  }
+}
+
+.dark {
+  .about-page {
+    padding: 0 10vw;
+    display: flex;
+    align-items: center;
+    height: 30vw;
+
+    .text-wrapper {
+      margin: 0 5vw;
+      color: #a3a5a6;
+
+      p {
+        margin-bottom: 2vw;
+        font-size: 1.1vw;
+
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    img {
+      opacity: .5;
+      height: 17vw;
+      margin-right: 3vw;
+    }
   }
 }
 </style>
