@@ -8,32 +8,33 @@
 </template>
 
 <script>
-    import CabinetFirstBanner from "../components/cabinet/CabinetFirstBanner";
-    import MarketplaceService from "../../../../services/MarketplaceService";
-    import CabinetSecondBanner from "../components/cabinet/CabinetSecondBanner";
-    import CabinetVideoSlider from "../components/cabinet/CabinetVideoSlider";
-    import CabinetBottomBanner from "../../CabinetBottomBanner";
-    import {mapGetters} from "vuex";
-    import CabinetService from "../../../../services/CabinetService";
+import CabinetFirstBanner from "../components/cabinet/CabinetFirstBanner";
+import MarketplaceService from "../../../../services/MarketplaceService";
+import CabinetSecondBanner from "../components/cabinet/CabinetSecondBanner";
+import CabinetVideoSlider from "../components/cabinet/CabinetVideoSlider";
+import CabinetBottomBanner from "../../CabinetBottomBanner";
+import {mapGetters} from "vuex";
+import CabinetService from "../../../../services/CabinetService";
 
-    export default {
-        name: "UserCabinet",
-        components: {
-            CabinetBottomBanner,
-            CabinetSecondBanner,
-            CabinetFirstBanner,
-            CabinetVideoSlider
-        },
-       computed: {
-            ...mapGetters([
-                'loadUser'
-            ])
-       }
+export default {
+    name: "UserCabinet",
+    components: {
+        CabinetBottomBanner,
+        CabinetSecondBanner,
+        CabinetFirstBanner,
+        CabinetVideoSlider
+    },
+    computed: {
+        ...mapGetters([
+            'loadUser'
+        ])
     }
+}
 </script>
 
 <style scoped lang="scss">
-    .cabinet-wrapper {
-        width: 70vw;
-    }
+.cabinet-wrapper {
+  width: 70vw;
+  margin-bottom: -1vw;
+}
 </style>
