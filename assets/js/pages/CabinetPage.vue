@@ -152,7 +152,12 @@
                         } else {
                             sidebar.style.position = 'unset';
                             sidebar.style.top = 0;
-                            sidebar.style.height =  'calc(100% - 18.7vw)';
+
+                            if (isTrainer) {
+                                sidebar.style.height =  'calc(100% - 18.7vw)';
+                            } else {
+                                sidebar.style.height =  'calc(100% - 17vw)';
+                            }
 
                             invite.style.position = 'unset';
                             invite.style.top = 0;

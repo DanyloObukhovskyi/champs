@@ -49,6 +49,7 @@ export default {
 .setting {
   .setting-body {
     margin-top: 1vw;
+    margin-bottom: -1vw;
   }
 
   .setting-wrapper {
