@@ -20,19 +20,19 @@ class YouTubeService
     /**
      * @var string
      */
-    public $chanelId;
+    public $channelId;
 
     /**
      * YouTubeService constructor.
      * @param null $chanelId
      */
-    public function __construct($chanelId = null)
+    public function __construct($channelId = null)
     {
         $this->apiKey = $_ENV['YOUTUBE_API_V3_KEY'];
         if (empty($chanelId)) {
-            $chanelId = $_ENV['DEFAULT_YOUTUBE_CHANEL'];
+            $channelId = $_ENV['DEFAULT_YOUTUBE_CHANNEL'];
         }
-        $this->chanelId = $chanelId;
+        $this->channelId = $channelId;
     }
 
     /**
@@ -47,7 +47,7 @@ class YouTubeService
     {
         $options = [
             'key' => $this->apiKey,
-            'channelId' => $this->chanelId,
+            'channelId' => $this->channelId,
             'part' => 'snippet,id',
             'order' => 'date',
             'type' => 'video',
