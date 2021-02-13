@@ -155,21 +155,24 @@ class ScheduleController extends AbstractController
         $availableDates = [];
         if (isset($request->date) and isset($trainer)) {
             $date = Carbon::createFromFormat('d.m.Y', $request->date);
-            $date->setDay(1);
+            $from = $date->setDay(1);
 
             $to = Carbon::createFromFormat('d.m.Y', $request->date);
             $to->setDay($to->daysInMonth);
 
-            if ($date->format('Y.m') >= Carbon::now()->format('Y.m')) {
-                for ($day = 1; $day <= $date->daysInMonth; $day++) {
-                    $date->setDay($day);
+            for ($day = 1; $day <= $from->daysInMonth; $day++) {
+                $from->setDay($day);
 
-                    $schedules = $this->scheduleService
-                        ->findAvailableByTrainerAndDate(
-                            $trainer,
-                            $date->format('Y-m-d')
-                        );
+                $schedules = $this->scheduleService
+                    ->findAvailableByTrainerAndDate(
+                        $trainer,
+                        $from->format('Y-m-d')
+                    );
 
+
+                if (Carbon::now()->timestamp - $from->timestamp >= 0) {
+                    $availableDates[$day] = false;
+                } else {
                     if (empty($schedules)) {
                         $availableDates[$day] = false;
                     } else {
