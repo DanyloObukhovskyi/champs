@@ -6,14 +6,14 @@
                     <img :src="'/uploads/avatars/' + user.photo" alt="avatar"
                          @error="$event.target.src = '/images/noLogo.png'">
                 </div>
-                <div class="lvl" v-if="user.level == null">
+                <div class="lvl" v-if="userRank == null">
                     <span>
                         0
                     </span>
                     <img src="/images/cabinet/csLvl.png" alt="lvl">
                 </div>
                 <div class="lvl" v-else>
-                    <img :src="'/images/ranks/' + user.level.icon" alt="lvl" :class="{dota: user.game !== null && user.game.code === 'dota'}">
+                    <img :src="'/images/ranks/' + userRank.icon" alt="lvl" :class="{dota: user.game !== null && user.game.code === 'dota'}">
                 </div>
             </div>
             <div class="nickname">
@@ -35,6 +35,31 @@
             ...mapGetters([
                 'user'
             ]),
+            ...mapGetters('cabinet/setting', [
+                'ranks',
+                'timezones'
+            ]),
+            userRank() {
+                if (this.user.game !== null) {
+                    const ranks = this.ranks[this.user.game.code];
+
+                    if (ranks) {
+                        const userRank = ranks.find(e => {
+                            if (Number(e.pointsFrom) <= Number(this.user.rank)) {
+                                if (e.pointsTo === null || Number(e.pointsTo) >= Number(this.user.rank)) {
+                                    return e;
+                                }
+                            }
+                        })
+                        if (userRank !== undefined && userRank !== null) {
+                            return userRank;
+                        }
+                    }
+                    return null;
+                } else {
+                    return null;
+                }
+            },
         }
     }
 </script>
@@ -101,8 +126,9 @@
                     height: 2vw;
 
                     &.dota {
-                      width: 2.6vw;
-                      height: 2.6vw;
+                      width: 3vw;
+                      height: 3vw;
+                      margin-bottom: -1vw;
                     }
                 }
             }
