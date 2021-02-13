@@ -2,6 +2,7 @@
     <div class="cabinet-sidebar" v-if="user !== null" :class="{'fixed': isFixed}" :style="{top: `${marginTop}px`}">
         <div class="page" v-for="page in pages">
             <router-link
+                    @click.native="pageUp"
                     :to="getPageLink(page.code)">
                 <img :src="'/images/cabinet/' + page.icon">
                 <img :src="'/images/cabinet/' + page.iconActive" class="active">
@@ -126,6 +127,12 @@ export default {
                 type = 'trainer';
             }
             return `/${CabinetService.lang}/${type}/cabinet/${code}`;
+        },
+        pageUp() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         }
     }
 }
