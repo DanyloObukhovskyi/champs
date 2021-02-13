@@ -30,4 +30,12 @@ class YouTubeController extends AbstractController
 
         return $this->json($videos);
     }
+
+    /**
+     * @Route("/ajax/youtube/get/channel")
+     */
+    public function getChannelId()
+    {
+        return $this->json($_ENV['DEFAULT_YOUTUBE_CHANNEL'] ?? null);
+    }
 }

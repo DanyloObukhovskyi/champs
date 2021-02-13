@@ -1,6 +1,6 @@
 <template>
     <div class="video-slider video-slider-home">
-        <lamp-header title="Видео" link="/ru/news" link-description="Смотреть все"></lamp-header>
+        <lamp-header title="Видео" :link="'https://www.youtube.com/channel/' + channelId" link-description="Смотреть все"></lamp-header>
         <div class="slider-body">
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
@@ -35,6 +35,7 @@
     import 'vue-slick-carousel/dist/vue-slick-carousel.css'
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
     import CabinetService from "../../services/CabinetService";
+    import YouTubeService from "../../services/YouTubeService";
 
     export default {
         name: "VideoSlider",
@@ -50,6 +51,7 @@
                     speed: 500,
                     dots: true,
                 },
+                channelId: null
             }
         },
         components: {
@@ -66,9 +68,16 @@
             getVideoLogo(videoId) {
                 return `//img.youtube.com/vi/${videoId}/hqdefault.jpg`;
             },
+            getChannelId() {
+                YouTubeService.getChannelId()
+                    .then(channelId => {
+                        this.channelId = channelId;
+                    })
+            }
         },
         mounted() {
             this.getVideoNews();
+            this.getChannelId();
         }
     }
 </script>
