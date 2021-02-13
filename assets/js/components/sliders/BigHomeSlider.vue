@@ -62,6 +62,7 @@ export default {
   -webkit-animation: animation-translate-right 1500ms linear both;
   animation-delay: 1.5s;
   animation: animation-translate-right 1500ms linear both;
+  margin-bottom: 1vw;
 
   .carousel-item {
     .banner {
