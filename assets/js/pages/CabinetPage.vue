@@ -175,6 +175,7 @@
   .cabinet {
 	margin-top: .5vw;
 	margin-bottom: 3vw;
+    width: 82.6vw;
   }
 
   .cabinet-body {
