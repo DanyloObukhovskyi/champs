@@ -235,12 +235,14 @@
         font-size: .8vw;
         align-items: center;
         color: #ff6d1d;
+        padding-left: 3.5vw;
     }
 
     .play .play-wrapper {
         background: rgb(255, 109, 29, 0.2);
         padding: .4vw .4vw .3vw .4vw;
         border-radius: 50%;
+        margin-right: .5vw;
     }
 
     .play .play-wrapper i {
