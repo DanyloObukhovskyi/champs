@@ -183,13 +183,10 @@
                 axios.get('/ru/setcookies').then();
             },
             up() {
-                let t;
-                let top = Math.max(document.body.scrollTop,document.documentElement.scrollTop);
-                if(top > 0) {
-                    window.scrollBy(0,-100);
-                    t = setTimeout(cookie.up, 20);
-                } else clearTimeout(t);
-                return false;
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
             }
         },
     });

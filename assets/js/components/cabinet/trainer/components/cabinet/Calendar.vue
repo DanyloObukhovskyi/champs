@@ -148,8 +148,8 @@
   .timetable-picker {
 	width: 100%;
 	margin-top: 2vw;
-	//-webkit-animation: animation-translate-right 1500ms linear both;
-	//animation: animation-translate-right 1500ms linear both;
+	-webkit-animation: animation-translate-right 1500ms linear both;
+	animation: animation-translate-right 1500ms linear both;
 
 	.title {
 	  font-size: 1.3vw;

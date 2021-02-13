@@ -114,7 +114,7 @@
                 'getTimezones'
             ]),
             initScroll() {
-                const self = this;
+                const isTrainer = this.user !== null && this.user.isTrainer;
 
                 document.addEventListener("DOMContentLoaded", function () {
                     window.onscroll = () => {
@@ -141,7 +141,7 @@
                             sidebar.style.position = 'fixed';
                             sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
 
-                            if (self.user !== null && self.user.isTrainer) {
+                            if (isTrainer) {
                                 sidebar.style.height =  `calc(${sidebarHeight}px - 29.7vw)`;
                             } else {
                                 sidebar.style.height =  `calc(${sidebarHeight}px - 30.5vw)`;
@@ -152,6 +152,7 @@
                         } else {
                             sidebar.style.position = 'unset';
                             sidebar.style.top = 0;
+                            sidebar.style.height =  'calc(100% - 18.7vw)';
 
                             invite.style.position = 'unset';
                             invite.style.top = 0;
@@ -191,6 +192,7 @@
 
 	.right {
 	  width: 85%;
+      margin-bottom: 1vw;
 	}
   }
 

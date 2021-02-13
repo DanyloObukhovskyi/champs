@@ -64,7 +64,15 @@ export default {
             showAllHistory: false,
         }
     },
+    watch: {
+        showAllHistory() {
+            setTimeout(this.initScroll, 1)
+        }
+    },
     computed: {
+        ...mapGetters([
+           'user'
+        ]),
         ...mapGetters('cabinet/wallet', [
             'studentsHistory'
         ]),
@@ -99,7 +107,50 @@ export default {
                     history.show = false;
                 }
             })
-        }
+        },
+        initScroll() {
+            const isTrainer = this.user !== null && this.user.isTrainer;
+
+            const sidebar = document.querySelector('.cabinet-sidebar');
+
+            const sidebarHeight = $(document).height() - window.scrollY;
+
+            const userCardPosition = document
+                .querySelector('.card-user')
+                .getBoundingClientRect();
+
+            const invite = document.querySelector('.invite');
+            const invitePosition = invite.getBoundingClientRect();
+
+            const header = document
+                .querySelector('#header')
+                .getBoundingClientRect();
+
+            const subNav = document
+                .querySelector('.sub-nav')
+                .getBoundingClientRect();
+
+            if (subNav.height + header.height - userCardPosition.height - userCardPosition.top >= 0) {
+                sidebar.style.position = 'fixed';
+                sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
+
+                if (isTrainer) {
+                    sidebar.style.height =  `calc(${sidebarHeight}px - 29.7vw)`;
+                } else {
+                    sidebar.style.height =  `calc(${sidebarHeight}px - 30.5vw)`;
+                }
+
+                invite.style.position = 'fixed';
+                invite.style.top = `calc(${header.height + subNav.height + 'px'} - 1vw)`;
+            } else {
+                sidebar.style.position = 'unset';
+                sidebar.style.top = 0;
+                sidebar.style.height =  'calc(100% - 18.7vw)';
+
+                invite.style.position = 'unset';
+                invite.style.top = 0;
+            }
+        },
     }
 }
 </script>
