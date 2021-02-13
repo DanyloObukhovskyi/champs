@@ -134,9 +134,8 @@
     }
 
     .match-row:hover{
-        height: 6.2vw;
-        margin-left: -.3vw;
-        margin-right: -.3vw;
+        margin: 0 -.3vw;
+        margin-bottom: .2vw;
     }
 
     .dark .match-row {
