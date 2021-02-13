@@ -508,7 +508,7 @@ export default {
       color: black;
     }
 
-    p:not(.MsoNormal) > span:first-child > span {
+    p:not(.MsoNormal) > span:first-child > span > span {
       color: black;
     }
   }
@@ -533,7 +533,7 @@ export default {
         color: white;
       }
 
-      p:not(.MsoNormal) > span:first-child > span {
+      p:not(.MsoNormal) > span:first-child > span > span {
         color: white;
       }
     }
