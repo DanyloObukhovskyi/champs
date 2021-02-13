@@ -24,6 +24,7 @@
     .w-100 {
         width: 100%;
     }
+
     .text-redactor div {
         margin: 0;
     }
@@ -41,69 +42,89 @@
     <?php } ?>
     <aside>
         <ul>
-            <?php $activePath = 'settings';?>
-            <?php require_once APPPATH.'views/sidebar.php'?>
+            <?php $activePath = 'settings'; ?>
+            <?php require_once APPPATH . 'views/sidebar.php' ?>
         </ul>
     </aside>
     <!--- ---->
     <div class="main-content">
         <h1 class="main-title">Настройки</h1>
         <form action="" method="post" enctype="multipart/form-data">
-            <?php foreach ($settings as $setting):?>
-                <label class="label" for=""><?php echo $setting['title']?></label>
-                <div class="input mb-5">
-                    <input
-                        type="text"
-                        class="fw-600 input2_txt"
-                        name="setting[<?php echo $setting['key']?>]"
-                        value="<?php echo $setting['value']?>">
+            <?php if (isset($paymentType)): ?>
+                <label class="label" for=""><?php echo $paymentType['title'] ?></label>
+                <div>
+                    <select class="input mb-5 w-100" name="setting[<?php echo $paymentType['key'] ?>]">
+                        <?php foreach ($paymentTypes as $type => $title): ?>
+                            <?php if ($type === $paymentType['value']): ?>
+                                <option selected value="<?php echo $type ?>">
+                                    <?php echo $title ?>
+                                </option>
+                            <?php else: ?>
+                                <option value="<?php echo $type ?>">
+                                    <?php echo $title ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-            <?php endforeach;?>
-            <h1 class="main-title">Социальные сети</h1>
-            <?php foreach ($social as $setting):?>
-                <label class="label" for=""><?php echo $setting['title']?></label>
-                <div class="input mb-5">
-                    <input
-                        type="text"
-                        class="fw-600 input2_txt"
-                        name="setting[<?php echo $setting['key']?>]"
-                        value="<?php echo $setting['value']?>">
-                </div>
-            <?php endforeach;?>
-            <h1 class="main-title">Описание тренировок</h1>
-            <?php foreach ($trainingDescriptions as $setting):?>
-                <label class="label" for=""><?php echo $setting['title']['title']?></label>
+            <?php endif; ?>
+            <?php foreach ($settings as $setting): ?>
+                <label class="label" for=""><?php echo $setting['title'] ?></label>
                 <div class="input mb-5">
                     <input
                             type="text"
                             class="fw-600 input2_txt"
-                            name="setting[<?php echo $setting['title']['key']?>]"
-                            value="<?php echo $setting['title']['value']?>">
+                            name="setting[<?php echo $setting['key'] ?>]"
+                            value="<?php echo $setting['value'] ?>">
                 </div>
-                <label class="label" for=""><?php echo $setting['description']['title']?></label>
+            <?php endforeach; ?>
+            <h1 class="main-title">Социальные сети</h1>
+            <?php foreach ($social as $setting): ?>
+                <label class="label" for=""><?php echo $setting['title'] ?></label>
+                <div class="input mb-5">
+                    <input
+                            type="text"
+                            class="fw-600 input2_txt"
+                            name="setting[<?php echo $setting['key'] ?>]"
+                            value="<?php echo $setting['value'] ?>">
+                </div>
+            <?php endforeach; ?>
+            <h1 class="main-title">Описание тренировок</h1>
+            <?php foreach ($trainingDescriptions as $setting): ?>
+                <label class="label" for=""><?php echo $setting['title']['title'] ?></label>
+                <div class="input mb-5">
+                    <input
+                            type="text"
+                            class="fw-600 input2_txt"
+                            name="setting[<?php echo $setting['title']['key'] ?>]"
+                            value="<?php echo $setting['title']['value'] ?>">
+                </div>
+                <label class="label" for=""><?php echo $setting['description']['title'] ?></label>
                 <div class="text-redactor">
-                    <textarea name="setting[<?php echo $setting['description']['key']?>]"><?php echo $setting['description']['value']?></textarea>
+                    <textarea
+                            name="setting[<?php echo $setting['description']['key'] ?>]"><?php echo $setting['description']['value'] ?></textarea>
                 </div>
-            <?php endforeach;?>
+            <?php endforeach; ?>
             <h1 class="main-title">Текст на страница политики</h1>
-            <?php foreach ($terms as $setting):?>
-                <label class="label" for=""><?php echo $setting['title']?></label>
+            <?php foreach ($terms as $setting): ?>
+                <label class="label" for=""><?php echo $setting['title'] ?></label>
                 <div class="text-redactor">
-                    <textarea name="setting[<?php echo $setting['key']?>]"><?php echo $setting['value']?></textarea>
+                    <textarea name="setting[<?php echo $setting['key'] ?>]"><?php echo $setting['value'] ?></textarea>
                 </div>
-            <?php endforeach;?>
-            <?php if (isset($about)):?>
-                <label class="label" for=""><?php echo $about['title']?></label>
+            <?php endforeach; ?>
+            <?php if (isset($about)): ?>
+                <label class="label" for=""><?php echo $about['title'] ?></label>
                 <div class="text-redactor">
-                    <textarea name="setting[<?php echo $about['key']?>]"><?php echo $about['value']?></textarea>
+                    <textarea name="setting[<?php echo $about['key'] ?>]"><?php echo $about['value'] ?></textarea>
                 </div>
-            <?php endif;?>
-            <?php if (isset($vacancies)):?>
-                <label class="label" for=""><?php echo $vacancies['title']?></label>
+            <?php endif; ?>
+            <?php if (isset($vacancies)): ?>
+                <label class="label" for=""><?php echo $vacancies['title'] ?></label>
                 <div class="text-redactor">
-                    <textarea name="setting[<?php echo $vacancies['key']?>]"><?php echo $vacancies['value']?></textarea>
+                    <textarea
+                            name="setting[<?php echo $vacancies['key'] ?>]"><?php echo $vacancies['value'] ?></textarea>
                 </div>
-            <?php endif;?>
+            <?php endif; ?>
             <div class="flex">
                 <a href="">
                     <button class="btn btn-orange mt-15 mr-10">Сохранить</button>

@@ -59,6 +59,13 @@ class Setting_model extends CI_Model
 
     public const VACANCIES = 'vacancies';
 
+    public const PAYMENT_TYPE = 'paymentType';
+
+    public const PAYMENT_TYPES = [
+        'yandex' => 'Яндкс касса',
+        'interkassa' => 'Interkassa'
+    ];
+
     public function get_social()
     {
         $this->db->select('*');
@@ -83,6 +90,12 @@ class Setting_model extends CI_Model
 
     public function get_all()
     {
+        $settingsIgnore = [
+            self::ABOUT,
+            self::VACANCIES,
+            self::PAYMENT_TYPE
+        ];
+
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where_not_in('key',
@@ -90,11 +103,9 @@ class Setting_model extends CI_Model
                 self::SOCIAL,
                 self::TRAININGS_DESCRIPTION,
                 self::TERMS_PAGES,
-                [self::ABOUT],
-                [self::VACANCIES]
+                $settingsIgnore
             )
         );
-
         $result = $this->db->get();
 
         return $result->result_array();
