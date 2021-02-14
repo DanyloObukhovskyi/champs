@@ -30,8 +30,8 @@ class MatchService extends Service{
         return this.send(`main/matches`, {date});
     }
 
-    getMatchUrl = id => {
-        return `/${this.lang}/matches/${id}`;
+    getMatchUrl = (id, slug) => {
+        return `/${this.lang}/matches/${id}/${slug}`;
     }
 
     sendComment = (id, comment) => {

@@ -18,6 +18,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\Game\GameRankService;
 use App\Service\News\NewsService;
+use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -221,6 +222,9 @@ class UserService  extends EntityService
             'reviewCount' => $count,
         ] = $this->reviewsService->reviewsDecorator($reviews);
 
+        $generator = new SlugGenerator;
+
+
         return [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -241,8 +245,9 @@ class UserService  extends EntityService
             'videos' => $videos,
             'timeZone' => $timeZone,
             'achievements' => $achievementsArray,
-            'rankIcon' => isset($gameRank) ? $gameRank->getIcon(): null,
-            'awards' => $awards
+            'rankIcon' => isset($gameRank) ? $gameRank->getIcon() : null,
+            'awards' => $awards,
+            'slug' => $generator->generate($user->getNickname())
         ];
     }
 

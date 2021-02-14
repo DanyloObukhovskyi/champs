@@ -103,7 +103,7 @@
         },
         computed: {
             matchUrl() {
-                return matchService.getMatchUrl(this.match.match_id)
+                return matchService.getMatchUrl(this.match.match_id, this.match.slug)
             }
         },
         methods: {

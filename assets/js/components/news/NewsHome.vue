@@ -71,7 +71,7 @@
                     })
             },
             getNewsUrl(news) {
-                return `/ru/news/${news.id}-${news.url}`
+                return `/ru/news/${news.id}/${news.url}`
             }
         },
         mounted() {

@@ -17,6 +17,7 @@ use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
 use App\Service\TeamService;
 use App\Traits\Dispatchable;
+use Ausi\SlugGenerator\SlugGenerator;
 use DateTime;
 use App\Entity\Event;
 use App\Repository\EventRepository;
@@ -191,6 +192,8 @@ class EventService extends EntityService
      */
     public function decorator(Event $event)
     {
+        $generator = new SlugGenerator;
+
         $dayStart = $event->getStartedAt()->format('d F');
         $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
 
@@ -206,7 +209,8 @@ class EventService extends EntityService
             'logoWithPath' => $this->imageService->getImagePath(),
             'startedAtRu' => NewsService::replaceMonth($dayStart),
             'endedAtRu' => NewsService::replaceMonth($dayEnd),
-            'views' => $event->getViews()
+            'views' => $event->getViews(),
+            'slug' => $generator->generate($event->getName()),
         ];
     }
 

@@ -10,6 +10,7 @@ use App\Entity\NewsLike;
 use App\Entity\NewsTag;
 use App\Repository\NewsRepository;
 use App\Service\EntityService;
+use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 
 class NewsService extends EntityService
@@ -55,6 +56,12 @@ class NewsService extends EntityService
                     'news' => $news
                 ]);
             $bookmark = isset($newsBookmark);
+        }
+
+        if (empty($news->getUrl())) {
+            $generator = new SlugGenerator;
+
+            $news->setUrl($generator->generate($news->getTitle()));
         }
         return [
             'id' => $news->getId(),

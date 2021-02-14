@@ -1,5 +1,5 @@
 <template>
-    <a :href="eventUrl(event.id)" class="event d-block">
+    <a :href="eventUrl(event)" class="event d-block">
         <div class="title">
             {{event.name}}
         </div>
@@ -27,8 +27,8 @@
         name: "EventRow",
         props: ['event'],
         methods: {
-            eventUrl(id) {
-                return eventService.getEventUrl(id)
+            eventUrl(event) {
+                return eventService.getEventUrl(event.id, event.slug)
             }
         }
     }

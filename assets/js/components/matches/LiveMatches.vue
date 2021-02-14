@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="watch d-flex justify-content-center align-items-center">
-                    <a :href="getMatchUrl(match.match_id)">Смотреть <i class="fas fa-caret-right"></i></a>
+                    <a :href="getMatchUrl(match)">Смотреть <i class="fas fa-caret-right"></i></a>
                 </div>
             </div>
         </div>
@@ -107,8 +107,8 @@
                 }
                 return className;
             },
-            getMatchUrl(id) {
-                return matchService.getMatchUrl(id)
+            getMatchUrl(match) {
+                return matchService.getMatchUrl(match.match_id, match.slug)
             },
         },
         mounted() {
