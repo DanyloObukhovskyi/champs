@@ -16,6 +16,7 @@ use App\Repository\MatchRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
 use App\Service\TeamService;
+use Ausi\SlugGenerator\SlugGenerator;
 use Symfony\Component\HttpFoundation\Request;
 
 class MatchService extends EntityService
@@ -269,6 +270,7 @@ class MatchService extends EntityService
             ],
             "streams" => $this->getMatchStreams($match),
             "isLive" => $match->getLive() ? true : false,
+            "slug" => $match->getSlug()
         ];
         $team1 = $match->getTeam1();
         if (isset($team1)) {

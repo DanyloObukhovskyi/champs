@@ -100,9 +100,9 @@ class EventsController extends AbstractController
     }
 
     /**
-     * @Route("/event/{id}", name="event.page")
+     * @Route("/event/{id}/{slug}", name="event.page")
      */
-    public function eventPage(int $id)
+    public function eventPage($id, $slug)
     {
         /** @var Event $event */
         $event = $this->entityManager->getRepository(Event::class)->find($id);

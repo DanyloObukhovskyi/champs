@@ -73,6 +73,9 @@ class MatchesController extends AbstractController
      */
     public $matchCommentService;
 
+    /**
+     * @var MatchCommentLikeService
+     */
     public $matchCommentLikeService;
 
     /**
@@ -134,15 +137,15 @@ class MatchesController extends AbstractController
 
     /**
      *
-     * @Route("/matches/{id}", name="matches_view")
+     * @Route("/matches/{id}/{slug}", name="matches_view")
      */
-    public function view($id, $router = 'matches')
+    public function view($id, $slug)
     {
         /** @var Match $match */
         $match = $this->matchService->find($id);
 
         return $this->render('templates/matches.view.html.twig', [
-            'router' => $router,
+            'router' => 'matches',
             'match' => $match
         ]);
     }

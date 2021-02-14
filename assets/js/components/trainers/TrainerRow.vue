@@ -165,7 +165,7 @@ export default {
             })
         },
         trainerUrl() {
-            return MarketplaceService.getTrainerUrl(this.trainer.id)
+            return MarketplaceService.getTrainerUrl(this.trainer.id, this.trainer.slug)
         }
     },
     methods: {

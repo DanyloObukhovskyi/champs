@@ -124,16 +124,14 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/{id}", name="news_view_single")
+     * @Route("/news/{id}/{slug}", name="news_view_single")
      */
-    public function view($id)
+    public function view($id, $slug)
     {
-        $newsId = explode('-', $id)[0];
-
         /** @var News $news */
         $news = $this->entityManager
             ->getRepository(News::class)
-            ->find($newsId);
+            ->find($id);
 
         if (!$news) {
             return $this->redirectToRoute('news_index');
@@ -141,7 +139,7 @@ class NewsController extends AbstractController
         $this->newsService->incrementingViews($news);
 
         return $this->render('templates/news.view.html.twig', [
-            'newsId' => $newsId,
+            'newsId' => $id,
             'news' => $news,
             'router' => 'news',
         ]);

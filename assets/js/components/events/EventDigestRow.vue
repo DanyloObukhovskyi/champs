@@ -1,5 +1,5 @@
 <template>
-    <a :href="eventUrl(event.id)" class="event d-flex justify-content-between">
+    <a :href="eventUrl(event)" class="event d-flex justify-content-between">
         <div class="title">
             {{event.name}}
         </div>
@@ -37,8 +37,8 @@
         name: "EventDigestRow",
         props: ['event', 'className'],
         methods: {
-            eventUrl(id) {
-                return eventService.getEventUrl(id)
+            eventUrl(event) {
+                return eventService.getEventUrl(event.id, event.slug)
             }
         }
     }

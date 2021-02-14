@@ -9,8 +9,8 @@ class MarketplaceService extends Service{
         return this.send(`ajax/settings/training/description`)
     }
 
-    getTrainerUrl = id => {
-        return `/${this.lang}/marketplace/trainer/${id}`;
+    getTrainerUrl = (id, slug) => {
+        return `/${this.lang}/marketplace/trainer/${id}/${slug}`;
     }
 
     marketplacePage = () => {

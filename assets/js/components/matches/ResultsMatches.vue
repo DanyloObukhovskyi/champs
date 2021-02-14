@@ -7,7 +7,7 @@
             <small-loader/>
         </div>
         <div class="results-matches-body" v-else>
-            <a :href="'/ru/matches/' + match.match_id" class="results-matches-row" v-for="match in matches">
+            <a :href="'/ru/matches/' + match.match_id + '/' + match.slug" class="results-matches-row" v-for="match in matches">
                 <div class="event">
                     <div>
                         <img :src="match.event.image">

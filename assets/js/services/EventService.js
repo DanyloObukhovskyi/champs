@@ -10,8 +10,8 @@ class EventService extends Service{
         return this.send(`main/events`)
     }
 
-    getEventUrl = id => {
-        return `/${this.lang}/event/${id}`;
+    getEventUrl = (id, slug) => {
+        return `/${this.lang}/event/${id}/${slug}`;
     }
 
     eventsPage = () => {

@@ -462,4 +462,11 @@ class Match implements \JsonSerializable
     {
         return $this->comments;
     }
+
+    public function getSlug()
+    {
+        $url = explode('/', $this->getUrl());
+
+        return $url[count($url) - 1];
+    }
 }
