@@ -73,16 +73,16 @@
             </teams-last-matches>
         </div>
         <div class="matches d-flex" v-if="!load && match !== null">
-            <div class="col-4 pl-0" v-if="match.pickAndBans.length > 0">
-                <match-maps-pick-and-ban :pick-and-bans="match.pickAndBans"/>
-            </div>
-            <div class="col-8 pr-0">
+                <match-maps-pick-and-ban
+                        class="col-4 pl-0"
+                        v-if="match.pickAndBans.length > 0"
+                        :pick-and-bans="match.pickAndBans"/>
                 <match-maps-statistics
+                        class="col-8 pr-0"
                         :team-a="match.teamA"
                         :team-b="match.teamB"
                         :maps="maps">
                 </match-maps-statistics>
-            </div>
         </div>
         <match-statistics
                 v-if="showStatistic"

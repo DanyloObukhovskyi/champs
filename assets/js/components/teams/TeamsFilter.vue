@@ -102,5 +102,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background-clip: content-box;
     }
 </style>

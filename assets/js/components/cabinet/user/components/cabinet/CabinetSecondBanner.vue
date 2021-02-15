@@ -11,7 +11,7 @@
             </div>
             <div class="go">
                 <div class="go-wrapper">
-                    <a href="/">
+                    <a href="/marketplace">
                         GO
                     </a>
                 </div>
@@ -200,6 +200,7 @@ export default {
       border-radius: 50%;
       left: 45%;
       animation: pulse 1s infinite;
+        z-index: 5;
 
       .go-wrapper {
         width: 100%;
@@ -215,7 +216,7 @@ export default {
         a {
           cursor: pointer;
           color: black;
-          z-index: 1;
+          z-index: 5;
         }
       }
     }

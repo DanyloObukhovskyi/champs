@@ -9,8 +9,8 @@
             </div>
             <div class="d-flex align-items-end">
                 <div class="tournaments-types">
-                    <div class="tournament-type" :class="{active: filters.tournamentType === tournament.type}"
-                         v-for="tournament in tournamentsTypes">
+                    <div class="tournament-type check-tournament" :class="{active: filters.tournamentType === tournament.type}"
+                         v-for="tournament in tournamentsTypes" @click="filters.tournamentType = tournament.type">
                         <div class="tournament-type-wrapper">
                             <div class="type">
                                 {{tournament.type}}
@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="select" @click="filters.tournamentType = tournament.type">
+                        <div class="select">
                             <img src="/images/events/check.png">
                         </div>
                     </div>
@@ -524,5 +524,9 @@
 
     .events-digest .dates .date:nth-child(1) {
         margin-right: .5vw;
+    }
+
+    .check-tournament:hover{
+        cursor: pointer;
     }
 </style>
