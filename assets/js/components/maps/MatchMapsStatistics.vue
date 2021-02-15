@@ -3,7 +3,7 @@
         <div class="map-statistics-header">
             <lamp-header title="Статистика карт"/>
         </div>
-        <div class="map-statistics-body">
+        <div class="map-statistics-body map-height">
             <div class="title-row">
                 <div class="map-statistics-col">
                     Карты
@@ -123,5 +123,9 @@
     .dark .maps-row .teamA,
     .dark .maps-row .teamB {
         background: #26292c;
+    }
+
+    .map-height{
+        height: 90%;
     }
 </style>

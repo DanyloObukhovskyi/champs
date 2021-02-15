@@ -3,7 +3,7 @@
         <div class="map-pool-header">
             <lamp-header title="Карты"/>
         </div>
-        <div class="map-pool-body">
+        <div class="map-pool-body map-height">
             <div v-for="(pick, index) in pickAndBans" class="pick-row">
                 {{index + 1}}. {{pick.team.name}}
                 <strong :class="types[pick.operation].class">
@@ -71,5 +71,8 @@
     .map-pool .map-pool-body .pick-row {
         padding: .9vw;
         font-size: 1.3vw;
+    }
+    .map-height{
+        height: 90%;
     }
 </style>

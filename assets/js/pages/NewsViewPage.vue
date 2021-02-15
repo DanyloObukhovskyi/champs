@@ -110,6 +110,7 @@ export default {
     },
     data() {
         return {
+            user: null,
             load: false,
             news: null,
             hotNewsLoad: false,
@@ -196,20 +197,34 @@ export default {
             }
         },
         setLike(type) {
-            NewsService.setLike(this.newsId, type)
-                .then(({likesCount, userLike}) => {
-                    this.likesCount = likesCount;
-                    this.userLike = userLike;
-                })
+            if(this.user !== null){
+                NewsService.setLike(this.newsId, type)
+                    .then(({likesCount, userLike}) => {
+                        this.likesCount = likesCount;
+                        this.userLike = userLike;
+                    })
+            } else {
+                this.showLogin();
+            }
         },
         updateComments(data) {
             this.comments = data.comments;
             this.news.commentsCount = data.commentsCount;
+        },
+        showLogin() {
+            this.$store.dispatch('showLogin')
+        },
+        getAuth(){
+            NewsService.getAuthUser()
+                .then(user => {
+                    this.user = user;
+                })
         }
     },
     mounted() {
         this.getHotNews()
         this.getNews();
+        this.getAuth();
     }
 }
 </script>

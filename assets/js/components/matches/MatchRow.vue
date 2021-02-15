@@ -122,7 +122,7 @@
 
 <style scoped>
     .match-row {
-        margin-bottom: .2vw;
+        margin-bottom: 0.75em;
         height: 6vw;
         background: url(/images/matches/matchBackground.png);
         background-repeat: round;
@@ -135,7 +135,7 @@
 
     .match-row:hover{
         margin: 0 -.3vw;
-        margin-bottom: .2vw;
+        margin-bottom: 0.75em;
     }
 
     .dark .match-row {
