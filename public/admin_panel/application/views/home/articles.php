@@ -253,7 +253,7 @@
             "lengthChange": true,
             "ordering": true,
              "ajax": {
-                 url: '/c-admin/post_type',
+                 url: '<?php echo base_url('/c-admin/post_type') ;?>',
                  type: 'POST',
                  data: {
 
@@ -321,7 +321,7 @@
             formData.append('text', text);
             $.ajax({
                 type:'POST',
-                url:'/c-admin/post_type/create',
+                url:'<?php echo base_url('/c-admin/post_type/create') ;?>',
                 data:formData,
                 processData: false,
                 contentType: false,
@@ -378,7 +378,7 @@
             formData.append('text', text);
             $.ajax({
                 type:'POST',
-                url:'/c-admin/post_type/update',
+                url:'<?php echo base_url('/c-admin/post_type/update'); ?>',
                 data:formData,
                 processData: false,
                 contentType: false,
@@ -437,7 +437,7 @@
             data : {
                 'id':id
             },
-            url: "/c-admin/post_type/fetch",
+            url: '<?php  echo base_url("/c-admin/post_type/fetch") ;?>',
             success : function(result){
                 result = JSON.parse(result);
                 if(result.status == true){
