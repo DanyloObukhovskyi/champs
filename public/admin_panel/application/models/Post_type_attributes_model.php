@@ -65,7 +65,7 @@ class Post_type_attributes_model extends CI_Model
                     'attribute_id' => $data['key']
                 ]);
                 if(!empty($settingExist)){
-                    $this->db->where('id', $id);
+                    $this->db->where('id', $settingExist['id']);
                     $this->db->update($this->table, [
                         'value' => $data['value']
                     ]);

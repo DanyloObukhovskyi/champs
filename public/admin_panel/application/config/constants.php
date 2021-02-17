@@ -89,4 +89,4 @@ define('DATE', 3);
 define('PHOTO_GALERY', 4);
 define('TAGS', 5);
 define('STREAM', 6);
-define('TEXT', 6);
+define('TEXT', 7);

@@ -32,6 +32,8 @@ class Edit_c extends CI_Controller
             'trainer_award_model',
             'trainer_lesson_price_m',
             'game_m',
+            'post_type_model',
+            'post_type_attributes_model'
         ));
     }
 
@@ -146,9 +148,13 @@ class Edit_c extends CI_Controller
                 foreach ($post_tags as $tag) {
                     $this->post_tags_model->create_tag($post_id, $tag);
                 }
-                if ($post_type == 9) {
-                    if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
-                        if ($post_type == 9) {
+                $post_type_attribute = $this->post_type_attributes_model->getone([
+                    'news_type_id' => $post_type,
+                    'value'        => 1
+                ]);
+                if(!empty($post_type_attribute)) {
+                    if ($post_type_attribute['attribute_id'] === PHOTO_GALERY) {
+                        if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
                             $article_img = array();
                             if (isset($_FILES["userfile"])) {
                                 if (!empty($_FILES["userfile"]["name"])) {
@@ -196,8 +202,8 @@ class Edit_c extends CI_Controller
                     }
                 }
                 $update_data = array();
+                $article_img = "";
                 if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
-                    $article_img = "";
                     if (isset($_FILES["userfile"])) {
                         if (!empty($_FILES["userfile"]["name"])) {
                             $config['upload_path'] = $this->config->item('upload_article-pic');
@@ -226,18 +232,18 @@ class Edit_c extends CI_Controller
                             }
                         }
                     }
-
-                    if ($post_type == 8) {
-                        $this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
-                        redirect($_SERVER["HTTP_REFERER"]);
-                        die();
+                    if(!empty($post_type_attribute)) {
+                        if ($post_type_attribute['attribute_id'] === STREAM) {
+                            $this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
+                            redirect($_SERVER["HTTP_REFERER"]);
+                            die();
+                        }
+                        if ($post_type_attribute['attribute_id'] === VIDEO) {
+                            $this->video($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
+                            redirect($_SERVER["HTTP_REFERER"]);
+                            die();
+                        }
                     }
-                    if ($post_type == 3) {
-                        $this->video($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
-                        redirect($_SERVER["HTTP_REFERER"]);
-                        die();
-                    }
-
                     $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
                     $update_data['title'] = $post_title;
                     $update_data['text'] = $post_content;
@@ -267,6 +273,7 @@ class Edit_c extends CI_Controller
         $data['UserID'] = $this->UserID;
         $data['user'] = $this->ion_auth->user()->row();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['post_types'] = $this->post_type_model->get([]);
 
         $tags = $this->post_tags_model->get_by_post_id($post_id);
         $data['tags'] = $this->post_tags_model->tags_to_string($tags);

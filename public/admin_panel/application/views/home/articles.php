@@ -183,31 +183,31 @@
                                         <span class="editor-edit mt-15">Возможности формата</span>
                                         <div class="checkbox_news_type mt-15 mr-10">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="photo">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="photo" >
                                                 <label class="form-check-label" for="inlineRadio1">Изображение</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="video">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="video">
                                                 <label class="form-check-label" for="inlineRadio2">Видео</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="stream">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="stream">
                                                 <label class="form-check-label" for="inlineRadio2">Прямая трансляция</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="photo_galary">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="photo_galary">
                                                 <label class="form-check-label" for="inlineRadio3">Фотогаларея</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="tags">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="tags" disabled>
                                                 <label class="form-check-label" for="inlineRadio3">Теги</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="date">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="date" disabled>
                                                 <label class="form-check-label" for="inlineRadio3">Дата</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="text">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="text" disabled>
                                                 <label class="form-check-label" for="inlineRadio3">Текст</label>
                                             </div>
                                         </div>

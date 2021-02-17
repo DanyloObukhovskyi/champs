@@ -31,7 +31,9 @@ class Add_c extends CI_Controller
             'trainer_achievement',
             'trainer_award_model',
             'post_tags_model',
-            'game_m'
+            'game_m',
+            'post_type_model',
+            'post_type_attributes_model'
         ));
         $this->user_capabilities = $this->config->item('user_capabilities');
     }
@@ -134,52 +136,58 @@ class Add_c extends CI_Controller
                 $post_is_top = (isset($_POST['is_top']));
                 $post_tags = (!empty($_POST["tags"])) ? explode(',', trim($_POST["tags"])) : [];
                 $post_game = (isset($_POST["game"])) ? trim($_POST["game"]) : '';
+                $post_type_attribute = $this->post_type_attributes_model->getone([
+                    'news_type_id' => $post_type,
+                    'value'        => 1
+                ]);
+                if(!empty($post_type_attribute)){
+                    if ($post_type_attribute['attribute_id'] === PHOTO_GALERY) {
+                        if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
+                            $article_img = array();
+                            if (isset($_FILES["userfile"])) {
+                                if (!empty($_FILES["userfile"]["name"])) {
+                                    $count = count($_FILES['userfile']['name']);
+                                    $files = $_FILES;
+                                    $this->load->library('upload');
+                                    for ($i = 0; $i < $count; $i++) {
+                                        $config['upload_path'] = $this->config->item('upload_article-pic');
+                                        $config['allowed_types'] = 'jpeg|jpg|png';
+                                        $config['max_size'] = 256831;
+                                        $config['max_width'] = 5000;
+                                        $config['max_height'] = 5000;
+                                        $this->upload->initialize($config);
 
-                if ($post_type == 9) {
-                    if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
-                        $article_img = array();
-                        if (isset($_FILES["userfile"])) {
-                            if (!empty($_FILES["userfile"]["name"])) {
-                                $count = count($_FILES['userfile']['name']);
-                                $files = $_FILES;
-                                $this->load->library('upload');
-                                for ($i = 0; $i < $count; $i++) {
-                                    $config['upload_path'] = $this->config->item('upload_article-pic');
-                                    $config['allowed_types'] = 'jpeg|jpg|png';
-                                    $config['max_size'] = 256831;
-                                    $config['max_width'] = 5000;
-                                    $config['max_height'] = 5000;
-                                    $this->upload->initialize($config);
+                                        $_FILES['userfile']['type'] = $files['userfile']['type'][$i];
+                                        $_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
+                                        $_FILES['userfile']['error'] = $files['userfile']['error'][$i];
+                                        $_FILES['userfile']['size'] = $files['userfile']['size'][$i];
 
-                                    $_FILES['userfile']['type'] = $files['userfile']['type'][$i];
-                                    $_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
-                                    $_FILES['userfile']['error'] = $files['userfile']['error'][$i];
-                                    $_FILES['userfile']['size'] = $files['userfile']['size'][$i];
+                                        $bytes = random_bytes(11);
 
-                                    $bytes = random_bytes(11);
+                                        $ext = explode(".", $files["userfile"]["name"][$i]);
+                                        $ext = array_pop($ext);
+                                        $fileName = bin2hex($bytes) . "." . $ext;
 
-                                    $ext = explode(".", $files["userfile"]["name"][$i]);
-                                    $ext = array_pop($ext);
-                                    $fileName = bin2hex($bytes) . "." . $ext;
+                                        $_FILES['userfile']['name'] = $fileName;
 
-                                    $_FILES['userfile']['name'] = $fileName;
-
-                                    if (!$this->upload->do_upload()) {
-                                        $error = array('error' => $this->upload->display_errors());
-                                        redirect($_SERVER["HTTP_REFERER"]);
-                                        die();
-                                    } else {
-                                        $data = array('upload_data' => $this->upload->data());
-                                        $article_img[$i] = $data["upload_data"]["orig_name"];
+                                        if (!$this->upload->do_upload()) {
+                                            $error = array('error' => $this->upload->display_errors());
+                                            redirect($_SERVER["HTTP_REFERER"]);
+                                            die();
+                                        } else {
+                                            $data = array('upload_data' => $this->upload->data());
+                                            $article_img[$i] = $data["upload_data"]["orig_name"];
+                                        }
                                     }
                                 }
                             }
+                            $this->gallery($post_title, $post_content, $post_type, $post_url, $article_img);
+                            redirect($_SERVER["HTTP_REFERER"]);
+                            die();
                         }
-                        $this->gallery($post_title, $post_content, $post_type, $post_url, $article_img);
-                        redirect($_SERVER["HTTP_REFERER"]);
-                        die();
                     }
                 }
+
                 if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
                     $article_img = "";
                     if (isset($_FILES["userfile"])) {
@@ -210,16 +218,17 @@ class Add_c extends CI_Controller
                         }
                     }
 
-
-                    if ($post_type == 8) {
-                        $this->stream($post_title, $post_content, $post_type, $post_url, $article_img);
-                        redirect($_SERVER["HTTP_REFERER"]);
-                        die();
-                    }
-                    if ($post_type == 3) {
-                        $this->video($post_title, $post_content, $post_type, $post_url, $article_img);
-                        redirect($_SERVER["HTTP_REFERER"]);
-                        die();
+                    if(!empty($post_type_attribute)) {
+                        if ($post_type_attribute['attribute_id'] === STREAM) {
+                            $this->stream($post_title, $post_content, $post_type, $post_url, $article_img);
+                            redirect($_SERVER["HTTP_REFERER"]);
+                            die();
+                        }
+                        if ($post_type_attribute['attribute_id'] === VIDEO) {
+                            $this->video($post_title, $post_content, $post_type, $post_url, $article_img);
+                            redirect($_SERVER["HTTP_REFERER"]);
+                            die();
+                        }
                     }
 
                     $update_data = array();
@@ -260,6 +269,7 @@ class Add_c extends CI_Controller
         $data['current_u_can'] = $current_u_can;
         $data['games'] = $this->game_m->get_all();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['post_types'] = $this->post_type_model->get([]);
 
         $data['output'] = $this->load->view('add/article', $data, true);
         $this->load->view('layout/add', $data);

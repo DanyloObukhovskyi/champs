@@ -656,32 +656,32 @@ class Home extends CI_Controller
                     } elseif($key == 'photo'){
                         $attributes[] = [
                             'key' => PHOTO,
-                            'value' => intval(true)
+                            'value' => intval(json_decode($value))
                         ];
                     } elseif($key == 'video'){
                         $attributes[] = [
                             'key' => VIDEO,
-                            'value' => intval(true)
+                            'value' => intval(json_decode($value))
                         ];
                     } elseif($key == 'photo_galery'){
                         $attributes[] = [
                             'key' => PHOTO_GALERY,
-                            'value' => intval(true)
+                            'value' => intval(json_decode($value))
                         ];
                     } elseif($key == 'tags'){
                         $attributes[] = [
                             'key' => TAGS,
-                            'value' => intval(true)
+                            'value' => intval(json_decode($value))
                         ];
                     } elseif($key == 'stream'){
                         $attributes[] = [
                             'key' => STREAM,
-                            'value' => intval(true)
+                            'value' => intval(json_decode($value))
                         ];
                     } elseif($key == 'text'){
                         $attributes[] = [
                             'key' => TEXT,
-                            'value' => intval(true)
+                            'value' => intval(json_decode($value))
                         ];
                     }
                 }
@@ -779,35 +779,35 @@ class Home extends CI_Controller
                                 ];
                             }
                             $this->post_type_model->update($id, $data);
-                        } elseif($key == 'photo'){
+                        } elseif($key === 'photo'){
                             $attributes[] = [
                                 'key' => PHOTO,
-                                'value' => intval(true)
+                                'value' => intval(json_decode($value))
                             ];
-                        } elseif($key == 'video'){
+                        } elseif($key === 'video'){
                             $attributes[] = [
                                 'key' => VIDEO,
-                                'value' => intval(true)
+                                'value' => intval(json_decode($value))
                             ];
-                        } elseif($key == 'photo_galery'){
+                        } elseif($key === 'photo_galery'){
                             $attributes[] = [
                                 'key' => PHOTO_GALERY,
-                                'value' => intval(true)
+                                'value' => intval(json_decode($value))
                             ];
-                        } elseif($key == 'tags'){
+                        } elseif($key === 'tags'){
                             $attributes[] = [
                                 'key' => TAGS,
-                                'value' => intval(true)
+                                'value' => intval(json_decode($value))
                             ];
-                        } elseif($key == 'stream'){
+                        } elseif($key === 'stream'){
                             $attributes[] = [
                                 'key' => STREAM,
-                                'value' => intval(true)
+                                'value' => intval(json_decode($value))
                             ];
-                        } elseif($key == 'text'){
+                        } elseif($key === 'text'){
                             $attributes[] = [
                                 'key' => TEXT,
-                                'value' => intval(true)
+                                'value' => intval(json_decode($value))
                             ];
                         }
 
@@ -820,6 +820,43 @@ class Home extends CI_Controller
             }
         } else {
             $response->errors = validation_errors();
+        }
+        die(json_encode($response));
+    }
+
+    public function fetchAttributes()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $id = $this->input->post('id');
+        if(!empty($id)){
+            $type = $this->post_type_model->getOne(['id' => $id]);
+            if(!empty($type)){
+                $type_attributes = $this->post_type_attributes_model->get(['news_type_id' => $id]);
+                $imgs_url = base_url($this->config->item('display_news_type-pic')).$type['img'];
+                $response->title = $type['title'];
+                $response->img = $imgs_url;
+                if(!empty($type_attributes)){
+                    foreach($type_attributes as $attributes){
+                        if($attributes['attribute_id'] == PHOTO){
+                            $response->photo = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == VIDEO){
+                            $response->video = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == PHOTO_GALERY){
+                            $response->photo_galery = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == TAGS){
+                            $response->tags = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == DATE){
+                            $response->date = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == STREAM){
+                            $response->date = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == TEXT){
+                            $response->date = boolval($attributes['value']);
+                        }
+                    }
+                }
+                $response->status = true;
+            }
         }
         die(json_encode($response));
     }

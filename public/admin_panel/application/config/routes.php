@@ -68,6 +68,7 @@ $route['c-admin/post_type/create'] = 'home/createPostTypes';
 $route['c-admin/post_type/delete'] = 'home/deletePostTypes';
 $route['c-admin/post_type/fetch'] = 'home/fetchPostTypes';
 $route['c-admin/post_type/update'] = 'home/updatePostTypes';
+$route['c-admin/post_type/fetchAttributes'] = 'home/fetchAttributes';
 
 //matches' pages
 $route['c-admin/matches/page/(:num)'] = 'home/matches/$1';
