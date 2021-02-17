@@ -633,7 +633,7 @@ class Home extends CI_Controller
         $response->status = false;
         $posts = $this->input->post();
         $this->form_validation->set_data(array_merge($posts));
-        $this->form_validation->set_rules('title', 'Название формата', 'required|min_length[5]');
+        $this->form_validation->set_rules('title', 'Название формата', 'required|min_length[2]');
         if ($this->form_validation->run()) {
             if (!empty($posts)) {
                 $attributes = [];
@@ -751,7 +751,7 @@ class Home extends CI_Controller
         $response->status = false;
         $posts = $this->input->post();
         $this->form_validation->set_data(array_merge($posts));
-        $this->form_validation->set_rules('title', 'Название формата', 'required|min_length[5]');
+        $this->form_validation->set_rules('title', 'Название формата', 'required|min_length[2]');
         if ($this->form_validation->run()) {
             $id = $this->input->post('id');
             if(!empty($id)){
