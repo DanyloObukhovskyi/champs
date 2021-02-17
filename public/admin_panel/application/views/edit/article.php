@@ -210,7 +210,7 @@
             data : {
                 'id':id
             },
-            url: '<?php  echo base_url("/c-admin/post_type/fetchAttributes") ;?>,
+            url: '<?php  echo base_url("/c-admin/post_type/fetchAttributes") ;?>',
             success : function(result){
                 result = JSON.parse(result);
                 if(result.status == true){
@@ -332,7 +332,7 @@
             data : {
                 'id':id
             },
-            url: '<?php  echo base_url("/c-admin/post_type/fetchAttributes") ; ?>,
+            url: '<?php  echo base_url("/c-admin/post_type/fetchAttributes") ; ?>',
             success : function(result){
                 result = JSON.parse(result);
                 if(result.status == true){
