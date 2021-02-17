@@ -63,6 +63,11 @@ $route['c-admin/posts/page/(:num)'] = 'home/index/$1';
 $route['c-admin/post/edit/(:num)/(:num)'] = 'edit_c/post/$1/$2';
 $route['c-admin/post/delete/(:num)/(:num)'] = 'delete_c/post/$1/$2';
 $route['c-admin/post/add/(:num)'] = 'add_c/post/$1';
+$route['c-admin/post_type'] = 'home/getPostTypes';
+$route['c-admin/post_type/create'] = 'home/createPostTypes';
+$route['c-admin/post_type/delete'] = 'home/deletePostTypes';
+$route['c-admin/post_type/fetch'] = 'home/fetchPostTypes';
+$route['c-admin/post_type/update'] = 'home/updatePostTypes';
 
 //matches' pages
 $route['c-admin/matches/page/(:num)'] = 'home/matches/$1';

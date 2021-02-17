@@ -3585,3 +3585,21 @@ Denis. styles. 4 september start
     display: flex;
     align-items: center;
 }
+.icosNews {
+    position: absolute;
+    left: 0px;
+    top: 2px;
+}
+.checkbox_news_type{
+    display: flex;
+    position: relative;
+    width: 100%;
+    place-content: space-between;
+}
+.profile-pic-smallForNews {
+    vertical-align: middle;
+    width: 117px;
+    height: 117px;
+    border-radius: 4px;
+    margin-top: 12px;
+}

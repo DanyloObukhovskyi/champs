@@ -24,9 +24,10 @@
 		
 		public function get_all($where = array(), $is_count = false, $sort = array(), $limit = array())
 		{
-			$this->db->select('*');
+			$this->db->select('news.*, news_types.*');
 			$this->db->from($this->table);
-			
+			$this->db->join('(SELECT id as news_type_id, title as type_title, img as type_img FROM news_type 
+                                                 ) AS `news_types`', 'news_types.news_type_id = news.type', 'left');
 			if (!empty($where['id'])) {
 				$this->db->where('id', $where['id']);
 			}
@@ -38,10 +39,10 @@
 					
 					if ($key == 'search') {
 						if (is_numeric($val)) {
-							$this->db->like('id', $val);
+							$this->db->like('news.id', $val);
 						}
 						else {
-							$this->db->like('title', $val);
+							$this->db->like('news.title', $val);
 						}
 					}
 					else {

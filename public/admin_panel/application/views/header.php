@@ -18,7 +18,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/popup.css'; ?>">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="<?php echo $url.'assets/js/bootstrap-tagsinput.min.js';?>"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="<?php echo $url.'assets/datatables.min.css'; ?>"/>
+    <script type="text/javascript" src="<?php echo $url.'assets/datatables.min.js'; ?>"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <header class="a-i-c j-c-s-b" style="background: #35393e">

@@ -21,7 +21,7 @@ class Home extends CI_Controller
             redirect('login/auth');
             die();
         }
-        $this->load->model(['users_model', 'setting_model', 'trainer_lesson_price_m']);
+        $this->load->model(['users_model', 'setting_model', 'trainer_lesson_price_m', 'post_type_model', 'post_type_attributes_model']);
         $this->user_capabilities = $this->config->item('user_capabilities');
     }
 
@@ -589,5 +589,238 @@ class Home extends CI_Controller
         $data['output'] = $this->load->view('home/settings', $data, true);
 
         $this->load->view('layout/home', $data);
+    }
+
+    public function getPostTypes()
+    {
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+
+        $total_data_count = $this->post_type_model->getNewsTypeData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->post_type_model->getNewsTypeData($length, $start, false, $search, $column, $order);
+
+        $data = [];
+
+        $imgs_url = base_url($this->config->item('display_news_type-pic'));
+        if (!empty($total_data)) {
+            foreach ($total_data as $type) {
+                $data[] = [
+                    '<img class="profile-pic-small" src="'.$imgs_url.$type['img'].'"/>',
+                    $type['id'],
+                    $type['title'],
+                    '<button type="button" class="btn btn-dark-blue btn-small" onclick="fetchNewsType('.$type['id'].')">Редактировать</button>
+                    <div class="pointer txt-orange ml-15 fw-600" style="display: inline-block;" onclick="deleteNewsType('.$type['id'].')">Удалить</div>'
+                ];
+            }
+        }
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+        die(json_encode($output));
+    }
+
+    public function createPostTypes()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $posts = $this->input->post();
+        $this->form_validation->set_data(array_merge($posts));
+        $this->form_validation->set_rules('title', 'Название формата', 'required|min_length[5]');
+        if ($this->form_validation->run()) {
+            if (!empty($posts)) {
+                $attributes = [];
+                foreach ($posts as $key => $value) {
+                    if($key == 'title'){
+                        $filename = '';
+                        if(!empty($_FILES)){
+                            $image = $_FILES["itempic"];
+                            if (is_uploaded_file($image["tmp_name"])) {
+                                $imgs_url = FCPATH.$this->config->item('upload_news_type-pic');
+                                if (!file_exists($imgs_url)) {
+                                    mkdir($imgs_url, 0777);
+                                }
+                                move_uploaded_file($image["tmp_name"], $imgs_url . $image["name"]);
+                                $filename = $image["name"];
+                            }
+                        }
+                        $this->post_type_model->create($value, $filename);
+                        $id = $this->db->insert_id();
+                    } elseif($key == 'photo'){
+                        $attributes[] = [
+                            'key' => PHOTO,
+                            'value' => intval(true)
+                        ];
+                    } elseif($key == 'video'){
+                        $attributes[] = [
+                            'key' => VIDEO,
+                            'value' => intval(true)
+                        ];
+                    } elseif($key == 'photo_galery'){
+                        $attributes[] = [
+                            'key' => PHOTO_GALERY,
+                            'value' => intval(true)
+                        ];
+                    } elseif($key == 'tags'){
+                        $attributes[] = [
+                            'key' => TAGS,
+                            'value' => intval(true)
+                        ];
+                    } elseif($key == 'stream'){
+                        $attributes[] = [
+                            'key' => STREAM,
+                            'value' => intval(true)
+                        ];
+                    } elseif($key == 'text'){
+                        $attributes[] = [
+                            'key' => TEXT,
+                            'value' => intval(true)
+                        ];
+                    }
+                }
+                if(!empty($id)){
+                    $this->post_type_attributes_model->create($id, $attributes);
+                    $response->status = true;
+                }
+            }
+        } else {
+            $response->errors = validation_errors();
+        }
+        die(json_encode($response));
+    }
+
+    public function deletePostTypes()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $id = $this->input->post('id');
+        if(!empty($id)){
+            $response->status = $this->post_type_model->delete($id);
+            $this->post_type_attributes_model->delete($id);
+        }
+        die(json_encode($response));
+    }
+
+    public function fetchPostTypes()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $id = $this->input->post('id');
+        if(!empty($id)){
+            $type = $this->post_type_model->getOne(['id' => $id]);
+            if(!empty($type)){
+                $type_attributes = $this->post_type_attributes_model->get(['news_type_id' => $id]);
+                $imgs_url = base_url($this->config->item('display_news_type-pic')).$type['img'];
+                $response->title = $type['title'];
+                $response->img = $imgs_url;
+                if(!empty($type_attributes)){
+                    foreach($type_attributes as $attributes){
+                        if($attributes['attribute_id'] == PHOTO){
+                            $response->photo = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == VIDEO){
+                            $response->video = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == PHOTO_GALERY){
+                            $response->photo_galery = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == TAGS){
+                            $response->tags = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == DATE){
+                            $response->date = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == STREAM){
+                            $response->date = boolval($attributes['value']);
+                        } elseif($attributes['attribute_id'] == TEXT){
+                            $response->date = boolval($attributes['value']);
+                        }
+                    }
+                }
+                $response->status = true;
+            }
+        }
+        die(json_encode($response));
+    }
+
+    public function updatePostTypes()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $posts = $this->input->post();
+        $this->form_validation->set_data(array_merge($posts));
+        $this->form_validation->set_rules('title', 'Название формата', 'required|min_length[5]');
+        if ($this->form_validation->run()) {
+            $id = $this->input->post('id');
+            if(!empty($id)){
+                if (!empty($posts)) {
+                    $attributes = [];
+                    foreach ($posts as $key => $value) {
+                        if($key == 'title'){
+                            if(!empty($_FILES)){
+                                $image = $_FILES["itempic"];
+                                if (is_uploaded_file($image["tmp_name"])) {
+                                    $imgs_url = FCPATH.$this->config->item('upload_news_type-pic');
+                                    if (!file_exists($imgs_url)) {
+                                        mkdir($imgs_url, 0777);
+                                    }
+                                    move_uploaded_file($image["tmp_name"], $imgs_url . $image["name"]);
+                                    $filename = $image["name"];
+                                }
+                                $data = [
+                                    'title' => $value,
+                                    'img'   => $filename
+                                ];
+                            } else {
+                                $data = [
+                                    'title' => $value
+                                ];
+                            }
+                            $this->post_type_model->update($id, $data);
+                        } elseif($key == 'photo'){
+                            $attributes[] = [
+                                'key' => PHOTO,
+                                'value' => intval(true)
+                            ];
+                        } elseif($key == 'video'){
+                            $attributes[] = [
+                                'key' => VIDEO,
+                                'value' => intval(true)
+                            ];
+                        } elseif($key == 'photo_galery'){
+                            $attributes[] = [
+                                'key' => PHOTO_GALERY,
+                                'value' => intval(true)
+                            ];
+                        } elseif($key == 'tags'){
+                            $attributes[] = [
+                                'key' => TAGS,
+                                'value' => intval(true)
+                            ];
+                        } elseif($key == 'stream'){
+                            $attributes[] = [
+                                'key' => STREAM,
+                                'value' => intval(true)
+                            ];
+                        } elseif($key == 'text'){
+                            $attributes[] = [
+                                'key' => TEXT,
+                                'value' => intval(true)
+                            ];
+                        }
+
+                    }
+                    if(!empty($id)){
+                        $this->post_type_attributes_model->update($id, $attributes);
+                        $response->status = true;
+                    }
+                }
+            }
+        } else {
+            $response->errors = validation_errors();
+        }
+        die(json_encode($response));
     }
 }
