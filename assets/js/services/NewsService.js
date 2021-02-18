@@ -50,7 +50,7 @@ class NewsService extends Service {
     }
 
     getTopNews = () => {
-        return this.send(`news/top/five`);
+        return this.send(`top/news/five`);
     }
 }
 
