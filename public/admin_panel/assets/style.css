@@ -3603,3 +3603,10 @@ Denis. styles. 4 september start
     border-radius: 4px;
     margin-top: 12px;
 }
+.checkbox_pages {
+    display: flex;
+    position: relative;
+    width: 100%;
+    place-content: space-between;
+    left: 15px;
+}

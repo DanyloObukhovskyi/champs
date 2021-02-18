@@ -15,6 +15,7 @@ use App\Entity\MatchMapTeamStatistic;
 use App\Service\Match\PastMatchService;
 use App\Service\PersonService;
 use App\Service\PlayerStatisticsService;
+use App\Service\Seo\SeoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,6 +97,8 @@ class MatchesController extends AbstractController
         $this->matchRepository = $entityManager->getRepository(Match::class);
         $this->matchCommentService = new MatchCommentService($entityManager);
         $this->matchCommentLikeService = new MatchCommentLikeService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
     }
 
     /**
@@ -104,7 +107,14 @@ class MatchesController extends AbstractController
     public function index(Request $request)
     {
         $type = $request->get('type');
+
+        $seoSettings = $this->seoService->getSeo('marketplace_index');
+
         return $this->render('templates/matches.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'matches',
             'type' => $type
         ]);

@@ -167,3 +167,9 @@ $route['c-admin/comments'] = 'comments_c/index';
 $route['c-admin/ajax/comments'] = 'comments_c/ajax';
 $route['c-admin/ajax/comments/save'] = 'comments_c/save';
 $route['c-admin/comments/delete/(:any)/(:num)'] = 'comments_c/delete/$1/$2';
+
+//seo
+$route['c-admin/seo'] = 'seo/index';
+$route['c-admin/seo/fetchPages'] = 'seo/fetchPages';
+$route['c-admin/seo/fetch'] = 'seo/fetch';
+$route['c-admin/seo/edit'] = 'seo/edit';

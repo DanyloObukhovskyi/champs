@@ -13,6 +13,7 @@ use App\Service\News\NewsLikeService;
 use App\Service\News\NewsService;
 use App\Service\Match\MatchService;
 use App\Service\News\NewsTagService;
+use App\Service\Seo\SeoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,6 +75,8 @@ class NewsController extends AbstractController
 
         $this->newsLikeService = new NewsLikeService($entityManager);
         $this->newsCommentLikeService = new NewsCommentLikeService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
     }
 
     /**
@@ -83,7 +86,13 @@ class NewsController extends AbstractController
     {
         $popularTags = $this->newsTagService->popularTags(5);
 
+        $seoSettings = $this->seoService->getSeo('news_index');
+
         return $this->render('templates/news.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'news',
             'tag' => $request->get('tag', null),
             'popularTags' => $popularTags

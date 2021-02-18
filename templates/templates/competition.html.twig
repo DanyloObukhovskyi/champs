@@ -1,6 +1,22 @@
 {% extends 'base.html.twig' %}
-{% block title %}Положение о конкурсе{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block router %}competition{% endblock %}
+{% block description %}
+    <meta name="description"
+          content="{{ description }}">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="{{ keywords }}">
+{% endblock %}
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+            <meta name="{{ meta.name }}"
+                  content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
 {% block body %}
     <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
         Положение о конкурсе

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TrainerLessonPrice;
+use App\Service\Seo\SeoService;
 use App\Service\UserService;
 use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,9 +19,13 @@ class MarketplaceController extends AbstractController
 
     public $userService;
 
+    public $seoService;
+
     public function __construct()
     {
         $this->userService = new UserService($this->getEntityManager());
+
+        $this->seoService = new SeoService($this->getEntityManager());
     }
 
     /**
@@ -30,7 +35,13 @@ class MarketplaceController extends AbstractController
     {
         $trainerId = $request->get('trainerId', null);
 
+        $seoSettings = $this->seoService->getSeo('marketplace_index');
+
         return $this->render('templates/marketplace.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'marketplace',
             'filters' => UserService::FILTERS,
             'games' => UserService::GAMES,
