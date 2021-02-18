@@ -9,7 +9,7 @@ use App\Entity\{
     RatingPerson,
     WeaponRating
 };
-use App\Service\{PersonService, RatingTeamService, RatingPersonService, WeaponRatingService};
+use App\Service\{PersonService, RatingTeamService, RatingPersonService, Seo\SeoService, WeaponRatingService};
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -56,6 +56,8 @@ class StatisticsController extends AbstractController
 
         $this->weaponService = new WeaponRatingService($entityManager);
         $this->personService = new PersonService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
     }
 
     /**
@@ -63,7 +65,14 @@ class StatisticsController extends AbstractController
      */
     public function index()
     {
-        return $this->render('templates/statistics.html.twig', ['router' => 'statistics',]);
+        $seoSettings = $this->seoService->getSeo('statistics_index');
+
+        return $this->render('templates/statistics.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'router' => 'statistics',]);
     }
 
     /**

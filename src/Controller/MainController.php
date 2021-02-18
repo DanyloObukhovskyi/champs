@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Translation\TranslatorInterface;
+use App\Entity\SeoPages;
+use App\Service\Seo\SeoService;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
@@ -57,6 +59,11 @@ class MainController extends DefController
      */
     public $newsTagService;
 
+    /**
+     * @var SeoService
+     */
+    public $seoService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -69,6 +76,8 @@ class MainController extends DefController
 
         $this->youTubeService = new YouTubeService();
         $this->newsTagService = new NewsTagService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
     }
 
     /**
@@ -85,7 +94,12 @@ class MainController extends DefController
 
         $popularTags = $this->newsTagService->popularTags(5);
 
+        $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
         return $this->render('templates/home.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'home',
             'token' => $token,
             'popularTags' => $popularTags
@@ -93,7 +107,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("//")
+     * @Route("//", name="main")
      */
     public function redirectToLogin(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
@@ -105,8 +119,14 @@ class MainController extends DefController
         $token = $request->get('token');
 
         $popularTags = $this->newsTagService->popularTags(5);
-        
+
+        $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
+
         return $this->render('templates/home.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'home',
             'token' => $token,
             'popularTags' => $popularTags

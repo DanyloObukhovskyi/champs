@@ -11,6 +11,7 @@ use App\Service\Event\EventPrizeDistributionService;
 use App\Service\Event\EventService;
 use App\Service\Event\EventTeamAttendingService;
 use App\Service\Match\MatchService;
+use App\Service\Seo\SeoService;
 use App\Service\TeamService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,6 +68,8 @@ class EventsController extends AbstractController
 
         $this->eventBracketService = new EventBracketService($this->entityManager);
         $this->teamService = new TeamService($this->entityManager);
+
+        $this->seoService = new SeoService($entityManager);
     }
 
     /**
@@ -74,7 +77,14 @@ class EventsController extends AbstractController
      */
     public function eventsPage()
     {
-        return $this->render('templates/events.html.twig', ['router' => 'events']);
+        $seoSettings = $this->seoService->getSeo('events_index');
+
+        return $this->render('templates/events.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'router' => 'events']);
     }
 
     /**
@@ -159,7 +169,13 @@ class EventsController extends AbstractController
      */
     public function digestPage()
     {
+        $seoSettings = $this->seoService->getSeo('digest_events');
+
         return $this->render('templates/digest.events.html.twig', [
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'digest',
         ]);
     }

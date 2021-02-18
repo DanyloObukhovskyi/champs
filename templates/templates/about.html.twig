@@ -1,6 +1,22 @@
 {% extends 'base.html.twig' %}
-{% block title %}О нас{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block router %}about{% endblock %}
+{% block description %}
+    <meta name="description"
+          content="{{ description }}">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="{{ keywords }}">
+{% endblock %}
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+            <meta name="{{ meta.name }}"
+                  content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
 {% block body %}
     <div class="about page">
         <div class="ml-8 mr-8 p-0 d-flex">

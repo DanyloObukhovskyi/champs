@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\AlbumPhotos;
 use App\Entity\Albums;
 use App\Entity\Stream;
+use App\Service\Seo\SeoService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Match;
@@ -12,6 +14,14 @@ use App\Repository\MatchRepository;
 
 class GalleryController extends AbstractController
 {
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        $this->seoService = new SeoService($entityManager);
+    }
+
     /**
      * @Route("/ru/gallery", name="gallery")
      */
