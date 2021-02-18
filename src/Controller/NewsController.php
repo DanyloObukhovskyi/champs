@@ -442,7 +442,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/top/five")
+     * @Route("/top/news/five")
      */
     public function getTopNews()
     {
