@@ -49,6 +49,16 @@ class SeoPages
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $heading;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $heading_type;
+
     public function __construct()
     {
         $this->meta = new ArrayCollection();
@@ -145,6 +155,30 @@ class SeoPages
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getHeading(): ?string
+    {
+        return $this->heading;
+    }
+
+    public function setHeading(string $heading): self
+    {
+        $this->heading = $heading;
+
+        return $this;
+    }
+
+    public function getHeadingType(): ?int
+    {
+        return $this->heading_type;
+    }
+
+    public function setHeadingType(?int $heading_type): self
+    {
+        $this->heading_type = $heading_type;
 
         return $this;
     }

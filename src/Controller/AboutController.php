@@ -35,6 +35,7 @@ class AboutController extends AbstractController
         $seoSettings = $this->seoService->getSeo('about_index');
 
         return $this->render('templates/about.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

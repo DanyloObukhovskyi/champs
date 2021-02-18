@@ -96,6 +96,7 @@ class MainController extends DefController
 
         $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
         return $this->render('templates/home.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],
@@ -123,6 +124,7 @@ class MainController extends DefController
         $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
 
         return $this->render('templates/home.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

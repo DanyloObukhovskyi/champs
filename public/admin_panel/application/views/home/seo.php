@@ -50,10 +50,23 @@
                         <form class="editor-edit-form" enctype="multipart/form-data">
                             <span class="editor-edit">Title</span>
                             <input class="editor-edit-form-input mt-15" type="text" id="title" placeholder="title" value="">
+                            <br>
                             <span class="editor-edit">Keywords</span>
                             <input class="editor-edit-form-input mt-15" type="text" id="keywords" placeholder="keywords" value="">
+                            <br>
                             <span class="editor-edit">Description</span>
                             <textarea class="editor-edit-form-input mt-15" type="text" id="description" placeholder="description" value=""></textarea>
+                            <br>
+                            <span class="editor-edit">Heading</span>
+                            <input class="editor-edit-form-input mt-15" type="text" id="heading" placeholder="heading" value="">
+                            <br>
+                            <span id="heading_type" class="editor-edit">Heading Type</span>
+                            <select class="form-control form-control-sm">
+                                <option value="" selected>Выберете тип заголовка</option>
+                                <option value="1">h1</option>
+                                <option value="2">h2</option>
+                            </select>
+                            <br>
                             <span class="editor-edit">Meta Tags</span>
                             <button class="btn btn-green" type="button"  onclick="addMeta()">+</button>
                             <div class="checkbox_pages mt-15 mr-10">
@@ -130,6 +143,8 @@
                     $('#keywords').val(result.keywords);
                     tinymce.get("description").setContent(result.description);
                     $('#id').val(id)
+                    $('#heading').val(result.heading)
+                    $('#heading_type').val(result.heading_type)
                     if(!$.trim(result.meta)){
                         result.metas.forEach(function(meta){
                             var html = [];
@@ -200,6 +215,8 @@
         let title = $('#title').val();
         let keywords = $('#keywords').val();
         let id = $('#id').val();
+        let heading = $('#heading').val();
+        let heading_type = $('#heading_type').val();
         let description = tinymce.get("description").getContent();
         $.ajax({
             type:'POST',
@@ -209,6 +226,8 @@
                 'title':title,
                 'description':description,
                 'keywords':keywords,
+                'heading':heading,
+                'heading_type':heading_type,
                 'metas': metas
             },
             success:function(data){

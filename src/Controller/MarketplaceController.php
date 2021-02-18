@@ -38,6 +38,7 @@ class MarketplaceController extends AbstractController
         $seoSettings = $this->seoService->getSeo('marketplace_index');
 
         return $this->render('templates/marketplace.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

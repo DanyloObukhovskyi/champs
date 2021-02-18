@@ -89,6 +89,7 @@ class NewsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('news_index');
 
         return $this->render('templates/news.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

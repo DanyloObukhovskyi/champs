@@ -34,6 +34,7 @@ class ContactController extends AbstractController
         $seoSettings = $this->seoService->getSeo('contact_index');
 
         return $this->render('templates/contact.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

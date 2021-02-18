@@ -89,6 +89,8 @@ class Seo extends CI_Controller
         $response->title = 'Champs.pro';
         $response->keywords = 'League of Legends, СS:GO, Dota, Игровые матчи, Игровые новости, События, Рейтинг команд, Рейтинг игроков, Игрок недели, Результаты матчей, Турниры';
         $response->description =  'Тренеры по League of Legends, СS:GO, Dota, матчи, игровые новости, события и мероприятия в игровой индустрии';
+        $response->heading = '';
+        $response->heading_type = '';
         $response->metas = [];
         $id = $this->input->post('id');
         if(!empty($id)){
@@ -102,6 +104,12 @@ class Seo extends CI_Controller
                 }
                 if(!empty($page['description'])){
                     $response->description = $page['description'];
+                }
+                if(!empty($page['heading'])){
+                    $response->heading = $page['heading'];
+                }
+                if(!empty($page['heading_type'])){
+                    $response->heading = $page['heading_type'];
                 }
                 $meta = $this->seo_page_meta_model->get([
                     'page_id' => $id
@@ -129,7 +137,9 @@ class Seo extends CI_Controller
                     $data = [
                         'title' => trim($posts['title']),
                         'description' => trim($posts['description']),
-                        'keywords' => trim($posts['keywords'])
+                        'keywords' => trim($posts['keywords']),
+                        'heading' => trim($posts['heading']),
+                        'heading_type' => $posts['heading_type'],
                     ];
                     $this->seo_page_model->update($id, $data);
                     if(!empty($posts['metas'])){

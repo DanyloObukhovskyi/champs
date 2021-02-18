@@ -19,9 +19,7 @@
     {% endif %}
 {% endblock %}
 {% block body %}
-    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-        Оферта на оказание услуг «Champs.Маркет»
-    </h1>
+    {{ heading }}
     <div class="politica">
         <div class="container">
             {{setting.get('offerPolicy') is not null ? setting.get('offerPolicy').value|raw  : ''}}

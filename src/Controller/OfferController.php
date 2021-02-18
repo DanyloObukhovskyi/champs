@@ -24,6 +24,7 @@ class OfferController extends AbstractController
         $seoSettings = $this->seoService->getSeo('offer_index');
 
         return $this->render('templates/offer.html.twig', [
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],
