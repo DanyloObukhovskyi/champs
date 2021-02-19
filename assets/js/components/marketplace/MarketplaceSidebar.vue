@@ -17,9 +17,13 @@
             'game',
             'games'
         ],
+        mounted() {
+            document.title = 'Поднимем навык игры cs go - индивидуальные и групповые тренировки'
+        },
         methods: {
             setGame(game) {
                 this.$emit('setGame', game)
+                document.title = 'Поднимем навык игры '+game+' - индивидуальные и групповые тренировки'
             }
         }
     }

@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
@@ -122,16 +123,24 @@ class EventsController extends AbstractController
 
         $router = 'events';
 
+
+        $teams = [];
+        /** @var EventTeamAttending $team */
+        foreach ($event->getTeamsAttending() as $team) {
+            $teams[] = $team->getTeam()->getName();
+        }
+
         return $this->render('templates/event.view.html.twig', compact(
             'router',
-            'event'
+            'event',
+            'teams'
         ));
     }
 
     /**
      * @Route("/ajax/event/{id}")
      */
-    public function getEvent($id)
+    public function getEvent($id, SerializerInterface $serializer)
     {
         /** @var Event $event */
         $event = $this->entityManager
@@ -156,11 +165,18 @@ class EventsController extends AbstractController
         }
         $teamsLineups = $this->teamService->teamsDecorator($teams);
 
+        $mapPool = [];
+        if(!empty($event->getMapPool())){
+            foreach($event->getMapPool() as $map){
+                $mapPoll[] = $map->jsonSerialize();
+            }
+        }
+
         return $this->json([
-            'event' => $event,
+            'event' => $event->jsonSerialize(),
             'prizeDistribution' => $prizeDistribution,
             'teamsLineups' => $teamsLineups,
-            'mapsPool' => $event->getMapPool(),
+            'mapsPool' => $mapPool,
             'brackets' => $brackets,
             'matches' => $matchesByDay,
         ]);

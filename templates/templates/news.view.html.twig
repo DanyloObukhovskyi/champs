@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ news.title }}{% endblock %}
+{% block title %}{{ news.title }} - {{ news.category }} от Champs.pro{% endblock %}
 {% block router %}{{ news.title }}{% endblock %}
 {% block description %}
-    <meta name="description" content="{{ news.title }}">
+    {% if news.text|length > 155 %}
+        <meta name="description" content="{{ description|slice(0, 155) ~ '...' }}">
+    {% endif %}
 {% endblock %}
 {% block keywords %}
     <meta name="Keywords" content="Игровые матчи, Игровые новости, События, Видео, Интервью">

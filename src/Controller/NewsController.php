@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\News;
+use App\Entity\NewsType;
 use App\Entity\NewsBookmark;
 use App\Entity\NewsCommentLike;
 use App\Entity\NewsLike;
@@ -149,7 +150,14 @@ class NewsController extends AbstractController
         }
         $this->newsService->incrementingViews($news);
 
+        $description = strip_tags($news->getText());
+
+        $news->category = $this->entityManager
+            ->getRepository(NewsType::class)
+            ->findOneBy(['id' => $news->getType()])->getTitle();
+
         return $this->render('templates/news.view.html.twig', [
+            'description' => $description,
             'newsId' => $id,
             'news' => $news,
             'router' => 'news',

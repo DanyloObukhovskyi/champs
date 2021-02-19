@@ -26,6 +26,7 @@ class PoliticaController extends AbstractController
 
         return $this->render('templates/politica.html.twig', [
             'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

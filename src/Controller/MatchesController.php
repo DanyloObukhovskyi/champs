@@ -154,8 +154,11 @@ class MatchesController extends AbstractController
         /** @var Match $match */
         $match = $this->matchService->find($id);
 
+        $matchDecorator = $this->matchService->matchDecorator($match);
+
         return $this->render('templates/matches.view.html.twig', [
             'router' => 'matches',
+            'matchDecorator' => $matchDecorator,
             'match' => $match
         ]);
     }
