@@ -1,20 +1,12 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ event.name }}{% endblock %}
 {% block description %}
     <meta name="description"
-          content="{{ description }}">
+          content="{{ event.name }}">
 {% endblock %}
 {% block keywords %}
     <meta name="Keywords"
-          content="{{ keywords }}">
-{% endblock %}
-{% block meta %}
-    {% if meta_tags is not empty %}
-        {% for meta in meta_tags %}
-            <meta name="{{ meta.name }}"
-                  content="{{ meta.value }}">
-        {% endfor %}
-    {% endif %}
+          content="{{ event.name }}">
 {% endblock %}
 {% block body %}
     <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
