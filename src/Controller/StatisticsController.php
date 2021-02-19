@@ -68,6 +68,7 @@ class StatisticsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('statistics_index');
 
         return $this->render('templates/statistics.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],

@@ -18,7 +18,11 @@
     {% endif %}
 {% endblock %}
 {% block body %}
-    {{ heading }}
+    {% if heading_type == 1 %}
+        <h1 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h1>
+    {% else %}
+        <h2 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h2>
+    {% endif %}
     <div class="home page">
         <home-page  popular-tags="{{ popularTags|json_encode }}"></home-page>
     </div>

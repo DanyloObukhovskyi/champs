@@ -35,6 +35,7 @@ class CompetitionController extends AbstractController
         $seoSettings = $this->seoService->getSeo('competition_index');
 
         return $this->render('templates/competition.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],

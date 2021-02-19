@@ -24,6 +24,7 @@ class SeoService extends EntityService
           'keywords' => 'League of Legends, СS:GO, Dota, Игровые матчи, Игровые новости, События, Рейтинг команд, Рейтинг игроков, Игрок недели, Результаты матчей, Турниры',
           'description' =>  'Тренеры по League of Legends, СS:GO, Dota, матчи, игровые новости, события и мероприятия в игровой индустрии',
           'heading' => '',
+          'heading_type' => 1,
           'meta' => [],
         ];
         $page = $this->repository->findOneBy([
@@ -40,17 +41,10 @@ class SeoService extends EntityService
                 $seo['description'] = $page->getDescription();
             }
             if(!empty($page->getHeadingType())){
-                if(!empty($page->getHeading())){
-                    if($page->getHeadingType() == 1){
-                        $seo['heading'] = '<h1 style="opacity: 0; position: absolute; left: 0; top: 0">'.$page->getHeading().'</h1>';
-                    } else {
-                        $seo['heading'] = '<h2 style="opacity: 0; position: absolute; left: 0; top: 0">>'.$page->getHeading().'</h2>';
-                    }
-                }
-            } else {
-                if(!empty($page->getHeading())){
-                    $seo['heading'] = '<h1 style="opacity: 0; position: absolute; left: 0; top: 0">>'.$page->getHeading().'</h1>';
-                }
+                 $seo['heading_type'] = $page->getHeadingType();
+            }
+            if(!empty($page->getHeading())){
+                $seo['heading'] = $page->getHeading();
             }
             if(!empty($page->getMeta())){
                 foreach($page->getMeta() as $meta){

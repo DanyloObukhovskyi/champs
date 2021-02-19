@@ -80,6 +80,7 @@ class EventsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('events_index');
 
         return $this->render('templates/events.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
@@ -173,6 +174,7 @@ class EventsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('digest_events');
 
         return $this->render('templates/digest.events.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],

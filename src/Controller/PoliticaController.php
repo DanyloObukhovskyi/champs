@@ -25,6 +25,7 @@ class PoliticaController extends AbstractController
         $seoSettings = $this->seoService->getSeo('politica_index');
 
         return $this->render('templates/politica.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],

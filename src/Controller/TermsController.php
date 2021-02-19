@@ -24,6 +24,7 @@ class TermsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('terms_index');
 
         return $this->render('templates/terms.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],

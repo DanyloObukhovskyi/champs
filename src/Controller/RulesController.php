@@ -25,6 +25,7 @@ class RulesController extends AbstractController
         $seoSettings = $this->seoService->getSeo('terms_of_use_index');
 
         return $this->render('templates/rules.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
