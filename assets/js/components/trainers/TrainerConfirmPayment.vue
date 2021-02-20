@@ -52,7 +52,7 @@
                         <i class="far fa-clock" aria-hidden="true"></i>
                         Время указано в соответствии с вашим часовым поясом
                         <span class="timezone" v-if="user !== null">
-                            {{user.timezone}} {{user.gmt}}
+                            {{ user.timezone }} {{ user.gmt }}
                         </span>
                         <span class="timezone" v-else>
                             Europe/Moscow GMT +3:00
@@ -65,7 +65,8 @@
                         </div>
                         <div>
                             <input type="checkbox" :value="true" v-model="checkService">
-                            <a :href="termsLink" target="_blank">Условия оформления заказа тренировок на сервисе Champs.Маркет</a>
+                            <a :href="termsLink" target="_blank">Условия оформления заказа тренировок на сервисе
+                                Champs.Маркет</a>
                         </div>
                     </div>
                 </div>
@@ -96,13 +97,14 @@ export default {
         'lessons',
         'trainer',
         'trainingType',
-        'selectedLength'
+        'selectedLength',
+        'paymentType'
     ],
     data() {
         return {
             load: false,
             checkOffer: false,
-            checkService: false
+            checkService: false,
         }
     },
     computed: {
@@ -154,7 +156,18 @@ export default {
                     .then((data) => {
                         this.load = false;
                         if (data.ids) {
-                            window.location.assign(`/${MarketplaceService.lang}/payment/pay/lesson?lessonIds=` + JSON.stringify(data.ids))
+                            if (this.paymentType === 'yandex') {
+                                window.location.assign(`/${MarketplaceService.lang}/payment/pay/lesson?lessonIds=` + JSON.stringify(data.ids))
+                            } else {
+                                MarketplaceService.interkassaLessonCreatePayment(data.ids)
+                                    .then(data => {
+                                        const form = $(`<form action="${data.url}" method="POST">`);
+                                        for (let key in data.params) {
+                                            form.append(`<input name="${key}" type="hidden" value="${data.params[key]}" />`);
+                                        }
+                                        form.appendTo($('body')).submit();
+                                    })
+                            }
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -167,7 +180,7 @@ export default {
         }
     },
     mounted() {
-        window.test123 = this;
+        console.log(this.paymentType)
     }
 }
 </script>

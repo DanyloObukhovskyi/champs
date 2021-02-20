@@ -24,9 +24,14 @@ class Payment
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $yandex_kassa_id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $inter_kassa_id;
 
     /**
      * @ORM\OneToOne(targetEntity=Lessons::class, cascade={"persist", "remove"})
@@ -35,9 +40,14 @@ class Payment
     private $lesson;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     private $yandex_data = [];
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $interkassa_data = [];
 
     /**
      * @ORM\Column(type="integer")
@@ -169,5 +179,37 @@ class Payment
     public function setLessonId($lesson_id): void
     {
         $this->lesson_id = $lesson_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInterKassaId()
+    {
+        return $this->inter_kassa_id;
+    }
+
+    /**
+     * @param mixed $inter_kassa_id
+     */
+    public function setInterKassaId($inter_kassa_id): void
+    {
+        $this->inter_kassa_id = $inter_kassa_id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInterkassaData(): array
+    {
+        return $this->interkassa_data;
+    }
+
+    /**
+     * @param array $interkassa_data
+     */
+    public function setInterkassaData(array $interkassa_data): void
+    {
+        $this->interkassa_data = $interkassa_data;
     }
 }

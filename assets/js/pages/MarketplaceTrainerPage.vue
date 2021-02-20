@@ -24,6 +24,7 @@
             <trainer-timetable
                     v-if="trainer !== null && !load"
                     :training-type="trainingType"
+                    :payment-type="paymentType"
                     :trainer="trainer">
             </trainer-timetable>
             <trainer-reviews v-if="trainer !== null && !load"
@@ -65,7 +66,7 @@
 
     export default {
         name: "MarketplaceTrainerPage",
-        props: ['social', 'trainerId', 'trainingType'],
+        props: ['social', 'trainerId', 'trainingType', 'paymentType'],
         components: {
             TrainerReviews,
             TrainerTimetable,

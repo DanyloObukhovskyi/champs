@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Setting;
 use App\Entity\TrainerLessonPrice;
 use App\Service\Seo\SeoService;
+use App\Service\Payment\PaymentService;
+use App\Service\Setting\SettingService;
 use App\Service\UserService;
 use App\Traits\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,17 +19,37 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MarketplaceController extends AbstractController
 {
-    use EntityManager;
+    /**
+     * @var EntityManagerInterface
+     */
+    public $entityManager;
 
+    /**
+     * @var UserService
+     */
     public $userService;
 
+    /**
+     * @var SeoService
+     */
     public $seoService;
 
-    public function __construct()
-    {
-        $this->userService = new UserService($this->getEntityManager());
+    /**
+     * @var SettingService
+     */
+    public $settingService;
 
-        $this->seoService = new SeoService($this->getEntityManager());
+    /**
+     * MarketplaceController constructor.
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        $this->seoService = new SeoService($entityManager);
+        $this->userService = new UserService($entityManager);
+        $this->settingService = new SettingService($entityManager);
     }
 
     /**
@@ -69,10 +93,20 @@ class MarketplaceController extends AbstractController
     {
         $trainer = $this->userService->find($userId);
 
+        /** @var Setting $paymentSetting */
+        $paymentSetting = $this->settingService->get('paymentType');
+
+        if (empty($paymentSetting)) {
+            $paymentType = PaymentService::DEFAULT_PAYMENT;
+        } else {
+            $paymentType = $paymentSetting->getValue();
+        }
+
         return $this->render('templates/marketplace.trainer.html.twig', [
             'trainer' => $trainer,
             'router' => 'marketplace',
-            'type' => $request->get('type') ?? null
+            'type' => $request->get('type') ?? null,
+            'paymentType' => $paymentType
         ]);
     }
 }
