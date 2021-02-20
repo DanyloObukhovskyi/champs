@@ -148,5 +148,4 @@ class YandexKassaPaymentService extends EntityService
             $this->save($paymentLesson);
         }
     }
-
 }

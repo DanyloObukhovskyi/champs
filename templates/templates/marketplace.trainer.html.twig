@@ -33,6 +33,7 @@
                         training-type="{{ type }}"
                     {% endif %}
                     :social="{{setting.social|json_encode}}"
+                    payment-type="{{ paymentType }}"
                     banner="{{ setting.get('marketplaceBanner') is not null ? setting.get('marketplaceBanner').value: null }}"
                     trainer-id="{{ trainer.id }}">
             </marketplace-trainer-page>

@@ -1,6 +1,6 @@
 import Service from "./Service";
 
-class MarketplaceService extends Service{
+class MarketplaceService extends Service {
     getTrainers = (game, offset, filters) => {
         return this.send(`ajax/trainers/${game}/${offset}`, filters)
     }
@@ -24,7 +24,7 @@ class MarketplaceService extends Service{
     getTrainerScheduleDay = (trainerId, date) => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
-        if (timezone < 0){
+        if (timezone < 0) {
             timezone = Math.abs(timezone);
         } else {
             timezone = -timezone
@@ -39,7 +39,7 @@ class MarketplaceService extends Service{
     setLessonPay = (lessons, type, trainerId) => {
         let timezone = (new Date().getTimezoneOffset()) / 60;
 
-        if (timezone < 0){
+        if (timezone < 0) {
             timezone = Math.abs(timezone);
         } else {
             timezone = -timezone
@@ -74,6 +74,12 @@ class MarketplaceService extends Service{
 
     getTrainerAvailableTrainingDatesForMonth = (trainerId, date) => {
         return this.send(`calendar/available/training/dates/for/month/${trainerId}`, {date});
+    }
+
+    interkassaLessonCreatePayment = ids => {
+        return this.send(`interkassa/create/payment`, {
+            lessonIds: ids
+        });
     }
 }
 

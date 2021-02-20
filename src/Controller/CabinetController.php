@@ -127,7 +127,7 @@ class CabinetController extends AbstractController
     /**
      * @Route("/{type}/cabinet/{page}", name="user_cabinet", defaults={"page"=null})
      */
-    public function page($type)
+    public function page(Request $request, $type)
     {
         if ($this->getUser() === null) {
             return $this->redirectToRoute('main');

@@ -65,6 +65,7 @@
                 :lessons="times"
                 :date="date"
                 :selected-time="resultTime"
+                :payment-type="paymentType"
                 :selected-length="times.filter(t => t.status === 2).length"
                 :training-type="trainingType">
         </trainer-confirm-payment>
@@ -90,7 +91,8 @@
         props: [
             'trainer',
             'selectedType',
-            'trainingType'
+            'trainingType',
+            'paymentType'
         ],
         data() {
             return {

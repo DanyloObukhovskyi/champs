@@ -12,6 +12,8 @@ use App\Service\EntityService;
 
 class PaymentService extends EntityService
 {
+    const DEFAULT_PAYMENT = 'interkassa';
+
     protected $entity = Payment::class;
 
     /**
