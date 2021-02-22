@@ -3,7 +3,7 @@ import Service from "./Service";
 class NewsService extends Service {
 
     newsPage = () => {
-        return `/${this.lang}/news`
+        return `/${this.lang}/novosti`
     }
 
     getNews = (length, filters = {}) => {

@@ -95,7 +95,18 @@ class MainController extends DefController
         $popularTags = $this->newsTagService->popularTags(5);
 
         $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
+
+        $newsEntities = $this->newsService->getMainNews();
+
+        $news = [];
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+
         return $this->render('templates/home.html.twig', [
+            'link' => $link,
+            'news' => $news,
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
@@ -124,7 +135,17 @@ class MainController extends DefController
 
         $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
 
+        $newsEntities = $this->newsService->getMainNews();
+
+        $news = [];
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+
         return $this->render('templates/home.html.twig', [
+            'link' => $link,
+            'news' => $news,
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],

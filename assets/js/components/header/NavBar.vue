@@ -10,22 +10,22 @@
                 <a :href="home" class="pointer" :class="{active : router == 'home'}">
                     Главная
                 </a>
-                <a :href="newsPage" class="pointer" :class="{active : router == 'news'}">
+                <a :href="newsPage" class="pointer" :class="{active : router == 'novosti'}">
                     Новости
                 </a>
                 <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">
                     Матчи
                 </a>
-                <a href="/ru/statistics" class="pointer" :class="{active : router == 'statistics'}">
+                <a href="/ru/statistika" class="pointer" :class="{active : router == 'statistika'}">
                     Статистика
                 </a>
-                <a :href="marketplacePage" class="pointer" :class="{active : router == 'marketplace'}">
+                <a :href="marketplacePage" class="pointer" :class="{active : router == 'obucheniye'}">
                     <div>
                         <small>pro</small>
                         Обучение
                     </div>
                 </a>
-                <a :href="digestPage" :class="{active : router == 'digest'}">
+                <a :href="digestPage" :class="{active : router == 'daydzhest_turnirov'}">
                     Дайджест турниров
                 </a>
                 <a href="/ru/mvp" class="pointer" :class="{active : router == 'mvp'}">

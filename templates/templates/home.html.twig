@@ -17,6 +17,31 @@
         {% endfor %}
     {% endif %}
 {% endblock %}
+{% block schema %}
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@graph" : [
+            {% for article in news %}
+                {
+                    "@type": "NewsArticle",
+                    "@id": "{{ link }}/article/{{ article.id }}/{{ article.url }}",
+                    "headline": "{{ article.title }}",
+                    "datePublished": "{{ article.date }}",
+                    "articleBody": "{{ article.text }}",
+                    "image": {
+                        "@type": "imageObject",
+                        "url": "{{ link }}/images/temp/news/{{ article.logo }}",
+                        "height": "400",
+                        "width": "300"
+                    },
+                    "author": [{"@type":"Person", "name":"Champs Pro"}]
+                }
+            {% endfor %}
+            ]
+        }
+    </script>
+{% endblock  %}
 {% block body %}
     {% if heading_type == 1 %}
         <h1 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h1>

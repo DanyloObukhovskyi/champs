@@ -53,7 +53,7 @@ class MarketplaceController extends AbstractController
     }
 
     /**
-     * @Route("/marketplace", name="marketplace_index")
+     * @Route("/obucheniye", name="marketplace_index")
      */
     public function index(Request $request)
     {
@@ -87,7 +87,7 @@ class MarketplaceController extends AbstractController
     }
 
     /**
-     * @Route("/marketplace/trainer/{userId}/{slug}")
+     * @Route("/obucheniye/trainer/{userId}/{slug}")
      */
     public function trainerPage(Request $request, $userId, $slug)
     {

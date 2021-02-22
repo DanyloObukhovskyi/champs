@@ -226,14 +226,14 @@ class UserController extends AbstractController
 
         if (isset($user)) {
             $userData = $this->userService->getUserData($user);
-        }
-        /** @var ReferralLink $inviteLink */
-        $inviteLink = $this->entityManager
-            ->getRepository(ReferralLink::class)
-            ->findOneBy([
-                'game' => $user->getGame()
-            ]);
 
+            /** @var ReferralLink $inviteLink */
+            $inviteLink = $this->entityManager
+                ->getRepository(ReferralLink::class)
+                ->findOneBy([
+                    'game' => $user->getGame()
+                ]);
+        }
         $userData['inviteVk'] = null;
 
         if (isset($inviteLink)) {

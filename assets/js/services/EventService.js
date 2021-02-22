@@ -19,7 +19,7 @@ class EventService extends Service{
     }
 
     digestPage = () => {
-        return `/${this.lang}/digest`;
+        return `/${this.lang}/daydzhest_turnirov/`;
     }
 
     getEvent = id => {

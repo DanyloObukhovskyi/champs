@@ -10,11 +10,11 @@ class MarketplaceService extends Service {
     }
 
     getTrainerUrl = (id, slug) => {
-        return `/${this.lang}/marketplace/trainer/${id}/${slug}`;
+        return `/${this.lang}/obucheniye/trainer/${id}/${slug}`;
     }
 
     marketplacePage = () => {
-        return `/${this.lang}/marketplace`;
+        return `/${this.lang}/obucheniye`;
     }
 
     getTrainer = id => {

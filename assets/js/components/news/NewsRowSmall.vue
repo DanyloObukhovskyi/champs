@@ -1,5 +1,5 @@
 <template>
-    <a :href="`/${lang}/news/${news.id}/${news.url}`"
+    <a :href="`/${lang}/article/${news.id}/${news.url}`"
        class="article d-block animation-target"
        :style="{'background-image': `url(/images/temp/news/${news.logo})`}"
        :class="className">

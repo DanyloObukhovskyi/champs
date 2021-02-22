@@ -61,7 +61,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/statistics", name="statistics_index")
+     * @Route("/statistika", name="statistics_index")
      */
     public function index()
     {

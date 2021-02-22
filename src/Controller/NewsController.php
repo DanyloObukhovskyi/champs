@@ -81,22 +81,31 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news", name="news_index")
+     * @Route("/novosti", name="news_index")
      */
     public function index(Request $request)
     {
         $popularTags = $this->newsTagService->popularTags(5);
 
         $seoSettings = $this->seoService->getSeo('news_index');
+        $newsEntities = $this->newsService->getMainNews();
+
+        $news = [];
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
 
         return $this->render('templates/news.html.twig', [
+            'link' => $link,
+            'news' => $news,
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
-            'router' => 'news',
+            'router' => 'novosti',
             'tag' => $request->get('tag', null),
             'popularTags' => $popularTags
         ]);
@@ -136,9 +145,9 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/news/{id}/{slug}", name="news_view_single")
+     * @Route("/article/{id}/{slug}", name="news_view_single")
      */
-    public function view($id, $slug)
+    public function view($id, $slug, Request $request)
     {
         /** @var News $news */
         $news = $this->entityManager
@@ -156,7 +165,11 @@ class NewsController extends AbstractController
             ->getRepository(NewsType::class)
             ->findOneBy(['id' => $news->getType()])->getTitle();
 
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+
         return $this->render('templates/news.view.html.twig', [
+            'date' => $news->getDate()->format('Y-m-d H:i:s'),
+            'link' => $link,
             'description' => $description,
             'newsId' => $id,
             'news' => $news,

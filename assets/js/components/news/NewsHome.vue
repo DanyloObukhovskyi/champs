@@ -1,7 +1,7 @@
 <template>
     <div class="news-home">
         <div class="news-home-header">
-            <lamp-header title="Новости" link="/ru/news" link-description="Все новости"></lamp-header>
+            <lamp-header title="Новости" link="/ru/novosti" link-description="Все новости"></lamp-header>
         </div>
         <div class="d-flex justify-content-center align-items-center p-5" v-if="load">
             <small-loader/>
@@ -71,7 +71,7 @@
                     })
             },
             getNewsUrl(news) {
-                return `/ru/news/${news.id}/${news.url}`
+                return `/ru/article/${news.id}/${news.url}`
             }
         },
         mounted() {

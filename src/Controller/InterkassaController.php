@@ -69,7 +69,6 @@ class InterkassaController extends AbstractController
      */
     public function webhook(Request $request)
     {
-        dump($request->request->all());
 
         /** @var Payment $payment */
         $payment = $this->entityManager
@@ -78,7 +77,6 @@ class InterkassaController extends AbstractController
                 'inter_kassa_id' => $request->request->get('ik_pm_no')
             ]);
 
-        dump($payment);
         if (isset($payment)) {
             if ($request->request->get('ik_inv_st') === InterkassaService::STATE_SUCCESS)
             {
@@ -94,6 +92,11 @@ class InterkassaController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->json('ok');
+        return $this->render('templates/payment/payment.send.html.twig',[
+            'lesson' => ['price' => $payment->getLesson()->getCost()],
+            'payment' => [ 'id' => $payment->getId()],
+            'student' => $payment->getLesson()->getStudent()->getNickname(),
+            'trainer' => $payment->getLesson()->getTrainer()->getNickname()
+        ]);
     }
 }

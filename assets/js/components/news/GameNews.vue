@@ -1,7 +1,7 @@
 <template>
     <div class="news-home">
         <div class="news-home-header">
-            <lamp-header title="Новости" link="/ru/news" link-description="Все новости"></lamp-header>
+            <lamp-header title="Новости" link="/ru/novosti" link-description="Все новости"></lamp-header>
         </div>
         <div class="news-home-body d-flex flex-wrap">
             <div class="news-home-row col-4" v-for="news in newsList">
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="show-more">
-            <a href="/ru/news">
+            <a href="/ru/novosti">
                 Посмотреть еще
             </a>
         </div>
@@ -58,7 +58,7 @@
                     })
             },
             getNewsUrl(news) {
-                return `/ru/news/${news.id}-${news.url}`
+                return `/ru/article/${news.id}-${news.url}`
             },
             getTags(tags) {
                 if (tags !== null) {
