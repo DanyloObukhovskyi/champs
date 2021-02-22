@@ -38,9 +38,7 @@
     <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
     {{ encore_entry_link_tags('app') }}
     {% block css %}{% endblock %}
-    {% if app.debug != true %}
         {% include 'yandex.metric.html.twig' %}
-    {% endif %}
     <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>
 </head>
 <body>
