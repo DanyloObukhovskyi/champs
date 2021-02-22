@@ -61,7 +61,10 @@ class MarketplaceController extends AbstractController
 
         $seoSettings = $this->seoService->getSeo('marketplace_index');
 
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+
         return $this->render('templates/marketplace.html.twig', [
+            'link' => $link,
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
@@ -101,8 +104,10 @@ class MarketplaceController extends AbstractController
         } else {
             $paymentType = $paymentSetting->getValue();
         }
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
 
         return $this->render('templates/marketplace.trainer.html.twig', [
+            'link' => $link,
             'trainer' => $trainer,
             'router' => 'marketplace',
             'type' => $request->get('type') ?? null,

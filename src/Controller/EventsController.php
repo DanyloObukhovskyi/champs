@@ -185,11 +185,14 @@ class EventsController extends AbstractController
     /**
      * @Route("/daydzhest_turnirov", name="digest_events")
      */
-    public function digestPage()
+    public function digestPage(Request $request)
     {
         $seoSettings = $this->seoService->getSeo('digest_events');
 
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+
         return $this->render('templates/digest.events.html.twig', [
+            'link' => $link,
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],

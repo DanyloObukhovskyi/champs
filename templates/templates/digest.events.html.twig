@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ title }}{% endblock %}
 {% block router %}events{% endblock %}
+{% block canonical %}
+    <link rel=“canonical” href=“{{ link }}/ru/daydzhest_turnirov” />
+{% endblock %}
 {% block description %}
     <meta name="description"
           content="{{ description }}">

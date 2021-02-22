@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ news.title }} - {{ news.category }} от Champs.pro{% endblock %}
 {% block router %}{{ news.title }}{% endblock %}
+{% block canonical %}
+    <link rel=“canonical” href=“{{ link }}/article/{{ news.id }}/{{ news.url }}” />
+{% endblock %}
 {% block description %}
     {% if news.text|length > 155 %}
         <meta name="description" content="{{ description|slice(0, 155) ~ '...' }}">

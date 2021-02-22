@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ title }}{% endblock %}
 {% block router %}news{% endblock %}
+{% block canonical %}
+    <link rel=“canonical” href=“{{ link }}/ru/novosti” />
+{% endblock %}
 {% block description %}
     <meta name="description"
           content="{{ description }}">
@@ -25,7 +28,7 @@
             {% for article in news %}
                 {
                     "@type": "NewsArticle",
-                    "@id": "{{ link }}/article/{{ article.id }}/{{ article.url }}",
+                    "@id": "{{ link }}/ru/article/{{ article.id }}/{{ article.url }}",
                     "headline": "{{ article.title }}",
                     "datePublished": "{{ article.date }}",
                     "articleBody": "{{ article.text }}",
