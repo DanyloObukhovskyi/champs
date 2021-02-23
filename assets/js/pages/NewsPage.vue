@@ -196,7 +196,7 @@
             }
         },
         mounted() {
-            window.history.pushState('page2', '', `/${this.lang}/news/`);
+            //window.history.pushState('page2', '', `/${this.lang}/news/`);
 
             if (this.tag !== null && this.tag !== '') {
                 this.filters.tags.push(this.tag);
