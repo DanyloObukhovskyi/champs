@@ -61,6 +61,11 @@ class NewsController extends AbstractController
     protected $newsCommentLikeService;
 
     /**
+     * @var SeoService
+     */
+    protected $seoService;
+
+    /**
      * NewsController constructor.
      * @param EntityManagerInterface $entityManager
      */
