@@ -60,6 +60,16 @@
                     :cost="cost.price">
             </trainer-cost-button>
         </div>
+        <div class="description" v-if="show && type !== null" @click="show = false">
+            <div class="arrow" :style="descriptionArrowStyle">
+            </div>
+            <p class="title">
+                {{ description[type].title }}
+            </p>
+            <div class="text" v-html="description[type].text">
+            </div>
+            <a :href="trainerUrl + `?type=${type}`" class="confirm">Принять</a>
+        </div>
         <div class="trainer-footer">
             <div class="rank">
                 <label>Ранг</label>
@@ -87,16 +97,6 @@
             <div class="trainer-video">
                 <trainer-row-video-slider :videos="trainer.videos"/>
             </div>
-        </div>
-        <div class="description" v-if="show && type !== null" @click="show = false">
-            <div class="arrow" :style="descriptionArrowStyle">
-            </div>
-            <p class="title">
-                {{ description[type].title }}
-            </p>
-            <div class="text" v-html="description[type].text">
-            </div>
-            <a :href="trainerUrl + `?type=${type}`" class="confirm">Принять</a>
         </div>
     </div>
 </template>
@@ -338,7 +338,7 @@ export default {
   .price-list {
     display: flex;
     margin-top: 1.5vw;
-
+    margin-bottom: 0.5vw;
     .price-row:nth-child(2),
     .price-row:nth-child(3) {
       margin-left: 5%;
@@ -398,7 +398,7 @@ export default {
 
   .description {
     z-index: 1;
-    position: absolute;
+      position: initial;
     width: 100%;
     margin-left: -1vw;
     top: 13.5vw;

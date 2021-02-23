@@ -51,6 +51,11 @@
                 <div class="tab-content">
                     <div role="tabpanel"
                          class="tab-pane show">
+                        <?php if ($this->session->flashdata('message')) {?>
+                            <div class="alert alert-success" role="alert">
+                                <?php echo $this->session->flashdata('message');?>
+                            </div>
+                        <?php }?>
                         <table class="new-table">
                             <thead>
                             <tr>

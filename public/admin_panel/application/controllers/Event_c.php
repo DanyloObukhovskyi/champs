@@ -67,6 +67,7 @@ class Event_c extends CI_Controller
         $data['images_url'] = $this->config->item('display_event-pic');
         $data['statuses'] = Event_model::STATUSES;
         $data['games'] = $this->game_m->get_all();
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         if (isset($event)) {
             $data['event'] = $event;
@@ -102,8 +103,8 @@ class Event_c extends CI_Controller
                 $upload_data['image_header'] = $this->uploadImage('image_header');
             }
             $event_id = $this->event_model->update($id, $upload_data);
-
-            redirect(base_url('c-admin/events/edit/'. $id));
+            $this->session->set_flashdata('message','Вы успешно отредактировали событие');
+            redirect(base_url('c-admin/events'));
         }
 
         $data['flags'] = $this->flag_model->get_all();
@@ -115,6 +116,7 @@ class Event_c extends CI_Controller
     {
         $data[] = '';
         $data['images_url'] = $this->config->item('display_event-pic');
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['flags'] = $this->flag_model->get_all();
         $data['statuses'] = Event_model::STATUSES;
@@ -152,7 +154,8 @@ class Event_c extends CI_Controller
             }
             $event_id = $this->event_model->create($upload_data);
 
-            redirect(base_url('c-admin/events/edit/'. $event_id));
+            $this->session->set_flashdata('message','Вы успешно создали событие');
+            redirect(base_url('c-admin/events'));
         }
 
         $data['output'] = $this->load->view('add/event', $data, true);

@@ -2,6 +2,7 @@
     <div class="cabinet">
         <div class="cabinet-body">
             <div class="left">
+                <vue-sticky-sidebar class="sidebar" containerSelector=".container" innerWrapperSelector='.sidebar__inner'>
                 <user-card v-if="!loadUser && user !== null"/>
                 <div class="d-flex justify-content-center mt-3 mb-3" v-else>
                     <small-loader/>
@@ -33,9 +34,10 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <cabinet-sidebar></cabinet-sidebar>
+                    <cabinet-sidebar></cabinet-sidebar>
+                </vue-sticky-sidebar>
             </div>
-            <div class="right">
+            <div class="right" id="content">
                 <cabinet-header v-if="user !== null && !user.isTrainer"></cabinet-header>
                 <router-view></router-view>
             </div>
@@ -67,6 +69,7 @@
     import TrainerSetting from "../components/cabinet/trainer/pages/Setting";
     import Wallet from "../components/cabinet/trainer/pages/Wallet";
     import RankingService from "../services/RankingService";
+    import vueStickySidebar from "vue-sticky-sidebar";
 
     const routes = [
         {path: `/${CabinetService.lang}/user/cabinet/`, component: UserCabinet},
@@ -95,6 +98,7 @@
             SmallLoader,
             UserCard,
             CabinetSidebar,
+            vueStickySidebar
         },
         props: ['isTrainer'],
         data() {
@@ -118,50 +122,49 @@
 
                 document.addEventListener("DOMContentLoaded", function () {
                     window.onscroll = () => {
-                        const sidebar = document.querySelector('.cabinet-sidebar');
-
-                        const sidebarHeight = $(document).height() - window.scrollY;
-
-                        const userCardPosition = document
-                            .querySelector('.card-user')
-                            .getBoundingClientRect();
-
-                        const invite = document.querySelector('.invite');
-                        const invitePosition = invite.getBoundingClientRect();
-
-                        const header = document
-                            .querySelector('#header')
-                            .getBoundingClientRect();
-
-                        const subNav = document
-                            .querySelector('.sub-nav')
-                            .getBoundingClientRect();
-
-                        if (subNav.height + header.height - userCardPosition.height - userCardPosition.top >= 0) {
-                            sidebar.style.position = 'fixed';
-                            sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
-
-                            if (isTrainer) {
-                                sidebar.style.height =  `calc(${sidebarHeight}px - 29.7vw)`;
-                            } else {
-                                sidebar.style.height =  `calc(${sidebarHeight}px - 30.5vw)`;
-                            }
-
-                            invite.style.position = 'fixed';
-                            invite.style.top = `calc(${header.height + subNav.height + 'px'} - 1vw)`;
-                        } else {
-                            sidebar.style.position = 'unset';
-                            sidebar.style.top = 0;
-
-                            if (isTrainer) {
-                                sidebar.style.height =  'calc(100% - 18.7vw)';
-                            } else {
-                                sidebar.style.height =  'calc(100% - 17vw)';
-                            }
-
-                            invite.style.position = 'unset';
-                            invite.style.top = 0;
-                        }
+                        // const sidebar = document.querySelector('.cabinet-sidebar');
+                        //
+                        // const sidebarHeight = $(document).height() - window.scrollY;
+                        //
+                        // const userCardPosition = document
+                        //     .querySelector('.card-user')
+                        //     .getBoundingClientRect();
+                        //
+                        // const invite = document.querySelector('.invite');
+                        // const invitePosition = invite.getBoundingClientRect();
+                        //
+                        // const header = document
+                        //     .querySelector('#header')
+                        //     .getBoundingClientRect();
+                        //
+                        // const subNav = document
+                        //     .querySelector('.sub-nav')
+                        //     .getBoundingClientRect();
+                        // if (subNav.height + header.height - userCardPosition.height - userCardPosition.top >= 0) {
+                        //     sidebar.style.position = 'fixed';
+                        //     sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
+                        //
+                        //     if (isTrainer) {
+                        //         sidebar.style.height =  `calc(${sidebarHeight}px - 29.7vw)`;
+                        //     } else {
+                        //         sidebar.style.height =  `calc(${sidebarHeight}px - 30.5vw)`;
+                        //     }
+                        //
+                        //     invite.style.position = 'fixed';
+                        //     invite.style.top = `calc(${header.height + subNav.height + 'px'} - 1vw)`;
+                        // } else {
+                        //     sidebar.style.position = 'unset';
+                        //     sidebar.style.top = 0;
+                        //
+                        //     if (isTrainer) {
+                        //         sidebar.style.height =  'calc(100% - 18.7vw)';
+                        //     } else {
+                        //         sidebar.style.height =  'calc(100% - 17vw)';
+                        //     }
+                        //
+                        //     invite.style.position = 'unset';
+                        //     invite.style.top = 0;
+                        // }
                     }
                 });
             },
@@ -197,7 +200,8 @@
 
 	.right {
 	  width: 85%;
-      margin-bottom: 1vw;
+
+        margin-bottom: 0vw;
 	}
   }
 
