@@ -129,7 +129,7 @@ export default {
         &.dota {
           width: 3vw;
           height: 3vw;
-          margin-bottom: -1vw;
+          margin-bottom: -0.7vw;
         }
       }
     }
