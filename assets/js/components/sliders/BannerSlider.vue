@@ -31,11 +31,15 @@
                 banners: [],
                 settings: {
                     dots: true,
-                    edgeFriction: 0.35,
+                    arrows: false,
                     infinite: true,
-                    speed: 500,
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    autoplaySpeed: 5000,
+                    pauseOnDotsHover: true,
+                    pauseOnFocus: true,
+                    pauseOnHover: true
                 },
             }
         },
@@ -90,5 +94,26 @@
     .banner-slider.slider-body .slick-slider.slick-initialized .slick-arrow {
         position: absolute;
         top: 4vw;
+    }
+</style>
+
+<style scoped lang="scss">
+    @import '../../../css/animations.css';
+
+    .banner-slider {
+        -webkit-animation: animation-translate-right 1500ms linear both;
+        animation-delay: 1.5s;
+        animation: animation-translate-right 1500ms linear both;
+        margin-bottom: 1vw;
+
+        .carousel-item {
+            .banner {
+                a {
+                    img {
+                        height: 20vw;
+                    }
+                }
+            }
+        }
     }
 </style>
