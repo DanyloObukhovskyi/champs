@@ -1,7 +1,7 @@
 <template>
     <nav class="header_nav fixed-top pl-8 pr-8 d-flex" :class="{'h-3': !isPageStart}" id="header">
         <div class="container nav align-items-stretch p-0">
-            <a :href="`/${lang}`" class="d-flex justify-content-center align-items-center logo-wrapper"
+            <a :href="`/${lang}/`" class="d-flex justify-content-center align-items-center logo-wrapper"
                :class="{'start p-3': isPageStart}">
                 <img v-show="!isPageStart" src="/images/logo.svg" class="logo w-75"/>
                 <img v-show="isPageStart" :class="{'mt-1': isPageStart}" src="/images/navbar/bigLogo.png" class="logo"/>
