@@ -26,11 +26,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['base_url'] = 'https://champs.pro/admin_panel/';
                        //https://172.104.237.6/ru/admin_panel/
 
-if(ENVIRONMENT == 'production'){
-    $config['main_url'] = 'https://champs.pro/';
-} else{
-    $config['main_url'] = 'https://test.champs.pro/';
-}
 /*
 |--------------------------------------------------------------------------
 | Index File
