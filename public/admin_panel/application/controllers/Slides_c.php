@@ -34,8 +34,13 @@ class Slides_c extends CI_Controller
                 if(!empty($_FILES["file"]["name"])) {
                     $files = $_FILES;
                     $this->load->library ('upload');
-
-                    $config['upload_path'] = $this->config->item('upload_slide-pic');
+                    $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_slide-pic');
+                    if(!file_exists(PUBLICPATH.'/uploads')){
+                        mkdir(PUBLICPATH.'/uploads', 0777);
+                        if (!file_exists($config['upload_path'])) {
+                            mkdir($config['upload_path'], 0777);
+                        }
+                    }
                     $config['allowed_types'] = 'jpeg|jpg|png';
                     $this->upload->initialize($config);
 
@@ -46,7 +51,6 @@ class Slides_c extends CI_Controller
                     $fileName = bin2hex ($bytes).".".$ext;
 
                     $_FILES['file']['name'] = $fileName;
-
                     if (!$this->upload->do_upload('file')) {
                         $error = array ('error' => $this->upload->display_errors ());
 
@@ -74,7 +78,7 @@ class Slides_c extends CI_Controller
                 );
             }
         }
-        $data['image_path'] = $this->config->item('display_slide-pic');
+        $data['image_path'] = $this->config->item('main_url').$this->config->item('display_slide-pic');
         $data['slides'] = $this->slide_model->get_all_slides();
         $data['types'] = [
             Slide_model::HOME_TYPE => 'Главная',
