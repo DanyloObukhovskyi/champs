@@ -273,8 +273,12 @@
 </style>
 
 <style>
+    .mt-5.d-flex.justify-content-around {
+        margin-top: 2em !important;
+        align-items: flex-end;
+    }
 	.discord-button {
-		height: 2.3vw;
+        height: 2.7vw;
 		border: unset;
 		color: white;
 		background: #ff6d1d;
