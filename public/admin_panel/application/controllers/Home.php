@@ -162,7 +162,7 @@ class Home extends CI_Controller
                 $value['team2_data'] = $this->posts_model->get_team($value["team2_id"]);
             }
 
-            $data['imgs_url'] = $this->config->item('display_team-pic');
+            $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_team-pic');
 
             $data['current_u_can'] = $current_u_can;
             $data['output'] = $this->load->view('home/matches', $data, true);
@@ -243,7 +243,7 @@ class Home extends CI_Controller
 //			    $users = array();
 //			    $data['users'] = $users;
 
-            $data['imgs_url'] = $this->config->item('display_profile-pic');
+            $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_profile-pic');
             $data['current_u_can'] = $current_u_can;
             $data['output'] = $this->load->view('home/users', $data, true);
             $this->load->view('layout/home', $data);
@@ -324,7 +324,7 @@ class Home extends CI_Controller
 //			    $users = array();
 //			    $data['users'] = $users;
             $data['current_u_can'] = $current_u_can;
-            $data['imgs_url'] = $this->config->item('display_trainers-pic');
+            $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_trainers-pic');
             $data['prices'] = Trainer_lesson_price_m::PRICE_TYPES;
             $data['price_type'] = $type;
 
@@ -578,7 +578,7 @@ class Home extends CI_Controller
         $data['social'] = $this->setting_model->get_social();
         $data['about'] = $this->setting_model->get_by_key(Setting_model::ABOUT)[0] ?? null;
         $data['settings'] = $settings;
-        $data['images_path'] = $this->config->item('display_banner-pic');
+        $data['images_path'] = $this->config->item('main_url').$this->config->item('display_banner-pic');
         $data['current_u_can'] = $current_u_can;
         $data['terms'] = $this->setting_model->get_terms();
         $data['vacancies'] = $this->setting_model->get_by_key(Setting_model::VACANCIES)[0] ?? null;

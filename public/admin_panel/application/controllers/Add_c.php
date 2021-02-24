@@ -47,7 +47,7 @@ class Add_c extends CI_Controller
             $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
             $update_data['text'] = "";
 
-            $imgs_ur = $this->config->item('display_article-pic');
+            $imgs_ur = $this->config->item('main_url').$this->config->item('display_article-pic');
             foreach ($article_img as $img) {
                 $update_data['text'] .= "<img src='" . $imgs_ur . $img . "' style='width:250px; height:250px'>";
             }

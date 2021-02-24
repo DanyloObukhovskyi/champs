@@ -46,7 +46,7 @@ class Edit_c extends CI_Controller
             $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
             $update_data['text'] = "";
 
-            $imgs_ur = $this->config->item('display_article-pic');
+            $imgs_ur = $this->config->item('main_url').$this->config->item('display_article-pic');
             foreach ($article_img as $img) {
                 $update_data['text'] .= "<img src='" . $imgs_ur . $img . "' style='width:250px; height:250px'>";
             }
@@ -292,7 +292,7 @@ class Edit_c extends CI_Controller
         }
         $data['games'] = $this->game_m->get_all();
         $data['current_u_can'] = $current_u_can;
-        $data['imgs_url'] = $this->config->item('display_article-pic');
+        $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_article-pic');
 
         $data['output'] = $this->load->view('edit/article', $data, true);
         $this->load->view('layout/edit', $data);
@@ -377,7 +377,7 @@ class Edit_c extends CI_Controller
         $roles = $data['user_info'][0]['roles'];
         $roles = json_decode($roles);
         $data['user_info'][0]['roles'] = $roles[0];
-        $data['imgs_url'] = $this->config->item('display_profile-pic');
+        $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_profile-pic');
         $data['upload_url'] = $this->config->item('upload_profile-pic');
         $data['current_u_can'] = $current_u_can;
         $data['output'] = $this->load->view('edit/user', $data, true);
@@ -553,7 +553,7 @@ class Edit_c extends CI_Controller
         $data['user_info'][0]['roles'] = $roles[0];
         $data['videos'] = $this->trainer_video->get_all_for_user($data['user_info'][0]['id']);
         $data['achievements'] = $this->trainer_achievement->get_by_trainer_id($trainer['id']);
-        $data['imgs_url'] = $this->config->item('display_trainers-pic');
+        $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_trainers-pic');
         $data['upload_url'] = $this->config->item('upload_trainers-pic');
         $data['current_u_can'] = $current_u_can;
         $data['awards'] = $this->award_model->get_all();

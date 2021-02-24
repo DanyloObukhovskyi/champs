@@ -30,7 +30,7 @@ class Event_c extends CI_Controller
     public function index()
     {
         $data = [];
-        $data['images_url'] = $this->config->item('display_event-pic');
+        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_event-pic');
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['output'] = $this->load->view('home/events', $data, true);
@@ -64,7 +64,7 @@ class Event_c extends CI_Controller
     {
         $data = [];
         $event = $this->event_model->get_by_id($id);
-        $data['images_url'] = $this->config->item('display_event-pic');
+        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_event-pic');
         $data['statuses'] = Event_model::STATUSES;
         $data['games'] = $this->game_m->get_all();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
@@ -115,7 +115,7 @@ class Event_c extends CI_Controller
     public function create()
     {
         $data[] = '';
-        $data['images_url'] = $this->config->item('display_event-pic');
+        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_event-pic');
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['flags'] = $this->flag_model->get_all();

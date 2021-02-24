@@ -30,7 +30,7 @@ class Marketplace_c extends CI_Controller
     public function marketplace_banners()
     {
         $data = [];
-        $data['images_url'] = $this->config->item('display_marketplace_banner-pic');
+        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_marketplace_banner-pic');
 
         $data['games'] = $this->game_m->get_all();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
@@ -117,7 +117,7 @@ class Marketplace_c extends CI_Controller
     public function trainers_banners()
     {
         $data = [];
-        $data['images_url'] = $this->config->item('display_marketplace_banner-pic');
+        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_marketplace_banner-pic');
 
         $data['games'] = $this->game_m->get_all();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
