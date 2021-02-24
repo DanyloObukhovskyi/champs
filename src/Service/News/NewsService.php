@@ -137,7 +137,7 @@ class NewsService extends EntityService
             $this->parseDate($filters->dateTo ?? null),
             $limit,
             $offset,
-            'views'
+            'id'
         );
     }
 
