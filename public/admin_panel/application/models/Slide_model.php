@@ -45,13 +45,16 @@ class Slide_model extends CI_Model
         ]);
     }
 
-    public function update($id, $url, $text, $img, $parent_id = null)
+    public function update($id, $url, $text, $type, $img, $parent_id = null)
     {
         $this->db->set('url', $url);
         $this->db->set('text', $text);
 
         if (isset($img)){
             $this->db->set('img', $img);
+        }
+        if (isset($type)){
+            $this->db->set('type', $type);
         }
         if (isset($parent_id)){
             $this->db->set('parent_id', $parent_id);

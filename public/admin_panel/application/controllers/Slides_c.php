@@ -61,8 +61,8 @@ class Slides_c extends CI_Controller
                 $this->slide_model->update(
                     $_POST['id'],
                     $_POST['url'],
-                    $_POST['type'],
                     $_POST['text'],
+                    $_POST['type'],
                     $fileName
                 );
             } else {

@@ -170,6 +170,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <h5>Размеры: <span id="image_size">1400x376</span></h5>
                             <div class="uploadImgTxT" style="display: none;" id="upload_data">
                                 <div class="txt-orange uploadImgTxT ml-10" id="img_name"></div>
                                 <div class="txt-orange uploadImgTxT  ml-10 rmo_close"></div>
@@ -181,9 +182,8 @@
                                         src="<?php print base_url("assets/icons/search.svg"); ?>">Превью</label>
                             <div class="mb-10 slide-preview">
                                 <div class="text-preview" id="text-preview">
-
                                 </div>
-                                <img class="preview" id="img_preview" src="" style="margin: 0">
+                                <img class="preview" id="img_preview" src="" style="margin: 0;height: 20vw;">
                             </div>
                         </div>
                     </div>
@@ -260,8 +260,19 @@
         const slidePreview = document.querySelector('.slide-preview');
         if (slidePreview) {
             if (event.target.value === 'home') {
+                $('#image_size').text('1400x376');
+                $('#img_preview').height('20vw')
+                $('#img_preview').width('100%')
                 slidePreview.classList.add('main')
-            } else {
+            } else if(event.target.value === 'general') {
+                $('#image_size').text('1170x200');
+                $('#img_preview').height('11vw')
+                $('#img_preview').width('100%')
+                slidePreview.classList.remove('main')
+            } else{
+                $('#image_size').text('690x376');
+                $('#img_preview').height('20vw')
+                $('#img_preview').width('50%')
                 slidePreview.classList.remove('main')
             }
         }
