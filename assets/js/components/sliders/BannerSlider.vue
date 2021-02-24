@@ -31,7 +31,7 @@
                 banners: [],
                 settings: {
                     dots: true,
-                    arrows: false,
+                    arrows: true,
                     infinite: true,
                     slidesToShow: 1,
                     slidesToScroll: 1,
@@ -105,15 +105,5 @@
         animation-delay: 1.5s;
         animation: animation-translate-right 1500ms linear both;
         margin-bottom: 1vw;
-
-        .carousel-item {
-            .banner {
-                a {
-                    img {
-                        height: 20vw;
-                    }
-                }
-            }
-        }
     }
 </style>
