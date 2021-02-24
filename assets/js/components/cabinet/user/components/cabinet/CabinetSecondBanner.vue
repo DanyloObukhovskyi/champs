@@ -11,7 +11,7 @@
             </div>
             <div class="go">
                 <div class="go-wrapper">
-                    <a href="/marketplace">
+                    <a href="/obucheniye">
                         GO
                     </a>
                 </div>
