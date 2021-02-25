@@ -74,7 +74,12 @@ class ScheduleService extends EntityService
             "Y-m-d",
             $date->format("Y-m-d")
         );
-        $carbonDayDate->setHour(0 - $timeOffset);
+
+        if($timeOffset < 0){
+            $carbonDayDate->setHour($timeOffset);
+        } else {
+            $carbonDayDate->setHour(0 - $timeOffset);
+        }
         $carbonDayDate->setMinutes(0);
 
         $schedules = [];
