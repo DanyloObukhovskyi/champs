@@ -191,7 +191,13 @@
 		}
 		
 		private function upload($filed_name="",$request_name="", $where=array()) {
-			$config['upload_path']          = $this->config->item('upload_person-pic');
+			$config['upload_path']          = PUBLICPATH.'/'.$this->config->item('upload_person-pic');
+            if (!file_exists(PUBLICPATH.'/uploads')) {
+                mkdir(PUBLICPATH.'/uploads', 0777);
+            }
+            if (!file_exists($config['upload_path'])) {
+                mkdir($config['upload_path'], 0777);
+            }
 			$config['allowed_types']        = 'jpeg|jpg|png';
 			$config['max_size']             = 2048;
 			$config['max_width']            = 1920;
@@ -218,7 +224,13 @@
 				$this->load->model("edit_fr_front");
 				$toUnlick = explode("/", $filed_name["value"]);
 				$toUnlick = (string)array_pop($toUnlick);
-				$path =  $this->config->item('upload_person-pic').$toUnlick;
+				$path =  PUBLICPATH.'/'.$this->config->item('upload_person-pic').$toUnlick;
+                if (!file_exists(PUBLICPATH.'/uploads')) {
+                    mkdir(PUBLICPATH.'/uploads', 0777);
+                }
+                if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_person-pic'))) {
+                    mkdir(PUBLICPATH.'/'.$this->config->item('upload_person-pic'), 0777);
+                }
 				$error = 0;
 				if (@!unlink($path)) {
 					$error=1;

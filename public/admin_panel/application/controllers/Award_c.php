@@ -67,7 +67,13 @@ class Award_c extends CI_Controller
                 $data['id'] = $_POST['id'];
             }
             if (!empty($_FILES["icon"]["name"])) {
-                $config['upload_path'] = $this->config->item('upload_trainers_awards-pic');
+                $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic');
+                if (!file_exists(PUBLICPATH.'/uploads')) {
+                    mkdir(PUBLICPATH.'/uploads', 0777);
+                }
+                if (!file_exists($config['upload_path'])) {
+                    mkdir($config['upload_path'], 0777);
+                }
                 $config['allowed_types'] = 'jpeg|jpg|png|svg';
                 $config['max_width'] = 44;
                 $config['max_height'] = 50;
@@ -83,7 +89,13 @@ class Award_c extends CI_Controller
                     $error = array('error' => $this->upload->display_errors());
                 }
                 if ($ext === 'svg') {
-                    $path = $this->config->item('upload_trainers_awards-pic') . $fileName;
+                    $path = PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic') . $fileName;
+                    if (!file_exists(PUBLICPATH.'/uploads')) {
+                        mkdir(PUBLICPATH.'/uploads', 0777);
+                    }
+                    if (!file_exists(PUBLICPATH.$this->config->item('upload_trainers_awards-pic'))) {
+                        mkdir(PUBLICPATH.$this->config->item('upload_trainers_awards-pic'), 0777);
+                    }
                     move_uploaded_file($_FILES['icon']['tmp_name'], $path);
                 }
 

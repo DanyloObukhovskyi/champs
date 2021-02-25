@@ -162,7 +162,16 @@ class Edit_c extends CI_Controller
                                     $files = $_FILES;
                                     $this->load->library('upload');
                                     for ($i = 0; $i < $count; $i++) {
-                                        $config['upload_path'] = $this->config->item('upload_article-pic');
+                                        $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_article-pic');
+                                        if (!file_exists(PUBLICPATH.'/images')) {
+                                            mkdir(PUBLICPATH.'/images', 0777);
+                                        }
+                                        if (!file_exists(PUBLICPATH.'/images/temp')) {
+                                            mkdir(PUBLICPATH.'/images/temp', 0777);
+                                        }
+                                        if (!file_exists($config['upload_path'])) {
+                                            mkdir($config['upload_path'], 0777);
+                                        }
                                         $config['allowed_types'] = 'jpeg|jpg|png';
                                         $config['max_size'] = 256831;
                                         $config['max_width'] = 5000;
@@ -196,6 +205,10 @@ class Edit_c extends CI_Controller
 
 
                             $this->gallery($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
+                            $this->session->set_flashdata(
+                                'message',
+                                'Вы успешно отредактировали вашу статью.'
+                            );
                             redirect($_SERVER["HTTP_REFERER"]);
                             die();
                         }
@@ -206,7 +219,16 @@ class Edit_c extends CI_Controller
                 if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
                     if (isset($_FILES["userfile"])) {
                         if (!empty($_FILES["userfile"]["name"])) {
-                            $config['upload_path'] = $this->config->item('upload_article-pic');
+                            $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_article-pic');
+                            if (!file_exists(PUBLICPATH.'/images')) {
+                                mkdir(PUBLICPATH.'/images', 0777);
+                            }
+                            if (!file_exists(PUBLICPATH.'/images/temp')) {
+                                mkdir(PUBLICPATH.'/images/temp', 0777);
+                            }
+                            if (!file_exists($config['upload_path'])) {
+                                mkdir($config['upload_path'], 0777);
+                            }
                             $config['allowed_types'] = 'jpeg|jpg|png';
                             $config['max_size'] = 2048;
                             $config['max_width'] = 1920;
@@ -235,11 +257,19 @@ class Edit_c extends CI_Controller
                     if(!empty($post_type_attribute)) {
                         if ($post_type_attribute['attribute_id'] === STREAM) {
                             $this->stream($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
+                            $this->session->set_flashdata(
+                                'message',
+                                'Вы успешно отредактировали вашу статью.'
+                            );
                             redirect($_SERVER["HTTP_REFERER"]);
                             die();
                         }
                         if ($post_type_attribute['attribute_id'] === VIDEO) {
                             $this->video($post_title, $post_content, $post_type, $post_url, $article_img, $post_game, $post_id, $post_is_top);
+                            $this->session->set_flashdata(
+                                'message',
+                                'Вы успешно отредактировали вашу статью.'
+                            );
                             redirect($_SERVER["HTTP_REFERER"]);
                             die();
                         }
@@ -254,9 +284,22 @@ class Edit_c extends CI_Controller
                     $update_data['is_top'] = $post_is_top;
 
                     $this->edit_m->update_news($post_id, $update_data);
+                    $this->session->set_flashdata(
+                        'message',
+                        'Вы успешно отредактировали вашу статью.'
+                    );
                     redirect(base_url('c-admin/post/edit/' . $post_id . "/" . $this->UserID));
                     die();
                 } else {
+                    if(empty($post_title)){
+                        $this->session->set_flashdata('error','Вы не заполнили заголовок');
+                    }
+                    if(empty($post_content)){
+                        $this->session->set_flashdata('error','Вы не заполнили контент');
+                    }
+                    if(empty($post_url)){
+                        $this->session->set_flashdata('error','Вы не заполнили url');
+                    }
                     redirect($_SERVER["HTTP_REFERER"]);
                     die();
                 }
@@ -300,6 +343,7 @@ class Edit_c extends CI_Controller
 
     public function user($id = 0, $user_id = 0)
     {
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
         $current_u_can = $this->users_model->get_capabilities($this->UserID);
         if (isset($current_u_can[0]["roles"])) {
             $current_u_can = json_decode($current_u_can[0]["roles"]);
@@ -378,10 +422,19 @@ class Edit_c extends CI_Controller
         $roles = json_decode($roles);
         $data['user_info'][0]['roles'] = $roles[0];
         $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_profile-pic');
-        $data['upload_url'] = $this->config->item('upload_profile-pic');
+        $data['upload_url'] = PUBLICPATH.'/'.$this->config->item('upload_profile-pic');
+        if(!file_exists(PUBLICPATH.'/uploads')){
+            mkdir(PUBLICPATH.'/uploads', 0777);
+            if (!file_exists($data['upload_url'])) {
+                mkdir($data['upload_url'], 0777);
+            }
+        } else {
+            if (!file_exists($data['upload_url'])) {
+                mkdir($data['upload_url'], 0777);
+            }
+        }
         $data['current_u_can'] = $current_u_can;
         $data['output'] = $this->load->view('edit/user', $data, true);
-        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $this->load->view('layout/edit', $data);
     }
@@ -484,7 +537,17 @@ class Edit_c extends CI_Controller
                     }
                     if (isset($_FILES["userfile"])) {
                         if (!empty($_FILES["userfile"]["name"])) {
-                            $config['upload_path'] = $this->config->item('upload_trainers-pic');
+                            $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_trainers-pic');
+                            if(!file_exists(PUBLICPATH.'/uploads')){
+                                mkdir(PUBLICPATH.'/uploads', 0777);
+                                if (!file_exists($config['upload_path'])) {
+                                    mkdir($config['upload_path'], 0777);
+                                }
+                            } else {
+                                if (!file_exists($config['upload_path'])) {
+                                    mkdir($config['upload_path'], 0777);
+                                }
+                            }
                             $config['allowed_types'] = 'jpeg|jpg|png|svg';
                             $config['max_size'] = 5120;
                             $config['max_width'] = 1080;
@@ -505,7 +568,17 @@ class Edit_c extends CI_Controller
                                 $this->edit_m->change_user_img($id, $data["upload_data"]["orig_name"]);
                             }
                             if ($ext === 'svg') {
-                                $path = $this->config->item('upload_trainers-pic') . $fileName;
+                                $path = PUBLICPATH.'/'.$this->config->item('upload_trainers-pic') . $fileName;
+                                if(!file_exists(PUBLICPATH.'/uploads')){
+                                    mkdir(PUBLICPATH.'/uploads', 0777);
+                                    if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_trainers-pic'))) {
+                                        mkdir(PUBLICPATH.'/'.$this->config->item('upload_trainers-pic'), 0777);
+                                    }
+                                } else {
+                                    if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_trainers-pic'))) {
+                                        mkdir(PUBLICPATH.'/'.$this->config->item('upload_trainers-pic'), 0777);
+                                    }
+                                }
                                 move_uploaded_file($_FILES['userfile']['tmp_name'], $path);
                                 $data = array('upload_data' => $this->upload->data());
                                 $this->load->model("edit_m");
@@ -554,7 +627,17 @@ class Edit_c extends CI_Controller
         $data['videos'] = $this->trainer_video->get_all_for_user($data['user_info'][0]['id']);
         $data['achievements'] = $this->trainer_achievement->get_by_trainer_id($trainer['id']);
         $data['imgs_url'] = $this->config->item('main_url').$this->config->item('display_trainers-pic');
-        $data['upload_url'] = $this->config->item('upload_trainers-pic');
+        $data['upload_url'] = PUBLICPATH.'/'.$this->config->item('upload_trainers-pic');
+        if(!file_exists(PUBLICPATH.'/uploads')){
+            mkdir(PUBLICPATH.'/uploads', 0777);
+            if (!file_exists($data['upload_url'])) {
+                mkdir($data['upload_url'], 0777);
+            }
+        } else {
+            if (!file_exists($data['upload_url'])) {
+                mkdir($data['upload_url'], 0777);
+            }
+        }
         $data['current_u_can'] = $current_u_can;
         $data['awards'] = $this->award_model->get_all();
         $data['trainer_awards'] = [];

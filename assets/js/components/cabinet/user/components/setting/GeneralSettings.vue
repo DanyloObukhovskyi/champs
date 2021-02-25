@@ -146,6 +146,8 @@
                             <img :src="'/images/ranks/' + additionallyRankIcon">
                         </div>
                     </div>
+                    <div class="form-group rank-icon-null" v-else>
+                    </div>
                 </div>
             </div>
         </div>
@@ -392,7 +394,19 @@ export default {
   .form-group:nth-child(1) {
     width: 60%;
   }
+  .rank-icon-null{
+      margin-right: 1.8vw;
+      width: auto;
+      .input {
+          background: transparent;
+          display: flex;
+          justify-content: center;
 
+          img {
+              height: 2.3vw;
+          }
+      }
+  }
   .rank-icon {
     width: auto;
     margin-right: -.5vw;

@@ -192,6 +192,7 @@
 	  //-webkit-animation: animation-translate-right 1500ms linear both;
 	  //animation: animation-translate-right 1500ms linear both;
 	  padding: 1vw 1.5vw;
+      border-radius: .5vw;
 
 	  .lessons-row {
 

@@ -58,6 +58,16 @@
 		<div class="main-describe">
 			<!-- Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus odit impedit non, veritatis illum nisi at dolore nam illo numquam sequi iste quidem dolores ipsa eaque ducimus laborum. Est, tenetur? -->
 		</div>
+        <?php if ($this->session->flashdata('error')) {?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo $this->session->flashdata('error');?>
+            </div>
+        <?php }?>
+        <?php if ($this->session->flashdata('message')) {?>
+            <div class="alert alert-success" role="alert">
+                <?php echo $this->session->flashdata('message');?>
+            </div>
+        <?php }?>
 		<div class="col-item">
 			<label class="label" for="">Выберите тип поста</label>
 			<div class="dropdown mb-15 main-post-dropdown-edit">
@@ -79,9 +89,9 @@
                 <input type="hidden" value="true" name="edit">
 				<input type="hidden" value="" name="post_type" id="post_type">
                 <input type="hidden" value="<?php echo $post_fields['type'];?>" id="id">
-                <input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
+                <input required class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
 				<div class="editor-edit mt-10">URL поста</div>
-				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
+				<input required class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
                 <div class="editor-edit mt-10">Теги</div>
                 <input type="text"
@@ -93,7 +103,7 @@
                        style="max-width: 200px; cursor: pointer; display: block;"
                        placeholder="input tags">
                 <div class="editor-edit mt-10">Игра</div>
-                <select name="game"
+                <select required name="game"
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                         <option value="">По умолчанию</option>
@@ -403,4 +413,22 @@
             }
         });
     }
+
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
 </script>

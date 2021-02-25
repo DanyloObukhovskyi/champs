@@ -6,16 +6,6 @@
 <link href="<?php print base_url("assets/css/datepicker.css"); ?>" rel="stylesheet">
 
 <main class="flex create-new-website-page">
-    <?php
-    $errors = validation_errors('<li>', '</li>');
-    if (!empty($errors)) { ?>
-        <div class="alert callout" role="alert">
-            <h5>Errors</h5>
-            <ul>
-                <?php print $errors; ?>
-            </ul>
-        </div>
-    <?php } ?>
     <aside>
         <?php $activePath = 'posts';?>
         <?php require_once APPPATH.'views/sidebar.php'?>
@@ -38,6 +28,16 @@
         <div class="main-describe">
             <!-- Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus odit impedit non, veritatis illum nisi at dolore nam illo numquam sequi iste quidem dolores ipsa eaque ducimus laborum. Est, tenetur? -->
         </div>
+        <?php if ($this->session->flashdata('error')) {?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo $this->session->flashdata('error');?>
+            </div>
+        <?php }?>
+        <?php if ($this->session->flashdata('message')) {?>
+            <div class="alert alert-success" role="alert">
+                <?php echo $this->session->flashdata('message');?>
+            </div>
+        <?php }?>
         <div class="col-item">
             <label class="label" for="">Выберите тип поста</label>
             <div class="dropdown mb-15 main-post-dropdown-edit">
@@ -54,9 +54,9 @@
             <form class="editor-edit-form" action="<?php print base_url("c-admin/post/add/".$UserID); ?>" method="post" enctype="multipart/form-data">
                 <input type="hidden" value="true" name="add">
                 <input type="hidden" value="" id="post_type" name="post_type">
-                <input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок">
+                <input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" required>
                 <div class="editor-edit mt-10">URL поста</div>
-                <input class="editor-edit-form-input mt-5 mb-10 " type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')">
+                <input class="editor-edit-form-input mt-5 mb-10 " type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" required>
                 <div class="editor-edit mt-10">Теги</div>
                 <input type="text"
                        id="tags"
@@ -67,7 +67,7 @@
                        style="max-width: 200px; cursor: pointer; display: block;"
                        placeholder="input tags">
                 <div class="editor-edit mt-10">Игра</div>
-                <select name="game"
+                <select required name="game"
                         style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
@@ -301,5 +301,24 @@
             }
         });
     }
+
+
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
 
 </script>

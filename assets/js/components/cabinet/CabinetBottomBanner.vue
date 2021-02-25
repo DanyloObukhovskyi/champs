@@ -85,7 +85,7 @@ export default {
     padding: 1vw;
     border-radius: .5vw;
     overflow: hidden;
-
+    margin-right: 3vw;
     .title {
       width: 58%;
       font-size: 1.4vw;

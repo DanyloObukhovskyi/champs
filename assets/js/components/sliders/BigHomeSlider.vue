@@ -59,6 +59,7 @@ export default {
 @import '../../../css/animations.css';
 
 .banner-slider {
+  margin-left: -0.6vw;
   -webkit-animation: animation-translate-right 1500ms linear both;
   animation-delay: 1.5s;
   animation: animation-translate-right 1500ms linear both;

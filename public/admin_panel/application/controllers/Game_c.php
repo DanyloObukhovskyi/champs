@@ -87,7 +87,13 @@ class Game_c extends CI_Controller
 
     public function uploadFile($file)
     {
-        $config['upload_path'] = $this->config->item('upload_game-pic');
+        $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_game-pic');
+        if (!file_exists(PUBLICPATH.'/uploads')) {
+            mkdir(PUBLICPATH.'/uploads', 0777);
+        }
+        if (!file_exists($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777);
+        }
         $config['allowed_types'] = 'jpeg|jpg|png|svg';
 
         $this->load->library('upload', $config);
@@ -98,7 +104,13 @@ class Game_c extends CI_Controller
 
         $_FILES[$file]["name"] = $fileName;
 
-        $path = $this->config->item('upload_game-pic') . $fileName;
+        $path = PUBLICPATH.'/'.$this->config->item('upload_game-pic') . $fileName;
+        if (!file_exists(PUBLICPATH.'/uploads')) {
+            mkdir(PUBLICPATH.'/uploads', 0777);
+        }
+        if (!file_exists(PUBLICPATH.$this->config->item('upload_game-pic'))) {
+            mkdir(PUBLICPATH.$this->config->item('upload_game-pic'), 0777);
+        }
         move_uploaded_file($_FILES[$file]['tmp_name'], $path);
 
         return $fileName;

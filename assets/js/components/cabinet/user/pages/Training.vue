@@ -144,7 +144,7 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 18vw;
-
+  margin-right: 2vw;
   .title {
     color: #9d9fa0;
     font-size: 1.5vw;

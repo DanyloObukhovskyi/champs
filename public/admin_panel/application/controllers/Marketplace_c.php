@@ -77,7 +77,13 @@ class Marketplace_c extends CI_Controller
             $data['game_id'] = $_POST['game'];
         }
         if (!empty($_FILES["img"]["name"])) {
-            $config['upload_path'] = $this->config->item('upload_marketplace_banner-pic');
+            $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic');
+            if (!file_exists(PUBLICPATH.'/uploads')) {
+                mkdir(PUBLICPATH.'/uploads', 0777);
+            }
+            if (!file_exists($config['upload_path'])) {
+                mkdir($config['upload_path'], 0777);
+            }
             $config['allowed_types'] = 'jpeg|jpg|png|svg';
 
             $this->load->library('upload', $config);
@@ -92,7 +98,13 @@ class Marketplace_c extends CI_Controller
                 $error = array('error' => $this->upload->display_errors());
             }
             if ($ext === 'svg') {
-                $path = $this->config->item('upload_marketplace_banner-pic') . $fileName;
+                $path = PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic') . $fileName;
+                if (!file_exists(PUBLICPATH.'/uploads')) {
+                    mkdir(PUBLICPATH.'/uploads', 0777);
+                }
+                if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic'))) {
+                    mkdir(PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic'), 0777);
+                }
                 move_uploaded_file($_FILES['img']['tmp_name'], $path);
             }
 
@@ -165,7 +177,13 @@ class Marketplace_c extends CI_Controller
             $data['game_id'] = $_POST['game'];
         }
         if (!empty($_FILES["img"]["name"])) {
-            $config['upload_path'] = $this->config->item('upload_marketplace_banner-pic');
+            $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic');
+            if (!file_exists(PUBLICPATH.'/uploads')) {
+                mkdir(PUBLICPATH.'/uploads', 0777);
+            }
+            if (!file_exists($config['upload_path'])) {
+                mkdir($config['upload_path'], 0777);
+            }
             $config['allowed_types'] = 'jpeg|jpg|png|svg';
 
             $this->load->library('upload', $config);
@@ -180,7 +198,13 @@ class Marketplace_c extends CI_Controller
                 $error = array('error' => $this->upload->display_errors());
             }
             if ($ext === 'svg') {
-                $path = $this->config->item('upload_marketplace_banner-pic') . $fileName;
+                $path = PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic') . $fileName;
+                if (!file_exists(PUBLICPATH.'/uploads')) {
+                    mkdir(PUBLICPATH.'/uploads', 0777);
+                }
+                if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic'))) {
+                    mkdir(PUBLICPATH.'/'.$this->config->item('upload_marketplace_banner-pic'), 0777);
+                }
                 move_uploaded_file($_FILES['img']['tmp_name'], $path);
             }
 

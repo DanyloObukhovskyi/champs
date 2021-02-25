@@ -169,7 +169,13 @@ class Event_c extends CI_Controller
         $files = $_FILES;
         $this->load->library('upload');
 
-        $config['upload_path'] = $this->config->item('upload_event-pic');
+        $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_event-pic');
+        if(!file_exists(PUBLICPATH.'/uploads')) {
+            mkdir(PUBLICPATH.'/images/temp', 0777);
+        }
+        if (!file_exists($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777);
+        }
         $config['allowed_types'] = 'jpeg|jpg|png';
         $config['max_size'] = 256831;
         $config['max_width'] = 5000;

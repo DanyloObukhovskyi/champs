@@ -55,7 +55,7 @@
 	background-color: #eff0f0;
 	border-radius: .5vw;
 	padding: 2vw 3vw;
-
+    margin-right: 1.5%;
 	.title {
 	  color: #9d9fa0;
 	  font-size: 1.5vw;
@@ -81,7 +81,6 @@
 	  background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
 	  background: linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
 	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#3d4146", GradientType=1);
-
 	  .title {
 		color: white;
 	  }
