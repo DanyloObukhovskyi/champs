@@ -463,7 +463,7 @@ class Add_c extends CI_Controller
                 $trainings = (isset($_POST["training"]) && !empty($_POST["training"])) ? $_POST["training"] : [];
                 $prices = (isset($_POST["price"]) && !empty($_POST["price"])) ? $_POST["price"] : [];
 
-                if (!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw)) {
+                if (!empty($nickname) && !empty($Email) && !empty($new_passw) && !empty($new_passw_confirm)) {
 
                     $mask = "ROLE_USER";
                     $user_capabilities = array($mask);
@@ -477,6 +477,10 @@ class Add_c extends CI_Controller
                         $this->load->model(array('Ion_auth_model'));
                         $update_data['password'] = $this->create_user_passw($new_passw);
                     } else {
+                        $this->session->set_flashdata(
+                            'message',
+                            'Ваши пароли не совпадают'
+                        );
                         redirect($_SERVER["HTTP_REFERER"]);
                         die();
                     }
@@ -597,10 +601,38 @@ class Add_c extends CI_Controller
 
 
                 } else {
+                    if(empty($nickname)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не добавили Никнейм'
+                        );
+                    }
+                    if(empty($Email)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не добавили Емейл'
+                        );
+                    }
+                    if(empty($new_passw)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не добавили пароль'
+                        );
+                    }
+                    if(!empty($new_passw) && empty($new_passw_confirm)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не подтвердили пароль'
+                        );
+                    }
                     redirect($_SERVER["HTTP_REFERER"]);
                     die();
                 }
             }
+            $this->session->set_flashdata(
+                'success',
+                'Вы успешно создали запись тренера. Вы можете отредактировать ее сейчас.'
+            );
             redirect(base_url("c-admin/trainer/edit/$created_id/$this->UserID"));
             die();
         }

@@ -59,6 +59,7 @@ $route['ru/admin_panel'] = 'Auth/login';
 
 $route['c-admin'] = 'home/index';
 //posts' pages
+$route['c-admin/posts'] = 'home/getPosts';
 $route['c-admin/posts/page/(:num)'] = 'home/index/$1';
 $route['c-admin/post/edit/(:num)/(:num)'] = 'edit_c/post/$1/$2';
 $route['c-admin/post/delete/(:num)/(:num)'] = 'delete_c/post/$1/$2';

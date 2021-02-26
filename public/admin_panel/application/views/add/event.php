@@ -40,31 +40,31 @@
                 <input type="hidden" name="create" value="">
                 <label class="label" for="">Название</label>
                 <div class="input mb-5">
-                    <input type="text"
+                    <input required type="text"
                            class="fw-600 input2_txt"
                            name="name">
                 </div>
                 <label class="label" for="">Приз</label>
                 <div class="input mb-5">
-                    <input type="text"
+                    <input required type="text"
                            class="fw-600 input2_txt"
                            name="prize">
                 </div>
                 <label class="label" for="">Локация</label>
                 <div class="input mb-5">
-                    <input type="text"
+                    <input required type="text"
                            class="fw-600 input2_txt"
                            name="location">
                 </div>
                 <label class="label" for="">Колличество команд</label>
                 <div class="input mb-5">
-                    <input type="number"
+                    <input required type="number"
                            class="fw-600 input2_txt"
                            name="command_count">
                 </div>
                 <label class="label" for="">URL</label>
                 <div class="input mb-5">
-                    <input type="text"
+                    <input required type="text"
                            class="fw-600 input2_txt"
                            name="url">
                 </div>
@@ -106,7 +106,7 @@
                     <?php endforeach; ?>
                 </select>
                 <label class="label" for="">Игра</label>
-                <select name="game_id" style="max-width: 200px; cursor: pointer; display: block;"
+                <select required name="game_id" style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
                     <option value="">По умолчанию</option>
                     <?php foreach ($games as $game): ?>
@@ -118,6 +118,7 @@
                     <?php endforeach; ?>
                 </select>
                 <div>
+                    <span>Загрузить лого(размеры:58x58)</span>
                     <div class="change-editor-edit-ban file-input" style="display: block;">
                         <div class="image_preview">
                             <img style="max-width: 100%;" src="" alt="">
@@ -140,6 +141,7 @@
                             </div>
                         </div>
                     </div>
+                    <span>Загрузить шапку(размеры:1275x312)</span>
                     <div class="change-editor-edit-ban file-input" style="display: block; margin-top: 10px;">
                         <div class="image_preview">
                             <img style="max-width: 100%;" src="" alt="">
@@ -152,7 +154,7 @@
                                            accept="image/jpeg,image/png"
                                            name="image_header" style="opacity: 0">
                                     <div class="changePassBTN change-img-edit-btn" style="margin-top: -18px !important;">
-                                        Загрузить шаппку
+                                        Загрузить шапку
                                     </div>
                                     <img class="icos2" src="http://champs.admin/assets/icons/downloadfor-checkbox.svg">
                                 </div>

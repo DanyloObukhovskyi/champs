@@ -142,4 +142,52 @@
 				return $result->result_array();
 			}
 		}
+
+        public function deleteWithGameId($id)
+        {
+            $this->db->delete($this->table, array('game_id' => $id));
+        }
+
+        public function getNewsData($limit, $offset, $count, $query, $column, $order)
+        {
+            $this->db->select('*');
+            if ($query != '') {
+                $this->db->where("(id LIKE '%$query%'");
+                $this->db->or_where("title LIKE '%$query%'");
+                $this->db->or_where("date LIKE '%$query%'");
+            }
+            if ($column == 0) {
+                $this->db->order_by('id', $order);
+            } elseif ($column == 1) {
+                $this->db->order_by('title', $order);
+            } elseif ($column == 2) {
+                $this->db->order_by('type', $order);
+            } elseif ($column == 3) {
+                $this->db->order_by('date', $order);
+            }
+            if ($count) {
+                return count($this->get([]));
+            }
+            $types = $this->getData([], $limit, $offset);
+
+            return $types;
+        }
+
+        public function getData($where, $limit, $offset) {
+            $query = $this->db->get_where($this->table, $where, $limit, $offset);
+            $data = array();
+            if ($query !== FALSE && $query->num_rows() > 0) {
+                $data = $query->result_array();
+            }
+            return $data;
+        }
+
+        public function get($where) {
+            $query = $this->db->get_where($this->table, $where);
+            $data = array();
+            if ($query !== FALSE && $query->num_rows() > 0) {
+                $data = $query->result_array();
+            }
+            return $data;
+        }
     }

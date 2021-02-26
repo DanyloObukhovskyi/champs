@@ -21,7 +21,14 @@ class Home extends CI_Controller
             redirect('login/auth');
             die();
         }
-        $this->load->model(['users_model', 'setting_model', 'trainer_lesson_price_m', 'post_type_model', 'post_type_attributes_model']);
+        $this->load->model([
+            'users_model',
+            'setting_model',
+            'trainer_lesson_price_m',
+            'post_type_model',
+            'post_type_attributes_model',
+            'posts_model'
+        ]);
         $this->user_capabilities = $this->config->item('user_capabilities');
     }
 
@@ -871,5 +878,45 @@ class Home extends CI_Controller
             }
         }
         die(json_encode($response));
+    }
+
+    public function getPosts()
+    {
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+
+        $total_data_count = $this->posts_model->getNewsData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->posts_model->getNewsData($length, $start, false, $search, $column, $order);
+
+        $data = [];
+
+        if (!empty($total_data)) {
+            foreach ($total_data as $post) {
+                $postType = $this->post_type_model->getOne(['id' => $post['type']]) ?? [
+                    'title' => '',
+                    'img' => ''
+                     ];
+                $data[] = [
+                    $post['id'],
+                    $post['title'],
+                    '<img class="pr-10" style="vertical-align: middle;" src="'.base_url("assets/img/news_type/".$postType['img']).'"/> '.$postType['title'].'',
+                    $post['date'],
+                    '<a class="pointer" href="'.base_url("c-admin/post/edit/".$post['id']."/".$this->UserID).'"><button class="btn btn-dark-blue btn-small">Редактировать</button></a>
+                    <div onclick="c_delete(\''.base_url("c-admin/post/edit/".$post['id']."/".$this->UserID).'\',\''.$post['title'].'\',\'Post\')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div>'
+                ];
+            }
+        }
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+        die(json_encode($output));
     }
 }

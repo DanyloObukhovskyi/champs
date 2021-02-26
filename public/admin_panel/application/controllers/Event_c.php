@@ -39,28 +39,49 @@ class Event_c extends CI_Controller
 
     public function ajax()
     {
-        $data = [
-            'events' => [],
-            'events_count' => 0,
-            'limit' => $this->per_page
-        ];
-        if (isset($_POST['page'])) {
-            $offset = $this->per_page * ((int)$_POST['page'] - 1);
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
 
-            $data['events_count'] = $this->event_model
-                ->get_paginate(true);
+        $total_data_count = $this->event_model->getEventData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->event_model->getEventData($length, $start, false, $search, $column, $order);
 
-            $data['events'] = $this->event_model
-                ->get_paginate(
-                    false,
-                    $this->per_page,
-                    $offset
-                );
+        $data = [];
+
+        if (!empty($total_data)) {
+            foreach ($total_data as $event) {
+                $data[] = [
+                    $event['id'],
+                    $event['name'],
+                    $event['started_at'],
+                    $event['ended_at'],
+                    $event['prize'],
+                    $event['location'],
+                    '<a href="'.base_url('c-admin/events/edit/'.$event['id']).'"
+                                      class="btn btn-dark-blue btn-small">
+                                       Редактировать
+                                   </a>
+                    <a href="'.base_url('c-admin/events/delete/'.$event['id']).'"
+                                            class="pointer txt-orange ml-15 fw-600">
+                                       Удалить
+                                   </a>'
+                ];
+            }
         }
-        echo json_encode($data);
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+        die(json_encode($output));
     }
 
-    public function edit($id=0)
+    public function edit($id= 0)
     {
         $data = [];
         $event = $this->event_model->get_by_id($id);
@@ -153,7 +174,6 @@ class Event_c extends CI_Controller
                 $upload_data['image_header'] = $this->uploadImage('image_header');
             }
             $event_id = $this->event_model->create($upload_data);
-
             $this->session->set_flashdata('message','Вы успешно создали событие');
             redirect(base_url('c-admin/events'));
         }
@@ -203,5 +223,13 @@ class Event_c extends CI_Controller
         }
 
         return $fileName;
+    }
+
+    public function delete($id)
+    {
+        $this->event_model->delete($id);
+
+        redirect('c-admin/events');
+        die();
     }
 }

@@ -10,7 +10,7 @@ class Game_rank extends CI_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where('game', $game);
+        $this->db->where('game_id', $game);
 
         if (!$is_count) {
             $this->db->limit($offset, $length);

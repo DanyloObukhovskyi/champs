@@ -100,7 +100,16 @@
     <!--- ---->
     <div class="main-content">
         <h1 class="main-title">Редактировать профиль тренера- <?php print $user_info[0]['nickname']; ?></h1>
-
+        <?php if ($this->session->flashdata('message')) {?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo $this->session->flashdata('message');?>
+            </div>
+        <?php }?>
+        <?php if ($this->session->flashdata('success')) {?>
+            <div class="alert alert-success" role="alert">
+                <?php echo $this->session->flashdata('success');?>
+            </div>
+        <?php }?>
         <form action="<?php print base_url("c-admin/trainer/edit/" . $user_info[0]['userid'] . "/" . $UserID); ?>"
               method="post" enctype="multipart/form-data">
             <input type="hidden" value="true" name="edit">

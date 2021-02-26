@@ -69,4 +69,9 @@ class Referral_link_m extends CI_Model
             return $results;
         }
     }
+
+    public function deleteWithGameId($id)
+    {
+        $this->db->delete($this->table, array('game_id' => $id));
+    }
 }

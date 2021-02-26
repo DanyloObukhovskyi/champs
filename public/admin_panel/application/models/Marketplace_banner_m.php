@@ -67,4 +67,9 @@ class Marketplace_banner_m extends CI_Model
     {
         $this->db->delete($this->table, array('id' => $id));
     }
+
+    public function deleteWithGameId($id)
+    {
+        $this->db->delete($this->table, array('game_id' => $id));
+    }
 }

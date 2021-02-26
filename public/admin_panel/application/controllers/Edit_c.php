@@ -497,6 +497,10 @@ class Edit_c extends CI_Controller
                         $update_data['password'] = $this->create_user_passw($new_passw);
                     } else {
                         if (!empty($new_passw)) {
+                            $this->session->set_flashdata(
+                                'message',
+                                'Ваши пароли не совпадают'
+                            );
                             redirect($_SERVER["HTTP_REFERER"]);
                             die();
                         }
@@ -512,7 +516,10 @@ class Edit_c extends CI_Controller
                     $update_data['rang'] = $rank;
 
                     $this->edit_m->updateUser($id, $update_data);
-
+                    $this->session->set_flashdata(
+                        'success',
+                        'Вы успешно отредактировали запись тренера.'
+                    );
                     if (empty($delete_trainer)) {
                         $update_data = array();
                         $update_data['method'] = $method;
@@ -590,6 +597,30 @@ class Edit_c extends CI_Controller
                         $this->edit_m->change_user_img($id, "prof-pic.svg");
                     }
                 } else {
+                    if(empty($nickname)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не добавили Никнейм'
+                        );
+                    }
+                    if(empty($Email)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не добавили Емейл'
+                        );
+                    }
+                    if(empty($new_passw)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не добавили пароль'
+                        );
+                    }
+                    if(!empty($new_passw) && empty($new_passw_confirm)){
+                        $this->session->set_flashdata(
+                            'message',
+                            'Вы не подтвердили пароль'
+                        );
+                    }
                     redirect($_SERVER["HTTP_REFERER"]);
                     die();
                 }

@@ -21,6 +21,10 @@ class Game_c extends CI_Controller
         $this->load->model(array(
             'users_model',
             'game_m',
+            'posts_model',
+            'referral_link_m',
+            'marketplace_banner_m',
+            'event_model'
         ));
     }
 
@@ -118,6 +122,11 @@ class Game_c extends CI_Controller
 
     public function delete($id)
     {
+        $this->posts_model->deleteWithGameId($id);
+        $this->referral_link_m->deleteWithGameId($id);
+        $this->marketplace_banner_m->deleteWithGameId($id);
+        $this->event_model->deleteWithGameId($id);
+        $this->event_model->deleteRelatedEventsWithGameId($id);
         $this->game_m->delete($id);
 
         redirect('c-admin/games');

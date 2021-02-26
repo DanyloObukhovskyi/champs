@@ -141,10 +141,10 @@
         el: '#app',
         data: {
             page: 1,
-            currentTab: '<?php echo array_key_first($games); ?>',
+            currentTab: '<?php echo $games[array_key_first($games)]['id']; ?>',
             games: {
-                <?php foreach ($games as $game => $name): ?>
-                    '<?php echo $game?>': ' <?php echo $name;?>',
+                <?php foreach ($games as $game): ?>
+                    '<?php echo $game['id'];?>': ' <?php echo $game['name'];?>',
                 <?php endforeach; ?>
             },
             ranks: {},

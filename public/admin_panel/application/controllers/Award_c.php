@@ -59,6 +59,8 @@ class Award_c extends CI_Controller
 
     public function save()
     {
+        $response = new stdClass();
+        $response->status = false;
         if (isset($_POST['text']) and isset($_FILES['icon'])){
             $data = [
                 'text' => $_POST['text']
@@ -77,6 +79,16 @@ class Award_c extends CI_Controller
                 $config['allowed_types'] = 'jpeg|jpg|png|svg';
                 $config['max_width'] = 44;
                 $config['max_height'] = 50;
+                $imageInfo = getimagesize($_FILES['icon']["tmp_name"]);
+                if(!empty($imageInfo)){
+                    if($imageInfo[0] > $config['max_width']){
+                        $response->error_message = 'Ширина изображения слишком большая';
+                        die(json_encode($response));
+                    } elseif($imageInfo[1] > $config['max_height']){
+                        $response->error_message = 'Высота изображения слишком большая';
+                        die(json_encode($response));
+                    }
+                }
 
                 $this->load->library('upload', $config);
                 $bytes = random_bytes(11);
@@ -93,8 +105,8 @@ class Award_c extends CI_Controller
                     if (!file_exists(PUBLICPATH.'/uploads')) {
                         mkdir(PUBLICPATH.'/uploads', 0777);
                     }
-                    if (!file_exists(PUBLICPATH.$this->config->item('upload_trainers_awards-pic'))) {
-                        mkdir(PUBLICPATH.$this->config->item('upload_trainers_awards-pic'), 0777);
+                    if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic'))) {
+                        mkdir(PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic'), 0777);
                     }
                     move_uploaded_file($_FILES['icon']['tmp_name'], $path);
                 }
@@ -103,11 +115,16 @@ class Award_c extends CI_Controller
 
                 if (isset($_POST['id'])){
                     $this->award_model->update($data);
+                    $response->status = true;
                 } else {
                     $this->award_model->create($data);
+                    $response->status = true;
                 }
+            } else {
+                $response->error_message = 'Вы не добавили изображение';
             }
         }
+        die(json_encode($response));
     }
 
     public function delete($id)
