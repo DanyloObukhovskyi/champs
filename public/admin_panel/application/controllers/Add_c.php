@@ -44,7 +44,9 @@ class Add_c extends CI_Controller
         if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
             $update_data = array();
             $update_data['title'] = $post_title;
-            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            if(!empty($post_url)){
+                $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            }
             $update_data['text'] = "";
 
             $imgs_ur = $this->config->item('main_url').$this->config->item('display_article-pic');
@@ -69,11 +71,13 @@ class Add_c extends CI_Controller
 
     public function stream($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "")
     {
-        if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+        if (!empty($post_title) && !empty($post_content) && !empty($post_type)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
             $update_data = array();
             $update_data['title'] = $post_title;
-            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            if(!empty($post_url)){
+                $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            }
             $update_data['text'] = $post_content;
 //				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             $update_data['logo'] = $article_img;
@@ -93,11 +97,13 @@ class Add_c extends CI_Controller
 
     public function video($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "")
     {
-        if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+        if (!empty($post_title) && !empty($post_content) && !empty($post_type)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
             $update_data = array();
             $update_data['title'] = $post_title;
-            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            if(!empty($post_url)){
+                $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            }
             $update_data['text'] = $post_content;
 //				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             $update_data['logo'] = $article_img;
@@ -142,7 +148,7 @@ class Add_c extends CI_Controller
                 ]);
                 if(!empty($post_type_attribute)) {
                     if ($post_type_attribute['attribute_id'] === PHOTO_GALERY) {
-                        if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
+                        if (!empty($post_title) && !empty($post_type)) {
                             $article_img = array();
                             if (isset($_FILES["userfile"])) {
                                 if (!empty($_FILES["userfile"]["name"])) {
@@ -207,7 +213,7 @@ class Add_c extends CI_Controller
                         }
                     }
 
-                    if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+                    if (!empty($post_title) && !empty($post_content) && !empty($post_type)) {
                         $article_img = "";
                         if (isset($_FILES["userfile"])) {
                             if (!empty($_FILES["userfile"]["name"])) {
@@ -269,7 +275,9 @@ class Add_c extends CI_Controller
 
                         $update_data = array();
                         $update_data['title'] = $post_title;
-                        $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+                        if(!empty($post_url)){
+                            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+                        }
                         $update_data['text'] = $post_content;
                         $update_data['logo'] = $article_img;
                         $update_data['created_at'] = date("Y-m-d H:i:s");

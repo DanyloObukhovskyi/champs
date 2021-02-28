@@ -39,11 +39,13 @@ class Edit_c extends CI_Controller
 
     public function gallery($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = "", $post_id = 0, $post_is_top = null)
     {
-        if (!empty($post_title) && !empty($post_type) && !empty($post_url)) {
+        if (!empty($post_title) && !empty($post_type)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
             $update_data = array();
             $update_data['title'] = $post_title;
-            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            if(!empty($post_url)){
+                $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            }
             $update_data['text'] = "";
 
             $imgs_ur = $this->config->item('main_url').$this->config->item('display_article-pic');
@@ -70,11 +72,13 @@ class Edit_c extends CI_Controller
 
     public function stream($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = '', $post_id = 0, $post_is_top = null)
     {
-        if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+        if (!empty($post_title) && !empty($post_content) && !empty($post_type)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
             $update_data = array();
             $update_data['title'] = $post_title;
-            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            if(!empty($post_url)){
+                $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            }
             $update_data['text'] = $post_content;
             if (!empty($article_img)) {
                 $update_data['logo'] = $article_img;
@@ -97,11 +101,13 @@ class Edit_c extends CI_Controller
 
     public function video($post_title = "", $post_content = "", $post_type = 0, $post_url = "", $article_img = "", $post_game = "", $post_id = 0, $post_is_top = null)
     {
-        if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+        if (!empty($post_title) && !empty($post_content) && !empty($post_type)) {
             $post_date = (isset($_POST["post_date"])) ? trim($_POST["post_date"]) : '';
             $update_data = array();
             $update_data['title'] = $post_title;
-            $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            if(!empty($post_url)){
+                $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+            }
             $update_data['text'] = $post_content;
 //				$update_data['text'] = '<iframe width="560" height="315" src="'.$post_content.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             if (!empty($article_img)) {
@@ -216,7 +222,7 @@ class Edit_c extends CI_Controller
                 }
                 $update_data = array();
                 $article_img = "";
-                if (!empty($post_title) && !empty($post_content) && !empty($post_type) && !empty($post_url)) {
+                if (!empty($post_title) && !empty($post_content) && !empty($post_type)) {
                     if (isset($_FILES["userfile"])) {
                         if (!empty($_FILES["userfile"]["name"])) {
                             $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_article-pic');
@@ -274,7 +280,9 @@ class Edit_c extends CI_Controller
                             die();
                         }
                     }
-                    $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+                    if(!empty($post_url)){
+                        $update_data['url'] = urlencode(str_replace(" ", "-", $post_url));
+                    }
                     $update_data['title'] = $post_title;
                     $update_data['text'] = $post_content;
                     $update_data['updated_at'] = date("Y-m-d H:i:s");

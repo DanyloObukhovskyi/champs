@@ -55,8 +55,6 @@
                 <input type="hidden" value="true" name="add">
                 <input type="hidden" value="" id="post_type" name="post_type">
                 <input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" required>
-                <div class="editor-edit mt-10">URL поста</div>
-                <input class="editor-edit-form-input mt-5 mb-10 " type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')" required>
                 <div class="editor-edit mt-10">Теги</div>
                 <input type="text"
                        id="tags"

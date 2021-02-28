@@ -90,8 +90,6 @@
 				<input type="hidden" value="" name="post_type" id="post_type">
                 <input type="hidden" value="<?php echo $post_fields['type'];?>" id="id">
                 <input required class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" value="<?php print $post_fields['title']; ?>">
-				<div class="editor-edit mt-10">URL поста</div>
-				<input required class="editor-edit-form-input mt-5 mb-10" type="text" name="post_url" placeholder="post url" onkeyup="this.value = this.value.replace(/[^a-z0-9\-]/g, '')"  value="<?php print $post_fields['url']; ?>">
 				<input class="editor-edit-form-input mt-5 mb-10" type="text" name="post_date" id="datepicker" style="max-width: 200px; cursor: pointer; display: block;" placeholder="select date" value="<?php print $post_fields['date']; ?>">
                 <div class="editor-edit mt-10">Теги</div>
                 <input type="text"
