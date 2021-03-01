@@ -254,6 +254,10 @@ class EventRepository extends ServiceEntityRepository
             $query->andWhere('e.name like :name')
                 ->setParameter('name', "%$filters->name%");
         }
+        if (!empty($filters->online)) {
+            $query->andWhere('e.isOnline = :isOnline')
+                ->setParameter('isOnline', $filters->online);
+        }
         return $query;
     }
 

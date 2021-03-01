@@ -107,6 +107,7 @@ class Event_c extends CI_Controller
             $upload_data['ended_at'] = isset($_POST['ended_at']) ? $_POST['ended_at'] : null;
             $upload_data['status'] = isset($_POST['status']) ? $_POST['status'] : null;
             $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
+            $upload_data['is_online'] = isset($_POST['is_online']) ? (int)$_POST['is_online'] : 0;
 
             $upload_data['image'] = null;
             $upload_data['image_header'] = null;
@@ -129,6 +130,8 @@ class Event_c extends CI_Controller
         }
 
         $data['flags'] = $this->flag_model->get_all();
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
         $data['output'] = $this->load->view('edit/event', $data, true);
         $this->load->view('layout/home', $data);
     }
@@ -155,6 +158,7 @@ class Event_c extends CI_Controller
             $upload_data['ended_at'] = isset($_POST['ended_at']) ? $_POST['ended_at'] : null;
             $upload_data['status'] = isset($_POST['status']) ? $_POST['status'] : null;
             $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
+            $upload_data['is_online'] = isset($_POST['is_online']) ? (int)$_POST['is_online'] : 0;
 
             $upload_data['image'] = null;
             $upload_data['image_header'] = null;
@@ -177,6 +181,7 @@ class Event_c extends CI_Controller
             $this->session->set_flashdata('message','Вы успешно создали событие');
             redirect(base_url('c-admin/events'));
         }
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['output'] = $this->load->view('add/event', $data, true);
         $this->load->view('layout/home', $data);

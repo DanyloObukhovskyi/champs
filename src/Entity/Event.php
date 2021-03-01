@@ -126,6 +126,11 @@ class Event implements \JsonSerializable
      */
     private $game;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true, options={"default" : false})
+     */
+    private $isOnline;
+
     public function __construct()
     {
         $this->teamsAttending = new ArrayCollection();
@@ -410,5 +415,21 @@ class Event implements \JsonSerializable
     public function setGame($game): void
     {
         $this->game = $game;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsOnline()
+    {
+        return $this->isOnline;
+    }
+
+    /**
+     * @param mixed $isOnline
+     */
+    public function setIsOnline($isOnline): void
+    {
+        $this->isOnline = $isOnline;
     }
 }
