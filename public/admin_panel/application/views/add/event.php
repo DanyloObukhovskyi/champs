@@ -93,6 +93,23 @@
                                placeholder="select date">
                     </div>
                 </div>
+                <div style="display: flex;">
+                    <div style="margin-right: 10px">
+                        <input class="mt-5 mb-10"
+                               type="radio"
+                               name="is_online"
+                               checked
+                               value="1">
+                        <label class="label" for="">Online</label>
+                    </div>
+                    <div>
+                        <input class="mt-5 mb-10"
+                               type="radio"
+                               name="is_online"
+                               value="0">
+                        <label class="label" for="">LAN</label>
+                    </div>
+                </div>
                 <label class="label" for="">Статус</label>
                 <select name="status" style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">

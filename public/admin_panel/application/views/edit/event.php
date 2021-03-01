@@ -105,6 +105,28 @@
                                placeholder="select date">
                     </div>
                 </div>
+                <div style="display: flex;">
+                    <div style="margin-right: 10px">
+                        <input class="mt-5 mb-10"
+                               type="radio"
+                               name="is_online"
+                                <?php if($event['is_online'] == 1):?>
+                                   checked
+                                <?php endif;?>
+                               value="1">
+                        <label class="label" for="">Online</label>
+                    </div>
+                    <div>
+                        <input class="mt-5 mb-10"
+                               type="radio"
+                               name="is_online"
+                                <?php if($event['is_online'] == 0):?>
+                                    checked
+                                <?php endif;?>
+                               value="0">
+                        <label class="label" for="">LAN</label>
+                    </div>
+                </div>
                 <label class="label" for="">Статус</label>
                 <select name="status" style="max-width: 200px; cursor: pointer; display: block;"
                         class="editor-edit-form-input mt-5 mb-10">
@@ -155,7 +177,7 @@
                     </div>
                     <div class="change-editor-edit-ban file-input" style="display: block; margin-top: 10px;">
                         <div class="image_preview">
-                            <img style="max-width: 100%;" src="<?php echo $images_url . $event['image_header']?>">
+                            <img style="max-width: 100%;" src="<?php echo $images_url . $event['image_header'] ?>">
                         </div>
                         <div style="display: flex;">
                             <div class="changePass mt-15 change-img-edit" style="display: block;">
