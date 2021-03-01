@@ -522,6 +522,7 @@ class EventService extends EntityService
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
             'name' => $filters->name ?? null,
+            'online' => $filters->online ?? null,
         ];
 
         $result = 0;
