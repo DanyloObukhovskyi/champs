@@ -24,7 +24,8 @@
                         К сожалению, на данный момент у вас нет тренировок в расписании.
                     </div>
                     <div>
-                        Вам достаточно выбрать одного из тренеров в разделе <a :href="marketplacePage"><span>Обучение.</span></a>
+                        Вам достаточно выбрать одного из тренеров в разделе <a
+                            :href="marketplacePage"><span>Обучение.</span></a>
                     </div>
                     <div>
                         И он поможет вам стать <span>PRO</span> игроком.
@@ -145,6 +146,7 @@ export default {
   justify-content: space-between;
   height: 18vw;
   margin-right: 2vw;
+
   .title {
     color: #9d9fa0;
     font-size: 1.5vw;
@@ -180,11 +182,11 @@ export default {
   .empty-lessons-wrapper {
     -webkit-animation: animation-translate-right 1500ms linear both;
     animation: animation-translate-right 1500ms linear both;
-    background: rgb(37,40,42);
-    background: -moz-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(61,65,70,1) 100%);
-    background: -webkit-linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(61,65,70,1) 100%);
-    background: linear-gradient(90deg, rgba(37,40,42,1) 0%, rgba(61,65,70,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a",endColorstr="#3d4146",GradientType=1);
+    background: rgb(37, 40, 42);
+    background: -moz-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+    background: linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(61, 65, 70, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#3d4146", GradientType=1);
     border-radius: .5vw;
     padding: 2vw 3vw;
     display: flex;

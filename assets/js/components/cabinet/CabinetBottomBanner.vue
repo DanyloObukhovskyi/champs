@@ -55,6 +55,7 @@ export default {
   display: flex;
   -webkit-animation: animation-translate-right 1500ms linear both;
   animation: animation-translate-right 1500ms linear both;
+  width: 68vw;
 
   .left {
     width: 55%;
