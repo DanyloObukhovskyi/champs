@@ -159,7 +159,7 @@
                 const dateFull = new Date(date);
 
                 const day = Number(dateFull.getDate()) < 10 ? `0${dateFull.getDate()}` : dateFull.getDate();
-                const month = Number(dateFull.getMonth()) < 10 ? `0${dateFull.getMonth()}` : dateFull.getMonth();
+                const month = Number(dateFull.getMonth() + 1) < 10 ? `0${dateFull.getMonth() + 1}` : dateFull.getMonth() + 1;
 
                 return {
                     day,

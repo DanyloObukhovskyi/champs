@@ -370,8 +370,8 @@ class Event implements \JsonSerializable
         return [
             "id" => $this->getId(),
             "name" => $this->getName(),
-            "startedAt" => $this->getStartedAt(),
-            "endedAt" => $this->getEndedAt(),
+            "startedAt" => $this->getStartedAt()->getTimestamp() * 1000,
+            "endedAt" => $this->getEndedAt()->getTimestamp() * 1000,
             "image" => $this->getImage(),
             'imageHeader' => $this->getImageHeader(),
             'logo' => $this->getImage(),
