@@ -115,15 +115,14 @@ export default {
                 })
             })
         },
-        getSlug(news)
-        {
+        getSlug(news) {
             return this.getTitleUrl(news.title)
                 .toLowerCase()
-                .replace(/ /g,'-')
-                .replace(/[^\w-]+/g,'')
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '')
                 ;
         },
-        getTitleUrl(title){
+        getTitleUrl(title) {
             return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
                 function (all, ch, space, words, i) {
                     if (space || words) {

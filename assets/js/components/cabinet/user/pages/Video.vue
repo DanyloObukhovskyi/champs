@@ -83,6 +83,7 @@ export default {
   background-color: #eff0f0;
   border-radius: .5vw;
   padding: 2vw;
+  margin: 1vw;
 
   .title {
     font-size: 1.5vw;
