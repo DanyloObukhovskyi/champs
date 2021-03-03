@@ -152,6 +152,39 @@ class ScheduleController extends AbstractController
             ->getRepository(User::class)
             ->find($trainerId);
 
+        /** @var User|null $authUser */
+        $authUser = $this->getUser();
+
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        if ($gmtNumeric < 0) {
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        }
+
+        if (isset($authUser) and !empty($authUser->getTimezone())) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $authUser->getTimeZone()
+            );
+            if ($gmtNumeric < 0) {
+                $userTimezone = -(int)gmdate("g", $gmtNumeric);
+            } else {
+                $userTimezone = (int)gmdate("g", $gmtNumeric);
+            }
+        } else {
+            $userTimezone = (int)$request->timezone;
+        }
+
+        if ($trainerTimezone < 0 and $userTimezone < 0) {
+            $timeOffset = $trainerTimezone + abs($userTimezone);
+        } elseif($trainerTimezone < 0 or $userTimezone < 0) {
+            $timeOffset = $trainerTimezone + $userTimezone;
+        } else {
+            $timeOffset = $trainerTimezone - $userTimezone;
+        }
+
         $availableDates = [];
         if (isset($request->date) and isset($trainer)) {
             $date = Carbon::createFromFormat('d.m.Y', $request->date);
@@ -160,16 +193,19 @@ class ScheduleController extends AbstractController
             $to = Carbon::createFromFormat('d.m.Y', $request->date);
             $to->setDay($to->daysInMonth);
 
-            for ($day = 1; $day <= $from->daysInMonth; $day++) {
-                $from->setDay($day);
+            if($timeOffset < 0){
+                $from->setHour($timeOffset);
+            } else {
+                $from->setHour(0 - $timeOffset);
+            }
+
+            for ($day = 1; $day <= Carbon::now()->daysInMonth; $day++) {
 
                 $schedules = $this->scheduleService
-                    ->findAvailableByTrainerAndDate(
+                    ->findByTrainerAndDate(
                         $trainer,
                         $from->format('Y-m-d')
                     );
-
-
                 if (Carbon::now()->timestamp - $from->timestamp >= 0) {
                     $availableDates[$day] = false;
                 } else {
@@ -179,6 +215,8 @@ class ScheduleController extends AbstractController
                         $availableDates[$day] = true;
                     }
                 }
+
+                $from->setHour($from->hour + 24);
             }
         }
 

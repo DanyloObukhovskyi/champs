@@ -73,7 +73,17 @@ class MarketplaceService extends Service {
     }
 
     getTrainerAvailableTrainingDatesForMonth = (trainerId, date) => {
-        return this.send(`calendar/available/training/dates/for/month/${trainerId}`, {date});
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0) {
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+        return this.send(`calendar/available/training/dates/for/month/${trainerId}`, {
+            date,
+            timezone
+        });
     }
 
     interkassaLessonCreatePayment = ids => {
