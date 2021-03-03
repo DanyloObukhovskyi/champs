@@ -27,11 +27,6 @@ class Country
      */
     private $nameRu;
 
-    /**
-     * @ORM\OneToMany(targetEntity=City::class, mappedBy="City")
-     */
-    private $cities;
-
     public function getId(): ?int
     {
         return $this->id;
