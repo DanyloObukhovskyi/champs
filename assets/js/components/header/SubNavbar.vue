@@ -167,7 +167,7 @@ export default {
 }
 
 .pl-8_5 {
-    padding-right: 8.5vw;
+    padding-right: 8.5vw !important;
 }
 
 .pl-10 {
@@ -228,6 +228,7 @@ export default {
 
 .help a {
     margin-right: .7vw;
+    display: flex;
 }
 
 .help a .zendesk {

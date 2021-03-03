@@ -2,6 +2,7 @@ body {
     font-family: 'Exo 2', sans-serif;
     background: #f8f8f8;
     overflow: scroll !important;
+    padding-right: 0 !important;
 }
 
 .dark body {

@@ -63,20 +63,4 @@ class Country
     {
         $this->nameRu = $nameRu;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCities()
-    {
-        return $this->cities;
-    }
-
-    /**
-     * @param mixed $cities
-     */
-    public function setCities($cities): void
-    {
-        $this->cities = $cities;
-    }
 }

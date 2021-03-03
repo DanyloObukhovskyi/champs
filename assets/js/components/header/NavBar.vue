@@ -283,7 +283,7 @@
     }
 
     .pr-8 {
-        padding-right: 8vw;
+        padding-right: 8vw !important;
     }
 
     .h-3 {
