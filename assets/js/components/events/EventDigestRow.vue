@@ -4,7 +4,7 @@
             {{event.name}}
         </div>
         <div class="digest">
-            <div class="type">
+            <div class="type" v-if="event.type === 'pro'">
                 {{event.type}}
             </div>
             <div class="d-flex justify-content-end">

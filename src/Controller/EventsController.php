@@ -220,8 +220,6 @@ class EventsController extends AbstractController
         $digestEvents = [];
         foreach ($events as $event) {
             $digestEvent = $event;
-
-            $digestEvent['type'] = 'pro';
             $digestEvent['game'] = 'cs';
 
             $digestEvents[] = $digestEvent;
