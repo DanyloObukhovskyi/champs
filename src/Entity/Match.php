@@ -33,7 +33,7 @@ class Match implements \JsonSerializable
     private $code;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $team1;
@@ -44,7 +44,7 @@ class Match implements \JsonSerializable
     private $team1_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $team2;

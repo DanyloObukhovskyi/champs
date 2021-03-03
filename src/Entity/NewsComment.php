@@ -20,17 +20,17 @@ class NewsComment implements JsonSerializable
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=NewsComment::class)
+     * @ORM\ManyToOne(targetEntity=NewsComment::class, cascade={"persist", "remove"})
      */
     private $parent;
 
     /**
-     * @ORM\ManyToOne(targetEntity=News::class)
+     * @ORM\ManyToOne(targetEntity=News::class, cascade={"persist", "remove"})
      */
     private $news;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $user;
 

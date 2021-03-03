@@ -18,7 +18,7 @@ class NewsTag
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=News::class)
+     * @ORM\ManyToOne(targetEntity=News::class, cascade={"persist", "remove"})
      */
     private $news;
 

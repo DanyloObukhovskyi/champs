@@ -20,7 +20,7 @@ class Invite
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $user;
 
@@ -40,7 +40,7 @@ class Invite
     private $type;
 
     /**
-     * @ORM\ManyToOne (targetEntity=InvitePrize::class)
+     * @ORM\ManyToOne (targetEntity=InvitePrize::class, cascade={"persist", "remove"})
      */
     private $prize;
 

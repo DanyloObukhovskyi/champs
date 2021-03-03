@@ -18,12 +18,12 @@ class NewsCommentLike
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=NewsComment::class)
+     * @ORM\ManyToOne(targetEntity=NewsComment::class, cascade={"persist", "remove"})
      */
     private $comment;
 

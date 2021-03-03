@@ -24,12 +24,12 @@ class Lessons
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id", cascade={"persist", "remove"})
      */
     private $student;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id", cascade={"persist", "remove"})
      */
     private $trainer;
 
@@ -89,7 +89,7 @@ class Lessons
     private $trainerNotice;
 
     /**
-     * @ORM\OneToOne(targetEntity=Payment::class, mappedBy="lesson")
+     * @ORM\OneToOne(targetEntity=Payment::class, mappedBy="lesson", cascade={"persist", "remove"})
      */
     private $payment;
 

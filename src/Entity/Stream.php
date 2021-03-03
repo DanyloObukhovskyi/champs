@@ -18,7 +18,7 @@ class Stream
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class, inversedBy="streams")
+     * @ORM\ManyToOne(targetEntity=Match::class, inversedBy="streams", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $game_match;

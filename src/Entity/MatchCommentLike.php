@@ -25,12 +25,12 @@ class MatchCommentLike
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MatchComment::class)
+     * @ORM\ManyToOne(targetEntity=MatchComment::class, cascade={"persist", "remove"})
      */
     private $comment;
 

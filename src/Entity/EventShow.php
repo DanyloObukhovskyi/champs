@@ -24,7 +24,7 @@ class EventShow
     private $event_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class)
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
      */
     private $event;
 

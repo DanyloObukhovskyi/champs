@@ -28,22 +28,22 @@ class EventBracket
     private $score2;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class)
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
      */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class)
+     * @ORM\ManyToOne(targetEntity=Match::class, cascade={"persist", "remove"})
      */
     private $match;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      */
     private $team1;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      */
     private $team2;
 

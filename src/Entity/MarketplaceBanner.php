@@ -33,7 +33,7 @@ class MarketplaceBanner
     private $img;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class)
+     * @ORM\ManyToOne(targetEntity=Game::class, cascade={"persist", "remove"})
      */
     private $game;
 

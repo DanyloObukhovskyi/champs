@@ -18,7 +18,7 @@ class TrainerVideo implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Teachers::class)
+     * @ORM\ManyToOne(targetEntity=Teachers::class, cascade={"persist", "remove"})
      */
     private $trainer;
 

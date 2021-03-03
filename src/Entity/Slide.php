@@ -29,7 +29,7 @@ class Slide
     private $url;
 
     /**
-     * @ORM\OneToOne(targetEntity=Slide::class)
+     * @ORM\OneToOne(targetEntity=Slide::class, cascade={"persist", "remove"})
      */
     private $parent;
 

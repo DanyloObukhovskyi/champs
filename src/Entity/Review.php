@@ -24,13 +24,13 @@ class Review
     private $lesson;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $student;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trainerReviews")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trainerReviews", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $trainer;

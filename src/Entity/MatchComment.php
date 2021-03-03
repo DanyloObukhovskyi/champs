@@ -18,17 +18,17 @@ class MatchComment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class)
+     * @ORM\ManyToOne(targetEntity=Match::class, cascade={"persist", "remove"})
      */
     private $match;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MatchComment::class)
+     * @ORM\ManyToOne(targetEntity=MatchComment::class, cascade={"persist", "remove"})
      */
     private $parent;
 

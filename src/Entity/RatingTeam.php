@@ -24,7 +24,7 @@ class RatingTeam
     private $teamId;
 
     /**
-     * @ORM\OneToOne(targetEntity=Team::class)
+     * @ORM\OneToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      */
     private $team;
 

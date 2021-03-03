@@ -28,7 +28,7 @@ class SeoPagesMeta
     private $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SeoPages::class, inversedBy="meta")
+     * @ORM\ManyToOne(targetEntity=SeoPages::class, inversedBy="meta", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $page;

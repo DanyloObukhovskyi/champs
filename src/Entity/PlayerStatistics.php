@@ -33,13 +33,13 @@ class PlayerStatistics
     private $rating;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class)
+     * @ORM\ManyToOne(targetEntity=Match::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $game_match;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Player::class)
+     * @ORM\ManyToOne(targetEntity=Player::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $player;
@@ -50,7 +50,7 @@ class PlayerStatistics
     private $mapId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Map::class)
+     * @ORM\ManyToOne(targetEntity=Map::class, cascade={"persist", "remove"})
      */
     private $map;
 

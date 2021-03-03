@@ -77,7 +77,7 @@ class Event implements \JsonSerializable
     private $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity=FlagIcon::class)
+     * @ORM\ManyToOne(targetEntity=FlagIcon::class, cascade={"persist", "remove"})
      */
     private $flagIcon;
 

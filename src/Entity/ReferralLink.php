@@ -18,7 +18,7 @@ class ReferralLink
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class)
+     * @ORM\ManyToOne(targetEntity=Game::class, cascade={"persist", "remove"})
      */
     private $game;
 

@@ -42,7 +42,7 @@ class Charactristics
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="charactristics")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="charactristics", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

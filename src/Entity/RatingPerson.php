@@ -34,7 +34,7 @@ class RatingPerson
     private $rating;
 
     /**
-     * @ORM\OneToOne(targetEntity=Person::class)
+     * @ORM\OneToOne(targetEntity=Person::class, cascade={"persist", "remove"})
      */
     private $person;
 

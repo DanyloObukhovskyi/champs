@@ -18,12 +18,12 @@ class LessonTime
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lessons::class)
+     * @ORM\ManyToOne(targetEntity=Lessons::class, cascade={"persist", "remove"})
      */
     private $lesson;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Schedule::class)
+     * @ORM\ManyToOne(targetEntity=Schedule::class, cascade={"persist", "remove"})
      */
     private $trainerTime;
 

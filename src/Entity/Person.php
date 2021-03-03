@@ -60,7 +60,7 @@ class Person implements JsonSerializable
     private $flagIconId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=FlagIcon::class)
+     * @ORM\ManyToOne(targetEntity=FlagIcon::class, cascade={"persist", "remove"})
      */
     private $flagIcon;
 

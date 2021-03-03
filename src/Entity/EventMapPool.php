@@ -18,12 +18,12 @@ class EventMapPool implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class)
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
      */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Map::class)
+     * @ORM\ManyToOne(targetEntity=Map::class, cascade={"persist", "remove"})
      */
     private $map;
 

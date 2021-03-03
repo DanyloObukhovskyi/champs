@@ -27,6 +27,11 @@ class Country
      */
     private $nameRu;
 
+    /**
+     * @ORM\OneToMany(targetEntity=City::class, mappedBy="City", cascade={"persist", "remove"})
+     */
+    private $cities;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,5 +67,21 @@ class Country
     public function setNameRu($nameRu): void
     {
         $this->nameRu = $nameRu;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCities()
+    {
+        return $this->cities;
+    }
+
+    /**
+     * @param mixed $cities
+     */
+    public function setCities($cities): void
+    {
+        $this->cities = $cities;
     }
 }

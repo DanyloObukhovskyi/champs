@@ -70,11 +70,6 @@ class Event_model extends CI_Model
         $this->db->delete($this->table['events'], array('game_id' => $id));
     }
 
-    public function deleteRelatedEventsWithGameId($id)
-    {
-        $this->db->delete($this->table['related_events'], array('game_id' => $id));
-    }
-
     public function getEventData($limit, $offset, $count, $query, $column, $order)
     {
         $this->db->select('*');

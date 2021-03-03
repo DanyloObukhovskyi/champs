@@ -34,14 +34,14 @@ class MvpTeam
     private $tag;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $creator;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class)
-     */
-    private $members;
+//    /**
+//     * @ORM\ManyToMany(targetEntity=User::class)
+//     */
+//    private $members;
 
     /**
      * MvpTeam constructor.

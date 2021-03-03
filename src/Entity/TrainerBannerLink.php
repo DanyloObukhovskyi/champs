@@ -18,7 +18,7 @@ class TrainerBannerLink
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=TrainerBanner::class)
+     * @ORM\ManyToOne(targetEntity=TrainerBanner::class, cascade={"persist", "remove"})
      */
     private $trainerBanner;
 

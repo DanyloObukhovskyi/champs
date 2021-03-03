@@ -24,7 +24,7 @@ class PurseHistory implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="purseHistories")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="purseHistories", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

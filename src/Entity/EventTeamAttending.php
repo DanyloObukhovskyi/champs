@@ -24,7 +24,7 @@ class EventTeamAttending implements JsonSerializable
     private $team;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class)
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
      */
     private $event;
 

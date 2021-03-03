@@ -28,7 +28,7 @@ class Result
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class)
+     * @ORM\ManyToOne(targetEntity=Match::class, cascade={"persist", "remove"})
      */
     private $match;
 

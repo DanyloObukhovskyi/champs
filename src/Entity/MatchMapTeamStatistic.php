@@ -23,7 +23,7 @@ class MatchMapTeamStatistic
     private $match_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class)
+     * @ORM\ManyToOne(targetEntity=Match::class, cascade={"persist", "remove"})
      */
     private $match;
 
@@ -33,7 +33,7 @@ class MatchMapTeamStatistic
     private $team_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      */
     private $team;
 
@@ -43,7 +43,7 @@ class MatchMapTeamStatistic
     private $map_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Map::class)
+     * @ORM\ManyToOne(targetEntity=Map::class, cascade={"persist", "remove"})
      */
     private $map;
     /**

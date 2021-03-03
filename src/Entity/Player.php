@@ -23,7 +23,7 @@ class Player implements \JsonSerializable
     private $start_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="players")
+     * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="players", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $team;
