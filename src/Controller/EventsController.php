@@ -208,24 +208,14 @@ class EventsController extends AbstractController
      */
     public function ajaxDigestPage(Request $request, $type, $page)
     {
-        $filters = $request->getContent();
-        $filters = json_decode($filters, false);
+        $filters = json_decode($request->getContent(), false);
 
         $events = $this->eventService->getEventsByType($filters, $type, $page);
         $events = $this->eventService->eventsDecorator($events);
 
         $counts = [];
         foreach (MatchService::MATCH_TYPES as $type) {
-            if ((isset($filters->game) and $filters->game !== 'cs') or
-                (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')) {
-                $counts[$type] = 0;
-            } else {
-                $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
-            }
-        }
-        if ((isset($filters->game) and $filters->game !== 'cs') or
-            (isset($filters->tournamentType) and $filters->tournamentType !== 'pro')) {
-            $events = [];
+            $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
         }
         $digestEvents = [];
         foreach ($events as $event) {

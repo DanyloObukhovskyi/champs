@@ -9,8 +9,8 @@
             </div>
             <div class="d-flex align-items-end">
                 <div class="tournaments-types">
-                    <div class="tournament-type check-tournament" :class="{active: filters.tournamentType === tournament.type}"
-                         v-for="tournament in tournamentsTypes" @click="filters.tournamentType = tournament.type">
+                    <div class="tournament-type check-tournament" :class="{active: filters.tournamentType === tournament.code}"
+                         v-for="tournament in tournamentsTypes" @click="filters.tournamentType = tournament.code">
                         <div class="tournament-type-wrapper">
                             <div class="type">
                                 {{tournament.type}}
@@ -137,10 +137,12 @@
     const TOURNAMENTS_TYPES = [
         {
             type: 'pro',
+            code: 'pro',
             description: 'Для профессионалов'
         },
         {
             type: 'все',
+            code: 'all',
             description: 'Для любителей'
         }
     ];
