@@ -177,7 +177,13 @@ class LessonsController extends AbstractController
         $lessons = [];
         foreach ($data->lessons as $lesson) {
             $carbon = Carbon::createFromFormat('d.m.Y', $lesson->date);
-            $carbon->setHour($lesson->time - $timeOffset);
+
+            if($timeOffset < 0){
+                $carbon->setHour($timeOffset);
+            } else {
+                $carbon->setHour(0 - $timeOffset);
+            }
+            $carbon->setHour($carbon->hour + $lesson->time);
 
             $lessons[] = [
                 'date' => $carbon->format('d.m.Y'),
