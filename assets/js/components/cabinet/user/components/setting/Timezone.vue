@@ -111,7 +111,7 @@
 	.form-group{
       &.timezone{
 		.multiselect__tags {
-		  width: 16vw;
+		  width: 13vw;
 		}
       }
 	}
