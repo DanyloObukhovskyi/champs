@@ -11,7 +11,9 @@
             </div>
             <div class="setting-wrapper">
                 <password/>
-                <timezone/>
+                <div class="avatar-discord-wrapper">
+                    <timezone/>
+                </div>
             </div>
         </div>
     </div>
