@@ -28,7 +28,7 @@ class Country
     private $nameRu;
 
     /**
-     * @ORM\OneToMany(targetEntity=City::class, mappedBy="City", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=City::class, mappedBy="City")
      */
     private $cities;
 
