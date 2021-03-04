@@ -26,6 +26,8 @@ class GameService extends EntityService
      */
     public function getAll()
     {
-        return $this->repository->findAll();
+        return $this->repository->findBy([
+            'isDeleted' => false
+        ]);
     }
 }

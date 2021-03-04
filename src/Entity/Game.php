@@ -47,6 +47,11 @@ class Game implements \JsonSerializable
      */
     private $active;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isDeleted;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -162,5 +167,21 @@ class Game implements \JsonSerializable
     public function setActive($active): void
     {
         $this->active = $active;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param mixed $isDeleted
+     */
+    public function setIsDeleted($isDeleted): void
+    {
+        $this->isDeleted = $isDeleted;
     }
 }

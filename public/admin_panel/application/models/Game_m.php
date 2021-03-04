@@ -14,9 +14,9 @@ class Game_m extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('is_deleted', 0);
 
         $result = $this->db->get();
-
         return $result->result_array();
     }
 
@@ -24,6 +24,7 @@ class Game_m extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('is_deleted', 0);
 
         if (!$is_count) {
             $this->db->limit($offset, $length);
@@ -46,6 +47,14 @@ class Game_m extends CI_Model
     public function delete($id)
     {
         $this->db->delete($this->table, array('id' => $id));
+    }
+
+    public function soft_delete($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update($this->table, array(
+            'is_deleted' => 1
+        ));
     }
 
     public function get($where) {

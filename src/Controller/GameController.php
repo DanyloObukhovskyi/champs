@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\MarketplaceBanner;
+use App\Service\Game\GameService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,11 +14,21 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class GameController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     public $entityManager;
+
+    /**
+     * @var GameService
+     */
+    public $gameService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+
+        $this->gameService = new GameService($entityManager);
     }
 
     /**
@@ -25,9 +36,7 @@ class GameController extends AbstractController
      */
     public function games()
     {
-        $games = $this->entityManager
-            ->getRepository(Game::class)
-            ->findAll();
+        $games = $this->gameService->getAll();
 
         return $this->json($games);
     }
