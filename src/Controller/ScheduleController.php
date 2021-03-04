@@ -188,38 +188,22 @@ class ScheduleController extends AbstractController
         $availableDates = [];
         if (isset($request->date) and isset($trainer)) {
             $date = Carbon::createFromFormat('d.m.Y', $request->date);
-            $from = $date->setDay(1);
 
-            $to = Carbon::createFromFormat('d.m.Y', $request->date);
-            $to->setDay($to->daysInMonth);
+            for ($day = 1; $day <= $date->daysInMonth; $day++) {
+                $date->setDay($day);
 
-            if($timeOffset < 0){
-                $from->setHour($timeOffset);
-            } else {
-                $from->setHour(0 - $timeOffset);
-            }
+                $availableDates[$day] = false;
+                if ((int)$date->format('Ymd') >= (int)Carbon::now()->format('Ymd')) {
+                    $schedule = $this->scheduleService->createDay($trainerId, $date, $timeOffset, true);
 
-            for ($day = 1; $day <= Carbon::now()->daysInMonth; $day++) {
-
-                $schedules = $this->scheduleService
-                    ->findByTrainerAndDate(
-                        $trainer,
-                        $from->format('Y-m-d')
-                    );
-                if (Carbon::now()->timestamp - $from->timestamp >= 0) {
-                    $availableDates[$day] = false;
-                } else {
-                    if (empty($schedules)) {
-                        $availableDates[$day] = false;
-                    } else {
-                        $availableDates[$day] = true;
+                    foreach ($schedule as $key => $value) {
+                        if ($value === 1) {
+                            $availableDates[$day] = true;
+                        }
                     }
                 }
-
-                $from->setHour($from->hour + 24);
             }
         }
-
         return $this->json($availableDates);
     }
 }
