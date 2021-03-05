@@ -99,7 +99,6 @@ class EventService extends EntityService
         $this->eventBracketService = new EventBracketService($entityManager);
 
         $this->matchService = new MatchService($entityManager);
-        $this->translator = new Translator($GLOBALS['request']->getLocale());
     }
 
     /**
@@ -231,6 +230,7 @@ class EventService extends EntityService
         if (empty($event)) {
             $event = new $this->entity;
             $event->setUrl($values['url'] ?? null);
+            $event->setViews(0);
         }
         if (!empty($values['started_at'])) {
             $startedAt = $values['started_at']->format("Y-m-d");

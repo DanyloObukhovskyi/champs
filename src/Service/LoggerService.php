@@ -29,22 +29,24 @@ class LoggerService
 
     public static function add($value, $type = false)
     {
-        switch ($type) {
-            case static::TYPE_ERROR:
-                static::$logger->error($value);
-                break;
+        if (isset($logger)) {
+            switch ($type) {
+                case static::TYPE_ERROR:
+                    static::$logger->error($value);
+                    break;
 
-            case static::TYPE_WARNING:
-                static::$logger->warning($value);
-                break;
+                case static::TYPE_WARNING:
+                    static::$logger->warning($value);
+                    break;
 
-            case static::TYPE_NOTE:
-                static::$logger->note($value);
-                break;
+                case static::TYPE_NOTE:
+                    static::$logger->note($value);
+                    break;
 
-            case static::TYPE_INFO:
-            default:
-                static::$logger->comment($value);
+                case static::TYPE_INFO:
+                default:
+                    static::$logger->comment($value);
+            }
         }
     }
 

@@ -312,7 +312,7 @@ class EventParserService
                                     $bracket['team1'] = [
                                         'name' => $round->team1->team->name,
                                         'url' => HLTVService::urlDecorator($round->team1->team->profileURL),
-                                        'logo' => $round->team1->team->logoURL,
+                                        'logo' => $round->team1->team->logoURL ?? null,
                                         'score' => $team1Score
                                     ];
                                 }
@@ -320,7 +320,7 @@ class EventParserService
                                     $bracket['team2'] = [
                                         'name' => $round->team2->team->name,
                                         'url' => HLTVService::urlDecorator($round->team2->team->profileURL),
-                                        'logo' => $round->team2->team->logoURL,
+                                        'logo' => $round->team2->team->logoURL ?? null,
                                         'score' => $team2Score
                                     ];
                                 }
