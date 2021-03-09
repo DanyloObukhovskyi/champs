@@ -23,14 +23,18 @@ class Event_c extends CI_Controller
             'users_model',
             'event_model',
             'flag_model',
-            'game_m'
+            'game_m',
+            'map_m',
+            'event_map_pool_m',
+            'team_m',
+            'event_prize_distribution_m'
         ));
     }
 
     public function index()
     {
         $data = [];
-        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_event-pic');
+        $data['images_url'] = $this->config->item('main_url') . $this->config->item('display_event-pic');
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['output'] = $this->load->view('home/events', $data, true);
@@ -39,15 +43,15 @@ class Event_c extends CI_Controller
 
     public function ajax()
     {
-        $draw   = intval($this->input->post("draw"));
-        $start  = intval($this->input->post("start"));
+        $draw = intval($this->input->post("draw"));
+        $start = intval($this->input->post("start"));
         $length = intval($this->input->post("length"));
         $search = $this->input->post("search")["value"];
         $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
-        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+        $order = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
 
         $total_data_count = $this->event_model->getEventData($length, $start, true, $search, $column, $order);
-        $total_data    = $this->event_model->getEventData($length, $start, false, $search, $column, $order);
+        $total_data = $this->event_model->getEventData($length, $start, false, $search, $column, $order);
 
         $data = [];
 
@@ -60,11 +64,11 @@ class Event_c extends CI_Controller
                     $event['ended_at'],
                     $event['prize'],
                     $event['location'],
-                    '<a href="'.base_url('c-admin/events/edit/'.$event['id']).'"
+                    '<a href="' . base_url('c-admin/events/edit/' . $event['id']) . '"
                                       class="btn btn-dark-blue btn-small">
                                        Редактировать
                                    </a>
-                    <a href="'.base_url('c-admin/events/delete/'.$event['id']).'"
+                    <a href="' . base_url('c-admin/events/delete/' . $event['id']) . '"
                                             class="pointer txt-orange ml-15 fw-600">
                                        Удалить
                                    </a>'
@@ -73,19 +77,19 @@ class Event_c extends CI_Controller
         }
 
         $output = [
-            "draw"            => $draw,
-            "recordsTotal"    => $total_data_count,
+            "draw" => $draw,
+            "recordsTotal" => $total_data_count,
             "recordsFiltered" => $total_data_count,
-            "data"            => $data,
+            "data" => $data,
         ];
         die(json_encode($output));
     }
 
-    public function edit($id= 0)
+    public function edit($id = 0)
     {
         $data = [];
         $event = $this->event_model->get_by_id($id);
-        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_event-pic');
+        $data['images_url'] = $this->config->item('main_url') . $this->config->item('display_event-pic');
         $data['statuses'] = Event_model::STATUSES;
         $data['games'] = $this->game_m->get_all();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
@@ -97,7 +101,9 @@ class Event_c extends CI_Controller
         }
         if (isset($_POST['edit'])) {
             $upload_data = [];
+            $maps = !empty($_POST['maps']) ? $_POST['maps'] : [];
             $upload_data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
+            $upload_data['stream'] = isset($_POST['stream']) ? $_POST['stream'] : '';
             $upload_data['prize'] = isset($_POST['prize']) ? $_POST['prize'] : '';
             $upload_data['location'] = isset($_POST['location']) ? $_POST['location'] : '';
             $upload_data['command_count'] = isset($_POST['command_count']) ? $_POST['command_count'] : null;
@@ -124,13 +130,39 @@ class Event_c extends CI_Controller
             if (!empty($_FILES["image_header"]["name"])) {
                 $upload_data['image_header'] = $this->uploadImage('image_header');
             }
+            if (!empty($maps)) {
+                $this->event_map_pool_m->delete_by_event($id);
+
+                foreach ($maps as $map) {
+                    $this->event_map_pool_m->create(array(
+                        'event_id' => $id,
+                        'map_id' => $map
+                    ));
+                }
+            }
             $event_id = $this->event_model->update($id, $upload_data);
-            $this->session->set_flashdata('message','Вы успешно отредактировали событие');
+            $this->session->set_flashdata('message', 'Вы успешно отредактировали событие');
             redirect(base_url('c-admin/events'));
         }
 
         $data['flags'] = $this->flag_model->get_all();
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
+        $data['maps'] = $this->map_m->get_all();
+        $data['event_map_pool'] = [];
+
+        $event_map_pool = $this->event_map_pool_m->get(['event_id' => $id]);
+
+        foreach ($event_map_pool as $event_map) {
+            foreach ($data['maps'] as $map) {
+                if ($map['id'] === $event_map['map_id']) {
+                    $data['event_map_pool'][] = $map;
+                }
+            }
+        }
+        $data['teams'] = $this->team_m->get_all();
+
+        $data['event_prize_distributions'] = $this->event_model->get_prize_distribution($id);
 
         $data['output'] = $this->load->view('edit/event', $data, true);
         $this->load->view('layout/home', $data);
@@ -139,7 +171,7 @@ class Event_c extends CI_Controller
     public function create()
     {
         $data[] = '';
-        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_event-pic');
+        $data['images_url'] = $this->config->item('main_url') . $this->config->item('display_event-pic');
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
         $data['flags'] = $this->flag_model->get_all();
@@ -148,7 +180,10 @@ class Event_c extends CI_Controller
 
         if (isset($_POST['create'])) {
             $upload_data = [];
+            $maps = !empty($_POST['maps']) ? $_POST['maps'] : [];
+            $prize_distributions = !empty($_POST['prize_distributions']) ? $_POST['prize_distributions'] : [];
             $upload_data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
+            $upload_data['stream'] = isset($_POST['stream']) ? $_POST['stream'] : '';
             $upload_data['prize'] = isset($_POST['prize']) ? $_POST['prize'] : '';
             $upload_data['location'] = isset($_POST['location']) ? $_POST['location'] : '';
             $upload_data['command_count'] = isset($_POST['command_count']) ? $_POST['command_count'] : null;
@@ -178,10 +213,31 @@ class Event_c extends CI_Controller
                 $upload_data['image_header'] = $this->uploadImage('image_header');
             }
             $event_id = $this->event_model->create($upload_data);
-            $this->session->set_flashdata('message','Вы успешно создали событие');
+
+            if (!empty($maps)) {
+                foreach ($maps as $map) {
+                    $this->event_map_pool_m->create(array(
+                        'event_id' => $event_id,
+                        'map_id' => $map
+                    ));
+                }
+            }
+            if (!empty($prize_distributions)) {
+                foreach ($prize_distributions as $prize_distribution) {
+                    $this->event_prize_distribution_m->create(array(
+                        'event_id' => $event_id,
+                        'team_id' => $prize_distribution['team_id'] ?? null,
+                        'prize' => $prize_distribution['prize'] ?? null,
+                        'position' => $prize_distribution['position'] ?? null,
+                    ));
+                }
+            }
+            $this->session->set_flashdata('message', 'Вы успешно создали событие');
             redirect(base_url('c-admin/events'));
         }
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['maps'] = $this->map_m->get_all();
+        $data['teams'] = $this->team_m->get_all();
 
         $data['output'] = $this->load->view('add/event', $data, true);
         $this->load->view('layout/home', $data);
@@ -194,9 +250,9 @@ class Event_c extends CI_Controller
         $files = $_FILES;
         $this->load->library('upload');
 
-        $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_event-pic');
-        if(!file_exists(PUBLICPATH.'/uploads')) {
-            mkdir(PUBLICPATH.'/images/temp', 0777);
+        $config['upload_path'] = PUBLICPATH . '/' . $this->config->item('upload_event-pic');
+        if (!file_exists(PUBLICPATH . '/uploads')) {
+            mkdir(PUBLICPATH . '/images/temp', 0777);
         }
         if (!file_exists($config['upload_path'])) {
             mkdir($config['upload_path'], 0777);
@@ -236,5 +292,48 @@ class Event_c extends CI_Controller
 
         redirect('c-admin/events');
         die();
+    }
+
+    public function get_prize_distribution($id)
+    {
+        $prizeDistributions = $this->event_model->get_prize_distribution($id);
+        $data = [];
+        foreach ($prizeDistributions as $prizeDistribution) {
+            $prizeDistribution['action'] = '
+             <div class="action">
+                 <button type="button"
+                        onclick="app.$refs.prizeDistribution.delete(' . $prizeDistribution['id'] . ')"
+                        class="btn btn-orange remove"
+                        style="display: flex; align-items: center;">
+                     <img width="25px"
+                         src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDQyNyA0MjcuMDAxMzEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTIiIHhtbDpzcGFjZT0icHJlc2VydmUiIGNsYXNzPSIiPjxnPjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0ibTIzMi4zOTg0MzggMTU0LjcwMzEyNWMtNS41MjM0MzggMC0xMCA0LjQ3NjU2My0xMCAxMHYxODljMCA1LjUxOTUzMSA0LjQ3NjU2MiAxMCAxMCAxMCA1LjUyMzQzNyAwIDEwLTQuNDgwNDY5IDEwLTEwdi0xODljMC01LjUyMzQzNy00LjQ3NjU2My0xMC0xMC0xMHptMCAwIiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIj48L3BhdGg+PHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBkPSJtMTE0LjM5ODQzOCAxNTQuNzAzMTI1Yy01LjUyMzQzOCAwLTEwIDQuNDc2NTYzLTEwIDEwdjE4OWMwIDUuNTE5NTMxIDQuNDc2NTYyIDEwIDEwIDEwIDUuNTIzNDM3IDAgMTAtNC40ODA0NjkgMTAtMTB2LTE4OWMwLTUuNTIzNDM3LTQuNDc2NTYzLTEwLTEwLTEwem0wIDAiIGZpbGw9IiNmZmZmZmYiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvcGF0aD48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Im0yOC4zOTg0MzggMTI3LjEyMTA5NHYyNDYuMzc4OTA2YzAgMTQuNTYyNSA1LjMzOTg0MyAyOC4yMzgyODEgMTQuNjY3OTY4IDM4LjA1MDc4MSA5LjI4NTE1NiA5LjgzOTg0NCAyMi4yMDcwMzIgMTUuNDI1NzgxIDM1LjczMDQ2OSAxNS40NDkyMTloMTg5LjIwMzEyNWMxMy41MjczNDQtLjAyMzQzOCAyNi40NDkyMTktNS42MDkzNzUgMzUuNzMwNDY5LTE1LjQ0OTIxOSA5LjMyODEyNS05LjgxMjUgMTQuNjY3OTY5LTIzLjQ4ODI4MSAxNC42Njc5NjktMzguMDUwNzgxdi0yNDYuMzc4OTA2YzE4LjU0Mjk2OC00LjkyMTg3NSAzMC41NTg1OTMtMjIuODM1OTM4IDI4LjA3ODEyNC00MS44NjMyODItMi40ODQzNzQtMTkuMDIzNDM3LTE4LjY5MTQwNi0zMy4yNTM5MDYtMzcuODc4OTA2LTMzLjI1NzgxMmgtNTEuMTk5MjE4di0xMi41Yy4wNTg1OTMtMTAuNTExNzE5LTQuMDk3NjU3LTIwLjYwNTQ2OS0xMS41MzkwNjMtMjguMDMxMjUtNy40NDE0MDYtNy40MjE4NzUtMTcuNTUwNzgxLTExLjU1NDY4NzUtMjguMDYyNS0xMS40Njg3NWgtODguNzk2ODc1Yy0xMC41MTE3MTktLjA4NTkzNzUtMjAuNjIxMDk0IDQuMDQ2ODc1LTI4LjA2MjUgMTEuNDY4NzUtNy40NDE0MDYgNy40MjU3ODEtMTEuNTk3NjU2IDE3LjUxOTUzMS0xMS41MzkwNjIgMjguMDMxMjV2MTIuNWgtNTEuMTk5MjE5Yy0xOS4xODc1LjAwMzkwNi0zNS4zOTQ1MzEgMTQuMjM0Mzc1LTM3Ljg3ODkwNyAzMy4yNTc4MTItMi40ODA0NjggMTkuMDI3MzQ0IDkuNTM1MTU3IDM2Ljk0MTQwNyAyOC4wNzgxMjYgNDEuODYzMjgyem0yMzkuNjAxNTYyIDI3OS44Nzg5MDZoLTE4OS4yMDMxMjVjLTE3LjA5NzY1NiAwLTMwLjM5ODQzNy0xNC42ODc1LTMwLjM5ODQzNy0zMy41di0yNDUuNWgyNTB2MjQ1LjVjMCAxOC44MTI1LTEzLjMwMDc4MiAzMy41LTMwLjM5ODQzOCAzMy41em0tMTU4LjYwMTU2Mi0zNjcuNWMtLjA2NjQwNy01LjIwNzAzMSAxLjk4MDQ2OC0xMC4yMTg3NSA1LjY3NTc4MS0xMy44OTQ1MzEgMy42OTE0MDYtMy42NzU3ODEgOC43MTQ4NDMtNS42OTUzMTMgMTMuOTI1NzgxLTUuNjA1NDY5aDg4Ljc5Njg3NWM1LjIxMDkzNy0uMDg5ODQ0IDEwLjIzNDM3NSAxLjkyOTY4OCAxMy45MjU3ODEgNS42MDU0NjkgMy42OTUzMTMgMy42NzE4NzUgNS43NDIxODggOC42ODc1IDUuNjc1NzgyIDEzLjg5NDUzMXYxMi41aC0xMjh6bS03MS4xOTkyMTkgMzIuNWgyNzAuMzk4NDM3YzkuOTQxNDA2IDAgMTggOC4wNTg1OTQgMTggMThzLTguMDU4NTk0IDE4LTE4IDE4aC0yNzAuMzk4NDM3Yy05Ljk0MTQwNyAwLTE4LTguMDU4NTk0LTE4LTE4czguMDU4NTkzLTE4IDE4LTE4em0wIDAiIGZpbGw9IiNmZmZmZmYiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvcGF0aD48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Im0xNzMuMzk4NDM4IDE1NC43MDMxMjVjLTUuNTIzNDM4IDAtMTAgNC40NzY1NjMtMTAgMTB2MTg5YzAgNS41MTk1MzEgNC40NzY1NjIgMTAgMTAgMTAgNS41MjM0MzcgMCAxMC00LjQ4MDQ2OSAxMC0xMHYtMTg5YzAtNS41MjM0MzctNC40NzY1NjMtMTAtMTAtMTB6bTAgMCIgZmlsbD0iI2ZmZmZmZiIgZGF0YS1vcmlnaW5hbD0iIzAwMDAwMCIgc3R5bGU9IiIgY2xhc3M9IiI+PC9wYXRoPjwvZz48L3N2Zz4=">
+                 </button>
+             </div>
+            ';
+
+            $data[] = $prizeDistribution;
+        }
+        echo json_encode(['data' => $data]);
+    }
+
+    public function delete_prize_distribution($id)
+    {
+        $this->event_prize_distribution_m->delete($id);
+
+        echo json_encode('ok');
+    }
+
+    public function add_prize_distribution($id)
+    {
+        $data = [
+            'event_id' => $id,
+            'team_id' => $_POST['team_id'],
+            'prize' => $_POST['prize'],
+            'position' => $_POST['position'],
+        ];
+
+        $this->event_prize_distribution_m->create($data);
+
+         echo json_encode('ok');
     }
 }

@@ -156,6 +156,10 @@ $route['c-admin/ajax/events'] = 'event_c/ajax';
 $route['c-admin/events/create'] = 'event_c/create';
 $route['c-admin/events/edit/(:num)'] = 'event_c/edit/$1';
 $route['c-admin/events/delete/(:num)'] = 'event_c/delete/$1';
+$route['c-admin/event/prize/distribution/ajax/(:num)'] = 'event_c/get_prize_distribution/$1';
+$route['c-admin/event/prize/distribution/ajax/delete/(:num)'] = 'event_c/delete_prize_distribution/$1';
+$route['c-admin/event/prize/distribution/ajax/add/(:num)'] = 'event_c/add_prize_distribution/$1';
+
 
 //referral
 $route['c-admin/referral'] = 'referral_c/index';

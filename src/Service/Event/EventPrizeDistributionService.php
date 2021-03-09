@@ -71,7 +71,7 @@ class EventPrizeDistributionService extends EntityService
             $prize = [];
             $prize['position'] = $prizeDistribution->getPosition();
             $prize['prize'] = $prizeDistribution->getPrize();
-            $prize['team'] = $prizeDistribution->getTeam();
+            $prize['team'] = !empty($prizeDistribution->getTeam()) ?  $prizeDistribution->getTeam()->jsonSerialize(): null;
 
             $prizes[$prize['position']] = $prize;
         }

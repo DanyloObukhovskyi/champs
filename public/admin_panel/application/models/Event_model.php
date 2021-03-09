@@ -12,7 +12,8 @@ class Event_model extends CI_Model
         "events_prize_distribution" => "event_prize_distribution",
         "events_map_pool" => "event_map_pool",
         "events_bracket"  => "event_bracket",
-        "matchs" => "match"
+        "matchs" => "match",
+        "teams" => "team"
     ];
 
     const STATUS_ALL = 'all';
@@ -131,5 +132,31 @@ class Event_model extends CI_Model
         $this->db->delete($this->table['events_bracket'], array('event_id' => $id));
         $this->db->delete($this->table['matchs'], array('event_id' => $id));
         $this->db->delete($this->table['events'], array('id' => $id));
+    }
+
+    public function get_prize_distribution($event_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table['events_prize_distribution']);
+        $this->db->where('event_id', $event_id);
+        //$this->db->join('team', 'event_prize_distribution.team_id = team.id');
+
+        $result = $this->db->get();
+        $event_prize_distributions = $result->result_array();
+
+        $data = [];
+        foreach ($event_prize_distributions as $event_prize_distribution) {
+
+            $this->db->select('*');
+            $this->db->from($this->table['teams']);
+            $this->db->where('id', $event_prize_distribution['team_id']);
+            $result = $this->db->get();
+
+            $team = $result->result_array()[0] ?? null;
+
+            $event_prize_distribution['team'] = $team;
+            $data[] = $event_prize_distribution;
+        }
+        return $data;
     }
 }

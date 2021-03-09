@@ -131,6 +131,11 @@ class Event implements \JsonSerializable
      */
     private $isOnline;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $stream;
+
     public function __construct()
     {
         $this->teamsAttending = new ArrayCollection();
@@ -431,5 +436,21 @@ class Event implements \JsonSerializable
     public function setIsOnline($isOnline): void
     {
         $this->isOnline = $isOnline;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
+
+    /**
+     * @param mixed $stream
+     */
+    public function setStream($stream): void
+    {
+        $this->stream = $stream;
     }
 }
