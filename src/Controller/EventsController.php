@@ -171,7 +171,6 @@ class EventsController extends AbstractController
                 $mapPoll[] = $map->jsonSerialize();
             }
         }
-
         return $this->json([
             'event' => $event->jsonSerialize(),
             'prizeDistribution' => $prizeDistribution,
