@@ -212,55 +212,58 @@ class EventRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('e')
             ->orderBy('e.startedAt', 'DESC');
 
-        if (isset($filters->teamA) or isset($filters->teamB)) {
+        if (isset($filters->teamA) || isset($filters->teamB)) {
             $query->innerJoin('e.teamsAttending', 'ta');
         }
-
+        $parameters = [];
         if ($type === EventService::FUTURE) {
-            $query->andWhere('e.startedAt > :date')
-                ->setParameter('date', $date);
+            $query->andWhere('e.startedAt > :date');
+            $parameters['date'] = $date;
         }
         if ($type === EventService::LIVE) {
             $query->andWhere('e.startedAt > :date')
-                ->andWhere('e.endedAt < :date')
-                ->setParameter('date', $date);
+                ->andWhere('e.endedAt < :date');
+            $parameters['date'] = $date;
         }
         if ($type === EventService::PAST) {
-            $query->andWhere('e.startedAt < :date')
-                ->setParameter('date', $date);
+            $query->andWhere('e.startedAt < :date');
+            $parameters['date'] = $date;
         }
 
         if (isset($filters->teamA)) {
-            $query->andWhere('ta.team = :teamA')
-                ->setParameter('teamA', $filters->teamA);
+            $query->andWhere('ta.team = :teamA');
+            $parameters['teamA'] = $filters->teamA;
         }
 
         if (isset($filters->teamB)) {
-            $query->andWhere('ta.team = :teamB')
-                ->setParameter('teamB', $filters->teamB);
+            $query->andWhere('ta.team = :teamB');
+            $parameters['teamB'] = $filters->teamB;
         }
 
         if (!empty($filters->dateFrom)) {
             $from = new \DateTime("$filters->dateFrom 00:00:00");
-            $query->andWhere('e.startedAt >= :dateFrom')
-                ->setParameter('dateFrom', $from);
+            $query->andWhere('e.startedAt >= :dateFrom');
+            $parameters['dateFrom'] = $from;
         }
         if (!empty($filters->dateTo)) {
             $to = new \DateTime("$filters->dateTo 23:59:59");
-            $query->andWhere('e.startedAt <= :dateTo')
-                ->setParameter('dateTo', $to);
+            $query->andWhere('e.startedAt <= :dateTo');
+            $parameters['dateTo'] = $to;
         }
         if (!empty($filters->name)) {
-            $query->andWhere('e.name like :name')
-                ->setParameter('name', "%$filters->name%");
+            $query->andWhere('e.name like :name');
+            $parameters['name'] = "%$filters->name%";
         }
-        if (!empty($filters->online)) {
-            $query->andWhere('e.isOnline = :isOnline')
-                ->setParameter('isOnline', $filters->online);
+        if (!is_null($filters->online)) {
+            $query->andWhere('e.isOnline = :isOnline');
+            $parameters['isOnline'] = $filters->online;
         }
         if (!empty($filters->tournamentType)) {
-            $query->andWhere('e.status = :status')
-                ->setParameter('status', $filters->tournamentType);
+            $query->andWhere('e.status = :status');
+            $parameters['status'] = $filters->tournamentType;
+        }
+        if(!empty($parameters)){
+            $query->setParameters($parameters);
         }
         return $query;
     }

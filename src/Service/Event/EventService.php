@@ -499,7 +499,7 @@ class EventService extends EntityService
             'dateTo' => MatchService::parseDate($filters->dateTo ?? null),
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
-            'online' => $filters->online ?? null,
+            'online' => intVal($filters->online) ?? null,
             'tournamentType' => $filters->tournamentType ?? null
         ];
 
