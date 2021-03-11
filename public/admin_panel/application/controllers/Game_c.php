@@ -79,6 +79,8 @@ class Game_c extends CI_Controller
             } else {
                 $data['is_marketplace'] = 0;
             }
+        } else {
+            $data['is_marketplace'] = 0;
         }
         if (!empty($_FILES['logo']["name"])) {
             $data['logo'] = $this->uploadFile('logo');
