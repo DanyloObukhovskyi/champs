@@ -34,7 +34,7 @@ export default {
 
 <style scoped lang="scss">
 .cabinet-wrapper {
-  width: 70vw;
+  width: 97%;
   margin-bottom: -1vw;
 }
 </style>
