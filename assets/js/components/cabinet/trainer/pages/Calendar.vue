@@ -572,6 +572,7 @@
 		font-weight: 500;
 		font-size: 0.75vw;
 		opacity: .75;
+        text-shadow: none;
 	}
 
 	.lessons .time_mobile {
