@@ -7,6 +7,7 @@
 namespace App\Service;
 
 
+use App\Entity\Event;
 use App\Entity\Player;
 use App\Entity\Team;
 use App\Repository\TeamRepository;
@@ -167,6 +168,7 @@ class TeamService extends EntityService
     /**
      * @param Team $team
      * @return array
+     * @throws \Doctrine\ORM\ORMException
      */
     public function teamDecorator(Team $team): array
     {

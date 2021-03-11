@@ -1,9 +1,21 @@
 <?php
 
 
-class Team_m extends CI_Model
+class Person_m extends CI_Model
 {
-    private $table = "team";
+    private $table = "person";
+
+    public function searchByNickOrName($search)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where("name LIKE '%$search%'");
+        $this->db->or_where("nick LIKE '%$search%'");
+
+        $result = $this->db->get();
+
+        return $result->result_array();
+    }
 
     public function create($data)
     {
@@ -58,6 +70,10 @@ class Team_m extends CI_Model
 
     public function get_one($id)
     {
-        return $this->get(['id' => $id])[0] ?? null;
+        $person = $this->get([
+            'id' => $id
+        ]);
+
+        return $person[0] ?? null;
     }
 }

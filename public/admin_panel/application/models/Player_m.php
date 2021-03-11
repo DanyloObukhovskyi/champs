@@ -1,9 +1,9 @@
 <?php
 
 
-class Team_m extends CI_Model
+class Player_m extends CI_Model
 {
-    private $table = "team";
+    private $table = "player";
 
     public function create($data)
     {
@@ -56,8 +56,13 @@ class Team_m extends CI_Model
         return $data;
     }
 
-    public function get_one($id)
+    public function get_one_by($values)
     {
-        return $this->get(['id' => $id])[0] ?? null;
+        return $this->get($values)[0] ?? null;
+    }
+
+    public function delete_by($values)
+    {
+        $this->db->delete($this->table, $values);
     }
 }

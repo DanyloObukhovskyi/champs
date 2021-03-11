@@ -29,8 +29,7 @@ class Player implements \JsonSerializable
     private $team;
 
     /**
-     * @ORM\OneToOne(targetEntity=Person::class, inversedBy="player", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne   (targetEntity=Person::class, inversedBy="player", cascade={"persist", "remove"})
      */
     private $person;
 
@@ -82,5 +81,21 @@ class Player implements \JsonSerializable
             'start_at' => $this->getStartAt(),
             'team' => $this->getTeam(),
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param mixed $event
+     */
+    public function setEvent($event): void
+    {
+        $this->event = $event;
     }
 }

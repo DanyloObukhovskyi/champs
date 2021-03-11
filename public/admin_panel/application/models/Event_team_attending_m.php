@@ -1,9 +1,9 @@
 <?php
 
 
-class Team_m extends CI_Model
+class Event_team_attending_m extends CI_Model
 {
-    private $table = "team";
+    private $table = "event_team_attending";
 
     public function create($data)
     {
@@ -19,31 +19,25 @@ class Team_m extends CI_Model
         return $result->result_array();
     }
 
-    public function get_paginate($is_count, $offset = 0, $length = null)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-
-        if (!$is_count) {
-            $this->db->limit($offset, $length);
-        }
-        $result = $this->db->get();
-        if ($is_count) {
-            return $result->num_rows();
-        } else {
-            return $result->result_array();
-        }
-    }
-
     public function update($update)
     {
         $this->db->where('id', $update['id']);
         $this->db->update($this->table, $update);
     }
 
+    public function delete_by_event($event_id)
+    {
+        $this->db->delete($this->table, array('event_id' => $event_id));
+    }
+
     public function delete($id)
     {
         $this->db->delete($this->table, array('id' => $id));
+    }
+
+    public function delete_by(array $values)
+    {
+        $this->db->delete($this->table, $values);
     }
 
     public function get($where)
@@ -54,10 +48,5 @@ class Team_m extends CI_Model
             $data = $query->result_array();
         }
         return $data;
-    }
-
-    public function get_one($id)
-    {
-        return $this->get(['id' => $id])[0] ?? null;
     }
 }

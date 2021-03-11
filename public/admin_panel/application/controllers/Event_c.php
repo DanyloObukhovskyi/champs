@@ -27,7 +27,11 @@ class Event_c extends CI_Controller
             'map_m',
             'event_map_pool_m',
             'team_m',
-            'event_prize_distribution_m'
+            'event_prize_distribution_m',
+            'event_team_attending_m',
+            'player_m',
+            'person_m',
+            'player_statistics_m'
         ));
     }
 
@@ -180,8 +184,11 @@ class Event_c extends CI_Controller
 
         if (isset($_POST['create'])) {
             $upload_data = [];
+
             $maps = !empty($_POST['maps']) ? $_POST['maps'] : [];
             $prize_distributions = !empty($_POST['prize_distributions']) ? $_POST['prize_distributions'] : [];
+            $teams_attending = !empty($_POST['teams-attending']) ? $_POST['teams-attending'] : [];
+
             $upload_data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
             $upload_data['stream'] = isset($_POST['stream']) ? $_POST['stream'] : '';
             $upload_data['prize'] = isset($_POST['prize']) ? $_POST['prize'] : '';
@@ -230,6 +237,30 @@ class Event_c extends CI_Controller
                         'prize' => $prize_distribution['prize'] ?? null,
                         'position' => $prize_distribution['position'] ?? null,
                     ));
+                }
+            }
+            $this->event_team_attending_m->delete_by([
+                'event_id' => $event_id,
+            ]);
+            foreach ($teams_attending as $team_attending) {
+                $this->event_team_attending_m->create([
+                    'event_id' => $event_id,
+                    'team_id' => $team_attending['team_id'],
+                    'number' => $team_attending['number']
+                ]);
+
+                foreach ($team_attending['players'] as $player) {
+                    $playerItem = $this->player_m->get_one_by([
+                        'team_id' => $team_attending['team_id'],
+                        'person_id' => $player,
+                    ]);
+
+                    if (empty($playerItem)) {
+                        $this->player_m->create([
+                            'team_id' => $team_attending['team_id'],
+                            'person_id' => $player,
+                        ]);
+                    }
                 }
             }
             $this->session->set_flashdata('message', 'Вы успешно создали событие');
@@ -334,6 +365,83 @@ class Event_c extends CI_Controller
 
         $this->event_prize_distribution_m->create($data);
 
-         echo json_encode('ok');
+        echo json_encode('ok');
+    }
+
+    public function get_teams_attending($id)
+    {
+        $teams = $this->event_team_attending_m->get([
+            'event_id' => $id
+        ]);
+
+        $data = [];
+        foreach ($teams as $team) {
+
+            $team['players'] = [];
+            $players = $this->player_m->get([
+                'team_id' => $team['team_id'],
+            ]);
+
+            foreach ($players as $player) {
+                $team['players'][] = $this->person_m->get_one($player['person_id']);
+            }
+
+            $team['team'] = $this->team_m->get_one($team['team_id']);
+
+            $data[] = $team;
+        }
+
+        echo json_encode($data);
+    }
+
+    public function add_teams_attending($id)
+    {
+        $this->event_team_attending_m->create([
+            'event_id' => $id,
+            'team_id' => $_POST['team_id'] ?? null,
+            'number' => $_POST['number'] ?? null
+        ]);
+
+        echo 'ok';
+    }
+
+    public function delete_teams_attending($id)
+    {
+        $res = $this->event_team_attending_m->delete_by([
+            'id' => $_POST['id'],
+        ]);
+
+        echo 'ok';
+    }
+
+    public function add_player_to_team($id)
+    {
+        $res = $this->player_m->create([
+            'person_id' => $_POST['person_id'],
+            'team_id' => $_POST['team_id'],
+        ]);
+
+        echo 'ok';
+    }
+
+    public function delete_player_to_team($id)
+    {
+        $player = $this->player_m->get([
+           'person_id' => $_POST['person_id'],
+        ]);
+        $player = $player[0] ?? null;
+
+        if (isset($player)) {
+            $this->player_statistics_m->delete_by([
+                'player_id' => $player['id']
+            ]);
+
+            $this->player_m->delete_by([
+                'person_id' => $_POST['person_id'],
+                'team_id' => $_POST['team_id'],
+            ]);
+        }
+
+        echo 'ok';
     }
 }

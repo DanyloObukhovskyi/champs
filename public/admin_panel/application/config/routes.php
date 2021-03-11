@@ -159,6 +159,11 @@ $route['c-admin/events/delete/(:num)'] = 'event_c/delete/$1';
 $route['c-admin/event/prize/distribution/ajax/(:num)'] = 'event_c/get_prize_distribution/$1';
 $route['c-admin/event/prize/distribution/ajax/delete/(:num)'] = 'event_c/delete_prize_distribution/$1';
 $route['c-admin/event/prize/distribution/ajax/add/(:num)'] = 'event_c/add_prize_distribution/$1';
+$route['c-admin/event/ajax/attending/teams/(:num)'] = 'event_c/get_teams_attending/$1';
+$route['c-admin/event/ajax/attending/teams/add/(:num)'] = 'event_c/add_teams_attending/$1';
+$route['c-admin/event/ajax/attending/teams/delete/(:num)'] = 'event_c/delete_teams_attending/$1';
+$route['c-admin/event/ajax/attending/teams/add/player/(:num)'] = 'event_c/add_player_to_team/$1';
+$route['c-admin/event/ajax/attending/teams/delete/player/(:num)'] = 'event_c/delete_player_to_team/$1';
 
 
 //referral
@@ -178,3 +183,6 @@ $route['c-admin/seo'] = 'seo/index';
 $route['c-admin/seo/fetchPages'] = 'seo/fetchPages';
 $route['c-admin/seo/fetch'] = 'seo/fetch';
 $route['c-admin/seo/edit'] = 'seo/edit';
+
+//players
+$route['c-admin/players/ajax/search'] = 'players_c/search';
