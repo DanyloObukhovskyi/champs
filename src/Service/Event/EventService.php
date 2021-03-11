@@ -270,6 +270,8 @@ class EventService extends EntityService
             }
             $event->setFlagIcon($flag);
         }
+        $event->setStatus(Event::STATUS_PRO);
+
         $this->save($event);
 
         return $event;

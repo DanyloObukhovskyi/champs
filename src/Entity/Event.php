@@ -117,7 +117,7 @@ class Event implements \JsonSerializable
     private $tournamentBrackets;
 
     /**
-     * @ORM\Column(type="string", nullable=true, options={"default" : "pro"})
+     * @ORM\Column(type="string", options={"default" : "pro"})
      */
     private $status;
 

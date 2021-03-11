@@ -115,7 +115,7 @@ class Event_c extends CI_Controller
             $upload_data['flag_icon_id'] = !empty($_POST['flag_icon_id']) ? $_POST['flag_icon_id'] : null;
             $upload_data['started_at'] = isset($_POST['started_at']) ? $_POST['started_at'] : null;
             $upload_data['ended_at'] = isset($_POST['ended_at']) ? $_POST['ended_at'] : null;
-            $upload_data['status'] = isset($_POST['status']) ? $_POST['status'] : null;
+            $upload_data['status'] = !empty($_POST['status']) ? $_POST['status'] : null;
             $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
             $upload_data['is_online'] = isset($_POST['is_online']) ? (int)$_POST['is_online'] : 0;
 
@@ -198,7 +198,7 @@ class Event_c extends CI_Controller
             $upload_data['flag_icon_id'] = !empty($_POST['flag_icon_id']) ? $_POST['flag_icon_id'] : null;
             $upload_data['started_at'] = isset($_POST['started_at']) ? $_POST['started_at'] : null;
             $upload_data['ended_at'] = isset($_POST['ended_at']) ? $_POST['ended_at'] : null;
-            $upload_data['status'] = isset($_POST['status']) ? $_POST['status'] : null;
+            $upload_data['status'] = !empty($_POST['status']) ? $_POST['status'] : null;
             $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
             $upload_data['is_online'] = isset($_POST['is_online']) ? (int)$_POST['is_online'] : 0;
 
