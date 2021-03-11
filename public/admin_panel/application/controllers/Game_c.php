@@ -73,6 +73,13 @@ class Game_c extends CI_Controller
         if (isset($_POST['code'])) {
             $data['code'] = $_POST['code'];
         }
+        if (isset($_POST['is_marketplace'])) {
+            if($_POST['is_marketplace'] === 'on'){
+                $data['is_marketplace'] = 1;
+            } else {
+                $data['is_marketplace'] = 0;
+            }
+        }
         if (!empty($_FILES['logo']["name"])) {
             $data['logo'] = $this->uploadFile('logo');
         }

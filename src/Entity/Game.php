@@ -52,6 +52,11 @@ class Game implements \JsonSerializable
      */
     private $isDeleted;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_marketplace;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -183,5 +188,17 @@ class Game implements \JsonSerializable
     public function setIsDeleted($isDeleted): void
     {
         $this->isDeleted = $isDeleted;
+    }
+
+    public function getIsMarketplace(): ?bool
+    {
+        return $this->is_marketplace;
+    }
+
+    public function setIsMarketplace(bool $is_marketplace): self
+    {
+        $this->is_marketplace = $is_marketplace;
+
+        return $this;
     }
 }

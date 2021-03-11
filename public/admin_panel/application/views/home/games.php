@@ -84,6 +84,10 @@
                                         <div class="input mb-5" id="input">
                                             <input name="code" type="text" :value="editGame !== null ? editGame.code: ''" class="fw-600 input2_txt">
                                         </div>
+                                        <label class="label" for="">Показывать игру на странице обучение?</label>
+                                        <div class=" mb-5">
+                                            <input name="is_marketplace" :checked="editGame !== null && editGame.is_marketplace === '1'" type="checkbox" class="form-check-input">
+                                        </div>
                                     </div>
                                 </form>
                             </div>

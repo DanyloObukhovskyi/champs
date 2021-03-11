@@ -3,6 +3,7 @@
         <div class="game"
              @click="setGame(item.code)"
              :class="{active: game === item.code}"
+             v-if="item.isMarketplace"
              v-for="item in games">
             <img :src="'/uploads/games/' + item.logo">
             {{item.name}}
