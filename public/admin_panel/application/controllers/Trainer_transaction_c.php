@@ -30,6 +30,7 @@ class Trainer_transaction_c extends CI_Controller
         $data = [];
 
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['user'] = $this->ion_auth->user()->row();
         $data['output'] = $this->load->view('home/trainer_transaction', $data, true);
         return $this->load->view('layout/home', $data);
     }

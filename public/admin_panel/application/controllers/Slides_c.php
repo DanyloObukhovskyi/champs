@@ -86,6 +86,7 @@ class Slides_c extends CI_Controller
             Slide_model::GENERAL_TYPE => 'Общие',
         ];
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['user'] = $this->ion_auth->user()->row();
 
         $data['output'] = $this->load->view('home/slides', $data, true);
         $this->load->view('layout/home', $data);

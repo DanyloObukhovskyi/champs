@@ -36,6 +36,7 @@ class Ranks_c extends CI_Controller
         $data['images_url'] = $this->config->item('main_url').$this->config->item('display_rank-pic');
         $data['games'] = $this->game_m->get([]);
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['user'] = $this->ion_auth->user()->row();
 
         $data['output'] = $this->load->view('home/ranks', $data, true);
         return $this->load->view('layout/home', $data);

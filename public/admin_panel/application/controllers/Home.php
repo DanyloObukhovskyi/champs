@@ -604,6 +604,7 @@ class Home extends CI_Controller
         $data['paymentType'] = $this->setting_model->get_by_key(Setting_model::PAYMENT_TYPE)[0] ?? null;
         $data['paymentTypes'] = Setting_model::PAYMENT_TYPES;
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['user'] = $this->ion_auth->user()->row();
 
         $data['output'] = $this->load->view('home/settings', $data, true);
 

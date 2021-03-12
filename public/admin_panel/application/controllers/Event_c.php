@@ -40,6 +40,7 @@ class Event_c extends CI_Controller
         $data = [];
         $data['images_url'] = $this->config->item('main_url') . $this->config->item('display_event-pic');
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+        $data['user'] = $this->ion_auth->user()->row();
 
         $data['output'] = $this->load->view('home/events', $data, true);
         $this->load->view('layout/home', $data);
@@ -154,6 +155,7 @@ class Event_c extends CI_Controller
 
         $data['maps'] = $this->map_m->get_all();
         $data['event_map_pool'] = [];
+        $data['user'] = $this->ion_auth->user()->row();
 
         $event_map_pool = $this->event_map_pool_m->get(['event_id' => $id]);
 
@@ -269,6 +271,7 @@ class Event_c extends CI_Controller
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
         $data['maps'] = $this->map_m->get_all();
         $data['teams'] = $this->team_m->get_all();
+        $data['user'] = $this->ion_auth->user()->row();
 
         $data['output'] = $this->load->view('add/event', $data, true);
         $this->load->view('layout/home', $data);
