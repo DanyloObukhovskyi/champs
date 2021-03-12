@@ -14,7 +14,7 @@
                             <span>
                                 {{ weekStart }}
                             </span>
-                            -
+                                -
                             <span>
                                 {{ weekEnd }}
                             </span>

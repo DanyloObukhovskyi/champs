@@ -98,6 +98,7 @@
     .hot-news .game-logo img {
         width: 1.5vw;
         margin-right: .7vw;
+        margin-top: 0.35vw;
     }
 
     .hot-news .title {
