@@ -906,7 +906,7 @@ class Home extends CI_Controller
                     '<img class="pr-10" style="vertical-align: middle;" src="'.base_url("assets/img/news_type/".$postType['img']).'"/> '.$postType['title'].'',
                     $post['date'],
                     '<a class="pointer" href="'.base_url("c-admin/post/edit/".$post['id']."/".$this->UserID).'"><button class="btn btn-dark-blue btn-small">Редактировать</button></a>
-                    <div onclick="c_delete(\''.base_url("c-admin/post/edit/".$post['id']."/".$this->UserID).'\',\''.$post['title'].'\',\'Post\')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div>'
+                    <div onclick="c_delete(\''.base_url("c-admin/post/delete/".$post['id']."/".$this->UserID).'\',\''.$post['title'].'\',\'Post\')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div>'
                 ];
             }
         }

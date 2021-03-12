@@ -277,6 +277,7 @@
         integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
         crossorigin="anonymous"></script>
 <script src="https://unpkg.com/vue-select@3.0.0"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script type="text/x-template" id="map-pool-template">
     <div id="event-map-pool">
@@ -499,7 +500,7 @@
         },
         methods: {
             deleteMap(map) {
-                this.eventMapPool = this.eventMapPool.filter(m => m.id !== map.id)
+                this.eventMapPool = this.eventMapPool.filter(m => m.id !== map.id);
             },
             addMap() {
                 const findMap = this.eventMapPool.find(m => m.id === this.selectedMap)
@@ -529,10 +530,20 @@
         },
         methods: {
             delete(id) {
-                axios.post('<?php echo base_url('c-admin/event/prize/distribution/ajax/delete/');?>' + id)
-                    .then(() => {
-                        this.table.ajax.reload();
-                    })
+                Swal.fire({
+                    title: 'Подтвердите удвление!',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Подтвердить`,
+                    denyButtonText: `Отмена`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.post('<?php echo base_url('c-admin/event/prize/distribution/ajax/delete/');?>' + id)
+                            .then(() => {
+                                this.table.ajax.reload();
+                            })
+                    }
+                })
             },
             add() {
                 const data = new FormData();
@@ -623,15 +634,25 @@
                 }
             },
             deleteTeam(index) {
-                const data = new FormData();
+                Swal.fire({
+                    title: 'Подтвердите удвление!',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Подтвердить`,
+                    denyButtonText: `Отмена`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const data = new FormData();
 
-                data.append('id', this.teamsAttending[index].id);
-                data.append('number', this.number);
+                        data.append('id', this.teamsAttending[index].id);
+                        data.append('number', this.number);
 
-                axios.post('<?php echo base_url('c-admin/event/ajax/attending/teams/delete/' . $event['id']);?>', data)
-                    .then(() => {
-                        this.getTeamsAttending()
-                    })
+                        axios.post('<?php echo base_url('c-admin/event/ajax/attending/teams/delete/' . $event['id']);?>', data)
+                            .then(() => {
+                                this.getTeamsAttending()
+                            })
+                    }
+                })
             },
             showModal(index) {
                 this.show = true;
@@ -668,19 +689,29 @@
                 }
             },
             deleteTeamPlayer(index) {
-                const player = this.attendingTeam.players[index];
+                Swal.fire({
+                    title: 'Подтвердите удвление!',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Подтвердить`,
+                    denyButtonText: `Отмена`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const player = this.attendingTeam.players[index];
 
-                if (player) {
-                    const data = new FormData();
+                        if (player) {
+                            const data = new FormData();
 
-                    data.append('person_id', player.id);
-                    data.append('team_id', this.attendingTeam.team.id);
+                            data.append('person_id', player.id);
+                            data.append('team_id', this.attendingTeam.team.id);
 
-                    axios.post('<?php echo base_url('c-admin/event/ajax/attending/teams/delete/player/' . $event['id']);?>', data)
-                        .then(() => {
-                            this.getTeamsAttending()
-                        })
-                }
+                            axios.post('<?php echo base_url('c-admin/event/ajax/attending/teams/delete/player/' . $event['id']);?>', data)
+                                .then(() => {
+                                    this.getTeamsAttending()
+                                })
+                        }
+                    }
+                })
             }
         },
         mounted() {

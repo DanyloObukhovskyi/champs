@@ -42,4 +42,9 @@ class Comment_m extends CI_Model
     {
         $this->db->delete($table, array('id' => $id));
     }
+
+    public function delete_news_comments($news_id)
+    {
+        $this->db->delete(self::NEWS_COMMENT_TABLE, array('news_id' => $news_id));
+    }
 }

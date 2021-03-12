@@ -19,7 +19,12 @@
 				redirect ('login/auth');
 				die();
 			}
-			$this->load->model(array('delete_m', 'users_model'));
+			$this->load->model(array(
+			    'delete_m',
+                'users_model',
+                'post_tags_model',
+                'comment_m'
+            ));
 			$this->user_capabilities = $this->config->item('user_capabilities');
 		}
 		
@@ -37,6 +42,8 @@
 				redirect($_SERVER["HTTP_REFERER"]);
 			}
 			if($current_u_can[0] == "1" || $current_u_can[1] == "1") {
+			    $this->post_tags_model->delete_by_post_id($post_id);
+			    $this->comment_m->delete_news_comments($post_id);
 				$this->delete_m->delete_post($post_id);
 				redirect($_SERVER["HTTP_REFERER"]);
 				die();
