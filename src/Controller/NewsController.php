@@ -90,7 +90,7 @@ class NewsController extends AbstractController
      */
     public function index(Request $request)
     {
-        $popularTags = $this->newsTagService->popularTags(5);
+        $popularTags = $this->newsTagService->popularTags(11);
 
         $seoSettings = $this->seoService->getSeo('news_index');
         $newsEntities = $this->newsService->getMainNews();

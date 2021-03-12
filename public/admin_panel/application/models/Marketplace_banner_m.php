@@ -26,6 +26,9 @@ class Marketplace_banner_m extends CI_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
+        $this->db->join('game', "game.id = {$this->table}.game_id", 'left');
+        $this->db->where('is_deleted', 0);
+
         if (!$is_count) {
             $this->db->limit($offset, $length);
         }

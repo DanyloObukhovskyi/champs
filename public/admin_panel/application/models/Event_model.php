@@ -54,6 +54,8 @@ class Event_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table['events']);
+        $this->db->join('game', "game.id = {$this->table['events']}.game_id", 'left');
+        $this->db->where('is_deleted', 0);
 
         if (!$is_count) {
             $this->db->limit($offset, $length);
@@ -74,6 +76,7 @@ class Event_model extends CI_Model
     public function getEventData($limit, $offset, $count, $query, $column, $order)
     {
         $this->db->select('*');
+
         if ($query != '') {
             $this->db->where("(id LIKE '%$query%'");
             $this->db->or_where("name LIKE '%$query%'");
@@ -83,18 +86,20 @@ class Event_model extends CI_Model
             $this->db->or_where("location LIKE '%$query%'");
         }
         if ($column == 0) {
-            $this->db->order_by('id', $order);
+            $this->db->order_by('event.id', $order);
         } elseif ($column == 1) {
-            $this->db->order_by('name', $order);
+            $this->db->order_by('event.name', $order);
         } elseif ($column == 2) {
-            $this->db->order_by('started_at', $order);
+            $this->db->order_by('event.started_at', $order);
         } elseif ($column == 3) {
-            $this->db->order_by('ended_at', $order);
+            $this->db->order_by('event.ended_at', $order);
         } elseif ($column == 4) {
-            $this->db->order_by('prize', $order);
+            $this->db->order_by('event.prize', $order);
         } elseif ($column == 5) {
-            $this->db->order_by('location', $order);
+            $this->db->order_by('event.location', $order);
         }
+        $this->db->join('game', "game.id = event.game_id", 'left');
+        $this->db->where('is_deleted', 0);
         if ($count) {
             return count($this->get([]));
         }

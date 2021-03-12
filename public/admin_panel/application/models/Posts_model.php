@@ -28,6 +28,7 @@
 			$this->db->from($this->table);
 			$this->db->join('(SELECT id as news_type_id, title as type_title, img as type_img FROM news_type 
                                                  ) AS `news_types`', 'news_types.news_type_id = news.type', 'left');
+
 			if (!empty($where['id'])) {
 				$this->db->where('id', $where['id']);
 			}
@@ -151,19 +152,24 @@
         public function getNewsData($limit, $offset, $count, $query, $column, $order)
         {
             $this->db->select('*');
+
+            $this->db->join('game', "game.id = {$this->table}.game_id", 'left');
+            $this->db->where('is_deleted', 0);
+            $this->db->or_where('is_deleted', null);
+
             if ($query != '') {
                 $this->db->where("(id LIKE '%$query%'");
                 $this->db->or_where("title LIKE '%$query%'");
                 $this->db->or_where("date LIKE '%$query%'");
             }
             if ($column == 0) {
-                $this->db->order_by('id', $order);
+                $this->db->order_by("{$this->table}.id", $order);
             } elseif ($column == 1) {
-                $this->db->order_by('title', $order);
+                $this->db->order_by("{$this->table}.title", $order);
             } elseif ($column == 2) {
-                $this->db->order_by('type', $order);
+                $this->db->order_by("{$this->table}.type", $order);
             } elseif ($column == 3) {
-                $this->db->order_by('date', $order);
+                $this->db->order_by("{$this->table}.date", $order);
             }
             if ($count) {
                 return count($this->get([]));

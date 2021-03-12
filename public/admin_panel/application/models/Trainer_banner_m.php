@@ -36,11 +36,14 @@ class Trainer_banner_m extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->join('game', "game.id = {$this->table}.game_id", 'left');
+        $this->db->where('is_deleted', 0);
 
         if (!$is_count) {
             $this->db->limit($offset, $length);
         }
         $result = $this->db->get();
+
         if ($is_count) {
             return $result->num_rows();
         } else {
@@ -49,6 +52,7 @@ class Trainer_banner_m extends CI_Model
 
             $this->db->select('*');
             $this->db->from($this->game_table);
+            $this->db->where('is_deleted', 0);
 
             $games = $this->db->get()->result_array();
 
