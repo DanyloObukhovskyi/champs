@@ -15,6 +15,7 @@
                 </div>
             </div>
             <form name="uploadAvatar" class="upload">
+                <span>Размеры:1250x1250</span>
                 <label for="avatar-upload-form">
                     Выбрать файл
                 </label>
@@ -87,8 +88,26 @@ export default {
         setPreviewImage() {
             const input = document.querySelector('#avatar-upload-form');
 
+            const self = this;
+
             if (input.files && input.files[0]) {
                 this.previewImage = URL.createObjectURL(input.files[0]);
+
+                const img = new Image();
+                img.onload = function () {
+
+                    if (this.width > 1250 || this.height > 1250) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Разрешения изображения привышает 1250x1250!',
+                        })
+
+                        self.previewImage = null;
+                        input.value = '';
+                    }
+                };
+                img.src = URL.createObjectURL(input.files[0]);
             }
         },
     }
@@ -129,6 +148,12 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 1.5vw;
+    flex-direction: column;
+    align-items: center;
+
+    span {
+      font-size: 1vw;
+    }
 
     label {
       background: #ff6d1d;
