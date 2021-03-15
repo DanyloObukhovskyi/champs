@@ -218,8 +218,8 @@
 		  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
 
 		  img {
-			height: 100%;
-			width: 9vw;
+            width: auto;
+            height: 13vw;
 		  }
 		}
 	  }
