@@ -91,14 +91,6 @@
             <div class="w-100 d-flex justify-content-center">
                 <loader v-if="load"/>
             </div>
-            <paginate
-                    v-if="showPaginate"
-                    :page-count="pagesCount"
-                    :click-handler="setPage"
-                    prev-text="Prev"
-                    next-text="Next"
-                    container-class="pagination">
-            </paginate>
         </div>
     </div>
 </template>
@@ -185,15 +177,17 @@
                     game: null,
                     tournamentType: null,
                 },
+                isLoadAll: false,
                 countries: [],
                 cities: [],
             }
         },
         watch: {
             selectEventsType() {
-                this.getEvents()
-            },
-            page() {
+                this.isLoadAll = false;
+                this.events = [];
+                this.page = 1;
+
                 this.getEvents()
             },
             'filters.dateFrom': function () {
@@ -240,19 +234,26 @@
         },
         methods: {
             getEvents() {
-                this.load = true
-                this.events = [];
+                if (!this.load && !this.isLoadAll) {
+                    this.load = true
 
-                eventService.getDigestEvents(this.selectEventsType, this.page, this.filters)
-                    .then(data => {
-                        this.events = data.events;
-                        this.counts = data.counts;
+                    eventService.getDigestEvents(this.selectEventsType, this.page, this.filters)
+                        .then(data => {
+                            this.counts = data.counts;
 
-                        if (data.limit !== null) {
-                            this.perPage = data.limit
-                        }
-                        this.load = false
-                    })
+                            if (data.events.length === 0) {
+                                this.isLoadAll = true;
+                            }
+                            for (let event of data.events) {
+                                this.events.push(event)
+                            }
+                            if (data.limit !== null) {
+                                this.perPage = data.limit
+                            }
+                            this.load = false
+                            this.page = this.page + 1;
+                        })
+                }
             },
             selectGame(game) {
                 if (this.filters.game === game){
@@ -267,9 +268,20 @@
             setFilter(filter, value) {
                 this.filters[filter] = value;
             },
+            scrollEventTrigger() {
+                const self = this;
+                window.onscroll = () => {
+                    const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+
+                    if (scrollable <= 10) {
+                        self.getEvents()
+                    }
+                }
+            },
         },
         mounted() {
             this.getEvents()
+            this.scrollEventTrigger();
 
             GAMES.map(game => {
                 if (this.eventsGames.indexOf(game) !== -1){
