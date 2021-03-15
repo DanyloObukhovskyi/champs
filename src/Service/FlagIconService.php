@@ -16,21 +16,23 @@ class FlagIconService extends EntityService
     {
         /** @var FlagIcon $flagIcon */
         $flagIcon = $this->repository->getFlagByOrigName($flag['name']);
+        $image = DownloadFile::getImage(HLTVService::urlDecorator($flag['url']));
 
-        if (empty($flagIcon)){
-            $image = DownloadFile::getImage(HLTVService::urlDecorator($flag['url']));
-
-            if (isset($image))
-            {
+        if (empty($flagIcon)) {
+            if (isset($image)) {
                 $flagIcon = new $this->entity;
                 $flagIcon->setOrigName($flag['name']);
                 $flagIcon->setExtension($flag['extension']);
                 $flagIcon->setName($image);
-
-                $flagIcon = $this->save($flagIcon);
+            }
+        } else {
+            if (isset($image)) {
+                $flagIcon->setOrigName($flag['name']);
+                $flagIcon->setExtension($flag['extension']);
+                $flagIcon->setName($image);
             }
         }
-        return $flagIcon;
+        return $this->save($flagIcon);
     }
 
     public function getFlagByOrigName(string $name)

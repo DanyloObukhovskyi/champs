@@ -1,12 +1,12 @@
 <template>
     <div class="team-players col-3">
         <div class="team">
-            <div class="logo">
+            <div class="logo" @click="show = !show">
                 <img :src="team.logo" @error="$event.target.src = '/images/noLogo.png'">
                 {{team.name}}
             </div>
         </div>
-        <div class="players">
+        <div class="players" v-show="show">
             <div class="player" v-for="player in team.players">
                 <img :src="'/uploads/images/' + player.photo" @error="$event.target.src = '/images/noLogo.png'">
                 {{player.nick}}
@@ -19,11 +19,19 @@
     export default {
         name: "TeamPlayers",
         props: ['team'],
+        data() {
+            return {
+                show: false
+            }
+        }
     }
 </script>
 
 <style scoped>
+    @import "../../../css/animations.css";
+
     .team {
+        cursor: pointer;
         font-size: 1.2vw;
         display: flex;
         justify-content: space-between;

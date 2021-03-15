@@ -38,12 +38,14 @@ class ParseFlagsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         new LoggerService(new SymfonyStyle($input, $output));
+
         $entityManager = $this->getApplication()->getKernel()->getContainer()->get('doctrine')->getManager();
         $flagIconService = new FlagIconService($entityManager);
 
 
         LoggerService::info("hltv flags parse");
         $flags = $this->getFlags();
+
         foreach ($flags as $flag) {
             LoggerService::info("hltv flag create: {$flag['name']}");
 

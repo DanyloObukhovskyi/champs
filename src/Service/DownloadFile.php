@@ -7,6 +7,7 @@
 namespace App\Service;
 
 
+use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\HttpClient;
 
 class DownloadFile
@@ -102,7 +103,27 @@ class DownloadFile
      */
     protected static function getContent($url)
     {
-        $client = HttpClient::create();
+        global $kernel;
+
+        $userAgents = $kernel->getContainer()
+            ->getParameter('user-agents');
+
+        $userAgentKey = array_rand($userAgents, 1);
+        $userAgent = $userAgents[$userAgentKey];
+
+        $options['headers'] = [
+            'User-Agent'=> $userAgent
+        ];
+
+        if ($_ENV['ENABLE_PROXY'] === 'true') {
+            $proxySettings = $kernel->getContainer()->getParameter('proxy');
+            $key = array_rand($proxySettings, 1);
+            $proxy = $proxySettings[$key];
+
+            $options['proxy'] = "{$proxy['user']}:{$proxy['password']}@{$proxy['host']}:{$proxy['port']}";
+        }
+
+        $client = new CurlHttpClient($options);
         $response = $client->request('GET', $url);
 
         $statusCode = $response->getStatusCode();
