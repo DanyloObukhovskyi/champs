@@ -5,7 +5,7 @@
         </div>
         <div class="prize-distribution-body">
             <div class="distribution" v-for="(prize, index) in distributions">
-                <img class="rating" :src="getRatingImage(index + 1)">
+                <div class="number" :class="index <= 2 ? `number_${index + 1}`: 'number_default'"></div>
                 <div class="d-flex justify-content-between w-100">
                     <div class="d-flex">
                         <div class="position">
@@ -138,8 +138,9 @@ export default {
     align-items: center;
 }
 
-.prize-distribution-body .distribution img.rating {
+.prize-distribution-body .distribution .number {
     height: 100%;
+    width: 2vw;
 }
 
 .prize-distribution-body .distribution img.rating:nth-child(3) {
@@ -170,5 +171,49 @@ export default {
 .prize-distribution-body .distribution .position .star img {
     height: 1vw;
     margin: 0 .5vw 0 1vw;
+}
+
+.prize-distribution-body .distribution .number.number_1::before {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #fdd051;
+    position: absolute;
+}
+
+.prize-distribution-body .distribution .number.number_2::before {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #b6b6b6;
+    position: absolute;
+}
+
+.prize-distribution-body .distribution .number.number_3::before {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #9d7a54;
+    position: absolute;
+}
+
+.prize-distribution-body .distribution .number.number_default::before {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #2d3135;
+    position: absolute;
 }
 </style>
