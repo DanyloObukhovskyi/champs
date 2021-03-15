@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\News;
 use App\Entity\NewsType;
 use App\Entity\NewsBookmark;
@@ -322,7 +323,13 @@ class NewsController extends AbstractController
      */
     public function getNewsByGame($game)
     {
-        $news = $this->newsService->getByGame($game);
+        $gameEntity = $this->entityManager
+            ->getRepository(Game::class)
+            ->findOneBy([
+                'code' => $game
+            ]);
+        
+        $news = $this->newsService->getByGame($gameEntity);
 
         $newsArray = [];
         foreach ($news as $new) {
