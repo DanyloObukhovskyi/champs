@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class OfferController extends AbstractController
 {
     public function __construct(EntityManagerInterface $entityManager)
@@ -17,7 +20,7 @@ class OfferController extends AbstractController
     }
 
     /**
-     * @Route("/ru/offer", name="offer_index")
+     * @Route("/oferta_na_okazanie_uslug", name="offer_index")
      */
     public function index()
     {

@@ -8,6 +8,9 @@ use App\Service\Seo\SeoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class CompetitionController extends AbstractController
 {
     /**
@@ -28,7 +31,7 @@ class CompetitionController extends AbstractController
     }
 
     /**
-     * @Route("/ru/competition", name="competition_index")
+     * @Route("/polozhenie_o_konkurse", name="competition_index")
      */
     public function index()
     {

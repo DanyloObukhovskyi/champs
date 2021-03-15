@@ -7,8 +7,21 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class TermsController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    public $entityManager;
+
+    /**
+     * @var SeoService
+     */
+    public $seoService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -17,7 +30,7 @@ class TermsController extends AbstractController
     }
 
     /**
-     * @Route("/ru/terms", name="terms_index")
+     * @Route("/usloviya_oformleniya_zakaza_trenirovok", name="terms_index")
      */
     public function index()
     {

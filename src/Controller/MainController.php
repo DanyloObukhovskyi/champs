@@ -332,7 +332,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/service_agreement", name="service_agreement_index")
+     * @Route("/oferta_na_okazanie_uslug_treneru", name="service_agreement_index")
      */
     public function service_agreement()
     {

@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class ContactController extends AbstractController
 {
 
@@ -27,7 +30,7 @@ class ContactController extends AbstractController
         $this->seoService = new SeoService($entityManager);
     }
     /**
-     * @Route("/ru/contact", name="contact_index")
+     * @Route("/kontakty", name="contact_index")
      */
     public function index()
     {

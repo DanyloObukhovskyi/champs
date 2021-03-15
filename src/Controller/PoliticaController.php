@@ -7,18 +7,29 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class PoliticaController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    public $entityManager;
+
+    /**
+     * @var SeoService
+     */
+    public $seoService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-
         $this->seoService = new SeoService($entityManager);
     }
 
     /**
-     * @Route("/ru/politica", name="politica_index")
+     * @Route("/politika_konfedinczialnosti", name="politica_index")
      */
     public function index()
     {
@@ -31,7 +42,7 @@ class PoliticaController extends AbstractController
             'description' => $seoSettings['description'],
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
-            'router' => 'politica']);
+            'router' => 'politica'
+        ]);
     }
-
 }

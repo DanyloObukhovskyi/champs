@@ -8,6 +8,9 @@ use App\Service\Seo\SeoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class AboutController extends AbstractController
 {
     /**
@@ -28,7 +31,7 @@ class AboutController extends AbstractController
     }
 
     /**
-     * @Route("/ru/about", name="about_index")
+     * @Route("/o_nas", name="about_index")
      */
     public function index()
     {
