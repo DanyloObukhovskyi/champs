@@ -151,7 +151,7 @@
 
         public function getNewsData($limit, $offset, $count, $query, $column, $order)
         {
-            $this->db->select('*');
+            $this->db->select('news.*');
 
             $this->db->join('game', "game.id = {$this->table}.game_id", 'left');
             $this->db->where('is_deleted', 0);
