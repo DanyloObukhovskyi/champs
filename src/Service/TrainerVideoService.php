@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
+use App\Repository\TrainerVideoRepository;
 
 class TrainerVideoService extends EntityService
 {
@@ -21,6 +22,9 @@ class TrainerVideoService extends EntityService
 
     protected $entity = TrainerVideo::class;
 
+    /**
+     * @var TrainerVideoRepository
+     */
     protected $repository;
 
     /**
@@ -44,16 +48,17 @@ class TrainerVideoService extends EntityService
     public function deleteVideo(Teachers $trainer, $video)
     {
         $trainerVideo = $this->repository->getByTrainerAndVideo($trainer, $video);
+
         if (isset($trainerVideo)) {
             $this->delete($trainerVideo);
         }
     }
 
     /**
-     * @param User $trainer
+     * @param Teachers $trainer
      * @return mixed
      */
-    public function getByTrainer(User $trainer)
+    public function getByTrainer(Teachers $trainer)
     {
         return $this->repository->getByTrainer($trainer);
     }

@@ -152,7 +152,7 @@ class UserService  extends EntityService
 
         $user->setTrainer($trainer);
 
-        $videos = $this->trainerVideosService->getByTrainer($user);
+        $videos = $this->trainerVideosService->getByTrainer($trainer);
         $videos = $this->trainerVideosService->decorator($videos);
 
         $trainerGame = $user->getGame();

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -20,7 +21,7 @@ class TrainerVideoRepository extends ServiceEntityRepository
         parent::__construct($registry, TrainerVideo::class);
     }
 
-    public function getByTrainer(User $trainer)
+    public function getByTrainer(Teachers $trainer)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.trainer = :trainer')
@@ -30,7 +31,7 @@ class TrainerVideoRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getByTrainerAndVideo(User $trainer, $video)
+    public function getByTrainerAndVideo(Teachers $trainer, $video)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.trainer = :trainer')
