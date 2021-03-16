@@ -54,6 +54,9 @@
             <form class="editor-edit-form" action="<?php print base_url("c-admin/post/add/".$UserID); ?>" method="post" enctype="multipart/form-data">
                 <input type="hidden" value="true" name="add">
                 <input type="hidden" value="" id="post_type" name="post_type">
+                <div class="editor-edit mt-10">Топ 5</div>
+                <input class="mt-5 mb-10" type="checkbox" name="is_top">
+                <div></div>
                 <input class="editor-edit-form-input" type="text" name="post_title" placeholder="Заголовок" required>
                 <div class="editor-edit mt-10">Теги</div>
                 <input type="text"

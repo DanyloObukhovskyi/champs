@@ -150,6 +150,8 @@ export default {
         font-size: 1vw;
         color: black;
         font-family: 'Exo 2', sans-serif;
+        white-space: pre-wrap;
+        margin-bottom: 0vw;
       }
     }
   }
