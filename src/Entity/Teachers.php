@@ -59,6 +59,11 @@ class Teachers
     private $isLessonCost;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $adminPercentage;
+
+    /**
      * @ORM\OneToMany(targetEntity=TrainerLessonPrice::class, mappedBy="trainer")
      */
     private $costs;
@@ -180,4 +185,21 @@ class Teachers
     {
         $this->isLessonCost = $isLessonCost;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAdminPercentage()
+    {
+        return $this->adminPercentage;
+    }
+
+    /**
+     * @param mixed $adminPercentage
+     */
+    public function setAdminPercentage($adminPercentage): void
+    {
+        $this->adminPercentage = $adminPercentage;
+    }
+
 }

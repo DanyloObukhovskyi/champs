@@ -99,7 +99,9 @@ class TrainerLessonPrice implements \JsonSerializable
      */
     public function getPriceWithPercentage(): ?int
     {
-        $percentageMarkup = $_ENV['PERCENTAGE_MARKUP_LESSON'];
+        $percentageMarkup = !empty($this->trainer->getAdminPercentage()) ?
+            $this->trainer->getAdminPercentage():
+            $_ENV['PERCENTAGE_MARKUP_LESSON'];
 
         $cost = $this->price;
 
