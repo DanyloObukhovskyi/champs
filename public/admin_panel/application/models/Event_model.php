@@ -52,7 +52,7 @@ class Event_model extends CI_Model
 
     public function get_paginate($is_count, $offset = 0, $length = null)
     {
-        $this->db->select('*');
+        $this->db->select('event.*');
         $this->db->from($this->table['events']);
         $this->db->join('game', "game.id = {$this->table['events']}.game_id", 'left');
         $this->db->where('is_deleted', 0);
@@ -75,7 +75,7 @@ class Event_model extends CI_Model
 
     public function getEventData($limit, $offset, $count, $query, $column, $order)
     {
-        $this->db->select('*');
+        $this->db->select('event.*');
 
         if ($query != '') {
             $this->db->where("(id LIKE '%$query%'");
