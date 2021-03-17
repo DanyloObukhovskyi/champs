@@ -6,6 +6,7 @@ use App\Repository\EventRepository;
 use App\Service\News\NewsService;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -132,9 +133,9 @@ class Event implements \JsonSerializable
     private $isOnline;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity=EventStream::class, mappedBy="event")
      */
-    private $stream;
+    private $streams;
 
     public function __construct()
     {
@@ -146,6 +147,7 @@ class Event implements \JsonSerializable
 
         $this->relatedEvents = new ArrayCollection();
         $this->tournamentBrackets = new ArrayCollection();
+        $this->streams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -439,18 +441,32 @@ class Event implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Collection|EventStream[]
      */
-    public function getStream()
+    public function getStreams(): Collection
     {
-        return $this->stream;
+        return $this->streams;
     }
 
-    /**
-     * @param mixed $stream
-     */
-    public function setStream($stream): void
+    public function addStream(EventStream $stream): self
     {
-        $this->stream = $stream;
+        if (!$this->streams->contains($stream)) {
+            $this->streams[] = $stream;
+            $stream->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStream(EventStream $stream): self
+    {
+        if ($this->streams->removeElement($stream)) {
+            // set the owning side to null (unless already changed)
+            if ($stream->getEvent() === $this) {
+                $stream->setEvent(null);
+            }
+        }
+
+        return $this;
     }
 }

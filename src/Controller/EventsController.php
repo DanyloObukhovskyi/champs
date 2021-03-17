@@ -9,6 +9,7 @@ use App\Service\Event\EventGroupPlayService;
 use App\Service\Event\EventMapPoolService;
 use App\Service\Event\EventPrizeDistributionService;
 use App\Service\Event\EventService;
+use App\Service\Event\EventStreamService;
 use App\Service\Event\EventTeamAttendingService;
 use App\Service\Match\MatchService;
 use App\Service\Seo\SeoService;
@@ -51,6 +52,12 @@ class EventsController extends AbstractController
     /** @var TeamService */
     public $teamService;
 
+    /** @var EventStreamService */
+    public $eventStreamService;
+
+    /** @var SeoService */
+    public $seoService;
+
     /**
      * EventsController constructor.
      */
@@ -71,6 +78,7 @@ class EventsController extends AbstractController
         $this->teamService = new TeamService($this->entityManager);
 
         $this->seoService = new SeoService($entityManager);
+        $this->eventStreamService = new EventStreamService($entityManager);
     }
 
     /**
@@ -140,7 +148,7 @@ class EventsController extends AbstractController
     /**
      * @Route("/ajax/event/{id}")
      */
-    public function getEvent($id, SerializerInterface $serializer)
+    public function getEvent($id)
     {
         /** @var Event $event */
         $event = $this->entityManager
@@ -171,6 +179,9 @@ class EventsController extends AbstractController
                 $mapPoll[] = $map->jsonSerialize();
             }
         }
+        $streams = $event->getStreams();
+        $streams = $this->decorateStreams($streams);
+
         return $this->json([
             'event' => $event->jsonSerialize(),
             'prizeDistribution' => $prizeDistribution,
@@ -178,7 +189,20 @@ class EventsController extends AbstractController
             'mapsPool' => $mapPool,
             'brackets' => $brackets,
             'matches' => $matchesByDay,
+            'streams' => $streams
         ]);
+    }
+
+    /**
+     * @param $streams
+     * @return \Generator
+     */
+    public function decorateStreams($streams): \Generator
+    {
+        foreach ($streams as $stream)
+        {
+            yield $this->eventStreamService->decorate($stream);
+        }
     }
 
     /**
