@@ -10,6 +10,9 @@
                                 {{ event.name }}
                             </h2>
                         </div>
+                        <div class="game" v-if="event.game !== null">
+                            <img :src="`/images/events/${event.game.code}.png`">
+                        </div>
                     </div>
                 </div>
                 <div class="event-date d-flex justify-content-center ">
@@ -321,6 +324,27 @@ export default {
 
 .dark .show button {
     background: #1e2123;
+}
+
+.event .banner .game {
+    height: 2vw;
+    font-size: .8vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #242424;
+    border-radius: .3vw;
+    cursor: pointer;
+    width: 3vw;
+    padding: .2vw;
+    margin-top: .2vw;
+    position: absolute;
+    right: .2vw;
+    top: -.2vw;
+}
+
+.event .banner .game img {
+    width: 3vw;
 }
 </style>
 

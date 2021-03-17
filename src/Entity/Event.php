@@ -389,6 +389,7 @@ class Event implements \JsonSerializable
             'commandsCount' => $this->getCommandCount(),
             'location' => $this->getLocation(),
             'flag' => $this->getFlagIcon(),
+            'game' => $this->getGame()
         ];
     }
 
