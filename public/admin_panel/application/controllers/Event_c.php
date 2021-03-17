@@ -31,7 +31,9 @@ class Event_c extends CI_Controller
             'event_team_attending_m',
             'player_m',
             'person_m',
-            'player_statistics_m'
+            'player_statistics_m',
+            'event_stream_m',
+            'country_m'
         ));
     }
 
@@ -108,7 +110,6 @@ class Event_c extends CI_Controller
             $upload_data = [];
             $maps = !empty($_POST['maps']) ? $_POST['maps'] : [];
             $upload_data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
-            $upload_data['stream'] = isset($_POST['stream']) ? $_POST['stream'] : '';
             $upload_data['prize'] = isset($_POST['prize']) ? $_POST['prize'] : '';
             $upload_data['location'] = isset($_POST['location']) ? $_POST['location'] : '';
             $upload_data['command_count'] = isset($_POST['command_count']) ? $_POST['command_count'] : null;
@@ -190,9 +191,9 @@ class Event_c extends CI_Controller
             $maps = !empty($_POST['maps']) ? $_POST['maps'] : [];
             $prize_distributions = !empty($_POST['prize_distributions']) ? $_POST['prize_distributions'] : [];
             $teams_attending = !empty($_POST['teams-attending']) ? $_POST['teams-attending'] : [];
+            $streams = !empty($_POST['streams']) ? $_POST['streams'] : [];
 
             $upload_data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
-            $upload_data['stream'] = isset($_POST['stream']) ? $_POST['stream'] : '';
             $upload_data['prize'] = isset($_POST['prize']) ? $_POST['prize'] : '';
             $upload_data['location'] = isset($_POST['location']) ? $_POST['location'] : '';
             $upload_data['command_count'] = isset($_POST['command_count']) ? $_POST['command_count'] : null;
@@ -223,6 +224,14 @@ class Event_c extends CI_Controller
             }
             $event_id = $this->event_model->create($upload_data);
 
+            if (!empty($streams)) {
+                foreach ($streams as $stream) {
+                    $this->event_stream_m->create(array(
+                        'event_id' => $event_id,
+                        'flag_icon_id' => $stream['icon_id'],
+                    ));
+                }
+            }
             if (!empty($maps)) {
                 foreach ($maps as $map) {
                     $this->event_map_pool_m->create(array(
@@ -446,5 +455,41 @@ class Event_c extends CI_Controller
         }
 
         echo 'ok';
+    }
+
+    public function add_event_stream($id)
+    {
+        $this->event_stream_m->create([
+            'event_id' => $id,
+            'stream' => $_POST['stream'],
+            'flag_icon_id' => $_POST['icon_id'],
+        ]);
+
+        echo json_encode('ok');
+    }
+
+    public function delete_event_stream($id)
+    {
+        $this->event_stream_m->delete($id);
+
+        echo json_encode('ok');
+    }
+
+    public function get_event_streams($id)
+    {
+        $streams = $this->event_stream_m->get(['event_id' => $id]);
+
+        $result = [];
+
+        foreach ($streams as $stream) {
+            $icon = $this->flag_model->get_one([
+                'id' => $stream['flag_icon_id']
+            ]);
+            $stream['icon'] = $icon;
+
+            $result[] = $stream;
+        }
+
+        echo json_encode($result);
     }
 }

@@ -156,14 +156,23 @@ $route['c-admin/ajax/events'] = 'event_c/ajax';
 $route['c-admin/events/create'] = 'event_c/create';
 $route['c-admin/events/edit/(:num)'] = 'event_c/edit/$1';
 $route['c-admin/events/delete/(:num)'] = 'event_c/delete/$1';
+
+//events prize distribution
 $route['c-admin/event/prize/distribution/ajax/(:num)'] = 'event_c/get_prize_distribution/$1';
 $route['c-admin/event/prize/distribution/ajax/delete/(:num)'] = 'event_c/delete_prize_distribution/$1';
 $route['c-admin/event/prize/distribution/ajax/add/(:num)'] = 'event_c/add_prize_distribution/$1';
+
+//events attending teams
 $route['c-admin/event/ajax/attending/teams/(:num)'] = 'event_c/get_teams_attending/$1';
 $route['c-admin/event/ajax/attending/teams/add/(:num)'] = 'event_c/add_teams_attending/$1';
 $route['c-admin/event/ajax/attending/teams/delete/(:num)'] = 'event_c/delete_teams_attending/$1';
 $route['c-admin/event/ajax/attending/teams/add/player/(:num)'] = 'event_c/add_player_to_team/$1';
 $route['c-admin/event/ajax/attending/teams/delete/player/(:num)'] = 'event_c/delete_player_to_team/$1';
+
+//events streams
+$route['c-admin/event/ajax/add/stream/(:num)'] = 'event_c/add_event_stream/$1';
+$route['c-admin/event/ajax/delete/stream/(:num)'] = 'event_c/delete_event_stream/$1';
+$route['c-admin/event/ajax/get/stream/(:num)'] = 'event_c/get_event_streams/$1';
 
 
 //referral

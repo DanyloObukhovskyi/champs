@@ -1,9 +1,14 @@
 <?php
 
 
-class Flag_model extends CI_Model
+class Country_m extends CI_Model
 {
-    public $table = 'flag_icon';
+    private $table = "country";
+
+    public function create($data)
+    {
+        return $this->db->insert($this->table, $data);
+    }
 
     public function get_all()
     {
@@ -11,8 +16,18 @@ class Flag_model extends CI_Model
         $this->db->from($this->table);
 
         $result = $this->db->get();
-
         return $result->result_array();
+    }
+
+    public function update($update)
+    {
+        $this->db->where('id', $update['id']);
+        $this->db->update($this->table, $update);
+    }
+
+    public function delete($id)
+    {
+        $this->db->delete($this->table, array('id' => $id));
     }
 
     public function get($where)
