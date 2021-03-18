@@ -184,44 +184,40 @@
         },
         watch: {
             selectEventsType() {
-                this.isLoadAll = false;
-                this.events = [];
-                this.page = 1;
-
-                this.getEvents()
+                this.reloadEvents()
             },
             'filters.dateFrom': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.dateTo': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.teamA': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.teamB': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.name': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.country': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.city': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.prize': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.online': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.game': function () {
-                this.getEvents();
+                this.reloadEvents();
             },
             'filters.tournamentType': function () {
-                this.getEvents()
+                this.reloadEvents()
             },
         },
         computed: {
@@ -233,6 +229,13 @@
             }
         },
         methods: {
+            reloadEvents() {
+                this.isLoadAll = false;
+                this.events = [];
+                this.page = 1;
+
+                this.getEvents()
+            },
             getEvents() {
                 if (!this.load && !this.isLoadAll) {
                     this.load = true
@@ -267,6 +270,7 @@
             },
             setFilter(filter, value) {
                 this.filters[filter] = value;
+                this.isLoadAll = false;
             },
             scrollEventTrigger() {
                 const self = this;

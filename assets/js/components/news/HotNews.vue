@@ -11,7 +11,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <div class="date">
-                    {{news.date_ru}}
+                    {{news.date_ru}} мск
                 </div>
                 <div class="activity">
                     <i class="fas fa-eye"></i>
