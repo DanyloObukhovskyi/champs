@@ -250,7 +250,7 @@ class EventRepository extends ServiceEntityRepository
             $to = new \DateTime("$filters->dateTo 23:59:59");
 
             $query->andWhere('e.endedAt >= :dateFrom');
-            $query->andWhere('e.endedAt >= :dateTo');
+            $query->andWhere('e.endedAt <= :dateTo');
 
             $parameters['dateFrom'] = $from->format('Y-m-d');
             $parameters['dateTo'] = $to->format('Y-m-d');
