@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\EventTeamAttending;
+use App\Entity\Game;
 use App\Service\Event\EventBracketService;
 use App\Service\Event\EventGroupPlayService;
 use App\Service\Event\EventMapPoolService;
@@ -214,6 +215,15 @@ class EventsController extends AbstractController
 
         $link = $request->getSchemeAndHttpHost().$request->getBasePath();
 
+        $games = [];
+
+        $gamesEntities = $this->entityManager->getRepository(Game::class)
+            ->getEventsGames();
+
+        /** @var Game $game */
+        foreach ($gamesEntities as $game) {
+            $games[] = $game->getCode();
+        }
         return $this->render('templates/digest.events.html.twig', [
             'link' => $link,
             'heading_type' => $seoSettings['heading_type'],
@@ -223,6 +233,7 @@ class EventsController extends AbstractController
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
             'router' => 'digest',
+            'games' => $games,
         ]);
     }
 
@@ -241,9 +252,10 @@ class EventsController extends AbstractController
             $counts[$type] = $this->eventService->getEventsCountByType($filters, $type);
         }
         $digestEvents = [];
+        /** @var Event $event */
         foreach ($events as $event) {
             $digestEvent = $event;
-            $digestEvent['game'] = 'cs';
+            $digestEvent['game'] = isset($event['game']) ? $event['game']['code']: null;
 
             $digestEvents[] = $digestEvent;
         }

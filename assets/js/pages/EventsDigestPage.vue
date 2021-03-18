@@ -106,6 +106,7 @@
     import TenseSelect from "../components/helpers/TenseSelect";
     import Multiselect from 'vue-multiselect'
     import EventDigestRow from "../components/events/EventDigestRow";
+    import EventService from "../services/EventService";
 
     const GAMES = [
         'cs',

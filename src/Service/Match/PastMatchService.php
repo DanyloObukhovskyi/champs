@@ -7,6 +7,7 @@ namespace App\Service\Match;
 use App\Entity\Match;
 use App\Entity\PastMatch;
 use App\Entity\Team;
+use App\Repository\PastMatchRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
 use App\Service\TeamService;
@@ -16,6 +17,9 @@ class PastMatchService extends EntityService
 {
     protected $entity = PastMatch::class;
 
+    /**
+     * @var PastMatchRepository
+     */
     protected $repository;
 
     protected $teamService;

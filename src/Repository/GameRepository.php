@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,6 +20,28 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
+    public function getEventsGames()
+    {
+        $games = $this->createQueryBuilder('g')
+            ->orderBy('g.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $eventsGames = [];
+
+        foreach ($games as $game) {
+            $event = $this->getEntityManager()
+                ->getRepository(Event::class)
+                ->findOneBy([
+                   'game' => $game
+                ]);
+            if (isset($event)) {
+                $eventsGames[] = $game;
+            }
+        }
+
+        return $eventsGames;
+    }
     // /**
     //  * @return Game[] Returns an array of Game objects
     //  */
