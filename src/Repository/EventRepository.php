@@ -235,20 +235,42 @@ class EventRepository extends ServiceEntityRepository
             $parameters['teamA'] = $filters->teamA;
         }
 
+        if (isset($filters->prize)) {
+            $query->andWhere('e.prize = :prize');
+            $parameters['prize'] = $filters->prize;
+        }
+
         if (isset($filters->teamB)) {
             $query->andWhere('ta.team = :teamB');
             $parameters['teamB'] = $filters->teamB;
         }
 
-        if (!empty($filters->dateFrom)) {
+        if (!empty($filters->dateFrom) and !empty($filters->dateTo)) {
             $from = new \DateTime("$filters->dateFrom 00:00:00");
-            $query->andWhere('e.startedAt >= :dateFrom');
-            $parameters['dateFrom'] = $from;
-        }
-        if (!empty($filters->dateTo)) {
             $to = new \DateTime("$filters->dateTo 23:59:59");
-            $query->andWhere('e.startedAt <= :dateTo');
-            $parameters['dateTo'] = $to;
+
+            $query->andWhere('e.endedAt >= :dateFrom');
+            $query->andWhere('e.endedAt >= :dateTo');
+
+            $parameters['dateFrom'] = $from->format('Y-m-d');
+            $parameters['dateTo'] = $to->format('Y-m-d');
+        } else {
+            if (!empty($filters->dateFrom)) {
+                $from = new \DateTime("$filters->dateFrom 00:00:00");
+                $query->andWhere('e.startedAt >= :dateFrom');
+                $parameters['dateFrom'] = $from;
+            }
+            if (!empty($filters->dateTo)) {
+                $to = new \DateTime("$filters->dateTo 23:59:59");
+                $query->andWhere('e.startedAt <= :dateTo');
+                $parameters['dateTo'] = $to;
+            }
+        }
+        if (!empty($filters->game)) {
+            $query->innerJoin('e.game', 'g');
+
+            $query->andWhere('g.code = :game');
+            $parameters['game'] = $filters->game;
         }
         if (!empty($filters->name)) {
             $query->andWhere('e.name like :name');

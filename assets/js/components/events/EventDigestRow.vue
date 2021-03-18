@@ -140,6 +140,6 @@
     }
 
     .event .digest .game img {
-        width: 3vw;
+        height: 2vw;
     }
 </style>

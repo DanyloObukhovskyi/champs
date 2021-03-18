@@ -210,7 +210,8 @@ class EventService extends EntityService
             'endedAtRu' => NewsService::replaceMonth($dayEnd),
             'views' => $event->getViews(),
             'slug' => $generator->generate($event->getName()),
-            'type' => $event->getStatus() ?? 'pro'
+            'type' => $event->getStatus() ?? 'pro',
+            'game' => !empty($event->getGame()) ? $event->getGame()->jsonSerialize() : null
         ];
     }
 
@@ -504,6 +505,8 @@ class EventService extends EntityService
             'online' => intVal($filters->online) ?? null,
             'tournamentType' => $filters->tournamentType ?? null,
             'name' => $filters->name ?? null,
+            'prize' => $filters->prize ?? null,
+            'game' => $filters->game ?? null,
         ];
 
         return $this->repository->getEventsByType(
@@ -530,7 +533,9 @@ class EventService extends EntityService
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
             'name' => $filters->name ?? null,
             'online' => $filters->online ?? null,
-            'tournamentType' => $filters->tournamentType ?? null
+            'tournamentType' => $filters->tournamentType ?? null,
+            'prize' => $filters->prize ?? null,
+            'game' => $filters->game ?? null,
         ];
 
         $result = 0;
