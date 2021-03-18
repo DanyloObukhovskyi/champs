@@ -502,7 +502,8 @@ class EventService extends EntityService
             'teamA' => $this->teamService->find($filters->teamA->id ?? null),
             'teamB' => $this->teamService->find($filters->teamB->id ?? null),
             'online' => intVal($filters->online) ?? null,
-            'tournamentType' => $filters->tournamentType ?? null
+            'tournamentType' => $filters->tournamentType ?? null,
+            'name' => $filters->name ?? null,
         ];
 
         return $this->repository->getEventsByType(
