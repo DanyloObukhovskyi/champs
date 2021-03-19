@@ -70,9 +70,12 @@ class PastMatchService extends EntityService
         $match = [];
         /** @var Team $teamOpponent */
         $teamOpponent = $this->teamService->getByName($pastMatch->getTeamTwo());
+        /** @var Match $matchEntity */
+        $matchEntity = $pastMatch->getMatch();
 
         $match['opponent']['name'] = $pastMatch->getTeamTwo();
         $match['score'] = $pastMatch->getScore();
+        $match['date'] = $matchEntity->getStartAt()->format('d.m.Y') ?? null;
 
         if (isset($teamOpponent)) {
             $this->imageService->setImage($teamOpponent->getLogo());

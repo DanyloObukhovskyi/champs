@@ -14,7 +14,7 @@
                 </div>
                 <div class="score">
                     <span class="d-flex justify-content-center" v-if="!match.isLive && isFuture">
-                         <img class="vs" src="/images/matches/vs.png">
+                         <img class="vs" src="/images/matches/matchVs.png">
                     </span>
                     <span class="d-flex justify-content-center" v-else>
                         <span :class="getScoreClass(match.teamA.score, match.teamB.score)">
