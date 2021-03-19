@@ -189,6 +189,7 @@ class Ranks_c extends CI_Controller
         if (isset($fileName)) {
             $update_data['icon'] = $fileName;
         }
+        $this->game_rank->update($update_data);
 
         echo json_encode('ok');
     }
