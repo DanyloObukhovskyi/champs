@@ -40,7 +40,7 @@
     }
 
     .dark .streams-viewer {
-        background-color: #3b3f44;
+        background: #26292c;
     }
 
     .streams-viewer .select-lang {
@@ -61,7 +61,7 @@
 
     .dark .streams-viewer .select-lang .stream-lang-btn {
         color: white;
-        background: #26292c;
+        background: #292c2f;
         border-bottom: .2vw solid #26292c;
     }
 
@@ -97,6 +97,6 @@
 
     .dark .streams-viewer .close {
         color: white;
-        background: #26292c;
+        background: #292c2f;
     }
 </style>

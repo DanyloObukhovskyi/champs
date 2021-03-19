@@ -29,4 +29,14 @@ class Game_rank extends CI_Model
         $this->db->where('id', $update['id']);
         $this->db->update($this->table, $update);
     }
+
+    public function delete($id)
+    {
+        $this->db->delete($this->table, array('id' => $id));
+    }
+
+    public function create($data)
+    {
+        return $this->db->insert($this->table, $data);
+    }
 }

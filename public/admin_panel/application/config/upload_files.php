@@ -11,6 +11,7 @@ $config['upload_trainers_awards-pic'] = 'uploads/trainers_awards/';
 $config['upload_game-pic']            = "uploads/games/";
 $config['upload_marketplace_banner-pic'] = "uploads/marketplace/";
 $config['upload_event-pic']           = "uploads/images/";
+$config['upload_rank-pic']           = "images/ranks/";
 
 $config['display_article-pic']        = "images/temp/news/";
 $config['display_profile-pic']        = "uploads/avatars/";

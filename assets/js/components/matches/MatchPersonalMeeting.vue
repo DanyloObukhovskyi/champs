@@ -52,7 +52,6 @@
     .meeting-matches{
         background-color: #1e2123;
         margin: 1vw 0;
-        height: 9.5vw;
     }
 
     .title{

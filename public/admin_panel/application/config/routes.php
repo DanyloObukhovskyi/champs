@@ -113,7 +113,9 @@ $route['c-admin/slides/delete/(:num)'] = 'slides_c/delete/$1';
 //ranks
 $route['c-admin/ranks'] = 'ranks_c/index';
 $route['c-admin/ajax/ranks'] = 'ranks_c/ajax';
-$route['c-admin/ajax/ranks/save'] = 'ranks_c/save';
+$route['c-admin/ajax/ranks/delete/(:num)'] = 'ranks_c/delete/$1';
+$route['c-admin/ajax/ranks/add'] = 'ranks_c/add';
+$route['c-admin/ajax/ranks/edit'] = 'ranks_c/edit';
 
 //awards
 $route['c-admin/awards'] = 'award_c/index';
