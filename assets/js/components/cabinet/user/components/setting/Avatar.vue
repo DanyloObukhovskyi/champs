@@ -9,9 +9,8 @@
         <div class="avatar-wrapper">
             <div class="avatar">
                 <div class="gradient">
-                    <img :src="'/uploads/avatars/' + user.photo" v-if="previewImage === null"
-                         @error="$event.target.src = '/images/noLogo.png'">
-                    <img :src="previewImage" v-else @error="previewImage = null">
+                    <div class="image-wrapper" :style="imageWrapperImage">
+                    </div>
                 </div>
             </div>
             <form name="uploadAvatar" class="upload">
@@ -55,6 +54,13 @@ export default {
         ...mapGetters([
             'user',
         ]),
+        imageWrapperImage() {
+            const background = this.previewImage !== null ? this.previewImage: '/uploads/avatars/' + this.user.photo;
+
+            return {
+                'background-image': `url('${background}')`
+            }
+        }
     },
     methods: {
         updateAvatar() {
@@ -135,6 +141,16 @@ export default {
       background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
       background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+
+      .image-wrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-image: url("/images/noLogo.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
 
       img {
         width: 100%;

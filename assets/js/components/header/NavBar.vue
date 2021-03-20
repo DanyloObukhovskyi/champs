@@ -52,8 +52,8 @@
                        class="icon">
                         <div class="avatar" v-if="user !== null">
                             <div class="gradient">
-                                <img :src="'/uploads/avatars/' + user.photo"
-                                     @error="$event.target.src = '/images/noLogo.png'">
+                                <div class="image-wrapper" :style="imageWrapperImage">
+                                </div>
                             </div>
                         </div>
                         <i v-else class="fas fa-arrow-right"></i>
@@ -126,6 +126,11 @@
                 const service = new Service();
 
                 return `/${service.lang}/`
+            },
+            imageWrapperImage() {
+                return {
+                    'background-image': `url('${'/uploads/avatars/' + this.user.photo}')`
+                }
             }
         }
     }
@@ -265,6 +270,16 @@
         background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
         background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+    }
+
+    .header_nav .nav .login-wrapper .image-wrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-image: url("/images/noLogo.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .header_nav .nav .login-wrapper .gradient img {
