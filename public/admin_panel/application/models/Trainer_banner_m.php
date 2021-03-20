@@ -34,7 +34,7 @@ class Trainer_banner_m extends CI_Model
 
     public function get_paginate($is_count, $offset = 0, $length = null)
     {
-        $this->db->select('*');
+        $this->db->select($this->table . '.*');
         $this->db->from($this->table);
         $this->db->join('game', "game.id = {$this->table}.game_id", 'left');
         $this->db->where('is_deleted', 0);
