@@ -142,11 +142,10 @@ export default {
 @import '../../../css/animations.css';
 
 #layout .cabinet-sidebar {
-  min-height: 15.7vw;
   border-radius: .3vw;
   width: 11.5vw;
   margin-top: 1vw;
-  height: 100%;
+  height: min-content;
   padding-top: 1vw;
   padding-bottom: 1vw;
   -webkit-animation: animation-translate-left 1500ms linear both;
