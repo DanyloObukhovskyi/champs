@@ -48,7 +48,7 @@ class GameController extends AbstractController
     {
         $banners = $this->entityManager
             ->getRepository(MarketplaceBanner::class)
-            ->findAll();
+            ->getBannersGameDistinct();
 
         return $this->json($banners);
     }
