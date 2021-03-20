@@ -2,7 +2,7 @@
     <div class="cabinet">
         <div class="cabinet-body">
             <div class="left">
-                <vue-sticky-sidebar class="sidebar" containerSelector=".container" innerWrapperSelector='.sidebar__inner'>
+<!--                <vue-sticky-sidebar :resize-sensor="false" :bottom-spacing="100" class="sidebar" containerSelector=".container" innerWrapperSelector='.sidebar__inner'>-->
                 <user-card v-if="!loadUser && user !== null"/>
                 <div class="d-flex justify-content-center mt-3 mb-3" v-else>
                     <small-loader/>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                     <cabinet-sidebar></cabinet-sidebar>
-                </vue-sticky-sidebar>
+<!--                </vue-sticky-sidebar>-->
             </div>
             <div class="right" id="content">
                 <cabinet-header v-if="user !== null && !user.isTrainer"></cabinet-header>
@@ -122,49 +122,45 @@
 
                 document.addEventListener("DOMContentLoaded", function () {
                     window.onscroll = () => {
-                        // const sidebar = document.querySelector('.cabinet-sidebar');
-                        //
-                        // const sidebarHeight = $(document).height() - window.scrollY;
-                        //
-                        // const userCardPosition = document
-                        //     .querySelector('.card-user')
-                        //     .getBoundingClientRect();
-                        //
-                        // const invite = document.querySelector('.invite');
-                        // const invitePosition = invite.getBoundingClientRect();
-                        //
-                        // const header = document
-                        //     .querySelector('#header')
-                        //     .getBoundingClientRect();
-                        //
-                        // const subNav = document
-                        //     .querySelector('.sub-nav')
-                        //     .getBoundingClientRect();
-                        // if (subNav.height + header.height - userCardPosition.height - userCardPosition.top >= 0) {
-                        //     sidebar.style.position = 'fixed';
-                        //     sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
-                        //
-                        //     if (isTrainer) {
-                        //         sidebar.style.height =  `calc(${sidebarHeight}px - 29.7vw)`;
-                        //     } else {
-                        //         sidebar.style.height =  `calc(${sidebarHeight}px - 30.5vw)`;
-                        //     }
-                        //
-                        //     invite.style.position = 'fixed';
-                        //     invite.style.top = `calc(${header.height + subNav.height + 'px'} - 1vw)`;
-                        // } else {
-                        //     sidebar.style.position = 'unset';
-                        //     sidebar.style.top = 0;
-                        //
-                        //     if (isTrainer) {
-                        //         sidebar.style.height =  'calc(100% - 18.7vw)';
-                        //     } else {
-                        //         sidebar.style.height =  'calc(100% - 17vw)';
-                        //     }
-                        //
-                        //     invite.style.position = 'unset';
-                        //     invite.style.top = 0;
-                        // }
+                        const sidebar = document.querySelector('.cabinet-sidebar');
+
+                        const content = document.querySelector('#content');
+
+                        const userCardPosition = document
+                            .querySelector('.card-user')
+                            .getBoundingClientRect();
+
+                        const invite = document.querySelector('.invite');
+                        const invitePosition = invite.getBoundingClientRect();
+
+                        const header = document
+                            .querySelector('#header')
+                            .getBoundingClientRect();
+
+                        const contentWindowOffset = content.getBoundingClientRect().height + content.getBoundingClientRect().y;
+                        const sidebarWindowOffset = sidebar.getBoundingClientRect().height + sidebar.getBoundingClientRect().y;
+
+                        if (Math.round(contentWindowOffset) <= Math.round(sidebarWindowOffset)) {
+                           // sidebar.style.position = 'unset';
+                        } else {
+                            const subNav = document
+                                .querySelector('.sub-nav')
+                                .getBoundingClientRect();
+
+                            if (subNav.height + header.height - userCardPosition.height - userCardPosition.top >= 0) {
+                                sidebar.style.position = 'fixed';
+                                sidebar.style.top = `calc(${header.height + subNav.height + invitePosition.height}px + .5vw)`;
+
+                                invite.style.position = 'fixed';
+                                invite.style.top = `calc(${header.height + subNav.height + 'px'} - 1vw)`;
+                            } else {
+                                sidebar.style.position = 'unset';
+                                sidebar.style.top = 0;
+
+                                invite.style.position = 'unset';
+                                invite.style.top = 0;
+                            }
+                        }
                     }
                 });
             },
