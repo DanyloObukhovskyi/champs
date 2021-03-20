@@ -95,7 +95,6 @@
         .slide-images {
             .slide {
                 width: 30vw;
-                height: 13vw;
                 -webkit-animation: animation-translate-right 1500ms linear both;
                 animation: animation-translate-right 1500ms linear both;
                 display: flex;
