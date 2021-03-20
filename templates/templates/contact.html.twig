@@ -38,21 +38,7 @@
         <div class="ml-8 mr-8 p-0 d-flex">
             <contacts>
                 <template v-slot:address>
-                    <p>
-                        Сhamps.pro Inc.
-                    </p>
-                    <p>
-                        Адрес офиса компании:
-                    </p>
-                    <p>
-                        16192 Coastal Highway
-                    </p>
-                    <p>
-                        Lewes, DE 19958
-                    </p>
-                    <p>
-                        USA
-                    </p>
+                    <pre>{{setting.get('contactAddress') is not null ? setting.get('contactAddress').value : ''}}</pre>
                 </template>
                 <template v-slot:info-mail>
                     <a href="mailto:{{setting.get('infoMail') is not null ? setting.get('infoMail').value : ''}}">
