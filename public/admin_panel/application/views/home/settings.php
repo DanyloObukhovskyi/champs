@@ -89,6 +89,15 @@
                             value="<?php echo $setting['value'] ?>">
                 </div>
             <?php endforeach; ?>
+            <h1 class="main-title">Аддресс</h1>
+            <label class="label" for=""><?php echo $address['title'] ?></label>
+            <div>
+                <textarea
+                        type="text"
+                        class="fw-600 input2_txt"
+                        style="height: 150px; width: 100%"
+                        name="setting[<?php echo $address['key'] ?>]"><?php echo $address['value'] ?></textarea>
+            </div>
             <h1 class="main-title">Описание тренировок</h1>
             <?php foreach ($trainingDescriptions as $setting): ?>
                 <label class="label" for=""><?php echo $setting['title']['title'] ?></label>

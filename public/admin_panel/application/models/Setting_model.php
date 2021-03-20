@@ -55,6 +55,8 @@ class Setting_model extends CI_Model
         'analytic' => self::TRAINING_ANALYTICS
     ];
 
+    public const ADDRESS = 'contactAddress';
+
     public const ABOUT = 'about';
 
     public const VACANCIES = 'vacancies';
@@ -93,7 +95,8 @@ class Setting_model extends CI_Model
         $settingsIgnore = [
             self::ABOUT,
             self::VACANCIES,
-            self::PAYMENT_TYPE
+            self::PAYMENT_TYPE,
+            self::ADDRESS
         ];
 
         $this->db->select('*');
