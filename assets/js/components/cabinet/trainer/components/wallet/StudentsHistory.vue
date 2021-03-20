@@ -18,8 +18,8 @@
                         </div>
                         <div class="trainer">
                             <div class="avatar">
-                                <img :src="'/uploads/avatars/' + history.student.photo"
-                                     @error="$event.target.src = '/images/noLogo.png'">
+                                <div class="image-wrapper" :style="imageWrapperImage(history.student.photo)">
+                                </div>
                             </div>
                             <div class="nickname">
                                 {{ history.student.nickname }}
@@ -107,6 +107,11 @@ export default {
                     history.show = false;
                 }
             })
+        },
+        imageWrapperImage(image) {
+            return {
+                'background-image': `url('${'/uploads/avatars/' + image}')`
+            }
         },
         initScroll() {
             const isTrainer = this.user !== null && this.user.isTrainer;
@@ -224,6 +229,16 @@ export default {
       background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
       display: flex;
+
+      .image-wrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-image: url("/images/noLogo.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
 
       img {
         width: 100%;

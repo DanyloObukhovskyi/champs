@@ -40,6 +40,10 @@
         display: flex;
     }
 
+    .last-matches-header {
+        margin-top: 3.5vw;
+    }
+
     .last-matches-body .team-matches:nth-child(1) {
         margin-right: .5vw;
         background: rgb(251, 252, 252);

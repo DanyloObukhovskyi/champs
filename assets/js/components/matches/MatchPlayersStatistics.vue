@@ -123,7 +123,7 @@
 
 <style scoped>
     .player-statistics {
-        margin-top: 4vw;
+        margin-top: 4.5vw;
     }
 
     .player-statistics .player-statistics-body {
