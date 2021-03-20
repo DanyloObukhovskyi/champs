@@ -16,7 +16,7 @@
                 :user="user">
         </comments-form>
         <div class="sing-in" v-else>
-            <span @click="showLogin" class="login">Войдите</span>, чтобы комментировать статью
+            <span @click="showLogin" class="login">Войдите</span>, чтобы комментировать матч
         </div>
         <div>
             <comments-list

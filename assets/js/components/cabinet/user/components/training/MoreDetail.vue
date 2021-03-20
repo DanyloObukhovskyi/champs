@@ -17,8 +17,8 @@
                         <div class="trainer" v-if="!user.isTrainer">
                             <div class="avatar">
                                 <a :href="trainerUrl" class="gradient d-block">
-                                    <img :src="'/uploads/avatars/' + lesson.trainer.photo"
-                                         @error="$event.target.src = '/images/noLogo.png'">
+                                    <div class="image-wrapper" :style="imageWrapperImage(lesson.trainer.photo)">
+                                    </div>
                                 </a>
                             </div>
                             <div class="trainer-data">
@@ -69,8 +69,8 @@
                         <div class="student" v-else>
                             <div class="avatar">
                                 <div class="gradient d-block">
-                                    <img :src="'/uploads/avatars/' + lesson.student.photo"
-                                         @error="$event.target.src = '/images/noLogo.png'">
+                                    <div class="image-wrapper" :style="imageWrapperImage(lesson.student.photo)">
+                                    </div>
                                 </div>
                             </div>
                             <div class="trainer-data">
@@ -199,7 +199,12 @@ export default {
                     this.load = false;
                     this.isUpdate = true;
                 })
-        }
+        },
+        imageWrapperImage(image) {
+            return {
+                'background-image': `url('${'/uploads/avatars/' + image}')`
+            }
+        },
     }
 }
 </script>
@@ -495,6 +500,16 @@ export default {
         background: -webkit-linear-gradient(0deg, rgba(255, 111, 31, 1) 0%, rgba(255, 194, 79, 1) 88%);
         background: linear-gradient(0deg, rgba(255, 111, 31, 1) 0%, rgba(255, 194, 79, 1) 88%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+
+        .image-wrapper {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background-image: url("/images/noLogo.png");
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
 
         img {
           width: 100%;

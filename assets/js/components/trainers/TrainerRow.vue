@@ -3,8 +3,8 @@
         <div class="trainer">
             <div class="avatar">
                 <a :href="trainerUrl" class="gradient d-block">
-                    <img :src="'/uploads/avatars/' + trainer.photo"
-                         @error="$event.target.src = '/images/noLogo.png'">
+                    <div class="image-wrapper" :style="imageWrapperImage">
+                    </div>
                 </a>
             </div>
             <div class="data">
@@ -166,6 +166,11 @@ export default {
         },
         trainerUrl() {
             return MarketplaceService.getTrainerUrl(this.trainer.id, this.trainer.slug)
+        },
+        imageWrapperImage() {
+            return {
+                'background-image': `url('${'/uploads/avatars/' + this.trainer.photo}')`
+            }
         }
     },
     methods: {
@@ -218,6 +223,16 @@ export default {
         background: -webkit-linear-gradient(0deg, rgba(255, 111, 31, 1) 0%, rgba(255, 194, 79, 1) 88%);
         background: linear-gradient(0deg, rgba(255, 111, 31, 1) 0%, rgba(255, 194, 79, 1) 88%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+
+        .image-wrapper {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background-image: url("/images/noLogo.png");
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
 
         img {
           width: 100%;

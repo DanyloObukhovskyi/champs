@@ -311,7 +311,7 @@
     }
 
     .last-matches, .matches {
-        margin-top: 1vw;
+        margin-top: 2.5vw;
     }
 
     .score {

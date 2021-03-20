@@ -114,7 +114,7 @@ export default {
 
 <style scoped>
 .team-composition {
-    margin-top: 3vw;
+    margin-top: 3.5vw;
 }
 
 .team-composition-body {

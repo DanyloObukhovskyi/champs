@@ -7,8 +7,8 @@
             <div class="trainer" :class="{'justify-content-center': isTrainerCabinetSmall}" v-if="user !== null">
                 <template v-if="!user.isTrainer">
                     <div class="avatar">
-                        <img :src="'/uploads/avatars/' + lesson.trainer.photo"
-                             @error="$event.target.src = '/images/noLogo.png'">
+                        <div class="image-wrapper" :style="imageWrapperImage(lesson.trainer.photo)">
+                        </div>
                     </div>
                     <div class="nickname">
                         {{ lesson.trainer.nickname }}
@@ -16,8 +16,8 @@
                 </template>
                 <template v-else>
                     <div class="avatar">
-                        <img :src="'/uploads/avatars/' + lesson.student.photo"
-                             @error="$event.target.src = '/images/noLogo.png'">
+                        <div class="image-wrapper" :style="imageWrapperImage(lesson.student.photo)">
+                        </div>
                     </div>
                     <div class="nickname">
                         {{ lesson.student.nickname }}
@@ -200,6 +200,11 @@
                         self.showMoreDetail = false;
                     }
                 })
+            },
+            imageWrapperImage(image) {
+                return {
+                    'background-image': `url('${'/uploads/avatars/' + image}')`
+                }
             }
         },
     }
@@ -238,6 +243,16 @@
 		background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
 		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
         display: flex;
+
+        .image-wrapper {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background-image: url("/images/noLogo.png");
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
 
 		img {
 		  width: 100%;
