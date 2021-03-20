@@ -139,9 +139,9 @@
     .dark .player-statistics .player-statistics-body {
         color: white;
         background: rgb(37, 40, 42);
-        background: -moz-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(59, 63, 68, 1) 50%, rgba(37, 40, 42, 1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(59, 63, 68, 1) 50%, rgba(37, 40, 42, 1) 100%);
-        background: linear-gradient(90deg, rgba(37, 40, 42, 1) 0%, rgba(59, 63, 68, 1) 50%, rgba(37, 40, 42, 1) 100%);
+        background: -moz-linear-gradient(90deg, rgba(59, 63, 68, 1) 0%, rgba(37, 40, 42, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(59, 63, 68, 1) 0%, rgba(37, 40, 42, 1) 100%);
+        background: linear-gradient(90deg, rgba(59, 63, 68, 1) 0%, rgba(37, 40, 42, 1) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#25282a", GradientType=1);
     }
 
