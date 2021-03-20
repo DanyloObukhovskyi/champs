@@ -63,7 +63,7 @@ export default {
 
     .vacancies-text {
 
-      p {
+      p, {
         color: #9d9fa0;
         margin: 0;
         font-size: 1vw;
@@ -98,10 +98,11 @@ export default {
     .address {
       width: 50%;
 
-      p {
+      p, pre {
         margin: 0;
         font-size: 1vw;
         color: #9d9fa0;
+        font-family: 'Exo 2', sans-serif;
       }
 
       .info-mail {
