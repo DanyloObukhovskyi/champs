@@ -19,6 +19,24 @@ class MarketplaceBannerRepository extends ServiceEntityRepository
         parent::__construct($registry, MarketplaceBanner::class);
     }
 
+    public function getBannersGameDistinct()
+    {
+        $banners = $this->findAll();
+
+        $bannersByGame = [];
+
+        /** @var MarketplaceBanner $banner */
+        foreach ($banners as $banner) {
+            $bannersByGame[$banner->getGame()->getId()] = $banner;
+        }
+        $banners = [];
+        foreach ($bannersByGame as $banner) {
+            $banners[] = $banner;
+        }
+
+        return $banners;
+    }
+
     // /**
     //  * @return MarketplaceBanner[] Returns an array of MarketplaceBanner objects
     //  */

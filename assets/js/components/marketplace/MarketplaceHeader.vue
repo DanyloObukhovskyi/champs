@@ -5,8 +5,7 @@
                 {{getTitle(banner).strFirst}}
                 <div> {{getTitle(banner).strSecond}}</div>
             </div>
-            <div class="text">
-                {{banner.text}}
+            <div class="text" v-html="banner.text">
             </div>
         </div>
         <div class="slide-images">
