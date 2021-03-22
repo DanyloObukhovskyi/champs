@@ -11,8 +11,6 @@ use App\Service\InviteService;
 use App\Service\Mailer\SwiftMailer;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Swift_Mailer;
-use Swift_SmtpTransport;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;

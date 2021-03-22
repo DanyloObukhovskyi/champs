@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lessons;
 use App\Entity\Payment;
 use App\Service\Interkassa\InterkassaService;
+use App\Service\LessonService;
 use App\Service\Payment\PaymentService;
 use App\Service\Payment\YandexKassa\YandexKassaPaymentService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,11 +31,17 @@ class InterkassaController extends AbstractController
      */
     public $interKassaService;
 
+    /**
+     * @var LessonService
+     */
+    public $lessonService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
 
         $this->interKassaService = new InterkassaService();
+        $this->lessonService =  new LessonService($entityManager);
     }
 
     /**
@@ -54,7 +61,7 @@ class InterkassaController extends AbstractController
 
         $cost = 0;
         foreach ($lessons as $lesson) {
-            $cost += (int)$lesson->getCostWithPercentage();
+            $cost += (int)$this->lessonService->getCostWithPercentage($lesson);
         }
         $payment = $this->interKassaService->createPayment($lessons, $cost);
 
