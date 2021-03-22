@@ -217,16 +217,16 @@ class EventRepository extends ServiceEntityRepository
         }
         $parameters = [];
         if ($type === EventService::FUTURE) {
-            $query->andWhere('e.startedAt > :date');
+            $query->andWhere('e.startedAt >= :date');
             $parameters['date'] = $date;
         }
         if ($type === EventService::LIVE) {
-            $query->andWhere('e.startedAt > :date')
-                ->andWhere('e.endedAt < :date');
+            $query->andWhere('e.startedAt <= :date');
+            $query->andWhere('e.endedAt >= :date');
             $parameters['date'] = $date;
         }
         if ($type === EventService::PAST) {
-            $query->andWhere('e.startedAt < :date');
+            $query->andWhere('e.endedAt <= :date');
             $parameters['date'] = $date;
         }
 
