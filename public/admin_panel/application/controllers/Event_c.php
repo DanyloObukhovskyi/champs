@@ -121,9 +121,6 @@ class Event_c extends CI_Controller
             $upload_data['game_id'] = isset($_POST['game_id']) ? $_POST['game_id'] : null;
             $upload_data['is_online'] = isset($_POST['is_online']) ? (int)$_POST['is_online'] : 0;
 
-            $upload_data['image'] = null;
-            $upload_data['image_header'] = null;
-
             if (isset($upload_data['started_at'])) {
                 $upload_data['started_at'] = (new DateTime($upload_data['started_at']))->format('Y-m-d');
             }

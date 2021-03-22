@@ -27,7 +27,7 @@ class Award_c extends CI_Controller
     public function index()
     {
         $data = [];
-        $data['images_url'] = $this->config->item('main_url').$this->config->item('display_trainers_awards-pic');
+        $data['images_url'] = $this->config->item('main_url') . $this->config->item('display_trainers_awards-pic');
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
         $data['user'] = $this->ion_auth->user()->row();
 
@@ -42,7 +42,7 @@ class Award_c extends CI_Controller
             'awards_count' => 0,
             'limit' => $this->award_per_page
         ];
-        if(isset($_POST['page'])){
+        if (isset($_POST['page'])) {
             $offset = $this->award_per_page * ((int)$_POST['page'] - 1);
 
             $data['awards_count'] = $this->award_model
@@ -62,69 +62,77 @@ class Award_c extends CI_Controller
     {
         $response = new stdClass();
         $response->status = false;
-        if (isset($_POST['text']) and isset($_FILES['icon'])){
+
+        if (isset($_POST['text'])) {
             $data = [
                 'text' => $_POST['text']
             ];
-            if (isset($_POST['id'])){
+            if (isset($_POST['id'])) {
                 $data['id'] = $_POST['id'];
             }
-            if (!empty($_FILES["icon"]["name"])) {
-                $config['upload_path'] = PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic');
-                if (!file_exists(PUBLICPATH.'/uploads')) {
-                    mkdir(PUBLICPATH.'/uploads', 0777);
-                }
-                if (!file_exists($config['upload_path'])) {
-                    mkdir($config['upload_path'], 0777);
-                }
-                $config['allowed_types'] = 'jpeg|jpg|png|svg';
-                $config['max_width'] = 44;
-                $config['max_height'] = 50;
-                $imageInfo = getimagesize($_FILES['icon']["tmp_name"]);
-                if(!empty($imageInfo)){
-                    if($imageInfo[0] > $config['max_width']){
-                        $response->error_message = 'Ширина изображения слишком большая';
-                        die(json_encode($response));
-                    } elseif($imageInfo[1] > $config['max_height']){
-                        $response->error_message = 'Высота изображения слишком большая';
-                        die(json_encode($response));
+            if (isset($_FILES['icon'])) {
+                if (!empty($_FILES["icon"]["name"])) {
+                    $config['upload_path'] = PUBLICPATH . '/' . $this->config->item('upload_trainers_awards-pic');
+                    if (!file_exists(PUBLICPATH . '/uploads')) {
+                        mkdir(PUBLICPATH . '/uploads', 0777);
                     }
-                }
-
-                $this->load->library('upload', $config);
-                $bytes = random_bytes(11);
-                $ext = explode(".", $_FILES["icon"]["name"]);
-                $ext = array_pop($ext);
-                $fileName = bin2hex($bytes) . "." . $ext;
-
-                $_FILES["icon"]["name"] = $fileName;
-                if (!$this->upload->do_upload('icon')) {
-                    $error = array('error' => $this->upload->display_errors());
-                }
-                if ($ext === 'svg') {
-                    $path = PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic') . $fileName;
-                    if (!file_exists(PUBLICPATH.'/uploads')) {
-                        mkdir(PUBLICPATH.'/uploads', 0777);
+                    if (!file_exists($config['upload_path'])) {
+                        mkdir($config['upload_path'], 0777);
                     }
-                    if (!file_exists(PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic'))) {
-                        mkdir(PUBLICPATH.'/'.$this->config->item('upload_trainers_awards-pic'), 0777);
+                    $config['allowed_types'] = 'jpeg|jpg|png|svg';
+                    $config['max_width'] = 50;
+                    $config['max_height'] = 50;
+                    $imageInfo = getimagesize($_FILES['icon']["tmp_name"]);
+                    if (!empty($imageInfo)) {
+                        if ($imageInfo[0] > $config['max_width']) {
+                            $response->error_message = 'Ширина изображения слишком большая';
+                            die(json_encode($response));
+                        } elseif ($imageInfo[1] > $config['max_height']) {
+                            $response->error_message = 'Высота изображения слишком большая';
+                            die(json_encode($response));
+                        }
                     }
-                    move_uploaded_file($_FILES['icon']['tmp_name'], $path);
+
+                    $this->load->library('upload', $config);
+                    $bytes = random_bytes(11);
+                    $ext = explode(".", $_FILES["icon"]["name"]);
+                    $ext = array_pop($ext);
+                    $fileName = bin2hex($bytes) . "." . $ext;
+
+                    $_FILES["icon"]["name"] = $fileName;
+                    if (!$this->upload->do_upload('icon')) {
+                        $error = array('error' => $this->upload->display_errors());
+                    }
+                    if ($ext === 'svg') {
+                        $path = PUBLICPATH . '/' . $this->config->item('upload_trainers_awards-pic') . $fileName;
+                        if (!file_exists(PUBLICPATH . '/uploads')) {
+                            mkdir(PUBLICPATH . '/uploads', 0777);
+                        }
+                        if (!file_exists(PUBLICPATH . '/' . $this->config->item('upload_trainers_awards-pic'))) {
+                            mkdir(PUBLICPATH . '/' . $this->config->item('upload_trainers_awards-pic'), 0777);
+                        }
+                        move_uploaded_file($_FILES['icon']['tmp_name'], $path);
+                    }
+
+                    $data['icon'] = $fileName;
+
+                    if (isset($_POST['id'])) {
+                        $this->award_model->update($data);
+                        $response->status = true;
+                    } else {
+                        $this->award_model->create($data);
+                        $response->status = true;
+                    }
+                } else {
+                    $response->error_message = 'Вы не добавили изображение';
                 }
-
-                $data['icon'] = $fileName;
-
-                if (isset($_POST['id'])){
+                if (isset($_POST['id'])) {
                     $this->award_model->update($data);
                     $response->status = true;
-                } else {
-                    $this->award_model->create($data);
-                    $response->status = true;
                 }
-            } else {
-                $response->error_message = 'Вы не добавили изображение';
             }
         }
+
         die(json_encode($response));
     }
 

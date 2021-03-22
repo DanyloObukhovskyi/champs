@@ -93,7 +93,7 @@
                                     Стоимость часа: <span>{{ hourPrice }} RUB</span>
                                 </div>
                                 <div class="lesson-price">
-                                    Стоимость занятия: <span>{{ lesson.cost }} RUB</span>
+                                    Сумма: <span>{{ lesson.costWithPercentage }} RUB</span>
                                 </div>
                             </div>
                             <div class="trainings-count" v-if="!user.isTrainer">
