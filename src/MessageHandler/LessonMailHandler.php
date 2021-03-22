@@ -25,28 +25,10 @@ trait LessonMailHandler
     }
 
     /**
-     * @param $trainer
-     * @return mixed
-     */
-    public function getTrainerGame($trainer)
-    {
-        $choseGame = $trainer->getGame();
-
-        foreach (UserService::GAMES as $game) {
-            if ($game['name'] === $trainer->getGame()) {
-                $choseGame = $game['title'];
-            }
-        }
-        return $choseGame;
-    }
-
-    /**
-     * @param $subject
      * @param Lessons $lesson
-     * @param bool $isTrainer
      * @return Swift_Message
      */
-    public function makeEmail(Lessons $lesson, $isTrainer = false)
+    public function makeStudentEmail(Lessons $lesson)
     {
         $lessonDuration = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
             ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
@@ -56,16 +38,38 @@ trait LessonMailHandler
             'trainer' => $lesson->getTrainer(),
             'lesson' => $lesson,
             'game' => $lesson->getTrainer()->getGame(),
-            'isTrainer' => $isTrainer,
+            'isTrainer' => false,
             'lessonDuration' => $lessonDuration
         ];
         $html = $this->renderView($this->template, $params);
 
-        if ($isTrainer) {
-            $email = $lesson->getTrainer()->getEmail();
-        } else {
-            $email = $lesson->getStudent()->getEmail();
-        }
+        $email = $lesson->getStudent()->getEmail();
+
+        return $this->makeMessage($this->subject)
+            ->setTo($email)
+            ->setBody($html, 'text/html');
+    }
+
+    /**
+     * @param Lessons $lesson
+     * @return Swift_Message
+     */
+    public function makeTeacherEmail(Lessons $lesson)
+    {
+        $lessonDuration = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
+            ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
+
+        $params = [
+            'user' => $lesson->getStudent(),
+            'trainer' => $lesson->getTrainer(),
+            'lesson' => $lesson,
+            'game' => $lesson->getTrainer()->getGame(),
+            'isTrainer' => true,
+            'lessonDuration' => $lessonDuration
+        ];
+        $html = $this->renderView($this->template, $params);
+
+        $email = $lesson->getTrainer()->getEmail();
 
         return $this->makeMessage($this->subject)
             ->setTo($email)
