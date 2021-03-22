@@ -583,7 +583,7 @@ class LessonService extends EntityService
             'type' => $lesson->getType(),
             'cost' => $lesson->getCost(),
             'month' => $month,
-            'type' => $lesson->getType(),
+            'costWithPercentage' => $this->getCostWithPercentage($lesson),
             'trainerNotice' => $lesson->getTrainerNotice(),
             'typeRu' => $translator->trans('trainings.' . $lesson->getType()),
             'dateFrom' => $dateFrom->format('Y.m.d H:i:s'),
@@ -598,6 +598,31 @@ class LessonService extends EntityService
                 'photo' => $lesson->getStudent()->getPhoto(),
             ]
         ];
+    }
+
+    /**
+     * @param Lessons $lessons
+     * @return float|int|null
+     */
+    public function getCostWithPercentage(Lessons $lessons)
+    {
+        $user = $lessons->getTrainer();
+        $trainer = $this->entityManager
+            ->getRepository(Teachers::class)
+            ->findOneBy([
+               'userid' =>  $user->getId()
+            ]);
+
+        $percentageMarkup = !empty($trainer->getAdminPercentage()) ?
+            $trainer->getAdminPercentage():
+            $_ENV['PERCENTAGE_MARKUP_LESSON'];
+
+        $cost = $lessons->getCost();
+
+        if (isset($percentageMarkup)) {
+            $cost = ($lessons->getCost() / 100) * ($percentageMarkup + 100);
+        }
+        return $cost;
     }
 
     /**
