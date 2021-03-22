@@ -8,7 +8,10 @@ use App\Entity\Schledule;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Repository\LessonsRepository;
+use App\Service\LessonService;
 use App\Service\Payment\YandexKassa\YandexKassaPaymentService;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +29,13 @@ class PaymentController extends AbstractController
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+
+    private $lessonService;
+
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager)
     {
         $this->logger = $logger;
+        $this->lessonService = new LessonService($entityManager);
     }
 
     /**
@@ -58,7 +65,7 @@ class PaymentController extends AbstractController
 
         $cost = 0;
         foreach ($lessons as $lesson) {
-            $cost += (int)$lesson->getCostWithPercentage();
+            $cost += (int)$this->lessonService->getCostWithPercentage($lesson);
         }
         $payment = $paymentService->createPayment($lessons, $cost, $_ENV['YANDEX_KASSA_RETURN_URL']);
 
