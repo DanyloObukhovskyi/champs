@@ -102,7 +102,7 @@ class MainController extends DefController
         foreach ($newsEntities as $newsEntity) {
             $news[] = $this->newsService->decorator($newsEntity);
         }
-        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+        $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
         return $this->render('templates/home.html.twig', [
             'link' => $link,
@@ -141,7 +141,7 @@ class MainController extends DefController
         foreach ($newsEntities as $newsEntity) {
             $news[] = $this->newsService->decorator($newsEntity);
         }
-        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+        $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
         return $this->render('templates/home.html.twig', [
             'link' => $link,
@@ -365,5 +365,13 @@ class MainController extends DefController
             'dateRu' => NewsService::replaceMonth($date->format('d F')),
             'matches' => $matchesParse
         ]);
+    }
+
+    /**
+     * @Route("/test/mail")
+     */
+    public function testMail(\Swift_Mailer $mailer)
+    {
+        $this->dispatchMessage(new TestMail($mailer));
     }
 }
