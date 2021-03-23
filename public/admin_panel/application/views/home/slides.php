@@ -130,6 +130,7 @@
         </div>
         <button class="btn btn-orange mt-15 mr-10"
                 data-toggle="modal"
+                onclick="addSlide()"
                 data-target="#slideModal">
             Добавить слайд
         </button>
@@ -189,7 +190,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                        <button class="btn btn-orange">
+                        <button class="btn btn-orange" id="addButton">
                             Добавить
                         </button>
                     </div>
@@ -231,6 +232,9 @@
     function editSlide(id) {
         const slideRaw = document.getElementById(`slide_${id}`);
         const form = document.getElementById('slideModal');
+
+        document.getElementById('exampleModalLabel').innerHTML = 'Редактировать слайд';
+        document.getElementById('addButton').innerHTML = 'Сохранить';
 
         if (slideRaw && form) {
             form.querySelector('input[name="id"]').value = slideRaw.dataset.id;
@@ -277,4 +281,21 @@
             }
         }
     })
+
+    function addSlide() {
+        document.getElementById('exampleModalLabel').innerHTML = 'Новый слайд';
+        document.getElementById('addButton').innerHTML = 'Добавить';
+
+        const form = document.getElementById('slideModal');
+
+        form.querySelector('input[name="id"]').value = '';
+        form.querySelector('input[name="url"]').value = '';
+        form.querySelector('input[name="text"]').value = '';
+
+        document.getElementById('text-preview').innerHTML = '';
+        document.getElementById('img_preview').src = '';
+        document.querySelectorAll('#slide_type option').forEach(function (option) {
+            option.selected = false;
+        })
+    }
 </script>
