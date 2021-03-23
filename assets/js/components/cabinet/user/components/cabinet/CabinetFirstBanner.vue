@@ -86,7 +86,7 @@ export default {
     display: flex;
     width: 54%;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     margin: 1vw 0 1vw 1vw;
 
     .title {
