@@ -92,6 +92,9 @@ class Game_c extends CI_Controller
         if (!empty($_FILES['news_icon']["name"])) {
             $data['news_icon'] = $this->uploadFile('news_icon');
         }
+        if (!empty($_FILES['event_icon']["name"])) {
+            $data['event_icon'] = $this->uploadFile('event_icon');
+        }
         if (isset($_POST['id'])) {
             $this->game_m->update($data);
         } else {

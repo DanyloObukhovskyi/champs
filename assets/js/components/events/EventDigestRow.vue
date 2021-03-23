@@ -9,7 +9,8 @@
             </div>
             <div class="d-flex justify-content-end">
                 <div class="game">
-                    <img :src="`/images/events/${event.game}.png`">
+                    <img :src="`/uploads/games/${event.game.eventIcon}`" v-if="event.game.eventIcon !== null">
+                    <img :src="`/images/events/${event.game.code}.png`" v-else>
                 </div>
             </div>
         </div>

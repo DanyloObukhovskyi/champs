@@ -255,7 +255,7 @@ class EventsController extends AbstractController
         /** @var Event $event */
         foreach ($events as $event) {
             $digestEvent = $event;
-            $digestEvent['game'] = isset($event['game']) ? $event['game']['code']: null;
+            $digestEvent['game'] = isset($event['game']) ? (array)$event['game']: null;
 
             $digestEvents[] = $digestEvent;
         }

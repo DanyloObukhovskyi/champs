@@ -43,6 +43,11 @@ class Game implements \JsonSerializable
     private $newsIcon;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $eventIcon;
+
+    /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $active;
@@ -154,6 +159,7 @@ class Game implements \JsonSerializable
             'logo' => $this->getLogo(),
             'newsIcon' => $this->getNewsIcon(),
             'sidebarIcon' => $this->getSidebarIcon(),
+            'eventIcon' => $this->getEventIcon(),
             'active' => $this->getActive()
         ];
     }
@@ -200,5 +206,21 @@ class Game implements \JsonSerializable
         $this->is_marketplace = $is_marketplace;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEventIcon()
+    {
+        return $this->eventIcon;
+    }
+
+    /**
+     * @param mixed $eventIcon
+     */
+    public function setEventIcon($eventIcon): void
+    {
+        $this->eventIcon = $eventIcon;
     }
 }
