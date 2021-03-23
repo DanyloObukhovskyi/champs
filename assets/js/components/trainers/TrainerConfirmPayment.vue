@@ -114,12 +114,12 @@ export default {
         whatTheOfferLink() {
             const service = new Service();
 
-            return `/${service.lang}/offer`
+            return `/${service.lang}/oferta_na_okazanie_uslug`
         },
         termsLink() {
             const service = new Service();
 
-            return `/${service.lang}/terms`
+            return `/${service.lang}/pravila_ispolzovaniya`
         },
         isAllChecked() {
             return this.checkOffer && this.checkService;
