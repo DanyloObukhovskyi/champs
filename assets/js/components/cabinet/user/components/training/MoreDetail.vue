@@ -108,7 +108,7 @@
                                     {{ lesson.trainerNotice }}
                                 </div>
                             </div>
-                            <div class="note" v-else>
+                            <div class="note" v-else v-if="lesson.availableReview">
                                 <label>
                                     Оставить заметку по данной тренировке:
                                 </label>
