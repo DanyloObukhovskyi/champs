@@ -3,8 +3,8 @@
         <div class="comment">
             <div class="user">
                 <div class="avatar">
-                    <img :src="'/images/temp/matches/' + comment.user.photo"
-                         @error="$event.target.src = '/images/noLogo.png'">
+                    <div class="image-wrapper" :style="imageWrapperImage(comment.user.photo)">
+                    </div>
                 </div>
                 <div class="name">
                     {{getUserName(comment.user)}}
@@ -129,6 +129,18 @@
                     comment: this.comment,
                     type: type
                 });
+            },
+            imageWrapperImage(photo) {
+                const image = new Image();
+                image.src = '/uploads/avatars/' + photo;
+
+                let path = "/images/noLogo.png";
+                if (image.width !== 0) {
+                    path = '/uploads/avatars/' + photo;
+                }
+                return {
+                    'background-image': `url('${path}')`
+                }
             }
         }
     }
@@ -170,6 +182,16 @@
         background-color: #AAA;
         flex-shrink: 0;
         overflow: hidden;
+    }
+
+    .comment .avatar .image-wrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-image: url("/images/noLogo.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .comment .user {
