@@ -15,6 +15,7 @@ use App\Entity\User;
 use App\Repository\LessonsRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class LessonService extends EntityService
 {
@@ -596,7 +597,8 @@ class LessonService extends EntityService
                 'id' => $lesson->getStudent()->getId(),
                 'nickname' => $lesson->getStudent()->getNickname(),
                 'photo' => $lesson->getStudent()->getPhoto(),
-            ]
+            ],
+            'availableReview' =>  Carbon::now() > $dateTo
         ];
     }
 
