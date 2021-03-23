@@ -27,6 +27,13 @@
     tbody img {
         width: 50px;
     }
+
+    .event_icon {
+        background-color: black;
+        width: min-content;
+        padding: 2px;
+        border-radius: 6px;
+    }
 </style>
 <main class="flex create-new-website-page">
     <?php
@@ -76,6 +83,10 @@
                                         <div class="input mb-5">
                                             <input name="news_icon" type="file" class="fw-600 input2_txt">
                                         </div>
+                                        <label class="label" for="">Иконка в турнирах(размеры:50x50)</label>
+                                        <div class="input mb-5">
+                                            <input name="event_icon" type="file" class="fw-600 input2_txt">
+                                        </div>
                                         <label class="label" for="">Название</label>
                                         <div class="input mb-5" id="input">
                                             <input name="name" type="text" :value="editGame !== null ? editGame.name: ''" class="fw-600 input2_txt">
@@ -117,6 +128,9 @@
                                     Иконка в новостях
                                 </td>
                                 <td class="js-expand-table-item pointer">
+                                    Иконка в турнирах
+                                </td>
+                                <td class="js-expand-table-item pointer">
                                     Название
                                 </td>
                                 <td class="js-expand-table-item pointer">
@@ -135,11 +149,16 @@
                                 <td class="js-expand-table-item pointer">
                                     <img :src="imagesPath + game.logo">
                                 </td>
-                                <td class="js-expand-table-item pointer">
-                                    <img :src="imagesPath + game.sidebar_icon">
+                                <td class="js-expand-table-item pointer" >
+                                    <img :src="imagesPath + game.sidebar_icon" v-if="game.sidebar_icon !== null">
                                 </td>
                                 <td class="js-expand-table-item pointer">
-                                    <img :src="imagesPath + game.news_icon">
+                                    <img :src="imagesPath + game.news_icon" v-if="game.news_icon !== null">
+                                </td>
+                                <td class="js-expand-table-item pointer">
+                                    <div class="event_icon" v-if="game.event_icon !== null">
+                                        <img :src="imagesPath + game.event_icon" >
+                                    </div>
                                 </td>
                                 <td class="js-expand-table-item pointer">
                                     {{game.name}}

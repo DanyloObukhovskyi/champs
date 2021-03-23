@@ -11,7 +11,8 @@
                             </h2>
                         </div>
                         <div class="game" v-if="event.game !== null">
-                            <img :src="`/images/events/${event.game.code}.png`">
+                            <img :src="`/uploads/games/${event.game.eventIcon}`" v-if="event.game.eventIcon !== null">
+                            <img :src="`/images/events/${event.game.code}.png`" v-else>
                         </div>
                     </div>
                 </div>
