@@ -20,14 +20,14 @@
                         <div class="review-header">
                             <div class="avatar-wrapper">
                                 <div class="avatar">
-                                    <img :src="'/images/temp/' + review.photo"
-                                         @error="$event.target.src = '/images/noLogo.png'">
+                                    <div class="image-wrapper" :style="imageWrapperImage(review.photo)">
+                                    </div>
                                 </div>
                             </div>
                             <div class="user-data">
                                 <div class="name">
                                     <div class="fio">
-                                        {{ review.name }} {{ review.family }}
+                                        {{ review.nickname }}
                                     </div>
                                     <div class="date">
                                         {{ review.dateRu }} мск
@@ -153,6 +153,18 @@
                     .then(res => {
                         this.hasPermissionToReview = res
                     })
+            },
+            imageWrapperImage(photo) {
+                const image = new Image();
+                image.src = '/uploads/avatars/' + photo;
+
+                let path = "/images/noLogo.png";
+                if (image.width !== 0) {
+                    path = '/uploads/avatars/' + photo;
+                }
+                return {
+                    'background-image': `url('${path}')`
+                }
             }
         },
         mounted() {
@@ -209,6 +221,16 @@
 				  display: flex;
 				  justify-content: center;
 				  align-items: center;
+
+                  .image-wrapper {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    background-image: url("/images/noLogo.png");
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                  }
 
 				  img {
 					width: 110%;

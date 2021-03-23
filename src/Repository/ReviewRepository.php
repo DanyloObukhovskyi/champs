@@ -42,7 +42,7 @@ class ReviewRepository extends ServiceEntityRepository
             ->andWhere('l.trainer = :val')
             ->setParameter('val', $value)
             ->leftJoin("l.student", "p")
-            ->addSelect("p.photo", "p.name", "p.family")
+            ->addSelect("p.photo", "p.name", "p.family", "p.nickname")
             ->leftJoin("l.lesson", "o")
             ->addSelect("o.dateTimeFrom", "o.dateTimeTo")
             ->getQuery();
