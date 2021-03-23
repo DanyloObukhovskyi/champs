@@ -51,8 +51,7 @@
                 {{ resultTime }}
             </div>
             <button class="payment-btn"
-                    data-toggle="modal"
-                    data-target="#confirmPaymentModal"
+                    @click="showPaymentModal"
                     v-if="times.filter(t => t.status === 2).length > 0 && user !== null">
                 Записаться
             </button>
@@ -79,6 +78,7 @@
     import SmallLoader from "../helpers/SmallLoader";
     import TrainerConfirmPayment from "./TrainerConfirmPayment";
     import {mapGetters} from "vuex";
+    import Swal from "sweetalert2";
 
     export default {
         name: "TrainerTimetable",
@@ -96,6 +96,7 @@
         ],
         data() {
             return {
+                alert: alert,
                 date: null,
                 load: false,
                 times: [],
@@ -156,6 +157,22 @@
             }
         },
         methods: {
+            showPaymentModal() {
+                if (this.trainingType === undefined || this.trainingType === null) {
+                    this.showError('Выберете тип тренировки!')
+                } else {
+                    $('#confirmPaymentModal').modal()
+                }
+            },
+            showError(message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Упс...',
+                    text: message,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
             setDate(date) {
                 this.date = date;
             },
@@ -216,7 +233,7 @@
             this.getTimes()
             this.getAvailableDates();
 
-            window.test = this;
+            window.testtest = this;
         }
     }
 </script>

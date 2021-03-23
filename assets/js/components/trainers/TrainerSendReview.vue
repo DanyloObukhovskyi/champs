@@ -117,7 +117,7 @@ export default {
           }
 
           span:hover ~ span {
-            color: #FF6D1D;;
+            color: #FF6D1D;
           }
 
           input {
