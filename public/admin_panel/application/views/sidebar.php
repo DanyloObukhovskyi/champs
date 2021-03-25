@@ -33,7 +33,7 @@
         <a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a>
     </li>
     <?php endif;?>
-    <?php if($roles[0] == 1 or $roles[1] == 1):?>
+    <?php if($roles[0] == 1):?>
     <li class="<?php echo 'slides' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/slides'); ?>">Слайды</a>
     </li>
@@ -46,7 +46,7 @@
         <a href="<?php echo base_url('c-admin/awards'); ?>">Награды</a>
     </li>
     <?php endif;?>
-    <?php if($roles[0] == 1 or $roles[1] == 1):?>
+    <?php if($roles[0] == 1):?>
     <li class="<?php echo 'games' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/games'); ?>">Игры</a>
     </li>
@@ -66,9 +66,13 @@
     <li class="<?php echo 'events' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/events'); ?>">События</a>
     </li>
+    <?php endif;?>
+    <?php if($roles[0] == 1):?>
     <li class="<?php echo 'referral' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/referral'); ?>">Реферрал</a>
     </li>
+    <?php endif;?>
+    <?php if($roles[0] == 1 or $roles[1] == 1):?>
     <li class="<?php echo 'comments' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/comments'); ?>">Коментарии и отзывы</a>
     </li>
