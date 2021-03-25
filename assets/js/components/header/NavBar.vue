@@ -3,7 +3,7 @@
         <div class="container nav align-items-stretch p-0">
             <a :href="`/${lang}/`" class="d-flex justify-content-center align-items-center logo-wrapper"
                :class="{'start p-3': isPageStart}">
-                <img v-show="!isPageStart" src="/images/logo.svg" class="logo w-75"/>
+                <img v-show="!isPageStart" src="/images/logo.svg" style="width: 65%;" class="logo"/>
                 <img v-show="isPageStart" :class="{'mt-1': isPageStart}" src="/images/navbar/bigLogo.png" class="logo"/>
             </a>
             <div class="menu pl-0">
