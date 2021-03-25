@@ -257,17 +257,19 @@ class Event_c extends CI_Controller
                     'number' => $team_attending['number']
                 ]);
 
-                foreach ($team_attending['players'] as $player) {
-                    $playerItem = $this->player_m->get_one_by([
-                        'team_id' => $team_attending['team_id'],
-                        'person_id' => $player,
-                    ]);
-
-                    if (empty($playerItem)) {
-                        $this->player_m->create([
+                if (!empty($team_attending['players'])) {
+                    foreach ($team_attending['players'] as $player) {
+                        $playerItem = $this->player_m->get_one_by([
                             'team_id' => $team_attending['team_id'],
                             'person_id' => $player,
                         ]);
+
+                        if (empty($playerItem)) {
+                            $this->player_m->create([
+                                'team_id' => $team_attending['team_id'],
+                                'person_id' => $player,
+                            ]);
+                        }
                     }
                 }
             }

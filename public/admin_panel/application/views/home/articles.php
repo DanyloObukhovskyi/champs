@@ -398,7 +398,7 @@
             data : {
                 'id':id
             },
-            url: "/c-admin/post_type/delete",
+            url: '<?php echo base_url("/c-admin/post_type/delete") ;?>',
             success : function(result){
                 result = JSON.parse(result);
                 if(result.status == true){
