@@ -26,7 +26,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="news-body" v-html="news.text" @click="showImages">
+                <div class="news-body" v-html="parseBackground(news.text)" @click="showImages">
                 </div>
                 <div class="tags">
                     <a :href="newsPageUrl(tag.title)" class="tag" v-for="tag in news.tags">
@@ -159,6 +159,9 @@ export default {
         }
     },
     methods: {
+        parseBackground(text) {
+            return text.replaceAll('background-color: #ffffff;', '').replaceAll('background-color:#ffffff;', '');
+        },
         reload() {
             this.getHotNews();
         },
@@ -184,7 +187,7 @@ export default {
                 })
         },
         newsPageUrl(tag) {
-            return `/${NewsService.lang}/news?tag=${tag}`;
+            return `/${NewsService.lang}/novosti?tag=${tag}`;
         },
         clearImg() {
             this.img = null;
@@ -305,6 +308,10 @@ export default {
 
 .news-view .news-body img {
     cursor: pointer;
+}
+
+.news-view .news-body h2 {
+    background-color: transparent !important;
 }
 
 .news-view .wrapper.news-wrap img.clone {

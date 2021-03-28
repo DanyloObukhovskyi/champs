@@ -163,9 +163,8 @@ export default {
 
                 NewsService.getNews(this.news.length, this.filters)
                     .then(data => {
-                        if (data.length < 6) {
-                            this.isLoadAll = true;
-                        }
+                        const oldNewsLength = this.news.length;
+
                         for (let item of data) {
                             const news = this.news.find(news => Number(item.id) === Number(news.id))
                             if (!news) {
@@ -173,6 +172,10 @@ export default {
                             }
                         }
                         this.load = false;
+
+                        if (oldNewsLength === this.news.length) {
+                            this.isLoadAll = true;
+                        }
                     })
             }
         },
