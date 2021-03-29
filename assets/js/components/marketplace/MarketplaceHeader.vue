@@ -94,7 +94,7 @@
 
         .slide-images {
             .slide {
-                width: 30vw;
+                width: 31vw;
                 -webkit-animation: animation-translate-right 1500ms linear both;
                 animation: animation-translate-right 1500ms linear both;
                 display: flex;
@@ -102,8 +102,8 @@
                 overflow: hidden;
 
                 img {
-                    width: 110%;
-                    height: 110%;
+                    width: 100%;
+                    height: 100%;
                 }
             }
 

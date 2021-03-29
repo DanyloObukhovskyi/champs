@@ -22,7 +22,7 @@
                     </div>
                     <img src="/images/noLogo.png">
                 </div>
-                <template v-if="!isPast">
+                <template v-if="!isPast && !match.isLive">
                     <div class="score" v-if="showScore && match.teamA !== null" :class="getScoreClass(match.teamA.score, match.teamB.score)">
                         {{match.teamA.score}}
                     </div>
