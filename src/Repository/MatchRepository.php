@@ -304,10 +304,8 @@ class MatchRepository extends ServiceEntityRepository
             $dateFrom =  $date = (new \DateTime())->format("Y-m-d") . " 00:00:00";
 
             $query->andWhere('m.live = :live')
-                ->andWhere('m.start_at <= :dateTo')
-                ->andWhere('m.start_at >= :dateFrom')
-                ->setParameter('dateFrom', $dateFrom)
-                ->setParameter('dateTo', $date)
+                ->andWhere('m.start_at > :dateStartFrom')
+                ->setParameter('dateStartFrom', $dateFrom)
                 ->setParameter('live', true);
         }
         if ($type === MatchService::PAST_MATCHES) {
