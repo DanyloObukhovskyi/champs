@@ -303,6 +303,7 @@ class MatchRepository extends ServiceEntityRepository
         if ($type === MatchService::LIVE_MATCHES) {
             $query->andWhere('m.live = :live')
                 ->andWhere('m.start_at <= :date')
+                ->setParameter('date', $date)
                 ->setParameter('live', true);
         }
         if ($type === MatchService::PAST_MATCHES) {
