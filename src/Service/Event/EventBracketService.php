@@ -110,13 +110,14 @@ class EventBracketService extends EntityService
                 $showBracketName = true;
             }
 
+            $match = !empty($bracket->getMatch()) ? $bracket->getMatch()->jsonSerialize() : null;
             $sortedBrackets[$type][$bracket->getType()][] =
                 [
                     'id' => $bracket->getId(),
                     'bracketName' => $bracket->getName(),
                     'bracketType' => $bracket->getType(),
                     'type' => $type,
-                    'match' => $bracket->getMatch()->jsonSerialize(),
+                    'match' => $match,
                     'player1' => [
                         'match' => $bracket->getMatch()->jsonSerialize(),
                         'playerId' => !empty($bracket->getTeam1()) ? $bracket->getTeam1()->getId() : null,
