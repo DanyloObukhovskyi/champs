@@ -9,6 +9,7 @@ imports:
     - { resource: parser/user-agents.yaml }
     - { resource: upload/user.yaml }
 parameters:
+    maintenanceFilePath: '%kernel.project_dir%/public/.maintenance'
 services:
     get_set_method_normalizer:
         class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
@@ -36,3 +37,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\EventListener\MaintenanceListener:
+        arguments:
+            - '%maintenanceFilePath%'
+            - '@twig'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request}
