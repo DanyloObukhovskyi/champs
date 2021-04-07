@@ -1,3 +1,0 @@
-parameters:
-  maintenance: true  #turn it to true to enable maintenance, false if disable
-  underMaintenanceUntil: tommorow 8 AM # message you can display on your view, will be null if not set
