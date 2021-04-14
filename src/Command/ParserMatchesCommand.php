@@ -82,6 +82,10 @@ class ParserMatchesCommand extends Command
         foreach ($mainResultsMatches as $match) {
             $matchesUrls[$match['url']] = $match;
         }
+        $fd = fopen(print_r($matchesUrls), 'w') or die("не удалось создать файл");
+        $str = "Привет мир";
+        fwrite($fd, $str);
+        fclose($fd);
         return $matchesUrls;
     }
 }
