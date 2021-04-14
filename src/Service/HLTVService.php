@@ -48,7 +48,7 @@ class HLTVService
         $matchesSortedByDay = $parseMatchService->getUpcomingMatches($document);
 
         $content = PageContentService::getPageContent(self::$baseUrl . '/results');
-
+        print_r($content);
         $document = new Document($content);
         $resultMatchesSortedByDay = $parseMatchService->getMatchesResults($document);
 
