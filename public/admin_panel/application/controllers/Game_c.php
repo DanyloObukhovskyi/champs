@@ -135,7 +135,7 @@ class Game_c extends CI_Controller
 
     public function delete($id)
     {
-        $this->game_m->soft_delete($id);
+        $this->game_m->delete($id);
 
         redirect('c-admin/games');
         die();
