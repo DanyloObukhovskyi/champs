@@ -111,7 +111,7 @@
                 </div>
                 <label class="label" for="">URL</label>
                 <div class="input mb-5">
-                    <input required type="text"
+                    <input type="text"
                            class="fw-600 input2_txt"
                            value="<?php echo $event['url'] ?>"
                            name="url">
