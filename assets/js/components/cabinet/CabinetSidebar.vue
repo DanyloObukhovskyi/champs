@@ -145,6 +145,7 @@ export default {
   border-radius: .3vw;
   width: 11.5vw;
   margin-top: 1vw;
+    min-height: 60vw;
   height: min-content;
   padding-top: 1vw;
   padding-bottom: 1vw;
