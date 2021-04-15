@@ -101,12 +101,23 @@ export default {
 
                 const img = new Image();
                 img.onload = function () {
-
+                    let size = input.files[0].size/1024/1024;
+                    console.log(size);
                     if (this.width > 1250 || this.height > 1250) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Упс...',
                             text: 'Разрешения изображения привышает 1250x1250!',
+                        })
+
+                        self.previewImage = null;
+                        input.value = '';
+                    }
+                    if(size > 1){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Размер изображения превышает 1 мб',
                         })
 
                         self.previewImage = null;
