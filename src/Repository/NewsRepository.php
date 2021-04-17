@@ -106,7 +106,7 @@ class NewsRepository extends ServiceEntityRepository
     public function getByGame($game)
     {
         return $this->createQueryBuilder("n")
-            ->orderBy('n.views', 'DESC')
+            ->orderBy('n.created_at', 'DESC')
             ->andWhere('n.game = :game')
             ->setParameter('game', $game)
             ->setMaxResults(6)
