@@ -75,9 +75,9 @@
                 </div>
                 <div class="games">
                     <button v-for="game in games"
-                            @click="selectGame(game)"
-                            :class="{active: filters.game === game}">
-                        <img :src="`/images/events/${game}.png`">
+                            @click="selectGame(game.code)"
+                            :class="{active: filters.game === game.code}">
+                        <img style="max-height: 32px;max-width: 50px" :src="`/uploads/games/${game.eventIcon}`">
                     </button>
                 </div>
             </div>
@@ -107,19 +107,20 @@
     import Multiselect from 'vue-multiselect'
     import EventDigestRow from "../components/events/EventDigestRow";
     import EventService from "../services/EventService";
+    import Service from "../services/Service";
 
-    const GAMES = [
-        'cs',
-        'dota',
-        'lol',
-        'valorant',
-        'fortnite',
-        'warcraft',
-        'pubg',
-        'fifa',
-        'overwatch',
-        'apex'
-    ];
+    // const GAMES = [
+    //     'cs',
+    //     'dota',
+    //     'lol',
+    //     'valorant',
+    //     'fortnite',
+    //     'warcraft',
+    //     'pubg',
+    //     'fifa',
+    //     'overwatch',
+    //     'apex'
+    // ];
 
     const EVENT_TYPES = {
         past: 'Прошедшие',
@@ -139,7 +140,7 @@
             description: 'Для любителей'
         }
     ];
-
+    const service = new Service();
     export default {
         name: "EventsDigestPage",
         components: {
@@ -283,16 +284,22 @@
                     }
                 }
             },
+            async getGames(){
+                const GAMES = await service.getGames().then(games => {
+                    return games;
+                });
+                GAMES.map(game => {
+                    if (this.eventsGames.indexOf(game.code) !== -1){
+                        this.games.push(game);
+                    }
+                })
+            }
         },
         mounted() {
             this.getEvents()
             this.scrollEventTrigger();
 
-            GAMES.map(game => {
-                if (this.eventsGames.indexOf(game) !== -1){
-                    this.games.push(game);
-                }
-            })
+            this.getGames();
         }
     }
 </script>
