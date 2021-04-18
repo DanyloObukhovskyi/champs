@@ -132,7 +132,7 @@ class Teams extends CI_Controller
         if(!empty($id)){
             $team = $this->team_m->getOne(['id' => $id]);
             if(!empty($team)){
-                $imgs_url = $this->config->item('main_url').'images/'.$team['logo'];
+                $imgs_url = $this->config->item('main_url').'uploads/images/'.$team['logo'];
                 $response->name = $team['name'];
                 $response->logo = $imgs_url;
                 $response->region = $team['region'];
@@ -156,7 +156,7 @@ class Teams extends CI_Controller
                 if(!empty($_FILES)){
                     $image = $_FILES["itempic"];
                     if (is_uploaded_file($image["tmp_name"])) {
-                        $imgs_url = PUBLICPATH.$this->config->item('upload_logo');
+                        $imgs_url = PUBLICPATH.$this->config->item('upload_event-pic');
 
                         if (!file_exists($imgs_url)) {
                             mkdir($imgs_url, 0777);
@@ -196,7 +196,7 @@ class Teams extends CI_Controller
                     if(!empty($_FILES)){
                         $image = $_FILES["itempic"];
                         if (is_uploaded_file($image["tmp_name"])) {
-                            $imgs_url = PUBLICPATH.$this->config->item('upload_logo');
+                            $imgs_url = PUBLICPATH.$this->config->item('upload_event-pic');
                             if (!file_exists($imgs_url)) {
                                 mkdir($imgs_url, 0777);
                             }
