@@ -197,3 +197,11 @@ $route['c-admin/seo/edit'] = 'seo/edit';
 
 //players
 $route['c-admin/players/ajax/search'] = 'players_c/search';
+
+$route['c-admin/teams'] = 'teams/index';
+$route['c-admin/teamsTable'] = 'teams/getTeams';
+$route['c-admin/team/edit/(:num)/(:num)'] = 'teams/edit/$1/$2';
+$route['c-admin/team/delete/(:num)/(:num)'] = 'teams/delete/$1/$2';
+$route['c-admin/team/fetch'] = 'teams/fetch';
+$route['c-admin/team/create'] = 'teams/create';
+$route['c-admin/team/update'] = 'teams/update';
