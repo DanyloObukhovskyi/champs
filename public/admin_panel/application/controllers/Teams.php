@@ -84,7 +84,7 @@ class Teams extends CI_Controller
             foreach ($totalData as $team) {
                 $data[] = [
                     $team['id'],
-                    '<img class="pr-10" style="vertical-align: middle;height:30px;width:50px" src="'. $this->config->item('main_url').'/images/'. $team['logo'] . '"/>',
+                    '<img class="pr-10" style="vertical-align: middle;height:30px;width:50px" src="'. $this->config->item('main_url').'uploads/images/'. $team['logo'] . '"/>',
                     $team['name'],
                     '<a class="pointer" href="#" onclick="fetchTeam('.$team['id'].')"><button class="btn btn-dark-blue btn-small">Редактировать</button></a>
                     <div onclick="c_delete(\''.base_url("c-admin/team/delete/".$team['id']."/".$this->UserID).'\',\''.$team['name'].'\',\'Post\')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div>'
