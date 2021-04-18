@@ -63,6 +63,11 @@
     </li>
     <?php endif;?>
     <?php if($roles[0] == 1 or $roles[1] == 1):?>
+        <li class="<?php echo 'teams' === $activePath ? 'active': ''?>">
+            <a href="<?php echo base_url('c-admin/teams'); ?>">Команды</a>
+        </li>
+    <?php endif;?>
+    <?php if($roles[0] == 1 or $roles[1] == 1):?>
     <li class="<?php echo 'events' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/events'); ?>">События</a>
     </li>

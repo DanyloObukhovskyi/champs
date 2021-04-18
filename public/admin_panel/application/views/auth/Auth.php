@@ -6,14 +6,14 @@
 
 
 <main style='min-height: calc(100% - 270px);  z-index:10;' >
-	<div class="main-container" style='float: left; margin-left: 150px;'>
-		<h1 class="main-container__title">Nice to see You!</h1>
+	<div class="main-container" style='display: flex;flex-direction: column;align-items: center;'>
+		<h1 class="main-container__title">Рады вас видеть!</h1>
 		<?php echo form_open("auth/login", array('role' => 'login', 'class' => 'login-form'));?>
-		<label class="label" for="">Login</label>
+		<label class="label" for="">Электронная почта</label>
 		<div class="input mb-10" id="input">
 			<?php echo form_input($identity, $this->input->post['identity'] ?? null, array('class' => 'input-group-field'));?>
 		</div>
-		<label class="label" for="">Password</label>
+		<label class="label" for="">Пароль</label>
 		<div class="input mb-10" id="input">
 			<?php echo form_input($password, '', array('class' => 'input-group-field'));?>
 		</div>
@@ -25,7 +25,7 @@
 		</div>
 		<?php echo form_close();?>
 		
-		<p class="fogot_passw"><a href="forgot_password" class='fogot_passw'>Forgot your password?</a></p>
+		<p class="fogot_passw"><a href="forgot_password" class='fogot_passw'>Забыли ваш пароль?</a></p>
 	
 	</div>
 </main>

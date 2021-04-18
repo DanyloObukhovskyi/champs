@@ -60,4 +60,38 @@ class Team_m extends CI_Model
     {
         return $this->get(['id' => $id])[0] ?? null;
     }
+
+    public function getTeamsData($limit, $offset, $count, $query, $column, $order)
+    {
+        $this->db->select('*');
+
+        if ($query != '') {
+            $this->db->where("(id LIKE '%$query%'");
+            $this->db->or_where("name LIKE '%$query%'");
+        }
+        if ($column == 0) {
+            $this->db->order_by("{$this->table}.id", $order);
+        } elseif ($column == 2) {
+            $this->db->order_by("{$this->table}.name", $order);
+        }
+        if ($count) {
+            return count($this->get([]));
+        }
+        $list = $this->getData([], $limit, $offset);
+
+        return $list;
+    }
+
+    public function getData($where, $limit, $offset) {
+        $query = $this->db->get_where($this->table, $where, $limit, $offset);
+        $data = array();
+        if ($query !== FALSE && $query->num_rows() > 0) {
+            $data = $query->result_array();
+        }
+        return $data;
+    }
+
+    public function getOne($where) {
+        return $this->db->limit(1)->get_where($this->table, $where)->row_array();
+    }
 }

@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Welcome to Champs Admin Pannel</title>
+	<title>Добро пожаловать в Champs Admin Pannel</title>
 	<?php
 		$url =  base_url();
 		$url =  str_replace("[::1]", "localhost", $url);
@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			
 			<li class="header-menu-item txt-orange fw-400">
 				<?php if(isset($user->email)) { ?>
-					<a href="<?php echo base_url('auth/logout'); ?>" class="txt-orange fw-400" style="cursor: pointer; padding-bottom: 23px;">Logout</a>
+					<a href="<?php echo base_url('auth/logout'); ?>" class="txt-orange fw-400" style="cursor: pointer; padding-bottom: 23px;">Выйти</a>
 				<?php } else { ?>
 					<li class="header-menu-item"<a href="<?php echo base_url('auth/login'); ?>" style="color:#f25500; cursor: pointer;";>Login</a></li>
 				<?php } ?>
