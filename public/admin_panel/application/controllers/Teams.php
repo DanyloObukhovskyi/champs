@@ -156,7 +156,7 @@ class Teams extends CI_Controller
                 if(!empty($_FILES)){
                     $image = $_FILES["itempic"];
                     if (is_uploaded_file($image["tmp_name"])) {
-                        $imgs_url = PUBLICPATH.$this->config->item('upload_event-pic');
+                        $imgs_url = PUBLICPATH.'/'.$this->config->item('upload_event-pic');
 
                         if (!file_exists($imgs_url)) {
                             mkdir($imgs_url, 0777);
@@ -196,7 +196,7 @@ class Teams extends CI_Controller
                     if(!empty($_FILES)){
                         $image = $_FILES["itempic"];
                         if (is_uploaded_file($image["tmp_name"])) {
-                            $imgs_url = PUBLICPATH.$this->config->item('upload_event-pic');
+                            $imgs_url = PUBLICPATH.'/'.$this->config->item('upload_event-pic');
                             if (!file_exists($imgs_url)) {
                                 mkdir($imgs_url, 0777);
                             }
