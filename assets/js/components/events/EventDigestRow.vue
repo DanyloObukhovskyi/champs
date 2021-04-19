@@ -14,6 +14,13 @@
                 </div>
             </div>
         </div>
+        <div class="event-middle align-items-end d-flex justify-content-between w-100">
+            <div class="news-footer d-flex w-100">
+                <div class="year w-100 d-flex justify-content-end">
+                    {{event.year}}
+                </div>
+            </div>
+        </div>
         <div class="event-footer align-items-end d-flex justify-content-between w-100">
             <div class="logo">
                 <img :src="event.logoWithPath" alt="">
@@ -81,7 +88,23 @@
         bottom: 0;
         margin-bottom: .7vw;
     }
+    .event-middle {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 1.7vw;
+    }
 
+    .event .news-footer .year {
+        font-size: .9vw;
+        text-transform: lowercase;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        width: 100%;
+        margin-right: 1.4vw;
+        color: #979797;
+        margin-right: 18%;
+    }
     .event .news-footer .activity {
         font-size: .9vw;
         display: flex;

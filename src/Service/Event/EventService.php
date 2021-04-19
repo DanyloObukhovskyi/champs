@@ -195,7 +195,7 @@ class EventService extends EntityService
 
         $dayStart = $event->getStartedAt()->format('d F');
         $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
-
+        $year =  $event->getStartedAt()->format('Y') < date('Y') ? $event->getStartedAt()->format('Y').' г' : '';
         $this->imageService->setImage($event->getImage());
 
         return [
@@ -203,6 +203,7 @@ class EventService extends EntityService
             "name" => $event->getName(),
             "startedAt" => $event->getStartedAt(),
             "endedAt" => $event->getEndedAt(),
+            "year" => $year,
             "image" => $event->getImage(),
             'imageHeader' => $event->getImageHeader(),
             'logoWithPath' => $this->imageService->getImagePath(),
