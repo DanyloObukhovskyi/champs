@@ -193,7 +193,7 @@
                         $('#image').attr('src','https://avatanplus.com/files/resources/mid/577e3ef8cdf33155c525fc0c.png')
                         $('#createTeam').modal('hide');
                         $('#teamsTable').DataTable().draw();
-                        var $images = null;
+                        $images = null;
                     }
                 },
                 error:function(data){
@@ -236,7 +236,7 @@
                         $('#image').attr('src','https://avatanplus.com/files/resources/mid/577e3ef8cdf33155c525fc0c.png')
                         $('#createTeam').modal('hide');
                         $('#teamsTable').DataTable().draw();
-                        var $images = null;
+                        $images = null;
                     }
                 },
                 error:function(data){
