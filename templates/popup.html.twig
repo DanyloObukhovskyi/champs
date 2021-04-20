@@ -218,7 +218,8 @@
 
                 }
                 playerTW.setVolume(0.5);
-
+                console.log(playerTW.getMuted());
+                console.log(playerTW.getVolume());
                 document.querySelector('#closeFrame').addEventListener('click', function () {
                     const now = new Date();
                     now.setMinutes(now.getMinutes() + 10);
