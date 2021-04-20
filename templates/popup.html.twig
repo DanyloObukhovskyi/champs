@@ -219,8 +219,8 @@
 
                 }
                 playerTW.setVolume(0.5);
-                console.log(playerTW.getMuted());
-                console.log(playerTW.getVolume());
+                playerTW.setMuted(false);
+                
                 document.querySelector('#closeFrame').addEventListener('click', function () {
                     const now = new Date();
                     now.setMinutes(now.getMinutes() + 10);
@@ -278,9 +278,6 @@
                 playerYT.unMute();
             } else {
                 playerTW.setMuted(false);
-                playerTW.setVolume(0.5);
-                console.log(playerTW.getMuted());
-                console.log(playerTW.getVolume());
             }
             e.target.parentNode.querySelector('div').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 448.075 448.075" style="enable-background:new 0 0 448.075 448.075;" xml:space="preserve">' +
                 '<path d="M352.021,16.075c0-6.08-3.52-11.84-8.96-14.4c-5.76-2.88-12.16-1.92-16.96,1.92l-141.76,112.96l167.68,167.68V16.075z"/>' +
