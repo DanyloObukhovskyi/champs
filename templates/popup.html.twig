@@ -57,18 +57,13 @@
     let mute = false;
     let play = false;
     let playerYT = null;
-
     let links = "{{ video is not null ? video.videoId : null }}";
-    let typeYT = "{{ last_stream['video_type'] ?? null }}";
+    let typeYT = "{{ video.videoType['video_type'] ?? null }}";
+
     let full = false;
-
     //temporary fix, rewrite this part for add videos
-    //const playerTW = new Object();
-    //playerTW.pause= function (){}
-
-    playerTW = new Twitch.Player('playerTW', {
-        video: links
-    });
+    // let playerTW = new Object();
+    // playerTW.pause= function (){}
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -80,59 +75,155 @@
         if (getCookie('hide_popup_video') !== undefined) {
             return;
         }
-        playerYT = new YT.Player('playerYT', {
-            videoId: links,
-            playerVars: {
-                'controls': 0,
-                'disablekb': 1,
-                'showinfo': 0,
-                'rel': 0,
-                'autoplay': 1,
-                'enablejsapi': 1,
-                'origin': 'http://champs.pro',
-            },
-            events: {
-                'onReady': (event) => {
-                    document.getElementById('stream').style.display = 'flex';
-                    document.getElementById('playerYT').style.display = 'block';
+
+        if(typeYT !== '1'){
+            playerYT = new YT.Player('playerYT', {
+                videoId: links,
+                playerVars: {
+                    'controls': 0,
+                    'disablekb': 1,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'autoplay': 1,
+                    'enablejsapi': 1,
+                    'origin': 'http://champs.pro',
+                },
+                events: {
+                    'onReady': (event) => {
+                        console.log(2342);
+                        document.getElementById('stream').style.display = 'flex';
+                        document.getElementById('playerYT').style.display = 'block';
 
 
-                    if (links === null) {
-                        document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                        if (links === null) {
+                            document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                                '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
+                                '</svg>';
+
+
+                            /*
+                            document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
                             '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
                             '</svg>';
 
+                            */
+                        } else {
+                            /* document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">' +
+                            '<path d="M187.733,0H51.2c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C204.8,7.641,197.159,0,187.733,0z"/>' +
+                            '<path d="M426.667,0H290.133c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C443.733,7.641,436.092,0,426.667,0z"/>' +
+                            '</svg>';
+                            */
 
-                        /*
-                        document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                            document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                                '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
+                                '</svg>';
+
+                        }
+                        event.target.setVolume(50);
+
+                        document.querySelector('#closeFrame').addEventListener('click', function () {
+                            const now = new Date();
+                            now.setMinutes(now.getMinutes() + 10);
+
+                            document.cookie = 'hide_popup_video=true;expires=' + now.toUTCString() + ';path=/';
+                        })
+                    },
+                }
+            });
+        } else {
+            var options = {
+                width: 720,
+                height: 1280,
+                channel: links,
+                // only needed if your site is also embedded on embed.example.com and othersite.example.com
+                parent: ["champs"]
+        };
+            playerTW = new Twitch.Player('playerTW', options
+                // {
+                //     channel: links,
+                //     autoplay: 1,
+                // events: {
+                //     'READY': (event) => {
+                //         console.log(2342);
+                //         document.getElementById('stream').style.display = 'flex';
+                //         document.getElementById('playerTW').style.display = 'block';
+                //
+                //
+                //         if (links === null) {
+                //             document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                //                 '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
+                //                 '</svg>';
+                //
+                //
+                //             /*
+                //             document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                //             '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
+                //             '</svg>';
+                //
+                //             */
+                //         } else {
+                //             /* document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">' +
+                //             '<path d="M187.733,0H51.2c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C204.8,7.641,197.159,0,187.733,0z"/>' +
+                //             '<path d="M426.667,0H290.133c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C443.733,7.641,436.092,0,426.667,0z"/>' +
+                //             '</svg>';
+                //             */
+                //
+                //             document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                //                 '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
+                //                 '</svg>';
+                //
+                //         }
+                //         event.target.setVolume(50);
+                //
+                //         document.querySelector('#closeFrame').addEventListener('click', function () {
+                //             const now = new Date();
+                //             now.setMinutes(now.getMinutes() + 10);
+                //
+                //             document.cookie = 'hide_popup_video=true;expires=' + now.toUTCString() + ';path=/';
+                //         })
+                //     },
+                // }
+            // }
+            );
+            playerTW.addEventListener('READY', function () {
+                document.getElementById('stream').style.display = 'flex';
+                document.getElementById('playerTW').style.display = 'block';
+
+
+                if (links === null) {
+                    document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
                         '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
                         '</svg>';
 
-                        */
-                    } else {
-                        /* document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">' +
-                        '<path d="M187.733,0H51.2c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C204.8,7.641,197.159,0,187.733,0z"/>' +
-                        '<path d="M426.667,0H290.133c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C443.733,7.641,436.092,0,426.667,0z"/>' +
+
+                    /*
+                    document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                    '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
+                    '</svg>';
+
+                    */
+                } else {
+                    /* document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">' +
+                    '<path d="M187.733,0H51.2c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C204.8,7.641,197.159,0,187.733,0z"/>' +
+                    '<path d="M426.667,0H290.133c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067h136.533 c9.426,0,17.067-7.641,17.067-17.067V17.067C443.733,7.641,436.092,0,426.667,0z"/>' +
+                    '</svg>';
+                    */
+
+                    document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
+                        '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
                         '</svg>';
-            */
 
-                        document.getElementById('streamPopupStart').querySelector('div').innerHTML = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320.001 320.001" style="enable-background:new 0 0 320.001 320.001;" xml:space="preserve">' +
-                            '<path d="M295.84,146.049l-256-144c-4.96-2.784-11.008-2.72-15.904,0.128C19.008,5.057,16,10.305,16,16.001v288 c0,5.696,3.008,10.944,7.936,13.824c2.496,1.44,5.28,2.176,8.064,2.176c2.688,0,5.408-0.672,7.84-2.048l256-144 c5.024-2.848,8.16-8.16,8.16-13.952S300.864,148.897,295.84,146.049z"/>' +
-                            '</svg>';
+                }
+                event.target.setVolume(50);
 
-                    }
-                    event.target.setVolume(50);
+                document.querySelector('#closeFrame').addEventListener('click', function () {
+                    const now = new Date();
+                    now.setMinutes(now.getMinutes() + 10);
 
-                    document.querySelector('#closeFrame').addEventListener('click', function () {
-                        const now = new Date();
-                        now.setMinutes(now.getMinutes() + 10);
-
-                        document.cookie = 'hide_popup_video=true;expires=' + now.toUTCString() + ';path=/';
-                    })
-                },
-            }
-        });
-
+                    document.cookie = 'hide_popup_video=true;expires=' + now.toUTCString() + ';path=/';
+                })
+            });
+        }
     }
 
     document.querySelectorAll('.setStreamButton').forEach((item) => {
