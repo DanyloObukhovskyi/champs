@@ -216,7 +216,7 @@
                         '</svg>';
 
                 }
-                playerTW.setVolume(50);
+                playerTW.setVolume(0.5);
 
                 document.querySelector('#closeFrame').addEventListener('click', function () {
                     const now = new Date();
@@ -334,8 +334,14 @@
     })
     document.getElementById('streamPopupLink').querySelector('span').addEventListener('click', (e) => {
         if (window.innerWidth > 600) {
-            if (links !== null) {
-                window.open('https://www.youtube.com/watch?v=' + links + '&has_verified=1', "_blank");
+            if (typeYT !== '1') {
+                if (links !== null) {
+                    window.open('https://www.youtube.com/watch?v=' + links + '&has_verified=1', "_blank");
+                }
+            } else {
+                if (links !== null) {
+                    window.open('https://www.twitch.tv/' + links, "_blank");
+                }
             }
         } else {
             if (!full) {
