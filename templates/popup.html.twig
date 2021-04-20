@@ -90,7 +90,6 @@
                 },
                 events: {
                     'onReady': (event) => {
-                        console.log(2342);
                         document.getElementById('stream').style.display = 'flex';
                         document.getElementById('playerYT').style.display = 'block';
 
@@ -217,7 +216,7 @@
                         '</svg>';
 
                 }
-                event.target.setVolume(50);
+                playerTW.setVolume(50);
 
                 document.querySelector('#closeFrame').addEventListener('click', function () {
                     const now = new Date();
