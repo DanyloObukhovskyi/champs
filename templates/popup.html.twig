@@ -136,7 +136,7 @@
                 height: 1280,
                 channel: links,
                 // only needed if your site is also embedded on embed.example.com and othersite.example.com
-                parent: ["champs"]
+                parent: ["champs.pro"]
         };
             playerTW = new Twitch.Player('playerTW', options
                 // {
@@ -185,7 +185,7 @@
                 // }
             // }
             );
-            playerTW.addEventListener('READY', function () {
+            document.addEventListener('Twitch.Player.READY', function () {
                 document.getElementById('stream').style.display = 'flex';
                 document.getElementById('playerTW').style.display = 'block';
 
