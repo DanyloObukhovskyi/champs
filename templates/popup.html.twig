@@ -188,7 +188,7 @@
             playerTW.addEventListener('Twitch.Player.PAUSE', function () {
                 console.log(234)
             });
-            playerTW.bind('Twitch.Player.READY', function() {
+            $('#stream').bind('Twitch.Player.READY', function() {
                 document.getElementById('stream').style.display = 'flex';
                 document.getElementById('playerTW').style.display = 'block';
 
