@@ -129,15 +129,15 @@
                 playerTW.setVolume(0.5);
 
 
-                // document.querySelector('#closeFrame').addEventListener('click', function () {
-                //     const now = new Date();
-                //     now.setMinutes(now.getMinutes() + 10);
-                //
-                //     document.cookie = 'hide_popup_video=true;expires=' + now.toUTCString() + ';path=/';
-                //     playerTW.pause();
-                //     document.getElementById('stream').style.display = 'none';
-                //     document.getElementById('playerTW').style.display = 'none';
-                // })
+                document.querySelector('#closeFrame').addEventListener('click', function () {
+                    const now = new Date();
+                    now.setMinutes(now.getMinutes() + 10);
+
+                    document.cookie = 'hide_popup_video=true;expires=' + now.toUTCString() + ';path=/';
+                    playerTW.pause();
+                    document.getElementById('stream').style.display = 'none';
+                    document.getElementById('playerTW').style.display = 'none';
+                })
                 //
                 // document.getElementById('streamPopupSound').querySelector('span').addEventListener('click', (e) => {
                 //     if (mute) {
