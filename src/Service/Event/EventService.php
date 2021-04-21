@@ -212,6 +212,7 @@ class EventService extends EntityService
             'views' => $event->getViews(),
             'slug' => $generator->generate($event->getName()),
             'type' => $event->getStatus() !== 'pro' ? 'все' : 'pro',
+            'location' => $event->getLocation(),
             'game' => !empty($event->getGame()) ? $event->getGame()->jsonSerialize() : null
         ];
     }

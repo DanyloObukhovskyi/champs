@@ -1,5 +1,5 @@
 <template>
-    <a :href="eventUrl(event)" class="event d-block">
+    <a :href="eventUrl(event)+'/'+event.slug" class="event d-block">
         <div class="title">
             {{event.name}}
         </div>
@@ -28,7 +28,7 @@
         props: ['event'],
         methods: {
             eventUrl(event) {
-                return eventService.getEventUrl(event.id, event.slug)
+                return eventService.getEventUrl(event.id)
             }
         }
     }

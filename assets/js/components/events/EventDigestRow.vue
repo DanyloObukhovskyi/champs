@@ -1,5 +1,5 @@
 <template>
-    <a :href="eventUrl(event)" class="event d-flex justify-content-between">
+    <a :href="eventUrl(event) +'/'+ getSlug(event)" class="event d-flex justify-content-between">
         <div class="title">
             {{event.name}}
         </div>
@@ -46,7 +46,52 @@
         props: ['event', 'className'],
         methods: {
             eventUrl(event) {
-                return eventService.getEventUrl(event.id, event.slug)
+                return eventService.getEventUrl(event.id)
+            },
+            getSlug(event) {
+                let name = this.getTitleUrl(event.name)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                    ;
+                let location =  this.getTitleUrl(event.location)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                ;
+                let game = this.getTitleUrl(event.game.name)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                ;
+                let start_date = this.getTitleUrl(event.startedAtRu)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                ;
+                let end_date = this.getTitleUrl(event.endedAtRu)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                ;
+                return name+'_'+location+'_'+game+'_'+start_date+'-'+end_date;
+            },
+            getTitleUrl(title) {
+                return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
+                    function (all, ch, space, words, i) {
+                        if (space || words) {
+                            return space ? '_' : '';
+                        }
+                        var code = ch.charCodeAt(0),
+                            index = code == 1025 || code == 1105 ? 0 :
+                                code > 1071 ? code - 1071 : code - 1039,
+                            t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
+                                'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+                                'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
+                                'shch', '', 'y', '', 'e', 'yu', 'ya'
+                            ];
+                        return t[index];
+                    });
             }
         }
     }
