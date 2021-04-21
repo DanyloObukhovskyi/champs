@@ -71,19 +71,19 @@
                             <div class="modal-body">
                                 <form name="saveGame">
                                     <div class="col-item">
-                                        <label class="label" for="">Лого(размеры:50x50)</label>
+                                        <label class="label" for="">Лого(размеры:765x745)</label>
                                         <div class="input">
                                             <input name="logo" type="file" class="fw-600 input2_txt">
                                         </div>
-                                        <label class="label" for="">Иконка в меню(размеры:50x50)</label>
+                                        <label class="label" for="">Иконка в меню(размеры:765x745)</label>
                                         <div class="input">
                                             <input name="sidebar_icon" type="file" class="fw-600 input2_txt">
                                         </div>
-                                        <label class="label" for="">Иконка в новости(размеры:50x50)</label>
+                                        <label class="label" for="">Иконка в новости(размеры:765x745)</label>
                                         <div class="input">
                                             <input name="news_icon" type="file" class="fw-600 input2_txt">
                                         </div>
-                                        <label class="label" for="">Иконка в турнирах(размеры:32x50)</label>
+                                        <label class="label" for="">Иконка в турнирах(размеры:280x180)</label>
                                         <div class="input">
                                             <input name="event_icon" type="file" class="fw-600 input2_txt">
                                         </div>
