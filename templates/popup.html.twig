@@ -96,6 +96,9 @@
 
     (function() {
         if(videoTypeID === '1'){
+            if (getCookie('hide_popup_video') !== undefined) {
+                return;
+            }
             var options = {
                 scrolling: 'no',
                 allowfullscreen: "true",
@@ -190,7 +193,6 @@
     })();
 
     function onYouTubeIframeAPIReady() {
-      console.trace();
         if (getCookie('hide_popup_video') !== undefined) {
             return;
         }
