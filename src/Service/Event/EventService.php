@@ -211,7 +211,7 @@ class EventService extends EntityService
             'endedAtRu' => NewsService::replaceMonth($dayEnd),
             'views' => $event->getViews(),
             'slug' => $generator->generate($event->getName()),
-            'type' => $event->getStatus() ?? 'pro',
+            'type' => $event->getStatus() !== 'pro' ? 'все' : 'pro',
             'game' => !empty($event->getGame()) ? $event->getGame()->jsonSerialize() : null
         ];
     }
