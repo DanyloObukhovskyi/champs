@@ -53,22 +53,27 @@ class NewsRepository extends ServiceEntityRepository
             $query->innerJoin('n.newsTags', 'nt')
                 ->andwhere('nt.title IN(:tags)')
                 ->setParameter('tags', $tags);
-        } else {
-            $query->leftJoin('n.newsTags', 'nt');
         }
+//        else {
+//            $query->leftJoin('n.newsTags', 'nt');
+//        }
         if (!empty($search)) {
             $query->andWhere('n.title like :search')
                 ->orWhere('n.text like :search')
                 ->orWhere('nt.title like :search')
                 ->setParameter('search', "%$search%");
         }
-        foreach ($titles as $title) {
-            $query->andwhere('n.title like :title')
-                ->setParameter('title', "%$title%");
+        if(!empty($titles)){
+            foreach ($titles as $title) {
+                $query->andwhere('n.title like :title')
+                    ->setParameter('title', "%$title%");
+            }
         }
-        foreach ($texts as $text) {
-            $query->andwhere('n.text like :text')
-                ->setParameter('text', "%$text%");
+        if(!empty($texts)){
+            foreach ($texts as $text) {
+                $query->andwhere('n.text like :text')
+                    ->setParameter('text', "%$text%");
+            }
         }
         if (!empty($dateFrom)) {
             $from = new \DateTime("$dateFrom 00:00:00");
