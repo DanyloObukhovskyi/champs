@@ -187,7 +187,7 @@ export default {
                 })
         },
         newsPageUrl(tag) {
-            return `/${NewsService.lang}/novosti?tag=${tag}`;
+            return `/${NewsService.lang}/novosti?tag=${encodeURIComponent(tag)}`;
         },
         clearImg() {
             this.img = null;

@@ -77,7 +77,7 @@
                 this.news = this.news.filter(news => news.id !== newsId);
             },
             addTag(tag) {
-                window.location = NewsService.newsPage() + `?tag=${tag}`;
+                window.location = NewsService.newsPage() + `?tag=${encodeURIComponent(tag)}`;
             }
         },
         mounted() {
