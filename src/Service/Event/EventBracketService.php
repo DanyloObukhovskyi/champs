@@ -119,7 +119,7 @@ class EventBracketService extends EntityService
                     'type' => $type,
                     'match' => $match,
                     'player1' => [
-                        'match' => $bracket->getMatch()->jsonSerialize(),
+                        'match' => !empty($bracket->getMatch()) ?  $bracket->getMatch()->jsonSerialize() : null,
                         'playerId' => !empty($bracket->getTeam1()) ? $bracket->getTeam1()->getId() : null,
                         'winner' => $bracket->getScore1() > $bracket->getScore2(),
 
@@ -127,7 +127,7 @@ class EventBracketService extends EntityService
                         'score' => $bracket->getScore1(),
                     ],
                     'player2' => [
-                        'match' => $bracket->getMatch()->jsonSerialize(),
+                        'match' => !empty($bracket->getMatch()) ?  $bracket->getMatch()->jsonSerialize() : null,
                         'playerId' => !empty($bracket->getTeam2()) ? $bracket->getTeam2()->getId() : null,
                         'winner' => $bracket->getScore2() > $bracket->getScore1(),
 

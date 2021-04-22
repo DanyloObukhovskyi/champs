@@ -449,8 +449,8 @@ class Match implements \JsonSerializable
             "startAt" => $this->getStartAt(),
             "startAtRu" => NewsService::replaceMonth($this->getStartAt()->format('d F Y')),
             "time" => date("H:i", $this->getStartAt()->getTimestamp()),
-            "teamA" => $this->getTeam1()->jsonSerialize(),
-            "teamB" => $this->getTeam2()->jsonSerialize(),
+            "teamA" => !empty($this->getTeam1()) ? $this->getTeam1()->jsonSerialize() : null,
+            "teamB" => !empty($this->getTeam2()) ? $this->getTeam2()->jsonSerialize() : null,
             "isLive" => $this->getLive() ? true : false,
         ];
     }
