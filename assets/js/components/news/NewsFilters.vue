@@ -28,10 +28,10 @@
                     <img src="/images/news/filter.svg" alt="">
                 </div>
                 <div class="full-input col d-flex align-items-center justify-content-between">
-                    <div>
+                    <div class="filters_text">
                         {{ filterType !== null ? types[filterType] : 'Фильтры' }}
                     </div>
-                    <i class="fas fa-chevron-down pointer" @click="show = !show"></i>
+                    <i class="fas fa-chevron-down pointer" @click="show = !show" style="color: #212529;"></i>
                 </div>
                 <div class="filters-dropdown-menu w-100 p-0" v-show="show">
                     <button class="dropdown-item"
@@ -255,5 +255,8 @@ export default {
 
 .news-filters .filters-body .tags .tag:hover {
     opacity: .7;
+}
+.filters_text{
+    color: #212529;
 }
 </style>
