@@ -116,7 +116,7 @@ class OauthController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('main_redirect');
     }
 
     /**
@@ -144,7 +144,7 @@ class OauthController extends AbstractController
             }
             $this->loginUser($user);
         }
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('main_redirect');
     }
 
     /**
@@ -182,7 +182,7 @@ class OauthController extends AbstractController
             $this->userService->setFacebookId($user, $faceBookAccount->id);
             $this->loginUser($user);
         }
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('main_redirect');
     }
 
     /**
@@ -222,7 +222,7 @@ class OauthController extends AbstractController
             $this->userService->setGoogleId($user, $googleAccount->id);
             $this->loginUser($user);
         }
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('main_redirect');
     }
 
     /**
@@ -253,7 +253,7 @@ class OauthController extends AbstractController
             }
             $this->loginUser($user);
         }
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('main_redirect');
     }
 
     /**
@@ -284,6 +284,6 @@ class OauthController extends AbstractController
             }
             $this->loginUser($user);
         }
-        return $this->redirectToRoute('main');
+        return $this->redirectToRoute('main_redirect');
     }
 }

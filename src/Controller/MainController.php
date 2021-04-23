@@ -120,7 +120,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("//", name="main")
+     * @Route("/", name="main_redirect")
      */
     public function redirectToLogin(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
