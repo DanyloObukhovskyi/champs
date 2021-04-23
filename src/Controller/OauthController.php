@@ -236,7 +236,7 @@ class OauthController extends AbstractController
     }
 
     /**
-     * @Route("/ru/auth/twich/hook", name="twich.auth.hook")
+     * @Route("/ru/auth/twich/hook", name="twich.hook")
      */
     public function twichLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
     {
