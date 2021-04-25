@@ -97,7 +97,7 @@ class WalletController extends AbstractController
             'userid' => $user->getId()
         ]);
 
-        $prices = $trainer->getCosts();
+        $prices = !empty($trainer) ? $trainer->getCosts() : null;
 
         return $this->json([
             'earned' => $earned,
@@ -105,9 +105,9 @@ class WalletController extends AbstractController
             'available' => $available,
             'transactionHistory' => $purseHistory,
             'studentsHistory' => $confirmedPayments,
-            'lessonPrices' => $this->decorateTrainerPrices($prices),
-            'wallet' => $trainer->getPayPal(),
-            'isLessonCost' => $trainer->getIsLessonCost()
+            'lessonPrices' => !empty($prices) ? $this->decorateTrainerPrices($prices) : 0,
+            'wallet' => !empty($trainer) ? $trainer->getPayPal() : 0,
+            'isLessonCost' => !empty($trainer) ? $trainer->getIsLessonCost() : 0
         ]);
     }
 
