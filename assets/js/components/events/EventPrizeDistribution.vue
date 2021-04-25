@@ -30,7 +30,7 @@
                         {{ prize.prize }}
                     </div>
                 </div>
-                <img class="rating" :src="getRatingImage(index + 1)">
+                <img :class="getRatingClass(index + 1)" :src="getRatingImage(index + 1)">
             </div>
         </div>
     </div>
@@ -79,6 +79,14 @@ export default {
                 image = `/images/rating/rating${index}.svg`;
             }
             return image;
+        },
+        getRatingClass(index){
+            let class_name = 'rating_default';
+
+            if (index <= 3) {
+                class_name = `rating_${index}`;
+            }
+            return class_name;
         },
         getCupImage(index) {
             return `/images/rating/cup${index}.svg`;
@@ -215,5 +223,67 @@ export default {
     clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
     background-color: #2d3135;
     position: absolute;
+}
+
+.prize-distribution-body .distribution .number.number_1::after {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #fdd051;
+    position: absolute;
+}
+
+.prize-distribution-body .distribution .number.number_2::after {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #b6b6b6;
+    position: absolute;
+}
+
+.prize-distribution-body .distribution .number.number_3::after {
+    content: "";
+    color: white;
+    display: flex;
+    width: 1.7vw;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #9d7a54;
+    position: absolute;
+}
+img.rating_1 {
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #fdd051;
+    transform: rotate(180deg);
+    width: 1.7vw;
+    display: flex;
+    height: 100%;
+}
+img.rating_2 {
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #b6b6b6;
+    transform: rotate(180deg);
+}
+img.rating_3 {
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #9d7a54;
+    transform: rotate(180deg);
+    width: 1.7vw;
+    display: flex;
+    height: 100%;
+}
+img.rating_default {
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    background-color: #2d3135;
+    transform: rotate(180deg);
+    width: 1.7vw;
+    display: flex;
+    height: 100%;
 }
 </style>
