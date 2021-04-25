@@ -371,14 +371,22 @@ class UserService  extends EntityService
      * @param $passwordEncoder
      * @return User|null
      */
-    public function createUserFromTwichData($twichData, $passwordEncoder): ?User
+    public function createUserFromTwichData($twichData, $twichUser,$passwordEncoder): ?User
     {
+        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        $timeZone = "$timeZone ($gmt)";
         $user = new User();
         $user->setRoles(['ROLE_USER']);
 
         $user->setIsTrainer(false);
         $user->setPurse(false);
 
+        if(!empty($timeZone)){
+            $user->setTimezone($timeZone);
+        }
+        $user->setNickname($twichUser->display_name);
+        $user->setEmail($twichUser->email);
         $user->setTwichId($twichData->sub);
         $user->setPassword($passwordEncoder->encodePassword($user, sha1($twichData->sub)));
 

@@ -236,12 +236,12 @@ class OauthController extends AbstractController
     }
 
     /**
-     * @Route("/ru/auth/twich/hook", name="twich.hook")
+     * @Route("/ru/auth/twich/hook", name="twich.hooks")
      */
     public function twichLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        $twichAccount = $this->twichAuthService->getAccountInfo($request->get('code'));
 
+        $twichAccount = $this->twichAuthService->getAccountInfo($request->get('code'));
         if (isset($twichAccount)) {
             $user = $this->getDoctrine()
                 ->getManager()
@@ -249,7 +249,9 @@ class OauthController extends AbstractController
                 ->findOneBy(['twichId' => $twichAccount->sub]);
 
             if (empty($user)) {
-                $user = $this->userService->createUserFromTwichData($twichAccount, $this->passwordEncoder);
+                $twichUser = $this->twichAuthService->getAccountAttr($twichAccount->token);
+
+                $user = $this->userService->createUserFromTwichData($twichAccount, $twichUser, $this->passwordEncoder);
             }
             $this->loginUser($user);
         }
