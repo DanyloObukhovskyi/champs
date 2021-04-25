@@ -206,7 +206,8 @@
     }
 
     .teamA img, .teamB img {
-        width: 2vw;
+        width: 1.96vw;
+        max-height: 4vh;
     }
 
     .team-name {
