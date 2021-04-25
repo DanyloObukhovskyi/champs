@@ -96,6 +96,9 @@ class VkAuthService
             return (object) $user;
 
         } catch (\Exception $e){
+            echo '<pre>';
+            var_dump($e);
+            die;
             return null;
         }
     }

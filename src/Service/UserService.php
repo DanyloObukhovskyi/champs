@@ -273,6 +273,14 @@ class UserService  extends EntityService
         $user->setIsTrainer(false);
         $user->setPurse(false);
 
+        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        $timeZone = "$timeZone ($gmt)";
+        if(!empty($timeZone)){
+            $user->setTimezone($timeZone);
+        }
+
+        $user->setEmail($discordData->email);
         $user->setNickname($discordData->username);
         $user->setPassword($passwordEncoder->encodePassword($user, sha1($discordData->id)));
 
@@ -371,26 +379,32 @@ class UserService  extends EntityService
      * @param $passwordEncoder
      * @return User|null
      */
-    public function createUserFromTwichData($twichData, $twichUser,$passwordEncoder): ?User
+    public function createUserFromTwichData($twichData, $twichUser, $passwordEncoder): ?User
     {
-        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
-            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
-        $timeZone = "$timeZone ($gmt)";
-        $user = new User();
-        $user->setRoles(['ROLE_USER']);
+        $user = $this->findByEmail($twichUser->email);
+        if(!empty($user)){
+            return false;
+        } else {
+            $user = new User();
+            $user->setRoles(['ROLE_USER']);
 
-        $user->setIsTrainer(false);
-        $user->setPurse(false);
+            $user->setIsTrainer(false);
+            $user->setPurse(false);
 
-        if(!empty($timeZone)){
-            $user->setTimezone($timeZone);
+            [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+            $timeZone = "$timeZone ($gmt)";
+            if(!empty($timeZone)){
+                $user->setTimezone($timeZone);
+            }
+
+            $user->setNickname($twichUser->display_name);
+            $user->setEmail($twichUser->email);
+            $user->setTwichId($twichData->sub);
+            $user->setPassword($passwordEncoder->encodePassword($user, sha1($twichData->sub)));
+
+            return $this->save($user);
         }
-        $user->setNickname($twichUser->display_name);
-        $user->setEmail($twichUser->email);
-        $user->setTwichId($twichData->sub);
-        $user->setPassword($passwordEncoder->encodePassword($user, sha1($twichData->sub)));
-
-        return $this->save($user);
     }
 
     /**

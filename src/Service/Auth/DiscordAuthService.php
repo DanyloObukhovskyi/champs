@@ -17,10 +17,10 @@ class DiscordAuthService
     public function getAuthorizeUrl()
     {
         $params = array(
-            'client_id' => $_ENV['DISCORD_OAUTH2_CLIENT_ID'],
-            'redirect_uri' => $_ENV['DISCORD_REDIRECT_URL'],
+            'client_id' => $_ENV['DISCORD_CLIENT_ID'],
             'response_type' => 'code',
-            'scope' => 'identify guilds'
+            'scope' => 'identify guilds email',
+            'prompt' => 'consent'
         );
         $params = http_build_query($params);
 
@@ -34,9 +34,8 @@ class DiscordAuthService
 
         $options = [
             "grant_type" => "authorization_code",
-            'client_id' => $_ENV['DISCORD_OAUTH2_CLIENT_ID'],
-            'client_secret' => $_ENV['DISCORD_OAUTH2_CLIENT_SECRET'],
-            'redirect_uri' => $_ENV['DISCORD_REDIRECT_URL'],
+            'client_id' => $_ENV['DISCORD_CLIENT_ID'],
+            'client_secret' => $_ENV['DISCORD_CLIENT_SECRET'],
             'code' => $token
         ];
         $token = $this->apiRequest($this->tokenURL, $options);
