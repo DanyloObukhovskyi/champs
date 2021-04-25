@@ -3,14 +3,8 @@
         <div class="lineups-header">
             <lamp-header title="Составы команд"></lamp-header>
         </div>
-        <div class="hide" v-if="show">
-            <button @click="show = false">
-                <i class="fas fa-caret-up"></i>
-                Свернуть
-            </button>
-        </div>
-        <div class="lineups-body" v-if="show">
-            <team-players v-for="(team, index) in teams" :key="index" :team="team"/>
+        <div class="lineups-body">
+            <team-players v-for="(team, index) in teams" :key="index" :team="team" :show="show"/>
         </div>
         <div class="show">
             <button @click="show = !show">

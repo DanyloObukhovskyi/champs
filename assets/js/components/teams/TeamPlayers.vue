@@ -18,10 +18,10 @@
 <script>
     export default {
         name: "TeamPlayers",
-        props: ['team'],
+        props: ['team', 'show'],
         data() {
             return {
-                show: false
+                //show: false
             }
         }
     }
