@@ -58,7 +58,7 @@
                     })
             },
             getNewsUrl(news) {
-                return `/ru/article/${news.id}-` + this.getSlug(news)
+                return `/ru/article/${news.id}/` + this.getSlug(news)
             },
             getTags(tags) {
                 if (tags !== null) {
