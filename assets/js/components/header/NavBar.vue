@@ -16,16 +16,16 @@
                 <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">
                     Матчи
                 </a>
-                <a href="/ru/statistika" class="pointer" :class="{active : router == 'statistika'}">
+                <a href="/ru/statistika" class="pointer" :class="{active : router === 'statistics'}">
                     Статистика
                 </a>
-                <a :href="marketplacePage" class="pointer" :class="{active : router == 'obucheniye'}">
+                <a :href="marketplacePage" class="pointer" :class="{active : router === 'marketplace'}">
                     <div>
                         <small>pro</small>
                         Обучение
                     </div>
                 </a>
-                <a :href="digestPage" :class="{active : router == 'daydzhest_turnirov'}">
+                <a :href="digestPage" :class="{active : router === 'digest'}">
                     Дайджест турниров
                 </a>
                 <a href="/ru/mvp" class="pointer" :class="{active : router == 'mvp'}">
@@ -355,5 +355,16 @@
 		display: flex;
 		font-weight: 100;
 		align-items: center;
+    }
+
+    .header_nav .nav .menu a:hover:after,
+    .header_nav .nav .menu span:hover:after {
+        content: "";
+        width: 100%;
+        height: 0.15vw;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: linear-gradient(270deg, #ff6d1d -25%, #ffc350 125%);
     }
 </style>
