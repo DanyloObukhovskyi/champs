@@ -65,7 +65,7 @@
                             <form class="editor-edit-form" enctype="multipart/form-data">
                                 <span class="editor-edit">Название команды</span>
                                 <input class="editor-edit-form-input mt-15" type="text" name="team_name" id="team_name" placeholder="Название" value="">
-                                <span class="editor-edit">Лого</span>
+                                <span class="editor-edit">Лого(Размеры:800x800)</span>
                                 <br>
                                 <img class="profile-pic-smallForNews" id="image" src="https://avatanplus.com/files/resources/mid/577e3ef8cdf33155c525fc0c.png"/>
                                 <div class="change-editor-edit-ban">
@@ -153,9 +153,15 @@
     window.addEventListener('load', function() {
         document.querySelector('input[name="team_logo"]').addEventListener('change', function() {
             if (this.files && this.files[0]) {
-                var img = document.querySelector('#image');
-                img.src = URL.createObjectURL(this.files[0]);
-                $images = this.files;
+                let file = this.files[0];
+                if(parseInt(file.size/1024/1024) < 1){
+                    var img = document.querySelector('#image');
+                    img.src = URL.createObjectURL(this.files[0]);
+                    $images = this.files;
+                } else {
+                    alert('Размер картинки превышает 1мб');
+                    var $images = null;
+                }
             }
         });
     });
