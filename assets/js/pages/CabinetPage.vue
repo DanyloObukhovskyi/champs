@@ -2,7 +2,7 @@
     <div class="cabinet">
         <div class="cabinet-body">
             <div class="left">
-<!--                <vue-sticky-sidebar :resize-sensor="false" :bottom-spacing="100" class="sidebar" containerSelector=".container" innerWrapperSelector='.sidebar__inner'>-->
+                <vue-sticky-sidebar :resize-sensor="false" :bottom-spacing="100" class="sidebar" containerSelector=".container" innerWrapperSelector='.sidebar__inner'>
                 <user-card v-if="!loadUser && user !== null"/>
                 <div class="d-flex justify-content-center mt-3 mb-3" v-else>
                     <small-loader/>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                     <cabinet-sidebar></cabinet-sidebar>
-<!--                </vue-sticky-sidebar>-->
+                </vue-sticky-sidebar>
             </div>
             <div class="right" id="content">
                 <cabinet-header v-if="user !== null && !user.isTrainer"></cabinet-header>
@@ -166,7 +166,7 @@
             },
         },
         mounted() {
-            this.initScroll()
+            //this.initScroll()
 
             this.getRanks();
             this.getTimezones();
