@@ -61,7 +61,7 @@ class InterkassaController extends AbstractController
 
         $cost = 0;
         foreach ($lessons as $lesson) {
-            $cost += (int)$this->lessonService->getCostWithPercentage($lesson);
+            $cost += (int)$this->lessonService->getCostWithOutPercentage($lesson);
         }
         $payment = $this->interKassaService->createPayment($lessons, $cost);
 

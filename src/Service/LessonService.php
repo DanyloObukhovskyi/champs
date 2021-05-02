@@ -167,10 +167,18 @@ class LessonService extends EntityService
                             $lessonCost = $cost->getPrice();
                         }
                     }
+                    $percentageMarkup = !empty($trainerEntity->getAdminPercentage()) ?
+                        $trainerEntity->getAdminPercentage():
+                        $_ENV['PERCENTAGE_MARKUP_LESSON'];
+                    if (isset($percentageMarkup)) {
+                        $cost = (($lessonCost * $lessonsCount) / 100) * ($percentageMarkup + 100);
+                    }
+
                     $lesson->setStudent($user);
                     $lesson->setTrainer($trainer);
                     $lesson->setType($type);
                     $lesson->setCost($lessonCost * $lessonsCount);
+                    $lesson->setTrenerPrice($cost);
                     $lesson->setStatus(Lessons::STATUS_NEW);
                     $lesson->setDateTimeFrom($dateFrom);
                     $lesson->setDateTimeTo($dateTo);
@@ -624,6 +632,12 @@ class LessonService extends EntityService
         if (isset($percentageMarkup)) {
             $cost = ($lessons->getCost() / 100) * ($percentageMarkup + 100);
         }
+        return $cost;
+    }
+
+    public function getCostWithOutPercentage(Lessons $lessons)
+    {
+        $cost = $lessons->getCost();
         return $cost;
     }
 

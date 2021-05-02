@@ -95,6 +95,11 @@ class Lessons
     private $payment;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $trenerPrice;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -353,5 +358,17 @@ class Lessons
     public function setPayment($payment): void
     {
         $this->payment = $payment;
+    }
+
+    public function getTrenerPrice(): ?int
+    {
+        return $this->trenerPrice;
+    }
+
+    public function setTrenerPrice(?int $trenerPrice): self
+    {
+        $this->trenerPrice = $trenerPrice;
+
+        return $this;
     }
 }
