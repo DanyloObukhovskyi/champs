@@ -264,7 +264,7 @@
                         <img src="<?php print base_url("assets/icons/info.svg"); ?>"/>
                         <div class="info_txt">Формат поля - числовой</div>
                     </div>
-                    <label class="label" for="">сколько текущий админ будет получать с ставки тренера в %</label>
+                    <label class="label" for="">комиссия с тренировки для тренера составляет в %</label>
                     <div class="input mb-5" id="input">
                         <input type="text" class="fw-600 input2_txt" name="admin_percentage"
                                id="admin_percentage " placeholder=""
