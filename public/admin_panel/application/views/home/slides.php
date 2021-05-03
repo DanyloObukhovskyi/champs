@@ -151,7 +151,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Текст</label>
-                            <input id="text" type="text" name="text" class="form-control">
+                            <textarea id="text" name="text" class="form-control"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="control-label"></label>
@@ -199,8 +199,16 @@
         </div>
     </div>
 </main>
+<script src="<?php echo base_url('assets/js/tinyMCE.js'); ?>" referrerpolicy="origin"></script>
 
 <script>
+    let editor = tinymce.init({
+        selector:'textarea',
+        plugins: 'code',
+        toolbar: 'code | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+        height: 600,
+    });
     const imagePreview = document.getElementById('img_preview');
     const text = document.getElementById('text');
 
@@ -239,8 +247,8 @@
         if (slideRaw && form) {
             form.querySelector('input[name="id"]').value = slideRaw.dataset.id;
             form.querySelector('input[name="url"]').value = slideRaw.dataset.url;
-            form.querySelector('input[name="text"]').value = slideRaw.dataset.text;
-
+           // form.querySelector('input[name="text"]').text = slideRaw.dataset.text;
+            tinyMCE.activeEditor.setContent(slideRaw.dataset.text);
             document.getElementById('text-preview').innerHTML = slideRaw.dataset.text;
             document.getElementById('img_preview').src = slideRaw.dataset.img;
             document.querySelectorAll('#slide_type option').forEach(function (option) {

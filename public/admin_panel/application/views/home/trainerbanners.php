@@ -346,8 +346,8 @@
             initRedactor() {
                 return tinymce.init({
                     selector: 'textarea.text-redactor',
-                    plugins: 'save',
-                    toolbar: 'save | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+                    plugins: 'save | code',
+                    toolbar: 'save | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | code',
                     toolbar_sticky: true,
                     autosave_ask_before_unload: false,
                     autosave_interval: '0.5s',
