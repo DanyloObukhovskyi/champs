@@ -2,7 +2,7 @@
     <div class="cabinet">
         <div class="cabinet-body">
             <div class="left">
-                <vue-sticky-sidebar :resize-sensor="true" :bottom-spacing="100" class="sidebar" containerSelector="#content" innerWrapperSelector='.invite'>
+                <vue-sticky-sidebar :resize-sensor="true" :bottom-spacing="100" class="sidebar" containerSelector=".container" innerWrapperSelector='.sidebar__inner'>
                 <user-card v-if="!loadUser && user !== null"/>
                 <div class="d-flex justify-content-center mt-3 mb-3" v-else>
                     <small-loader/>
@@ -38,7 +38,6 @@
                 </vue-sticky-sidebar>
             </div>
             <div class="right" id="content">
-            <div class="right">
                 <cabinet-header v-if="user !== null && !user.isTrainer"></cabinet-header>
                 <router-view></router-view>
             </div>
