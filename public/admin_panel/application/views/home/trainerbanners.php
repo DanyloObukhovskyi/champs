@@ -68,7 +68,7 @@
                             <div class="modal-body">
                                 <form name="saveBanner">
                                     <div class="col-item">
-                                        <label class="label" for="">Изображение (1080 x 400)</label>
+                                        <label class="label" for="">Изображение (1080 x 460)</label>
                                         <div v-if="imageSrc !== null">
                                             <img :src="imageSrc" style="width: 50%; margin-bottom: 15px; margin-top: 15px;">
                                         </div>
@@ -269,7 +269,7 @@
                                 })
                             }
 
-                            if (this.height > 400) {
+                            if (this.height > 460) {
                                 input.value = '';
                                 banners.imageSrc = null;
 
