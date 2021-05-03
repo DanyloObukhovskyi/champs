@@ -118,8 +118,7 @@ export default {
 
             axios.post('/ru/login', formData)
                 .then((res) => {
-                    window.location = window.location.pathname
-                    window.location.reload();
+                    window.location = window.location.href.split("?")[0];
                 })
                 .catch(({response}) => {
                     this.error = true;
