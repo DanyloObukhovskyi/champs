@@ -118,6 +118,7 @@ export default {
 
             axios.post('/ru/login', formData)
                 .then((res) => {
+                    window.location = window.location.pathname
                     window.location.reload();
                 })
                 .catch(({response}) => {
