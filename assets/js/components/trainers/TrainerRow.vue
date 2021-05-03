@@ -516,7 +516,7 @@ export default {
     }
 
     p:not(.MsoNormal) > span:first-child {
-      color: rgba(0, 0, 0, 0);
+      //color: rgba(0, 0, 0, 0);
     }
 
     p:not([class]) > span:first-child {
@@ -541,14 +541,14 @@ export default {
       }
 
       p:not(.MsoNormal) > span:first-child {
-        color: rgba(0, 0, 0, 0);
+        //color: rgba(0, 0, 0, 0);
       }
 
       p:not([class]) > span:first-child {
         color: white;
       }
 
-      p:not(.MsoNormal) > span:first-child > span > span {
+      p > span:first-child > span > span {
         color: white;
       }
     }
