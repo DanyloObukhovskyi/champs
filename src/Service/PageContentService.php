@@ -22,9 +22,10 @@ class PageContentService
      */
     public static function getPageContent($url, $count = 1)
     {
+        print_r($_ENV['ENABLE_PROXY'] === 'true');
         sleep(1);
         $response = self::getContent($url);
-        print_r($response, $_ENV['ENABLE_PROXY']);
+        print_r($response);
         if (is_array($response) && isset($response['error']))
         {
             if($response['status'] == 503 && $count < 2)
