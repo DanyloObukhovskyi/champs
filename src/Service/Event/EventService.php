@@ -249,10 +249,10 @@ class EventService extends EntityService
 
         /** @var Event $event */
         $event->setPrize($values['prize'] ?? null);
-        $event->setCommandCount($values['teams']);
-        $event->setLocation($values['location']);
-        $event->setName($values['name']);
-        $event->setEndedAt($values['ended_at']);
+        $event->setCommandCount($values['teams'] ?? null);
+        $event->setLocation($values['location'] ?? null);
+        $event->setName($values['name'] ?? null);
+        $event->setEndedAt($values['ended_at'] ?? null);
         $event->setCreatedAt($parseDate);
 
         $event = $this->setImageLogo($event, $values);
