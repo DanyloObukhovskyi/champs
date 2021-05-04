@@ -81,18 +81,16 @@ export default {
 
 .stream-block {
     position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%;
+    height: 1080px;
+    margin-top: 20px;
 }
 
 .stream-block iframe {
     position: relative;
-    width: 100%;
-    height: 0;
+    height: 1080px;
+    margin-top: 20px;
     margin-right: .12vw;
     margin-left: .1vw;
-    padding-bottom: 56.25%;
 }
 
 .streams-viewer .close {
