@@ -71,9 +71,11 @@
 
     .marketplace-header {
         display: flex;
-
+        height:auto;
+        
         .slide-text {
             padding: 0vw 2vw;
+            height:auto;
             background-color: #ffffff;
             -webkit-animation: animation-translate-left 1500ms linear both;
             animation: animation-translate-left 1500ms linear both;
