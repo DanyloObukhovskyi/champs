@@ -60,18 +60,18 @@ class ParserMatchesCommand extends Command
      */
     protected function getAllMatches()
     {
-        //$matches = $this->matchService->getLiveMatches();
+        $matches = $this->matchService->getLiveMatches();
 
         $matchesUrls = [];
 
-//        /** @var Match $match */
-//        foreach ($matches as $match) {
-//            $matchesUrls[$match->getUrl()] = [
-//                'url' => $match->getUrl(),
-//                'is_live' => true
-//            ];
-//        }
-//
+        /** @var Match $match */
+        foreach ($matches as $match) {
+            $matchesUrls[$match->getUrl()] = [
+                'url' => $match->getUrl(),
+                'is_live' => true
+            ];
+        }
+
         $parserMatches = HLTVService::getMatches();
 
         foreach ($parserMatches as $match) {
