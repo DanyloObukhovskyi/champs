@@ -67,7 +67,8 @@
             </div>
         </div>
         <div class="event-body" v-if="event !== null && !load">
-            <template v-if="streams.length > 0">
+<!--            <template v-if="streams.length > 0">-->
+            <template>
                 <event-stream-viewer
                         v-if="showStreams"
                         @hide="() => showStreams = false"
@@ -137,7 +138,9 @@ export default {
             matches: [],
             load: false,
             showStreams: false,
-            streams: []
+            streams: [
+                'test'
+            ]
         }
     },
     computed: {
