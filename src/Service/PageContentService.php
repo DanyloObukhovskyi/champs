@@ -22,7 +22,7 @@ class PageContentService
      */
     public static function getPageContent($url, $count = 1)
     {
-        print_r($_ENV['ENABLE_PROXY'] === 'true');
+        print_r($_ENV);
         sleep(1);
         $response = self::getContent($url);
         print_r($response);
