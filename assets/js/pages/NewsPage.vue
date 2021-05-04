@@ -214,7 +214,7 @@ export default {
 
 <style scoped>
 .news {
-    margin-bottom: 1vw;
+    margin-bottom: 3vw;
 }
 
 .news .tags {
