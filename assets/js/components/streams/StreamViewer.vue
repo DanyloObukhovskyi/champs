@@ -71,8 +71,7 @@
 
     .stream-block {
         position: relative;
-        width: 100%;
-        height: 0;
+        height: 1080px;
         padding-bottom: 56.25%;
     }
 
