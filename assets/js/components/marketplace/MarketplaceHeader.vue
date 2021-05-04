@@ -73,7 +73,7 @@
         display: flex;
 
         .slide-text {
-            padding: 1vw 2vw;
+            padding: 0vw 2vw;
             background-color: #ffffff;
             -webkit-animation: animation-translate-left 1500ms linear both;
             animation: animation-translate-left 1500ms linear both;
