@@ -4,7 +4,7 @@
             Расписание
         </div>
         <div class="timetable-wrapper">
-            <div class="timetable-body" v-if="lessons && lessons.length > 0">
+            <div class="timetable-body" v-if="lessons && Object.keys(lessons).length > 0">
                 <div class="lessons-row" v-for="(dayLessons, day) in lessons">
                     <div class="date-day">
                         {{ day }}

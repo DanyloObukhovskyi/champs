@@ -36,13 +36,16 @@
         computed: {
             ...mapGetters([
                     'user',
+                    'cabinet/training/lessons'
                 ]
             ),
             ...mapGetters('cabinet/trainerCabinet', [
-                    'lessons',
                     'earned'
-                ]
-            )
+                ],
+            ),
+            lessons() {
+                return this['cabinet/training/lessons'];
+            }
         },
         methods: {
             getFirstLessonsAndEarned() {
@@ -56,10 +59,21 @@
 
                         this.load = false;
                     })
+            },
+            getLessons() {
+                this.load = true;
+
+                CabinetService.getLessons()
+                    .then(({future, past}) => {
+                        this.$store.commit('cabinet/training/setLessons', {future, past})
+
+                        this.load = false;
+                    })
             }
         },
         mounted() {
             this.getFirstLessonsAndEarned();
+            this.getLessons();
         }
     }
 </script>

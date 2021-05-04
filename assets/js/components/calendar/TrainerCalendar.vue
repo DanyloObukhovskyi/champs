@@ -33,9 +33,9 @@
                     {{ d }}
                 </span>
             </div>
-            <div class="day disable" v-for="i in nextMonthDays">
+            <div class="day disable" v-for="key in nextMonthDays">
                 <span>
-                    {{ i }}
+                    {{ key }}
                 </span>
             </div>
         </div>
@@ -95,7 +95,7 @@ export default {
         return {
             month: 0,
             monthView: false,
-            year: 2020,
+            year: 2021,
             days: 0,
             day: 0,
             months: MONTHS,
@@ -105,7 +105,7 @@ export default {
     watch: {},
     computed: {
         monthDays() {
-            const date = new Date(this.year, this.month, 32);
+            const date = new Date(this.year, this.month + 1, 32);
 
             return 32 - date.getDate();
         },
@@ -114,8 +114,7 @@ export default {
             let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
 
             const prevMonthDaysCount = day < 0 ? 0 : day;
-
-            const prevMonth = new Date(this.year, this.month - 1, 0);
+            const prevMonth = new Date(this.year, this.month, 0);
 
             let prevDay = prevMonth.getDate();
 
@@ -124,10 +123,14 @@ export default {
                 prevDays.push(prevDay)
                 prevDay--;
             }
-            return prevDays;
+            return prevDays.reverse();
         },
         nextMonthDays() {
-            return 35 - this.monthDays - this.prevMonthDays.length;
+            let day = 35 - this.monthDays - this.prevMonthDays.length
+            if(day < 0){
+                day = 0;
+            }
+            return day;
         },
         dateRu() {
             return `${this.day} ${MONTHS_PARSE[this.month]} ${this.year}`;
