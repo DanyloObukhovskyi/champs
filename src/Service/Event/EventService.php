@@ -248,7 +248,7 @@ class EventService extends EntityService
         }
 
         /** @var Event $event */
-        $event->setPrize($values['prize']);
+        $event->setPrize($values['prize'] ?? null);
         $event->setCommandCount($values['teams']);
         $event->setLocation($values['location']);
         $event->setName($values['name']);
