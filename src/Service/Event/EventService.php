@@ -438,7 +438,7 @@ class EventService extends EntityService
             }
         } else {
             /** @var Event $prevent */
-            $prevent = $this->getByName($values['name']);
+            $prevent = $this->getByName($values['name'] ?? null);
             if (isset($prevent)) {
                 $event->setImage($prevent->getImage());
             }
