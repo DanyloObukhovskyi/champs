@@ -396,7 +396,7 @@ class UserService  extends EntityService
      */
     public function createUserFromTwichData($twichData, $twichUser, $passwordEncoder): ?User
     {
-        $user = $this->findByEmail($twichUser->email);
+        $user = $this->findJustByEmail($twichUser->email);
         if(!empty($user)){
             $user->setTwichId($twichData->sub);
             return $user;
@@ -623,6 +623,10 @@ class UserService  extends EntityService
         return $this->repository->findByEmail($email, $userId);
     }
 
+    public function findJustByEmail(string $email)
+    {
+        return $this->repository->findJustByEmail($email);
+    }
     /**
      * @param User $user
      * @return string

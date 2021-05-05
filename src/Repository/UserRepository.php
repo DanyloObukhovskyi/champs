@@ -69,4 +69,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
+
+    /**
+     * @param $email
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findJustByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
 }
