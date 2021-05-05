@@ -71,16 +71,18 @@
 
     .stream-block {
         position: relative;
-        height: 1080px;
-        margin-top: 20px;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%;
     }
 
     .stream-block iframe {
         position: relative;
-        height: 1080px;
-        margin-top: 20px;
+        width: 100%;
+        height: 0;
         margin-right: .12vw;
         margin-left: .1vw;
+        padding-bottom: 56.25%;
     }
 
     .streams-viewer .close {

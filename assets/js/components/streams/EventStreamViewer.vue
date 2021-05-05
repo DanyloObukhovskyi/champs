@@ -1,14 +1,14 @@
 <template>
     <div class="streams-viewer">
         <div class="select-lang">
-<!--            <button>-->
-<!--&lt;!&ndash;                    v-for="stream in streams"&ndash;&gt;-->
-<!--&lt;!&ndash;                    @click="selectedStream = stream"&ndash;&gt;-->
-<!--&lt;!&ndash;                    :class="{active: selectedStream === stream}"&ndash;&gt;-->
-<!--&lt;!&ndash;                    class="stream-lang-btn">&ndash;&gt;-->
-<!--&lt;!&ndash;                <img :src="`/uploads/images/${stream.icon}`">&ndash;&gt;-->
-<!--                Ru-->
-<!--            </button>-->
+            <button
+                    v-for="stream in streams"
+                    @click="selectedStream = stream"
+                    :class="{active: selectedStream === stream}"
+                    class="stream-lang-btn">
+                <img :src="`/uploads/images/${stream.icon}.png`">
+                {{ stream.lang }}
+            </button>
         </div>
         <div class="stream-block" >
             <iframe
@@ -30,10 +30,28 @@
 <script>
 export default {
     name: "EventStreamViewer",
-    props: ['streams'],
+    // props: ['streams'],
     data() {
         return {
             selectedStream: null,
+            streams: [
+                {
+                    lang: 'RU',
+                    icon: 'ru'
+                },
+                {
+                    lang: 'UK',
+                    icon: 'uk'
+                },
+                {
+                    lang: 'PL',
+                    icon: 'pl'
+                },
+                {
+                    lang: 'ES',
+                    icon: 'es'
+                },
+            ]
         }
     },
 
@@ -81,13 +99,13 @@ export default {
 
 .stream-block {
     position: relative;
-    height: 1080px;
+    height: 560px;
     margin-top: 20px;
 }
 
 .stream-block iframe {
     position: relative;
-    height: 1080px;
+    height: 560px;
     margin-top: 20px;
     margin-right: .12vw;
     margin-left: .1vw;
