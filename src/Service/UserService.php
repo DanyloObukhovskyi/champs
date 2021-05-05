@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UserService  extends EntityService
 {
-    public const USER_PHOTO_PATH = '/images/temp/matches';
+    public const USER_PHOTO_PATH = '/public/uploads/avatars';
 
     public const FILTERS = [
         'studyCostFrom' => [
@@ -461,10 +461,6 @@ class UserService  extends EntityService
      */
     public function createUserFromVkData(object $vkData, $passwordEncoder): ?User
     {
-        $photo = $this->downloadUserPhoto($vkData->photo);
-        echo '<pre>';
-        var_dump($photo);
-        die;
         $user = new User();
         $user->setRoles(['ROLE_USER']);
 
