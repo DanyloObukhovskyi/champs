@@ -140,7 +140,16 @@ class OauthController extends AbstractController
                 ->findOneBy(['discordId' => $discordUser->id]);
 
             if (empty($user)) {
-                $user = $this->userService->createUserFromDiscord($discordUser, $this->passwordEncoder);
+                $entityManager = $this->getDoctrine()->getManager();
+                $user = $entityManager->getRepository(User::class)->findOneBy([
+                    'email' => $discordUser->email
+                ]);
+                if (empty($user)) {
+                    $user = $this->userService->createUserFromDiscord($discordUser, $this->passwordEncoder);
+                } else {
+                    $user->setDiscordId($discordUser->id);
+                    $entityManager->flush();
+                }
             }
             $this->loginUser($user);
         }
