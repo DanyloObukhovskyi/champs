@@ -557,7 +557,7 @@ class LessonService extends EntityService
      */
     public function decorateLesson(Lessons $lesson, $user, $timezone = null, $translator)
     {
-        $trainer = $this->teacherService->findByUserId($lesson->getTrainer()->getId());
+        $trainer = $lesson->getTrainer();
 
         $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
         if (empty($lesson->getDateTimeTo())) {
@@ -577,8 +577,16 @@ class LessonService extends EntityService
             } else {
                 $trainerTimezone = (int)gmdate("g", $gmtNumeric);
             }
-            $timeOffset = $trainerTimezone - (int)$timezone;
+
+            if ($trainerTimezone < 0 && $timezone < 0) {
+                $timeOffset = $trainerTimezone + abs($timezone);
+            } elseif($trainerTimezone < 0 || $timezone < 0) {
+                $timeOffset = $trainerTimezone + $timezone;
+            } else {
+                $timeOffset = $trainerTimezone - $timezone;
+            }
         }
+
         $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
         $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
 
@@ -604,7 +612,7 @@ class LessonService extends EntityService
             'student' => [
                 'id' => $lesson->getStudent()->getId(),
                 'nickname' => $lesson->getStudent()->getNickname(),
-                'photo' => $lesson->getStudent()->getPhoto(),
+                'photo' => $lesson->getStudent()->getPhoto()
             ],
             'availableReview' =>  Carbon::now() > $dateTo
         ];

@@ -310,19 +310,25 @@ class LessonsController extends AbstractController
         $parseLessons = [];
         /** @var Lessons $lesson */
         foreach ($lessons as $lesson) {
-            $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
-            $timeOffset = 0;
+            $payment = $lesson->getPayment();
+            if(!empty($payment) && $payment->getPaymentStatus() === Payment::STATUS_OK){
+                $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
+                $timeOffset = 0;
 
-            if ($lesson->getDateTimeFrom() > new \DateTime()) {
-                $type = 'future';
-            } else {
-                $type = 'past';
+                if ($lesson->getDateTimeFrom() > new \DateTime()) {
+                    $type = 'future';
+                } else {
+                    $type = 'past';
+                }
+
+
+                $dateFrom = $this->parseDateToUserTimezone($lesson, $dateFrom, $timezone);
+
+                $dateRu = $this->dateTranslate($dateFrom, $translator);
+
+                $parseLessons[$type][$dateRu][] = $this->lessonService->decorateLesson($lesson, $user, $timezone, $translator);
             }
-            $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
 
-            $dateRu = $this->dateTranslate($dateFrom, $translator);
-
-            $parseLessons[$type][$dateRu][] = $this->lessonService->decorateLesson($lesson, $user, $timezone, $translator);
         }
         return $parseLessons;
     }
