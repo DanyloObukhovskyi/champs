@@ -309,6 +309,14 @@ class UserService  extends EntityService
         $user->setFamily($faceBookData->last_name);
         $user->setPassword($passwordEncoder->encodePassword($user, sha1($faceBookData->id)));
 
+
+        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        $timeZone = "$timeZone ($gmt)";
+        if(!empty($timeZone)){
+            $user->setTimezone($timeZone);
+        }
+
         try {
             $image = DownloadFile::getImage($faceBookData->picture->data->url, self::USER_PHOTO_PATH);
 
@@ -351,6 +359,13 @@ class UserService  extends EntityService
         $user->setEmail($googleData->email);
         $user->setIsTrainer(false);
         $user->setPurse(false);
+
+        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        $timeZone = "$timeZone ($gmt)";
+        if(!empty($timeZone)){
+            $user->setTimezone($timeZone);
+        }
 
         $user->setName($googleData->givenName);
         $user->setFamily($googleData->familyName);
@@ -422,6 +437,13 @@ class UserService  extends EntityService
 
         $user->setRoles(['ROLE_USER']);
 
+        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        $timeZone = "$timeZone ($gmt)";
+        if(!empty($timeZone)){
+            $user->setTimezone($timeZone);
+        }
+
         $user->setIsTrainer(false);
         $user->setPurse(false);
 
@@ -439,11 +461,17 @@ class UserService  extends EntityService
      */
     public function createUserFromVkData(object $vkData, $passwordEncoder): ?User
     {
+        $photo = $this->downloadUserPhoto($vkData->photo);
+        echo '<pre>';
+        var_dump($photo);
+        die;
         $user = new User();
         $user->setRoles(['ROLE_USER']);
 
         $user->setIsTrainer(false);
         $user->setPurse(false);
+
+        $user->setNickname($vkData->first_name);
 
         $user->setVkId($vkData->id);
         $user->setName($vkData->first_name);
