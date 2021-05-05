@@ -64,7 +64,7 @@
                     <cabinet-button
                             @click="setConfirmed"
                             text-first="Занятие окончено"
-                            v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall"
+                            v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today))"
                             :text-second="finishLessonLabel">
                         <template v-slot:img>
                             <img src="/images/cabinet/arrow.png">
@@ -206,7 +206,7 @@
                     'background-image': `url('${'/uploads/avatars/' + image}')`
                 }
             }
-        },
+        }
     }
 </script>
 

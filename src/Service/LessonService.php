@@ -614,7 +614,9 @@ class LessonService extends EntityService
                 'nickname' => $lesson->getStudent()->getNickname(),
                 'photo' => $lesson->getStudent()->getPhoto()
             ],
-            'availableReview' =>  Carbon::now() > $dateTo
+            'availableReview' =>  Carbon::now() > $dateTo,
+            'dateAfter7Days' => $dateTo->modify('+7 days')->format('Y.m.d H:i:s'),
+            'today' => Carbon::now()->format('Y.m.d H:i:s')
         ];
     }
 
