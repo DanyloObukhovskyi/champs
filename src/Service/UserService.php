@@ -452,6 +452,13 @@ class UserService  extends EntityService
         $photo = $this->downloadUserPhoto($vkData->photo);
         $user->setPhoto($photo);
 
+        [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+            ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        $timeZone = "$timeZone ($gmt)";
+        if(!empty($timeZone)){
+            $user->setTimezone($timeZone);
+        }
+
         $user->setPassword($passwordEncoder->encodePassword($user, sha1($vkData->id)));
 
         return $this->save($user);
