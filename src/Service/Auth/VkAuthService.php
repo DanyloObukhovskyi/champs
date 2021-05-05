@@ -77,7 +77,7 @@ class VkAuthService
      * @param array $fields
      * @return object|null
      */
-    public function getAccountInfo($code, $fields = ['photo']): ?object
+    public function getAccountInfo($code, $fields = ['photo', 'email']): ?object
     {
         try {
             $response = $this->oauth->getAccessToken(
@@ -92,7 +92,9 @@ class VkAuthService
                 'user_ids'  => [$userId],
                 'fields'    => $fields
             ]);
-
+            echo '<pre>';
+            var_dump($user);
+            die;
             return (object) $user;
 
         } catch (\Exception $e){
