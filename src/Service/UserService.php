@@ -279,6 +279,9 @@ class UserService  extends EntityService
         if(!empty($timeZone)){
             $user->setTimezone($timeZone);
         }
+        $avatar = "https://cdn.discordapp.com/avatars/" . $discordData->id . "/" . $discordData->avatar . ".png";
+        $photo = $this->downloadUserPhoto($avatar);
+        $user->setPhoto($photo);
 
         $user->setEmail($discordData->email);
         $user->setNickname($discordData->username);
