@@ -413,7 +413,7 @@ class UserService  extends EntityService
             if(!empty($timeZone)){
                 $user->setTimezone($timeZone);
             }
-            $photo = $this->downloadUserPhoto($twichData->profile_image_url);
+            $photo = $this->downloadUserPhoto($twichUser->profile_image_url);
             $user->setPhoto($photo);
 
             $user->setNickname($twichUser->display_name);
