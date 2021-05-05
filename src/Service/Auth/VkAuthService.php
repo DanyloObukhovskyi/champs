@@ -92,13 +92,12 @@ class VkAuthService
                 'user_ids'  => [$userId],
                 'fields'    => $fields
             ]);
-
+            echo '<pre>';
+            var_dump($user);
+            die;
             return (object) $user;
 
         } catch (\Exception $e){
-            echo '<pre>';
-            var_dump($e);
-            die;
             return null;
         }
     }
