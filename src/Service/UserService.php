@@ -396,14 +396,9 @@ class UserService  extends EntityService
      */
     public function createUserFromTwichData($twichData, $twichUser, $passwordEncoder): ?User
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $user = $entityManager->getRepository(User::class)->findBy([
-            'email' => $twichUser->email
-        ]);
+        $user = $this->findJustByEmail($twichUser->email)[0];
         if(!empty($user)){
-            $user->setTwichId($twichData->sub);
-            $entityManager->flush();
-            return $user;
+            return false;
         } else {
             $user = new User();
             $user->setRoles(['ROLE_USER']);
