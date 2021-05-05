@@ -250,14 +250,8 @@ class OauthController extends AbstractController
 
             if (empty($user)) {
                 $twichUser = $this->twichAuthService->getAccountAttr($twichAccount->token);
-                $user = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository(User::class)
-                    ->findOneBy(['email' => $twichUser->email]);
                 if (empty($user)) {
                     $user = $this->userService->createUserFromTwichData($twichAccount, $twichUser, $this->passwordEncoder);
-                } else {
-                    $user->setTwichId($twichAccount->sub);
                 }
             }
             $this->loginUser($user);

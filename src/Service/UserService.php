@@ -398,7 +398,8 @@ class UserService  extends EntityService
     {
         $user = $this->findByEmail($twichUser->email);
         if(!empty($user)){
-            return false;
+            $user->setTwichId($twichData->sub);
+            return $user;
         } else {
             $user = new User();
             $user->setRoles(['ROLE_USER']);
@@ -412,6 +413,8 @@ class UserService  extends EntityService
             if(!empty($timeZone)){
                 $user->setTimezone($timeZone);
             }
+            $photo = $this->downloadUserPhoto($twichData->profile_image_url);
+            $user->setPhoto($photo);
 
             $user->setNickname($twichUser->display_name);
             $user->setEmail($twichUser->email);
