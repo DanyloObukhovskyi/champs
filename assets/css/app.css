@@ -48,7 +48,9 @@ body {
     background-size: auto;
     background-size: 35%;
 }
-
+div#layout {
+    min-height: calc(100vh - 80px);
+}
 .dark .home {
     background: url(/images/home/backgroundBlack.png) no-repeat;
     background-size: 100%;
