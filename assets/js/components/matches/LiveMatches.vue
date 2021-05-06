@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="watch d-flex justify-content-center align-items-center">
-                    <a :href="getMatchUrl(match)">Смотреть <i class="fas fa-caret-right"></i></a>
+                    <a :href="getMatchUrl(match, getSlug(match))">Смотреть <i class="fas fa-caret-right"></i></a>
                 </div>
             </div>
         </div>
@@ -107,9 +107,58 @@
                 }
                 return className;
             },
-            getMatchUrl(match) {
-                return matchService.getMatchUrl(match.match_id, match.slug)
+            getMatchUrl(match, slug) {
+                return matchService.getMatchUrl(match.match_id, slug)
             },
+            getSlug(match) {
+                try{
+                    let team1 = this.getTitleUrl(match.teamA.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let team2 = this.getTitleUrl(match.teamB.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let event =  this.getTitleUrl(match.event.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let game = this.getTitleUrl(match.event.game.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let start_date = this.getTitleUrl(match.startedAtRu)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return team1+'_vs_'+team2+'_'+event+'_'+game+'_'+start_date;
+                } catch (e) {
+                    return match.slug;
+                }
+            },
+            getTitleUrl(title) {
+                return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
+                    function (all, ch, space, words, i) {
+                        if (space || words) {
+                            return space ? '_' : '';
+                        }
+                        var code = ch.charCodeAt(0),
+                            index = code == 1025 || code == 1105 ? 0 :
+                                code > 1071 ? code - 1071 : code - 1039,
+                            t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
+                                'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+                                'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
+                                'shch', '', 'y', '', 'e', 'yu', 'ya'
+                            ];
+                        return t[index];
+                    });
+            }
         },
         mounted() {
             this.getLiveMatches()

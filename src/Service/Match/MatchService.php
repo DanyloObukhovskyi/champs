@@ -15,6 +15,7 @@ use App\Entity\Team;
 use App\Repository\MatchRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
+use App\Service\News\NewsService;
 use App\Service\TeamService;
 use Ausi\SlugGenerator\SlugGenerator;
 use Symfony\Component\HttpFoundation\Request;
@@ -286,6 +287,7 @@ class MatchService extends EntityService
         } else {
             $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImageHeader());
         }
+        $dayStart = $match->getStartAt()->format('d F');
 
         $matchFields = [
             "match_id" => $match->getId(),
@@ -295,11 +297,13 @@ class MatchService extends EntityService
             "logo"     => "",
             "teamA"    => null,
             "teamB"    => null,
+            "startedAtRu" => NewsService::replaceMonth($dayStart),
             "event"    => [
                 "name"      => $match->getEvent() === null ? null : $match->getEvent()->getName(),
                 "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
                 "endedAt"   => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                "image"     => $this->imageService->getImagePath()
+                "image"     => $this->imageService->getImagePath(),
+                'game'      => $match->getEvent() === null ? null : !empty($match->getEvent()->getGame()) ? $match->getEvent()->getGame()->jsonSerialize() : null
             ],
             "streams" => $this->getMatchStreams($match),
             "isLive" => $match->getLive() ? true : false,

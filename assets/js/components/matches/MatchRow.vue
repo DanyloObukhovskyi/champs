@@ -103,7 +103,7 @@
         },
         computed: {
             matchUrl() {
-                return matchService.getMatchUrl(this.match.match_id, this.match.slug)
+                return matchService.getMatchUrl(this.match.match_id, this.getSlug(this.match))
             }
         },
         methods: {
@@ -116,6 +116,55 @@
                 }
                 return className;
             },
+            getSlug(match) {
+                try{
+                    let team1 = this.getTitleUrl(match.teamA.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let team2 = this.getTitleUrl(match.teamB.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let event =  this.getTitleUrl(match.event.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let game = this.getTitleUrl(match.event.game.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let start_date = this.getTitleUrl(match.startedAtRu)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return team1+'_vs_'+team2+'_'+event+'_'+game+'_'+start_date;
+                } catch (e) {
+                    return match.slug;
+                }
+            },
+            getTitleUrl(title) {
+                return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
+                    function (all, ch, space, words, i) {
+                        if (space || words) {
+                            return space ? '_' : '';
+                        }
+                        var code = ch.charCodeAt(0),
+                            index = code == 1025 || code == 1105 ? 0 :
+                                code > 1071 ? code - 1071 : code - 1039,
+                            t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
+                                'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+                                'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
+                                'shch', '', 'y', '', 'e', 'yu', 'ya'
+                            ];
+                        return t[index];
+                    });
+            }
         },
     }
 </script>
