@@ -298,7 +298,7 @@ class EventsController extends AbstractController
                 ->findBy([
                     'country' => $filters->id
                 ])
-                ->setMaxResults(500);
+                ->setMaxResults(200);
         } else {
             $cities = $this->getDoctrine()
                 ->getManager()
