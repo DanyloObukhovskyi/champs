@@ -120,16 +120,14 @@ export default {
 .likes .like:hover img,
 .likes .dislike:hover img {
     display: none;
+    margin: 0;
 }
 
 .likes .like:hover .active,
 .likes .dislike:hover .active {
     display: unset;
-    width: 1.2vw;
     cursor: pointer;
-    margin-top: .5vw;
     margin-right: .3vw;
-    height: 1.2vw;
 }
 
 .likes .dislike img {
@@ -179,18 +177,17 @@ export default {
 
 .widget .likes .like img,
 .widget .likes .dislike img {
-    margin-right: 0;
+    /*margin-right: 0;*/
     margin-bottom: .4vw;
     width: 2vw;
 }
 
 .widget .likes .like:hover .active,
 .widget .likes .dislike:hover .active {
-    display: unset;
     width: 2vw;
     cursor: pointer;
-    height: 2vw;
-    margin-top: 0;
+    height: 2.1vw;
+    margin-top: -2px;
 }
 
 .widget .likes .likes-count-first {
