@@ -297,8 +297,9 @@ class EventsController extends AbstractController
                 ->getRepository(City::class)
                 ->findBy([
                     'country' => $filters->id
-                ])
-                ->setMaxResults(200);
+                    ],
+                    ['id' => 'ASC'],
+                    '1000');
         } else {
             $cities = $this->getDoctrine()
                 ->getManager()
