@@ -251,8 +251,7 @@ class EventService extends EntityService
         return [
             "id" => $city->getId(),
             "nameRu" => $city->getNameRu(),
-            "nameEn" => $city->getNameEn(),
-            "country" => $city->getCountry()
+            "nameEn" => $city->getNameEn()
         ];
     }
 
