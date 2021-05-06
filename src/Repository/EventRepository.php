@@ -209,6 +209,16 @@ class EventRepository extends ServiceEntityRepository
         $date = new \DateTime();
         $date = $date->format("Y-m-d");
 
+        if(!empty($filters->country)){
+            $countries = [
+                $filters->country,
+                $filters->country.' (Online)'
+            ];
+            if(!empty($filters->city)){
+                $countries[] = $filters->city.', '.$filters->country;
+                $countries[] = $filters->city;
+            }
+        }
         $query = $this->createQueryBuilder('e')
             ->orderBy('e.startedAt', 'DESC');
 
@@ -236,8 +246,12 @@ class EventRepository extends ServiceEntityRepository
         }
 
         if (isset($filters->prize)) {
+            setlocale(LC_MONETARY, 'en_US');
+            $money = str_replace( '*', '',  trim(money_format('%i', $filters->prize)));
+            $money = str_replace( '.00', '',  $money);
+            $money = str_replace( 'USD', '$',  $money);
             $query->andWhere('e.prize = :prize');
-            $parameters['prize'] = $filters->prize;
+            $parameters['prize'] = $money;
         }
 
         if (isset($filters->teamB)) {
@@ -283,6 +297,10 @@ class EventRepository extends ServiceEntityRepository
         if (!empty($filters->tournamentType)) {
             $query->andWhere('e.status = :status');
             $parameters['status'] = $filters->tournamentType;
+        }
+        if(!empty($filters->country)){
+            $query->andWhere('e.location IN(:location)');
+            $parameters['location'] = $countries;
         }
         if(!empty($parameters)){
             $query->setParameters($parameters);

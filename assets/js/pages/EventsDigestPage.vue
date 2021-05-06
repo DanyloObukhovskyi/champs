@@ -41,6 +41,9 @@
                     <multiselect
                             placeholder="Страна"
                             v-model="filters.country"
+                            label="nameRu"
+                            track-by="id"
+                            selectLabel="Выберете страну"
                             :options="countries">
                     </multiselect>
                 </div>
@@ -48,6 +51,9 @@
                     <multiselect
                             placeholder="Город"
                             v-model="filters.city"
+                            label="nameRu"
+                            track-by="id"
+                            selectLabel="Выберете город"
                             :options="cities">
                     </multiselect>
                 </div>
@@ -205,6 +211,7 @@
             },
             'filters.country': function () {
                 this.reloadEvents();
+                this.getCitiesForDigest();
             },
             'filters.city': function () {
                 this.reloadEvents();
@@ -293,6 +300,25 @@
                         this.games.push(game);
                     }
                 })
+            },
+            getCountries()
+            {
+                eventService.getCountries()
+                    .then(data => {
+                        this.countries = data.countries;
+                    })
+            },
+            getCitiesForDigest()
+            {
+                let country = this.filters.country;
+                if(country && country !== null){
+                    eventService.getCitiesForDigest(country)
+                        .then(data => {
+                            this.cities = data.cities;
+                        })
+                } else {
+                    this.cities = [];
+                }
             }
         },
         mounted() {
@@ -300,6 +326,7 @@
             this.scrollEventTrigger();
 
             this.getGames();
+            this.getCountries();
         }
     }
 </script>
@@ -554,5 +581,8 @@
 
     .check-tournament:hover{
         cursor: pointer;
+    }
+    .multiselect__content-wrapper{
+        width: auto;
     }
 </style>

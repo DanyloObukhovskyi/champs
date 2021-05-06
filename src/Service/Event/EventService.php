@@ -509,6 +509,8 @@ class EventService extends EntityService
             'name' => $filters->name ?? null,
             'prize' => $filters->prize ?? null,
             'game' => $filters->game ?? null,
+            'country' => !empty($filters->country) ? $filters->country->nameEn ?? '' : '',
+            'city' => !empty($filters->city) ? $filters->city->nameEn ?? '' : ''
         ];
 
         return $this->repository->getEventsByType(
@@ -538,6 +540,8 @@ class EventService extends EntityService
             'tournamentType' => $filters->tournamentType ?? null,
             'prize' => $filters->prize ?? null,
             'game' => $filters->game ?? null,
+            'country' => !empty($filters->country) ? $filters->country->nameEn ?? '' : '',
+            'city' => !empty($filters->city) ? $filters->city->nameEn ?? '' : ''
         ];
 
         $result = 0;

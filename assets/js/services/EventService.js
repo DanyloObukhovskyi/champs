@@ -29,6 +29,14 @@ class EventService extends Service{
     getDigestEvents = (type, page, filters) => {
         return this.send(`ajax/digest/events/${type}/${page}`, filters)
     }
+
+    getCountries = () => {
+        return this.send(`ajax/digest/countries`)
+    }
+
+    getCitiesForDigest = (country) => {
+        return this.send(`ajax/digest/cities`, country)
+    }
 }
 
 export default new EventService();

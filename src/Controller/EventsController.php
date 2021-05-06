@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
+use App\Entity\Country;
 use App\Entity\Event;
 use App\Entity\EventTeamAttending;
 use App\Entity\Game;
@@ -264,6 +266,40 @@ class EventsController extends AbstractController
             'events' => $digestEvents,
             'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
             'counts' => $counts,
+        ]);
+    }
+
+    /**
+     * @Route("/ajax/digest/countries")
+     */
+    public function ajaxDigestPageCountry(Request $request)
+    {
+        $countries = $this->getDoctrine()
+            ->getManager()
+            ->getRepository(Country::class)
+            ->findAll();
+
+        return $this->json([
+            'countries' => $countries
+        ]);
+    }
+
+    /**
+     * @Route("/ajax/digest/cities")
+     */
+    public function ajaxDigestPageCities(Request $request)
+    {
+        $filters = json_decode($request->getContent(), false);
+
+        $cities = $this->getDoctrine()
+            ->getManager()
+            ->getRepository(City::class)
+            ->findBy([
+                'country' => $filters->id
+            ]);
+
+        return $this->json([
+            'cities' => $cities
         ]);
     }
 }
