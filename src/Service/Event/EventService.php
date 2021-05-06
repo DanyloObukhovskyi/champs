@@ -7,6 +7,8 @@
 namespace App\Service\Event;
 
 
+use App\Entity\City;
+use App\Entity\Country;
 use App\Message\Match;
 use App\Service\DownloadFile;
 use App\Service\EntityService;
@@ -185,6 +187,28 @@ class EventService extends EntityService
         return $eventItems;
     }
 
+    public function citiesDecorator(array $cities): array
+    {
+        $cityItems = [];
+
+        /** @var City $city */
+        foreach ($cities as $city) {
+            $cityItems[] = $this->decoratorForCity($city);
+        }
+        return $cityItems;
+    }
+
+    public function countriesDecorator(array $countries): array
+    {
+        $countryItems = [];
+
+        /** @var Country $country */
+        foreach ($countries as $country) {
+            $countryItems[] = $this->decoratorForCountry($country);
+        }
+        return $countryItems;
+    }
+
     /**
      * @param Event $event
      * @return array
@@ -214,6 +238,34 @@ class EventService extends EntityService
             'type' => $event->getStatus() !== 'pro' ? 'все' : 'pro',
             'location' => $event->getLocation(),
             'game' => !empty($event->getGame()) ? $event->getGame()->jsonSerialize() : null
+        ];
+    }
+
+
+    /**
+     * @param City $city
+     * @return array
+     */
+    public function decoratorForCity(City $city)
+    {
+        return [
+            "id" => $city->getId(),
+            "nameRu" => $city->getNameRu(),
+            "nameEn" => $city->getNameEn(),
+            "country" => $city->getCountry()
+        ];
+    }
+
+    /**
+     * @param Country $country
+     * @return array
+     */
+    public function decoratorForCountry(Country $country)
+    {
+        return [
+            "id" => $country->getId(),
+            "nameRu" => $country->getNameRu(),
+            "nameEn" => $country->getNameEn()
         ];
     }
 

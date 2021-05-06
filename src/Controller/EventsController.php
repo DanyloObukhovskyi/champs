@@ -278,7 +278,7 @@ class EventsController extends AbstractController
             ->getManager()
             ->getRepository(Country::class)
             ->findAll();
-
+        $countries = $this->eventService->countriesDecorator($countries);
         return $this->json([
             'countries' => $countries
         ]);
@@ -297,6 +297,7 @@ class EventsController extends AbstractController
             ->findBy([
                 'country' => $filters->id
             ]);
+        $cities = $this->eventService->citiesDecorator($cities);
 
         return $this->json([
             'cities' => $cities
