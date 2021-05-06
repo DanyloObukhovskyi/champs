@@ -291,12 +291,22 @@ class EventsController extends AbstractController
     {
         $filters = json_decode($request->getContent(), false);
 
-        $cities = $this->getDoctrine()
-            ->getManager()
-            ->getRepository(City::class)
-            ->findBy([
-                'country' => $filters->id
-            ]);
+        if($filters->id === 1 ){
+            $cities = $this->getDoctrine()
+                ->getManager()
+                ->getRepository(City::class)
+                ->setMaxResults(500)
+                ->findBy([
+                    'country' => $filters->id
+                ]);
+        } else {
+            $cities = $this->getDoctrine()
+                ->getManager()
+                ->getRepository(City::class)
+                ->findBy([
+                    'country' => $filters->id
+                ]);
+        }
         $cities = $this->eventService->citiesDecorator($cities);
 
         return $this->json([
