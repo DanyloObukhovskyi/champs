@@ -60,7 +60,7 @@ class NewsRepository extends ServiceEntityRepository
         if (!empty($search)) {
             $query->andWhere('n.title like :search')
                 ->orWhere('n.text like :search')
-                ->orWhere('nt.title like :search')
+                ->orWhere('n.title like :search')
                 ->setParameter('search', "%$search%");
         }
         if(!empty($titles)){
