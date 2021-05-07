@@ -62,6 +62,12 @@
         }
     }
 
+    .marketplace-sidebar:first-child {
+        .game {
+            border-top: none !important;
+        }
+    }
+
     .dark {
         .marketplace-sidebar{
             background-color: #1e2123;
