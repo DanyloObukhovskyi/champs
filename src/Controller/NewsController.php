@@ -118,13 +118,13 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/hot/news")
+     * @Route("/hot/news/{offset}")
      */
-    public function getHotNews(Request $request)
+    public function getHotNews(Request $request, $offset = 0)
     {
         $filters = json_decode($request->getContent(), false);
 
-        $newsCollect = $this->newsService->getHotNews($filters);
+        $newsCollect = $this->newsService->getHotNews($filters, 10 , $offset);
         $hotNews = [];
 
         /** @var News $newsEntity */

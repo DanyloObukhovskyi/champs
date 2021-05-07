@@ -61,6 +61,8 @@ export default {
             news: [],
             load: false,
             isLoadAll: false,
+            isLoadAllHot: false,
+            loadHot: false,
             filters: {
                 search: null,
                 dateFrom: null,
@@ -156,6 +158,7 @@ export default {
                 const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
                 if (scrollable <= 10) {
                     self.getNews()
+                    self.getHotNews()
                 }
             }
         },
@@ -186,15 +189,33 @@ export default {
         reload() {
             this.news = [];
             this.isLoadAll = false;
+            this.isLoadAllHot = false;
 
+            this.hotNews = [];
             this.pageUp();
             this.getNews();
+            this.getHotNews();
         },
         getHotNews() {
-            newsService.getHotNews()
-                .then(data => {
-                    this.hotNews = data;
-                })
+            if (!this.isLoadAllHot && !this.loadHot) {
+                this.loadHot = true;
+                newsService.getHotNews(this.hotNews.length)
+                    .then(data => {
+                        const oldNewsLength = this.hotNews.length;
+
+                        for (let item of data) {
+                            const news = this.hotNews.find(hotNews => Number(item.id) === Number(hotNews.id))
+                            if (!news) {
+                                this.hotNews.push(item);
+                            }
+                        }
+                        this.loadHot = false;
+
+                        if (oldNewsLength === this.hotNews.length) {
+                            this.isLoadAllHot = true;
+                        }
+                    })
+            }
         }
     },
     mounted() {

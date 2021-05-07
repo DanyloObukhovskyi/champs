@@ -114,6 +114,7 @@ export default {
             load: false,
             news: null,
             hotNewsLoad: false,
+            isLoadAllHot: false,
             hotNews: [],
             filters: {
                 dateFrom: null,
@@ -166,13 +167,36 @@ export default {
             this.getHotNews();
         },
         getHotNews() {
-            this.hotNewsLoad = true;
+            if (!this.isLoadAllHot && !this.hotNewsLoad) {
+                this.hotNewsLoad = true;
 
-            NewsService.getHotNews(this.filters)
-                .then(data => {
-                    this.hotNews = data;
-                    this.hotNewsLoad = false;
-                })
+                NewsService.getHotNews(this.hotNews.length, this.filters)
+                    .then(data => {
+                        const oldNewsLength = this.hotNews.length;
+
+                        for (let item of data) {
+                            const news = this.hotNews.find(hotNews => Number(item.id) === Number(hotNews.id))
+                            if (!news) {
+                                this.hotNews.push(item);
+                            }
+                        }
+                        this.hotNewsLoad = false;
+
+                        if (oldNewsLength === this.hotNews.length) {
+                            this.isLoadAllHot = true;
+                        }
+                    })
+            }
+        },
+        scrollEventTrigger() {
+            const self = this;
+            window.onscroll = () => {
+                const scrollable = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
+                console.log(scrollable);
+                if (scrollable <= 1869) {
+                    self.getHotNews()
+                }
+            }
         },
         getNews() {
             NewsService.getSingleNews(this.newsId)
@@ -228,6 +252,7 @@ export default {
         this.getHotNews()
         this.getNews();
         this.getAuth();
+        this.scrollEventTrigger();
     }
 }
 </script>
