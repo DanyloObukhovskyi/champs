@@ -421,7 +421,15 @@
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="<?php echo base_url('assets/js/tinyMCE.js'); ?>" referrerpolicy="origin"></script>
 <script>
+    tinymce.init({
+        selector:'textarea',
+        plugins: 'code',
+        toolbar: 'code | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+        height: 600
+    });
     var userId = "<?php print $ProfileID; ?>";
 
     function changePass() {

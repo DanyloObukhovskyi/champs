@@ -205,7 +205,13 @@
 <script src="<?php echo base_url('assets/js/tinyMCE.js'); ?>" referrerpolicy="origin"></script>
 <script src="<?php echo base_url('assets/js/datepicker.js'); ?>" referrerpolicy="origin"></script>
 <script>
-	tinymce.init({selector:'textarea'});
+	tinymce.init({
+        selector:'textarea',
+        plugins: 'code',
+        toolbar: 'code | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+        height: 600
+	});
 
 	$( function() {
 			$( "#datepicker" ).datetimepicker({
