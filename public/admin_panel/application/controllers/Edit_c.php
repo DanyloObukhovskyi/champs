@@ -457,6 +457,10 @@ class Edit_c extends CI_Controller
             redirect($this->config->item(base_url('404_override')));
             die();
         }
+        $sort = array();
+        $offset = 0;
+        $where = array("id" => $id);
+        $data['user_info'] = $this->trainers_model->get_all_trainers($where, 'all', false, $sort, array($offset, 1), true, true);
         if (isset($_POST['edit'])) {
             if (trim($_POST['edit']) == true && (int)$user_id == $this->UserID) {
                 $nickname = (isset($_POST["nickname"]) && !empty($_POST["nickname"])) ? trim($_POST["nickname"]) : '';
@@ -481,13 +485,13 @@ class Edit_c extends CI_Controller
                 $trainings = (isset($_POST["training"]) && !empty($_POST["training"])) ? $_POST["training"] : [];
                 $prices = (isset($_POST["price"]) && !empty($_POST["price"])) ? $_POST["price"] : [];
 
-                $this->trainer_video->deleteRecords($id);
+                $this->trainer_video->deleteRecords($data['user_info'][0]['id']);
                 foreach ($videos as $video) {
-                    $this->trainer_video->create($id, $video);
+                    $this->trainer_video->create($data['user_info'][0]['id'], $video);
                 }
-                $this->trainer_award_model->delete_records($id);
+                $this->trainer_award_model->delete_records($data['user_info'][0]['id']);
                 foreach ($awards as $award) {
-                    $this->trainer_award_model->create($id, $award);
+                    $this->trainer_award_model->create($data['user_info'][0]['id'], $award);
                 }
                 if (!empty($nickname) && !empty($Email)) {
                     $mask = "ROLE_USER";
@@ -646,11 +650,6 @@ class Edit_c extends CI_Controller
         $data['UserID'] = $this->UserID;
         $data['ProfileID'] = $id;
         $data['user'] = $this->ion_auth->user()->row();
-
-        $sort = array();
-        $offset = 0;
-        $where = array("id" => $id);
-        $data['user_info'] = $this->trainers_model->get_all_trainers($where, 'all', false, $sort, array($offset, 1), true, true);
 
         if (empty($data["user_info"])) {
             redirect($_SERVER["HTTP_REFERER"]);
