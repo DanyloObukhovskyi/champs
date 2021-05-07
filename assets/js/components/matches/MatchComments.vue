@@ -38,6 +38,7 @@
     import CommentsForm from "../comments/CommentsForm";
     import CommentsList from "../comments/CommentsList";
     import MatchService from "../../services/MatchService";
+    import NewsService from "../../services/NewsService";
 
     export default {
         name: "MatchComments",
@@ -142,7 +143,10 @@
             }
         },
         mounted() {
-            this.user = MatchService.user
+            MatchService.getAuthUser()
+                .then(user => {
+                    this.user = user;
+                })
         }
     }
 </script>

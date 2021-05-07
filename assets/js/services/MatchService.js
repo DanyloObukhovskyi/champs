@@ -49,6 +49,10 @@ class MatchService extends Service{
     setCommentLike = (commentId, type) => {
         return this.send(`like/match/comment/${commentId}`, { type });
     }
+
+    getAuthUser = () =>  {
+        return this.send('get/auth')
+    }
 }
 
 export default new MatchService();
