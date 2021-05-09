@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Lessons;
+use App\Entity\Payment;
 use App\Entity\PurseHistory;
 use App\Entity\Review;
 use App\Entity\Schedule;
