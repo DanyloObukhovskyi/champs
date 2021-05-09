@@ -253,6 +253,7 @@ export default {
     border: none;
     margin-right: .5vw;
     cursor: pointer;
+    margin-bottom: 5px;
 }
 
 .news .tags .tag:hover {

@@ -325,6 +325,7 @@ export default {
     margin-right: .5vw;
     cursor: pointer;
     outline: unset;
+    margin-bottom: 5px;
 }
 
 .news-view .news .tags .tag:hover {
