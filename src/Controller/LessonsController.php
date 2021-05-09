@@ -142,7 +142,7 @@ class LessonsController extends AbstractController
             'userid' => $trainer->getId()
         ]);
 
-        if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS !== 0) {
+        if ($trainerEntity->getIsLessonCost() and count($data->lessons) % Lessons::LESSON_HOURS === 0) {
             return $this->json(['message' => 'Неверные данные!'], 422);
         }
 
