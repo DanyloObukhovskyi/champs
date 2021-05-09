@@ -114,7 +114,7 @@
 
 	.search {
 	  display: flex;
-	  margin: .25vw 0;
+      margin: 0.25vw 0.25vw;
 
 	  .search-button {
 		width: 4vw;
