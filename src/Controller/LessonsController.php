@@ -322,8 +322,7 @@ class LessonsController extends AbstractController
                     $type = 'past';
                 }
 
-
-                $dateFrom = $this->parseDateToUserTimezone($lesson, $dateFrom, $timezone);
+                $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timezone);
 
                 $dateRu = $this->dateTranslate($dateFrom, $translator);
 
