@@ -519,7 +519,7 @@ class LessonService extends EntityService
             $payment = $lesson->getPayment();
 
             if (isset($payment) and $payment->getPaymentStatus() === Payment::STATUS_OK) {
-                $earned += (int)$lesson->getCost();
+                $earned += (int)$lesson->getTrenerPrice();
             }
         }
         return $earned;
