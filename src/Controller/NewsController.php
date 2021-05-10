@@ -141,7 +141,20 @@ class NewsController extends AbstractController
     {
         $request = json_decode($request->getContent(), false);
 
-        $newsEntities = $this->newsService->getByFilters($request, 10, $offset);
+        $formats = [];
+        if(!empty($request->formats)){
+            $allFormats = $this->entityManager
+                ->getRepository(NewsType::class)
+                ->findBy(['title' => $request->formats]);
+            if(!empty($allFormats))
+            {
+                foreach($allFormats as $format){
+                    $formats[] = $format->getId();
+                }
+            }
+        }
+
+        $newsEntities = $this->newsService->getByFilters($request, 10, $offset, $formats);
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {

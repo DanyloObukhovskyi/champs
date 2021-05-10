@@ -93,13 +93,14 @@ class NewsService extends EntityService
      * @param $request
      * @param $limit
      * @param $offset
+     * @param $formats
      * @return mixed
      */
-    public function getByFilters($request, $limit, $offset)
+    public function getByFilters($request, $limit, $offset, $formats)
     {
         return $this->repository->getByFilters(
             $request->search ?? null,
-            $request->tags,
+            $formats,
             $request->titles,
             $request->texts,
             $this->parseDate($request->dateFrom ?? null),
@@ -108,6 +109,7 @@ class NewsService extends EntityService
             $offset
         );
     }
+
 
     /**
      * @param News $news
