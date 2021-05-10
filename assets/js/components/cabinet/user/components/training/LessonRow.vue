@@ -75,7 +75,7 @@
         </div>
         <div class="lesson-bottom">
             <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="isTrainerCabinetSmall"/>
-            <send-review :lesson="lesson" v-if="showReview"/>
+            <send-review :lesson="lesson" v-if="isStudentConfirmed"/>
         </div>
     </div>
 </template>
@@ -111,7 +111,7 @@
         data() {
             return {
                 showMoreDetail: false,
-                showReview: true,
+                showReview: false,
             }
         },
         computed: {
@@ -135,12 +135,14 @@
                 }
                 if (this.isConfirmed) {
                     label = 'Оставьте комментарий';
-                    this.showReview = true;
                 }
                 return label;
             },
             isConfirmed() {
                 return this.lesson.trainerStatus && this.lesson.studentStatus;
+            },
+            isStudentConfirmed() {
+                return this.lesson.studentStatus;
             }
         },
         methods: {
