@@ -3,6 +3,7 @@ body {
     background: #f8f8f8;
     overflow: scroll !important;
     padding-right: 0 !important;
+    overflow-x: hidden !important;
 }
 
 .dark body {
