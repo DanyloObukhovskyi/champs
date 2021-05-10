@@ -66,6 +66,17 @@
                     Прошедшие тренировки
                 </template>
             </timetable>
+            <div class="empty-lessons-wrapper">
+                <div class="title">
+                </div>
+                <div class="body">
+                    <div>
+                        К сожалению, на данный момент у вас нет тренировок в расписании.
+                    </div>
+                </div>
+                <div class="title">
+                </div>
+            </div>
         </div>
     </div>
 </template>
