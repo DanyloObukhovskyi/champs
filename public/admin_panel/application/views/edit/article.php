@@ -115,12 +115,12 @@
                 <div class="change-editor-edit-ban" id="image">
 					<div class="changePass mt-15 change-img-edit" style="display: block;">
 						<div class="changePassBTN mt-5 change-img-btn-edit"><input class="change-img-edit-input" type="file" accept="image/jpeg,image/png" id="userfile_image" style="opacity: 0"/>
-							<div class="changePassBTN change-img-edit-btn" style="margin-top: -18px !important;">Загрузить заставку(600х400)</div>
+							<div class="changePassBTN change-img-edit-btn" style="margin-top: -18px !important;">Загрузить заставку</div>
 							<img class="icos2" src="<?php print base_url("assets/icons/downloadfor-checkbox.svg"); ?>" />
 						</div>
 					</div>
 					<div class="change-img-edit-warning" id="uploaded_img_name">
-						Загрузите в формате .jpg или .png
+						Загрузите в формате .jpg или .png (600х400)
 					</div>
 				</div>
 				<textarea  id="text"><?php print $post_fields['text']; ?></textarea>
