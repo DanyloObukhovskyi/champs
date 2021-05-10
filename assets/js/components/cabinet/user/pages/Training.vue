@@ -1,5 +1,5 @@
 <template>
-    <div class="training-wrapper">
+    <div class="training-wrapper" id="content">
         <div class="banner-wrapper" v-if="user !== null && !user.isTrainer">
             <cabinet-bottom-banner/>
         </div>
@@ -14,7 +14,7 @@
                 </template>
             </timetable>
         </div>
-        <div class="timetable-wrapper" v-if="!showFuture && !user.isTrainer">
+        <div class="timetable-wrapper" v-if="!load && !showFuture && !user.isTrainer">
             <div class="empty-lessons-wrapper">
                 <div class="title">
                     Расписание
@@ -35,6 +35,20 @@
                 </div>
             </div>
         </div>
+        <div class="timetable-wrapper" v-else-if="!load && !showFuture && user.isTrainer">
+            <div class="empty-lessons-wrapper">
+                <div class="title">
+                    Расписание
+                </div>
+                <div class="body">
+                    <div>
+                        К сожалению, на данный момент у вас нет тренировок в расписании.
+                    </div>
+                </div>
+                <div class="title">
+                </div>
+            </div>
+        </div>
         <div class="timetable-wrapper" v-if="!load && showPast">
             <timetable
                     :lessons="lessons.past"
@@ -43,6 +57,20 @@
                     Прошедшие тренировки
                 </template>
             </timetable>
+        </div>
+        <div class="timetable-wrapper" v-else-if="!load && !showPast">
+            <div class="empty-lessons-wrapper">
+                <div class="title">
+                    Прошедшие тренировки
+                </div>
+                <div class="body">
+                    <div>
+                        К сожалению, на данный момент у вас нет тренировок в расписании.
+                    </div>
+                </div>
+                <div class="title">
+                </div>
+            </div>
         </div>
     </div>
 </template>
