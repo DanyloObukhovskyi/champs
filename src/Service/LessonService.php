@@ -602,7 +602,7 @@ class LessonService extends EntityService
             'type' => $lesson->getType(),
             'cost' => $lesson->getCost(),
             'month' => $month,
-            'costWithPercentage' => $this->getCostWithPercentage($lesson),
+            'costWithPercentage' => $this->getCostWithOutPercentage($lesson),
             'trainerNotice' => $lesson->getTrainerNotice(),
             'typeRu' => $translator->trans('trainings.' . $lesson->getType()),
             'dateFrom' => $dateFrom->format('Y.m.d H:i:s'),
