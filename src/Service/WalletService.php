@@ -79,18 +79,8 @@ class WalletService
         foreach ($lessons as $lesson) {
             /** @var Payment $payment */
             $payment = $lesson->getPayment();
-            if (empty($lesson->getDateTimeTo())) {
-                $dateTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('Y.m.d H');
-            } else {
-                $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
-            }
 
-            $timeOffset = 0;
-
-            $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
-            $dateAfter7Day = $dateTo->modify('+7 days')->format('Y.m.d H:i:s');
-            $today = Carbon::now();
-            if (!empty($payment) && $payment->getPaymentStatus() === Payment::STATUS_OK && $today < $dateAfter7Day) {
+            if (!empty($payment) && $payment->getPaymentStatus() === Payment::STATUS_OK) {
                 $payments[] = $lesson->getPayment();
             }
         }
