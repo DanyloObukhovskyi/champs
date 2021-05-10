@@ -158,7 +158,7 @@ class LessonService extends EntityService
                     $lessonsCount = count($lessonTimes);
 
                     if ($trainerEntity->getIsLessonCost()) {
-                        $lessonsCount = (int)$lessonsCount / Lessons::LESSON_HOURS;
+                        $lessonsCount = (int)$lessonsCount;
                     }
                     $lessonCost = 0;
                     /** @var TrainerLessonPrice $cost */
