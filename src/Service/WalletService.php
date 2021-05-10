@@ -179,7 +179,7 @@ class WalletService
 
                 $studentsHistory[] = [
                     'date' => $payment->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'cost' => (int)$this->lessonService->getCostWithOutPercentage($lesson),
+                    'cost' => (int)$this->lessonService->getCostWithPercentage($lesson),
                     'student' => $this->userService->getUserData($lesson->getStudent()),
                     'lesson' => $this->lessonService->decorateLesson($lesson, $user, null, $translator),
                     'show' => false
