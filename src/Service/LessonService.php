@@ -171,7 +171,9 @@ class LessonService extends EntityService
                         $trainerEntity->getAdminPercentage():
                         $_ENV['PERCENTAGE_MARKUP_LESSON'];
                     if (isset($percentageMarkup)) {
-                        $cost = (($lessonCost * $lessonsCount) / 100) * ($percentageMarkup + 100);
+                        $cost = abs(((($lessonCost * $lessonsCount) / 100) * $percentageMarkup) - ($lessonCost * $lessonsCount));
+                    } else {
+                        $cost = $lessonCost * $lessonsCount;
                     }
 
                     $lesson->setStudent($user);
