@@ -73,13 +73,24 @@ class WalletService
         } else {
             $lessons = $this->lessonService->getByTeacher($user);
         }
+
         $payments = [];
         /** @var Lessons $lesson */
         foreach ($lessons as $lesson) {
             /** @var Payment $payment */
             $payment = $lesson->getPayment();
+            if (empty($lesson->getDateTimeTo())) {
+                $dateTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('Y.m.d H');
+            } else {
+                $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
+            }
 
-            if (!empty($payment) and $payment->getPaymentStatus() === Payment::STATUS_OK) {
+            $timeOffset = 0;
+
+            $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
+            $dateAfter7Day = $dateTo->modify('+7 days')->format('Y.m.d H:i:s');
+            $today = Carbon::now();
+            if (!empty($payment) && $payment->getPaymentStatus() === Payment::STATUS_OK && $today < $dateAfter7Day) {
                 $payments[] = $lesson->getPayment();
             }
         }
@@ -99,7 +110,7 @@ class WalletService
 
         /** @var Payment $payment */
         foreach ($payments as $payment) {
-            $earnedAll += (int)$payment->getLesson()->getCost();
+            $earnedAll += (int)$payment->getLesson()->getTrenerPrice();
         }
         return $earnedAll - $allPurseSum;
     }
@@ -186,5 +197,13 @@ class WalletService
             }
         }
         return $studentsHistory;
+    }
+
+    public function parseDateToUserTimezone($date, $timeOffset)
+    {
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom->setHour($dateFrom->hour + $timeOffset);
+
+        return $dateFrom;
     }
 }
