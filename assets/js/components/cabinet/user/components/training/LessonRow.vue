@@ -75,7 +75,7 @@
         </div>
         <div class="lesson-bottom">
             <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="isTrainerCabinetSmall"/>
-            <send-review :lesson="lesson" v-if="isStudentConfirmed"/>
+            <send-review :lesson="lesson" v-if="isStudentConfirmed && !user.isTrainer"/>
         </div>
     </div>
 </template>
