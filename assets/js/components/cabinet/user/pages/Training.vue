@@ -59,18 +59,13 @@
             </timetable>
         </div>
         <div class="timetable-wrapper" v-else-if="!load && !showPast">
-            <div class="empty-lessons-wrapper">
-                <div class="title">
+            <timetable
+                    :lessons="lessons.past"
+                    :is-past="true">
+                <template v-slot:title>
                     Прошедшие тренировки
-                </div>
-                <div class="body">
-                    <div>
-                        К сожалению, на данный момент у вас нет тренировок в расписании.
-                    </div>
-                </div>
-                <div class="title">
-                </div>
-            </div>
+                </template>
+            </timetable>
         </div>
     </div>
 </template>
