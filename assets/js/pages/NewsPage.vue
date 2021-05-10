@@ -67,7 +67,7 @@ export default {
                 search: null,
                 dateFrom: null,
                 dateTo: null,
-                tags: [],
+                formats: [],
                 titles: [],
                 texts: [],
             },
@@ -75,7 +75,7 @@ export default {
         }
     },
     watch: {
-        "filters.tags": function () {
+        "filters.formats": function () {
             this.reload()
         },
         "filters.titles": function () {

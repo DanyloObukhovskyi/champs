@@ -80,9 +80,9 @@ export default {
             showFilters: false,
             filterType: null,
             types: {
-                tags: 'Теги',
                 titles: 'Названия',
-                texts: 'Текст'
+                texts: 'Текст',
+                formats: 'Форматы'
             },
         }
     },
