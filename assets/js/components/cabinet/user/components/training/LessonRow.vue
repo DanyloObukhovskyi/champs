@@ -111,7 +111,7 @@
         data() {
             return {
                 showMoreDetail: false,
-                showReview: false,
+                showReview: true,
             }
         },
         computed: {
