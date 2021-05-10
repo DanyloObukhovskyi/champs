@@ -59,14 +59,11 @@
             </timetable>
         </div>
         <div class="timetable-wrapper" v-else-if="!load && !showPast">
-            <timetable
-                    :lessons="lessons.past"
-                    :is-past="true">
-                <template v-slot:title>
-                    Прошедшие тренировки
-                </template>
-            </timetable>
             <div class="empty-lessons-wrapper">
+                <div class="title" style="position: fixed;
+    width: 50%;">
+                    Прошедшие тренировки
+                </div>
                 <div class="title">
                 </div>
                 <div class="body">
