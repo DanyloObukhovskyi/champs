@@ -135,6 +135,7 @@
                 }
                 if (this.isConfirmed) {
                     label = 'Оставьте комментарий';
+                    this.showReview = true;
                 }
                 return label;
             },
@@ -205,17 +206,7 @@
                 return {
                     'background-image': `url('${'/uploads/avatars/' + image}')`
                 }
-            },
-            isShowReview()
-            {
-                let isConfirmed = this.isConfirmed();
-                if(isConfirmed){
-                    this.showReview = true;
-                }
             }
-        },
-        mounted() {
-            this.isShowReview();
         }
     }
 </script>
