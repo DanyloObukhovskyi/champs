@@ -600,7 +600,7 @@ class LessonService extends EntityService
         return [
             'id' => $lesson->getId(),
             'type' => $lesson->getType(),
-            'cost' => $lesson->getCost(),
+            'cost' => $user->getIsTrainer() ? $this->getCostWithPercentage($lesson) : $this->getCostWithOutPercentage($lesson),
             'month' => $month,
             'costWithPercentage' => $user->getIsTrainer() ? $this->getCostWithPercentage($lesson) : $this->getCostWithOutPercentage($lesson),
             'trainerNotice' => $lesson->getTrainerNotice(),
