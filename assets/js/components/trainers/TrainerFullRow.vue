@@ -345,7 +345,7 @@
 
 	  .price-row {
 		&.active {
-		  background: url(/images/marketplace/priceBackgroundHover.png);
+		  //background: url(/images/marketplace/priceBackgroundHover.png);
 		  background-position: center;
 		  background-size: cover;
 		  color: white;
@@ -370,7 +370,7 @@
 
 		&:hover {
 		  transition: all .5s ease-in-out;
-		  background: url(/images/marketplace/priceBackgroundHover.png);
+		  //background: url(/images/marketplace/priceBackgroundHover.png);
 		  background-position: center;
 		  background-size: cover;
 		  color: white;
@@ -538,7 +538,7 @@
 		  background-size: cover;
 
 		  &.active {
-			background: url(/images/marketplace/priceBackgroundHover.png);
+			//background: url(/images/marketplace/priceBackgroundHover.png);
 			background-position: center;
 			background-size: cover;
 			color: white;
@@ -554,7 +554,7 @@
 
 		  &:hover {
 			transition: all .5s ease-in-out;
-			background: url(/images/marketplace/priceBackgroundHover.png);
+			//background: url(/images/marketplace/priceBackgroundHover.png);
 			background-position: center;
 			background-size: cover;
 			color: white;
