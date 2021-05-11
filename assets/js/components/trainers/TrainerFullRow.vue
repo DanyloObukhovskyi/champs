@@ -370,6 +370,10 @@
 
 		&:hover {
 		  transition: all .5s ease-in-out;
+            background: linear-gradient(
+                            104deg
+                    , #ffc344 53%, #f77741 46%);
+            clip-path: polygon(5.8% 0, 94.4% 0, 100% 30%, 100% 70%, 94.4% 100%, 5.8% 100%, 0 70%, 0 30%);
 		  //background: url(/images/marketplace/priceBackgroundHover.png);
 		  background-position: center;
 		  background-size: cover;
@@ -553,6 +557,10 @@
 		  }
 
 		  &:hover {
+              background: linear-gradient(
+                              104deg
+                      , #ffc344 53%, #f77741 46%);
+              clip-path: polygon(5.8% 0, 94.4% 0, 100% 30%, 100% 70%, 94.4% 100%, 5.8% 100%, 0 70%, 0 30%);
 			transition: all .5s ease-in-out;
 			//background: url(/images/marketplace/priceBackgroundHover.png);
 			background-position: center;

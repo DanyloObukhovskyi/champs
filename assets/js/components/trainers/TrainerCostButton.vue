@@ -59,14 +59,6 @@ export default {
   transition: all .5s ease-in-out;
 
   &.active {
-      background: linear-gradient(
-                      104deg
-              , #ffc344 53%, #f77741 46%);
-      clip-path: polygon(5.8% 0, 94.4% 0, 100% 30%, 100% 70%, 94.4% 100%, 5.8% 100%, 0 70%, 0 30%);
-      width: 99.4%;
-      top: 1px;
-      height: 98%;
-      left: 1px;
     background-position: center;
     background-size: cover;
     color: white;
@@ -81,6 +73,10 @@ export default {
   }
 
   &:hover {
+      background: linear-gradient(
+                      104deg
+              , #ffc344 53%, #f77741 46%);
+      clip-path: polygon(5.8% 0, 94.4% 0, 100% 30%, 100% 70%, 94.4% 100%, 5.8% 100%, 0 70%, 0 30%);
     transition: all .5s ease-in-out;
     background-position: center;
     background-size: cover;
@@ -88,15 +84,6 @@ export default {
 
 
     .background {
-        transition: none;
-        background: linear-gradient(
-                        104deg
-                , #ffc344 53%, #f77741 46%);
-        clip-path: polygon(5.8% 0, 94.4% 0, 100% 30%, 100% 70%, 94.4% 100%, 5.8% 100%, 0 70%, 0 30%);
-        width: 99.4%;
-        top: 1px;
-        height: 98%;
-        left: 1px;
       i {
         color: white;
         font-size: 1vw;
@@ -152,6 +139,10 @@ export default {
     height: 4.1vw;
 
     &:hover {
+        background: linear-gradient(
+                        104deg
+                , #ffc344 53%, #f77741 46%);
+        clip-path: polygon(5.8% 0, 94.4% 0, 100% 30%, 100% 70%, 94.4% 100%, 5.8% 100%, 0 70%, 0 30%);
       transition: all .5s ease-in-out;
       background-position: center;
       background-size: cover;
