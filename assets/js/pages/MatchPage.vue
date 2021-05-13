@@ -14,7 +14,10 @@
                 </div>
                 <div class="score">
                     <span class="d-flex justify-content-center" v-if="!match.isLive && isFuture">
-                         <img class="vs" src="/images/matches/matchVs.png">
+<!--                         <img class="vs" src="/images/matches/matchVs.png">-->
+                        <div class="vs">
+
+                        </div>
                     </span>
                     <span class="d-flex justify-content-center" v-else>
                         <span :class="getScoreClass(match.teamA.score, match.teamB.score)">
@@ -357,8 +360,24 @@
         color: #b2b4b5;
     }
 
-    img.vs {
-        height: 4.5vw;
+    .vs {
+        clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+        height: 5.5vw;
+        width: 7.5vw;
+        background: linear-gradient(
+                0deg
+                , rgba(255,181,132,1) 9%, rgba(160,67,170,0) 90%);
+    }
+
+    .vs:before {
+        content: 'VS';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 700;
+        font-size: 3vw;
+        mix-blend-mode: screen;
     }
 
     .comments{

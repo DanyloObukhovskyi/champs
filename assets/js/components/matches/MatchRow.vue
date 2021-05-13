@@ -30,7 +30,7 @@
                         0
                     </div>
                     <div class="vs">
-                        <img src="/images/matches/vs.png">
+<!--                        <img src="/images/matches/vs.png">-->
                     </div>
                     <div class="score" v-if="showScore && match.teamB !== null" :class="getScoreClass(match.teamB.score, match.teamA.score)">
                         {{match.teamB.score}}
@@ -304,10 +304,25 @@
         width: .8vw;
     }
 
-    .vs img {
-        height: 4vw;
+    .vs {
+        clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+        height: 4.5vw;
+        width: 4.5vw;
+        background: linear-gradient(
+                0deg
+                , rgba(255,181,132,1) 9%, rgba(160,67,170,0) 90%);
     }
-
+    .vs:before {
+        content: 'VS';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 700;
+        font-size: 1.5vw;
+        mix-blend-mode: screen;
+        color: white;
+    }
     .teams .score.red {
         color: #be1517;
     }
