@@ -1,5 +1,5 @@
 <template>
-    <div class="news-view">
+    <div class="news-view" ref="news_page">
         <div class="col-9 pl-0">
             <div class="news" v-if="!load && news !== null">
                 <div class="news-header">
@@ -58,12 +58,9 @@
                 <loader v-if="load"/>
             </div>
         </div>
-        <div class="col-3 pr-0">
+        <div class="col-3 pr-0" :style="btnStyles">
             <news-filters :filters="filters" @reload="reload"/>
-            <div class="d-flex justify-content-center">
-                <loader v-if="hotNewsLoad"></loader>
-            </div>
-            <hot-news v-if="!hotNewsLoad" :news="hotNews"/>
+            <hot-news :news="hotNews"/>
         </div>
         <transition name="fade">
             <div class="wrapper news-wrap" v-if="zoom" @click="clearImg">
@@ -130,6 +127,7 @@ export default {
             likesCount: 0,
             userLike: null,
             comments: [],
+            height: '100%',
         }
     },
     watch: {
@@ -157,6 +155,12 @@ export default {
                 users.push(userLike.user)
             }
             return users;
+        },
+        btnStyles() {
+            return {
+                'max-height': `${this.height}`,
+                'overflow-y': 'scroll'
+            };
         }
     },
     methods: {
@@ -175,8 +179,8 @@ export default {
                         const oldNewsLength = this.hotNews.length;
 
                         for (let item of data) {
-                            const news = this.hotNews.find(hotNews => Number(item.id) === Number(hotNews.id))
-                            if (!news) {
+                            const newsHot = this.hotNews.find(hotNews => Number(item.id) === Number(hotNews.id))
+                            if (!newsHot) {
                                 this.hotNews.push(item);
                             }
                         }
@@ -191,15 +195,16 @@ export default {
         scrollEventTrigger() {
             const self = this;
             window.onscroll = () => {
-                const scrollable = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
-                console.log(scrollable);
-                if (scrollable <= 1869) {
+                const scrollable = $('.page').height() - ($(window).innerHeight() + $(window).scrollTop());
+                const scrollableDocument = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
+                if (scrollableDocument <= 1869) {
                     self.getHotNews()
                 }
             }
         },
-        getNews() {
-            NewsService.getSingleNews(this.newsId)
+        async getNews() {
+            this.load = true;
+            await NewsService.getSingleNews(this.newsId)
                 .then(data => {
                     this.news = data.news;
                     this.likes = data.likes;
@@ -209,6 +214,7 @@ export default {
 
                     this.load = false;
                 })
+            this.changeMaxHeight();
         },
         newsPageUrl(tag) {
             return `/${NewsService.lang}/novosti?tag=${encodeURIComponent(tag)}`;
@@ -246,6 +252,11 @@ export default {
                 .then(user => {
                     this.user = user;
                 })
+        },
+        changeMaxHeight()
+        {
+            console.log($('.page').height());
+            this.height = $('.page').height() - 200 + 'px'
         }
     },
     mounted() {
@@ -399,6 +410,7 @@ export default {
 .dark .news-view .news-body {
     color: white;
 }
+
 </style>
 
 <style>
@@ -408,5 +420,14 @@ export default {
 
 p.article-render__block.article-render__block_unstyled {
     background-color: transparent !important;
+}
+::-webkit-scrollbar { /* chrome based */
+    width: 0px;  /* ширина scrollbar'a */
+    background: transparent;  /* опционально */
+}
+
+html {
+    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
 }
 </style>
