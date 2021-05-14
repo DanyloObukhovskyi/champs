@@ -1,33 +1,47 @@
 <template>
     <div class="news-view" ref="news_page">
-        <div class="col-9 pl-0">
-            <div class="news" v-if="!load && news !== null">
-                <div class="news-header">
-                    <h2 class="title">
-                        {{ news.title }}
-                    </h2>
-                    <div class="news-logo">
-                        <img class="w-100" :src="'/images/temp/news/' + news.logo" alt="" @error="tagsAbsolute = false">
-                        <div class="tags" :class="{absolute: tagsAbsolute}">
-                            <a :href="newsPageUrl(tag.title)" class="tag" v-for="tag in news.tags">
-                                {{ tag.title }}
-                            </a>
+        <div class="d-flex">
+            <div class="col-9 pl-0">
+                <div class="news" v-if="!load && news !== null">
+                    <div class="news-header">
+                        <h2 class="title">
+                            {{ news.title }}
+                        </h2>
+                        <div class="news-logo">
+                            <img class="w-100" :src="'/images/temp/news/' + news.logo" alt="" @error="tagsAbsolute = false">
+                            <div class="tags" :class="{absolute: tagsAbsolute}">
+                                <a :href="newsPageUrl(tag.title)" class="tag" v-for="tag in news.tags">
+                                    {{ tag.title }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="date">
+                                {{ news.date_ru }}
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-eye"></i>
+                                {{ news.views }} {{ news.views == 1 ? 'Просмотр' : 'Просмотров' }}
+                                <i class="fas fa-comment-dots"></i>
+                                {{ news.commentsCount }} {{ news.commentsCount == 1 ? 'Коментарий' : 'Коментариев' }}
+                            </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <div class="date">
-                            {{ news.date_ru }}
-                        </div>
-                        <div class="activity">
-                            <i class="fas fa-eye"></i>
-                            {{ news.views }} {{ news.views == 1 ? 'Просмотр' : 'Просмотров' }}
-                            <i class="fas fa-comment-dots"></i>
-                            {{ news.commentsCount }} {{ news.commentsCount == 1 ? 'Коментарий' : 'Коментариев' }}
-                        </div>
+                    <div class="news-body" v-html="parseBackground(news.text)" @click="showImages">
                     </div>
+
                 </div>
-                <div class="news-body" v-html="parseBackground(news.text)" @click="showImages">
+                <div class="d-flex justify-content-center">
+                    <loader v-if="load"/>
                 </div>
+            </div>
+            <div class="col-3 pr-0" :style="btnStyles">
+                <news-filters :filters="filters" @reload="reload"/>
+                <hot-news :news="hotNews"/>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="col-9 pl-0">
                 <div class="tags">
                     <a :href="newsPageUrl(tag.title)" class="tag" v-for="tag in news.tags">
                         {{ tag.title }}
@@ -54,13 +68,7 @@
                     </news-comments>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <loader v-if="load"/>
-            </div>
-        </div>
-        <div class="col-3 pr-0" :style="btnStyles">
-            <news-filters :filters="filters" @reload="reload"/>
-            <hot-news :news="hotNews"/>
+            <div class="col-3 pr-0"></div>
         </div>
         <transition name="fade">
             <div class="wrapper news-wrap" v-if="zoom" @click="clearImg">
@@ -213,6 +221,10 @@ export default {
                     this.comments = data.comments
 
                     this.load = false;
+
+                    this.$nextTick(() => {
+
+                    })
                 })
             this.changeMaxHeight();
         },
@@ -256,7 +268,7 @@ export default {
         changeMaxHeight()
         {
             console.log($('.page').height());
-            this.height = $('.page').height() - 200 + 'px'
+            this.height = $('.page').height() - 280 + 'px'
         }
     },
     mounted() {
@@ -270,7 +282,7 @@ export default {
 
 <style scoped>
 .news-view {
-    display: flex;
+    display: block;
     padding-top: 1vw;
     padding-bottom: 8vw;
 }

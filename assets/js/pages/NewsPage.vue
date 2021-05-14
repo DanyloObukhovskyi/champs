@@ -32,7 +32,7 @@ import NewsFilters from "../components/news/NewsFilters";
 import Loader from "../components/helpers/Loader";
 import HotNews from "../components/news/HotNews";
 import newsService from "../services/NewsService";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import NewsRow from "../components/news/NewsRow";
 
 
@@ -70,6 +70,7 @@ export default {
                 formats: [],
                 titles: [],
                 texts: [],
+                tags: []
             },
             pageEnd: false,
         }

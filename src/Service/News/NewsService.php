@@ -100,6 +100,7 @@ class NewsService extends EntityService
     {
         return $this->repository->getByFilters(
             $request->search ?? null,
+            $request->tags,
             $formats,
             $request->titles,
             $request->texts,
@@ -133,6 +134,7 @@ class NewsService extends EntityService
         return $this->repository->getByFilters(
             $request->search ?? null,
             $filters->tags ?? [],
+            $filters->formats ?? [],
             $filters->titles ?? [],
             $filters->texts ?? [],
             $this->parseDate($filters->dateFrom ?? null),
