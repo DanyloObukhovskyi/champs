@@ -1,8 +1,8 @@
 <template>
     <div class="news-view" ref="news_page">
-        <div class="d-flex">
+        <div class="d-flex" style="align-items: flex-start;">
             <div class="col-9 pl-0">
-                <div class="news" v-if="!load && news !== null">
+                <div class="news news_info" v-if="!load && news !== null">
                     <div class="news-header">
                         <h2 class="title">
                             {{ news.title }}
@@ -203,6 +203,7 @@ export default {
         scrollEventTrigger() {
             const self = this;
             window.onscroll = () => {
+                this.changeMaxHeight();
                 const scrollable = $('.page').height() - ($(window).innerHeight() + $(window).scrollTop());
                 const scrollableDocument = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
                 if (scrollableDocument <= 1869) {
@@ -226,7 +227,6 @@ export default {
 
                     })
                 })
-            this.changeMaxHeight();
         },
         newsPageUrl(tag) {
             return `/${NewsService.lang}/novosti?tag=${encodeURIComponent(tag)}`;
@@ -267,8 +267,7 @@ export default {
         },
         changeMaxHeight()
         {
-            console.log($('.page').height());
-            this.height = $('.page').height() - 280 + 'px'
+            this.height = $('.news_info').height()+ 'px'
         }
     },
     mounted() {
