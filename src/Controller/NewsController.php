@@ -154,7 +154,7 @@ class NewsController extends AbstractController
             }
         }
 
-        $newsEntities = $this->newsService->getByFilters($request, 10, $offset, $formats);
+        $newsEntities = $this->newsService->getByFilters($request, 30, $offset, $formats);
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
