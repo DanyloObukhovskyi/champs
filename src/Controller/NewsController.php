@@ -124,7 +124,7 @@ class NewsController extends AbstractController
     {
         $filters = json_decode($request->getContent(), false);
 
-        $newsCollect = $this->newsService->getHotNews($filters, 30 , $offset);
+        $newsCollect = $this->newsService->getHotNews($filters, 40 , $offset);
         $hotNews = [];
 
         /** @var News $newsEntity */
@@ -154,7 +154,7 @@ class NewsController extends AbstractController
             }
         }
 
-        $newsEntities = $this->newsService->getByFilters($request, 30, $offset, $formats);
+        $newsEntities = $this->newsService->getByFilters($request, 40, $offset, $formats);
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
