@@ -76,6 +76,9 @@ export default {
         }
     },
     watch: {
+        "filters.tags": function () {
+            this.reload()
+        },
         "filters.formats": function () {
             this.reload()
         },
