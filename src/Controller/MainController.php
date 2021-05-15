@@ -92,7 +92,7 @@ class MainController extends DefController
 
         $token = $request->get('token');
 
-        $popularTags = $this->newsTagService->popularTags(5);
+        $popularTags = $this->newsTagService->popularTags(10);
 
         $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
 
@@ -131,7 +131,7 @@ class MainController extends DefController
 
         $token = $request->get('token');
 
-        $popularTags = $this->newsTagService->popularTags(5);
+        $popularTags = $this->newsTagService->popularTags(10);
 
         $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
 
