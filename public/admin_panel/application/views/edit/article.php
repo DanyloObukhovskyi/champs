@@ -205,13 +205,18 @@
 <script src="<?php echo base_url('assets/js/tinyMCE.js'); ?>" referrerpolicy="origin"></script>
 <script src="<?php echo base_url('assets/js/datepicker.js'); ?>" referrerpolicy="origin"></script>
 <script>
-	tinymce.init({
+    tinymce.init({
         selector:'textarea',
-        plugins: 'code',
-        toolbar: 'code | undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+        plugins:     [
+            'code | lists advlist | autolink',
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks advcode fullscreen',
+            'insertdatetime media table powerpaste hr code'
+        ],
+        toolbar: 'code | undo redo | bold italic underline strikethrough | blockquote |fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | lists advlist | autolink',
 
         height: 600
-	});
+    });
 
 	$( function() {
 			$( "#datepicker" ).datetimepicker({
