@@ -16,7 +16,7 @@
             <div class="left-box">
                 <div class="trainer-calendar">
                     <div class="trainer-calendar-title">
-                        Выберете дату
+                        Выберите дату
                     </div>
                     <trainer-calendar
                             ref="calendar"
@@ -29,7 +29,7 @@
             <div class="right-box">
                 <div class="trainer-timetable">
                     <div class="trainer-timetable-title">
-                        Выберете время
+                        Выберите время
                     </div>
                     <div class="time-status-description">
                         <span class="free"></span> свободно

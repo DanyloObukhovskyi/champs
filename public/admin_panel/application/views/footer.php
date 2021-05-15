@@ -80,7 +80,7 @@
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <footer class="flex j-c-s-b a-i-c" style="background: #45484b;">
-	<div class="copyright"> © Champs.pro, 2020</div>
+	<div class="copyright">©️2020-2021 Champs.pro. All rights reserved</div>
 	<div class="flex footer-center a-i-c">
 		<div class="help-and-supp">Поддержка:</div>
 		<img class="ml-10 mr-5" src="<?php print base_url('assets/img/Message.svg'); ?>" alt="">
