@@ -8,6 +8,7 @@ use App\Entity\News;
 use App\Entity\NewsBookmark;
 use App\Entity\NewsLike;
 use App\Entity\NewsTag;
+use App\Entity\NewsType;
 use App\Repository\NewsRepository;
 use App\Service\EntityService;
 use Ausi\SlugGenerator\SlugGenerator;
@@ -214,5 +215,17 @@ class NewsService extends EntityService
     public function getTopNews()
     {
         return $this->repository->getTopNews();
+    }
+
+    /**
+     * @param NewsType $newsType
+     * @return array
+     */
+    public function decoratorForNewsTypes(NewsType $newsType): array
+    {
+        return [
+            'id' => $newsType->getId(),
+            'title' => $newsType->getTitle()
+        ];
     }
 }

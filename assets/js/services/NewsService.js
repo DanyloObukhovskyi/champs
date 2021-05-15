@@ -52,6 +52,10 @@ class NewsService extends Service {
     getTopNews = () => {
         return this.send(`top/news/five`);
     }
+
+    getFormats = () => {
+        return this.send(`news/formats`);
+    }
 }
 
 export default new NewsService();

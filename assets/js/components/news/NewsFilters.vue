@@ -4,17 +4,33 @@
             <lamp-header title="Горячие новости"/>
         </div>
         <div class="filters-body">
-            <div class="keyword d-flex">
+            <div class="keyword d-flex" v-if="filterType !== 'formats'">
                 <div class="search-keyword">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="full-input">
+                <div class="full-input" >
                     <input @keyup.enter="addWord"
                            v-model="search"
                            type="text"
                            class="col search-input"
                            @click="showFilters = !showFilters"
                            placeholder="Введите ключевое слово">
+                </div>
+            </div>
+            <div class="keyword d-flex" v-else>
+                <div class="search-keyword">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div style="width: 100%">
+                    <multiselect
+                            placeholder="Выберете формат"
+                            v-model="search"
+                            label="title"
+                            track-by="id"
+                            selectLabel="Выберете формат"
+                            @select="addWordFormat"
+                            :options="formats">
+                    </multiselect>
                 </div>
             </div>
             <calendar-filter
@@ -62,6 +78,8 @@
 import Calendar from "../calendar/Calendar";
 import LampHeader from "../helpers/LampHeader";
 import CalendarFilter from "../calendar/CalendarFilter";
+import Multiselect from 'vue-multiselect';
+import NewsService from "../../services/NewsService";
 
 export default {
     name: "NewsFilters",
@@ -72,6 +90,7 @@ export default {
         CalendarFilter,
         LampHeader,
         Calendar,
+        Multiselect
     },
     data() {
         return {
@@ -120,6 +139,11 @@ export default {
         }
     },
     methods: {
+        addWordFormat(selectedOption, id){
+            if (selectedOption.title !== null && selectedOption.title !== '') {
+                this.filters[this.filterType].push(selectedOption.title);
+            }
+        },
         addWord() {
             if (this.search !== null && this.search !== '') {
                 const findWord = this.filters[this.filterType].find(w => w === this.search)
@@ -141,7 +165,16 @@ export default {
             this.dateToView = false;
             this.filters.dateTo = date;
         },
+        getFormats(){
+            NewsService.getFormats()
+                .then(data => {
+                    this.formats = data.formats;
+                })
+        }
     },
+    mounted() {
+        this.getFormats();
+    }
 }
 </script>
 
@@ -261,4 +294,30 @@ export default {
 .filters_text{
     color: #212529;
 }
+</style>
+<style>
+    .multiselect{
+        width: 100% !important;
+        background: rgb(59, 59, 59) !important;
+        color: #adadad !important;
+    }
+    .multiselect .multiselect__tags{
+        width: 100% !important;
+        background: rgb(59, 59, 59) !important;
+        color: #adadad !important;
+    }
+    .multiselect__content-wrapper{
+        background: rgb(59, 59, 59) !important;
+        color: #adadad !important;
+    }
+    .multiselect__input, .multiselect__single{
+        background: rgb(59, 59, 59) !important;
+        color: #adadad !important;
+    }
+    .focus-visible{
+        color: #adadad !important;
+    }
+    .multiselect__content-wrapper{
+        width: 100% !important;
+    }
 </style>

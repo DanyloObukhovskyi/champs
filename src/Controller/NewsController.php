@@ -511,4 +511,21 @@ class NewsController extends AbstractController
         }
         return $this->json($news);
     }
+
+    /**
+     * @Route("/news/formats")
+     */
+    public function getFormats()
+    {
+        $formats = [];
+        $allFormats = $this->entityManager
+            ->getRepository(NewsType::class)
+            ->findAll();
+        if(!empty($allFormats)){
+            foreach($allFormats as $format){
+                $formats[] = $this->newsService->decoratorForNewsTypes($format);
+            }
+        }
+        return $this->json(['formats' => $formats]);
+    }
 }
