@@ -37,7 +37,7 @@
                     <button class="dropdown-item"
                             :class="{active: filterType === type}"
                             @click="filterType = type, show = false"
-                            v-for="(label, type) in types">
+                            v-for="(label, type) in types" v-if="type !== 'tags'">
                         {{ label }}
                     </button>
                 </div>
@@ -82,8 +82,10 @@ export default {
             types: {
                 titles: 'Названия',
                 texts: 'Текст',
-                formats: 'Форматы'
+                formats: 'Форматы',
+                tags: ''
             },
+            formats: []
         }
     },
     computed: {

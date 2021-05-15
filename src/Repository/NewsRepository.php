@@ -92,10 +92,15 @@ class NewsRepository extends ServiceEntityRepository
             $query->andWhere('n.created_at <= :dateTo')
                 ->setParameter('dateTo', $to);
         }
-        return $query->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+        if($limit !== 0){
+            return $query->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
+        } else {
+            return $query->getQuery()
+                ->getResult();
+        }
     }
 
     /**
