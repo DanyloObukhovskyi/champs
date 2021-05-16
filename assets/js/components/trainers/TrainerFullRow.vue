@@ -132,7 +132,9 @@
                     group: 'Групповая тренировка',
                     analytic: 'Анализ видео',
                 },
-                descriptionArrowStyle: {}
+                descriptionArrowStyle: {
+                    'left' : '13vw'
+                }
             }
         },
         watch: {
@@ -162,6 +164,7 @@
                         buttonNum = i + 1;
                     }
                 }
+
                 if (buttonNum !== null) {
                     switch (buttonNum) {
                         case 1 :
@@ -174,6 +177,8 @@
                             self.descriptionArrowStyle.left = '70vw';
                             break;
                     }
+                } else {
+                    self.descriptionArrowStyle.left = '13vw';
                 }
             },
             toggleDescription({type}) {
