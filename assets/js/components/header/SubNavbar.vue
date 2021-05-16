@@ -219,7 +219,7 @@ export default {
 }
 
 .help {
-    margin-top: .5vw;
+
 }
 
 .help img {
