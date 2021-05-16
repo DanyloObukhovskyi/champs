@@ -4,7 +4,7 @@
             Календарь
         </div>
         <div class="timetable-wrapper">
-            <div class="timetable-body">
+            <div class="timetable-body" :style="this.$route.fullPath === '/ru/trainer/cabinet' ? 'border-bottom-left-radius: 0;border-bottom-right-radius: 0;' : ''">
                 <div class="title">
                     Для того чтобы открыть слоты на тренировку
                 </div>
