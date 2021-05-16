@@ -96,6 +96,7 @@
 
         .slide-images {
             .slide {
+                height: 100%;
                 width: 31vw;
                 -webkit-animation: animation-translate-right 1500ms linear both;
                 animation: animation-translate-right 1500ms linear both;
