@@ -214,7 +214,7 @@ class TrainerController extends AbstractController
             ->findOneBy(['code' => $gameCode]);
 
         $users = $this->userService->getTrainers($filters, $game, $offset);
-        $trainers = $this->userService->teachersDecorator($users);
+        $trainers = $this->userService->teachersDecorator($users, $gameCode);
 
         return $this->json([
             'trainers' => $trainers,

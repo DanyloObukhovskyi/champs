@@ -90,9 +90,9 @@ class MarketplaceController extends AbstractController
     }
 
     /**
-     * @Route("/obucheniye/trainer/{userId}/{slug}")
+     * @Route("/obucheniye/{code}/trainer/{userId}/{slug}")
      */
-    public function trainerPage(Request $request, $userId, $slug)
+    public function trainerPage(Request $request, $code, $userId, $slug)
     {
         $trainer = $this->userService->find($userId);
 

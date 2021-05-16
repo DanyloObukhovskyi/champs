@@ -110,7 +110,7 @@ class UserService  extends EntityService
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function teachersDecorator($users)
+    public function teachersDecorator($users, $gameCode)
     {
         $response = [];
 
@@ -120,6 +120,7 @@ class UserService  extends EntityService
 
            if (isset($teacher))
            {
+               $teacher['gameCode'] = $gameCode;
                $response[] = $teacher;
            }
         }
@@ -156,7 +157,7 @@ class UserService  extends EntityService
         $videos = $this->trainerVideosService->decorator($videos);
 
         $trainerGame = $user->getGame();
-
+        $subGame = $user->getAdditionallyGame();
         if (!empty($user->getTimeZone())) {
             [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
                 ->getGmtTimezoneString($user->getTimeZone());
@@ -247,7 +248,8 @@ class UserService  extends EntityService
             'achievements' => $achievementsArray,
             'rankIcon' => isset($gameRank) ? $gameRank->getIcon() : null,
             'awards' => $awards,
-            'slug' => $generator->generate($user->getNickname())
+            'slug' => $generator->generate($user->getNickname()),
+            'subGame' => $subGame
         ];
     }
 

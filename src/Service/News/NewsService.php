@@ -58,6 +58,13 @@ class NewsService extends EntityService
                 ]);
             $bookmark = isset($newsBookmark);
         }
+        $newsTypeId = $news->getType();
+        $type = [];
+        if(!empty($newsTypeId)){
+            $type = $this->entityManager
+                ->getRepository(NewsType::class)
+                ->findOneBy(['id' => $newsTypeId]);
+        }
 
         if (empty($news->getUrl())) {
             $generator = new SlugGenerator;
@@ -72,7 +79,7 @@ class NewsService extends EntityService
             'logo' => $news->getLogo(),
             'date' => $news->getDate()->format('m-d H:i'),
             'url' => $news->getUrl(),
-            'type' => $news->getType(),
+            'type' => $type,
             'tags' => $tags,
             'game' => !empty($news->getGame()) ? $news->getGame() : null,
             'date_ru' => self::replaceMonth($news->getDate()->format('d F H:i')),

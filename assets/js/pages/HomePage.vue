@@ -103,9 +103,10 @@ export default {
                 search: null,
                 dateFrom: null,
                 dateTo: null,
-                tags: [],
+                formats: [],
                 titles: [],
                 texts: [],
+                tags: []
             }
         }
     },
@@ -197,9 +198,9 @@ export default {
             const self = this;
             window.onscroll = () => {
                 const scrollable = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
+                console.log(scrollable);
                 if (scrollable <= 2400) {
                     self.getNews()
-                } else if(scrollable <= 2600){
                     self.getHotNews()
                 }
             }

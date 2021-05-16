@@ -164,9 +164,9 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}/{slug}", name="news_view_single")
+     * @Route("/article/{id}/{format}/{game}/{title}", name="news_view_single")
      */
-    public function view($id, $slug, Request $request)
+    public function view($id, $format, $game, $title, Request $request)
     {
         /** @var News $news */
         $news = $this->entityManager

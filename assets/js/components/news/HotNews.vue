@@ -43,13 +43,32 @@
             }
         },
         methods:{
-            getSlug(news)
-            {
-                return this.getTitleUrl(news.title)
-                    .toLowerCase()
-                    .replace(/ /g,'-')
-                    .replace(/[^\w-]+/g,'')
+            getSlug(news) {
+                try{
+                    let type = this.getTitleUrl(news.type.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
                     ;
+                    let game = this.getTitleUrl(news.game.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let title =  this.getTitleUrl(news.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let date = this.getTitleUrl(news.date_ru)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return type+'/'+game+'/'+title+'-'+date;
+                } catch (e) {
+                    return news.slug;
+                }
             },
             getTitleUrl(title){
                 return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
