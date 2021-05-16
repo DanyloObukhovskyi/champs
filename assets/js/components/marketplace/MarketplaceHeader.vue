@@ -1,5 +1,5 @@
 <template>
-    <div class="marketplace-header">
+    <div class="marketplace-header text-center">
         <div class="slide-text" v-show="game === banner.game.code" v-for="banner in banners">
             <div class="title">
                 {{getTitle(banner).strFirst}}
@@ -84,7 +84,6 @@
                 color: #ff6d1d;
                 font-size: 1.8vw;
                 font-weight: 500;
-                line-height: normal;
                 margin-bottom: 1vw;
             }
 
