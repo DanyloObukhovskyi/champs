@@ -58,7 +58,7 @@ export default {
             const background = this.previewImage !== null ? this.previewImage: '/uploads/avatars/' + this.user.photo;
 
             return {
-                'background-image': `url('${background}')`
+                'background-image': `url('${background}'), url('/images/noLogoAvatar.png')`
             }
         }
     },

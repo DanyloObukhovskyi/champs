@@ -4,7 +4,7 @@
             <div class="avatar">
                 <div class="gradient d-block">
                     <img :src="'/uploads/avatars/' + trainer.photo"
-                         @error="$event.target.src = '/images/noLogo.png'">
+                         @error="$event.target.src = '/images/noLogoAvatar.png'">
                 </div>
             </div>
             <div class="data">

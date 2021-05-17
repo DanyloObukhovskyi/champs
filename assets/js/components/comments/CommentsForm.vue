@@ -42,7 +42,7 @@ export default {
     computed: {
         imageWrapperImage() {
             return {
-                'background-image': `url('${'/uploads/avatars/' + this.user.photo}')`
+                'background-image': `url('${'/uploads/avatars/' + this.user.photo}'), url('/images/noLogoAvatar.png')`
             }
         }
     },

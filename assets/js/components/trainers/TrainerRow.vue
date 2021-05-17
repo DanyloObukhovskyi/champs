@@ -168,8 +168,12 @@ export default {
             return MarketplaceService.getTrainerUrl(this.trainer.id, this.trainer.gameCode ,this.trainer.slug)
         },
         imageWrapperImage() {
+            let image = '/images/noLogoAvatar.png';
+            if(this.trainer.photo){
+                image = '/uploads/avatars/' + this.trainer.photo;
+            }
             return {
-                'background-image': `url('${'/uploads/avatars/' + this.trainer.photo}')`
+                'background-image': `url('${image}'), url('/images/noLogoAvatar.png')`
             }
         }
     },
