@@ -171,7 +171,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <h5>Размеры: <span id="image_size">1598x384</span></h5>
+                            <h5>Размеры: <span id="image_size">1210x160</span></h5>
                             <div class="uploadImgTxT" style="display: none;" id="upload_data">
                                 <div class="txt-orange uploadImgTxT ml-10" id="img_name"></div>
                                 <div class="txt-orange uploadImgTxT  ml-10 rmo_close"></div>
@@ -272,7 +272,7 @@
         const slidePreview = document.querySelector('.slide-preview');
         if (slidePreview) {
             if (event.target.value === 'home') {
-                $('#image_size').text('1598x384');
+                $('#image_size').text('1210x160');
                 $('#img_preview').height('20vw')
                 $('#img_preview').width('100%')
                 slidePreview.classList.add('main')
