@@ -280,7 +280,8 @@
 	  .left-box {
 		margin-top: 2vw;
 		width: 30%;
-
+          margin-bottom: 1.5vw;
+          
 		.trainer-calendar {
 		  .trainer-calendar-title {
 			color: #ff6d1d;
