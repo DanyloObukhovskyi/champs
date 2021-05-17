@@ -27,7 +27,9 @@
                             v-model="search"
                             label="title"
                             track-by="id"
+                            class="news-filters_multiselect"
                             selectLabel="Выберете формат"
+                            style="width: 100%"
                             @select="addWordFormat"
                             :options="formats">
                     </multiselect>
@@ -294,30 +296,32 @@ export default {
 .filters_text{
     color: #212529;
 }
+.news-filters_multiselect::v-deep .multiselect {
+    width: 100% !important;
+    background: rgb(59, 59, 59) !important;
+    color: #adadad !important;
+}
+.news-filters_multiselect::v-deep .multiselect__tags{
+    width: 100% !important;
+    background: rgb(59, 59, 59) !important;
+    color: #adadad !important;
+}
+.news-filters_multiselect::v-deep .multiselect__content-wrapper{
+    background: rgb(59, 59, 59) !important;
+    color: #adadad !important;
+}
+.news-filters_multiselect::v-deep .multiselect__input, .multiselect__single{
+    background: rgb(59, 59, 59) !important;
+    color: #adadad !important;
+}
+.news-filters_multiselect::v-deep .focus-visible{
+    color: #adadad !important;
+}
+.news-filters_multiselect::v-deep .multiselect__content-wrapper{
+    width: 100% !important;
+}
+
 </style>
 <style>
-    .multiselect{
-        width: 100% !important;
-        background: rgb(59, 59, 59) !important;
-        color: #adadad !important;
-    }
-    .multiselect .multiselect__tags{
-        width: 100% !important;
-        background: rgb(59, 59, 59) !important;
-        color: #adadad !important;
-    }
-    .multiselect__content-wrapper{
-        background: rgb(59, 59, 59) !important;
-        color: #adadad !important;
-    }
-    .multiselect__input, .multiselect__single{
-        background: rgb(59, 59, 59) !important;
-        color: #adadad !important;
-    }
-    .focus-visible{
-        color: #adadad !important;
-    }
-    .multiselect__content-wrapper{
-        width: 100% !important;
-    }
+
 </style>
