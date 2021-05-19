@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Lessons;
 use App\Entity\Payment;
+use App\Entity\Teachers;
+use App\Message\PaymentLessonMail;
 use App\Service\Interkassa\InterkassaService;
 use App\Service\LessonService;
 use App\Service\Payment\PaymentService;
 use App\Service\Payment\YandexKassa\YandexKassaPaymentService;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,7 +77,7 @@ class InterkassaController extends AbstractController
     /**
      * @Route ("/webhook")
      */
-    public function webhook(Request $request)
+    public function webhook(Request $request, Swift_Mailer $mailer)
     {
 
         /** @var Payment $payment */
@@ -97,6 +100,9 @@ class InterkassaController extends AbstractController
 
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
+
+
+            $this->dispatchMessage(new PaymentLessonMail($mailer,  $payment->getLesson()));
         }
 
         return $this->render('templates/payment/payment.send.html.twig',[
