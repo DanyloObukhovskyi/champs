@@ -37,8 +37,10 @@ trait LessonMailHandler
      */
     public function makeStudentEmail(Lessons $lesson)
     {
+        $lessonDuration = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
+        ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
         $this->timezoneService = new TimeZoneService();
-        
+
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
             $lesson->getTrainer()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
@@ -60,6 +62,7 @@ trait LessonMailHandler
             }
         }
 
+        $timeOffset = 0;
         if ($trainerTimezone < 0 and $userTimezone < 0) {
             $timeOffset = $trainerTimezone + abs($userTimezone);
         } elseif($trainerTimezone < 0 or $userTimezone < 0) {
@@ -68,8 +71,7 @@ trait LessonMailHandler
             $timeOffset = $trainerTimezone - $userTimezone;
         }
 
-        $carbon = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
-            ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
+        $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $lesson->getDateTimeFrom());
 
         if($timeOffset < 0){
             $carbon->setHour($timeOffset);
@@ -77,7 +79,7 @@ trait LessonMailHandler
             $carbon->setHour(0 - $timeOffset);
         }
 
-        $lessonDuration = $carbon;
+        $dateWithTimeZone = $carbon;
 
         $params = [
             'user' => $lesson->getStudent(),
@@ -85,7 +87,8 @@ trait LessonMailHandler
             'lesson' => $lesson,
             'game' => $lesson->getTrainer()->getGame(),
             'isTrainer' => false,
-            'lessonDuration' => $lessonDuration
+            'lessonDuration' => $lessonDuration,
+            'dateWithTimeZone' => $dateWithTimeZone
         ];
         $html = $this->renderView($this->template, $params);
 

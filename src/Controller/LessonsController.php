@@ -166,7 +166,7 @@ class LessonsController extends AbstractController
         } else {
             $userTimezone = (int)$data->timezone;
         }
-
+        $timeOffset = 0;
         if ($trainerTimezone < 0 and $userTimezone < 0) {
             $timeOffset = $trainerTimezone + abs($userTimezone);
         } elseif($trainerTimezone < 0 or $userTimezone < 0) {

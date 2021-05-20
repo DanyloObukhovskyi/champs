@@ -76,8 +76,8 @@
                         продолжительностью {{ lessonDuration }} {{ lessonDuration > 1 ? 'часов': 'час' }}!
                     </p>
                     <p class="mt-2">
-                        Ваш урок состоится <strong>{{ lesson.dateTimeFrom|date('Y.m.d') }}</strong>
-                        в <strong>{{ lesson.dateTimeFrom|date('H') }}:00</strong>.
+                        Ваш урок состоится <strong>{{ lesson.dateWithTimeZone|date('Y.m.d') }}</strong>
+                        в <strong>{{ lesson.dateWithTimeZone|date('H') }}:00</strong>.
                     </p>
                     <p class="mt-2">
                         Теперь вы можете пообщаться с вашим тренером в
