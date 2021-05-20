@@ -126,7 +126,7 @@ class LessonsController extends AbstractController
      *
      * @Route("/lessons/create/", methods={"GET","POST"}, name="create_student_trainer_lesson")
      */
-    public function createNewLesson(Request $request, Swift_Mailer $mailer)
+    public function createNewLesson(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent(), false);
@@ -204,13 +204,7 @@ class LessonsController extends AbstractController
                 $user,
                 $data->type
             );
-
-        $lessons = $this->lessonService->getLessonsByIds($lessonIds);
-
-        foreach ($lessons as $lesson) {
-            // Dispatch payment mail
-            $this->dispatchMessage(new PaymentLessonMail($mailer, $lesson));
-        }
+        
         return $this->json(['ids' => $lessonIds]);
     }
 

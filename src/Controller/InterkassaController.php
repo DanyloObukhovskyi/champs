@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use YandexCheckout\Model\ConfirmationType;
+use Swift_Mailer;
 
 /**
  * @Route("/{_locale}/interkassa", requirements={"locale": "ru"})
@@ -77,7 +78,7 @@ class InterkassaController extends AbstractController
     /**
      * @Route ("/webhook")
      */
-    public function webhook(Request $request)
+    public function webhook(Request $request, Swift_Mailer $mailer)
     {
 
         /** @var Payment $payment */
@@ -101,7 +102,7 @@ class InterkassaController extends AbstractController
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
 
-
+            $this->dispatchMessage(new PaymentLessonMail($mailer, $payment->getLesson()));
         }
 
         return $this->render('templates/payment/payment.send.html.twig',[
