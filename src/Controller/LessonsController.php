@@ -205,7 +205,12 @@ class LessonsController extends AbstractController
                 $data->type
             );
 
+        $lessons = $this->lessonService->getLessonsByIds($lessonIds);
 
+        foreach ($lessons as $lesson) {
+            // Dispatch payment mail
+            $this->dispatchMessage(new PaymentLessonMail($mailer, $lesson));
+        }
         return $this->json(['ids' => $lessonIds]);
     }
 
