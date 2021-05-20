@@ -85,7 +85,7 @@
             </div>
             <div class="achievements">
                 <label v-if="trainer.achievements.length > 0">Достижения</label>
-                <div class="achievement" v-for="achievement in trainer.achievements">
+                <div class="achievement" v-for="achievement in trainer.achievements.slice(0, 3)">
                     <div class="name">
                         {{ achievement.tournament }}
                     </div>

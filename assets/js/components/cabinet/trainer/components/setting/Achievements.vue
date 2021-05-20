@@ -140,9 +140,9 @@
             checkToggle(achievement) {
                 const checkedAchievements = this.achievements.filter(a => a.show === true);
 
-                if (!achievement.show && checkedAchievements.length >= 3) {
-                    return this.showError('Можно выбрать не больше 3х!')
-                }
+                // if (!achievement.show && checkedAchievements.length >= 3) {
+                //     return this.showError('Можно выбрать не больше 3х!')
+                // }
                 achievement.show = !achievement.show
             }
         },
