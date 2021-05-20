@@ -116,7 +116,7 @@ class UserService  extends EntityService
 
         foreach ($users as $user)
         {
-           $teacher = $this->decorator($user);
+           $teacher = $this->decorator($user, false, $gameCode);
 
            if (isset($teacher))
            {
@@ -130,11 +130,12 @@ class UserService  extends EntityService
     /**
      * @param User $user
      * @param bool $isFull
+     * @param mixed $code
      * @return array
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function decorator(User $user, $isFull = false)
+    public function decorator(User $user, $isFull = false, $code = null)
     {
         /** @var Teachers $trainer */
         $trainer = $this->entityManager->getRepository(Teachers::class)
@@ -191,13 +192,17 @@ class UserService  extends EntityService
                 'achievement' => $achievement->getAchievement()
             ];
         }
+        $isSubGame = false;
+        if(!empty($code)){
+            $isSubGame = $trainerGame->getCode() !== $code ? true : false;
+        }
 
-        $rank = (int)$user->getRang();
+        $rank = $isSubGame ? (int)$user->getAdditionallyRank() : (int)$user->getRang();
 
         if (is_int((int)$rank)){
             $gameRank = $this->entityManager
                 ->getRepository(GameRank::class)
-                ->getByPoints($user->getGame(), $rank);
+                ->getByPoints($isSubGame ? $user->getAdditionallyGame() : $user->getGame(), $rank);
         } else {
             $gameRank = null;
         }
@@ -234,7 +239,7 @@ class UserService  extends EntityService
             'photo' => $user->getPhoto(),
             'name' => $user->getName(),
             'game' => $trainerGame,
-            'rank' => $user->getRang(),
+            'rank' => $rank,
             'family' => $user->getFamily(),
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
