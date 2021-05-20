@@ -608,7 +608,7 @@ class LessonService extends EntityService
             'costWithPercentage' => $user->getIsTrainer() ? $this->getCostWithPercentage($lesson) : $this->getCostWithOutPercentage($lesson),
             'studentPrice' => $this->getCostWithOutPercentage($lesson),
             'trainerNotice' => $lesson->getTrainerNotice(),
-            'typeRu' => $translator->trans('trainings.' . $lesson->getType()),
+            'typeRu' => $translator->trans('trainings.titles.' . $lesson->getType()),
             'dateFrom' => $dateFrom->format('Y.m.d H:i:s'),
             'dateTo' => $dateTo->format('Y.m.d H:i:s'),
             'trainerStatus' => $lesson->getTrainerStatus(),
