@@ -196,7 +196,7 @@ class UserService  extends EntityService
         if(!empty($code)){
             $isSubGame = $trainerGame->getCode() !== $code ? true : false;
         }
-
+        var_dump($isSubGame,$trainerGame->getCode(),$code);
         $rank = $isSubGame ? (int)$user->getAdditionallyRank() : (int)$user->getRang();
 
         if (is_int((int)$rank)){
