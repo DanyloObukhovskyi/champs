@@ -6,11 +6,14 @@
                     <div class="more-detail-body">
                         <div class="more-detail-head">
                             <div class="title-wrapper">
-                                <div class="title">
+                                <div class="title" v-if="lesson.isOver">
                                     Подробные данные по завершенной тренировке.
                                 </div>
+                                <div class="title" v-else>
+                                    Подробные данные по предстоящей тренировке.
+                                </div>
                                 <div class="sub-title">
-                                    {{ date }} ноября 2020 с {{ timeFrom }} до {{ timeTo }} - {{ lesson.typeRu }}
+                                    {{ date }} {{lesson.month}} {{ new Date(lesson.dateFrom).getFullYear() }} с {{ timeFrom }} до {{ timeTo }} - {{ lesson.typeRu }}
                                 </div>
                             </div>
                         </div>

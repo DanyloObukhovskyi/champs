@@ -596,7 +596,10 @@ class LessonService extends EntityService
         $decorateTrainer = $this->userService->decorator($lesson->getTrainer());
 
         $month = $translator->trans($dateFrom->format('F'));
-
+        $isOver = false;
+        if($dateFrom < Carbon::now()->format('Y.m.d H:i:s')){
+            $isOver = true;
+        }
         return [
             'id' => $lesson->getId(),
             'type' => $lesson->getType(),
@@ -619,7 +622,8 @@ class LessonService extends EntityService
             ],
             'availableReview' =>  $lesson->getStudentStatus(),
             'dateAfter7Days' => $dateTo->modify('+7 days')->format('Y.m.d H:i:s'),
-            'today' => Carbon::now()->format('Y.m.d H:i:s')
+            'today' => Carbon::now()->format('Y.m.d H:i:s'),
+            'isOver' => $isOver
         ];
     }
 
