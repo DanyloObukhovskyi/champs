@@ -1,11 +1,13 @@
 <template>
     <div class="marketplace-header text-center">
         <div class="slide-text" v-show="game === banner.game.code" v-for="banner in banners">
-            <div class="title">
-                {{getTitle(banner).strFirst}}
-                <div> {{getTitle(banner).strSecond}}</div>
-            </div>
-            <div class="text" v-html="banner.text">
+            <div class="slide-text-block">
+                <div class="title">
+                    {{getTitle(banner).strFirst}}
+                    <div> {{getTitle(banner).strSecond}}</div>
+                </div>
+                <div class="text" v-html="banner.text">
+                </div>
             </div>
         </div>
         <div class="slide-images">
@@ -79,6 +81,11 @@
             background-color: #ffffff;
             -webkit-animation: animation-translate-left 1500ms linear both;
             animation: animation-translate-left 1500ms linear both;
+
+            .slide-text-block{
+                top: 50%;
+                transform: translate(0, -50%);
+            }
 
             .title {
                 color: #ff6d1d;
