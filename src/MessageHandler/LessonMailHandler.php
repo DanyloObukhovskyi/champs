@@ -6,6 +6,7 @@ namespace App\MessageHandler;
 
 use App\Entity\Lessons;
 use App\Entity\Teachers;
+use App\Service\TimeZoneService;
 use App\Service\UserService;
 use App\Traits\RenderView;
 use Carbon\Carbon;
@@ -13,6 +14,11 @@ use Swift_Message;
 
 trait LessonMailHandler
 {
+    /**
+     * @var TimeZoneService
+     */
+    public $timezoneService;
+
     use RenderView;
 
     /**
@@ -31,7 +37,8 @@ trait LessonMailHandler
      */
     public function makeStudentEmail(Lessons $lesson)
     {
-
+        $this->timezoneService = new TimeZoneService();
+        
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
             $lesson->getTrainer()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
