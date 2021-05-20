@@ -77,7 +77,7 @@ class InterkassaController extends AbstractController
     /**
      * @Route ("/webhook")
      */
-    public function webhook(Request $request)
+    public function webhook(Request $request, Swift_Mailer $mailer)
     {
 
         /** @var Payment $payment */
@@ -102,6 +102,7 @@ class InterkassaController extends AbstractController
             $this->entityManager->flush();
 
 
+            $this->dispatchMessage(new PaymentLessonMail($mailer,  $payment->getLesson()));
         }
 
         return $this->render('templates/payment/payment.send.html.twig',[
