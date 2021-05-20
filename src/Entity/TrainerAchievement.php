@@ -33,7 +33,7 @@ class TrainerAchievement implements \JsonSerializable
     private $isShow;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Teachers::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Teachers::class, cascade={})
      */
     private $trainer;
 
