@@ -18,7 +18,7 @@
                     О тренере
                 </div>
                 <div class="about-text">
-                    <pre>{{ trainer.trainer.method }}</pre>
+                    <pre v-html="trainer.trainer.method"></pre>
                 </div>
             </div>
             <trainer-timetable
