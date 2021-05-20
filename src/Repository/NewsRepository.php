@@ -82,14 +82,38 @@ class NewsRepository extends ServiceEntityRepository
                     ->setParameter('text', "%$text%");
             }
         }
+        if(empty($dateFrom)){
+            $dateFrom = date('Y-m-d', strtotime('- 1 year'));
+        }
+        if(empty($dateTo)){
+            $dateTo = date('Y-m-d');
+        }
+        if (!empty($dateFrom) && !empty($dateTo)) {
+            $from = new \DateTime("$dateFrom 00:00:00");
+            $to = new \DateTime("$dateTo 23:59:59");
+            $query->andWhere('n.date BETWEEN :dateFrom AND :dateTo')
+                ->setParameter('dateFrom', $from)
+                ->setParameter('dateTo', $to);
+        } else {
+            if (!empty($dateFrom)) {
+                $from = new \DateTime("$dateFrom 00:00:00");
+                $query->andWhere('n.date >= :dateFrom')
+                    ->setParameter('dateFrom', $from);
+            }
+            if (!empty($dateTo)) {
+                $to = new \DateTime("$dateTo 23:59:59");
+                $query->andWhere('n.date <= :dateTo')
+                    ->setParameter('dateTo', $to);
+            }
+        }
         if (!empty($dateFrom)) {
             $from = new \DateTime("$dateFrom 00:00:00");
-            $query->andWhere('n.created_at >= :dateFrom')
+            $query->andWhere('n.date >= :dateFrom')
                 ->setParameter('dateFrom', $from);
         }
         if (!empty($dateTo)) {
             $to = new \DateTime("$dateTo 23:59:59");
-            $query->andWhere('n.created_at <= :dateTo')
+            $query->andWhere('n.date <= :dateTo')
                 ->setParameter('dateTo', $to);
         }
         if($limit !== 0){
