@@ -82,7 +82,7 @@
                         <div class="more-detail-bottom">
                             <div class="price" v-if="user.isTrainer">
                                 <div class="hour-price">
-                                    Стоимость для клиента: <span>{{ hourPrice }} RUB</span>
+                                    Стоимость для клиента: <span>{{ lesson.studentPrice }} RUB</span>
                                 </div>
                                 <div class="lesson-price">
                                     Зачислено на счет: <span>{{ lesson.cost }} RUB</span>
