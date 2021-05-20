@@ -155,7 +155,7 @@
                                     </div>
                                     <label>Ранг</label>
                                     <div class="input">
-                                        <input type="number" class="input2_txt" name="rank" :value="choseRank?.rang">
+                                        <input type="text" class="input2_txt" name="rank" :value="choseRank?.rang">
                                     </div>
                                     <label>От</label>
                                     <div class="input">
