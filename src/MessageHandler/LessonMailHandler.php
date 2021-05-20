@@ -71,15 +71,10 @@ trait LessonMailHandler
             $timeOffset = $trainerTimezone - $userTimezone;
         }
 
-        $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $lesson->getDateTimeFrom());
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $lesson->getDateTimeFrom());
+        $dateFrom->setHour($dateFrom->hour + $timeOffset);
 
-        if($timeOffset < 0){
-            $carbon->setHour($timeOffset);
-        } else {
-            $carbon->setHour(0 - $timeOffset);
-        }
-
-        $dateWithTimeZone = $carbon;
+        $dateWithTimeZone = $dateFrom;
 
         $params = [
             'user' => $lesson->getStudent(),
