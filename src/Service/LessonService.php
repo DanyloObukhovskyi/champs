@@ -597,7 +597,7 @@ class LessonService extends EntityService
 
         $month = $translator->trans($dateFrom->format('F'));
         $isOver = false;
-        if($dateFrom < Carbon::now()->format('Y.m.d H:i:s')){
+        if($dateFrom->format('Y.m.d H:i:s') < Carbon::now()->format('Y.m.d H:i:s')){
             $isOver = true;
         }
         return [
