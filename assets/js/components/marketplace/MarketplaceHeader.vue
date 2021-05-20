@@ -84,7 +84,8 @@
 
             .slide-text-block{
                 top: 50%;
-                transform: translate(0, -50%);
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
 
             .title {
@@ -92,6 +93,7 @@
                 font-size: 1.8vw;
                 font-weight: 500;
                 margin-bottom: 1vw;
+                margin-top: 0px
             }
 
             .text {
