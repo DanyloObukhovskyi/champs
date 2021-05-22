@@ -32,6 +32,11 @@ class TrainerBannerLink
      */
     private $link;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $chanel_name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -83,5 +88,18 @@ class TrainerBannerLink
     public function setLink($link): void
     {
         $this->link = $link;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChanelName()
+    {
+        return $this->chanel_name;
+    }
+
+    public function setChanelName($chanel_name): void
+    {
+        $this->chanel_name = $chanel_name;
     }
 }

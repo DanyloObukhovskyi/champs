@@ -231,7 +231,18 @@ class Marketplace_c extends CI_Controller
                 }
             }
         }
+        if (isset($_POST['chanel_name'])) {
+            foreach ($this->trainer_banner_m->social_types as $type => $title){
+                if (isset($_POST['chanel_name'][$type]) and !empty($_POST['chanel_name'][$type])) {
+                    $bannerLink = [];
+                    $bannerLink['trainer_banner_id'] = $bannerId;
+                    $bannerLink['type'] = $type;
+                    $bannerLink['chanel_name'] = $_POST['chanel_name'][$type];
 
+                    $this->trainer_banner_link_m->update_or_create($bannerLink);
+                }
+            }
+        }
         if (isset($_POST['id'])) {
             $this->trainer_banner_m->update($data);
         }

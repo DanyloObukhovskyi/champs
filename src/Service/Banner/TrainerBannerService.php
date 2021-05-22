@@ -37,16 +37,21 @@ class TrainerBannerService extends EntityService
     public function decorate(TrainerBanner $banner)
     {
         $bannerLinks = [];
-
+        $bannerChanels = [];
         /** @var TrainerBannerLink $link */
         foreach ($banner->getLinks() as $link) {
             $bannerLinks[$link->getType()] = $link->getLink();
+        }
+        /** @var TrainerBannerLink $chanelName */
+        foreach ($banner->getChanelName() as $chanelName) {
+            $bannerChanels[$chanelName->getType()] = $chanelName->getChanelName();
         }
         return [
             'img' => $banner->getImg(),
             'text' => $banner->getText(),
             'title' => $banner->getTitle(),
-            'links' => $bannerLinks
+            'links' => $bannerLinks,
+            'chanelNames' => $bannerChanels
         ];
     }
 }

@@ -43,6 +43,11 @@ class TrainerBanner
      */
     private $links;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TrainerBannerLink::class, mappedBy="trainerBanner")
+     */
+    private $chanel_name;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
@@ -115,6 +120,19 @@ class TrainerBanner
     public function setLinks(ArrayCollection $links): void
     {
         $this->links = $links;
+    }
+
+    public function getChanelName()
+    {
+        return $this->chanel_name;
+    }
+
+    /**
+     * @param ArrayCollection $chanel_name
+     */
+    public function setChanelName(ArrayCollection $chanel_name): void
+    {
+        $this->chanel_name = $chanel_name;
     }
 
     /**

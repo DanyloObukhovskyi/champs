@@ -14,7 +14,7 @@
                         <img src="/images/marketplace/vk.svg">
                     </div>
                     <div class="social-title">
-                        CHAMPS_PRO
+                        {{ banner.chanelNames.vk ? banner.chanelNames.vk : 'CHAMPS_PRO' }}
                     </div>
                 </a>
                 <a :href="banner.links.youtube ? banner.links.youtube : null">
@@ -22,15 +22,15 @@
                         <img src="/images/marketplace/youtube.svg">
                     </div>
                     <div class="social-title">
-                        CHAMPSPRO
+                        {{ banner.chanelNames.youtube ? banner.chanelNames.youtube : 'CHAMPS_PRO' }}
                     </div>
                 </a>
                 <a :href="banner.links.telegram ? banner.links.telegram : null">
                     <div class="icon">
-                        <img src="/images/marketplace/telegram.svg">
+                        <img src="/images/marketplace/tiktok.png">
                     </div>
                     <div class="social-title">
-                        CHAMPS_PRO
+                        {{ banner.chanelNames.telegram ? banner.chanelNames.telegram : 'CHAMPS_PRO' }}
                     </div>
                 </a>
                 <a :href="banner.links.twitch ? banner.links.twitch : null">
@@ -38,7 +38,7 @@
                         <img src="/images/marketplace/twitch.svg">
                     </div>
                     <div class="social-title">
-                        CHAMPSPRO
+                        {{ banner.chanelNames.twitch ? banner.chanelNames.twitch : 'CHAMPS_PRO' }}
                     </div>
                 </a>
             </div>
@@ -63,6 +63,9 @@ export default {
             }
             return style;
         }
+    },
+    mounted() {
+        console.log(this.banner);
     }
 }
 </script>

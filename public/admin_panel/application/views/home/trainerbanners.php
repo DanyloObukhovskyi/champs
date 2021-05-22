@@ -98,8 +98,15 @@
                                         </div>
                                         <template v-for="(title, type) in linkTypes">
                                             <label class="label" for="">{{title}}</label>
-                                            <div class="input mb-5">
-                                                <input :name="`links[${type}]`" :placeholder="title" type="text" :value="getLinkByType(type)" class="fw-600 input2_txt">
+                                            <div class="mb-5">
+                                                <h5>Ссылка</h5>
+                                                <div class="input">
+                                                    <input :name="`links[${type}]`" :placeholder="title" type="text" :value="getLinkByType(type)" class="fw-600 input2_txt">
+                                                </div>
+                                                <h5>Название канала</h5>
+                                                <div class="input">
+                                                    <input :name="`chanel_name[${type}]`" :placeholder="title" type="text" :value="getTitleByType(type)" class="fw-600 input2_txt">
+                                                </div>
                                             </div>
                                         </template>
                                     </div>
@@ -340,6 +347,14 @@
                     const link = this.edit.links.find(e => e.type === type)
                     if (link) {
                         return link.link;
+                    }
+                }
+            },
+            getTitleByType(type) {
+                if (this.edit !== null) {
+                    const link = this.edit.links.find(e => e.type === type)
+                    if (link) {
+                        return link.chanel_name;
                     }
                 }
             },
