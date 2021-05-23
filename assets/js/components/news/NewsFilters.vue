@@ -320,6 +320,10 @@ export default {
 .news-filters_multiselect::v-deep .multiselect__content-wrapper{
     width: 100% !important;
 }
+.news-filters_multiselect::v-deep .multiselect__single{
+    background: rgb(59, 59, 59) !important;
+    color: #adadad !important;
+}
 
 </style>
 <style>
