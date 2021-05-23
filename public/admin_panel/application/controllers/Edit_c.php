@@ -637,7 +637,7 @@ class Edit_c extends CI_Controller
                     die();
                 }
                 if (!empty($delete_trainer)) {
-                    redirect(base_url("c-admin/trainers/page/1"));
+                    redirect(base_url("c-admin/trainers/all/page/1"));
                     die();
                 }
             }

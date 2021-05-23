@@ -15,7 +15,8 @@
             "admins" => "admins",
             "payments" => "payments",
             "trainer_lesson_price" => "trainer_lesson_price",
-            "trainer_achievement" => "trainer_achievement"
+            "trainer_achievement" => "trainer_achievement",
+            'trainer_video' => "trainer_video"
         );
 		
 		public function __construct()
@@ -117,9 +118,13 @@
 			return false;
 		}
 		
-		function delete_trainer_as_teacher($id=0) {
+		function delete_trainer_as_teacher($id = 0) {
 			$id = (int) $id;
 			if ($id > 0) {
+			    $trainerId = $this->getOne(['userid' => $id], $this->table['trainers'])['id'];
+                $this->db->delete($this->table['trainer_video'], array('trainer_id' => $trainerId));
+                $this->db->delete($this->table['trainer_lesson_price'], array('trainer_id' => $trainerId));
+                $this->db->delete($this->table['trainer_achievement'], array('trainer_id' => $trainerId));
 				$this->db->delete($this->table['trainers'], array('userid' => $id));
 				return true;
 			}
@@ -158,4 +163,8 @@
 			
 			return false;
 		}
+
+        public function getOne($where, $table) {
+            return $this->db->limit(1)->get_where($table, $where)->row_array();
+        }
 	}
