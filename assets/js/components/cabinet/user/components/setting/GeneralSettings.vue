@@ -107,7 +107,7 @@
                             placeholder="Введите название">
                     </multiselect>
                 </div>
-                <div class="ranks">
+                <div class="ranks" v-if="!user.game.showRank">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
@@ -127,7 +127,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="ranks">
+                <div class="ranks" v-else>
+                    <div class="form-group">
+                        <label>Звание</label>
+                        <multiselect
+                                v-model="selectedRank"
+                                :options="rankForSearch"
+                                :multiple="false"
+                                :searchable="false"
+                                @select="getRank"
+                                label="rank"
+                                track-by="rank"
+                                placeholder="Выберете из списка">
+                        </multiselect>
+                    </div>
+                    <div class="form-group rank-icon" v-if="rankIcon !== null">
+                        <label>Ранг</label>
+                        <div class="input">
+                            <img :src="'/images/ranks/' + rankIcon">
+                        </div>
+                    </div>
+                </div>
+                <div class="ranks" v-if="!user.additionallyGame.showRank">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
@@ -139,6 +160,29 @@
                         <div class="input">
                             <input type="text" disabled v-model="additionallyRankString">
                         </div>
+                    </div>
+                    <div class="form-group rank-icon" v-if="additionallyRankIcon !== null">
+                        <label>Ранг</label>
+                        <div class="input">
+                            <img :src="'/images/ranks/' + additionallyRankIcon">
+                        </div>
+                    </div>
+                    <div class="form-group rank-icon-null" v-else>
+                    </div>
+                </div>
+                <div class="ranks" v-else>
+                    <div class="form-group">
+                        <label>Звание</label>
+                        <multiselect
+                                v-model="selectedAdditionalRank"
+                                :options="rankForAdditionalSearch"
+                                :multiple="false"
+                                :searchable="false"
+                                @select="getAdditionalRank"
+                                label="rank"
+                                track-by="rank"
+                                placeholder="Выберете из списка">
+                        </multiselect>
                     </div>
                     <div class="form-group rank-icon" v-if="additionallyRankIcon !== null">
                         <label>Ранг</label>
@@ -201,7 +245,12 @@ export default {
             cities: [],
             loadCities: false,
             userGender: null,
+            selectRank: null,
+            selectAdditionalRank: null
         }
+    },
+    watch:{
+
     },
     computed: {
         ...mapGetters([
@@ -211,6 +260,34 @@ export default {
             'ranks',
             'timezones'
         ]),
+        rankForSearch(){
+            if (this.user.game !== null) {
+                return this.ranks[this.user.game.code];
+            }
+        },
+        selectedRank() {
+            if(this.rankForSearch !== null){
+                if(this.selectRank !== null){
+                    return this.selectRank;
+                } else {
+                    return this.getRankForSearch();
+                }
+            }
+        },
+        rankForAdditionalSearch(){
+            if (this.user.additionallyGame !== null) {
+                return this.ranks[this.user.additionallyGame.code];
+            }
+        },
+        selectedAdditionalRank() {
+            if(this.rankForAdditionalSearch !== null){
+                if(this.selectAdditionalRank !== null){
+                    return this.selectAdditionalRank;
+                } else {
+                    return this.getRankForAdditionalSearch();
+                }
+            }
+        },
         userRank() {
             if (this.user.game !== null) {
                 const ranks = this.ranks[this.user.game.code];
@@ -364,6 +441,61 @@ export default {
 
                 this.user.gender = gender ? gender : null;
             }
+        },
+        getRanksList() {
+            if (this.user.game !== null) {
+                this.rankForSearch = this.ranks[this.user.game.code];
+            }
+        },
+        getRankForSearch(){
+            if (this.user.game !== null) {
+                const ranks = this.ranks[this.user.game.code];
+
+                if (ranks) {
+                    const userRank = ranks.find(e => {
+                        if (Number(e.pointsFrom) <= Number(this.user.rank)) {
+                            if (e.pointsTo === null || Number(e.pointsTo) >= Number(this.user.rank)) {
+                                return e;
+                            }
+                        }
+                    })
+                    if (userRank !== undefined && userRank !== null) {
+                        return userRank;
+                    }
+                }
+                return null;
+            } else {
+                return null;
+            }
+        },
+        getRank(selectedOption, id){
+            this.selectRank = selectedOption;
+            this.user.rank = selectedOption.pointsFrom;
+        },
+        getRankForAdditionalSearch(){
+            if (this.user.additionallyGame !== null) {
+                const ranks = this.ranks[this.user.additionallyGame.code];
+
+                if (ranks) {
+                    const userRank = ranks.find(e => {
+                        if (Number(e.pointsFrom) <= Number(this.user.additionallyRank)) {
+                            if (e.pointsTo === null || Number(e.pointsTo) >= Number(this.user.additionallyRank)) {
+                                return e;
+                            }
+                        }
+                    })
+                    if (userRank !== undefined && userRank !== null) {
+                        return userRank;
+                    }
+                }
+                return null;
+            } else {
+                return null;
+            }
+        },
+        getAdditionalRank(selectedAdditionalOption, id){
+            this.selectAdditionalRank = selectedAdditionalOption;
+            this.user.additionallyRank = selectedAdditionalOption.pointsFrom;
         }
     },
     mounted() {

@@ -99,6 +99,10 @@
                                         <div class=" mb-5">
                                             <input name="is_marketplace" :checked="editGame !== null && editGame.is_marketplace === '1'" type="checkbox" class="form-check-input">
                                         </div>
+                                        <label class="label" for="">Показывать ранг вместо (MMR/ELO)?</label>
+                                        <div class=" mb-5">
+                                            <input name="show_rank" :checked="editGame !== null && editGame.show_rank === '1'" type="checkbox" class="form-check-input">
+                                        </div>
                                     </div>
                                 </form>
                             </div>

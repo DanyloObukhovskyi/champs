@@ -74,7 +74,7 @@
                 <label>Ранг</label>
                 <div>
                     <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
-                    {{ trainer.rank }}
+                    {{ getRank(trainer) }}
                 </div>
                 <template v-if="trainer.awards.length > 0">
                     <label>Награды</label>
@@ -109,6 +109,8 @@
     import TrainerCostButton from "./TrainerCostButton";
     import TrainerRank from "./TrainerRank";
     import MarketplaceService from "../../services/MarketplaceService";
+    import {mapGetters} from "vuex";
+    import RankingService from "../../services/RankingService"
 
     export default {
         name: "TrainerFullRow",
@@ -134,7 +136,8 @@
                 },
                 descriptionArrowStyle: {
                     'left' : '13vw'
-                }
+                },
+                ranksForSearch: []
             }
         },
         watch: {
@@ -188,7 +191,38 @@
                     this.type = type;
                 }
                 this.$emit('setTrainingType', type)
+            },
+            getRank(trainer){
+                if(!trainer.game.showRank){
+                    return trainer.rank;
+                } else {
+                    const ranks = this.ranksForSearch[trainer.game.code];
+                    if (ranks) {
+                        const userRank = ranks.find(e => {
+                            if (Number(e.pointsFrom) <= Number(trainer.rank)) {
+                                if (e.pointsTo === null || Number(e.pointsTo) >= Number(trainer.rank)) {
+                                    return e;
+                                }
+                            }
+                        })
+                        if (userRank !== undefined && userRank !== null) {
+                            return userRank.rank;
+                        } else {
+                            return trainer.rank;
+                        }
+                    }
+                    return trainer.rank;
+                }
+            },
+            async getRanks(){
+                RankingService.getAllRanks().then(
+                    data => {
+                    this.ranksForSearch = data
+                });
             }
+        },
+        created() {
+            this.getRanks();
         },
         mounted() {
             this.type = this.trainingType;

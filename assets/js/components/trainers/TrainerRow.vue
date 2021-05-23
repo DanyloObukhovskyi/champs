@@ -76,7 +76,7 @@
                 <div class="d-flex align-items-center">
                     <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
                     <div>
-                        {{ trainer.rank }}
+                        {{ getRank(trainer) }}
                         <div class="global-elite" v-if="trainer.trainer.globalElite">
                             THE GLOBAL ELITE
                         </div>
@@ -106,6 +106,7 @@ import TrainerRowVideoSlider from "./TrainerRowVideoSlider";
 import TrainerCostButton from "./TrainerCostButton";
 import TrainerRank from "./TrainerRank";
 import MarketplaceService from "../../services/MarketplaceService";
+import RankingService from "../../services/RankingService";
 
 export default {
     name: "TrainerRow",
@@ -128,7 +129,8 @@ export default {
                 group: 'Групповая тренировка',
                 analytic: 'Анализ видео',
             },
-            descriptionArrowStyle: {}
+            descriptionArrowStyle: {},
+            ranksForSearch: []
         }
     },
     watch: {
@@ -197,6 +199,37 @@ export default {
                 })
             }
         },
+        getRank(trainer){
+            if(!trainer.game.showRank){
+                return trainer.rank;
+            } else {
+                const ranks = this.ranksForSearch[trainer.game.code];
+                if (ranks) {
+                    const userRank = ranks.find(e => {
+                        if (Number(e.pointsFrom) <= Number(trainer.rank)) {
+                            if (e.pointsTo === null || Number(e.pointsTo) >= Number(trainer.rank)) {
+                                return e;
+                            }
+                        }
+                    })
+                    if (userRank !== undefined && userRank !== null) {
+                        return userRank.rank;
+                    } else {
+                        return trainer.rank;
+                    }
+                }
+                return trainer.rank;
+            }
+        },
+        async getRanks(){
+            RankingService.getAllRanks().then(
+                data => {
+                    this.ranksForSearch = data
+                });
+        }
+    },
+    created() {
+        this.getRanks();
     }
 }
 </script>

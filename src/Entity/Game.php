@@ -62,6 +62,11 @@ class Game implements \JsonSerializable
      */
     private $is_marketplace;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $show_rank;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -222,5 +227,17 @@ class Game implements \JsonSerializable
     public function setEventIcon($eventIcon): void
     {
         $this->eventIcon = $eventIcon;
+    }
+
+    public function getShowRank(): ?bool
+    {
+        return $this->show_rank;
+    }
+
+    public function setShowRank(bool $show_rank): self
+    {
+        $this->show_rank = $show_rank;
+
+        return $this;
     }
 }
