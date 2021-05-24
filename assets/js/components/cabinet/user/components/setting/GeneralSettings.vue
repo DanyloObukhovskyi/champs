@@ -503,7 +503,7 @@ export default {
         },
         setGameRank(){
             this.showRank = this.user.game !== null ? this.user.game.showRank : false;
-            this.showAdditionalyRank = this.user.additionallyGame !== null ? this.user.game.showAdditionalyRank : false;
+            this.showAdditionalyRank = this.user.additionallyGame !== null ? this.user.additionallyGame.showAdditionalyRank : false;
         }
     },
     mounted() {
