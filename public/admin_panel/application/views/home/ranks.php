@@ -157,14 +157,16 @@
                                     <div class="input">
                                         <input type="text" class="input2_txt" name="rank" :value="choseRank?.rang">
                                     </div>
-                                    <label>От</label>
-                                    <div class="input">
-                                        <input type="number" class="input2_txt" name="from"
-                                               :value="choseRank?.points_from">
-                                    </div>
-                                    <label>До</label>
-                                    <div class="input">
-                                        <input type="number" class="input2_txt" name="to" :value="choseRank?.points_to">
+                                    <div v-if="!showRank">
+                                        <label>От</label>
+                                        <div class="input">
+                                            <input type="number" class="input2_txt" name="from"
+                                                   :value="choseRank?.points_from">
+                                        </div>
+                                        <label>До</label>
+                                        <div class="input">
+                                            <input type="number" class="input2_txt" name="to" :value="choseRank?.points_to">
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -200,11 +202,17 @@
                 '<?php echo $game['id'];?>': ' <?php echo $game['name'];?>',
                 <?php endforeach; ?>
             },
+            allGames: {
+                <?php foreach ($games as $game): ?>
+                '<?php echo $game['id'];?>': ' <?php echo $game['show_rank'];?>',
+                <?php endforeach; ?>
+            },
             ranks: {},
             ranksCount: 0,
             limit: 0,
             imagesPath: '<?php echo $images_url; ?>',
             show: false,
+            showRank: false,
             choseRank: null
         },
         watch: {
@@ -225,7 +233,7 @@
                 const form = document.querySelector('#rankForm');
                 const data = new FormData(form);
 
-                if (form.from.value === '') {
+                if (!this.showRank && form.from.value === '') {
                     return this.errorMessage('Поле "От" обязательно для заполнения!')
                 }
                 if (form.rank.value === '') {
@@ -264,8 +272,8 @@
             addRank() {
                 const form = document.querySelector('#rankForm');
                 const data = new FormData(form);
-
-                if (form.from.value === '') {
+                console.log(this.showRank);
+                if (!this.showRank && form.from.value === '') {
                     return this.errorMessage('Поле "От" обязательно для заполнения!')
                 }
                 if (form.rank.value === '') {
@@ -293,8 +301,8 @@
                 const form = new FormData();
 
                 form.append('game', this.currentTab)
-                form.append('page', this.page)
-
+                form.append('page', this.page);
+                this.showRank = (this.allGames[this.currentTab] === ' 1');
                 axios.post('<?php echo base_url('c-admin/ajax/ranks');?>', form)
                     .then(({data}) => {
                         this.ranks = data.ranks;

@@ -118,14 +118,35 @@ class Ranks_c extends CI_Controller
                 $data = array('upload_data' => $this->upload->data());
                 $rank_img = $data["upload_data"]["orig_name"];
             }
-
-            $this->game_rank->create([
-                'game_id' => $_POST['game_id'],
-                'points_from' => $_POST['from'] ?? 0,
-                'points_to' => $_POST['to'] ?? 0,
-                'rang' => $_POST['rank'] ?? 1,
-                'icon' => $fileName,
-            ]);
+            $showRank = $this->game_m->getOne(['id' => $_POST['game_id']])['show_rank'];
+            if(!$showRank){
+                $this->game_rank->create([
+                    'game_id' => $_POST['game_id'],
+                    'points_from' => $_POST['from'] ?? 0,
+                    'points_to' => $_POST['to'] ?? 0,
+                    'rang' => $_POST['rank'] ?? 1,
+                    'icon' => $fileName,
+                ]);
+            } else {
+                $existRaw = $this->game_rank->getOne(['game_id' => $_POST['game_id']]);
+                if($existRaw){
+                    $this->game_rank->create([
+                        'game_id' => $_POST['game_id'],
+                        'points_from' => (int)$existRaw['points_from'] + 1,
+                        'points_to' => (int)$existRaw['points_to'] + 1,
+                        'rang' => $_POST['rank'] ?? 1,
+                        'icon' => $fileName,
+                    ]);
+                } else {
+                    $this->game_rank->create([
+                        'game_id' => $_POST['game_id'],
+                        'points_from' => $_POST['from'] ?? 1,
+                        'points_to' => $_POST['to'] ?? 2,
+                        'rang' => $_POST['rank'] ?? 1,
+                        'icon' => $fileName,
+                    ]);
+                }
+            }
         }
         echo json_encode('ok');
     }

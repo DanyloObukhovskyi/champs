@@ -65,4 +65,8 @@ class Game_m extends CI_Model
         }
         return $data;
     }
+
+    public function getOne($where) {
+        return $this->db->limit(1)->get_where($this->table, $where)->row_array();
+    }
 }

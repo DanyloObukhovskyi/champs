@@ -39,4 +39,8 @@ class Game_rank extends CI_Model
     {
         return $this->db->insert($this->table, $data);
     }
+
+    public function getOne($where) {
+        return $this->db->limit(1)->order_by('id', 'DESC')->get_where($this->table, $where)->row_array();
+    }
 }
