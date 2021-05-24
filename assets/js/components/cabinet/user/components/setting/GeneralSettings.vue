@@ -268,8 +268,10 @@ export default {
             'timezones'
         ]),
         rankForSearch(){
-            if (this.user.game !== null) {
+            if (this.user.game !== null && Object.keys(this.ranks).length !== 0) {
                 return this.ranks[this.user.game.code];
+            } else {
+                return [];
             }
         },
         selectedRank() {
@@ -282,8 +284,10 @@ export default {
             }
         },
         rankForAdditionalSearch(){
-            if (this.user.additionallyGame !== null) {
+            if (this.user.additionallyGame !== null && Object.keys(this.ranks).length !== 0) {
                 return this.ranks[this.user.additionallyGame.code];
+            } else {
+                return [];
             }
         },
         selectedAdditionalRank() {
@@ -459,7 +463,6 @@ export default {
         getRankForSearch(){
             if (this.user.game !== null) {
                 const ranks = this.ranks[this.user.game.code];
-
                 if (ranks) {
                     const userRank = ranks.find(e => {
                         if (Number(e.pointsFrom) <= Number(this.user.rank)) {
