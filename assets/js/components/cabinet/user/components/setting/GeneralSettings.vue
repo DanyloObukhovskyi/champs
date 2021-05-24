@@ -178,7 +178,6 @@
                     <div class="form-group">
                         <label>Звание</label>
                         <multiselect
-                                v-model="selectedAdditionalRank"
                                 :options="rankForAdditionalSearch"
                                 :multiple="false"
                                 :searchable="false"
@@ -493,7 +492,6 @@ export default {
                             }
                         }
                     })
-                    console.log(userRank);
                     if (userRank !== undefined && userRank !== null && userRank !== 'null') {
                         return userRank;
                     }
