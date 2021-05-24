@@ -500,8 +500,8 @@ export default {
             this.user.additionallyRank = selectedAdditionalOption.pointsFrom;
         },
         setGameRank(){
-            // this.showRank = !this.user.game.showRank;
-            // this.showAdditionalyRank = !this.user.game.showAdditionalyRank;
+            this.showRank = this.user.game !== null ? !this.user.game.showRank : false;
+            this.showAdditionalyRank = this.user.additionallyGame !== null ? !this.user.game.showAdditionalyRank : false;
         }
     },
     mounted() {
