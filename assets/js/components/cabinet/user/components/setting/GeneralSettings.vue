@@ -288,7 +288,7 @@ export default {
         },
         selectedAdditionalRank() {
             if(this.rankForAdditionalSearch !== null){
-                if(this.selectAdditionalRank !== null){
+                if(this.selectAdditionalRank !== null && this.selectAdditionalRank !== 'null'){
                     return this.selectAdditionalRank;
                 } else {
                     return this.getRankForAdditionalSearch();
@@ -493,6 +493,7 @@ export default {
                             }
                         }
                     })
+                    console.log(userRank);
                     if (userRank !== undefined && userRank !== null && userRank !== 'null') {
                         return userRank;
                     }
