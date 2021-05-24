@@ -103,6 +103,7 @@
                             track-by="nameRu"
                             :searchable="true"
                             :loading="loadCities"
+                            :show-labels="false"
                             @search-change="getCities"
                             placeholder="Введите название">
                     </multiselect>
@@ -138,6 +139,7 @@
                                 @select="getRank"
                                 label="rank"
                                 track-by="rank"
+                                :show-labels="false"
                                 placeholder="Выберете из списка">
                         </multiselect>
                     </div>
@@ -181,6 +183,7 @@
                                 @select="getAdditionalRank"
                                 label="rank"
                                 track-by="rank"
+                                :show-labels="false"
                                 placeholder="Выберете из списка">
                         </multiselect>
                     </div>
