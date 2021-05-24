@@ -178,6 +178,7 @@
                     <div class="form-group">
                         <label>Звание</label>
                         <multiselect
+                                v-model="selectedAdditionalRank"
                                 :options="rankForAdditionalSearch"
                                 :multiple="false"
                                 :searchable="false"
