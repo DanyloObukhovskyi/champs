@@ -12,6 +12,7 @@
                     <input @keyup.enter="addWord"
                            v-model="search"
                            type="text"
+                           style="background: white;color:black"
                            class="col search-input"
                            @click="showFilters = !showFilters"
                            placeholder="Введите ключевое слово">
@@ -298,32 +299,33 @@ export default {
 }
 .news-filters_multiselect::v-deep .multiselect {
     width: 100% !important;
-    background: rgb(59, 59, 59) !important;
-    color: #adadad !important;
+    /*background: rgb(59, 59, 59) !important;*/
+    /*color: #adadad !important;*/
 }
 .news-filters_multiselect::v-deep .multiselect__tags{
     width: 100% !important;
-    background: rgb(59, 59, 59) !important;
-    color: #adadad !important;
+    border:1px solid rgba(0, 0, 0, .15) !important;
+    /*background: rgb(59, 59, 59) !important;*/
+    /*color: #adadad !important;*/
 }
-.news-filters_multiselect::v-deep .multiselect__content-wrapper{
-    background: rgb(59, 59, 59) !important;
-    color: #adadad !important;
-}
-.news-filters_multiselect::v-deep .multiselect__input, .multiselect__single{
-    background: rgb(59, 59, 59) !important;
-    color: #adadad !important;
-}
-.news-filters_multiselect::v-deep .focus-visible{
-    color: #adadad !important;
-}
+/*.news-filters_multiselect::v-deep .multiselect__content-wrapper{*/
+/*    background: rgb(59, 59, 59) !important;*/
+/*    color: #adadad !important;*/
+/*}*/
+/*.news-filters_multiselect::v-deep .multiselect__input, .multiselect__single{*/
+/*    background: rgb(59, 59, 59) !important;*/
+/*    color: #adadad !important;*/
+/*}*/
+/*.news-filters_multiselect::v-deep .focus-visible{*/
+/*    color: #adadad !important;*/
+/*}*/
 .news-filters_multiselect::v-deep .multiselect__content-wrapper{
     width: 100% !important;
 }
-.news-filters_multiselect::v-deep .multiselect__single{
-    background: rgb(59, 59, 59) !important;
-    color: #adadad !important;
-}
+/*.news-filters_multiselect::v-deep .multiselect__single{*/
+/*    background: rgb(59, 59, 59) !important;*/
+/*    color: #adadad !important;*/
+/*}*/
 
 </style>
 <style>
