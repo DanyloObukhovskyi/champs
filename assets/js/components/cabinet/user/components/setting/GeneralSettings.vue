@@ -107,7 +107,7 @@
                             placeholder="Введите название">
                     </multiselect>
                 </div>
-                <div class="ranks" v-if="user.game ? !user.game.showRank : true">
+                <div class="ranks" v-if="!showRank">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
@@ -148,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ranks" v-if="user.additionallyGame ? !user.additionallyGame.showRank : true">
+                <div class="ranks" v-if="!showAdditionalyRank">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
@@ -246,7 +246,9 @@ export default {
             loadCities: false,
             userGender: null,
             selectRank: null,
-            selectAdditionalRank: null
+            selectAdditionalRank: null,
+            showRank: false,
+            showAdditionalyRank : false
         }
     },
     watch:{
@@ -496,11 +498,16 @@ export default {
         getAdditionalRank(selectedAdditionalOption, id){
             this.selectAdditionalRank = selectedAdditionalOption;
             this.user.additionallyRank = selectedAdditionalOption.pointsFrom;
+        },
+        setGameRank(){
+            this.showRank = !this.user.game.showRank;
+            this.showAdditionalyRank = !this.user.game.showAdditionalyRank;
         }
     },
     mounted() {
         this.getCountries();
         this.setGender();
+        this.setGameRank();
     }
 }
 </script>
