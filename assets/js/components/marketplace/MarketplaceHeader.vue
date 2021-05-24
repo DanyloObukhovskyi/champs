@@ -1,5 +1,5 @@
 <template>
-    <div class="marketplace-header text-center">
+    <div class="marketplace-header">
         <div class="slide-text" v-show="game === banner.game.code" v-for="banner in banners">
             <div class="slide-text-block">
                 <div class="title">
