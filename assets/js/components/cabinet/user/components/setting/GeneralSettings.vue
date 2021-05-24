@@ -107,7 +107,7 @@
                             placeholder="Введите название">
                     </multiselect>
                 </div>
-                <div class="ranks" v-if="!user.game.showRank">
+                <div class="ranks" v-if="user.game ? !user.game.showRank : true">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
@@ -148,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ranks" v-if="!user.additionallyGame.showRank">
+                <div class="ranks" v-if="user.game ? !user.additionallyGame.showRank : true">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
