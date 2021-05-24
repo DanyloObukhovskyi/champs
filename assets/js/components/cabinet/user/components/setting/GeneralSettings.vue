@@ -292,6 +292,7 @@ export default {
         },
         userRank() {
             if (this.user.game !== null) {
+                this.setGameRank();
                 const ranks = this.ranks[this.user.game.code];
 
                 if (ranks) {
@@ -313,6 +314,7 @@ export default {
         },
         additionallyUserRank() {
             if (this.user.additionallyGame !== null) {
+                this.setGameRank();
                 const ranks = this.ranks[this.user.additionallyGame.code];
 
                 if (ranks) {
