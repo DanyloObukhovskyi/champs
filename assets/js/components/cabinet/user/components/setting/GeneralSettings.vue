@@ -148,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ranks" v-if="user.game ? !user.additionallyGame.showRank : true">
+                <div class="ranks" v-if="user.additionallyGame ? !user.additionallyGame.showRank : true">
                     <div class="form-group">
                         <label>MMR/ELO</label>
                         <div class="input">
