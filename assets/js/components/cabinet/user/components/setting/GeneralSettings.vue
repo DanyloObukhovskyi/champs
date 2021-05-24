@@ -51,6 +51,7 @@
                             :options="$store.state.header.games"
                             :multiple="false"
                             :searchable="false"
+                            :show-labels="false"
                             label="name"
                             track-by="name"
                             placeholder="">
@@ -63,6 +64,7 @@
                             :options="$store.state.header.games"
                             :multiple="false"
                             :searchable="false"
+                            :show-labels="false"
                             label="name"
                             track-by="name"
                             placeholder="">
@@ -328,7 +330,7 @@ export default {
                             }
                         }
                     })
-                    if (userRank !== undefined && userRank !== null) {
+                    if (userRank !== undefined && userRank !== null && userRank !== 'null') {
                         return userRank;
                     }
                 }
@@ -466,11 +468,11 @@ export default {
                             }
                         }
                     })
-                    if (userRank !== undefined && userRank !== null) {
+                    if (userRank !== undefined && userRank !== null && userRank !== 'null') {
                         return userRank;
                     }
                 }
-                return null;
+                return [];
             } else {
                 return null;
             }
@@ -491,7 +493,7 @@ export default {
                             }
                         }
                     })
-                    if (userRank !== undefined && userRank !== null) {
+                    if (userRank !== undefined && userRank !== null && userRank !== 'null') {
                         return userRank;
                     }
                 }
