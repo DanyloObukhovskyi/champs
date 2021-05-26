@@ -35,6 +35,7 @@
     "vue-slick-carousel": "^1.0.6",
     "vue-sticky-sidebar": "^1.0.5",
     "vue-sweetalert2": "^4.1.1",
+    "vue-tweet-embed": "^2.4.0",
     "vuejs-paginate": "^2.1.0",
     "vuex": "^3.6.0"
   },
