@@ -44,7 +44,7 @@ class NewsRepository extends ServiceEntityRepository
         string $dateTo = null,
         int $limit,
         int $offset,
-        string $orderField = 'id',
+        string $orderField = 'date',
         string $orderType = 'DESC'
     )
     {
