@@ -271,6 +271,13 @@ export default {
         changeMaxHeight()
         {
             this.height = $('.news_info').height()+ 'px'
+        },
+        addTwitter(){
+            let twitter = document.createElement('script');
+            twitter.setAttribute('src',"https://platform.twitter.com/widgets.js");
+            twitter.setAttribute('async',"");
+            twitter.setAttribute('charset',"utf-8");
+            document.head.appendChild(twitter);
         }
     },
     mounted() {
@@ -278,13 +285,10 @@ export default {
         this.getNews();
         this.getAuth();
         this.scrollEventTrigger();
+        this.addTwitter();
     },
     created() {
-        let twitter = document.createElement('script');
-        twitter.setAttribute('src',"https://platform.twitter.com/widgets.js");
-        twitter.setAttribute('async',"");
-        twitter.setAttribute('charset',"utf-8");
-        document.head.appendChild(twitter);
+
     }
 }
 </script>
