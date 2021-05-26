@@ -442,7 +442,10 @@ export default {
     width: 100%;
 }
 blockquote{
-    margin: 0 !important;
+    margin-block-start: 1em !important;
+    margin-block-end: 1em !important;
+    margin-inline-start: 40px !important;
+    margin-inline-end: 40px !important;
 }
 p.article-render__block.article-render__block_unstyled {
     background-color: transparent !important;
