@@ -434,16 +434,16 @@ export default {
 .dark .news-view .news-body {
     color: white;
 }
-blockquote{
-    margin: 0 !important;
-}
+
 </style>
 
 <style>
 .news-body .row img {
     width: 100%;
 }
-
+blockquote{
+    margin: 0 !important;
+}
 p.article-render__block.article-render__block_unstyled {
     background-color: transparent !important;
 }
