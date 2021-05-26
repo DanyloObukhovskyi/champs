@@ -278,10 +278,16 @@ export default {
         this.getNews();
         this.getAuth();
         this.scrollEventTrigger();
+    },
+    created() {
+        let twitter = document.createElement('script');
+        twitter.setAttribute('src',"https://platform.twitter.com/widgets.js");
+        twitter.setAttribute('async',"");
+        twitter.setAttribute('charset',"utf-8");
+        document.head.appendChild(twitter);
     }
 }
 </script>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <style scoped>
 .news-view {
     display: block;
