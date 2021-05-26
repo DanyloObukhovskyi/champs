@@ -98,7 +98,7 @@ import NewsComments from "../components/news/NewsComments";
 import NewsWidget from "../components/news/NewsWidget";
 import NewsService from "../services/NewsService";
 import Likes from "../components/likes/Likes";
-
+import { Tweet, Moment, Timeline } from 'vue-tweet-embed';
 export default {
     name: "NewsViewPage",
     props: [
@@ -111,7 +111,10 @@ export default {
         Loader,
         ShareButtons,
         NewsComments,
-        NewsWidget
+        NewsWidget,
+        Tweet,
+        Moment,
+        Timeline
     },
     data() {
         return {
@@ -432,13 +435,13 @@ export default {
 p.article-render__block.article-render__block_unstyled {
     background-color: transparent !important;
 }
-::-webkit-scrollbar { /* chrome based */
-    width: 0px;  /* ширина scrollbar'a */
-    background: transparent;  /* опционально */
-}
+/*::-webkit-scrollbar { !* chrome based *!*/
+/*    width: 0px;  !* ширина scrollbar'a *!*/
+/*    background: transparent;  !* опционально *!*/
+/*}*/
 
-html {
-    -ms-overflow-style: none;  /* IE 10+ */
-    scrollbar-width: none; /* Firefox */
-}
+/*html {*/
+/*    -ms-overflow-style: none;  !* IE 10+ *!*/
+/*    scrollbar-width: none; !* Firefox *!*/
+/*}*/
 </style>
