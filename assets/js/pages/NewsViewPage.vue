@@ -447,6 +447,14 @@ blockquote{
     margin-inline-start: 40px !important;
     margin-inline-end: 40px !important;
 }
+blockquote:before {
+    color: #ccc;
+    content: open-quote;
+    font-size: 4em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
+}
 p.article-render__block.article-render__block_unstyled {
     background-color: transparent !important;
 }
