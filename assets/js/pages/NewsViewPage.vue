@@ -229,6 +229,7 @@ export default {
                     this.$nextTick(() => {
 
                     })
+                    this.addTwitter();
                 })
         },
         newsPageUrl(tag) {
@@ -285,7 +286,6 @@ export default {
         this.getNews();
         this.getAuth();
         this.scrollEventTrigger();
-        this.addTwitter();
     },
     created() {
 
