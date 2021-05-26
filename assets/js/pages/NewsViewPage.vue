@@ -434,7 +434,9 @@ export default {
 .dark .news-view .news-body {
     color: white;
 }
-
+blockquote{
+    margin: 0 !important;
+}
 </style>
 
 <style>
