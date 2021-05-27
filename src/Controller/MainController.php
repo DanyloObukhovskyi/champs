@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Service\HLTVService;
+use App\Service\LoggerService;
 use App\Entity\{Result, Match};
 use App\Service\Event\EventService;
 use App\Service\Match\MatchService;
@@ -373,5 +375,40 @@ class MainController extends DefController
     public function testMail(\Swift_Mailer $mailer)
     {
         $this->dispatchMessage(new TestMail($mailer));
+    }
+
+    /**
+     * @Route("/test/parser")
+     */
+    public function checkParser(){
+        LoggerService::info("get events");
+        $events = HLTVService::getMainEvents();
+        echo "<pre>";
+        var_dump($events);
+        die;
+        if (empty($events)) {
+            return null;
+        }
+        $result = [];
+
+        foreach ($events as $event) {
+
+            if (isset($event['started_at'])) {
+                $eventEntity = $this->eventService->create($event, $parseDate);
+            }
+
+            if (empty($eventEntity)) {
+                LoggerService::error("event entity didnt created");
+            } else {
+                if ($isNotMain) {
+                    $this->eventShowService->createOrUpdate($eventEntity, $this->parseDate);
+                }
+                $result[] = $eventEntity;
+            }
+        }
+
+        return !empty($result) ? $result : null;
+
+        return $events;
     }
 }

@@ -122,7 +122,7 @@ class MatchHandler implements MessageHandlerInterface
     {
         dump($match->getMatch());
         $matchFull = HLTVService::getMatchFull($match->getMatch());
-        print_r(empty($matchFull));
+        dump(empty($matchFull));
         if (empty($matchFull)) {
 
             return;

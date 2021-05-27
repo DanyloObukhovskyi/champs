@@ -127,7 +127,7 @@ class DownloadFile
         $response = $client->request('GET', $url);
 
         $statusCode = $response->getStatusCode();
-
+        dump('ответ на картинки ', $statusCode);
         if (!in_array($statusCode, [200, 301, 302])) {
             return false;
         }

@@ -75,17 +75,18 @@ class ParserEventsCommand extends Command
 
         if (empty($mainEvents)) {
             LoggerService::error("hltv events not found");
-            return 0;
+//            return 0;
+        } else {
+            $this->createEvents($mainEvents);
         }
-
-        $this->createEvents($mainEvents);
 
         $events = $this->getEvents();
         if (empty($events)) {
             LoggerService::error("hltv events not found");
             return 0;
+        } else {
+            $this->createEvents($events, true);
         }
-        $this->createEvents($events, true);
 
         $this->updateInfiEventsFromArray($this->eventService->getOldEvents());
         $this->updateInfiEventsFromArray($this->eventService->getFeatureEvents());
