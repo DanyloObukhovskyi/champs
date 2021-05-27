@@ -186,7 +186,7 @@ class EventService extends EntityService
             if(empty($event->getGame())){
                 /** @var Game|NULL $gameEntity */
                 $gameEntity = $this->entityManager->getRepository(Game::class)
-                    ->findOneBy(['code' => 'cs']);
+                    ->findOneBy(['code' => 'Counter-Strike: Global Offensive']);
                 $event->setGame($gameEntity);
                 $this->entityManager->flush();
             }
