@@ -105,7 +105,11 @@
                     ;
                     return team1+'_vs_'+team2+'_'+event+'_'+game+'_'+start_date;
                 } catch (e) {
-                    return match.slug;
+                    try {
+                        return match.slug;
+                    } catch (e) {
+                        return '';
+                    }
                 }
             },
             getTitleUrl(title) {

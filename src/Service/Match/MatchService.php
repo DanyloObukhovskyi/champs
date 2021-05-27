@@ -111,6 +111,7 @@ class MatchService extends EntityService
         }
 
         if (!empty($teams)) {
+            print_r(!empty($teams));
             $match->setTeam1($teams[0]);
             if (isset($teams[1])){
                 $match->setTeam2($teams[1]);
@@ -303,7 +304,7 @@ class MatchService extends EntityService
                 "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
                 "endedAt"   => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
                 "image"     => $this->imageService->getImagePath(),
-                'game'      => $match->getEvent() === null ? null : !empty($match->getEvent()->getGame()) ? $match->getEvent()->getGame()->jsonSerialize() : null
+                'game'      => $match->getEvent() !== null ? (!empty($match->getEvent()->getGame()) ? $match->getEvent()->getGame()->jsonSerialize() : null) : null
             ],
             "streams" => $this->getMatchStreams($match),
             "isLive" => $match->getLive() ? true : false,

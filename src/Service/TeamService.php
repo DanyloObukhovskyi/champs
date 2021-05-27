@@ -120,7 +120,18 @@ class TeamService extends EntityService
                         $team->setLogo($imagePhoto);
                         $team->setParseLogoDate(Carbon::now());
                     }
-                }catch (\Exception $e){
+                } catch (\Exception $e){
+                    LoggerService::add("Download image error: $e");
+                }
+            } else {
+                try {
+                    $imagePhoto = DownloadFile::getImage($photo);
+                    if (!empty($imagePhoto))
+                    {
+                        $team->setLogo($imagePhoto);
+                        $team->setParseLogoDate(Carbon::now());
+                    }
+                } catch (\Exception $e){
                     LoggerService::add("Download image error: $e");
                 }
             }

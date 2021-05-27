@@ -9,6 +9,7 @@ namespace App\Service\Event;
 
 use App\Entity\City;
 use App\Entity\Country;
+use App\Entity\Game;
 use App\Message\Match;
 use App\Service\DownloadFile;
 use App\Service\EntityService;
@@ -182,6 +183,13 @@ class EventService extends EntityService
 
         /** @var Event $event */
         foreach ($events as $event) {
+            if(empty($event->getGame())){
+                /** @var Game|NULL $gameEntity */
+                $gameEntity = $this->entityManager->getRepository(Game::class)
+                    ->findOneBy(['code' => 'cs']);
+                $event->setGame($gameEntity);
+                $this->entityManager->flush();
+            }
             $eventItems[] = $this->decorator($event);
         }
         return $eventItems;

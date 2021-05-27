@@ -9,7 +9,7 @@
             </div>
             <div class="d-flex justify-content-end">
                 <div class="game">
-                    <img :src="`/uploads/games/${event.game.eventIcon}`" v-if="event.game.eventIcon !== null">
+                    <img :src="`/uploads/games/${event.game.eventIcon}`" v-if="event.game ? event.game.eventIcon !== null : false">
                     <img :src="`/images/events/${event.game.code}.png`" v-else>
                 </div>
             </div>
@@ -49,32 +49,36 @@
                 return eventService.getEventUrl(event.id)
             },
             getSlug(event) {
-                let name = this.getTitleUrl(event.name)
-                    .toLowerCase()
-                    .replace(/ /g, '-')
-                    .replace(/[^\w-]+/g, '')
+                try{
+                    let name = this.getTitleUrl(event.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
                     ;
-                let location =  this.getTitleUrl(event.location)
-                    .toLowerCase()
-                    .replace(/ /g, '-')
-                    .replace(/[^\w-]+/g, '')
-                ;
-                let game = this.getTitleUrl(event.game.name)
-                    .toLowerCase()
-                    .replace(/ /g, '-')
-                    .replace(/[^\w-]+/g, '')
-                ;
-                let start_date = this.getTitleUrl(event.startedAtRu)
-                    .toLowerCase()
-                    .replace(/ /g, '-')
-                    .replace(/[^\w-]+/g, '')
-                ;
-                let end_date = this.getTitleUrl(event.endedAtRu)
-                    .toLowerCase()
-                    .replace(/ /g, '-')
-                    .replace(/[^\w-]+/g, '')
-                ;
-                return name+'_'+location+'_'+game+'_'+start_date+'-'+end_date;
+                    let location =  this.getTitleUrl(event.location)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let game = this.getTitleUrl(event.game.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let start_date = this.getTitleUrl(event.startedAtRu)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let end_date = this.getTitleUrl(event.endedAtRu)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return name+'_'+location+'_'+game+'_'+start_date+'-'+end_date;
+                } catch (e) {
+                    return event.slug;
+                }
             },
             getTitleUrl(title) {
                 return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,

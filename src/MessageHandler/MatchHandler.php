@@ -217,6 +217,12 @@ class MatchHandler implements MessageHandlerInterface
             if (isset($team['players'])) {
                 $this->createPlayers($team['players'], $leftTeamEntity);
             }
+        } elseif(!empty($leftTeamEntity)) {
+            $team = HLTVService::getTeam($left);
+            $leftTeamEntity = $this->teamService->create($team);
+            if (isset($team['players'])) {
+                $this->createPlayers($team['players'], $leftTeamEntity);
+            }
         }
         if (isset($right['name'])) {
             $rightTeamEntity = $this->teamService->getByName($right['name']);
@@ -228,6 +234,13 @@ class MatchHandler implements MessageHandlerInterface
             $isDateParse = $rightTeamParseDate->format('Y.m.d H:m:s') >= $date;
         }
         if (empty($rightTeamEntity) or count($rightTeamEntity->getPlayers()) < 5 or $isDateParse) {
+            $team = HLTVService::getTeam($right);
+
+            $rightTeamEntity = $this->teamService->create($team);
+            if (isset($team['players'])) {
+                $this->createPlayers($team['players'], $rightTeamEntity);
+            }
+        } elseif(!empty($rightTeamEntity)) {
             $team = HLTVService::getTeam($right);
 
             $rightTeamEntity = $this->teamService->create($team);

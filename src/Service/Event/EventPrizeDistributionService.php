@@ -53,7 +53,7 @@ class EventPrizeDistributionService extends EntityService
         $eventPrizeDistribution->setEvent($event);
         $eventPrizeDistribution->setTeam($team);
         $eventPrizeDistribution->setPosition($values['position'] ?? null);
-        $eventPrizeDistribution->setPrize(!empty($values) ?  $values['prize'] : null);
+        $eventPrizeDistribution->setPrize(!empty($values) ?  $values['prize'] ?? null : null);
 
         return $this->save($eventPrizeDistribution);
     }

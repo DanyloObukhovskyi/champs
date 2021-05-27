@@ -21,6 +21,9 @@ class EventParserService
     {
         dump($url);
         $eventNameRaw = $document->first("//div[contains(concat(' ', normalize-space(@class), ' '), ' event-page ')]//div[contains(concat(' ', normalize-space(@class), ' '), ' eventname ')]", Query::TYPE_XPATH);
+        if(empty($eventNameRaw)){
+            $eventNameRaw = $document->first("//div[contains(concat(' ', normalize-space(@class), ' '), ' event-page ')]//h1[contains(concat(' ', normalize-space(@class), ' '), ' eventname ')]", Query::TYPE_XPATH);
+        }
 
         if (empty($eventNameRaw)) {
             return false;
@@ -309,18 +312,27 @@ class EventParserService
                                     'matchUrl' => HLTVService::urlDecorator($round->match->matchPageURL),
                                 ];
                                 if (isset($round->team1) and isset($round->team1->team)) {
+                                    $teamLogo = $round->team1->team->logoURL ?? null;
+                                    if(empty($teamLogo)){
+                                        $teamLogo = $round->team1->team->teamLogo->dayLogoURL ?? null;
+                                    }
+
                                     $bracket['team1'] = [
                                         'name' => $round->team1->team->name,
                                         'url' => HLTVService::urlDecorator($round->team1->team->profileURL),
-                                        'logo' => $round->team1->team->logoURL ?? null,
+                                        'logo' => $teamLogo ?? null,
                                         'score' => $team1Score
                                     ];
                                 }
                                 if (isset($round->team2) and isset($round->team2->team)) {
+                                    $teamLogo2 = $round->team2->team->logoURL ?? null;
+                                    if(empty($teamLogo2)){
+                                        $teamLogo2 = $round->team2->team->teamLogo->dayLogoURL ?? null;
+                                    }
                                     $bracket['team2'] = [
                                         'name' => $round->team2->team->name,
                                         'url' => HLTVService::urlDecorator($round->team2->team->profileURL),
-                                        'logo' => $round->team2->team->logoURL ?? null,
+                                        'logo' => $teamLogo2 ?? null,
                                         'score' => $team2Score
                                     ];
                                 }
