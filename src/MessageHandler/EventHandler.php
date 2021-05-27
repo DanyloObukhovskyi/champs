@@ -50,9 +50,9 @@ class EventHandler implements MessageHandlerInterface
             if (isset($team['teamName'])) {
                 $teamEntity = $this->teamService->getByName($team['teamName']);
 
-                if (isset($teamEntity)) {
-                    continue;
-                }
+//                if (isset($teamEntity)) {
+//                    continue;
+//                }
 
                 $fullTeam = HLTVService::getTeam(['name' => $team['teamName'], 'url' => $team['teamUrl']]);
 
