@@ -446,7 +446,10 @@ blockquote{
     margin-block-end: 1em !important;
     margin-inline-start: 40px !important;
     margin-inline-end: 40px !important;
-    border-left: 10px solid #ccc;
+    padding: 8px 0 8px 20px;
+    border-left: 3px solid #000;
+    font-size: 17px;
+    font-style: italic;
 }
 p.article-render__block.article-render__block_unstyled {
     background-color: transparent !important;
