@@ -90,7 +90,7 @@
                     v-if="Object.keys(prizeDistribution).length > 0">
             </event-prize-distribution>
             <div class="event-news">
-                <game-news game="cs"/>
+                <game-news :game="gameNews"/>
             </div>
             <div class="d-flex teams-lineups">
                 <event-team-lineups :teams="teamsLineups"/>
@@ -175,6 +175,10 @@ export default {
             } else {
                 result = new Date(this.event.startedAt) > new Date();
             }
+        },
+        gameNews(){
+            let game = this.event.game.code;
+            return game;
         }
     },
     methods: {
