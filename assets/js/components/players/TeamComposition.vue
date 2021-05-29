@@ -22,7 +22,7 @@
             <div class="teamB">
                 <div class="title">
                     <img :src="teamB.logo">
-                    {{ teamA.title }}
+                    {{ teamB.title }}
                 </div>
                 <div class="players">
                     <player

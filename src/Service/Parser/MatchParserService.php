@@ -118,7 +118,11 @@ class MatchParserService
         $url = $this->getMatchUrl($matchCell);
         $eventName = $this->getMatchEventName($matchCell);
         $eventLogo = $this->getMatchEventLogo($matchCell);
-
+//        if(empty($eventName)){
+//            echo '<pre>';
+//            var_dump($url);
+//            die;
+//        }
         return [
             'url' => $url,
             'is_live' => false,
@@ -244,7 +248,15 @@ class MatchParserService
         if (isset($matchEvent)) {
             $matchEvent = trim($matchEvent->text());
         }
-
+        if(empty($matchEvent)){
+            $matchEvent = $matchCell->find('.event');
+            if(is_array($matchEvent)){
+                $matchEvent = $matchEvent[0]->first('span.event-name');
+                if(!empty($matchEvent)){
+                    $matchEvent = trim($matchEvent->text());
+                }
+            }
+        }
         return $matchEvent;
     }
 
@@ -262,7 +274,19 @@ class MatchParserService
 
             $matchEventLogo = $this->urlDecorator($matchEventLogo);
         }
+        if(empty($matchEventLogo)){
+            $matchEventLogo = $matchCell->find('.event');
+            if(is_array($matchEventLogo)){
+                if(!empty($matchEventLogo)){
+                    $matchEventLogo = $matchEventLogo[0]->first('img.event-logo');
+                    $matchEventLogo = trim($matchEventLogo->attr('src'));
 
+                    $matchEventLogo = $this->urlDecorator($matchEventLogo);
+                } else {
+                    return null;
+                }
+            }
+        }
         return $matchEventLogo;
     }
 

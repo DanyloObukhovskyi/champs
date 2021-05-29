@@ -109,9 +109,7 @@ class MatchService extends EntityService
             $match->setTeam1WinRate($values['headToHead'][0] ?? null);
             $match->setTeam2WinRate($values['headToHead'][1] ?? null);
         }
-
         if (!empty($teams)) {
-            print_r(!empty($teams));
             $match->setTeam1($teams[0]);
             if (isset($teams[1])){
                 $match->setTeam2($teams[1]);

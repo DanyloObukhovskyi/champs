@@ -5,11 +5,29 @@ namespace App\Service\Parser;
 
 
 use App\Service\HLTVService;
+use App\Traits\EntityManager;
 use DiDom\Document;
 use DiDom\Query;
+use App\Service\TeamService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EventParserService
 {
+    use EntityManager;
+    /**
+     * @var EntityManagerInterface
+     */
+    public $entityManager;
+
+    /** @var TeamService */
+    protected $teamService;
+
+    public function __construct()
+    {
+        $entityManager = $this->getEntityManager();
+        $this->teamService = new TeamService($entityManager);
+    }
+
     /**
      * @param Document $document
      * @param $url
@@ -104,6 +122,11 @@ class EventParserService
 
                     $distribution['teamName'] = $teamName;
                     $distribution['teamUrl'] = $teamUrl;
+                    if(!empty($teamName) && !empty($teamUrl)){
+                        $fullTeam = HLTVService::getTeam(['name' => $teamName, 'url' => $teamUrl]);
+
+                        $this->teamService->createTeams([$fullTeam]);
+                    }
                 }
                 $position = $prizeDistribution->first('div:nth-child(2)');
                 if (isset($position)) {
@@ -252,8 +275,14 @@ class EventParserService
                 'teamUrl' => $teamUrl,
                 'number' => $number
             ];
-        }
 
+            if(!empty($teamName) && !empty($teamUrl)){
+                $fullTeam = HLTVService::getTeam(['name' => $teamName, 'url' => $teamUrl]);
+
+                $this->teamService->createTeams([$fullTeam]);
+            }
+
+        }
         return $teamsAttending;
     }
 

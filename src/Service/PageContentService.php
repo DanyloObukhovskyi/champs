@@ -24,8 +24,6 @@ class PageContentService
     {
         sleep(1);
         $response = self::getContent($url);
-        dump('Статус');
-        print_r($response);
         if (is_array($response) && isset($response['error']))
         {
             if($response['status'] == 503 && $count < 2)

@@ -3,7 +3,7 @@
         <div class="player-week-body" @click="choseActive">
             <div class="player-photo">
                 <div class="player-photo-grid">
-                    <img v-if="player !== null" class="hex-grid__image" :src="player.image" alt="">
+                    <img v-if="player !== null" class="hex-grid__image" :src="'/uploads/images/' + player.image" alt="">
                 </div>
             </div>
         </div>
