@@ -22,10 +22,10 @@
                     {{map.name}}
                 </div>
                 <div class="teamA">
-                    {{getTeamMapStatistics(map.id, teamA).rating}}
+                    {{getTeamMapStatistics(map.id, teamA) ? getTeamMapStatistics(map.id, teamA).rating : null}}
                 </div>
                 <div class="teamB">
-                    {{getTeamMapStatistics(map.id, teamB).rating}}
+                    {{getTeamMapStatistics(map.id, teamB) ? getTeamMapStatistics(map.id, teamB).rating : null}}
                 </div>
             </div>
         </div>
