@@ -310,8 +310,9 @@ class MatchRepository extends ServiceEntityRepository
                 ->setParameter('live', true);
         }
         if ($type === MatchService::PAST_MATCHES) {
+            $dateFrom =  (new \DateTime())->format("Y-m-d") . (new \DateTime())->format("G:i:s");
             $query->andWhere('m.start_at < :date')
-                ->setParameter('date', $date);
+                ->setParameter('date', $dateFrom);
         }
 
         if (isset($filters->teamA)) {
