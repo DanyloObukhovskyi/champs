@@ -302,7 +302,7 @@ class MatchRepository extends ServiceEntityRepository
                 ->setParameter('date', $dateFrom);
         }
         if ($type === MatchService::LIVE_MATCHES) {
-            $dateFrom =  $date = (new \DateTime())->format("Y-m-d") . " 00:00:00";
+            $dateFrom =  $date = (new \DateTime())->format("Y-m-d"). ' ' . (new \DateTime())->format("G:i:s");
 
             $query->andWhere('m.live = :live')
                 ->andWhere('m.start_at > :dateStartFrom')
