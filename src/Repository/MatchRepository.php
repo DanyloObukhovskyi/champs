@@ -297,8 +297,9 @@ class MatchRepository extends ServiceEntityRepository
             ->orderBy('m.start_at', 'DESC');
 
         if ($type === MatchService::FUTURE_MATCHES) {
+            $dateFrom =  (new \DateTime())->format("Y-m-d") . (new \DateTime())->format("G:i:s");
             $query->andWhere('m.start_at > :date')
-                ->setParameter('date', $date);
+                ->setParameter('date', $dateFrom);
         }
         if ($type === MatchService::LIVE_MATCHES) {
             $dateFrom =  $date = (new \DateTime())->format("Y-m-d") . " 00:00:00";
