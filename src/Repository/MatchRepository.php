@@ -297,7 +297,7 @@ class MatchRepository extends ServiceEntityRepository
             ->orderBy('m.start_at', 'DESC');
 
         if ($type === MatchService::FUTURE_MATCHES) {
-            $dateFrom =  (new \DateTime())->format("Y-m-d") . (new \DateTime())->format("G:i:s");
+            $dateFrom =  (new \DateTime())->format("Y-m-d"). ' ' . (new \DateTime())->format("G:i:s");
             $query->andWhere('m.start_at > :date')
                 ->setParameter('date', $dateFrom);
         }
@@ -310,7 +310,7 @@ class MatchRepository extends ServiceEntityRepository
                 ->setParameter('live', true);
         }
         if ($type === MatchService::PAST_MATCHES) {
-            $dateFrom =  (new \DateTime())->format("Y-m-d") . (new \DateTime())->format("G:i:s");
+            $dateFrom =  (new \DateTime())->format("Y-m-d"). ' ' . (new \DateTime())->format("G:i:s");
             $query->andWhere('m.start_at < :date')
                 ->setParameter('date', $dateFrom);
         }
