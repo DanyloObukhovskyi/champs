@@ -307,7 +307,7 @@ class MatchRepository extends ServiceEntityRepository
             $query
 //                ->andWhere('m.live = :live')
                 ->andWhere('m.start_at > :dateStartFrom')
-                ->andWhere('m.start_at < :dateStartFrom')
+                ->andWhere('m.start_at < :dateStartTo')
                 ->setParameter('dateStartTo', $date)
                 ->setParameter('dateStartFrom', $dateFrom);
 //                ->setParameter('live', true);
