@@ -132,14 +132,19 @@ export default {
                     .replace(/ /g, '-')
                     .replace(/[^\w-]+/g, '')
                 ;
-                let date = this.getTitleUrl(news.date_ru)
+                let date = this.getTitleUrl(news.date_ru_with_year)
                     .toLowerCase()
                     .replace(/ /g, '-')
                     .replace(/[^\w-]+/g, '')
                 ;
                 return type+'/'+game+'/'+title+'-'+date;
             } catch (e) {
-                return news.slug;
+                let title =  this.getTitleUrl(news.title)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                ;
+                return title;
             }
         },
         getTitleUrl(title) {

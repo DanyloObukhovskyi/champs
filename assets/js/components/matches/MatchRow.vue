@@ -277,7 +277,7 @@
     }
 
     .play {
-        width: 24%;
+        width: 19%;
         display: flex;
         justify-content: center;
         margin-right: .5vw;
