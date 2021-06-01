@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="time d-flex" v-if="!match.isLive">
+            <div class="time d-flex" v-if="!match.isLive || !match.streamTime">
                 <img src="/images/matches/time.svg">
                 {{match.time}}
             </div>
