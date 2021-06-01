@@ -297,20 +297,23 @@ class MatchRepository extends ServiceEntityRepository
             ->orderBy('m.start_at', 'DESC');
 
         if ($type === MatchService::FUTURE_MATCHES) {
-            $dateFrom =  (new \DateTime())->format("Y-m-d"). ' ' . (new \DateTime())->format("G:i:s");
+            $dateFrom =  (new \DateTime())->format("Y-m-d"). " 23:59:59";
             $query->andWhere('m.start_at > :date')
                 ->setParameter('date', $dateFrom);
         }
         if ($type === MatchService::LIVE_MATCHES) {
-            $dateFrom =  $date = (new \DateTime())->format("Y-m-d"). ' ' . (new \DateTime())->format("G:i:s");
-
-            $query->andWhere('m.live = :live')
+            $dateFrom =  $date = (new \DateTime())->format("Y-m-d") . " 00:00:00";
+            $date = $date->format("Y-m-d") . " 23:59:59";
+            $query
+//                ->andWhere('m.live = :live')
                 ->andWhere('m.start_at > :dateStartFrom')
-                ->setParameter('dateStartFrom', $dateFrom)
-                ->setParameter('live', true);
+                ->andWhere('m.start_at < :dateStartFrom')
+                ->setParameter('dateStartTo', $date)
+                ->setParameter('dateStartFrom', $dateFrom);
+//                ->setParameter('live', true);
         }
         if ($type === MatchService::PAST_MATCHES) {
-            $dateFrom =  (new \DateTime())->format("Y-m-d"). ' ' . (new \DateTime())->format("G:i:s");
+            $dateFrom =  (new \DateTime())->format("Y-m-d") . " 23:59:59";
             $query->andWhere('m.start_at < :date')
                 ->setParameter('date', $dateFrom);
         }
