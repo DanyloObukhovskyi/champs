@@ -131,7 +131,7 @@ class MatchesController extends AbstractController
         $filters = json_decode($filters, false);
 
         $matches = $this->matchService->getMatchesByType($filters, $type, $page);
-        $matches = $this->matchService->matchesDecorator($matches);
+        $matches = $this->matchService->matchesDecorator($matches, $type);
         $counts = [];
 
         foreach (MatchService::MATCH_TYPES as $type) {

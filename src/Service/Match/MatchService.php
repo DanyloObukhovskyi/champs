@@ -243,9 +243,10 @@ class MatchService extends EntityService
 
     /**
      * @param array $matches
+     * @param $type
      * @return array
      */
-    public function matchesDecorator(array $matches)
+    public function matchesDecorator(array $matches, $type = 'live')
     {
         $items = [];
 
@@ -266,7 +267,7 @@ class MatchService extends EntityService
                     "items" => [],
                 ];
             }
-            $items[$startDay]["items"][] = $this->matchDecorator($match);
+            $items[$startDay]["items"][] = $this->matchDecorator($match, $type);
         }
         ksort($items);
         $items = array_reverse($items);
@@ -276,10 +277,11 @@ class MatchService extends EntityService
 
     /**
      * @param Match $match
+     * @param $type
      * @param string $locale
      * @return array
      */
-    public function matchDecorator(Match $match)
+    public function matchDecorator(Match $match, $type = live)
     {
         if (!empty($match->getEvent()) and !empty($match->getEvent()->getImage())){
             $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImage());
@@ -306,6 +308,7 @@ class MatchService extends EntityService
             ],
             "streams" => $this->getMatchStreams($match),
             "isLive" => $match->getLive() ? true : false,
+            'type' => $type,
             "slug" => $match->getSlug()
         ];
         $matchFields['statistics'] = $this->getMatchStatistics($match);
