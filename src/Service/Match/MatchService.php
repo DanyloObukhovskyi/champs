@@ -309,7 +309,7 @@ class MatchService extends EntityService
             "streams" => $this->getMatchStreams($match),
             "isLive" => $match->getLive() ? true : false,
             'type' => $type,
-            'streamTime' => $match->getStartAt()->getTimestamp() < date()->getTimestamp(),
+            'streamTime' => $match->getStartAt()->getTimestamp() < date('')->getTimestamp(),
             "slug" => $match->getSlug()
         ];
         $matchFields['statistics'] = $this->getMatchStatistics($match);
