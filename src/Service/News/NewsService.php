@@ -83,7 +83,7 @@ class NewsService extends EntityService
             'type' => $type,
             'tags' => $tags,
             'game' => !empty($news->getGame()) ? $news->getGame() : null,
-            'date_ru' => self::replaceMonth($news->getDate()->format('d F H:i')),
+            'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
             'views' => $news->getViews() ?? 0,
             'commentsCount' => count($news->getComments()),
