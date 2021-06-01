@@ -17,7 +17,7 @@
                 </div>
                 <match-row
                         :key="index"
-                        :show-score="match.isLive || selectMatchesType === 'past'"
+                        :show-score="match.type === 'live'|| match.isLive || selectMatchesType === 'past'"
                         :match="match"
                         :is-past="selectMatchesType === 'past'"
                         v-for="(match, index) in day.items">
