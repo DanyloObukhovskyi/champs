@@ -29,7 +29,7 @@
                     <div class="score" v-else-if="showScore">
                         0
                     </div>
-                    <div class="vs">
+                    <div class="vs_future">
 <!--                        <img src="/images/matches/vs.png">-->
                     </div>
                     <div class="score" v-if="showScore && match.teamB !== null" :class="getScoreClass(match.teamB.score, match.teamA.score)">
@@ -305,6 +305,9 @@
     }
 
     .vs {
+
+    }
+    .vs_future {
         clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
         height: 4.5vw;
         width: 4.5vw;
@@ -312,7 +315,7 @@
                 0deg
                 , rgba(255,181,132,1) 9%, rgba(160,67,170,0) 90%);
     }
-    .vs:before {
+    .vs_future:before {
         content: 'VS';
         position: absolute;
         left: 50%;
