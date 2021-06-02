@@ -281,7 +281,7 @@ class MatchService extends EntityService
      * @param string $locale
      * @return array
      */
-    public function matchDecorator(Match $match, $type = live)
+    public function matchDecorator(Match $match, $type = 'live')
     {
         if (!empty($match->getEvent()) and !empty($match->getEvent()->getImage())){
             $this->imageService->setImage($match->getEvent() === null ? null : $match->getEvent()->getImage());
