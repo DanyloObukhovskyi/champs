@@ -22,6 +22,11 @@ class RatingPersonService extends EntityService
     protected $imageService;
 
     /**
+     * @var PersonService
+     */
+    protected $personService;
+
+    /**
      * RatingPersonService constructor.
      * @param $entityManager
      */
@@ -30,6 +35,7 @@ class RatingPersonService extends EntityService
         parent::__construct($entityManager);
 
         $this->imageService = new ImageService();
+        $this->personService = new PersonService($entityManager);
     }
 
     /**
@@ -74,7 +80,7 @@ class RatingPersonService extends EntityService
     {
         $players = [];
 
-        foreach ($ratingPlayers as $ratingPlayer){
+        foreach ($ratingPlayers as $ratingPlayer) {
             $players[] = $this->retingPlayerDecorator($ratingPlayer);
         }
         return $players;
@@ -88,42 +94,7 @@ class RatingPersonService extends EntityService
     {
         /** @var Person $person */
         $person = $ratingPerson->getPerson();
-        $this->imageService->setImage($person->getPhoto());
-        $image = $this->imageService->getImagePath();
 
-        $flag = $person->getFlagIcon();
-        $flagID = $person->getFlagIconId();
-
-        if (isset($flag)){
-            $flag = $flag->getName();
-        }
-        $this->imageService->setImage($flag);
-        $flag = $this->imageService->getImagePath();
-
-        $player = [
-            'user_id' => $person->getId (),
-        	'person_id' => $ratingPerson->getId(),
-            'rating' => $ratingPerson->getRating(),
-            'nickname' => $person->getNick(),
-            'fullname' => $person->getName(),
-            'image' => $image,
-            'flag' => $flag,
-            'flag_id' => $flagID
-        ];
-
-
-        if (!empty($person->getPlayer())){
-            /** @var Team $team */
-            $team = $person->getPlayer()->getTeam();
-            $this->imageService->setImage($team->getLogo());
-            $logo = $this->imageService->getImagePath();
-
-            $player['team'] = [
-                'title' => $team->getName(),
-                'image' =>$logo,
-                'id' => $team->getId()
-            ];
-        }
-        return $player;
+        return $this->personService->personDecorate($person);
     }
 }

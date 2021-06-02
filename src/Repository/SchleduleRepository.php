@@ -30,15 +30,14 @@ class SchleduleRepository extends ServiceEntityRepository
      */
     public function getByDate(\Datetime $date)
     {
-        $from = new \DateTime($date->format("Y-m-d")." 00:00:00");
-        $to   = new \DateTime($date->format("Y-m-d")." 23:59:59");
+        $from = new \DateTime($date->format("Y-m-d") . " 00:00:00");
+        $to = new \DateTime($date->format("Y-m-d") . " 23:59:59");
 
         $qb = $this->createQueryBuilder("e");
         $qb
             ->andWhere('e.date BETWEEN :from AND :to')
-            ->setParameter('from', $from )
-            ->setParameter('to', $to)
-        ;
+            ->setParameter('from', $from)
+            ->setParameter('to', $to);
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -54,8 +53,7 @@ class SchleduleRepository extends ServiceEntityRepository
             ->andWhere('l.trainer_id = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -66,17 +64,16 @@ class SchleduleRepository extends ServiceEntityRepository
      */
     public function findByUserAndDate(int $userId, \Datetime $date)
     {
-        $from = new \DateTime($date->format("Y-m-d")." 00:00:00");
-        $to   = new \DateTime($date->format("Y-m-d")." 23:59:59");
+        $from = new \DateTime($date->format("Y-m-d") . " 00:00:00");
+        $to = new \DateTime($date->format("Y-m-d") . " 23:59:59");
 
         $qb = $this->createQueryBuilder("e");
         $qb
             ->andWhere('e.date BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->andWhere('e.trainer_id = :val')
-            ->setParameter('val', $userId)
-        ;
+            ->setParameter('val', $userId);
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -91,15 +88,14 @@ class SchleduleRepository extends ServiceEntityRepository
      */
     public function findByUserAndDateFrom(int $userId, \Datetime $date)
     {
-        $from = new \DateTime($date->format("Y-m-d")." 00:00:00");
+        $from = new \DateTime($date->format("Y-m-d") . " 00:00:00");
 
         $qb = $this->createQueryBuilder("e");
         $qb
             ->andWhere('e.date > :from')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->andWhere('e.trainer_id = :val')
-            ->setParameter('val', $userId)
-        ;
+            ->setParameter('val', $userId);
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -113,13 +109,13 @@ class SchleduleRepository extends ServiceEntityRepository
      */
     public function findByTrainerAndDateWeek(int $trainer_id, \Datetime $date)
     {
-        $from = new \DateTime($date->format("Y-m-d")." 00:00:00");
-        $to   = new \DateTime($date->format("Y-m-d")." 23:59:59");
+        $from = new \DateTime($date->format("Y-m-d") . " 00:00:00");
+        $to = new \DateTime($date->format("Y-m-d") . " 23:59:59");
         $to->modify('+6 day');
 
         $qb = $this->createQueryBuilder("e");
         $qb->andWhere('e.date BETWEEN :from AND :to')
-            ->setParameter('from', $from )
+            ->setParameter('from', $from)
             ->setParameter('to', $to)
             ->andWhere('e.trainer_id = :val')
             ->setParameter('val', $trainer_id);

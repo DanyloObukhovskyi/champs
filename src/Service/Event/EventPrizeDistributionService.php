@@ -15,8 +15,13 @@ class EventPrizeDistributionService extends EntityService
 
     protected $repository;
 
+    /** @var TeamService */
     protected $teamService;
 
+    /**
+     * EventPrizeDistributionService constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct($entityManager);
@@ -24,10 +29,16 @@ class EventPrizeDistributionService extends EntityService
         $this->teamService = new TeamService($entityManager);
     }
 
+    /**
+     * @param $values
+     * @param $event
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function create($values, $event)
     {
-        if (empty($values['teamName']))
-        {
+        if (empty($values['teamName'])) {
             $team = null;
         } else {
             $team = $this->teamService->getByName($values['teamName']);
@@ -36,35 +47,33 @@ class EventPrizeDistributionService extends EntityService
         /** @var EventPrizeDistribution $eventPrizeDistribution */
         $eventPrizeDistribution = $this->repository->findByTeamAndEvent($values['position'], $event, $team);
 
-        if (empty($eventPrizeDistribution))
-        {
+        if (empty($eventPrizeDistribution)) {
             $eventPrizeDistribution = new $this->entity;
         }
         $eventPrizeDistribution->setEvent($event);
         $eventPrizeDistribution->setTeam($team);
         $eventPrizeDistribution->setPosition($values['position'] ?? null);
-        $eventPrizeDistribution->setPrize($values['prize'] ?? null);
+        $eventPrizeDistribution->setPrize(!empty($values) ?  $values['prize'] ?? null : null);
 
         return $this->save($eventPrizeDistribution);
     }
 
+    /**
+     * @param $prizeDistributions
+     * @return array
+     */
     public function prizeDecorator($prizeDistributions)
     {
         $prizes = [];
 
         /** @var EventPrizeDistribution $prizeDistribution */
-        foreach ($prizeDistributions as $prizeDistribution)
-        {
+        foreach ($prizeDistributions as $prizeDistribution) {
             $prize = [];
             $prize['position'] = $prizeDistribution->getPosition();
             $prize['prize'] = $prizeDistribution->getPrize();
+            $prize['team'] = !empty($prizeDistribution->getTeam()) ?  $prizeDistribution->getTeam()->jsonSerialize(): null;
 
-            $team = $prizeDistribution->getTeam();
-            if (!empty($team)){
-                $prize['team'] = $this->teamService->teamDecorator($team);
-            }
-
-            $prizes[] = $prize;
+            $prizes[$prize['position']] = $prize;
         }
         return $prizes;
     }

@@ -10,14 +10,8 @@
 			</div>
 		<?php } ?>
 	<aside>
-		<ul>
-			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[1]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a></li>
-			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[2]) ? '' : 'display:none'; ?>"><a href="<?php echo base_url("c-admin/matches/page/1"); ?>" >Статистика</a></li>
-			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/users/page/1'); ?>"> Пользователи</a></li>
-			<li style="<?php print ($current_u_can[0] == 1 || $current_u_can[3]) ? '' : 'display:none'; ?>" class="active" ><a href="<?php echo base_url('c-admin/trainers/page/1'); ?>">Тренера</a></li>
-			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a></li>
-			<li style="<?php print ($current_u_can[0] == 1) ? '' : 'display:none'; ?>"><a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a></li>
-		</ul>
+        <?php $activePath = 'trainers';?>
+        <?php require_once APPPATH.'views/sidebar.php'?>
 	</aside>
 	<!--- ---->
 	<?php
@@ -44,15 +38,30 @@
 			?>
 			<i class="input-icon icon icon-search"></i>
 		</div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation"
+                class="<?php echo 'all' === $price_type ? 'active': ''?>">
+                <a href="<?php echo base_url("c-admin/trainers/all/page/1"); ?>">
+                    Все
+                </a>
+            </li>
+            <?php foreach ($prices as $type => $label):?>
+            <li role="presentation"
+                class="<?php echo $type === $price_type ? 'active': ''?>">
+                <a href="<?php echo base_url("c-admin/trainers/$type/page/1"); ?>">
+                    <?php echo $label?>
+                </a>
+            </li>
+            <?php endforeach;?>
+        </ul>
 		<div class="relative">
 			<table class="new-table">
 				<thead>
 				<tr>
 					<td class="width-5"><a href="<?php print base_url('c-admin/trainers/page/1?sort[id]=' . ($sort_id == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> ID</a></td>
 					<td class="width-5"><a href="<?php print base_url('c-admin/trainers/page/1?sort[email]='.($sort_email == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col"> Фото</a></td>
-					<td class="width-20"><a href="<?php print base_url('c-admin/trainers/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Цена/час</a></td>
 					<td class="width-25"><a href="<?php print base_url('c-admin/trainers/page/1?sort[roles]='.($sort_type == 'asc' ? 'desc' : 'asc')); ?>"class="table-head-col">Никнейм</a></td>
-					<td class="width-15">Каледдарь</td>
+					<td class="width-15">Календарь</td>
 					<td class="width-10 pr-140 t-a-r">Опции</td>
 				
 				</tr>
@@ -67,9 +76,8 @@
 						<tr>
 							<td><?php echo $val['id']; ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><img class="profile-pic-small" src="<?php print $imgs_url.$val['photo']; ?>" /></td>
-							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['cost'].".руб/час" ?></td>
 							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><?php print $val['nickname']; ?></td>
-							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><a class="pointer" href="<?php print "/ru/marketplace?trainerId=".$val['userid']; ?>"><button class="btn btn-dark-blue btn-small">Календарь</button></a></td>
+							<td class="js-expand-table-item pointer" data-id="<?php echo $rmo_i; ?>"><a class="pointer" href="<?php print $this->config->item('main_url')."ru/obucheniye?trainerId=".$val['userid']; ?>"><button class="btn btn-dark-blue btn-small">Календарь</button></a></td>
 							<td class="t-a-r pr-15"><a class="pointer" href="<?php print base_url("c-admin/trainer/edit/".$val['userid']."/".$UserID); ?>"><button class="btn btn-dark-blue btn-small">Редактировать</button></a> <div onclick="c_delete(<?php print "'". base_url("c-admin/trainer/delete/".$val['userid']."/".$UserID)."'"; ?>,<?php print "'".$val['nickname']."'";?>,'Post')" class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить</div></td>
 						
 						</tr>

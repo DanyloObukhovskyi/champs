@@ -19,8 +19,7 @@ class EventGroupPlayService extends EntityService
     {
         $eventGroup = $this->repository->findByGroupAndTeamAndEvent($groupName, $team, $event);
 
-        if (empty($eventGroup))
-        {
+        if (empty($eventGroup)) {
             /** @var EventGroup $eventGroup */
             $eventGroup = new $this->entity;
             $eventGroup->setTeam($team);
@@ -42,8 +41,7 @@ class EventGroupPlayService extends EntityService
         $groups = [];
 
         /** @var EventGroup $eventGroup */
-        foreach ($eventGroups as $eventGroup)
-        {
+        foreach ($eventGroups as $eventGroup) {
             $groups[$eventGroup->getGroupName()][] = [
                 'team' => $eventGroup->getTeam(),
                 'm' => $eventGroup->getM(),

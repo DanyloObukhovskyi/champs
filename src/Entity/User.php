@@ -13,6 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    public const DEFAULT_TIMEZONE = 'Europe/Moscow';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -21,7 +23,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 
@@ -57,14 +59,14 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=25, nullable=true)
+     * @ORM\ManyToOne(targetEntity=Game::class)
      */
     private $game;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $rank;
+    private $rang;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -75,6 +77,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $steam_id;
+
     private $trainer = null;
     /**
      * @ORM\OneToMany(targetEntity=Charactristics::class, mappedBy="user")
@@ -108,14 +111,76 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $vk;
+    /**
+     * @ORM\ManyToMany(targetEntity=MvpTeam::class)
+     * @ORM\JoinTable(
+     *  name="mvp_team_user",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="mvp_team_id", referencedColumnName="id")
+     *  }
+     * )
+     */
+    private $mvpTeams;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $discordId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $faceBookId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $twichId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $vkId;
+    /**
+     * @ORM\Column(type="string", options={"default" : "Europe/Moscow"})
+     */
+    private $timezone;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $gender;
+    /**
+     * @ORM\Column(type="date", length=255, nullable=true)
+     */
+    private $bday;
+    /**
+     * @ORM\ManyToOne(targetEntity=Game::class)
+     */
+    private $additionallyGame;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $additionallyRank;
+    /**
+     * @ORM\ManyToOne(targetEntity=Country::class)
+     */
+    private $country;
+    /**
+     * @ORM\ManyToOne(targetEntity=City::class)
+     */
+    private $city;
 
     public function __construct()
     {
         $this->charactristics = new ArrayCollection();
-        $this->reviews        = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
         $this->trainerReviews = new ArrayCollection();
         $this->purseHistories = new ArrayCollection();
-        $this->videosUrls     = new ArrayCollection();
+        $this->videosUrls = new ArrayCollection();
+        $this->mvpTeams = new ArrayCollection();
     }
 
     /**
@@ -245,7 +310,7 @@ class User implements UserInterface
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): self
+    public function setPhoto($photo = null): self
     {
         $this->photo = $photo;
 
@@ -269,26 +334,26 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGame(): ?string
+    public function getGame(): ?Game
     {
         return $this->game;
     }
 
-    public function setGame(?string $game): self
+    public function setGame(Game $game): self
     {
         $this->game = $game;
 
         return $this;
     }
 
-    public function getRank(): ?string
+    public function getRang(): ?string
     {
-        return $this->rank;
+        return $this->rang;
     }
 
-    public function setRank(?string $rank): self
+    public function setRang(?string $rang): self
     {
-        $this->rank = $rank;
+        $this->rang = $rang;
 
         return $this;
     }
@@ -327,8 +392,7 @@ class User implements UserInterface
 
     public function addCharactristic(Charactristics $charactristic): self
     {
-        if (!$this->charactristics->contains($charactristic))
-        {
+        if (!$this->charactristics->contains($charactristic)) {
             $this->charactristics[] = $charactristic;
             $charactristic->setUser($this);
         }
@@ -338,12 +402,10 @@ class User implements UserInterface
 
     public function removeCharactristic(Charactristics $charactristic): self
     {
-        if ($this->charactristics->contains($charactristic))
-        {
+        if ($this->charactristics->contains($charactristic)) {
             $this->charactristics->removeElement($charactristic);
             // set the owning side to null (unless already changed)
-            if ($charactristic->getUser() === $this)
-            {
+            if ($charactristic->getUser() === $this) {
                 $charactristic->setUser(null);
             }
         }
@@ -373,8 +435,7 @@ class User implements UserInterface
 
     public function addReview(Review $review): self
     {
-        if (!$this->reviews->contains($review))
-        {
+        if (!$this->reviews->contains($review)) {
             $this->reviews[] = $review;
             $review->setStudent($this);
         }
@@ -384,12 +445,10 @@ class User implements UserInterface
 
     public function removeReview(Review $review): self
     {
-        if ($this->reviews->contains($review))
-        {
+        if ($this->reviews->contains($review)) {
             $this->reviews->removeElement($review);
             // set the owning side to null (unless already changed)
-            if ($review->getStudent() === $this)
-            {
+            if ($review->getStudent() === $this) {
                 $review->setStudent(null);
             }
         }
@@ -407,8 +466,7 @@ class User implements UserInterface
 
     public function addTrainerReview(Review $trainerReview): self
     {
-        if (!$this->trainerReviews->contains($trainerReview))
-        {
+        if (!$this->trainerReviews->contains($trainerReview)) {
             $this->trainerReviews[] = $trainerReview;
             $trainerReview->setTrainer($this);
         }
@@ -418,12 +476,10 @@ class User implements UserInterface
 
     public function removeTrainerReview(Review $trainerReview): self
     {
-        if ($this->trainerReviews->contains($trainerReview))
-        {
+        if ($this->trainerReviews->contains($trainerReview)) {
             $this->trainerReviews->removeElement($trainerReview);
             // set the owning side to null (unless already changed)
-            if ($trainerReview->getTrainer() === $this)
-            {
+            if ($trainerReview->getTrainer() === $this) {
                 $trainerReview->setTrainer(null);
             }
         }
@@ -441,8 +497,7 @@ class User implements UserInterface
 
     public function addPurseHistory(PurseHistory $purseHistory): self
     {
-        if (!$this->purseHistories->contains($purseHistory))
-        {
+        if (!$this->purseHistories->contains($purseHistory)) {
             $this->purseHistories[] = $purseHistory;
             $purseHistory->setUser($this);
         }
@@ -452,12 +507,10 @@ class User implements UserInterface
 
     public function removePurseHistory(PurseHistory $purseHistory): self
     {
-        if ($this->purseHistories->contains($purseHistory))
-        {
+        if ($this->purseHistories->contains($purseHistory)) {
             $this->purseHistories->removeElement($purseHistory);
             // set the owning side to null (unless already changed)
-            if ($purseHistory->getUser() === $this)
-            {
+            if ($purseHistory->getUser() === $this) {
                 $purseHistory->setUser(null);
             }
         }
@@ -507,5 +560,213 @@ class User implements UserInterface
     public function setVk($vk): void
     {
         $this->vk = $vk;
+    }
+
+    public function getMvpTeams()
+    {
+        return $this->mvpTeams;
+    }
+
+    public function getDiscordId()
+    {
+        return $this->discordId;
+    }
+
+    /**
+     * @param mixed $discordId
+     */
+    public function setDiscordId($discordId): void
+    {
+        $this->discordId = $discordId;
+    }
+
+    public function getFaceBookId()
+    {
+        return $this->faceBookId;
+    }
+
+    /**
+     * @param mixed $faceBookId
+     */
+    public function setFaceBookId($faceBookId): void
+    {
+        $this->faceBookId = $faceBookId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param mixed $googleId
+     */
+    public function setGoogleId($googleId): void
+    {
+        $this->googleId = $googleId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwichId()
+    {
+        return $this->twichId;
+    }
+
+    /**
+     * @param mixed $twichId
+     */
+    public function setTwichId($twichId): void
+    {
+        $this->twichId = $twichId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVkId()
+    {
+        return $this->vkId;
+    }
+
+    /**
+     * @param mixed $vkId
+     */
+    public function setVkId($vkId): void
+    {
+        $this->vkId = $vkId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone): void
+    {
+        $this->timezone = $timezone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBday()
+    {
+        return $this->bday;
+    }
+
+    /**
+     * @param mixed $bday
+     */
+    public function setBday($bday): void
+    {
+        $this->bday = $bday;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param mixed $city
+     */
+    public function setCity($city): void
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdditionallyGame()
+    {
+        return $this->additionallyGame;
+    }
+
+    /**
+     * @param mixed $additionallyGame
+     */
+    public function setAdditionallyGame($additionallyGame): void
+    {
+        $this->additionallyGame = $additionallyGame;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdditionallyRank()
+    {
+        return $this->additionallyRank;
+    }
+
+    /**
+     * @param mixed $additionallyRank
+     */
+    public function setAdditionallyRank($additionallyRank): void
+    {
+        $this->additionallyRank = $additionallyRank;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGlobalElite(): bool
+    {
+        $result = false;
+        /** @var Game $game */
+        $game = $this->getGame();
+
+        if (isset($game) and $game->getCode() === 'cs') {
+            if ((int)$this->getRang() >= $_ENV['ELO_FOR_GLOBAL_ELITE']) {
+                $result = true;
+            }
+        }
+        return $result;
     }
 }

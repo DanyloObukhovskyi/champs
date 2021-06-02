@@ -3,182 +3,307 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Entity\Match;
-use App\Entity\News;
-use App\Entity\Person;
-use App\Entity\RatingPerson;
-use App\Entity\RatingTeam;
-use App\Entity\Result;
+use App\Service\HLTVService;
+use App\Service\LoggerService;
+use App\Entity\{Result, Match};
 use App\Service\Event\EventService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
+use App\Service\News\NewsService;
+use App\Service\News\NewsTagService;
 use App\Service\RatingPersonService;
-use App\Service\RatingTeamService;
+use App\Service\YouTubeService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatorInterface;
+use App\Entity\SeoPages;
+use App\Service\Seo\SeoService;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class MainController extends DefController
 {
     /**
-     * @Route("/ru/", name="main")
+     * @var EntityManagerInterface
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public $entityManager;
+
+    /**
+     * @var MatchService
+     */
+    public $matchService;
+
+    /**
+     * @var NewsService
+     */
+    public $newsService;
+
+    /**
+     * @var EventService
+     */
+    public $eventService;
+
+    /**
+     * @var RatingPersonService
+     */
+    public $ratingPersonService;
+
+    /**
+     * @var YouTubeService
+     */
+    public $youTubeService;
+
+    /**
+     * @var NewsTagService
+     */
+    public $newsTagService;
+
+    /**
+     * @var SeoService
+     */
+    public $seoService;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        $this->matchService = new MatchService($entityManager);
+        $this->newsService = new NewsService($entityManager);
+
+        $this->eventService = new EventService($entityManager);
+        $this->ratingPersonService = new RatingPersonService($entityManager);
+
+        $this->youTubeService = new YouTubeService();
+        $this->newsTagService = new NewsTagService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
+    }
+
+    /**
+     * @Route("/", name="main")
+     */
+    public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         // get the login error if there is one
         $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $authenticationUtils->getLastUsername();
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $matchService = new MatchService($entityManager);
-        $eventService = new EventService($entityManager);
-        $ratingPlayersService = new RatingPersonService($entityManager);
-        $ratingCommandService = new RatingTeamService($entityManager);
+        $token = $request->get('token');
 
-        $matches = $entityManager->getRepository(Match::class)->findMatchesByDate(new \DateTime());
-        $matchesItems = $matchService->matchesDecorator($matches);
+        $popularTags = $this->newsTagService->popularTags(10);
 
-        $events = $entityManager->getRepository(Event::class)->getCurrentEvents();
-        $eventItems = $eventService->eventsDecorator($events);
+        $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
 
-        $results =  $entityManager->getRepository(Result::class)->getCurrent();
-        $matchResults = [];
+        $newsEntities = $this->newsService->getMainNews();
 
-        // RATING PLAYERS
-        $ratingPlayers = $entityManager->getRepository(RatingPerson::class)->getRatingPersons();
-        $ratingPlayers = $ratingPlayersService->retingPlayersDecorator($ratingPlayers);
-
-        // RATING COMMANDS
-        $ratingCommands = $entityManager->getRepository(RatingTeam::class)->getRatingTeams();
-        $ratingCommands = $ratingCommandService->retingTeamsDecorator($ratingCommands);
-
-        // BEST PLAYER WEEK
-        /** @var Person $playerWeek */
-        $playerWeek = $entityManager->getRepository(Person::class)->getWeekPlayer();
-
-        $currDate = null;
-        foreach ($results as $result)
-        {
-            $match = $result->getMatch();
-
-            $key = date("d", $match->getStartAt()->getTimestamp());
-            /** @var Match $match */
-
-            if (!array_key_exists($key, $matchResults))
-            {
-                $matchResults[$key] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $matchResults[$key]["items"][] = $matchService->matchDecorator($match);
+        $news = [];
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
         }
+        $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
-        $repository = $entityManager->getRepository(News::class);
-        $news = $repository->findBy([],['date'=>'DESC'],6,0);
-	
-	    $livesItems = [
-		    [
-			    'id' => 1,
-			    'video_id' => "Nz3_Vg5GBio",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "ТОП 5 мобильных игр | Champs | Hino",
-		    ],
-		    [
-			    'id' => 2,
-			    'video_id' => "1NnA3hbwqRY",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "ММОшим / Champs / ModirDred",
-		    ],
-		    [
-			    'id' => 3,
-			    'video_id' => "Lmz9itL7sqs",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "Новости недели / Hino x ModirDred / Champs",
-		    ],
-		    [
-			    'id' => 4,
-			    'video_id' => "cwd6zSjKEW4",
-			    'video_type' => 0,
-			    'logo' => "",
-			    'title' => "Cyberpunk 2077 | Однопользовательские | Champs | MontemDred"
-		    ],
-	    ];
-        
-	    /*
-	    * stream - news type - 8
-	    * video - news type - 3
-	    */
-	    $VideoData = $repository->findBy(['type'=>array(8, 3)],['date'=>'DESC'],4,0); //8 - stream; 3 - video
-	    $VideoItems = $this->prepare_video($VideoData);
-	    if(count($VideoItems) < 4) {
-		    $ij =  4 - (4 - count($VideoItems));
-		    for($ij; $ij < 4; $ij++) {
-			    $VideoItems[$ij] = $livesItems[$ij];
-		    }
-	    }
-        
         return $this->render('templates/home.html.twig', [
-            'events' => $eventItems,
+            'link' => $link,
+            'news' => $news,
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
             'router' => 'home',
-            'matches' => $matchesItems,
-            'results' => $matchResults,
-//            'videoNews' => $livesItems,
-	        'videoNews' => $VideoItems,
-            'ratingPlayers' => $ratingPlayers,
-            'ratingCommands' => $ratingCommands,
-            'playerWeek' => $playerWeek,
-            'news' => $news
-            ]);
+            'token' => $token,
+            'popularTags' => $popularTags
+        ]);
     }
-	
-	public function prepare_video($data=array()) {
-		$VideoItems = array();
-		if(!empty($data)) {
-			foreach ($data as $v_key => &$v_value) {
-				$tmp = array();
-				$tmp['id'] = $v_value->getId();
-				
-				$link = $v_value->getText();
-				preg_match("/http|s:\/\//",$link,$match_items);
-				preg_match("/twitch/",$link,$is_TW);
-				preg_match("/youtu/",$link,$is_YT);
-				if(strlen($link) == 11 && count($match_items) == 0) {
-					$tmp['video_type'] = 0; //YouTube video
-					$tmp['video_id'] = $link;
-				}
-				if(count($is_TW) > 0) {
-					$tmp['video_type'] = 1; //Twich video
-					$link = str_replace("https://www.twitch.tv/", "", $link);
-					$link = str_replace("http://www.twitch.tv/", "", $link);
-					$link = str_replace("https://twitch.tv/", "", $link);
-					$link = str_replace("http://twitch.tv/", "", $link);
-					$link = str_replace("https://player.twitch.tv/?channel=", "", $link);
-					$link = str_replace("http://player.twitch.tv/?channel=", "", $link);
-					$tmp['video_id'] = $link;
-				}
-				if(count($is_YT) > 0) {
-					$tmp['video_type'] = 0; //YouTube video
-					$link = str_replace("https://youtu.be/", "", $link);
-					$link = str_replace("http://youtu.be/", "", $link);
-					$link = str_replace("https://www.youtube.com/watch?v=", "", $link);
-					$link = str_replace("http://www.youtube.com/watch?v=", "", $link);
-					
-					$tmp['video_id'] = $link;
-				}
-				$tmp['logo'] = $v_value->getLogo();
-				$tmp['title'] = $v_value->getTitle();
-				$VideoItems[$v_key] = $tmp;
-			}
-		}
-		return $VideoItems;
-	}
-	
+
     /**
-     * @Route("/ru/404", name="notFound")
+     * @Route("/", name="main_redirect")
+     */
+    public function redirectToLogin(AuthenticationUtils $authenticationUtils, Request $request): Response
+    {
+        // get the login error if there is one
+        $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $authenticationUtils->getLastUsername();
+
+        $token = $request->get('token');
+
+        $popularTags = $this->newsTagService->popularTags(10);
+
+        $seoSettings = $this->seoService->getSeo($request->attributes->get('_route'));
+
+        $newsEntities = $this->newsService->getMainNews();
+
+        $news = [];
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
+
+        return $this->render('templates/home.html.twig', [
+            'link' => $link,
+            'news' => $news,
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'router' => 'home',
+            'token' => $token,
+            'popularTags' => $popularTags
+        ]);
+    }
+
+    /**
+     * @Route("/{game}", requirements={"game": "cs"})
+     */
+    public function gameHome($game): Response
+    {
+        return $this->render("templates/home/$game.html.twig", [
+            'router' => 'home',
+        ]);
+    }
+
+    public function prepareVideo($data = array())
+    {
+        $VideoItems = array();
+        if (!empty($data)) {
+            foreach ($data as $v_key => &$v_value) {
+                $tmp = array();
+                $tmp['id'] = $v_value->getId();
+
+                $link = $v_value->getText();
+                preg_match("/http|s:\/\//", $link, $match_items);
+                preg_match("/twitch/", $link, $is_TW);
+                preg_match("/youtu/", $link, $is_YT);
+                if (strlen($link) == 11 && count($match_items) == 0) {
+                    $tmp['video_type'] = 0; //YouTube video
+                    $tmp['video_id'] = $link;
+                }
+                if (count($is_TW) > 0) {
+                    $tmp['video_type'] = 1; //Twich video
+                    $link = str_replace("https://www.twitch.tv/", "", $link);
+                    $link = str_replace("http://www.twitch.tv/", "", $link);
+                    $link = str_replace("https://twitch.tv/", "", $link);
+                    $link = str_replace("http://twitch.tv/", "", $link);
+                    $link = str_replace("https://player.twitch.tv/?channel=", "", $link);
+                    $link = str_replace("http://player.twitch.tv/?channel=", "", $link);
+                    $tmp['video_id'] = $link;
+                }
+                if (count($is_YT) > 0) {
+                    $tmp['video_type'] = 0; //YouTube video
+                    $link = str_replace("https://youtu.be/", "", $link);
+                    $link = str_replace("http://youtu.be/", "", $link);
+                    $link = str_replace("https://www.youtube.com/watch?v=", "", $link);
+                    $link = str_replace("http://www.youtube.com/watch?v=", "", $link);
+
+                    $tmp['video_id'] = $link;
+                }
+                $tmp['logo'] = $v_value->getLogo();
+                $tmp['title'] = $v_value->getTitle();
+                $date = $v_value->getDate()->format('d F Y');
+
+                foreach (MatchService::MOHTHS as $month => $lang) {
+                    $date = str_replace($month, $lang, $date);
+                }
+                $tmp['date'] = $date;
+                $VideoItems[$v_key] = $tmp;
+            }
+        }
+        return $VideoItems;
+    }
+
+    /**
+     * @Route("/main/results")
+     */
+    public function getMainResults()
+    {
+        $results = $this->entityManager
+            ->getRepository(Result::class)
+            ->getCurrent();
+
+        $matchResults = [];
+        foreach ($results as $result) {
+            /** @var Match $match */
+            $match = $result->getMatch();
+            $matchResults[] = $this->matchService->matchDecorator($match);
+        }
+        return $this->json($matchResults);
+    }
+
+    /**
+     * @Route("/main/live/matches")
+     */
+    public function getMainLiveMatches()
+    {
+        $matches = $this->entityManager
+            ->getRepository(Match::class)
+            ->findBy(['live' => 1], ['id' => 'DESC'], 6);
+
+        $matchesItems = $this->matchService->matchesDecorator($matches);
+
+        return $this->json($matchesItems);
+    }
+
+    /**
+     * @Route("/main/news")
+     */
+    public function getMainNews()
+    {
+        $news = $this->newsService->getMainNews();
+
+        $newsArray = [];
+        foreach ($news as $new) {
+            $newsArray[] = $this->newsService->decorator($new);
+        }
+        return $this->json($newsArray);
+    }
+
+    /**
+     * @Route("/main/video/news")
+     */
+    public function getVideoNews(TranslatorInterface $translator)
+    {
+        try {
+            $videos = $this->youTubeService->getVideoList(10);
+        } catch (\Exception $e) {
+            $videos = [];
+        }
+        $parseVideos = [];
+
+        foreach ($videos as $video) {
+            $month = $translator->trans($video['date']->format('F'));
+            $date = $video['date']->format('d ') . $month . $video['date']->format(' Y');
+
+            $video['date'] = $date;
+            $parseVideos[] = $video;
+        }
+        return $this->json($parseVideos);
+    }
+
+    /**
+     * @Route("/main/events")
+     */
+    public function getMainRatingPlayers()
+    {
+        $events = $this->entityManager
+            ->getRepository(Event::class)
+            ->getCurrentEvents();
+
+        $events = $this->eventService
+            ->eventsDecorator($events);
+
+        return $this->json($events);
+    }
+
+    /**
+     * @Route("/404", name="notFound")
      */
     public function notFound()
     {
@@ -186,16 +311,16 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/setcookies", name="main_setcookies")
+     * @Route("/setcookies", name="main_setcookies")
      */
     public function setcookies()
     {
-        setcookie("cookie_agree", 'true');
+        setcookie("cookie_agree", true);
         return $this->json(array('status' => true));
     }
 
     /**
-     * @Route("/ru/map", name="map_index")
+     * @Route("/map", name="map_index")
      */
     public function index()
     {
@@ -209,7 +334,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/ru/service_agreement", name="service_agreement_index")
+     * @Route("/oferta_na_okazanie_uslug_treneru", name="service_agreement_index")
      */
     public function service_agreement()
     {
@@ -221,4 +346,69 @@ class MainController extends DefController
         ]);
     }
 
+    /**
+     * @Route("/main/matches")
+     */
+    public function getMainMatches(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+        $date = !empty($request->date) ? new \DateTime($request->date) : new \DateTime();
+
+        $matches = $this->entityManager
+            ->getRepository(Match::class)
+            ->findMatchesByDate($date);
+
+        $matchesParse = [];
+        foreach ($matches as $match) {
+            $matchesParse[] = $this->matchService->matchDecorator($match);
+        }
+
+        return $this->json([
+            'dateRu' => NewsService::replaceMonth($date->format('d F')),
+            'matches' => $matchesParse
+        ]);
+    }
+
+    /**
+     * @Route("/test/mail")
+     */
+    public function testMail(\Swift_Mailer $mailer)
+    {
+        $this->dispatchMessage(new TestMail($mailer));
+    }
+
+    /**
+     * @Route("/test/parser")
+     */
+    public function checkParser(){
+        LoggerService::info("get events");
+        $events = HLTVService::getMainEvents();
+        echo "<pre>";
+        var_dump($events);
+        die;
+        if (empty($events)) {
+            return null;
+        }
+        $result = [];
+
+        foreach ($events as $event) {
+
+            if (isset($event['started_at'])) {
+                $eventEntity = $this->eventService->create($event, $parseDate);
+            }
+
+            if (empty($eventEntity)) {
+                LoggerService::error("event entity didnt created");
+            } else {
+                if ($isNotMain) {
+                    $this->eventShowService->createOrUpdate($eventEntity, $this->parseDate);
+                }
+                $result[] = $eventEntity;
+            }
+        }
+
+        return !empty($result) ? $result : null;
+
+        return $events;
+    }
 }

@@ -7,24 +7,42 @@
 namespace App\Service\Event;
 
 
+use App\Entity\City;
+use App\Entity\Country;
+use App\Entity\Game;
 use App\Message\Match;
 use App\Service\DownloadFile;
 use App\Service\EntityService;
 use App\Service\FlagIconService;
 use App\Service\ImageService;
 use App\Service\MapService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
+use App\Service\News\NewsService;
 use App\Service\TeamService;
 use App\Traits\Dispatchable;
+use Ausi\SlugGenerator\SlugGenerator;
 use DateTime;
 use App\Entity\Event;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Translation\Translator;
 
 class EventService extends EntityService
 {
     use Dispatchable;
+
+    public const FUTURE = 'future';
+
+    public const LIVE = 'live';
+
+    public const PAST = 'past';
+
+    public const TYPES = [
+        self::FUTURE,
+        self::LIVE,
+        self::PAST,
+    ];
 
     protected $entity = Event::class;
 
@@ -89,6 +107,8 @@ class EventService extends EntityService
     /**
      * @param $values
      * @param DateTime|null $parseDate
+     * @return Event
+     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -127,8 +147,7 @@ class EventService extends EntityService
     public function getByNameAndStartDate($name, $startAt)
     {
         $event = $this->repository->getByNameAndStartDate($name, $startAt);
-        if (isset($event))
-        {
+        if (isset($event)) {
             $this->entityManager->persist($event);
             return $event;
         }
@@ -146,8 +165,7 @@ class EventService extends EntityService
     public function getByNameAndBetweenDate($name, $date)
     {
         $event = $this->repository->getByNameAndBetweenDate($name, $date);
-        if (isset($event))
-        {
+        if (isset($event)) {
             $this->entityManager->persist($event);
             return $event;
         }
@@ -163,62 +181,99 @@ class EventService extends EntityService
     {
         $eventItems = [];
 
-        foreach ($events as $event)
-        {
-            /** @var Event $event */
-            $eventItems[] = [
-                "id" => $event->getId(),
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $event->getImage(),
-                'imageHeader' => $event->getImageHeader()
-            ];
+        /** @var Event $event */
+        foreach ($events as $event) {
+            if(empty($event->getGame())){
+                /** @var Game|NULL $gameEntity */
+                $gameEntity = $this->entityManager->getRepository(Game::class)
+                    ->findOneBy(['code' => 'Counter-Strike: Global Offensive']);
+                $event->setGame($gameEntity);
+                $this->entityManager->flush();
+            }
+            $eventItems[] = $this->decorator($event);
         }
         return $eventItems;
     }
 
+    public function citiesDecorator(array $cities): array
+    {
+        $cityItems = [];
+
+        /** @var City $city */
+        foreach ($cities as $city) {
+            $cityItems[] = $this->decoratorForCity($city);
+        }
+        return $cityItems;
+    }
+
+    public function countriesDecorator(array $countries): array
+    {
+        $countryItems = [];
+
+        /** @var Country $country */
+        foreach ($countries as $country) {
+            $countryItems[] = $this->decoratorForCountry($country);
+        }
+        return $countryItems;
+    }
+
     /**
-     * @param $events
+     * @param Event $event
      * @return array
      */
-    public function futureEventsDecorator($events): array
+    public function decorator(Event $event)
     {
-        $futureEventItems = [];
-        foreach ($events as $event)
-        {
+        $generator = new SlugGenerator;
 
-            /** @var Event $event */
-            if (!array_key_exists(date("F Y", $event->getStartedAt()->getTimestamp()), $futureEventItems))
-            {
-                $futureEventItems[date("F Y",$event->getStartedAt()->getTimestamp())] = [
-                    "date" => date("F Y", $event->getStartedAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $image = $event->getImage();
-            $this->imageService->setImage($image);
+        $dayStart = $event->getStartedAt()->format('d F');
+        $dayEnd = !empty($event->getEndedAt()) ? $event->getEndedAt()->format('d F') : null;
+        $year =  $event->getStartedAt()->format('Y') < date('Y') ? $event->getStartedAt()->format('Y').' г' : '';
+        $this->imageService->setImage($event->getImage());
 
-            $image = isset($image) ? $this->imageService->getImagePath(): null;
+        return [
+            "id" => $event->getId(),
+            "name" => $event->getName(),
+            "startedAt" => $event->getStartedAt(),
+            "endedAt" => $event->getEndedAt(),
+            "year" => $year,
+            "image" => $event->getImage(),
+            'imageHeader' => $event->getImageHeader(),
+            'logoWithPath' => $this->imageService->getImagePath(),
+            'startedAtRu' => NewsService::replaceMonth($dayStart),
+            'endedAtRu' => NewsService::replaceMonth($dayEnd),
+            'views' => $event->getViews(),
+            'slug' => $generator->generate($event->getName()),
+            'type' => $event->getStatus() !== 'pro' ? 'все' : 'pro',
+            'location' => $event->getLocation(),
+            'game' => !empty($event->getGame()) ? $event->getGame()->jsonSerialize() : null
+        ];
+    }
 
-            $headerImage = $event->getImageHeader();
-            $this->imageService->setImage($headerImage);
 
-            $headerImage = $this->imageService->getImagePath();
+    /**
+     * @param City $city
+     * @return array
+     */
+    public function decoratorForCity(City $city)
+    {
+        return [
+            "id" => $city->getId(),
+            "nameRu" => $city->getNameRu(),
+            "nameEn" => $city->getNameEn()
+        ];
+    }
 
-            $futureEventItems[date("F Y", $event->getStartedAt()->getTimestamp())]["items"][] = [
-                "id" => $event->getId(),
-                "name" => $event->getName(),
-                "startedAt" => $event->getStartedAt(),
-                "endedAt" => $event->getEndedAt(),
-                "image" => $image,
-                "imageHeader" => $headerImage,
-                "teams" => $event->getCommandCount(),
-                "location" => $event->getLocation(),
-                "prize" => $event->getPrize()
-            ];
-        }
-        return $futureEventItems;
+    /**
+     * @param Country $country
+     * @return array
+     */
+    public function decoratorForCountry(Country $country)
+    {
+        return [
+            "id" => $country->getId(),
+            "nameRu" => $country->getNameRu(),
+            "nameEn" => $country->getNameEn()
+        ];
     }
 
     /**
@@ -234,53 +289,51 @@ class EventService extends EntityService
         /** @var Event $event */
         $event = $this->getByUrl($values['url']);
 
-        if (empty($event))
-        {
+        if (empty($event)) {
             $event = new $this->entity;
             $event->setUrl($values['url'] ?? null);
+            $event->setViews(0);
         }
-        if (!empty($values['started_at']))
-        {
+        if (!empty($values['started_at'])) {
             $startedAt = $values['started_at']->format("Y-m-d");
 
             $event->setStartedAt(new \DateTime($startedAt));
         }
-        if (empty($values['ended_at'])){
-            $values['ended_at'] =  $values['started_at'] ?? null;
+        if (empty($values['ended_at'])) {
+            $values['ended_at'] = $values['started_at'] ?? null;
         }
-        if (is_string($values['ended_at'])){
+        if (is_string($values['ended_at'])) {
             $values['ended_at'] = new \DateTime($values['ended_at']);
         }
 
         /** @var Event $event */
-        $event->setPrize($values['prize']);
-        $event->setCommandCount($values['teams']);
-        $event->setLocation($values['location']);
-        $event->setName($values['name']);
-        $event->setEndedAt($values['ended_at']);
+        $event->setPrize($values['prize'] ?? null);
+        $event->setCommandCount($values['teams'] ?? null);
+        $event->setLocation($values['location'] ?? null);
+        $event->setName($values['name'] ?? '');
+        $event->setEndedAt($values['ended_at'] ?? null);
         $event->setCreatedAt($parseDate);
 
         $event = $this->setImageLogo($event, $values);
-        if (!empty($values['imageHeader']))
-        {
+        if (!empty($values['imageHeader'])) {
             try {
                 $image = DownloadFile::getImage($values['imageHeader']);
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 //
             }
-            if (isset($image))
-            {
+            if (isset($image)) {
                 $event->setImageHeader($image);
             }
         }
-        if (isset($values['flag']))
-        {
+        if (isset($values['flag'])) {
             $flag = $this->flagIconService->getFlagByOrigName($values['flag']['name']);
-            if (empty($flag)){
+            if (empty($flag)) {
                 $flag = $this->flagIconService->createOrUpdate($values['flag']);
             }
             $event->setFlagIcon($flag);
         }
+        $event->setStatus(Event::STATUS_PRO);
+
         $this->save($event);
 
         return $event;
@@ -292,10 +345,8 @@ class EventService extends EntityService
      */
     public function setPrizeDistributions($event, $prizeDistributions)
     {
-        if (isset($prizeDistributions))
-        {
-            foreach ($prizeDistributions as $prizeDistribution)
-            {
+        if (isset($prizeDistributions)) {
+            foreach ($prizeDistributions as $prizeDistribution) {
                 $this->eventPrizeDistributionService->create($prizeDistribution, $event);
             }
         }
@@ -307,14 +358,11 @@ class EventService extends EntityService
      */
     public function setGroupPLay($event, $groupPlay)
     {
-        if (isset($groupPlay)){
-            foreach ($groupPlay as $groupName => $teams)
-            {
-                foreach ($teams as $teamName => $teamFields)
-                {
+        if (isset($groupPlay)) {
+            foreach ($groupPlay as $groupName => $teams) {
+                foreach ($teams as $teamName => $teamFields) {
                     $team = $this->teamService->getByName($teamName);
-                    if (isset($team))
-                    {
+                    if (isset($team)) {
                         $this->eventGroupPlayService->create($event, $team, $groupName, $teamFields);
                     }
                 }
@@ -328,12 +376,11 @@ class EventService extends EntityService
      */
     public function setMapPool($event, $mapPool)
     {
-        if (isset($mapPool))
-        {
-            foreach ($mapPool as $mapName){
+        if (isset($mapPool)) {
+            foreach ($mapPool as $mapName) {
                 $map = $this->mapService->getByName($mapName);
 
-                if (isset($map)){
+                if (isset($map)) {
                     $this->eventMapPoolService->create($event, $map);
                 }
             }
@@ -349,14 +396,11 @@ class EventService extends EntityService
      */
     public function setRelatedEvents($event, $relatedEvents)
     {
-        if (isset($relatedEvents))
-        {
-            foreach ($relatedEvents as $relatedEvent)
-            {
+        if (isset($relatedEvents)) {
+            foreach ($relatedEvents as $relatedEvent) {
                 $relatedEventEntity = $this->createBaseEvent($relatedEvent);
 
-                if (isset($relatedEventEntity))
-                {
+                if (isset($relatedEventEntity)) {
                     $this->relatedEventService->create($event, $relatedEventEntity);
                 }
             }
@@ -379,25 +423,37 @@ class EventService extends EntityService
         return $this->repository->getFeatureEvents();
     }
 
+    /**
+     * @param $event
+     * @param $teamsAttending
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function createEventTeamsAttending($event, $teamsAttending)
     {
-        foreach ($teamsAttending as $teamAttending)
-        {
+        foreach ($teamsAttending as $teamAttending) {
             $team = $this->teamService->getByName($teamAttending['teamName']);
 
-            if (empty($team))
-            {
+            if (empty($team)) {
                 continue;
             }
             $this->eventTeamAttendingService->create($event, $team, $teamAttending['number']);
         }
     }
 
+    /**
+     * @param $url
+     * @return mixed
+     */
     public function getByUrl($url)
     {
         return $this->repository->getByUrl($url);
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function getByName($name)
     {
         return $this->repository->getByName($name);
@@ -411,57 +467,65 @@ class EventService extends EntityService
         return $this->repository->getOldEvents();
     }
 
+    /**
+     * @param $event
+     * @param $image
+     * @return mixed
+     */
     public function setEventImage($event, $image)
     {
-        if (!empty($image))
-        {
+        if (!empty($image)) {
             $image = DownloadFile::getImage($image);
-            if (isset($image))
-            {
+            if (isset($image)) {
                 $event->setImage($image);
             }
         }
         return $this->save($event);
     }
 
+    /**
+     * @param $event
+     * @param $values
+     * @return mixed
+     */
     public function setImageLogo($event, $values)
     {
-        if (!empty($values['image']))
-        {
+        if (!empty($values['image'])) {
             $image = DownloadFile::getImage($values['image']);
-            if (isset($image))
-            {
+            if (isset($image)) {
                 $event->setImage($image);
             }
         } else {
             /** @var Event $prevent */
-            $prevent = $this->getByName($values['name']);
-            if (isset($prevent))
-            {
+            $prevent = $this->getByName($values['name'] ?? null);
+            if (isset($prevent)) {
                 $event->setImage($prevent->getImage());
             }
         }
         return $event;
     }
 
+    /**
+     * @param $event
+     * @param $brackets
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function createBrackets($event, $brackets)
     {
         $brackets = $brackets['rounds'] ?? [];
 
-        foreach ($brackets as $type => $bracket)
-        {
-            foreach ($bracket as $name => $matches){
+        foreach ($brackets as $type => $bracket) {
+            foreach ($bracket as $name => $matches) {
 
                 foreach ($matches as $match) {
-                    if (isset($match['team1']['name']))
-                    {
+                    if (isset($match['team1']['name'])) {
                         $team1 = $this->teamService->getByName($match['team1']['name']);
                     }
-                    if (isset($match['team2']['name']))
-                    {
+                    if (isset($match['team2']['name'])) {
                         $team2 = $this->teamService->getByName($match['team2']['name']);
                     }
-                    if (isset($match['matchUrl'])){
+                    if (isset($match['matchUrl'])) {
                         $matchEntity = $this->matchService->findByUrl($match['matchUrl']);
 
                         if (empty($matchEntity)) {
@@ -483,5 +547,81 @@ class EventService extends EntityService
                 }
             }
         }
+    }
+
+    /**
+     * @param $filters
+     * @param $type
+     * @param $page
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function getEventsByType($filters, $type, $page)
+    {
+        $filters = (object)[
+            'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
+            'dateTo' => MatchService::parseDate($filters->dateTo ?? null),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+            'online' => intVal($filters->online) ?? null,
+            'tournamentType' => $filters->tournamentType ?? null,
+            'name' => $filters->name ?? null,
+            'prize' => $filters->prize ?? null,
+            'game' => $filters->game ?? null,
+            'country' => !empty($filters->country) ? $filters->country->nameEn ?? '' : '',
+            'city' => !empty($filters->city) ? $filters->city->nameEn ?? '' : ''
+        ];
+
+        return $this->repository->getEventsByType(
+            $filters,
+            $type,
+            $page - 1 ?? null,
+            $_ENV['EVENTS_PAGINATION'] ?? null
+        );
+    }
+
+    /**
+     * @param $filters
+     * @param $type
+     * @return int|mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getEventsCountByType($filters, $type)
+    {
+        $filters = (object)[
+            'dateFrom' => MatchService::parseDate($filters->dateFrom ?? null),
+            'dateTo' => MatchService::parseDate($filters->dateTo ?? null),
+            'teamA' => $this->teamService->find($filters->teamA->id ?? null),
+            'teamB' => $this->teamService->find($filters->teamB->id ?? null),
+            'name' => $filters->name ?? null,
+            'online' => $filters->online ?? null,
+            'tournamentType' => $filters->tournamentType ?? null,
+            'prize' => $filters->prize ?? null,
+            'game' => $filters->game ?? null,
+            'country' => !empty($filters->country) ? $filters->country->nameEn ?? '' : '',
+            'city' => !empty($filters->city) ? $filters->city->nameEn ?? '' : ''
+        ];
+
+        $result = 0;
+
+        if (in_array($type, self::TYPES, false)) {
+            $result = $this->repository->getEventsQueryByType($filters, $type)
+                ->select('count(e.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+        return $result;
+    }
+
+    /**
+     * @param Event $event
+     * @return mixed
+     */
+    public function addEventView(Event $event)
+    {
+        $event->setViews($event->getViews() + 1);
+
+        return $this->save($event);
     }
 }

@@ -25,15 +25,19 @@
 			}
 		}
 		
-		function get_all_trainers($where = array(), $is_count = false, $sort = array(), $limit = array())
+		function get_all_trainers($where = array(), $type = 'all', $is_count = false, $sort = array(), $limit = array())
 		{
 			$this->db->select('*');
 			$this->db->from($this->table);
 			$this->db->join('teachers', 'user.id = teachers.userid');
-			
-			if (!empty($where['id'])) {
-				$this->db->where('user.id', $where['id']);
-			}
+
+            if (!empty($where['id'])) {
+                $this->db->where('user.id', $where['id']);
+            }
+			if ($type !== 'all') {
+                $this->db->join('trainer_lesson_price', 'teachers.id = trainer_lesson_price.trainer_id');
+                $this->db->where('trainer_lesson_price.lesson_type', (string)$type);
+            }
 			else {
 				$ij = 1;
 				$search_flag = false;

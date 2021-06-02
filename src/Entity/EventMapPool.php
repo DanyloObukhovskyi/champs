@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=EventMapPoolRepository::class)
  */
-class EventMapPool
+class EventMapPool implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -17,13 +17,13 @@ class EventMapPool
      */
     private $id;
 
-     /**
-      * @ORM\ManyToOne(targetEntity=Event::class)
-      */
+    /**
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
+     */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Map::class)
+     * @ORM\ManyToOne(targetEntity=Map::class, cascade={"persist", "remove"})
      */
     private $map;
 
@@ -62,5 +62,18 @@ class EventMapPool
     public function setMap($map): void
     {
         $this->map = $map;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+
+        return [
+            "id" => $this->getId(),
+            "event" => $this->getEvent(),
+            "map" => $this->getMap()
+        ];
     }
 }

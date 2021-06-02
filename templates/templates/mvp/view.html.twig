@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+{% block description %}
+    <meta name="description" content="Турнир">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords" content="Турнир">
+{% endblock %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Турнир
+    </h1>
+    <div class="events_view" id="tournament">
+        <div class="container">
+            <div class="row">
+                <div class="component event d-flex justify-content-center ">
+                    <div class="grid col-10 d-flex justify-content-center h-100" style="background-image: url('{{ tournament.image }}')">
+                        <div>
+                            <div class="d-flex justify-content-center">
+                                <img :src="tournament.logo" class="width-100px">
+                            </div>
+                            <h2 class="d-block title" v-html="tournament.name">
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="component event d-flex justify-content-center">
+                    <div class="col-6">
+                        <div class="component">
+                            <div class="header">
+                                <div class="round">
+                                    <div><img src="/images/lamp.svg" alt="lamp.svg"  /></div>
+                                </div>
+                                <div class="title">
+                                    Информация о турнире
+                                </div>
+                            </div>
+                            <div class="component statistics">
+                                <div class="grid-block statistics-maps">
+                                    <div class="grid-header">
+                                        <div class="r w-100">
+                                            Дата
+                                        </div>
+                                        <div class="r w-100" v-html="tournament.date">
+                                        </div>
+                                    </div>
+                                    <div class="grid-header">
+                                        <div class="r w-100">
+                                            Режим
+                                        </div>
+                                        <div class="r w-100" v-html="tournament.mode">
+                                        </div>
+                                    </div>
+                                    <div class="grid-header">
+                                        <div class="r w-100">
+                                            Доступ
+                                        </div>
+                                        <div class="r w-100" >
+                                            <i class="fas fa-lock-open" v-if="tournament.access"></i>
+                                            <i class="fas fa-lock" v-else></i>
+                                        </div>
+                                    </div>
+                                    <div class="grid-header">
+                                        <div class="r w-100">
+                                            Приз
+                                        </div>
+                                        <div class="r w-100" v-html="tournament.prize">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="component">
+                            <div class="header">
+                                <div class="round">
+                                    <div><img src="/images/lamp.svg" alt="lamp.svg"  /></div>
+                                </div>
+                                <div class="title">
+                                    Участвовать
+                                </div>
+                            </div>
+                            <div class="component statistics">
+                                <div class="grid-block statistics-maps">
+                                    <div class="grid-header">
+                                        <div class="p-2 r w-100">
+                                            <div class="p-0 w-100">
+                                                <div class="p-0 col-12 d-flex justify-content-center">
+                                                    {% if app.user is not null %}
+                                                        <a
+                                                            data-toggle="modal"
+                                                            data-target="#steamModal"
+                                                            class="btn-orange w-100 text-light p-2 text-center pointer">
+                                                            <i class="fas fa-trophy"></i>
+                                                            Участвовать в турнире
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                                {% if app.user is null %}
+                                                    <div class="col-12 pt-3">
+                                                        Войди или зарегистрируйся, чтобы участвовать в турнире
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="steamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-radius-0">
+                {% if app.user is not null and app.user.steamId is empty %}
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center w-100">Подключи Steam и вперед!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam%3Fstate=steam&openid.realm=https%3A%2F%2Fchamps.pro%2Fru%2Foauth%2Fsteam&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select"
+                           target="_blank"
+                           class="btn btn-secondary w-100 border-radius-0">
+                            <i class="fab fa-steam"></i>
+                            Подключи Steam
+                        </a>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        Нужна помощь? Напиши в&nbsp;<a href="mailto:support@champs.pro">службу поддержки</a>.
+                    </div>
+                {% elseif app.user is not null %}
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center w-100">Для этого турика тебе нужна команда</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Создай свою тиму или присоединись к уже существующей
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <a href="{{ path('mvp.cabinet.tournaments') }}" class="btn-orange text-light p-2 text-center pointer w-100" >Создать команду</a>
+                        <a data-dismiss="modal" aria-label="Close" class="btn-grey pointer text-center text-light border-radius-0 p-2 w-75">Отменить</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+        const tournament = new Vue({
+            el: '#tournament',
+            data: {
+                tournament: {{ tournament|json_encode|raw }},
+            },
+        })
+    </script>
+{% endblock %}

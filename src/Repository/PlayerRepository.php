@@ -36,8 +36,7 @@ class PlayerRepository extends ServiceEntityRepository
             ->setParameter('person_id', $personId)
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -56,8 +55,22 @@ class PlayerRepository extends ServiceEntityRepository
                 'nick' => $nick])
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
+    /**
+     * @param $teamId
+     * @return mixed
+     */
+    public function getByTeam($teamId)
+    {
+        return $this->createQueryBuilder('pl')
+            ->leftJoin('App\Entity\Person', 'pr', Join::WITH, 'pr.id = pl.person')
+            ->andWhere('pl.team = :team_id')
+            ->orderBy('pr.name', 'DESC')
+            ->setParameter('team_id', $teamId)
+            ->getQuery()
+            ->setMaxResults(5)
+            ->getResult();
+    }
 }

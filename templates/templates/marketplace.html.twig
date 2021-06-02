@@ -1,130 +1,45 @@
 {% extends 'base.html.twig' %}
-{% block title %}Обучение{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block router %}marketplace{% endblock %}
 {% block description %}
-    <meta name="description" content="Обучения тактикам League of Legends, Dota или Cs:go">
+    <meta name="description"
+          content="{{ description }}">
+{% endblock %}
+{% block canonical %}
+    <link rel=“canonical” href=“{{ link }}/ru/obucheniye” />
 {% endblock %}
 {% block keywords %}
-    <meta name="Keywords" content="Обучение League of Legends, Обучение Dota, Обучение Cs:go">
+    <meta name="Keywords"
+          content="{{ keywords }}">
 {% endblock %}
-{% block css %}
-    <link rel="stylesheet" href="/assets/styles/sidebar.css">
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+            <meta name="{{ meta.name }}"
+                  content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
 {% endblock %}
 {% block body %}
-    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-        Marketplace
-    </h1>
-    <div class="marketplace" id="marketplace">
-        <market-header :selected-game="sidebarActiveItem"></market-header>
-        <div class="wrapper d-flex align-items-stretch">
-            <sidebar :filters="filters" :active="sidebarActiveItem" :items="gammelist" @search="search"></sidebar>
-            <div id="content" class="pl-md-5 pr-md-5 pb-md-5 mt-4">
-                <div class="load w-100 h-100 d-flex justify-content-center align-items-center" v-if="load">
-                    <div>
-                        <img src="/images/load.gif">
-                    </div>
-                </div>
-                <trainers-list v-if="!load && trainer == null" :trainers="trainers" :games="gammelist"></trainers-list>
-                <trainer-page v-if="trainer != null" :trainer="trainer" :trainers="trainersAll"></trainer-page>
+    {% if heading_type == 1 %}
+        <h1 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h1>
+    {% else %}
+        <h2 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h2>
+    {% endif %}
+    <div class="marketplace page">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span>
+                    Обучение
+                </span>
             </div>
         </div>
+        <div class="ml-8 mr-8 p-0 mt-2">
+            <marketplace-page/>
+        </div>
     </div>
-{% endblock %}
-{% block js %}
-    {% include 'templates/marketplace/filters.html.twig' %}
-    {% include 'templates/marketplace/trainer/timetable.html.twig' %}
-    {% include 'templates/lessons/payments.html.twig' %}
-    {% include 'templates/lessons/order.html.twig' %}
-    {% include 'templates/marketplace/trainer/page.html.twig' %}
-    {% include 'templates/marketplace/header.html.twig' %}
-    {% include 'templates/marketplace/sidebar.html.twig' %}
-    {% include 'templates/marketplace/trainersList.html.twig' %}
-    <script>
-        const trainerId = {{ trainerId is not null ? trainerId : 'null'}}
-
-        const marketplace = new Vue({
-            el: '#marketplace',
-            data: {
-                game: header.game,
-                gammelist: JSON.parse('{{ games|json_encode|raw }}'),
-                filters: JSON.parse('{{ filters|json_encode|raw }}'),
-                trainers: [],
-                trainer: null,
-                load: false,
-            },
-            watch: {
-                sidebarActiveItem () {
-                   this.getGameTrainersList()
-                },
-            },
-            methods:{
-                getGameTrainersList() {
-                    this.load = true;
-                    this.trainers = [];
-
-                    axios.post('/ru/trainers/slider/' + this.sidebarActiveItem, {...this.filters})
-                        .then((res) => {
-                            this.trainers = res.data;
-                            this.trainer = null;
-
-                            this.load = false;
-                        })
-                        .catch(() => {
-                            this.trainers = [];
-                            this.trainer = null;
-
-                            this.load = false;
-                        });
-
-                    if (document.getElementById('.slide_clone')) {
-                        this.slideWidth = document.getElementById('.slide_clone').clientWidth;
-                    }
-                },
-                choseTrainer(id){
-                    this.trainer = this.trainersAll.find(el => {
-                        return el.id === id
-                    })
-                },
-                search(){
-                   this.getGameTrainersList();
-                },
-                getTrainer(){
-                    this.load = true;
-
-                    axios.post('/ru/marketplace/trainer/' + trainerId)
-                        .then(({data}) => {
-                            this.trainer = data
-                            this.state = 'mounted'
-
-                            this.load = false;
-                        })
-                },
-            },
-            computed:{
-                trainersAll() {
-                    const trainers = [];
-
-                    for (let page of this.trainers){
-                        for (let trainer of page){
-                            trainers.push(trainer)
-                        }
-                    }
-                    return trainers;
-                },
-                selectedGame() {
-                    return this.gammelist.find(e => e.name = this.sidebarActiveItem)
-                },
-                sidebarActiveItem() {
-                    return header.game
-                }
-            },
-            mounted() {
-                if (trainerId !== null){
-                    this.getTrainer()
-                } else {
-                    this.getGameTrainersList()
-                }
-            }
-        })
-    </script>
 {% endblock %}

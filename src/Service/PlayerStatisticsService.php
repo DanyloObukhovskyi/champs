@@ -88,8 +88,7 @@ class PlayerStatisticsService extends EntityService
             }
             $stat[$map][$statistic->getType()][] = [
                 'stat_id' => $statistic->getId(),
-                'player_id' => $statistic->getPlayer()->getId(),
-//                'player_id' => $statistic->getPlayer()->getPerson()->getId(),
+                'player_id' => $statistic->getPlayer()->getPerson()->getId(),
                 'player' => $statistic->getPlayer()->getPerson()->getNick(),
                 'kd' => $statistic->getKd(),
                 'adr' => $statistic->getAdr(),

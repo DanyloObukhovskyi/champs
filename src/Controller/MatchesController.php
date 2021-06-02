@@ -3,195 +3,323 @@
 namespace App\Controller;
 
 use App\Entity\Match;
+use App\Entity\MatchCommentLike;
 use App\Entity\PlayerStatistics;
-use App\Entity\Stream;
-use App\Entity\PastMatch;
-use App\Kernel;
 use App\Repository\MatchRepository;
-use App\Service\MatchService;
-use App\Service\ImageService;
+use App\Service\MapService;
+use App\Service\Match\MatchCommentLikeService;
+use App\Service\Match\MatchCommentService;
+use App\Service\Match\MatchMapTeamWinRateService;
+use App\Service\Match\MatchService;
 use App\Entity\MatchMapTeamStatistic;
+use App\Service\Match\PastMatchService;
+use App\Service\PersonService;
 use App\Service\PlayerStatisticsService;
+use App\Service\Seo\SeoService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class MatchesController extends AbstractController
 {
     /**
-     * @Route("/ru/matches", name="matches_index_page")
+     * @var MatchService
      */
-    public function index()
+    public $matchService;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    public $entityManager;
+
+    /**
+     * @var PastMatchService
+     */
+    public $pastMatchService;
+
+    /**
+     * @var PlayerStatisticsService
+     */
+    public $playerStatisticsService;
+
+    /**
+     * @var MapService
+     */
+    public $mapService;
+
+    /**
+     * @var MatchMapTeamWinRateService
+     */
+    public $matchMapTeamWinRateService;
+
+    /**
+     * @var PersonService
+     */
+    public $personService;
+
+    /**
+     * @var MatchRepository
+     */
+    public $matchRepository;
+
+    /**
+     * @var MatchCommentService
+     */
+    public $matchCommentService;
+
+    /**
+     * @var MatchCommentLikeService
+     */
+    public $matchCommentLikeService;
+
+    /**
+     * MatchesController constructor.
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $matchService = new MatchService($entityManager);
+        $this->entityManager = $entityManager;
 
-        $matches = $entityManager->getRepository(Match::class)->findMatchesNotEnded();
-        $matchesItems = $matchService->matchesDecorator($matches);
+        $this->matchService = new MatchService($entityManager);
+        $this->pastMatchService = new PastMatchService($entityManager);
 
-        $lives = $entityManager->getRepository(Match::class)->findLive();
+        $this->playerStatisticsService = new PlayerStatisticsService($entityManager);
+        $this->mapService = new MapService($entityManager);
 
-        return $this->render('templates/matches.html.twig',
-            ['router' => 'matches', 'matches' => $matches, "items" => $matchesItems, "lives" => $lives]);
+        $this->matchMapTeamWinRateService = new MatchMapTeamWinRateService($entityManager);
+        $this->personService = new PersonService($entityManager);
+
+        $this->matchRepository = $entityManager->getRepository(Match::class);
+        $this->matchCommentService = new MatchCommentService($entityManager);
+        $this->matchCommentLikeService = new MatchCommentLikeService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
+    }
+
+    /**
+     * @Route("/matches", name="matches_index_page")
+     */
+    public function index(Request $request)
+    {
+        $type = $request->get('type');
+
+        $seoSettings = $this->seoService->getSeo('marketplace_index');
+
+        return $this->render('templates/matches.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'router' => 'matches',
+            'type' => $type
+        ]);
+    }
+
+    /**
+     * @Route("/ajax/matches/{type}/{page}", defaults={"page"=1})
+     */
+    public function getMatchesAjax(Request $request, $type, $page)
+    {
+        $filters = $request->getContent();
+        $filters = json_decode($filters, false);
+
+        $matches = $this->matchService->getMatchesByType($filters, $type, $page);
+        $matches = $this->matchService->matchesDecorator($matches, $type);
+        $counts = [];
+
+        foreach (MatchService::MATCH_TYPES as $type) {
+            $counts[$type] = $this->matchService->getMatchesCountByType($filters, $type);
+        }
+
+        return $this->json([
+            'matches' => $matches,
+            'limit' => $_ENV['MATCHES_PAGINATION'] ?? null,
+            'counts' => $counts
+        ]);
     }
 
     /**
      *
-     * @Route("/ru/matches/{id}", name="matches_view")
+     * @Route("/matches/{id}/{slug}", name="matches_view")
      */
-    public function view($id, $router = 'matches')
+    public function view($id, $slug)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $imageService = new ImageService();
-        $playerStatisticsService = new PlayerStatisticsService($entityManager);
-
         /** @var Match $match */
-        $match_view = $entityManager->getRepository(Match::class)->findOneBy([
-            'id' => $id,
-        ]);
-	
-	    $stat_array = array();
-	    
-        $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
-            ->findByMatchTeam($match_view->getId(),
-            $match_view->getTeam1());
-	
-	    foreach($playerStatisticsTeam1 as $key1 =>$value) {
-		    $player_tmp_id = $value->getPlayer()->getId();
-		    $stat_tmp_id = $value->getId();
-		    $stat_array[$player_tmp_id] = $stat_tmp_id;
-	    }
+        $match = $this->matchService->find($id);
 
-        $playerStatisticsTeam1 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam1);
-
-        $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)
-            ->findByMatchTeam($match_view->getId(),
-            $match_view->getTeam2());
-	
-	    foreach($playerStatisticsTeam2 as $key1 =>$value) {
-		    $player_tmp_id = $value->getPlayer()->getId();
-		    $stat_tmp_id = $value->getId();
-		    $stat_array[$player_tmp_id] = $stat_tmp_id;
-	    }
-
-        $playerStatisticsTeam2 = $playerStatisticsService->statisticsDecorator($playerStatisticsTeam2);
-
-        $results = $entityManager->getRepository(Match::class)->findResults();
-
-        $items    = [];
-        $currDate = null;
-
-        foreach ($results as $match)
-        {
-            /** @var Match $match */
-
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
-                $items[date("d", $match->getStartAt()->getTimestamp())] = [
-                    "date" => date("d F", $match->getStartAt()->getTimestamp()),
-                    "items" => [],
-                ];
-            }
-            $items[date("d", $match->getStartAt()->getTimestamp())]["items"][] =
-                [
-                    "match_id" => $match->getId(),
-                    "time" => date("H:i", $match->getStartAt()->getTimestamp()),
-                    "title" => "",
-                    "logo" => "",
-                    "teamA" => [
-                        "title" => $match->getTeam1() !== null ? str_replace("'", "", $match->getTeam1()->getName()): null,
-                        "logo" => "/uploads/images/" . ($match->getTeam1() !== null ? $match->getTeam1()->getLogo(): null),
-                        "score" => $match->getScore1() == 0 ? null : $match->getScore1(),
-                    ],
-                    "teamB" => [
-                        "title" =>$match->getTeam2() !== null ?  str_replace("'", "", $match->getTeam2()->getName()): null,
-                        "logo" => "/uploads/images/" . ($match->getTeam2() !== null ? $match->getTeam2()->getLogo(): null),
-                        "score" => $match->getScore2() == 0 ? null : $match->getScore2(),
-                    ],
-                    "event" => [
-                        "name" => $match->getEvent() === null ? null : $match->getEvent()->getName(),
-                        "startedAt" => $match->getEvent() === null ? null : $match->getEvent()->getStartedAt(),
-                        "endedAt" => $match->getEvent() === null ? null : $match->getEvent()->getEndedAt(),
-                        "image" => $match->getEvent() === null ? null : $match->getEvent()->getImage(),
-                    ],
-                ];
-        }
-        /** @var Match $match_view */
-        $date = $match_view->getStartAt()->format(("d F Y H:i"));
-        str_replace("January", "Января", $date);
-        str_replace("February", "Февраля", $date);
-        str_replace("March", "Марта", $date);
-        str_replace("April", "Апреля", $date);
-        str_replace("May", "Мая", $date);
-        str_replace("June", "Июня", $date);
-        str_replace("Jule", "Июля", $date);
-        str_replace("August", "Августа", $date);
-        str_replace("September", "Сентября", $date);
-        str_replace("October", "Октября", $date);
-        str_replace("November", "Ноября", $date);
-        str_replace("December", "Декабря", $date);
-
-        $matchStats = [];
-        $maps = [];
-        $matchStatsEntities = $this->getDoctrine()->getRepository(MatchMapTeamStatistic::class)
-            ->getMatchTeamStatistic($match_view);
-
-        $team1Id = !empty($match_view->getTeam1()) ? $match_view->getTeam1()->getId() : null;
-        $team2Id = !empty($match_view->getTeam2()) ? $match_view->getTeam2()->getId() : null;
-	    $ij=0;
-        foreach ($matchStatsEntities as $matchStatEntity){
-            $team = $matchStatEntity->getTeam();
-            if ($team1Id === $team->getId() or $team2Id === $team->getId()){
-                $imageService->setImage($team->getLogo());
-
-                $map = $matchStatEntity->getMap();
-
-                $matchStats[$team->getName()]['logo'] = $imageService->getImagePath();
-                $matchStats[$team->getName()]['name'] =$team->getName();
-	            $matchStats[$team->getName()]['s_id'][$map->getName()] = $matchStatEntity->getId ();
-                $matchStats[$team->getName()]['maps'][$map->getName()] = $matchStatEntity->getWinRate();
-	            $maps[$map->getName()]['id'] = $map->getId();
-                $maps[$map->getName()]['name'] = $map->getName();
-                $maps[$map->getName()]['image'] = $map->getImage();
-	            $ij++;
-            }
-        }
-        $pastMatches = [];
-        $pastMatchesEntities = $this->getDoctrine()->getRepository(PastMatch::class)->getByMatch($match_view);
-	    $ij=0;
-        foreach ($pastMatchesEntities as $pastMatchesEntity){
-            $team = $pastMatchesEntity->getTeam();
-            if ($team1Id === $team->getId() or $team2Id === $team->getId()) {
-                $imageService->setImage($team->getLogo());
-
-                $pastMatches[$team->getName()]['logo'] = $imageService->getImagePath();
-                $pastMatches[$team->getName()]['matches'][] = [
-	                'opponent_id' => $pastMatchesEntities[$ij]->getId(),
-                    'opponent' => $pastMatchesEntity->getTeamTwo(),
-                    'score' => $pastMatchesEntity->getScore()
-                ];
-	            $ij++;
-            }
-        }
+        $matchDecorator = $this->matchService->matchDecorator($match);
 
         return $this->render('templates/matches.view.html.twig', [
-            'router' => $router,
-            'match' => $match_view,
-            'results' => $items,
-            'date' => $date,
-            'matchStats' => $matchStats,
-            'pastMatches' => $pastMatches,
-            'maps' => $maps,
-            'playerStatisticsTeam1' => $playerStatisticsTeam1,
-            'playerStatisticsTeam2' => $playerStatisticsTeam2,
-	        'stat_array' =>$stat_array,
+            'router' => 'matches',
+            'matchDecorator' => $matchDecorator,
+            'match' => $match
         ]);
     }
 
     /**
      *
-     * @Route("/ru/matches/before/{id}", name="before_match")
+     * @Route("/get/match/{id}")
+     */
+    public function getMatch($id, TranslatorInterface $translator)
+    {
+        /** @var Match $match */
+        $match = $this->matchService->find($id);
+        $matchDecorate = $this->matchService->matchDecorator($match);
+
+        $matchDecorate['teamA']['pastMatches'] = $this->getMatchTeamPastMatches($match, $match->getTeam1());
+        $matchDecorate['teamB']['pastMatches'] = $this->getMatchTeamPastMatches($match, $match->getTeam2());
+
+        $matchDecorate['teamA']['mapStatistics'] = $this->getMatchTeamMapStatistics($match, $match->getTeam1());
+        $matchDecorate['teamB']['mapStatistics'] = $this->getMatchTeamMapStatistics($match, $match->getTeam2());
+
+        $matchDecorate['teamA']['playerStatistics'] = $this->getMatchPlayerStatistics($match, $match->getTeam1());
+        $matchDecorate['teamB']['playerStatistics'] = $this->getMatchPlayerStatistics($match, $match->getTeam2());
+
+        $matchDecorate['teamA']['players'] = $this->getTeamPlayers($match, $match->getTeam1());
+        $matchDecorate['teamB']['players'] = $this->getTeamPlayers($match, $match->getTeam2());
+
+        $matchDecorate['startedAt']['date'] = $this->matchService->translateMatchDate($match, $translator);
+        $matchDecorate['startedAt']['time'] = $match->getStartAt()->format('H:m');
+        $matchDecorate['startedAt']['timeStamp'] = $match->getStartAt()->getTimestamp();
+
+        $meetingMatches = $this->matchService->getMeetingMatches($match);
+        $matchDecorate['meetingMatches'] = [];
+
+        /** @var Match $meetingMatch */
+        foreach ($meetingMatches as $meetingMatch) {
+            $matchMeetingMatches = $this->matchService->matchDecorator($meetingMatch);
+
+            $matchMeetingMatches['startedAt']['date'] = $this->matchService->translateMatchDate($meetingMatch, $translator);
+            $matchMeetingMatches['startedAt']['time'] = $meetingMatch->getStartAt()->format('H:m');
+            $matchMeetingMatches['startedAt']['timeStamp'] = $meetingMatch->getStartAt()->getTimestamp();
+
+            $matchDecorate['meetingMatches'][] = $matchMeetingMatches;
+        }
+
+        $comments = $this->matchCommentService
+            ->getRepository()->findBy([
+                'match' => $match,
+                'parent' => null
+            ]);
+
+        $matchDecorate['commentsCount'] = count($match->getComments());
+
+        $comments = $this->matchCommentService->recurciveComments(
+            $comments,
+            $_ENV['MAX_COMMENTS_ANSWERS'],
+            $this->getUser()
+        );
+
+        return $this->json([
+            'match' => $matchDecorate,
+            'maps' => $this->mapService->getAll(),
+            'comments' => $comments
+        ]);
+    }
+
+    /**
+     * @param $match
+     * @param $team
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getMatchTeamPastMatches($match, $team)
+    {
+        $team1PastMatches = [];
+
+        if (isset($team)) {
+            $team1PastMatches = $this->pastMatchService->getByMatchAndTeam($match, $team);
+        }
+
+        return $this->pastMatchService->decorateAll($team1PastMatches);
+    }
+
+    /**
+     * @param Match $match
+     * @param Team|null $team
+     * @return array
+     */
+    public function getMatchTeamMapStatistics(Match $match, $team)
+    {
+        $teamMapStatistics = [];
+        $matchMapStatistics = [];
+
+        if (isset($team)) {
+            /** @var MatchMapTeamStatistic[] $matchMapStatistics */
+            $matchMapStatistics = $this->matchMapTeamWinRateService->getByMatchAndTeam($match, $team);
+        }
+        /** @var MatchMapTeamStatistic $mapTeamStatistic */
+        foreach ($matchMapStatistics as $mapTeamStatistic) {
+            $teamMapStatistics[] = [
+                'map' => $mapTeamStatistic->getMap(),
+                'rating' => $mapTeamStatistic->getWinRate()
+            ];
+        }
+        return $teamMapStatistics;
+    }
+
+    /**
+     * @param Match $match
+     * @param Team|null $team
+     * @return array
+     */
+    public function getMatchPlayerStatistics(Match $match, $team)
+    {
+        $matchPlayerStatistics = null;
+
+        if (isset($team)) {
+            $playerStatisticsTeam = $this->getDoctrine()
+                ->getRepository(PlayerStatistics::class)
+                ->findByMatchTeam(
+                    $match->getId(),
+                    $team
+                );
+            $playerStatisticsTeam = $this->playerStatisticsService
+                ->statisticsDecorator($playerStatisticsTeam);
+
+            $matchPlayerStatistics = empty($playerStatisticsTeam) ? null : $playerStatisticsTeam;
+        }
+        return $matchPlayerStatistics;
+    }
+
+    /**
+     * @param Match $match
+     * @param Team|null $team
+     * @return array
+     */
+    public function getTeamPlayers(Match $match, $team)
+    {
+        $teamPersons = [];
+        $playerStatistics = $match->getPlayerStatistics();
+
+        if (isset($team)) {
+            /** @var PlayerStatistics $playerStatistic */
+            foreach ($playerStatistics as $playerStatistic) {
+                $teamId = $playerStatistic->getPlayer()
+                    ->getTeam()
+                    ->getId();
+
+                if ($teamId === $team->getId()) {
+                    $teamPerson = $playerStatistic->getPlayer()->getPerson();
+
+                    $teamPersons[$teamPerson->getId()] = $this->personService->personDecorate($teamPerson);
+                }
+            }
+        }
+        return $teamPersons;
+    }
+
+    /**
+     *
+     * @Route("/matches/before/{id}", name="before_match")
      */
     public function before_match($id)
     {
@@ -200,22 +328,26 @@ class MatchesController extends AbstractController
 
     /**
      *
-     * @Route("/ru/matches/live/{id}", name="live_match")
+     * @Route("/matches/live/{id}", name="live_match")
      */
-    public function live_match($id)
+    public function liveMatch($id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $match = $entityManager->getRepository(Match::class)->findOneBy([
+        $match = $this->entityManager->getRepository(Match::class)->findOneBy([
             'id' => $id,
         ]);
 
-        $playerStatisticsTeam1 = $this->getDoctrine()->getRepository(PlayerStatistics::class)->findByMatchTeam($match->getId(),
-            $match->getTeam1());
-        $playerStatisticsTeam2 = $this->getDoctrine()->getRepository(PlayerStatistics::class)->findByMatchTeam($match->getId(),
-            $match->getTeam2());
-
-
+        $playerStatisticsTeam1 = $this->entityManager
+            ->getRepository(PlayerStatistics::class)
+            ->findByMatchTeam(
+                $match->getId(),
+                $match->getTeam1()
+            );
+        $playerStatisticsTeam2 = $this->entityManager
+            ->getRepository(PlayerStatistics::class)
+            ->findByMatchTeam(
+                $match->getId(),
+                $match->getTeam2()
+            );
 
         return $this->render('templates/matches.live.html.twig', [
             'router' => 'matches',
@@ -227,7 +359,7 @@ class MatchesController extends AbstractController
 
     /**
      *
-     * @Route("/ru/live/{matchId}", name="live_video")
+     * @Route("/live/{matchId}", name="live_video")
      */
     public function live_video($matchId)
     {
@@ -240,8 +372,7 @@ class MatchesController extends AbstractController
         $streams = $match->getStreams();
 //        $streamItems = [];
         $url = null;
-        foreach ($streams as $stream)
-        {
+        foreach ($streams as $stream) {
             /** @var Stream $stream */
             $url = $stream->getUrl();
 //            $streamItems[$stream->getLanguage()] =  $stream->getUrl();
@@ -255,9 +386,7 @@ class MatchesController extends AbstractController
     }
 
     /**
-     * Matches /ru/matches/*
-     *
-     * @Route("/ru/matches/filter/{$filter}", name="get_matches_by_filter_page")
+     * @Route("/matches/filter/{$filter}", name="get_matches_by_filter_page")
      */
     public function getMatchesByFilter($filter)
     {
@@ -265,15 +394,13 @@ class MatchesController extends AbstractController
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesNotEnded();
 
-        $items    = [];
+        $items = [];
         $currDate = null;
 
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             /** @var Match $match */
 
-            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items))
-            {
+            if (!array_key_exists(date("d", $match->getStartAt()->getTimestamp()), $items)) {
                 $items[date("d", $match->getStartAt()->getTimestamp())] = [
                     "date" => date("d F", $match->getStartAt()->getTimestamp()),
                     "items" => [],
@@ -307,20 +434,119 @@ class MatchesController extends AbstractController
     }
 
     /**
-     * Matches /ru/matches/*
-     *
-     * @Route("/ru/matches/date/{filter}", name="get_matches_by_date_page")
+     * @Route("/matches/date/{filter}", name="get_matches_by_date_page")
      */
     public function getMatchesByDate($filter)
     {
-        $form          = json_decode($filter);
-        $date          = new \DateTime($form['date']);
+        $form = json_decode($filter);
+        $date = new \DateTime($form['date']);
         $entityManager = $this->getDoctrine()->getManager();
 
         $matches = $entityManager->getRepository(Match::class)->findMatchesByDate($date);
 
         return $this->json([
             'matches' => $matches,
+        ]);
+    }
+
+    /**
+     * @Route("/match/add/comment")
+     */
+    public function addComment(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+        $match = $this->matchService->find($request->id);
+
+        $parentComment = null;
+
+        if (isset($request->commentId)) {
+            $parentComment = $this->matchCommentService->getRepository()
+                ->find($request->commentId);
+        }
+
+        if (!empty($this->getUser()) and isset($match)) {
+            $this->matchCommentService->create(
+                $this->getUser(),
+                $match,
+                $parentComment,
+                $request->comment
+            );
+
+            return $this->json('ok');
+        }
+        return $this->json('unauthorized', 401);
+    }
+
+    /**
+     * @Route("/match/{matchId}/comments")
+     */
+    public function getComments(int $matchId)
+    {
+        /** @var Match $news */
+        $match = $this->matchService->find($matchId);
+
+        $newsComments = $this->matchCommentService
+            ->getRepository()
+            ->findBy([
+                'match' => $match,
+                'parent' => null
+            ]);
+        $newsComments = $this->matchCommentService->recurciveComments(
+            $newsComments,
+            $_ENV['MAX_COMMENTS_ANSWERS'],
+            $this->getUser()
+        );
+
+        return $this->json([
+            'comments' => $newsComments,
+            'commentsCount' => count($match->getComments())
+        ]);
+    }
+
+    /**
+     * @Route("/like/match/comment/{commentId}")
+     */
+    public function setLikeComment(Request $request, $commentId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $matchComment = $this->matchCommentService
+            ->getRepository()
+            ->find($commentId);
+
+        $matchCommentLike = null;
+
+        if (isset($matchComment) and !empty($this->getUser())) {
+            $matchCommentLike = $this->entityManager
+                ->getRepository(MatchCommentLike::class)
+                ->findOneBy([
+                    'comment' => $matchComment,
+                    'user' => $this->getUser()
+                ]);
+
+            if (empty($matchCommentLike)) {
+                $matchCommentLike = new MatchCommentLike();
+                $matchCommentLike->setUser($this->getUser());
+                $matchCommentLike->setComment($matchComment);
+            }
+            $matchCommentLike->setType($request->type);
+
+            $this->entityManager->persist($matchCommentLike);
+            $this->entityManager->flush();
+        }
+        $likesCount = $this->matchCommentLikeService->getLikesCount($matchComment);
+
+        $userLike = null;
+
+        if (!empty($this->getUser())) {
+            $like = $this->matchCommentLikeService->userLike($matchComment, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->matchCommentLikeService->decorator($like);
+            }
+        }
+        return $this->json([
+            'likesCount' => $likesCount,
+            'userLike' => $userLike
         ]);
     }
 }

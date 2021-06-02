@@ -1,0 +1,38 @@
+January: Января
+February: Февраля
+March: Марта
+April: Апреля
+May: Мая
+June: Июня
+Jule: Июля
+July: Июля
+August: Августа
+September: Сентября
+October: Октября
+November: Ноября
+December: Декабря
+Monday: Понедельник
+Tuesday: Вторник
+Wednesday: Среда
+Thursday: Четверг
+Friday: Пятница
+Saturday: Суббота
+Sunday: Воскресенье
+This email is already taken: Этот эмейл уже занят!
+trainings:
+  titles:
+    individual: Индивидуальная тренировка
+    group: Групповая тренировка
+    analytic: Анализ реплея
+  description:
+    individual: Укажите стоимость тренировки в рублях за индивидуальное занятие с учеником.
+    group: Укажите стоимость тренировки в рублях за групповое занятие с учениками (количество учеников до 5).
+    analytic: Укажите стоимость в рублях за детальный разбор реплея ученика, результат должен быть предоставлен ученику в текстовом формате.
+earned:
+  per this month: за этот месяц
+  per previous month: за прошлый месяц
+Password cannot be shorter than 5 characters: Пароль не может быть короче 5 символов
+The password was entered incorrectly: Пароль введен не верно
+Paypal was specified in the wrong format: Paypal был указан в неверном формате
+Invalid credentials.: Неверный пароль
+Email could not be found.: Электронная почта не найдена

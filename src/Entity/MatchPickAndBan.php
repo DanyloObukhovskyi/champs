@@ -23,7 +23,7 @@ class MatchPickAndBan
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class, inversedBy="matchPickAndBans")
+     * @ORM\ManyToOne(targetEntity=Match::class, inversedBy="matchPickAndBans", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $game;

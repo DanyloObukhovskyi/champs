@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}Champs.pro{% endblock %}
+{% block router %}home{% endblock %}
+{% block description %}
+    <meta name="description"
+          content="Тренеры по League of Legends, СS:GO, Dota, матчи, игровые новости, события и мероприятия в игровой индустрии">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="League of Legends, СS:GO, Dota, Игровые матчи, Игровые новости, События, Рейтинг команд, Рейтинг игроков, Игрок недели, Результаты матчей, Турниры">
+{% endblock %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Главная
+    </h1>
+    <div class="home page">
+        <cs-home-page></cs-home-page>
+    </div>
+{% endblock %}

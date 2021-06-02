@@ -18,8 +18,7 @@ class TeamParserService
     public function getMatchTeam($document)
     {
         $teamLogoRaw = $document->first('img.teamlogo');
-        if (empty($teamLogoRaw))
-        {
+        if (empty($teamLogoRaw)) {
             return null;
         }
 
@@ -29,22 +28,19 @@ class TeamParserService
         ];
 
         $profileRaw = $document->first('.profile-team-info');
-        if (empty($profileRaw))
-        {
+        if (empty($profileRaw)) {
             return null;
         }
 
         $nameTeamRaw = $profileRaw->first('.profile-team-name');
-        if (empty($nameTeamRaw))
-        {
+        if (empty($nameTeamRaw)) {
             return null;
         }
 
         $team['name'] = trim($nameTeamRaw->text());
 
         $regionTeamRaw = $profileRaw->first("//div[contains(concat(' ', normalize-space(@class), ' '), ' team-country ')]/img", Query::TYPE_XPATH);
-        if (isset($regionTeamRaw))
-        {
+        if (isset($regionTeamRaw)) {
             $team['region'] = trim($regionTeamRaw->attr('title'));
 
             $flagIconPath = parse_url($regionTeamRaw->attr('src'), PHP_URL_PATH);
@@ -56,13 +52,11 @@ class TeamParserService
 
         $teamPersonsRaw = $document->find("//div[contains(concat(' ', normalize-space(@class), ' '), ' bodyshot-team ')]/a[contains(concat(' ', normalize-space(@class), ' '), ' col-custom ')]", Query::TYPE_XPATH);
 
-        if (count($teamPersonsRaw) === 0)
-        {
+        if (count($teamPersonsRaw) === 0) {
             return $team;
         }
 
-        foreach ($teamPersonsRaw as $teamPersonRaw)
-        {
+        foreach ($teamPersonsRaw as $teamPersonRaw) {
             $playerUrl = $teamPersonRaw->attr('href');
             $playerUrl = HLTVService::urlDecorator($playerUrl);
 
@@ -72,26 +66,21 @@ class TeamParserService
             ];
 
             $playerImageRaw = $teamPersonRaw->first("//img[contains(@class, 'bodyshot-team-img')]", Query::TYPE_XPATH);
-            if (isset($playerImageRaw))
-            {
+            if (isset($playerImageRaw)) {
                 $player['photo'] = trim($playerImageRaw->attr('src'));
             }
 
             $team['players'][] = $player;
         }
 
-        if (!empty($team['players']))
-        {
-            foreach ($team['players'] as &$player)
-            {
-                if (empty($player['url']))
-                {
+        if (!empty($team['players'])) {
+            foreach ($team['players'] as &$player) {
+                if (empty($player['url'])) {
                     continue;
                 }
 
                 $personItem = $this->getPerson($player);
-                if (!$personItem)
-                {
+                if (!$personItem) {
                     continue;
                 }
                 $player = $player + $personItem;
@@ -110,13 +99,12 @@ class TeamParserService
     {
         try {
             $content = PageContentService::getPageContent($player['url']);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
 
             $content = null;
         }
 
-        if (empty($content) or ($content and is_array($content) && isset($content['error'])))
-        {
+        if (empty($content) or ($content and is_array($content) && isset($content['error']))) {
             return null;
         }
 
@@ -124,34 +112,29 @@ class TeamParserService
 
         $profileRaw = $document->find("//div[contains(@class, 'playerProfile')]", Query::TYPE_XPATH);
 
-        if (count($profileRaw) == 0)
-        {
+        if (count($profileRaw) == 0) {
             return null;
         }
 
         $profileRaw = $profileRaw[0];
 
         $profileNickRaw = $profileRaw->first("//h1[contains(@class, 'playerNickname')]", Query::TYPE_XPATH);
-        if (isset($profileNickRaw))
-        {
+        if (isset($profileNickRaw)) {
             $player['nick'] = trim($profileNickRaw->text());
         }
 
         $profileAgeRaw = $profileRaw->first("//div[contains(@class, 'playerAge')]/span[2]", Query::TYPE_XPATH);
-        if (isset($profileAgeRaw))
-        {
+        if (isset($profileAgeRaw)) {
             $player['age'] = intval($profileAgeRaw->text());
         }
 
         $profileRealNameRaw = $profileRaw->first("//div[contains(@class, 'playerRealname')]", Query::TYPE_XPATH);
-        if (isset($profileRealNameRaw))
-        {
+        if (isset($profileRealNameRaw)) {
             $player['realname'] = trim($profileRealNameRaw->text());
         }
 
         $profileRegionRaw = $profileRaw->first("//div[contains(@class, 'playerRealname')]/img[contains(@class, 'flag')]", Query::TYPE_XPATH);
-        if (isset($profileRegionRaw))
-        {
+        if (isset($profileRegionRaw)) {
             $player['region'] = trim($profileRegionRaw->attr('title'));
 
             $flagIconPath = parse_url($profileRegionRaw->attr('src'), PHP_URL_PATH);
@@ -162,22 +145,18 @@ class TeamParserService
         }
 
         $profilePhotoRaw = $profileRaw->first("//img[contains(@class, 'bodyshot-img')]", Query::TYPE_XPATH);
-        if (isset($profilePhotoRaw))
-        {
+        if (isset($profilePhotoRaw)) {
             $player['photo'] = trim($profilePhotoRaw->attr('src'));
         }
 
         $profileTeamsRaw = $profileRaw->find("//table[contains(@class, 'team-breakdown')]/tbody/tr", Query::TYPE_XPATH);
 
-        if (!empty($profileTeamsRaw))
-        {
+        if (!empty($profileTeamsRaw)) {
             $player['teams'] = [];
-            foreach ($profileTeamsRaw as $profileTeamRaw)
-            {
+            foreach ($profileTeamsRaw as $profileTeamRaw) {
 
                 $teamNameRaw = $profileTeamRaw->first("//td[contains(@class, 'team-name-cell')]//img[contains(@class, 'team-logo')]", Query::TYPE_XPATH);
-                if (empty($teamNameRaw))
-                {
+                if (empty($teamNameRaw)) {
                     continue;
                 }
                 $team = [
@@ -186,22 +165,19 @@ class TeamParserService
                 ];
 
                 $timePeriodRaw = $profileTeamRaw->find("//td[contains(@class, 'time-period-cell')]", Query::TYPE_XPATH);
-                if (count($timePeriodRaw) == 0)
-                {
+                if (count($timePeriodRaw) == 0) {
                     continue;
                 }
 
                 $timePeriodRaw = $timePeriodRaw[0];
                 $timeStartRaw = $timePeriodRaw->find("span[1]", Query::TYPE_XPATH);
-                if (count($timeStartRaw) == 0)
-                {
+                if (count($timeStartRaw) == 0) {
                     continue;
                 }
 
                 $unixtime = trim($timeStartRaw[0]->attr('data-unix'));
                 $dateTime = new \DateTime();
-                if (strlen($unixtime) == 13)
-                {
+                if (strlen($unixtime) == 13) {
                     $unixtime = substr($unixtime, 0, -3);
                 }
                 $dateTime = $dateTime->setTimestamp($unixtime + 3600);
@@ -209,12 +185,10 @@ class TeamParserService
                 $team['start_at'] = $dateTime;
 
                 $timeEndRaw = $timePeriodRaw->find("span[2]", Query::TYPE_XPATH);
-                if (count($timeEndRaw) > 0)
-                {
+                if (count($timeEndRaw) > 0) {
                     $unixtime = trim($timeEndRaw[0]->attr('data-unix'));
                     $dateTime = new \DateTime();
-                    if (strlen($unixtime) == 13)
-                    {
+                    if (strlen($unixtime) == 13) {
                         $unixtime = substr($unixtime, 0, -3);
                     }
                     $dateTime = $dateTime->setTimestamp($unixtime);
@@ -237,7 +211,7 @@ class TeamParserService
     public function getCurrentPlayerTeam($document)
     {
         $currentTeamBlock = $document->first('.playerTeam');
-        if (isset($currentTeamBlock)){
+        if (isset($currentTeamBlock)) {
             $currentTeamName = $currentTeamBlock->first('a');
 
             $teamUrl = $currentTeamName->attr('href');
@@ -246,8 +220,8 @@ class TeamParserService
             $teamName = trim($currentTeamName->text());
 
             $teamIcon = $currentTeamBlock->first('img');
-            $teamIcon = isset($teamIcon) ? $teamIcon->attr('src'): null;
-            $teamIcon = isset($teamIcon) ? HLTVService::urlDecorator($teamIcon): null;
+            $teamIcon = isset($teamIcon) ? $teamIcon->attr('src') : null;
+            $teamIcon = isset($teamIcon) ? HLTVService::urlDecorator($teamIcon) : null;
 
             return [
                 'name' => $teamName,

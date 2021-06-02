@@ -31,7 +31,7 @@ class EventShowRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        if (isset($event)){
+        if (isset($event)) {
             $createdAt = $event->getCreatedAt();
 
             /** @var EventShow[] $events */

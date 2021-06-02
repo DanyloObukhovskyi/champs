@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\EventTeamAttendingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=EventTeamAttendingRepository::class)
  */
-class EventTeamAttending
+class EventTeamAttending implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -23,7 +24,7 @@ class EventTeamAttending
     private $team;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class)
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
      */
     private $event;
 
@@ -83,5 +84,16 @@ class EventTeamAttending
     public function setNumber($number): void
     {
         $this->number = $number;
+    }
+
+    public function jsonSerialize()
+    {
+
+        return [
+            'id' => $this->getId(),
+            'team' => $this->getTeam(),
+            'eventId' => $this->getEvent()->getId(),
+            'number' => $this->getNumber(),
+        ];
     }
 }

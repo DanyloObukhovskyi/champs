@@ -7,6 +7,7 @@
 namespace App\Service;
 
 
+use App\Entity\Event;
 use App\Entity\Player;
 use App\Entity\Team;
 use App\Repository\TeamRepository;
@@ -119,7 +120,18 @@ class TeamService extends EntityService
                         $team->setLogo($imagePhoto);
                         $team->setParseLogoDate(Carbon::now());
                     }
-                }catch (\Exception $e){
+                } catch (\Exception $e){
+                    LoggerService::add("Download image error: $e");
+                }
+            } else {
+                try {
+                    $imagePhoto = DownloadFile::getImage($photo);
+                    if (!empty($imagePhoto))
+                    {
+                        $team->setLogo($imagePhoto);
+                        $team->setParseLogoDate(Carbon::now());
+                    }
+                } catch (\Exception $e){
                     LoggerService::add("Download image error: $e");
                 }
             }
@@ -167,14 +179,64 @@ class TeamService extends EntityService
     /**
      * @param Team $team
      * @return array
+     * @throws \Doctrine\ORM\ORMException
      */
     public function teamDecorator(Team $team): array
     {
         $this->imageService->setImage($team->getLogo());
 
+        $playersEntities = $this->playerService->getByTeam($team->getId());
+
+        $players = [];
+        /** @var Player $playerEntity */
+        foreach ($playersEntities as $playerEntity){
+            if (!empty($playerEntity->getPerson())) {
+                $players[] = $playerEntity->getPerson()->jsonSerialize();
+            }
+        }
         return [
-            'name' => $team->getName(),
-            'logo' => $this->imageService->getImagePath()
+            'id'      => $team->getId(),
+            'name'    => $team->getName(),
+            'logo'    => $this->imageService->getImagePath(),
+            'players' => $players
         ];
+    }
+
+    /**
+     * @param array $teams
+     * @return array
+     */
+    public function teamsDecorator($teams): array
+    {
+        $teamsDecorate = [];
+
+        foreach ($teams as $team){
+            $teamsDecorate[] = $this->teamDecorator($team);
+        }
+
+        return $teamsDecorate;
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function findByName($name)
+    {
+        return $this->repository->findByName($name);
+    }
+
+    /**
+     * @param $id
+     * @return Team|null
+     */
+    public function find($id)
+    {
+        if (isset($id)){
+            $team = $this->repository->find($id);
+        } else {
+            $team = null;
+        }
+        return $team;
     }
 }

@@ -4,8 +4,10 @@
 namespace App\Service;
 
 
+use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
+use App\Repository\TrainerVideoRepository;
 
 class TrainerVideoService extends EntityService
 {
@@ -20,13 +22,16 @@ class TrainerVideoService extends EntityService
 
     protected $entity = TrainerVideo::class;
 
+    /**
+     * @var TrainerVideoRepository
+     */
     protected $repository;
 
     /**
-     * @param User $trainer
+     * @param Teachers $trainer
      * @param $video
      */
-    public function create(User $trainer, $video)
+    public function create(Teachers $trainer, $video)
     {
         /** @var TrainerVideo $trainerVideo */
         $trainerVideo = new $this->entity;
@@ -37,23 +42,23 @@ class TrainerVideoService extends EntityService
     }
 
     /**
-     * @param User $trainer
+     * @param Teachers $trainer
      * @param $video
      */
-    public function deleteVideo(User $trainer, $video)
+    public function deleteVideo(Teachers $trainer, $video)
     {
         $trainerVideo = $this->repository->getByTrainerAndVideo($trainer, $video);
-        if (isset($trainerVideo))
-        {
+
+        if (isset($trainerVideo)) {
             $this->delete($trainerVideo);
         }
     }
 
     /**
-     * @param User $trainer
+     * @param Teachers $trainer
      * @return mixed
      */
-    public function getByTrainer(User $trainer)
+    public function getByTrainer(Teachers $trainer)
     {
         return $this->repository->getByTrainer($trainer);
     }
@@ -67,13 +72,15 @@ class TrainerVideoService extends EntityService
         $videosUrls = [];
 
         /** @var TrainerVideo $video */
-        foreach ($videos as $video)
-        {
-            $video = explode('/', $video->getVideoUrl());
-            $video = end($video);
-            
-            $video = str_replace('watch?v=', '', $video);
-            $videosUrls[] = $video;
+        foreach ($videos as $video) {
+            $videoId = explode('/', $video->getVideoUrl());
+            $videoId = end($videoId);
+
+            $videoId = str_replace('watch?v=', '', $videoId);
+            $videosUrls[] = [
+                'videoId' => $videoId,
+                'videoUrl' => $video->getVideoUrl()
+            ];
         }
         return $videosUrls;
     }
@@ -84,10 +91,8 @@ class TrainerVideoService extends EntityService
      */
     public function isYouTubeVideo($video)
     {
-        foreach (self::YOUTUBE_TYPES as $type)
-        {
-            if (strpos($video, $type) !== false)
-            {
+        foreach (self::YOUTUBE_TYPES as $type) {
+            if (strpos($video, $type) !== false) {
                 return true;
             }
         }

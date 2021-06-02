@@ -1,76 +1,57 @@
 {% extends 'base.html.twig' %}
-{% block title %}Champs.pro{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block router %}home{% endblock %}
+{% block canonical %}
+    <link rel=“canonical” href=“{{ link }}/ru” />
+{% endblock %}
 {% block description %}
-  <meta name="description" content="Тренеры по League of Legends, СS:GO, Dota, матчи, игровые новости, события и мероприятия в игровой индустрии">
+    <meta name="description"
+          content="{{ description }}">
 {% endblock %}
 {% block keywords %}
-  <meta name="Keywords" content="League of Legends, СS:GO, Dota, Игровые матчи, Игровые новости, События, Рейтинг команд, Рейтинг игроков, Игрок недели, Результаты матчей, Турниры">
+    <meta name="Keywords"
+          content="{{ keywords }}">
 {% endblock %}
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+        <meta name="{{ meta.name }}"
+              content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+{% block schema %}
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@graph" : [
+            {% for article in news %}
+                {
+                    "@type": "NewsArticle",
+                    "@id": "{{ link }}/ru/article/{{ article.id }}/{{ article.url }}",
+                    "headline": "{{ article.title }}",
+                    "datePublished": "{{ article.date }}",
+                    "articleBody": "{{ article.text }}",
+                    "image": {
+                        "@type": "imageObject",
+                        "url": "{{ link }}/images/temp/news/{{ article.logo }}",
+                        "height": "400",
+                        "width": "300"
+                    },
+                    "author": [{"@type":"Person", "name":"Champs Pro"}]
+                }
+            {% endfor %}
+            ]
+        }
+    </script>
+{% endblock  %}
 {% block body %}
-<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-  Главная
-</h1>
-<div class="home">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        <div class="banner">
-
-
-{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
-{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
-{#        <img src="/images/Banner.png"/>#}
-{#    </object>#}
-{#</a>#}
-
-        </div>
-        {% include 'templates/home/matches.html.twig' %}
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/home/videos.html.twig' %}
-      </div>
+    {% if heading_type == 1 %}
+        <h1 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h1>
+    {% else %}
+        <h2 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h2>
+    {% endif %}
+    <div class="home page">
+        <home-page  popular-tags="{{ popularTags|json_encode }}"></home-page>
     </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/home/events.html.twig' %}
-        {% include 'templates/home/tournaments.html.twig' %}
-        <div class="banner bottom">
-          
-{#<a href="https://bit.ly/35pUtMC" target="_blank" class="a">#}
-{#    <object class="object banner" data="/images/banner2.svg" type="image/svg+xml">#}
-{#        <img src="/images/Banner.png"/>#}
-{#    </object>#}
-{#</a>#}
-
-        </div>
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-            {% include 'templates/home/updates.html.twig' %}
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-            {% include 'templates/home/results.html.twig' %}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        {% include 'templates/home/ratings.player.html.twig' %}
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-        <div class="row">
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-            {% include 'templates/home/ratings.teams.html.twig' %}
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-            {% include 'templates/home/player.week.html.twig' %}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}

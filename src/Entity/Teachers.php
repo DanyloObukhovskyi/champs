@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TeachersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,31 +29,6 @@ class Teachers
     private $userid;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $videolink;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $cost;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
-    private $isLessonCost;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $about;
-
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
-    private $shorttitle;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $method;
@@ -63,11 +39,9 @@ class Teachers
     private $twitch;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToMany(targetEntity=Award::class)
      */
-    private $streamType;
-
-    private $comissionCost;
+    private $awards;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -78,6 +52,31 @@ class Teachers
      * @ORM\Column(type="string", nullable=true)
      */
     private $timeZone;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : false})
+     */
+    private $isLessonCost;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $adminPercentage;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrainerLessonPrice::class, mappedBy="trainer")
+     */
+    private $costs;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_active;
+
+    public function __construct()
+    {
+        $this->costs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,68 +94,7 @@ class Teachers
 
         return $this;
     }
-
-    public function getVideoLink(): ?string
-    {
-        return $this->videolink;
-    }
-
-    public function setVideoLink(?string $videolink): self
-    {
-        $this->videolink = $videolink;
-
-        return $this;
-    }
-
-    public function getCost(): ?int
-    {
-        $percentageMarkup = $_ENV['PERCENTAGE_MARKUP_LESSON'];
-
-        $cost = $this->cost;
-
-        if (isset($percentageMarkup))
-        {
-            $cost = ($this->cost / 100)  * ($percentageMarkup + 100);
-        }
-        return $cost;
-    }
-
-    public function getCostWithNoPercentage()
-    {
-        return $this->cost;
-    }
-
-    public function setCost(?int $cost): self
-    {
-        $this->cost = $cost;
-
-        return $this;
-    }
-
-    public function getAbout(): ?string
-    {
-        return $this->about;
-    }
-
-    public function setAbout(?string $about): self
-    {
-        $this->about = $about;
-
-        return $this;
-    }
-
-    public function getShorttitle(): ?string
-    {
-        return $this->shorttitle;
-    }
-
-    public function setShorttitle(?string $shorttitle): self
-    {
-        $this->shorttitle = $shorttitle;
-
-        return $this;
-    }
-
+    
     public function getMethod(): ?string
     {
         return $this->method;
@@ -179,23 +117,6 @@ class Teachers
         $this->twitch = $twitch;
 
         return $this;
-    }
-
-    public function getStreamType(): ?int
-    {
-        return $this->streamType;
-    }
-
-    public function setStreamType(?int $streamType): self
-    {
-        $this->streamType = $streamType;
-
-        return $this;
-    }
-
-    public function getComissionCost()
-    {
-        return ($this->cost) * self::SERVICE_COST_MULTIPLIER;
     }
 
     /**
@@ -233,6 +154,30 @@ class Teachers
     /**
      * @return mixed
      */
+    public function getAwards()
+    {
+        return $this->awards;
+    }
+
+    /**
+     * @param mixed $awards
+     */
+    public function setAwards($awards): void
+    {
+        $this->awards = $awards;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCosts()
+    {
+        return $this->costs;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIsLessonCost()
     {
         return $this->isLessonCost;
@@ -245,4 +190,33 @@ class Teachers
     {
         $this->isLessonCost = $isLessonCost;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAdminPercentage()
+    {
+        return $this->adminPercentage;
+    }
+
+    /**
+     * @param mixed $adminPercentage
+     */
+    public function setAdminPercentage($adminPercentage): void
+    {
+        $this->adminPercentage = $adminPercentage;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): self
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
 }

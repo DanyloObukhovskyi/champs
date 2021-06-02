@@ -5,7 +5,7 @@ namespace App\Command;
 use App\Entity\Match;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
-use App\Service\MatchService;
+use App\Service\Match\MatchService;
 use App\Traits\Dispatchable;
 use App\Message\Match as MatchMessage;
 use Symfony\Component\Console\Command\Command;
@@ -26,8 +26,7 @@ class ParserMatchesCommand extends Command
         $this
             ->setDescription('Add a short description for your command')
             ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
     /** @var MatchService */
@@ -49,8 +48,7 @@ class ParserMatchesCommand extends Command
 
         $matches = $this->getAllMatches();
 
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             $this->dispatch(new MatchMessage($match));
         }
         return Command::SUCCESS;
@@ -67,8 +65,7 @@ class ParserMatchesCommand extends Command
         $matchesUrls = [];
 
         /** @var Match $match */
-        foreach ($matches as $match)
-        {
+        foreach ($matches as $match) {
             $matchesUrls[$match->getUrl()] = [
                 'url' => $match->getUrl(),
                 'is_live' => true
@@ -77,16 +74,15 @@ class ParserMatchesCommand extends Command
 
         $parserMatches = HLTVService::getMatches();
 
-        foreach ($parserMatches as $match)
-        {
+        foreach ($parserMatches as $match) {
             $matchesUrls[$match['url']] = $match;
         }
         $mainResultsMatches = HLTVService::getMainMatchesResults();
 
-        foreach ($mainResultsMatches as $match)
-        {
+        foreach ($mainResultsMatches as $match) {
             $matchesUrls[$match['url']] = $match;
         }
+
         return $matchesUrls;
     }
 }

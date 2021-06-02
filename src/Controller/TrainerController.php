@@ -2,35 +2,56 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\PurseHistory;
 use App\Entity\Teachers;
 use App\Entity\User;
 use App\Service\UserService;
-use App\Traits\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class TrainerController extends AbstractController
 {
-    use EntityManager;
-
     /**
      * @var UserService
      */
     public $userService;
 
-    public function __construct()
+    /**
+     * @var EntityManagerInterface
+     */
+    public $entityManager;
+
+    /**
+     * @var ValidatorInterface
+     */
+    public $validator;
+
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
+
+    public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator, TranslatorInterface $translator)
     {
-        $this->userService = new UserService($this->getEntityManager());
+        $this->entityManager = $entityManager;
+
+        $this->validator = $validator;
+        $this->translator = $translator;
+
+        $this->userService = new UserService($entityManager);
     }
 
     /**
-     * @Route("/ru/trainer/timelist", name="trainer_index")
+     * @Route("/trainer/timelist", name="trainer_index")
      */
     public function index()
     {
@@ -50,7 +71,7 @@ class TrainerController extends AbstractController
     }
 
     /**
-     * @Route("/ru/trainer/timetable", name="timetable_index")
+     * @Route("/trainer/timetable", name="timetable_index")
      */
     public function timetable()
     {
@@ -75,7 +96,7 @@ class TrainerController extends AbstractController
     }
 
     /**
-     * @Route("/ru/trainer/purse", name="purse_index")
+     * @Route("/trainer/purse", name="purse_index")
      */
     public function purse()
     {
@@ -118,7 +139,7 @@ class TrainerController extends AbstractController
     }
 
     /**
-     * @Route("/ru/trainer/settings", name="trainer_settings_index")
+     * @Route("/trainer/settings", name="trainer_settings_index")
      */
     public function trainer_settings()
     {
@@ -142,7 +163,7 @@ class TrainerController extends AbstractController
     /**
      * Trainer /ru/trainer/*
      *
-     * @Route("/ru/trainer/info/{id}", name="get_trainer_info")
+     * @Route("/trainer/info/{id}", name="get_trainer_info")
      */
     public function getTrainerInfo($id)
     {
@@ -160,60 +181,50 @@ class TrainerController extends AbstractController
     }
 
     /**
-     * @Route("/ru/trainer/set-info/{form}", name="set_trainer_info")
+     * @Route("/trainer/set-info/{form}", name="set_trainer_info")
      */
     public function setUserInfo($form)
     {
         $newInfo = json_decode($form);
-        $entityManager = $this->getDoctrine()->getManager();
-        $user = $entityManager->getRepository(Teachers::class)->find($newInfo->id);
+        $user = $this->entityManager
+            ->getRepository(Teachers::class)
+            ->find($newInfo->id);
 
         if (!$user) {
             throw $this->createNotFoundException(
                 'No trainer found for id ' . $newInfo->id
             );
         }
-
-        $user->setVideoLink($newInfo->videolink);
         $user->setGame($newInfo->game);
         $user->setCost($newInfo->cost);
         $user->setAbout($newInfo->about);
-        $entityManager->flush();
+
+        $this->entityManager->flush();
 
         return $this->json($user);
     }
 
     /**
-     * @Route("/ru/trainers/slider/{game}", name="get_trainer_info_slider_games")
+     * @Route("/ajax/trainers/{gameCode}/{offset}", name="get_trainer_info_slider_games")
      */
-    public function setTrainerSliderInfo(Request $request, $game)
+    public function setTrainerSliderInfo(Request $request, $gameCode, $offset = 0)
     {
-        $paginate = $_ENV['TRAINERS_ON_PAGE'] ?? 5;
-
-        if ($game == 'all') {
-            $game = ['cs', 'lol', 'dota'];
-        }
-        $entityManager = $this->getDoctrine()->getManager();
-        $users = $entityManager->getRepository(User::class)->findBy([
-            'istrainer' => 1,
-            'game' => $game
-        ]);
-
-        if (!$users) {
-            return $this->json([]);
-        }
-
         $filters = json_decode($request->getContent(), true);
-        $response = $this->userService->teachersDecorator($users, $filters);
-        $response = array_chunk($response, $paginate);
+        $game = $this->entityManager->getRepository(Game::class)
+            ->findOneBy(['code' => $gameCode]);
 
-        return $this->json($response);
+        $users = $this->userService->getTrainers($filters, $game, $offset);
+        $trainers = $this->userService->teachersDecorator($users, $gameCode);
+
+        return $this->json([
+            'trainers' => $trainers,
+        ]);
     }
 
     /**
-     * @Route("/ru/trainer/paypall/{method}/{userId}", methods={"POST"}, name="trainer_paypall")
+     * @Route("/trainer/paypall/{method}/{userId}", methods={"POST"}, name="trainer_paypall")
      */
-    public function trainerPayPall(Request $request, ValidatorInterface $validator, $method, $userId)
+    public function trainerPayPall(Request $request, $method, $userId)
     {
         $request = json_decode($request->getContent(), true);
 
@@ -224,17 +235,16 @@ class TrainerController extends AbstractController
 
         $payPal = null;
 
-        if (isset($trainer)){
-            if ($method === 'set'){
+        if (isset($trainer)) {
+            if ($method === 'set') {
                 $constraints = new Assert\Collection([
                     'payPal' => [new Assert\Email()],
                 ]);
-                $violations = $validator->validate($request, $constraints);
+                $violations = $this->validator->validate($request, $constraints);
 
                 $data = [];
 
-                if ($violations->count() === 0)
-                {
+                if ($violations->count() === 0) {
                     $data['message'] = [
                         'type' => 'success',
                         'text' => 'Paypal был успешно сохранен'

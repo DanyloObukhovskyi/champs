@@ -27,7 +27,7 @@ class RatingTeamRepository extends ServiceEntityRepository
     public function findByTeamId(int $teamId)
     {
         /** @var RatingTeam $ratingTeam */
-        $ratingTeam =  $this->createQueryBuilder('r')
+        $ratingTeam = $this->createQueryBuilder('r')
             ->where("r.teamId = $teamId")
             ->setMaxResults(1)
             ->getQuery()
@@ -42,7 +42,7 @@ class RatingTeamRepository extends ServiceEntityRepository
         $ratingTeams = $this->createQueryBuilder('r')
             ->orderBy('r.createdAt', 'DESC')
             ->andWhere('r.createdAt is not null')
-            ->setMaxResults(8)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 

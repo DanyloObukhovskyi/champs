@@ -55,15 +55,15 @@ function OnEdit(element, flag = "") {
 		if (flag == "svg") {
 			var c_value = element.innerHTML;
 			c_value = c_value.split(" - ");
-			if(c_value[0]){
-				if(c_value[1]){
+			if (c_value[0]) {
+				if (c_value[1]) {
 					TMP_Value = c_value[1];
 				}
 				c_value = c_value[0];
 			} else {
 				var c_value = element.innerHTML;
 			}
-		} else if(flag == "player_d") {
+		} else if (flag == "player_d") {
 			var c_value = element.getAttribute('attr-row-data');
 		} else if (flag == "svg2") {
 			var c_value = element.getAttribute('attr-row-rating');
@@ -132,8 +132,13 @@ function closeEdit() {
 function SaveEdit() {
 	if (canEdit == true) {
 		let current_val = $('#current_edit_V').val();
-		
-		document.getElementsByClassName("opened_edit")[0].innerHTML = current_val + " - "+TMP_Value;
+
+		if (TMP_Value != "") {
+			document.getElementsByClassName("opened_edit")[0].innerHTML = current_val + " - " + TMP_Value;
+		} else {
+			document.getElementsByClassName("opened_edit")[0].innerHTML = current_val;
+		}
+
 		TMP_Value = "";
 		let WhereKey = document.getElementsByClassName("opened_edit")[0].getAttribute("attr-row-id");
 		let field = document.getElementsByClassName("opened_edit")[0].getAttribute("attr-row-field");
@@ -248,21 +253,25 @@ function setOpenDate(element) {
 		let date = element.getAttribute('attr-row-date');
 		let table = element.getAttribute('attr-row-table');
 		let user_id = element.getAttribute('attr-row-userid');
-		
+
 		let identity = getCookie("identity");
 		let remember_code = getCookie("remember_code");
-		
+
 		let setDate = "";
-		setDate = new Date(date).toLocaleString("ru", {year: 'numeric', month: 'numeric', day: 'numeric'});
-		
+		setDate = new Date(date).toLocaleString("ru", {
+			year: 'numeric',
+			month: 'numeric',
+			day: 'numeric'
+		});
+
 		let insert_data = {
 			user_id: user_id,
 			date: setDate,
 			time_from: time,
-			
+
 		};
 		insert_data = JSON.stringify(insert_data);
-		
+
 		let post_data = {
 			ajax_update: true, //проверяю есть ли нужный post запрос
 			open_date: true, //проверяю есть ли нужный post запрос
@@ -273,16 +282,16 @@ function setOpenDate(element) {
 			where: '', // условие для обновления. По какому параметру будет происходить поиск в бд.
 			new_data: insert_data, // то что будем обновлять или добавлять. В формате название поля в таблице => значение
 		};
-		
+
 		let url = "https://champs.pro/admin_panel/index.php/c-admin/ajax/update/";
 		$.post(url, post_data, function (answer) {
 			if (answer == "true") {
 				let bg_color = element.style.background;
-				if(bg_color == "" && element.innerHTML.length < 17) {
+				if (bg_color == "" && element.innerHTML.length < 17) {
 					element.style.background = "green";
 				} else {
 					element.style.background = "";
-					element.innerHTML ="";
+					element.innerHTML = "";
 				}
 			} else {
 				console.log(answer);

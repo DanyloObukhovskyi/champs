@@ -19,18 +19,18 @@ class Review
 
     /**
      * @ORM\OneToOne(targetEntity=Lessons::class, inversedBy="review", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $lesson;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $student;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trainerReviews")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trainerReviews", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $trainer;
@@ -41,27 +41,27 @@ class Review
     private $rate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : false})
      */
     private $tactics;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : false})
      */
     private $scatter;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : false})
      */
     private $aim;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : false})
      */
     private $mentor;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : false})
      */
     private $duel;
 

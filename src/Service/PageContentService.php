@@ -24,7 +24,6 @@ class PageContentService
     {
         sleep(1);
         $response = self::getContent($url);
-
         if (is_array($response) && isset($response['error']))
         {
             if($response['status'] == 503 && $count < 2)
@@ -37,7 +36,6 @@ class PageContentService
                 sleep(10);
                 return static::getPageContent($url, ++$count);
             }
-
             return null;
         }
 
@@ -78,7 +76,6 @@ class PageContentService
             $message = $exception->getMessage();
             $statusCode = 404;
         }
-
         if ($statusCode != 200)
         {
             return ['status' => $statusCode, 'error' => true, 'message' => $message];
@@ -86,5 +83,4 @@ class PageContentService
 
         return $response;
     }
-
 }

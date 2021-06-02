@@ -1,31 +1,69 @@
 {% extends 'base.html.twig' %}
-{% block title %}Контакты{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block router %}contact{% endblock %}
+{% block description %}
+    <meta name="description"
+          content="{{ description }}">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="{{ keywords }}">
+{% endblock %}
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+            <meta name="{{ meta.name }}"
+                  content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
 {% block body %}
-<h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-  Контакты
-</h1>
-<div class="contact">
-  <div class="container">
-    <div class="title">Контакты</div>
-    <div class="subtitle">Студия киберспортивного вещания Champs</div>
-    <div class="rows">
-      <div>
-        <p>Адрес редакции: 630049, г.Новосибирск,<br> ул. Галущака 4, подъезд 6, офис 2</p>
-        <p>ОГРН: 1155476103815</p>
-      </div>
-      <div>
-        <p>E-mail: info@champs.pro</p>
-        <p>Отдел маркетинга: marketing@champs.pro</p>
-        <p>Отдел продаж: sales@champs.pro</p>
-        <p>Если вы хотите работать в Champs: jobs@champs.pro</p>
-        <p>Служба технической поддержки: support@champs.pro</p>
-      </div>
+    {% if heading_type == 1 %}
+        <h1 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h1>
+    {% else %}
+        <h2 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h2>
+    {% endif %}
+    <div class="contact page">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span>
+                    Контакты
+                </span>
+            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <contacts>
+                <template v-slot:address>
+                    <pre>{{setting.get('contactAddress') is not null ? setting.get('contactAddress').value : ''}}</pre>
+                </template>
+                <template v-slot:info-mail>
+                    <a href="mailto:{{setting.get('infoMail') is not null ? setting.get('infoMail').value : ''}}">
+                        E-mail:{{setting.get('infoMail') is not null ? setting.get('infoMail').value : ''}}
+                    </a>
+                </template>
+                <template v-slot:advertising-mail>
+                    <a href="mailto:{{setting.get('advertisingMail') is not null ? setting.get('advertisingMail').value : ''}}">
+                        {{setting.get('advertisingMail') is not null ? setting.get('advertisingMail').value : ''}}
+                    </a>
+                </template>
+                <template v-slot:job-mail>
+                    <a href="mailto:{{setting.get('jobMail') is not null ? setting.get('jobMail').value : ''}}">
+                        {{setting.get('jobMail') is not null ? setting.get('jobMail').value : ''}}
+                    </a>
+                </template>
+                <template v-slot:support-mail>
+                    <a href="mailto:{{setting.get('support') is not null ? setting.get('support').value : ''}}">
+                        {{setting.get('support') is not null ? setting.get('support').value : ''}}
+                    </a>
+                </template>
+                <template v-slot:vacancies>
+                    {{setting.get('vacancies') is not null ? setting.get('vacancies').value|raw : ''}}
+                </template>
+            </contacts>
+        </div>
     </div>
-  </div>
-  <img src="/images/Champs_Logo.png" class="back" alt="backend" />
-  <div class="map">
-    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A7c0daed862ae9497af8f73f1ff20f4528c8599bba1fc6fa5841f00a6696332b8&amp;width=100%25&amp;height=464&amp;lang=ru_RU&amp;scroll=true"></script>
-  </div>
-</div>
 {% endblock %}

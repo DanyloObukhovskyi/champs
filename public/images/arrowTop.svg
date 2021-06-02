@@ -1,0 +1,12 @@
+<svg id="Кнопка_Наверх_" data-name="Кнопка &quot;Наверх&quot;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="92" height="25" viewBox="0 0 92 25">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #9d9fa0;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <image id="Подложка" width="92" height="25" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAAAZCAYAAAC8ekmHAAAB4UlEQVRoge2Zu0oDQRSGv0QbNSHEYKkoYoJBBB9AvFWCFr6CjY0ggljYWFhqKQheQBHBC8ZGsBNEEEGwsRBEfAcLGwuVgSOsIdns7szK3r56Zzj/t9kzh0mqq6cXQ6SBS2DS1IYB4QqYAr5MlNOUy7ebirUGzJraLED0Ac3AtYmSTAmfATaBlInNAsgw8AQ865aWNpCtHziIsGwk275k1UJXeA64ALL6mQJPVrLmdArVEa7e+iFQCpc3LUqS2fPXrNPDV4E545GCj5L+Ddx4qdSr8GlgK+J9244R4BF4cbvQS0spymdl4sANK7/ttOi2frfSMiYOjojgaWBwIzwl4185jnbrUJZx0XFrddPDV4B5g8VGBTWbfwK3TvI4Fa7uR3Zi3rftGAMegNdGDzoRqG63jtTL8bXkcJMWRw1vAhsJbwMqQD7uRh2QF1cZu0fthKuDYA8Y/O/KQ4xytWt3iNr18CVgMe4GPTAAfAB3tZbWEz4hI2BySHpjXIS/Va+uJbQbOEkOSS2Uu2Nx+Ydq4S3S+AvhyRZYCuKy1VpgtXA1aw/F3ZRBlMtt63bWHr4ALIc4XFBRk8s7cI/lF66uGzfibsZH1oFRRHgncCb/TCf4g3J7qlwr4edARyLadzqAyg8xhzVHOAl2nAAAAABJRU5ErkJggg=="/>
+  <path id="Стелка" class="cls-1" d="M959.609,1584.16l-4.45,4.55a0.539,0.539,0,0,0-.159.39,0.58,0.58,0,0,0,.159.4l0.328,0.33a0.536,0.536,0,0,0,.774,0l3.737-3.81,3.741,3.82a0.547,0.547,0,0,0,.773,0l0.328-.34a0.54,0.54,0,0,0,.16-0.39,0.581,0.581,0,0,0-.16-0.4l-4.454-4.55A0.552,0.552,0,0,0,959.609,1584.16Z" transform="translate(-914 -1575)"/>
+</svg>

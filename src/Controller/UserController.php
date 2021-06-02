@@ -3,11 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Charactristics;
+use App\Entity\ConfirmCode;
+use App\Entity\ReferralLink;
 use App\Entity\Teachers;
 use App\Entity\TrainerVideo;
 use App\Entity\User;
+use App\Service\ConfirmCodeService;
 use App\Service\TrainerVideoService;
+use App\Service\UserService;
 use App\Traits\EntityManager;
+use App\Message\ConfirmCodeMail;
+use Doctrine\ORM\EntityManagerInterface;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,10 +23,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
+/**
+ * @Route("/{_locale}", requirements={"locale": "ru"})
+ */
 class UserController extends AbstractController
 {
-    use EntityManager;
-
     private const ACTION_ADD = 'add';
 
     private const ACTION_DELETE = 'delete';
@@ -36,295 +44,36 @@ class UserController extends AbstractController
      */
     private $trainerVideoService;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    /**
+     * @var ConfirmCodeService
+     */
+    private $confirmCodeService;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
         $this->passwordEncoder = $passwordEncoder;
-        $this->trainerVideoService = new TrainerVideoService($this->getEntityManager());
-    }
 
-    /**
-     * @Route("/ru/user/timelist", name="timelist_index")
-     */
-    public function index()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('main');
-        } else {
-            return $this->render('templates/cabinet/user/timelist.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/timelist.css'
-                    ]
-                ]
-            );
-        }
-    }
+        $this->entityManager = $entityManager;
+        $this->trainerVideoService = new TrainerVideoService($entityManager);
 
-    /**
-     * @Route("/ru/user/specifications", name="specifications_index")
-     */
-    public function specifications()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('trainer_index');
-        } else {
-            $gameRoles['Counter Strike: GO'] = Charactristics::CS_ROLES;
-            $gameRoles['DOTA']               = Charactristics::DOTA_ROLES;
-            $gameRoles['League of Legends']  = Charactristics::LOL_ROLES;
-
-            return $this->render('templates/cabinet/user/specifications.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/specifications.css'
-                    ],
-                    'gameRoles' => $gameRoles
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/ru/user/history", name="history_index")
-     */
-    public function history()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('main');
-        } else {
-            $data = [
-                [
-                    'date' => 'Сегодня, 25 июня',
-                    'items' => [
-                        [
-                            'time' => '13:00-14:00',
-                            'image' => '/images/temp/Rectangle506.png',
-                            'name' => 'Rafaeeela',
-                            'rating' => 3,
-                            'price' => 3000,
-                            'closed' => true,
-                        ],
-                        [
-                            'time' => '13:00-14:00',
-                            'image' => '/images/temp/Rectangle506.png',
-                            'name' => 'Rafaeeela',
-                            'rating' => 3,
-                            'price' => 3000,
-                            'closed' => true,
-                        ]
-                    ]
-                ]
-            ];
-
-            return $this->render('templates/cabinet/user/history.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/history.css'
-                    ],
-                    'data' => $data,
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/ru/user/settings", name="settings_index")
-     */
-    public function settings()
-    {
-        if ($this->getUser()->getistrainer()) {
-            return $this->redirectToRoute('main');
-        } else {
-            return $this->render('templates/cabinet/user/settings.html.twig',
-                [
-                    'router' => 'cabinet',
-                    'styles' => [
-                        'cabinet/cabinet.css',
-                        'cabinet/user/settings.css'
-                    ]
-                ]
-            );
-        }
+        $this->userService = new UserService($entityManager);
+        $this->confirmCodeService = new ConfirmCodeService($entityManager);
     }
 
     /**
      * User /ru/user/*
      *
-     * @Route("/ru/user/info/{id}", name="get_user_info")
-     */
-    public function getUserInfo($id)
-    {
-        /** @var User $user */
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findOneBy([
-                'id' => $id
-            ]);
-
-        if (!$user) {
-            throw $this->createNotFoundException(
-                'No user found for id ' . $id
-            );
-        }
-
-        $result = [
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'istrainer' => $user->getIsTrainer(),
-            'nickname' => $user->getNickname(),
-            'photo' => $user->getPhoto(),
-            'name' => $user->getName(),
-            'game' => $user->getGame(),
-            'rank' => $user->getRank(),
-            'family' => $user->getFamily(),
-            'discord' => $user->getDiscord(),
-            'purse' => $user->getPurse(),
-            'vk' => $user->getVk(),
-        ];
-
-        if ($user->getIsTrainer()) {
-            $trainer = $this->getDoctrine()
-                ->getRepository(Teachers::class)
-                ->findByUserId(intval($id));
-
-            if (!$trainer) {
-                $entityManager = $this->getDoctrine()->getManager();
-                /** @var Teachers $trainer */
-                $trainer = new Teachers();
-                $trainer->setVideoLink('');
-                $trainer->setUser($user->getId());
-                $trainer->setCost(0);
-                $trainer->setAbout('');
-                $trainer->setShorttitle('');
-                $trainer->setMethod('');
-                $trainer->setStreamType(0);
-                $trainer->setTwitch('');
-
-
-                $entityManager->persist($trainer);
-                $entityManager->flush();
-            }
-//            $trainer->setUser(null);
-            $user->setTrainer($trainer);
-
-            $userTrainer = $user->getTrainer();
-            $result['trainer'] = $trainer;
-        }
-
-        return $this->json($result);
-    }
-
-    /**
-     * @Route("/ru/user/set-info/", methods={"POST"}, name="set_user_info")
-     */
-    public function setUserInfo(Request $request)
-    {
-        // retrieves POST variables respectively\
-        $userId = $request->request->get('id');
-        $entityManager = $this->getDoctrine()->getManager();
-        /** @var User $user */
-        $user = $entityManager->getRepository(User::class)->find($userId);
-
-        if (!$user) {
-            return $this->json([
-                'status' => 404
-            ]);
-        }
-        $user->setVk($request->request->get('vk'));
-        $user->setName($request->request->get('name'));
-        $user->setEmail($request->request->get('email'));
-        $user->setNickname($request->request->get('nickname'));
-//        $user->setPhoto($newInfo->photo);
-        $user->setFamily($request->request->get('family'));
-        $user->setGame($request->request->get('game'));
-        $user->setRank($request->request->get('rank'));
-        $user->setDiscord($request->request->get('discord'));
-//
-        if ($request->request->get('photo') && ($request->request->get('photo') != '')) {
-            if ($user->getPhoto() !== null) {
-                if (($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".jpg") ||
-                    ($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".png") ||
-                    ($user->getPhoto() == $user->getId() . "-" . $user->getName() . $user->getNickname() . ".jpeg")) {
-                    unlink("images/temp/matches/" . $user->getPhoto());
-                }
-
-            }
-
-            $data = $request->request->get('photo');
-
-            if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) {
-                $data = substr($data, strpos($data, ',') + 1);
-                $type = strtolower($type[1]); // jpg, png, gif
-
-                if (!in_array($type, ['jpg', 'jpeg', 'png'])) {
-                    throw new \Exception('invalid image type');
-                }
-
-                $data = base64_decode($data);
-
-                if ($data === false) {
-                    throw new \Exception('base64_decode failed');
-                }
-            } else {
-                throw new \Exception('did not match data URI with image data');
-            }
-
-            $filename = $user->getId() . "-" . $user->getName() . $user->getNickname() . "." . $type;
-            file_put_contents("images/temp/matches/{$filename}", $data);
-
-            $user->setPhoto($filename);
-        }
-
-
-        if ($user->getIsTrainer()) {
-            $trainer = $entityManager->getRepository(Teachers::class)
-                ->findOneBy([
-                    'userid' => $userId
-                ]);
-            if (!$trainer) {
-                $trainer = new Teachers();
-                $trainer->setUser($user->getId());
-            }
-
-            $trainer->setTimeZone($request->request->get('timezone', null));
-            $trainer->setVideoLink($request->request->get('videolink'));
-            $trainer->setCost($request->request->get('cost'));
-            $trainer->setAbout($request->request->get('about'));
-            $trainer->setShorttitle($request->request->get('shorttitle'));
-            $trainer->setMethod($request->request->get('method'));
-            $trainer->setStreamType($request->request->get('streamtype', null));
-            $trainer->setTwitch($request->request->get('channellink'));
-            $trainer->setIsLessonCost($request->request->get('isLessonCost', false) === "false" ? false: true);
-
-            $entityManager->persist($trainer);
-            $entityManager->flush();
-        }
-        $password = $request->request->get('password');
-
-        if ($password == $request->request->get('password_repeat')) {
-            if ($password != '') {
-                $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
-            }
-        }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return $this->json([
-            'status' => 200,
-            'photo' => $user->getPhoto()
-        ]);
-    }
-
-    /**
-     * User /ru/user/*
-     *
-     * @Route("/ru/user/info/by-mail/{mail}", name="get_user_info_by_mail")
+     * @Route("/user/info/by-mail/{mail}", name="get_user_info_by_mail")
      */
     public function getUserInfoByMail($mail)
     {
@@ -344,7 +93,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/ru/{action}/user/video/{id}", methods={"POST"}, name="add_trainer_video")
+     * @Route("/{action}/user/video/{id}", methods={"POST"}, name="add_trainer_video")
      */
     public function addVideo(Request $request, $action, $id)
     {
@@ -374,5 +123,122 @@ class UserController extends AbstractController
             $videos[] = $trainerVideo->getVideoUrl();
         }
         return $this->json($videos);
+    }
+
+
+    /**
+     * @Route("/get/auth", name="get.auth.user")
+     */
+    public function getAuthUser()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (isset($user)) {
+            $user = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'steam' => $user->getSteamId(),
+                'nickname' => $user->getNickname(),
+                'photo' => $user->getPhoto()
+            ];
+        }
+
+        return $this->json($user);
+    }
+
+    /**
+     * @Route("/generate/confirm/code")
+     */
+    public function generateEmailConfirmCode(Request $request, Swift_Mailer $mailer)
+    {
+        $email = $request->get('email');
+        $confirmCode = $this->confirmCodeService->create($email);
+
+        $this->dispatchMessage(new ConfirmCodeMail($confirmCode, $mailer));
+
+        return $this->json('ok');
+    }
+
+    /**
+     * @Route("/check/confirm/code")
+     */
+    public function checkConfirmCode(Request $request)
+    {
+        $user = $request->get('user');
+        /** @var ConfirmCode $confirmCode */
+        $confirmCode = $this->confirmCodeService->getCode($user['email'] ?? '');
+
+        if (isset($confirmCode)) {
+            if ((string)$confirmCode->getCode() === (string)$user['code']) {
+                return $this->json('Код подтвержден!');
+            }
+        }
+        return $this->json('Код не совпадает!', 422);
+    }
+
+    /**
+     * @Route("/ajax/user/set/nickname")
+     */
+    public function setNickName(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        /** @var User|null $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([
+            'email' => $request->email
+        ]);
+
+        if (!empty($request->nickname) and isset($user)) {
+
+            $user->setNickname($request->nickname);
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            return $this->json('ok');
+        }
+        return $this->json('Никнейм не может быть пустым!', 422);
+    }
+
+    /**
+     * @Route("/check/email")n
+     */
+    public function checkIsEmailValid(Request $request)
+    {
+        $email = $request->get('email');
+
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([
+            'email' => $email
+        ]);
+        return isset($user) ?
+            $this->json('Этот эмейл уже занят!', 422) :
+            $this->json('ok');
+    }
+
+    /**
+     * @Route("/auth/user/full", name="user_cabinet_ajax_full")
+     */
+    public function authUserFull()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (isset($user)) {
+            $userData = $this->userService->getUserData($user);
+
+            /** @var ReferralLink $inviteLink */
+            $inviteLink = $this->entityManager
+                ->getRepository(ReferralLink::class)
+                ->findOneBy([
+                    'game' => $user->getGame()
+                ]);
+        }
+        $userData['inviteVk'] = null;
+
+        if (isset($inviteLink)) {
+            $userData['inviteVk'] = $inviteLink->getLink();
+        }
+        return $this->json(isset($user) ? $userData : null);
     }
 }

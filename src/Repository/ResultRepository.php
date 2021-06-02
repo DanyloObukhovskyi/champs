@@ -33,7 +33,7 @@ class ResultRepository extends ServiceEntityRepository
         $results = $this->createQueryBuilder('r')
             ->orderBy('r.createdAt', 'DESC')
             ->andWhere('r.createdAt is not null')
-            ->setMaxResults(6)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 

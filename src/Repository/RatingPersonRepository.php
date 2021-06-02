@@ -31,7 +31,7 @@ class RatingPersonRepository extends ServiceEntityRepository
     public function findByPersonId(int $personId)
     {
         /** @var RatingPerson $ratingPerson */
-        $ratingPerson =  $this->createQueryBuilder('r')
+        $ratingPerson = $this->createQueryBuilder('r')
             ->where("r.personId = $personId")
             ->setMaxResults(1)
             ->getQuery()
@@ -46,13 +46,12 @@ class RatingPersonRepository extends ServiceEntityRepository
         $ratingPersons = $this->createQueryBuilder('r')
             ->orderBy('r.createdAt', 'DESC')
             ->andWhere('r.createdAt is not null')
-            ->setMaxResults(8)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
         $ratingPersonsIds = [];
 
-        foreach ($ratingPersons as $ratingPerson)
-        {
+        foreach ($ratingPersons as $ratingPerson) {
             $ratingPersonsIds[] = $ratingPerson->getId();
         }
 
@@ -60,7 +59,7 @@ class RatingPersonRepository extends ServiceEntityRepository
             ->orderBy('r.rating', 'DESC')
             ->andWhere('r.id IN (:ids)')
             ->setParameter('ids', $ratingPersonsIds)
-            ->setMaxResults(8)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 

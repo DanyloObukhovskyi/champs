@@ -35,4 +35,55 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    /**
+     * @param $game
+     * @param $search
+     * @return mixed
+     */
+    public function findByGameAndNick($game, $search)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.game = :game')
+            ->andWhere('u.nickname like :search')
+            ->orWhere('u.additionallyGame = :game')
+            ->andWhere('u.nickname like :search')
+            ->setParameter('game', $game)
+            ->setParameter('search', "%$search%")
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $email
+     * @param $userId
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByEmail($email, $userId)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->andWhere('u.id != :id')
+            ->setParameter('email', $email)
+            ->setParameter('id', $userId)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param $email
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findJustByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
 }

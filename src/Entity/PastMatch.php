@@ -23,7 +23,7 @@ class PastMatch
     private $match_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class)
+     * @ORM\ManyToOne(targetEntity=Match::class, cascade={"persist", "remove"})
      */
     private $match;
 
@@ -33,7 +33,7 @@ class PastMatch
     private $team_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      */
     private $team;
 

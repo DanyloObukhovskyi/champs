@@ -30,8 +30,7 @@ class EventMapPoolService extends EntityService
     {
         $eventMapPool = $this->repository->findByEventAndMap($event, $map);
 
-        if (empty($eventMapPool))
-        {
+        if (empty($eventMapPool)) {
             /** @var EventMapPool $eventMapPool */
             $eventMapPool = new $this->entity;
             $eventMapPool->setEvent($event);
@@ -48,8 +47,7 @@ class EventMapPoolService extends EntityService
         $maps = [];
 
         /** @var EventMapPool $eventMapPool */
-        foreach ($eventMapsPool as $eventMapPool)
-        {
+        foreach ($eventMapsPool as $eventMapPool) {
             /** @var Map $map */
             $map = $eventMapPool->getMap();
             $this->imageService->setImage($map->getImage());

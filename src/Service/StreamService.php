@@ -29,8 +29,7 @@ class StreamService extends EntityService
     {
         /** @var Stream $stream */
         $stream = $this->getByName($match->getId(), $values['name']);
-        if ($stream)
-        {
+        if ($stream) {
             $this->entityManager->persist($stream);
             return $stream;
         }
@@ -41,8 +40,7 @@ class StreamService extends EntityService
             ->setUrl($values['url'])
             ->setMatch($match);
 
-        if (!empty($values['language']))
-        {
+        if (!empty($values['language'])) {
             $stream->setLanguage($values['language']);
         }
 
@@ -63,8 +61,7 @@ class StreamService extends EntityService
     public function getByName($matchId, $name)
     {
         $stream = $this->repository->getByName($matchId, $name);
-        if (isset($stream))
-        {
+        if (isset($stream)) {
             $this->entityManager->persist($stream);
             return $stream;
         }

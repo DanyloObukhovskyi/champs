@@ -5,11 +5,12 @@ namespace App\Entity;
 use App\Repository\PersonRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
  */
-class Person
+class Person implements JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -59,7 +60,7 @@ class Person
     private $flagIconId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=FlagIcon::class)
+     * @ORM\ManyToOne(targetEntity=FlagIcon::class, cascade={"persist", "remove"})
      */
     private $flagIcon;
 
@@ -154,7 +155,6 @@ class Person
     }
 
     /**
-     * @return Carbon
      * @throws \Exception
      */
     public function getParsePhotoDate()
@@ -202,4 +202,12 @@ class Person
         $this->flagIcon = $flagIcon;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getName(),
+            'photo' => $this->getPhoto(),
+            'nick' => $this->getNick()
+        ];
+    }
 }

@@ -2,105 +2,109 @@
 {% block title %}История{% endblock %}
 {% block router %}cabinet{% endblock %}
 {% block css %}
-  {% for style in styles %}
-    <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
-  {% endfor %}
+    {% for style in styles %}
+        <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}"/>
+    {% endfor %}
 {% endblock %}
 {% block body %}
-<div class="cabinet" id="cabinet" style="min-height: 40vw">
-  <div class="container">
-    <div class="header">
-      <div class="lft">
-        <a href="{{ path('timelist_index') }}">РАСПИСАНИЕ</a>
-        <a href="{{ path('specifications_index') }}">ХАРАКТЕРИСТИКИ</a>
-        <a class="active">ИСТОРИЯ</a>
-        <a href="{{ path('settings_index') }}">НАСТРОЙКИ</a>
-      </div>
-      <div class="rgt">
-        <a href="{{ path('app_logout') }}">Выйти</a>
-      </div>
-    </div>
-    <div class="list">
-      <div class="lft">
-        <div class="list-table" v-for="(item, i) in items" :key="i">
-          <div class="date">
-            <div v-text="item.parse"></div>
-          </div>
-          <div class="item" v-for="(child, i2) in item.items" :key="i2">
-            <div class="time" v-text="child.time"></div>
-            <div class="user">
-              <img :src="child.icon" />
-              <span v-text="child.name" />
+    <div class="cabinet" id="cabinet" style="min-height: 40vw">
+        <div class="container">
+            <div class="header">
+                <div class="lft">
+                    <a href="{{ path('timelist_index') }}">РАСПИСАНИЕ</a>
+                    <a href="{{ path('specifications_index') }}">ХАРАКТЕРИСТИКИ</a>
+                    <a class="active">ИСТОРИЯ</a>
+                    <a href="{{ path('settings_index') }}">НАСТРОЙКИ</a>
+                    <a href="{{ path('mvp.cabinet.tournaments') }}">MVP</a>
+                </div>
+                <div class="rgt">
+                    <a href="{{ path('app_logout') }}">Выйти</a>
+                </div>
             </div>
-            <div class="stars">
-              <img src="/images/StarOrange.svg" v-for="s in 5" :key="s" alt="StarOrange" />
+            <div class="list">
+                <div class="lft">
+                    <div class="list-table" v-for="(item, i) in items" :key="i">
+                        <div class="date">
+                            <div v-text="item.parse"></div>
+                        </div>
+                        <div class="item" v-for="(child, i2) in item.items" :key="i2">
+                            <div class="time" v-text="child.time"></div>
+                            <div class="user">
+                                <img :src="child.icon"/>
+                                <span v-text="child.name"/>
+                            </div>
+                            <div class="stars">
+                                <img src="/images/StarOrange.svg" v-for="s in 5" :key="s" alt="StarOrange"/>
+                            </div>
+                            <div class="closed">Занятие окончено</div>
+                            <div class="price" v-text="child.price + ' ₽'"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="closed">Занятие окончено</div>
-            <div class="price" v-text="child.price + ' ₽'"></div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
 
-<script>
-  const cabinet = new Vue({
-    el: '#cabinet',
-    methods: {
-    },
-    data: function () {
-      return {
-        items: [],
-      }
-    },
-    mounted() {
-      const th = this;
-      axios.get('/lessons/student/{{app.user.id}}')
-      .then((res) => {
-        if (res.data !== null) {
-          let items = [];
-          let bool = true;
-          res.data.forEach((item) => {
-            const date = new Date(item.datetime);
-            const dateHour = new Date(item.datetime);
-            dateHour.setHours(dateHour.getHours() + 1);
-            bool = true;
-            let newitem = {
-              time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
-              name: item.trainer_id.nickname,
-              icon: item.trainer_id.photo ? '/images/temp/matches/' + item.trainer_id.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
-              status: 1,
-              price: item.cost,
-            };
-            items.forEach((item2, i) => {
-              const date2 = new Date(item2.date);
-              if (date.getDate() === date2.getDate() && date.getMonth() === date2.getMonth() && date.getFullYear() === date2.getFullYear()) {
-                bool = false;
-                newitem = {
-                  time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
-                  name: item.trainer_id.nickname,
-                  icon: item.trainer_id.photo ? '/images/temp/matches/' + item.trainer_id.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
-                  status: 1,
-                  price: item.cost,
-                };
-                items[i].items.push(newitem);
-              }
-            })
-            if (bool) {
-              const nitem = {
-                parse: date.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'}),
-                date: item.datetime,
-                items: [newitem],
-              };
-              items.push(nitem);
+    <script>
+        const cabinet = new Vue({
+            el: '#cabinet',
+            methods: {},
+            data: function () {
+                return {
+                    items: [],
+                }
+            },
+            mounted() {
+                const th = this;
+                axios.get('/lessons/student/{{ app.user.id }}')
+                    .then((res) => {
+                        if (res.data !== null) {
+                            let items = [];
+                            let bool = true;
+                            res.data.forEach((item) => {
+                                const date = new Date(item.datetime);
+                                const dateHour = new Date(item.datetime);
+                                dateHour.setHours(dateHour.getHours() + 1);
+                                bool = true;
+                                let newitem = {
+                                    time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
+                                    name: item.trainer_id.nickname,
+                                    icon: item.trainer_id.photo ? '/images/temp/matches/' + item.trainer_id.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
+                                    status: 1,
+                                    price: item.cost,
+                                };
+                                items.forEach((item2, i) => {
+                                    const date2 = new Date(item2.date);
+                                    if (date.getDate() === date2.getDate() && date.getMonth() === date2.getMonth() && date.getFullYear() === date2.getFullYear()) {
+                                        bool = false;
+                                        newitem = {
+                                            time: `${date.getHours()}:00 - ${dateHour.getHours() < 10 ? '0' + dateHour.getHours() : dateHour.getHours()}:00`,
+                                            name: item.trainer_id.nickname,
+                                            icon: item.trainer_id.photo ? '/images/temp/matches/' + item.trainer_id.photo : '/uploads/images/830f223afcf85dd280790e27079814b4.jpg',
+                                            status: 1,
+                                            price: item.cost,
+                                        };
+                                        items[i].items.push(newitem);
+                                    }
+                                })
+                                if (bool) {
+                                    const nitem = {
+                                        parse: date.toLocaleString("ru", {
+                                            weekday: 'long',
+                                            day: 'numeric',
+                                            month: 'long'
+                                        }),
+                                        date: item.datetime,
+                                        items: [newitem],
+                                    };
+                                    items.push(nitem);
+                                }
+                            });
+                            th.items = items;
+                        }
+                    })
             }
-          });
-          th.items = items;
-        }
-      })
-    }
-  });
-</script>
+        });
+    </script>
 
 {% endblock %}

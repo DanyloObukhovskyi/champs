@@ -30,8 +30,7 @@ class PlayerService extends EntityService
     public function create(Person $person, Team $team)
     {
         $player = $this->repository->getByPersonId($person->getId());
-        if (isset($player))
-        {
+        if (isset($player)) {
             $player->setTeam($team);
             $this->entityManager->persist($player);
             return $player;
@@ -56,21 +55,27 @@ class PlayerService extends EntityService
      */
     public function getByTeamAndNick($teamId, $nick)
     {
-        try
-        {
+        try {
             $player = $this->repository->getByTeamAndNick($teamId, $nick);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             LoggerService::add($e->getMessage(), LoggerService::TYPE_INFO);
         }
 
-        if (isset($player))
-        {
+        if (isset($player)) {
             $this->entityManager->persist($player);
             return $player;
         }
 
         return false;
+    }
+
+    /**
+     * @param $teamId
+     * @return Player|bool|null
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getByTeam($teamId)
+    {
+        return $this->repository->getByTeam($teamId);
     }
 }

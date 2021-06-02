@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block description %}
+    <meta name="description" content="Турниры">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords" content="Турниры">
+{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/load.css"/>
+{% endblock %}
+{% block body %}
+    <div id="app">
+        <h1 style="display: none">
+            Турниры
+        </h1>
+        <div class="events_view pt-0">
+            <mvp-tournaments-list></mvp-tournaments-list>
+        </div>
+    </div>
+{% endblock %}

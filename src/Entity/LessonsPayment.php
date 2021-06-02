@@ -18,12 +18,12 @@ class LessonsPayment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Payment::class)
+     * @ORM\ManyToOne(targetEntity=Payment::class, cascade={"persist", "remove"})
      */
     private $payment;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lessons::class)
+     * @ORM\ManyToOne(targetEntity=Lessons::class, cascade={"persist", "remove"})
      */
     private $lesson;
 

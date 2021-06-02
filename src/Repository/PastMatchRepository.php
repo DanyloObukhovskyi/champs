@@ -28,18 +28,15 @@ class PastMatchRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByMatchPastMatchAndTeam(Match $match, Match $pastMatch, Team $team)
+    public function findByMatchAndTeam(Match $match, Team $team)
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.match_id = :match_id')
-            ->andWhere('p.past_id = :past_id')
             ->andWhere('p.team_id = :team_id')
             ->setParameter('match_id', $match->getId())
-            ->setParameter('past_id', $pastMatch->getId())
             ->setParameter('team_id', $team->getId())
-            ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 
     /**

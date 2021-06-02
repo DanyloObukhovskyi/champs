@@ -18,7 +18,7 @@ class MatchStatistics
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Match::class, inversedBy="matchStatistics")
+     * @ORM\ManyToOne(targetEntity=Match::class, inversedBy="matchStatistics", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $game_match;
@@ -34,7 +34,7 @@ class MatchStatistics
     private $score2;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Map::class)
+     * @ORM\ManyToOne(targetEntity=Map::class, cascade={"persist", "remove"})
      */
     private $map;
 

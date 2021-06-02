@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\NewsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class News
 {
-    const
+    public const
         NEWS_TYPE_ALL = 0,
         NEWS_TYPE_TRANSFER = 1,
         NEWS_TYPE_MATCH = 2,
@@ -19,6 +20,13 @@ class News
         NEWS_TYPE_ARTICLE = 5,
         NEWS_TYPE_NEWS = 6,
         NEWS_TYPE_TEXT = 7;
+
+    public const GAME_ICONS = [
+        'dota' => 'dota.png',
+        'cs' => 'cs.png',
+        'lol' => 'lol.jpg',
+        'valorant' => 'valorant.png'
+    ];
 
     /**
      * @ORM\Id()
@@ -66,6 +74,42 @@ class News
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $type;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NewsTag::class, mappedBy="news")
+     */
+    private $newsTags;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $views;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Game::class, cascade={"persist", "remove"})
+     */
+    private $game;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NewsComment::class, mappedBy="news")
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NewsLike::class, mappedBy="news")
+     */
+    private $likes;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isTop;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -168,8 +212,96 @@ class News
         return $this;
     }
 
-    public static function getNewsTypes()
+    /**
+     * @return mixed
+     */
+    public function getTags()
     {
+        return $this->newsTags;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * @param mixed $views
+     */
+    public function setViews($views): void
+    {
+        $this->views = $views;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param mixed $game
+     */
+    public function setGame($game): void
+    {
+        $this->game = $game;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getGameIcon()
+    {
+        $iconName = null;
+
+        if (isset($this->game)) {
+            $iconName = self::GAME_ICONS[$this->game] ?? null;
+        }
+        return $iconName;
+    }
+
+    /**
+     * @return NewsComment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @param mixed $likes
+     */
+    public function setLikes($likes): void
+    {
+        $this->likes = $likes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsTop()
+    {
+        return $this->isTop;
+    }
+
+    /**
+     * @param mixed $isTop
+     */
+    public function setIsTop($isTop): void
+    {
+        $this->isTop = $isTop;
     }
 }

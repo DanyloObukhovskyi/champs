@@ -7,6 +7,7 @@
 namespace App\Service;
 
 
+use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\HttpClient;
 
 class DownloadFile
@@ -27,8 +28,14 @@ class DownloadFile
 
     /**
      * @param string $url
+     * @param null $uploadDir
+     * @return string|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public static function getImage($url)
+    public static function getImage($url, $uploadDir = null)
     {
         ini_set('max_execution_time', 0);
         global $kernel;
@@ -36,30 +43,31 @@ class DownloadFile
         $ext = static::getFileExt($url);
 
         $fileResponse = static::getContent($url);
-        if (!$fileResponse)
-        {
+        if (!$fileResponse) {
             return null;
         }
 
-        if (!static::isFileImage($fileResponse['type']))
-        {
+        if (!static::isFileImage($fileResponse['type'])) {
             LoggerService::error("{$url} is not image");
             return null;
         }
 
-        if (!$ext)
-        {
+        if (!$ext) {
             $ext = static::getExtByContentType($fileResponse['type']);
         }
 
-        if (empty($ext))
-        {
+        if (empty($ext)) {
             LoggerService::error("{$url} wrong extension");
             return null;
         }
 
         $filename = $fileResponse['name'] . '.' . $ext;
-        $uploadDir = $kernel->getProjectDir() . '/public/uploads/images';
+
+        if (empty($uploadDir)) {
+            $uploadDir = $kernel->getProjectDir() . '/public/uploads/images';
+        } else {
+            $uploadDir = $kernel->getProjectDir() . $uploadDir;
+        }
 
         $result = static::saveFile($uploadDir . '/' . $filename, $filename, $fileResponse['content']);
         return $result ? $filename : null;
@@ -77,8 +85,7 @@ class DownloadFile
         $parseUrl = parse_url($url);
 
         $extPos = strrpos($parseUrl['path'], '.');
-        if ($extPos !== false)
-        {
+        if ($extPos !== false) {
             $result = substr($parseUrl['path'], $extPos + 1);
         }
 
@@ -96,13 +103,32 @@ class DownloadFile
      */
     protected static function getContent($url)
     {
-        $client = HttpClient::create();
+        global $kernel;
+
+        $userAgents = $kernel->getContainer()
+            ->getParameter('user-agents');
+
+        $userAgentKey = array_rand($userAgents, 1);
+        $userAgent = $userAgents[$userAgentKey];
+
+        $options['headers'] = [
+            'User-Agent'=> $userAgent
+        ];
+
+        if ($_ENV['ENABLE_PROXY'] === 'true') {
+            $proxySettings = $kernel->getContainer()->getParameter('proxy');
+            $key = array_rand($proxySettings, 1);
+            $proxy = $proxySettings[$key];
+
+            $options['proxy'] = "{$proxy['user']}:{$proxy['password']}@{$proxy['host']}:{$proxy['port']}";
+        }
+
+        $client = new CurlHttpClient($options);
         $response = $client->request('GET', $url);
 
         $statusCode = $response->getStatusCode();
 
-        if (!in_array($statusCode, [200, 301, 302]))
-        {
+        if (!in_array($statusCode, [200, 301, 302])) {
             return false;
         }
 
@@ -130,10 +156,8 @@ class DownloadFile
     {
         $extList = static::getImageExtList();
 
-        foreach ($extList as $imageExt => $extValue)
-        {
-            if (strpos($type, $imageExt))
-            {
+        foreach ($extList as $imageExt => $extValue) {
+            if (strpos($type, $imageExt)) {
                 return $extValue;
             }
         }
@@ -149,15 +173,13 @@ class DownloadFile
      */
     protected static function saveFile($filePath, $filename, $content): bool
     {
-        if (file_exists($filePath))
-        {
+        if (file_exists($filePath)) {
             return $filename;
         }
 
         $fp = fopen($filePath, 'wb+');
-        if (!$fp)
-        {
-            LoggerService::error("Cant create file ". $filename);
+        if (!$fp) {
+            LoggerService::error("Cant create file " . $filename);
             return false;
         }
 

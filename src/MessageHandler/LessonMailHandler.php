@@ -5,6 +5,8 @@ namespace App\MessageHandler;
 
 
 use App\Entity\Lessons;
+use App\Entity\Teachers;
+use App\Service\TimeZoneService;
 use App\Service\UserService;
 use App\Traits\RenderView;
 use Carbon\Carbon;
@@ -12,6 +14,11 @@ use Swift_Message;
 
 trait LessonMailHandler
 {
+    /**
+     * @var TimeZoneService
+     */
+    public $timezoneService;
+
     use RenderView;
 
     /**
@@ -25,28 +32,73 @@ trait LessonMailHandler
     }
 
     /**
-     * @param $trainer
-     * @return mixed
+     * @param Lessons $lesson
+     * @return Swift_Message
      */
-    public function getTrainerGame($trainer)
+    public function makeStudentEmail(Lessons $lesson)
     {
-        $choseGame = $trainer->getGame();
+        $lessonDuration = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
+        ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
+        $this->timezoneService = new TimeZoneService();
 
-        foreach (UserService::GAMES as $game) {
-            if ($game['name'] === $trainer->getGame()) {
-                $choseGame = $game['title'];
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $lesson->getTrainer()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+
+        if ($gmtNumeric < 0) {
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        }
+
+        if ($lesson->getStudent()->getTimezone() !== null) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $lesson->getStudent()->getTimeZone()
+            );
+            if ($gmtNumeric < 0) {
+                $userTimezone = -(int)gmdate("g", $gmtNumeric);
+            } else {
+                $userTimezone = (int)gmdate("g", $gmtNumeric);
             }
         }
-        return $choseGame;
+
+        $timeOffset = 0;
+        if ($trainerTimezone < 0 and $userTimezone < 0) {
+            $timeOffset = $trainerTimezone + abs($userTimezone);
+        } elseif($trainerTimezone < 0 or $userTimezone < 0) {
+            $timeOffset = $trainerTimezone + $userTimezone;
+        } else {
+            $timeOffset = $trainerTimezone - $userTimezone;
+        }
+
+        $dateFrom = Carbon::createFromFormat('Y-m-d H:i:s', $lesson->getDateTimeFrom()->format('Y-m-d H:i:s'));
+        $dateFrom->setHour($dateFrom->hour + $timeOffset);
+
+        $dateWithTimeZone = $dateFrom;
+
+        $params = [
+            'user' => $lesson->getStudent(),
+            'trainer' => $lesson->getTrainer(),
+            'lesson' => $lesson,
+            'game' => $lesson->getTrainer()->getGame(),
+            'isTrainer' => false,
+            'lessonDuration' => $lessonDuration,
+            'dateWithTimeZone' => $dateWithTimeZone
+        ];
+        $html = $this->renderView($this->template, $params);
+
+        $email = $lesson->getStudent()->getEmail();
+
+        return $this->makeMessage($this->subject)
+            ->setTo($email)
+            ->setBody($html, 'text/html');
     }
 
     /**
-     * @param $subject
      * @param Lessons $lesson
-     * @param bool $isTrainer
      * @return Swift_Message
      */
-    public function makeEmail(Lessons $lesson, $isTrainer = false)
+    public function makeTeacherEmail(Lessons $lesson)
     {
         $lessonDuration = (new Carbon($lesson->getDateTimeTo()->format('Y-m-d H:i:s')))
             ->diffInHours((new Carbon($lesson->getDateTimeFrom()->format('Y-m-d H:i:s'))));
@@ -55,17 +107,13 @@ trait LessonMailHandler
             'user' => $lesson->getStudent(),
             'trainer' => $lesson->getTrainer(),
             'lesson' => $lesson,
-            'game' => $this->getTrainerGame($lesson->getTrainer()),
-            'isTrainer' => $isTrainer,
+            'game' => $lesson->getTrainer()->getGame(),
+            'isTrainer' => true,
             'lessonDuration' => $lessonDuration
         ];
         $html = $this->renderView($this->template, $params);
 
-        if ($isTrainer) {
-            $email = $lesson->getTrainer()->getEmail();
-        } else {
-            $email = $lesson->getStudent()->getEmail();
-        }
+        $email = $lesson->getTrainer()->getEmail();
 
         return $this->makeMessage($this->subject)
             ->setTo($email)

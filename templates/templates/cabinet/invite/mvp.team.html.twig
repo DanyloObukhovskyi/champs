@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}Инвайт{% endblock %}
+{% block css %}
+
+{% endblock %}
+{% block body %}
+    <div class="cabinet" id="app">
+        <div class="container">
+            <mvp-invite-page team-id="{{ teamId }}" :is-authorize="{{ app.user is not null ? 'true': 'false' }}"/>
+        </div>
+    </div>
+{% endblock %}

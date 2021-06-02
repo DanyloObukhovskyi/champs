@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Person;
+use App\Entity\Team;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,17 +27,14 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function getByNick($nick): ?Person
     {
-        try
-        {
+        try {
             $query = $this->createQueryBuilder('p')
-                ->andWhere('p.nick = :nick')
-                ->setParameter('nick', $nick)
+                ->andWhere('p.nick like :nick')
+                ->setParameter('nick', "%$nick%")
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getOneOrNullResult();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -50,8 +48,7 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function getByNameAndNick($name, $nick): ?Person
     {
-        try
-        {
+        try {
             $query = $this->createQueryBuilder('p')
                 ->andWhere('p.name = :name')
                 ->andWhere('p.nick = :nick')
@@ -60,9 +57,7 @@ class PersonRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getOneOrNullResult();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -83,20 +78,14 @@ class PersonRepository extends ServiceEntityRepository
 
         return $weekPlayer;
     }
-	
-	public function getPersonById($id) {
-		$sql = "SELECT * FROM person as p join rating_person as r ON p.id = r.person_id WHERE p.id = ".$id." and r.created_at is not null ORDER BY r.created_at DESC LIMIT 8";
-		$stmt = $this->_em->getConnection()->prepare($sql);
-		$stmt->execute();
-		return $stmt->fetchAll();
-//		return $Persons;
-	}
-	
-	public function getAllFlags() {
-		$sql = "SELECT `orig_name`, `id` FROM flag_icon";
-		$stmt = $this->_em->getConnection()->prepare($sql);
-		$stmt->execute();
-		return $stmt->fetchAll();
-//		return $Persons;
-	}
+
+    public function getPersonsByTeam(Team $team)
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.player', 'pp')
+            ->andWhere('pp.team = :team')
+            ->setParameter('team', $team)
+            ->getQuery()
+            ->getResult();
+    }
 }

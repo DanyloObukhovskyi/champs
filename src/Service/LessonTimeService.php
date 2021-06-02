@@ -25,8 +25,7 @@ class LessonTimeService extends EntityService
 
         $schedules = [];
         /** @var LessonTime $lessonTime */
-        foreach ($lessonTimes as $lessonTime)
-        {
+        foreach ($lessonTimes as $lessonTime) {
             $schedules[] = $lessonTime->getTrainerTime();
         }
         return $schedules;

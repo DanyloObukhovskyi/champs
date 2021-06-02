@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MatchRepository;
+use App\Service\News\NewsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=MatchRepository::class)
  * @ORM\Table(name="`match`")
  */
-class Match
+class Match implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -32,7 +33,7 @@ class Match
     private $code;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $team1;
@@ -43,7 +44,7 @@ class Match
     private $team1_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $team2;
@@ -113,13 +114,19 @@ class Match
      */
     private $team2_win_rate;
 
+    /**
+     * @ORM\OneToMany(targetEntity=MatchComment::class, mappedBy="match")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->matchStatistics = new ArrayCollection();
         $this->streams = new ArrayCollection();
         $this->matchPickAndBans = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -127,8 +134,7 @@ class Match
 
     public function getStartAt(): ?\DateTimeInterface
     {
-        $temp = clone $this->start_at;
-        return $temp->modify('+3 hours');
+        return $this->start_at;
     }
 
     public function setStartAt(\DateTimeInterface $start_at): self
@@ -195,12 +201,10 @@ class Match
     {
         $score = 0;
 
-        foreach ($this->matchStatistics as $match_statistic)
-        {
+        foreach ($this->matchStatistics as $match_statistic) {
             /** @var MatchStatistics $match_statistic */
             $method = "getScore{$team}";
-            if($match_statistic->$method() >= 16)
-            {
+            if ($match_statistic->$method() >= 16) {
                 $score++;
             }
         }
@@ -319,17 +323,15 @@ class Match
 
     public function getPlayerStatistics(): Collection
     {
-        return  $this->playerStatistics;
+        return $this->playerStatistics;
     }
 
     public function getRounds(int $map_id)
     {
         $score = 0;
 
-        foreach ($this->getMatchStatistics() as $match_statistic)
-        {
-            if($map_id == $match_statistic->getMap()->getId())
-            {
+        foreach ($this->getMatchStatistics() as $match_statistic) {
+            if ($map_id == $match_statistic->getMap()->getId()) {
                 $score += $match_statistic->getScore1() + $match_statistic->getScore2();
             }
         }
@@ -339,12 +341,12 @@ class Match
 
     public function getEvent(): ?Event
     {
-        if (isset($this->event)){
+        if (isset($this->event)) {
             try {
                 $this->event->getName();
 
                 return $this->event;
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 return null;
             }
         }
@@ -435,5 +437,36 @@ class Match
     public function setTeam2WinRate($team2_win_rate): void
     {
         $this->team2_win_rate = $team2_win_rate;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return [
+            "id" => $this->getId(),
+            "startAt" => $this->getStartAt(),
+            "startAtRu" => NewsService::replaceMonth($this->getStartAt()->format('d F Y')),
+            "time" => date("H:i", $this->getStartAt()->getTimestamp()),
+            "teamA" => !empty($this->getTeam1()) ? $this->getTeam1()->jsonSerialize() : null,
+            "teamB" => !empty($this->getTeam2()) ? $this->getTeam2()->jsonSerialize() : null,
+            "isLive" => $this->getLive() ? true : false,
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function getSlug()
+    {
+        $url = explode('/', $this->getUrl());
+
+        return $url[count($url) - 1];
     }
 }

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Подними свой скилл, тренер {{ trainer.nickname }} ждет тебя!{% endblock %}
+{% block router %}marketplace{% endblock %}
+{% block description %}
+    <meta name="description" content="Тренер {{ trainer.nickname }} проведет обучение и повысит рейтинг игры , покажет твой путь к PRO сцене киберспорта">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords" content="Тренер {{ trainer.nickname }} проведет обучение и повысит рейтинг игры , покажет твой путь к PRO сцене киберспорта">
+{% endblock %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        Тренер: Тренер {{ trainer.nickname }} прошел отбор Champs.pro и имеет высокий рейтинг игры
+    </h1>
+    <div class="marketplace page">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <a href="{{ url('marketplace_index') }}">
+                    Обучение
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span>
+                    {{ trainer.nickname }}
+                </span>
+            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0 mt-2">
+            <marketplace-trainer-page
+                    {% if type is not null %}
+                        training-type="{{ type }}"
+                    {% endif %}
+                    :social="{{setting.social|json_encode}}"
+                    payment-type="{{ paymentType }}"
+                    banner="{{ setting.get('marketplaceBanner') is not null ? setting.get('marketplaceBanner').value: null }}"
+                    trainer-id="{{ trainer.id }}">
+            </marketplace-trainer-page>
+        </div>
+    </div>
+{% endblock %}

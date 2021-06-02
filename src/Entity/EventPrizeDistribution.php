@@ -28,12 +28,12 @@ class EventPrizeDistribution
     private $prize;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Event::class)
+     * @ORM\ManyToOne(targetEntity=Event::class, cascade={"persist", "remove"})
      */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class)
+     * @ORM\ManyToOne(targetEntity=Team::class, cascade={"persist", "remove"})
      */
     private $team;
 

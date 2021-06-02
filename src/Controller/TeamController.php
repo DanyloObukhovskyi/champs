@@ -3,41 +3,35 @@
 namespace App\Controller;
 
 use App\Entity\Team;
+use App\Service\TeamService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TeamController extends AbstractController
 {
-    /**
-     * @Route("/team", name="team")
-     */
-    public function index()
+    public $entityManager;
+
+    public $teamService;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        return $this->render('team/index.html.twig', [
-            'controller_name' => 'TeamController',
-        ]);
+        $this->entityManager = $entityManager;
+        $this->teamService = new TeamService($entityManager);
     }
 
     /**
-     * @Route("/ru/team/create/{form}", methods={"GET","POST"}, name="create_team")
+     * @Route("/ru/ajax/search/teams")
      */
-    public function createTeam($form)
+    public function findTeams(Request $request)
     {
-        $team = json_decode($form);
-        $entityManager = $this->getDoctrine()->getManager();
+        $teams = $this->teamService->findByName($request->getContent());
 
-        $model = new Team();
-        $model->setName($team->name);
-        $model->setLogo($team->logo);
-
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($model);
-
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
-
-        return $this->json($model);
+        $teamsArray = [];
+        foreach ($teams as $team) {
+            $teamsArray[] = $this->teamService->teamDecorator($team);
+        }
+        return $this->json($teamsArray);
     }
-
-
 }

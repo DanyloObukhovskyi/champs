@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="NwguaN_" resname="January">
+        <source>January</source>
+        <target>Января</target>
+      </trans-unit>
+      <trans-unit id="yHfG.0B" resname="February">
+        <source>February</source>
+        <target>Февраля</target>
+      </trans-unit>
+      <trans-unit id="nZWizw1" resname="March">
+        <source>March</source>
+        <target>Марта</target>
+      </trans-unit>
+      <trans-unit id="Sv5uoVD" resname="April">
+        <source>April</source>
+        <target>Апреля</target>
+      </trans-unit>
+      <trans-unit id="jHj_W5k" resname="May">
+        <source>May</source>
+        <target>Мая</target>
+      </trans-unit>
+      <trans-unit id="1YCMDgp" resname="June">
+        <source>June</source>
+        <target>Июня</target>
+      </trans-unit>
+      <trans-unit id="K1lzZrH" resname="Jule">
+        <source>Jule</source>
+        <target>Июля</target>
+      </trans-unit>
+      <trans-unit id="6c96HKS" resname="July">
+        <source>July</source>
+        <target>Июля</target>
+      </trans-unit>
+      <trans-unit id="pm2JcOV" resname="August">
+        <source>August</source>
+        <target>Августа</target>
+      </trans-unit>
+      <trans-unit id="zVWeoKv" resname="September">
+        <source>September</source>
+        <target>Сентября</target>
+      </trans-unit>
+      <trans-unit id=".deReHt" resname="October">
+        <source>October</source>
+        <target>Октября</target>
+      </trans-unit>
+      <trans-unit id="neb_HXJ" resname="November">
+        <source>November</source>
+        <target>Ноября</target>
+      </trans-unit>
+      <trans-unit id="j7IEykY" resname="December">
+        <source>December</source>
+        <target>Декабря</target>
+      </trans-unit>
+      <trans-unit id="agDfwdy" resname="Monday">
+        <source>Monday</source>
+        <target>Понедельник</target>
+      </trans-unit>
+      <trans-unit id="fYrx3hJ" resname="Tuesday">
+        <source>Tuesday</source>
+        <target>Вторник</target>
+      </trans-unit>
+      <trans-unit id="wKbMgpz" resname="Wednesday">
+        <source>Wednesday</source>
+        <target>Среда</target>
+      </trans-unit>
+      <trans-unit id=".CZiBi." resname="Thursday">
+        <source>Thursday</source>
+        <target>Четверг</target>
+      </trans-unit>
+      <trans-unit id="4h8.Nyp" resname="Friday">
+        <source>Friday</source>
+        <target>Пятница</target>
+      </trans-unit>
+      <trans-unit id="2_Ncc2P" resname="Saturday">
+        <source>Saturday</source>
+        <target>Суббота</target>
+      </trans-unit>
+      <trans-unit id="hz.vdg5" resname="Sunday">
+        <source>Sunday</source>
+        <target>Воскресенье</target>
+      </trans-unit>
+      <trans-unit id="FcEsbM5" resname="This email is already taken">
+        <source>This email is already taken</source>
+        <target>Этот эмейл уже занят!</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

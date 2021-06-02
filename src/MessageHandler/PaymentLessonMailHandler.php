@@ -27,8 +27,8 @@ class PaymentLessonMailHandler implements MessageHandlerInterface
         $lesson = $paymentLesson->getLesson();
 
         //Send user mail
-        $paymentLesson->getMailer()->send($this->makeEmail($lesson));
+        $paymentLesson->getMailer()->send($this->makeStudentEmail($lesson));
         //Send trainer mail
-        $paymentLesson->getMailer()->send($this->makeEmail($lesson, true));
+        $paymentLesson->getMailer()->send($this->makeTeacherEmail($lesson));
     }
 }

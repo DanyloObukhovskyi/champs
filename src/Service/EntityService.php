@@ -19,7 +19,7 @@ abstract class EntityService
     /** @var EntityManager */
     protected $entityManager;
 
-    /** @var  */
+    /** @var */
     protected $entity;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -52,5 +52,28 @@ abstract class EntityService
                 $this->entityManager->getConfiguration()
             );
         }
+    }
+
+    public function getUser()
+    {
+        global $kernel;
+
+        return $kernel->getContainer()
+            ->get('security.token_storage')
+            ->getToken()
+            ->getUser();
+
+        if (!$kernel->getContainer()->has('security.token_storage')) {
+            return null;
+        }
+
+        if (null === $token = $kernel->getContainer()->get('security.token_storage')->getToken()) {
+            return null;
+        }
+
+        if (!\is_object($user = $token->getUser())) {
+            return null;
+        }
+        return $user;
     }
 }

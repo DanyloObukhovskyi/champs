@@ -24,7 +24,7 @@ class Schedule
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      */
     private $trainer;
 

@@ -1,0 +1,22 @@
+{% include 'yandex.metric.html.twig' %}
+<script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        "ecommerce": {
+            "purchase": {
+                "actionField": {
+                    "id" : "TRX{{ payment.id }}"
+                },
+                "products": [
+                    {
+                        "id": "{{ payment.id }}",
+                        "name": "Урок от {{ trainer }} для {{ student }}",
+                        "price": {{ lesson.price }},
+                        "brand": "Champs Pro",
+                        "quantity": 1
+                    }
+                ]
+            }
+        }
+    });
+</script>

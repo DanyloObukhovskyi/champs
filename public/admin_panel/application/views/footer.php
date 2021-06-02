@@ -8,13 +8,13 @@
 	<div class="confirm_modal-content">
 		<a href=""><div class="close">×</div></a><br>
 		<div id="modal_text">
-			<div class="no_license"> Are You sure?</div><br><br>
+			<div class="no_license"> Вы уверенны?</div><br><br>
 			<div class="want_delete" id="confirm_text"></div>
 			<div class="confirm_text">
-				<div class="type_delete">Type DELETE to confirm</div>
+				<div class="type_delete">Напишите УДАЛИТЬ для подтверждения</div>
 				<input type="text" id="confirmation_text22" class="input_style s2t2" placeholder="Value">
-				<div class="confrim_btn" id="rmo_delete" style="width: 70px" onclick="confirm_delete()"><div class="confirm">DELETE</div></div>
-				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Cancel</div></div> </a>
+				<div class="confrim_btn" id="rmo_delete" style="width: 78px" onclick="confirm_delete()"><div class="confirm">УДАЛИТЬ</div></div>
+				<a href=""><div class="delete_btn"><div class="confirm" style="color: #7f8fa4;">Отмена</div></div> </a>
 			</div>
 		</div>
 	
@@ -24,7 +24,7 @@
 <script>
 	function c_delete(value, item, subject){
 		document.getElementById('confirmation_text22').setAttribute("link", value);
-		var confirm_text = "Now You want to delete "+subject+" ("+item+")?";
+		var confirm_text = "Вы хотите удалить "+subject+" ("+item+")?";
 		$("#confirm_text").append(confirm_text);
 		var modal_confirm = document.getElementById('confirm_delete');
 		modal_confirm.style.display = "block";
@@ -32,7 +32,7 @@
 		button = document.getElementById("confirmation_text22");
 		button.addEventListener("input", function(){
 			
-			if(document.getElementById('confirmation_text22').value == "DELETE"){
+			if(document.getElementById('confirmation_text22').value == "УДАЛИТЬ"){
 				$('.confrim_btn').css('background-color','#39b54a');
 				$('.s2t2').css('border-color','#39b54a');
 			}else{
@@ -44,7 +44,7 @@
 	
 	function confirm_delete(){
 		var check_text = document.getElementById('confirmation_text22').value;
-		if(check_text == "DELETE"){
+		if(check_text == "УДАЛИТЬ"){
 			var url = document.getElementById('confirmation_text22').getAttribute("link");
 			if(url && url.length>1){
 				
@@ -78,8 +78,9 @@
 		}
 	}
 </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <footer class="flex j-c-s-b a-i-c" style="background: #45484b;">
-	<div class="copyright"> © Champs.pro, 2020</div>
+	<div class="copyright">©️2020-2021 Champs.pro. All rights reserved</div>
 	<div class="flex footer-center a-i-c">
 		<div class="help-and-supp">Поддержка:</div>
 		<img class="ml-10 mr-5" src="<?php print base_url('assets/img/Message.svg'); ?>" alt="">

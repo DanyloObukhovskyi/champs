@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
  */
-class Player
+class Player implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -23,14 +23,13 @@ class Player
     private $start_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="players")
+     * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="players", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $team;
 
     /**
-     * @ORM\OneToOne(targetEntity=Person::class, inversedBy="player", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne   (targetEntity=Person::class, inversedBy="player", cascade={"persist", "remove"})
      */
     private $person;
 
@@ -73,5 +72,30 @@ class Player
         $this->start_at = $start_at;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'start_at' => $this->getStartAt(),
+            'team' => $this->getTeam(),
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param mixed $event
+     */
+    public function setEvent($event): void
+    {
+        $this->event = $event;
     }
 }

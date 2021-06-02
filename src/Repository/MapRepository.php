@@ -31,8 +31,7 @@ class MapRepository extends ServiceEntityRepository
             ->setParameter('name', $name)
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -47,7 +46,13 @@ class MapRepository extends ServiceEntityRepository
             ->setParameter('code', $code)
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
+    }
+
+    public function getAll()
+    {
+        return $this->createQueryBuilder('m')
+            ->getQuery()
+            ->getResult();
     }
 }

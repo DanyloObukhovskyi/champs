@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Настройки{% endblock %}
+{% block router %}mvp{% endblock %}
+{% block css %}
+    {% for style in styles %}
+        <link type="text/css" rel="stylesheet" href="/assets/styles/{{ style }}" />
+    {% endfor %}
+{% endblock %}
+{% block body %}
+    <div class="cabinet" id="app">
+        <div class="container">
+            <div class="header">
+                <div class="lft">
+                    <a href="{{ path('timelist_index') }}">РАСПИСАНИЕ</a>
+                    <a href="{{ path('specifications_index') }}">ХАРАКТЕРИСТИКИ</a>
+                    <a href="{{ path('history_index') }}">ИСТОРИЯ</a>
+                    <a href="{{ path('settings_index') }}">НАСТРОЙКИ</a>
+                    <a class="active">MVP</a>
+                </div>
+                <div class="rgt">
+                    <a href="{{ path('app_logout') }}">Выйти</a>
+                </div>
+            </div>
+            <mvp-page></mvp-page>
+        </div>
+    </div>
+{% endblock %}

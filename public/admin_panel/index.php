@@ -235,6 +235,8 @@ switch (ENVIRONMENT)
 	// Name of the "system" directory
 	define('SYSDIR', basename(BASEPATH));
 
+    define('PUBLICPATH', pathinfo(FCPATH, 3));
+
 	// The path to the "application" directory
 	if (is_dir($application_folder))
 	{

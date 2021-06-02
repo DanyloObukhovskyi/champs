@@ -40,7 +40,7 @@ class YandexKassaPaymentService extends EntityService
 
     protected $entity = Payment::class;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct($entityManager)
     {
         $this->merchant_id = $_ENV['YANDEX_KASSA_ID'];
         $this->secret = $_ENV['YANDEX_KASSA_SECRET'];
@@ -54,8 +54,7 @@ class YandexKassaPaymentService extends EntityService
         $client = new Client();
         $client->setAuth($this->merchant_id, $this->secret);
 
-        try
-        {
+        try {
             $lessonsId = $lessons[0]->getId();
 
             $payment = $client->createPayment(
@@ -66,7 +65,7 @@ class YandexKassaPaymentService extends EntityService
                     ],
                     'confirmation' => [
                         'type' => 'redirect',
-                        'return_url' => $redirect . $lessonsId,
+                        'return_url' => $redirect,
                     ],
                     'capture' => true,
                     'description' => $description,
@@ -74,8 +73,7 @@ class YandexKassaPaymentService extends EntityService
                 uniqid('', true)
             );
 
-            if($payment and !empty($lessons))
-            {
+            if ($payment and !empty($lessons)) {
                 $payment_e = new Payment();
                 $payment_e->setPaymentStatus(Payment::STATUS_NEW);
                 $payment_e->setYandexData(json_decode(json_encode($payment), true));
@@ -88,9 +86,7 @@ class YandexKassaPaymentService extends EntityService
             }
 
             return $payment;
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return null;
         }
     }
@@ -104,19 +100,16 @@ class YandexKassaPaymentService extends EntityService
             'yandex_kassa_id' => $yandex_kassa_id
         ]);
 
-        if(!$payment)
-        {
+        if (!$payment) {
             return false;
         }
 
         $payment->setPaymentStatus(Payment::STATUS_OK);
 
-        try
-        {
+        try {
             $this->save($payment);
-        } catch (\Exception $e)
-        {
-            return  false;
+        } catch (\Exception $e) {
+            return false;
         }
 
         return true;
@@ -132,17 +125,14 @@ class YandexKassaPaymentService extends EntityService
             'yandex_kassa_id' => $yandex_kassa_id
         ]);
 
-        if(!$payment)
-        {
+        if (!$payment) {
             return false;
         }
 
-        try
-        {
+        try {
             $this->delete($payment);
-        } catch (\Exception $e)
-        {
-            return  false;
+        } catch (\Exception $e) {
+            return false;
         }
 
         return true;
@@ -150,8 +140,7 @@ class YandexKassaPaymentService extends EntityService
 
     public function createPaymentLessons($payment, $lessons)
     {
-        foreach ($lessons as $lesson)
-        {
+        foreach ($lessons as $lesson) {
             $paymentLesson = new LessonsPayment();
             $paymentLesson->setLesson($lesson);
             $paymentLesson->setPayment($payment);
@@ -159,5 +148,4 @@ class YandexKassaPaymentService extends EntityService
             $this->save($paymentLesson);
         }
     }
-
 }

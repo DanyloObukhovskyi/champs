@@ -1,135 +1,53 @@
 {% extends 'base.html.twig' %}
-{% block title %}События{% endblock %}
+{% block title %}
+    {% if teams is not empty %}
+            Команды
+            {% for team in teams %}
+                {{ team }}
+            {% endfor %}
+            на турнире {{ event.name }} по CS:GO
+    {% else %}
+        {{ event.name }}
+    {% endif %}
+{% endblock %}
 {% block description %}
-    <meta name="description" content="События">
+    <meta name="description"
+          content="Команды
+            {% for team in teams %}
+                {{ team }}
+            {% endfor %}
+            на турнире {{ event.name }} по CS:GO история встреч и подробности">
 {% endblock %}
 {% block keywords %}
-    <meta name="Keywords" content="События">
+    <meta name="Keywords"
+          content="{{ event.name }}">
 {% endblock %}
 {% block body %}
     <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
-        Событие
+        Команды
+        {% for team in teams %}
+            {{ team }}
+        {% endfor %}
+        на турнире {{ event.name }} по CS:GO история встреч и подробности
     </h1>
-    <div class="events_view">
-        <div class="container">
-            <div class="row">
-                <div class="component event d-flex justify-content-center ">
-                    <div class="grid col-10 d-flex justify-content-center p-3" style="background-image: url('/uploads/images/{{ event.imageHeader }}')">
-                        <div>
-                            <div class="d-flex justify-content-center">
-                                {% if event.image is not null %}
-                                    <img src="/uploads/images/{{ event.image }}" class="width-100px">
-                                {% endif %}
-                            </div>
-                            <h2 class="d-block title">
-                                {{ event.name }}
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="component event d-flex justify-content-center ">
-                    <div class="row grid col-10 d-flex justify-content-around">
-                        <div>
-                            Дата
-                            <div class="text-center">
-                                {{ event.startedAt|date('m.d.Y') }} - {{ event.endedAt|date('m.d.Y') }}
-                            </div>
-                        </div>
-                        <div>
-                            Приз
-                            <div class="text-center">
-                                {{ event.prize }}
-                            </div>
-                        </div>
-                        <div>
-                            Команды
-                            <div class="text-center">
-                                {{ event.commandCount }}
-                            </div>
-                        </div>
-                        <div>
-                            Локация
-                            <div class="text-center">
-                                <img style="width: 20px; border: 1px solid #000;" src="/uploads/images/{{ event.flagIcon.name }}" alt="">
-                                {{ event.location }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="component event d-flex justify-content-center">
-                    <div class="col-10">
-                        {% if prizeDistribution is not empty %}
-                            <div class="component">
-                            <div class="header">
-                                <div class="round">
-                                    <div><img src="/images/lamp.svg" alt="lamp.svg"  /></div>
-                                </div>
-                                <div class="title">
-                                    Призовые места
-                                </div>
-                            </div>
-                                <div class="component statistics">
-                                    <div class="grid-block statistics-maps">
-                                        <div class="grid-header">
-                                            <div class="r w-100">
-                                                #
-                                            </div>
-                                            <div class="r w-100">
-                                                Место
-                                            </div>
-                                            <div class="r w-100">
-                                                Приз
-                                            </div>
-                                            <div class="r w-100">
-                                                Команда
-                                            </div>
-                                        </div>
-                                        {% set i = 1 %}
-                                        {% for prize in prizeDistribution %}
-                                            <div class="grid-header">
-                                                <div class="r w-100">
-                                                    {{ i }}.
-                                                </div>
-                                                <div class="r w-100">
-                                                    {{ prize.position }}
-                                                </div>
-                                                <div class="r w-100">
-                                                    {{ prize.prize }}
-                                                </div>
-                                                <div class="r w-100">
-                                                    {% if prize.team is defined %}
-                                                        <img src="{{ prize.team.logo }}" class="width-15px" alt="{{ prize.team.name }}">
-                                                        {{ prize.team.name }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            {% set i = i + 1  %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="component d-flex justify-content-center">
-                    <div class="col-10 d-flex justify-content-center match__view flex-wrap">
-                        {% include 'templates/events/groupPlays.html.twig' %}
-                    </div>
-                </div>
-                <div class="component d-flex justify-content-center ">
-                    <div class="col-10 d-flex flex-wrap match__view">
-                        {% include 'templates/events/teamsAttending.html.twig' %}
-                        {% include 'templates/events/mapsPool.html.twig' %}
-                        {% include 'templates/events/relatedEvents.html.twig' %}
-                    </div>
-                </div>
-            <div class="component d-flex justify-content-center ">
-                <div class="col-10 d-flex flex-wrap match__view">
-                    {% include 'templates/events/bracket.html.twig' %}
-                </div>
+    <div class="event page">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <a href="{{ url('digest_events') }}">
+                    Дайджест турниры
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span style="">
+                    {{ event.name }}
+                </span>
             </div>
-            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0">
+            <event-page :id="{{ event.id }}"/>
         </div>
     </div>
 {% endblock %}
