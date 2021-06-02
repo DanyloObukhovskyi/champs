@@ -30,9 +30,9 @@
                     <a href="/ru/auth/discord/">
                         <img src="/images/login_discord.svg">
                     </a>
-                    <a href="/ru/auth/facebook/">
-                        <img src="/images/facebook.png">
-                    </a>
+<!--                    <a href="/ru/auth/facebook/">-->
+<!--                        <img src="/images/facebook.png">-->
+<!--                    </a>-->
                     <a href="/ru/auth/google/">
                         <img src="/images/google.png">
                     </a>

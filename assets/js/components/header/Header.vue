@@ -8,7 +8,9 @@
                 :is-trainer="isTrainer"
                 :is-authorize="isAuthorize">
         </nav-bar>
-        <sub-nav-bar @setgame="setGame" :games="games">
+<!--        <sub-nav-bar @setgame="setGame" :games="games">-->
+<!--        </sub-nav-bar>-->
+        <sub-nav-bar @setgame="setGame" :games="[]">
         </sub-nav-bar>
         <login-modal
                 :token="token"

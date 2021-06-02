@@ -302,7 +302,9 @@
                     <div class="admin-notice" style="height: 38px;">
                         <div style="display: block; height: 50px;   vertical-align: top;" class="ml-35 mt-10">
                             <input name="delete_trainer" value="1" type="checkbox" class="admin-checkbox"
-                                   style="margin-top: 13px;">
+                            <?php if($user_info[0]['is_active'] === '0'): ?>
+                                <?php echo 'checked' ;?>
+                            <?php endif;?> style="margin-top: 13px;">
                             <div class="admin-notice-text" style=" margin-top: 10px;">Убрать профиль из тренеров</div>
                         </div>
                     </div>

@@ -519,8 +519,13 @@ class Edit_c extends CI_Controller
                     }
 
                     if (!empty($delete_trainer)) {
-                        $update_data['istrainer'] = 0;
-                        $this->delete_m->delete_trainer_as_teacher($id);
+//                        $update_data['istrainer'] = 0;
+                        $update_data_for_teacher['is_active'] = false;
+                        $this->edit_m->updateTeacher($id, $update_data_for_teacher);
+//                        $this->delete_m->delete_trainer_as_teacher($id);
+                    } else {
+                        $update_data_for_teacher['is_active'] = true;
+                        $this->edit_m->updateTeacher($id, $update_data_for_teacher);
                     }
                     $update_data['discord'] = $discord;
 
@@ -637,7 +642,10 @@ class Edit_c extends CI_Controller
                     die();
                 }
                 if (!empty($delete_trainer)) {
-                    redirect(base_url("c-admin/trainers/all/page/1"));
+                    redirect($_SERVER["HTTP_REFERER"]);
+                    die();
+                } else {
+                    redirect($_SERVER["HTTP_REFERER"]);
                     die();
                 }
             }

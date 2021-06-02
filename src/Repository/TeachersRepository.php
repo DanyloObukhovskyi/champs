@@ -90,6 +90,7 @@ class TeachersRepository extends ServiceEntityRepository
 
         $trainers = $this->createQueryBuilder('t')
             ->where('t.userid IN(:ids)')
+            ->andWhere('t.is_active = 1')
             ->setParameter('ids', $userIds)
             ->getQuery()
             ->getResult();

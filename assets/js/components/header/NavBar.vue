@@ -28,9 +28,9 @@
                 <a :href="digestPage" :class="{active : router === 'digest'}">
                     Дайджест турниров
                 </a>
-                <a href="/ru/mvp" class="pointer" :class="{active : router == 'mvp'}">
-                    MVP
-                </a>
+<!--                <a href="/ru/mvp" class="pointer" :class="{active : router == 'mvp'}">-->
+<!--                    MVP-->
+<!--                </a>-->
             </div>
 <!--            <social :social="social"></social>-->
             <div class="login-wrapper">
