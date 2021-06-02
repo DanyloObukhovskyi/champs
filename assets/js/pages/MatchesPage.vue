@@ -6,7 +6,7 @@
                           :types="matchTypes"
                           :selected="selectMatchesType">
             </tense-select>
-            <div class="d-flex justify-content-between" style="margin-left: .5vw;">
+            <div class="d-flex justify-content-between" style= "margin-left: .5vw;">
                 <filters @setFilter="setFilter" v-bind="filters"/>
             </div>
         </div>
