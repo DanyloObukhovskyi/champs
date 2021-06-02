@@ -198,7 +198,7 @@ export default {
             const self = this;
             window.onscroll = () => {
                 const scrollable = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
-                console.log(scrollable);
+
                 if (scrollable <= 2400) {
                     self.getNews()
                     self.getHotNews()
