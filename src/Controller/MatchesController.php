@@ -108,7 +108,7 @@ class MatchesController extends AbstractController
     {
         $type = $request->get('type');
 
-        $seoSettings = $this->seoService->getSeo('marketplace_index');
+        $seoSettings = $this->seoService->getSeo('matches_index_page');
 
         return $this->render('templates/matches.html.twig', [
             'heading_type' => $seoSettings['heading_type'],

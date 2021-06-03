@@ -65,7 +65,7 @@ class Seo extends CI_Controller
                     '<h4>'.$page['name'].'</h4>',
                     '<h5>'.$page['title'].'</h5>',
                     $page['keywords'],
-                    '<a href="'.$page['url'].'">Открыть Страницу</a>',
+                    '<a href="'.str_replace('test.','',$page['url']).'">Открыть Страницу</a>',
                     '<div class="row justify-content-center">
                         <button type="button" style="left:50%" class="btn btn-dark-blue btn-small" onclick="fetch('.$page['id'].')">Редактировать</button>
                         </div>'
