@@ -153,12 +153,8 @@
         {
             $this->db->select('news.*');
 
-            $this->db->join('game', "game.id = {$this->table}.game_id", 'left');
-            $this->db->where('is_deleted', 0);
-            $this->db->or_where('is_deleted', null);
-
             if ($query != '') {
-                $this->db->or_where("(news.id LIKE '%$query%'");
+                $this->db->where("(news.id LIKE '%$query%'");
                 $this->db->or_where("news.title LIKE '%$query%'");
                 $this->db->or_where("news.date LIKE '%$query%')");
             }
