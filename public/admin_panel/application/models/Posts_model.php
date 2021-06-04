@@ -163,13 +163,13 @@
                 $this->db->or_where("date LIKE '%$query%'");
             }
             if ($column == 0) {
-                $this->db->order_by("news.id", $order);
+                $this->db->order_by("id", $order);
             } elseif ($column == 1) {
-                $this->db->order_by("news.title", $order);
+                $this->db->order_by("title", $order);
             } elseif ($column == 2) {
-                $this->db->order_by("news.type", $order);
+                $this->db->order_by("type", $order);
             } elseif ($column == 3) {
-                $this->db->order_by("news.date", $order);
+                $this->db->order_by("date", $order);
             }
             if ($count) {
                 return count($this->get([]));
