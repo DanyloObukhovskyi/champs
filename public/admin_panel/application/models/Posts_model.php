@@ -160,7 +160,7 @@
             if ($query != '') {
                 $this->db->where("(id LIKE '%$query%'");
                 $this->db->or_where("title LIKE '%$query%'");
-                $this->db->or_where("date LIKE '%$query%'");
+                $this->db->or_where("date LIKE '%$query%')");
             }
             if ($column == 0) {
                 $this->db->order_by("id", $order);
