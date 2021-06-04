@@ -158,9 +158,9 @@
             $this->db->or_where('is_deleted', null);
 
             if ($query != '') {
-                $this->db->where("(id LIKE '%$query%'");
-                $this->db->or_where("title LIKE '%$query%'");
-                $this->db->or_where("date LIKE '%$query%')");
+                $this->db->where("({$this->table}.id LIKE '%$query%'");
+                $this->db->or_where("{$this->table}.title LIKE '%$query%'");
+                $this->db->or_where("{$this->table}.date LIKE '%$query%')");
             }
             if ($column == 0) {
                 $this->db->order_by("{$this->table}.id", $order);
