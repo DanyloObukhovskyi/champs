@@ -66,7 +66,7 @@ export default {
         updateAvatar() {
             if (!this.load) {
                 const form = new FormData(document.forms.uploadAvatar);
-
+                console.log(form);
                 this.load = true;
                 CabinetService.updateUser(form)
                     .then(user => {
