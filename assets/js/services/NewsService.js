@@ -11,7 +11,7 @@ class NewsService extends Service {
     }
 
     getMainNews = (length, filters = {}) => {
-        return this.send(`ajax/mainNews/${length}`, filters);
+        return this.send(`ajax/main_news/${length}`, filters);
     }
 
     getHotNews = (ofset = 0, filters = {}) => {
