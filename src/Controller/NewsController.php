@@ -168,6 +168,24 @@ class NewsController extends AbstractController
      */
     public function getMainNews(Request $request, $offset = 0)
     {
+        $topNewsEntities = $this->newsService->getTopNews();
+        $topsNewsIds = [];
+        foreach ($topNewsEntities as $topNewsEntity) {
+            $top = $this->newsService->decorator($topNewsEntity);
+            $topsNewsIds[] = $top['id'];
+        }
+
+        if(!empty($topsNewsIds)){
+            $allTopNewsEntities = $this->entityManager->getRepository(News::class)
+                ->getByNotTopIds($topsNewsIds);
+
+            /** @var News $newsTop */
+            foreach($allTopNewsEntities as $newsTop){
+                $newsTop->setIsTop(false);
+            }
+            $this->entityManager->flush();
+        }
+
         $request = json_decode($request->getContent(), false);
 
         $formats = [];

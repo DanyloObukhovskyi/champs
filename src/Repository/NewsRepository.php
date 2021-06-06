@@ -175,4 +175,17 @@ class NewsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param $ids
+     * @return mixed
+     */
+    public function getByNotTopIds($ids)
+    {
+        $eq = $this->createQueryBuilder("n");
+        $eq->orderBy('n.created_at', 'DESC')
+            ->where($eq->expr()->notIn('n.id', $ids))
+            ->andWhere('n.isTop = 1');
+        return $eq->getQuery()->getResult();
+    }
 }
