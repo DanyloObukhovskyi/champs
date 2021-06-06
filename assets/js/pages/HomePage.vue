@@ -176,7 +176,7 @@ export default {
             if (!this.isLoadAll && !this.load) {
                 this.load = true;
 
-                NewsService.getNews(this.news.length, this.filters)
+                NewsService.getMainNews(this.news.length, this.filters)
                     .then(data => {
                         const oldNewsLength = this.news.length;
 

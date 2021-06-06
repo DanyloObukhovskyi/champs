@@ -10,6 +10,10 @@ class NewsService extends Service {
         return this.send(`ajax/news/${length}`, filters);
     }
 
+    getMainNews = (length, filters = {}) => {
+        return this.send(`ajax/mainNews/${length}`, filters);
+    }
+
     getHotNews = (ofset = 0, filters = {}) => {
         return this.send(`hot/news/`+ ofset, filters);
     }

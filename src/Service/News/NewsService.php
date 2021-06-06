@@ -118,7 +118,10 @@ class NewsService extends EntityService
             $this->parseDate($request->dateFrom ?? null),
             $this->parseDate($request->dateTo ?? null),
             $limit,
-            $offset
+            $offset,
+            'date',
+            'DESC',
+            (array)$request
         );
     }
 
@@ -152,7 +155,8 @@ class NewsService extends EntityService
             $this->parseDate($filters->dateTo ?? null),
             $limit,
             $offset,
-            'id'
+            'id',
+            'DESC'
         );
     }
 

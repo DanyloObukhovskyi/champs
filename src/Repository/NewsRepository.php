@@ -31,6 +31,7 @@ class NewsRepository extends ServiceEntityRepository
      * @param int $offset
      * @param string $orderField
      * @param string $orderType
+     * @param mixed $form
      * @return mixed
      * @throws \Exception
      */
@@ -45,7 +46,8 @@ class NewsRepository extends ServiceEntityRepository
         int $limit,
         int $offset,
         string $orderField = 'date',
-        string $orderType = 'DESC'
+        string $orderType = 'DESC',
+        array $form = null
     )
     {
         $query = $this->createQueryBuilder("n")
@@ -116,6 +118,15 @@ class NewsRepository extends ServiceEntityRepository
             $query->andWhere('n.date <= :dateTo')
                 ->setParameter('dateTo', $to);
         }
+
+        if(!empty($form)){
+            if(isset($form['is_main'])){
+                if($form['is_main'] === true){
+                    $query->andWhere('n.isTop = 0');
+                }
+            }
+        }
+
         if($limit !== 0){
             return $query->setFirstResult($offset)
                 ->setMaxResults($limit)

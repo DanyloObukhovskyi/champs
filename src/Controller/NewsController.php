@@ -154,7 +154,36 @@ class NewsController extends AbstractController
             }
         }
 
-        $newsEntities = $this->newsService->getByFilters($request, 100, $offset, $formats);
+        $newsEntities = $this->newsService->getByFilters($request, 60, $offset, $formats);
+
+        $news = [];
+        foreach ($newsEntities as $newsEntity) {
+            $news[] = $this->newsService->decorator($newsEntity);
+        }
+        return $this->json($news);
+    }
+
+    /**
+     * @Route("/ajax/mainNews/{offset}", name="mainNews.ajax", defaults={"offset" = 0})
+     */
+    public function getMainNews(Request $request, $offset = 0)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $formats = [];
+        if(!empty($request->formats)){
+            $allFormats = $this->entityManager
+                ->getRepository(NewsType::class)
+                ->findBy(['title' => $request->formats]);
+            if(!empty($allFormats))
+            {
+                foreach($allFormats as $format){
+                    $formats[] = $format->getId();
+                }
+            }
+        }
+        $request->is_main = true;
+        $newsEntities = $this->newsService->getByFilters($request, 60, $offset, $formats);
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
