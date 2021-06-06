@@ -66,9 +66,9 @@ export default {
         updateAvatar() {
             if (!this.load) {
                 const form = new FormData(document.forms.uploadAvatar);
-                
+
                 this.load = true;
-                CabinetService.updateUser(document.forms.uploadAvatar.avatar)
+                CabinetService.updateUser(form)
                     .then(user => {
                         this.$store.commit('setUser', user);
 
