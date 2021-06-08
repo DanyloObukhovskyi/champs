@@ -71,7 +71,7 @@
         </div>
         <div class="trainer-footer">
             <div class="rank">
-                <label>Ранг</label>
+                <label>Ранг/Рейтинг</label>
                 <div>
                     <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
                     {{ getRank(trainer) }}

@@ -72,7 +72,7 @@
         </div>
         <div class="trainer-footer">
             <div class="rank">
-                <label>Ранг</label>
+                <label>Ранг/Рейтинг</label>
                 <div class="d-flex align-items-center">
                     <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
                     <div>
