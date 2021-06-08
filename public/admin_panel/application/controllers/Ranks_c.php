@@ -203,8 +203,11 @@ class Ranks_c extends CI_Controller
         $update_data = [];
         $update_data['id'] = $_POST['id'];
         $update_data['game_id'] = $_POST['game_id'];
-        $update_data['points_from'] = $_POST['from'];
-        $update_data['points_to'] = $_POST['to'];
+        $showRank = $this->game_m->getOne(['id' => $_POST['game_id']])['show_rank'];
+        if(!$showRank){
+            $update_data['points_from'] = $_POST['from'];
+            $update_data['points_to'] = $_POST['to'];
+        }
         $update_data['rang'] = $_POST['rank'];
 
         if (isset($fileName)) {
