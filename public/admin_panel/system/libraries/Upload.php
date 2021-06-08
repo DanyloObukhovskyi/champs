@@ -394,7 +394,8 @@ class CI_Upload {
 				$_file = $_file[$field];
 			}
 		}
-
+        echo '<pre>';
+		var_dump('isset file', isset($_file));
 		if ( ! isset($_file))
 		{
 			$this->set_error('upload_no_file_selected', 'debug');
@@ -402,6 +403,8 @@ class CI_Upload {
 		}
 
 		// Is the upload path valid?
+        echo '<pre>';
+        var_dump('validate_upload_path',$this->validate_upload_path());
 		if ( ! $this->validate_upload_path())
 		{
 			// errors will already be set by validate_upload_path() so just return FALSE
@@ -409,6 +412,8 @@ class CI_Upload {
 		}
 
 		// Was the file able to be uploaded? If not, determine the reason why.
+        echo '<pre>';
+		var_dump('is_uploaded_file', is_uploaded_file($_file['tmp_name']));
 		if ( ! is_uploaded_file($_file['tmp_name']))
 		{
 			$error = isset($_file['error']) ? $_file['error'] : 4;
