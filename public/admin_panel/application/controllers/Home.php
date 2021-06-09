@@ -409,6 +409,7 @@ class Home extends CI_Controller
         foreach ($data['payments'] as $key => &$value) {
             $value['refund'] = $this->selectData->checkRefund((int)$value["id"]);
             $value['student'] = $this->selectData->getStudent((int)$value["student_id"]);
+            $value['totalPrice']   = $this->selectData->getTotalPrice((int)$value["id"])[0]['cost'] ?? 0;
         }
 
         $data['output'] = $this->load->view('home/payments', $data, true);

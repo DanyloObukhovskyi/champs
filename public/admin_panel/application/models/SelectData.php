@@ -151,4 +151,15 @@
 				return $result->result_array();
 			}
 		}
+
+		public function getTotalPrice($id = 0){
+            if($id > 0) {
+                $this->db->select('lessons.cost');
+                $this->db->from("lessons_payment");
+                $this->db->join('lessons', 'lessons.id = lessons_payment.lesson_id', 'inner');
+                $this->db->where('payment_id', (int)$id);
+                $result = $this->db->get();
+                return $result->result_array();
+            }
+        }
 	}

@@ -78,14 +78,7 @@
 									$payment_id = $val['yandex_kassa_id'];
 									$amount = 0;
 									$currency = "RUB";
-									if(!empty($val['yandex_data'])) {
-										$data = (array)json_decode ($val['yandex_data']);
-										if (!empty($data)) {
-											$amount = $data["amount"]->value;
-											$currency = $data["amount"]->currency;
-											print $data["amount"]->value." ".$data["amount"]->currency;
-										}
-									}
+                                    echo $val["totalPrice"].' '.$currency;
 								?>
 							</td>
 							<td data-id="<?php echo $rmo_i; ?>">
