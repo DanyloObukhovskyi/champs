@@ -149,6 +149,7 @@ class UserService  extends EntityService
             $trainer->setUser($user->getId());
             $trainer->setMethod("");
             $trainer->setIsLessonCost(false);
+            $trainer->setIsActive(false);
             $this->save($trainer);
         }
 
