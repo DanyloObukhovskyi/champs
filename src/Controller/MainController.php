@@ -422,7 +422,7 @@ class MainController extends DefController
     }
 
     /**
-     * @Route("/generateSitemap",defaults={"_format"="xml"}
+     * @Route("/generate_sitemap", defaults={"_format"="xml", name="sitemap"}
      *     )
      */
     public function generateSitemap(Request $request)
