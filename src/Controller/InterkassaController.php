@@ -112,4 +112,33 @@ class InterkassaController extends AbstractController
             'trainer' => $payment->getLesson()->getTrainer()->getNickname()
         ]);
     }
+
+    /**
+     * @Route ("/testWebhook")
+     */
+    public function testWebhook(Request $request, Swift_Mailer $mailer)
+    {
+        /** @var Payment $payment */
+        $payment = $this->entityManager
+            ->getRepository(Payment::class)
+            ->findOneBy([
+                'inter_kassa_id' => '9729804c760bb5fe6cfc8f8a892daf75'
+            ]);
+
+        if (isset($payment)) {
+                $payment->setPaymentStatus(Payment::STATUS_OK);
+
+            $this->entityManager->persist($payment);
+            $this->entityManager->flush();
+
+            $this->dispatchMessage(new PaymentLessonMail($mailer, $payment->getLesson()));
+        }
+
+        return $this->render('templates/payment/payment.send.html.twig',[
+            'lesson' => ['price' => $payment->getLesson()->getCost()],
+            'payment' => [ 'id' => $payment->getId()],
+            'student' => $payment->getLesson()->getStudent()->getNickname(),
+            'trainer' => $payment->getLesson()->getTrainer()->getNickname()
+        ]);
+    }
 }
