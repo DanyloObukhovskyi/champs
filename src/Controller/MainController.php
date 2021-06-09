@@ -21,6 +21,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 use App\Entity\SeoPages;
 use App\Service\Seo\SeoService;
 use App\Service\UserService;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
  */
@@ -449,35 +451,35 @@ class MainController extends DefController
         $siteData.= $this->getUrls($baseUrl,'news');
 
         $siteData.= ' <url>
-                      <loc>'.$baseUrl.'matches</loc> 
-                      <changefreq>daily</changefreq> 
+                      <loc>'.$baseUrl.'matches</loc>
+                      <changefreq>daily</changefreq>
                       <lastmod>'.date('Y-m-d').'</lastmod>
-                      <priority>0.5</priority> 
+                      <priority>0.5</priority>
                     </url>';
 
         $siteData.= $this->getUrls($baseUrl,'matches');
 
         $siteData.= ' <url>
-                      <loc>'.$baseUrl.'statistika</loc> 
-                      <changefreq>daily</changefreq> 
+                      <loc>'.$baseUrl.'statistika</loc>
+                      <changefreq>daily</changefreq>
                       <lastmod>'.date('Y-m-d').'</lastmod>
-                      <priority>0.5</priority> 
+                      <priority>0.5</priority>
                     </url>';
 
         $siteData.= ' <url>
-                      <loc>'.$baseUrl.'obucheniye</loc> 
-                      <changefreq>daily</changefreq> 
+                      <loc>'.$baseUrl.'obucheniye</loc>
+                      <changefreq>daily</changefreq>
                       <lastmod>'.date('Y-m-d').'</lastmod>
-                      <priority>0.5</priority> 
+                      <priority>0.5</priority>
                     </url>';
 
         $siteData.= $this->getUrls($baseUrl,'trainers');
 
         $siteData.= ' <url>
-                      <loc>'.$baseUrl.'daydzhest_turnirov</loc> 
-                      <changefreq>daily</changefreq> 
+                      <loc>'.$baseUrl.'daydzhest_turnirov</loc>
+                      <changefreq>daily</changefreq>
                       <lastmod>'.date('Y-m-d').'</lastmod>
-                      <priority>0.5</priority> 
+                      <priority>0.5</priority>
                     </url>';
 
         $siteData.= $this->getUrls($baseUrl,'digest');
