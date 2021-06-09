@@ -372,7 +372,7 @@ class Home extends CI_Controller
         } else {
             $where['search'] = $search;
         }
-
+        $where['payment_status'] = 1;
 
         $offset = $this->post_per_page * $page;
         $posts_count = $this->selectData->get_all_payments($where, true);
