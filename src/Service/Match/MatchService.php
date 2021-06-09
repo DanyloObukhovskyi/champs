@@ -536,4 +536,9 @@ class MatchService extends EntityService
             $match->getStartAt()
         );
     }
+
+    public function getAllMatches()
+    {
+        return $this->repository->getMatchesForSiteMap();
+    }
 }

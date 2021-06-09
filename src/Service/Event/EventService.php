@@ -223,6 +223,9 @@ class EventService extends EntityService
      */
     public function decorator(Event $event)
     {
+        if(empty($event->getStartedAt())){
+            return [];
+        }
         $generator = new SlugGenerator;
 
         $dayStart = $event->getStartedAt()->format('d F');
@@ -623,5 +626,10 @@ class EventService extends EntityService
         $event->setViews($event->getViews() + 1);
 
         return $this->save($event);
+    }
+
+    public function getAllEvents()
+    {
+        return $this->repository->findAll();
     }
 }

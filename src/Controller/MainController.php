@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
-use App\Entity\{Result, Match};
+use App\Entity\{Game, News, Result, Match, Teachers, User};
 use App\Service\Event\EventService;
 use App\Service\Match\MatchService;
 use App\Service\News\NewsService;
@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Translation\TranslatorInterface;
 use App\Entity\SeoPages;
 use App\Service\Seo\SeoService;
-
+use App\Service\UserService;
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
  */
@@ -66,6 +66,11 @@ class MainController extends DefController
      */
     public $seoService;
 
+    /**
+     * @var UserService
+     */
+    public $userService;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -80,6 +85,8 @@ class MainController extends DefController
         $this->newsTagService = new NewsTagService($entityManager);
 
         $this->seoService = new SeoService($entityManager);
+
+        $this->userService = new UserService($entityManager);
     }
 
     /**
@@ -410,5 +417,346 @@ class MainController extends DefController
         return !empty($result) ? $result : null;
 
         return $events;
+    }
+
+    /**
+     * @Route("/generateSitemap",defaults={"_format"="xml"}
+     *     )
+     */
+    public function generateSitemap(Request $request)
+    {
+        $baseUrl = $request->getSchemeAndHttpHost().$request->getBasePath().'/ru/';
+        $filename = 'sitemap.xml';
+
+        header("content-type: text/xml;");
+
+        $siteData = '<?xml version="1.0" encoding="UTF-8" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'novosti</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= $this->getUrls($baseUrl,'news');
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'matches</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= $this->getUrls($baseUrl,'matches');
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'statistika</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'obucheniye</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= $this->getUrls($baseUrl,'trainers');
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'daydzhest_turnirov</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= $this->getUrls($baseUrl,'digest');
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'politika_konfedinczialnosti</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'pravila_ispolzovaniya</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'usloviya_oformleniya_zakaza_trenirovok</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'oferta_na_okazanie_uslug</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'oferta_na_okazanie_uslug_treneru</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'polozhenie_o_konkurse</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'kontakty</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+        $siteData.= ' <url>
+                      <loc>'.$baseUrl.'o_nas</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+
+
+        $siteData.= '</urlset>';
+
+        $response = new Response($siteData);
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
+
+        return new Response($siteData);
+    }
+
+    public function getUrls($baseUrl, $type)
+    {
+        $urlData = '';
+        switch ($type){
+            case 'news':
+                $newsCollect = $this->newsService->getHotNews([], 0 , 0);
+                /** @var News $newsEntity */
+                foreach ($newsCollect as $newsEntity) {
+                    $news = $this->newsService->decorator($newsEntity);
+                    try {
+                        $newsType = $this->sanitize($news['type']->getTitle());
+                        $game = !empty($news['game']) ? $this->sanitize($news['game']->getName()) : null;
+                        $title =  $this->sanitize($news['title']);
+                        $date = $this->sanitize($news['date_ru_with_year']);
+                        if(empty($newsType) || empty($game) || empty($title) || empty($date)){
+                            $newsUrl = $news['slug'];
+                        } else {
+                            $newsUrl = $newsType.'/'.$game.'/'.$title.'-'.$date;
+                        }
+                    } catch (\Exception $e){
+                        $title =  $this->sanitize($news['title']);
+                        $newsUrl = $title;
+                    }
+                    $urlData.= ' <url>
+                      <loc>'.$baseUrl.'article/'.$news['id'].'/'.$newsUrl.'</loc> 
+                      <changefreq>daily</changefreq> 
+                      <lastmod>'.date('Y-m-d').'</lastmod>
+                      <priority>0.5</priority> 
+                    </url>';
+                }
+                break;
+            case 'matches':
+                $matches = $this->matchService->getAllMatches();
+                $matches = $this->matchService->matchesDecorator($matches);
+                foreach($matches as $dates) {
+                    foreach ($dates['items'] as $match) {
+                        try {
+                            $team1 = $this->sanitize($match['teamA']['title']);
+                            $team2 = $this->sanitize($match['teamB']['title']);
+                            $event = $this->sanitize($match['event']['name']);
+                            $game = $this->sanitize($match['event']['game']['name']);
+                            $start_date = $this->sanitize($match['startedAtRu']);
+                            $matchUrl = $team1 . '_vs_' . $team2 . '_' . $event . '_' . $game . '_' . $start_date;
+                        } catch (\Exception $e) {
+                            if(isset($match['slug']) && !empty($match['slug'])){
+                                $matchUrl = $match['slug'];
+                            } else {
+                                continue;
+                            }
+                        }
+                        $urlData.= ' <url>
+                          <loc>'.$baseUrl.'matches/'.$match['match_id'].'/'.$matchUrl.'</loc> 
+                          <changefreq>daily</changefreq> 
+                          <lastmod>'.date('Y-m-d').'</lastmod>
+                          <priority>0.5</priority> 
+                        </url>';
+                    }
+                }
+                break;
+            case 'trainers':
+                $games = $this->entityManager->getRepository(Game::class)
+                    ->findAll();
+                foreach($games as $game){
+                    $users = $this->userService->getTrainers(['search' => null, 'workout' => 'all', 'isExpensive' => false], $game,0);
+                    $trainers = $this->userService->teachersDecorator($users, $game->getCode());
+                    foreach($trainers as $trainer){
+                        $trainerUrl = $this->sanitize($game->getCode()).'/'.$this->sanitize($trainer['slug']);
+                        $urlData.= ' <url>
+                          <loc>'.$baseUrl.'obucheniye/'.$trainer['id'].'/'.$trainerUrl.'</loc> 
+                          <changefreq>daily</changefreq> 
+                          <lastmod>'.date('Y-m-d').'</lastmod>
+                          <priority>0.5</priority> 
+                        </url>';
+                    }
+                }
+                break;
+            case 'digest':
+                $events = $this->eventService->getAllEvents();
+                $events = $this->eventService->eventsDecorator($events);
+                foreach($events as $event){
+                    try{
+                        $name = $this->sanitize($event['name']);
+                        $location =  $this->sanitize($event['location']);
+                        $game = $this->sanitize($event['game']['name']);
+                        $start_date = $this->sanitize($event['startedAtRu']);
+                        $end_date = $this->sanitize($event['endedAtRu']);
+                        $eventUrl =  $name.'_'.$location.'_'.$game.'_'.$start_date.'-'.$end_date;
+                    } catch (\Exception $e) {
+                        if(isset($event['slug']) && !empty($event['slug'])){
+                            $eventUrl = $event['slug'];
+                        } else {
+                            continue;
+                        }
+                    }
+                    $urlData.= ' <url>
+                          <loc>'.$baseUrl.'event/'.$event['id'].'/'.$eventUrl.'</loc> 
+                          <changefreq>daily</changefreq> 
+                          <lastmod>'.date('Y-m-d').'</lastmod>
+                          <priority>0.5</priority> 
+                        </url>';
+                }
+
+                break;
+        }
+
+        return $urlData;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public function utf8_uri_encode( $utf8_string, $length = 0 ) {
+        $unicode = '';
+        $values = array();
+        $num_octets = 1;
+        $unicode_length = 0;
+
+        $string_length = strlen( $utf8_string );
+        for ($i = 0; $i < $string_length; $i++ ) {
+
+            $value = ord( $utf8_string[ $i ] );
+
+            if ( $value < 128 ) {
+                if ( $length && ( $unicode_length >= $length ) )
+                    break;
+                $unicode .= chr($value);
+                $unicode_length++;
+            } else {
+                if ( count( $values ) == 0 ) $num_octets = ( $value < 224 ) ? 2 : 3;
+
+                $values[] = $value;
+
+                if ( $length && ( $unicode_length + ($num_octets * 3) ) > $length )
+                    break;
+                if ( count( $values ) == $num_octets ) {
+                    if ($num_octets == 3) {
+                        $unicode .= '%' . dechex($values[0]) . '%' . dechex($values[1]) . '%' . dechex($values[2]);
+                        $unicode_length += 9;
+                    } else {
+                        $unicode .= '%' . dechex($values[0]) . '%' . dechex($values[1]);
+                        $unicode_length += 6;
+                    }
+
+                    $values = array();
+                    $num_octets = 1;
+                }
+            }
+        }
+
+        return $unicode;
+    }
+
+
+    public function seems_utf8($str) {
+        $length = strlen($str);
+        for ($i=0; $i < $length; $i++) {
+            $c = ord($str[$i]);
+            if ($c < 0x80) $n = 0; # 0bbbbbbb
+            elseif (($c & 0xE0) == 0xC0) $n=1; # 110bbbbb
+            elseif (($c & 0xF0) == 0xE0) $n=2; # 1110bbbb
+            elseif (($c & 0xF8) == 0xF0) $n=3; # 11110bbb
+            elseif (($c & 0xFC) == 0xF8) $n=4; # 111110bb
+            elseif (($c & 0xFE) == 0xFC) $n=5; # 1111110b
+            else return false; # Does not match any model
+            for ($j=0; $j<$n; $j++) { # n bytes matching 10bbbbbb follow ?
+                if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+
+    public function sanitize($title) {
+        $title = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $title);
+        $title = strip_tags($title);
+        // Preserve escaped octets.
+        $title = preg_replace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $title);
+        // Remove percent signs that are not part of an octet.
+        $title = str_replace('%', '', $title);
+        // Restore octets.
+        $title = preg_replace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
+
+        if ($this->seems_utf8($title)) {
+            if (function_exists('mb_strtolower')) {
+                $title = mb_strtolower($title, 'UTF-8');
+            }
+            $title = $this->utf8_uri_encode($title, 200);
+        }
+
+        $title = strtolower($title);
+        $title = preg_replace('/&.+?;/', '', $title); // kill entities
+        $title = str_replace('.', '-', $title);
+        $title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
+        $title = preg_replace('/\s+/', '-', $title);
+        $title = preg_replace('|-+|', '-', $title);
+        $title = trim($title, '-');
+
+        return $title;
     }
 }

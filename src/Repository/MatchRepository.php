@@ -416,4 +416,9 @@ class MatchRepository extends ServiceEntityRepository
         }
         return $matches;
     }
+
+    public function getMatchesForSiteMap()
+    {
+        return $this->findAll();
+    }
 }
