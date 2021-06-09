@@ -8,6 +8,9 @@
             <img :src="'/uploads/games/' + item.logo">
             {{item.name}}
         </div>
+        <div v-if="game === 'Counter-Strike: Global Offensive'" v-html="csScript" />
+        <div v-if="game === 'Dota 2'" v-html="dotaScript" />
+        <div v-if="game === 'Valorant'" v-html="valorantScript" />
     </div>
 </template>
 
@@ -18,6 +21,17 @@
             'game',
             'games'
         ],
+        watch:{
+            game: function (val) {
+                if(val === 'Counter-Strike: Global Offensive'){
+                    this.csGame()
+                } else if(val === 'Dota 2'){
+                    this.dotaGame()
+                } else if(val === 'Valorant'){
+                    this.valorantGame()
+                }
+            }
+        },
         mounted() {
             document.title = 'Поднимем навык игры cs go - индивидуальные и групповые тренировки'
         },
@@ -25,7 +39,28 @@
             setGame(game) {
                 this.$emit('setGame', game)
                 document.title = 'Поднимем навык игры '+game+' - индивидуальные и групповые тренировки'
+            },
+            csGame(){
+                let tag = document.createElement("script");
+                tag.setAttribute("src", 'http://champs.pro/uploads/cs.js');
+                document.head.appendChild(tag);
+            },
+            dotaGame(){
+                let tag = document.createElement("script");
+                tag.setAttribute("src", 'http://champs.pro/uploads/dota.js');
+                document.head.appendChild(tag);
+            },
+            valorantGame(){
+                let tag = document.createElement("script");
+                tag.setAttribute("src", 'http://champs.pro/uploads/valorant.js');
+                document.head.appendChild(tag);
             }
+        },
+        created() {
+
+            this.csScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-986024-2w1uZ" style="position:fixed; left:-999px;" alt=""/></noscript>';
+            this.dotaScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-986027-9vxub" style="position:fixed; left:-999px;" alt=""/></noscript>';
+            this.valorantScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-986028-8RL3d" style="position:fixed; left:-999px;" alt=""/></noscript>';
         }
     }
 </script>
