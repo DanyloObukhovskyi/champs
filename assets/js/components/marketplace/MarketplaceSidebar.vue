@@ -42,17 +42,17 @@
             },
             csGame(){
                 let tag = document.createElement("script");
-                tag.setAttribute("src", 'http://champs.pro/uploads/cs.js');
+                tag.setAttribute("src", 'https://champs.pro/uploads/cs.js');
                 document.head.appendChild(tag);
             },
             dotaGame(){
                 let tag = document.createElement("script");
-                tag.setAttribute("src", 'http://champs.pro/uploads/dota.js');
+                tag.setAttribute("src", 'https://champs.pro/uploads/dota.js');
                 document.head.appendChild(tag);
             },
             valorantGame(){
                 let tag = document.createElement("script");
-                tag.setAttribute("src", 'http://champs.pro/uploads/valorant.js');
+                tag.setAttribute("src", 'https://champs.pro/uploads/valorant.js');
                 document.head.appendChild(tag);
             }
         },
