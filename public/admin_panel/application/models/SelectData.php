@@ -18,7 +18,7 @@
 			
 			$this->db->select('payment.id, user.nickname, payment.created_at, payment.yandex_kassa_id, lessons.student_id, payment.yandex_data, lessons.date_time_from');
 			$this->db->from("payment");
-			$this->db->join("lessons", "payment.lesson_id = lessons.id");\
+			$this->db->join("lessons", "payment.lesson_id = lessons.id");
 			$this->db->join("user", "lessons.trainer_id = user.id");
 			
 			if (!empty($where['id'])) {
