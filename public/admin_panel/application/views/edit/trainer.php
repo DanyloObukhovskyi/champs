@@ -295,7 +295,7 @@
                     <label class="label" for="">Метод</label>
                     <div class=" mb-20" id="input">
                     <textarea style="width: 100%; resize:none;" rows="7" name="method"
-                              required><?php print $user_info[0]['method']; ?></textarea>
+                              ><?php print $user_info[0]['method']; ?></textarea>
                     </div>
                 </div>
                 <div class="col-item">
