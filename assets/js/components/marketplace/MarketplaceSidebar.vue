@@ -58,7 +58,7 @@
         },
         created() {
 
-            this.csScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-986024-2w1uZ" style="position:fixed; left:-999px;" alt=""/></noscript>';
+            this.csScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-991376-3qok7" style="position:fixed; left:-999px;" alt=""/></noscript>';
             this.dotaScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-986027-9vxub" style="position:fixed; left:-999px;" alt=""/></noscript>';
             this.valorantScript = '<noscript><img src="https://vk.com/rtrg?p=VK-RTRG-986028-8RL3d" style="position:fixed; left:-999px;" alt=""/></noscript>';
         }
