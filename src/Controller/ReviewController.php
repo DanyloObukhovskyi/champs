@@ -79,7 +79,8 @@ class ReviewController extends AbstractController
         $reviewData = [
             'id' => $review->getId(),
             'text' => $review->getComment(),
-            'rate' => $review->getRate()
+            'rate' => $review->getRate(),
+            'date' => $review->getCreatedAt()->format('Y.m.d H:i:s')
         ];
 
         return $this->json([
