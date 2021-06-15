@@ -31,7 +31,7 @@
         </div>
         <div class="review" v-else>
             <div class="review-title" v-if="!isUpdate">
-                Ваш отзыв
+                Отзыв оставлен
             </div>
             <div class="review-title" v-else>
                 Редактировать отзыв
