@@ -1,8 +1,8 @@
 <template>
     <div class="review-wrapper" v-if="show">
         <div class="review" v-if="!lesson.reviewExist">
-            <div class="review-title" v-if="!lesson.reviewExist">
-                Оставте отзыв
+            <div class="review-title">
+                Оставьте отзыв
             </div>
             <div class="review-body">
                 <div class="stars">

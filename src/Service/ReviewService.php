@@ -8,6 +8,7 @@ use App\Entity\Lessons;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use App\Service\News\NewsService;
+use Carbon\Carbon;
 
 /**
  * Class ReviewService
@@ -115,7 +116,7 @@ class ReviewService extends EntityService
         ];
     }
 
-    public function reviewsDecoratorForOne($reviews)
+    public function reviewsDecoratorForOne($reviews, $timeOffset = null)
     {
         $sum = 0;
         $count = 0;
@@ -136,7 +137,7 @@ class ReviewService extends EntityService
                 'id' => $review->getId(),
                 'text' => $review->getComment(),
                 'rate' => $review->getRate(),
-                'date' => $review->getCreatedAt()->format('Y.m.d H:i:s')
+                'date' => $this->parseDateToUserTimezone($review->getCreatedAt()->format('Y.m.d H:i:s'), $timeOffset)
             ];
 
             //$reviewCreatedAt = $review->getCreatedAt()->format('d F H:m');
@@ -155,5 +156,18 @@ class ReviewService extends EntityService
             'ratingTotal' => $result,
             'rating' => $rating
         ];
+    }
+
+    /**
+     * @param $date
+     * @param $timeOffset
+     * @return string
+     */
+    public function parseDateToUserTimezone($date, $timeOffset)
+    {
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom->setHour($dateFrom->hour + $timeOffset);
+
+        return $dateFrom;
     }
 }
