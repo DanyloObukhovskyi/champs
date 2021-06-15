@@ -165,7 +165,7 @@ class ReviewService extends EntityService
      */
     public function parseDateToUserTimezone($date, $timeOffset)
     {
-        $dateFrom = \Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
         $dateFrom->setHour($dateFrom->hour + $timeOffset);
 
         return $dateFrom;
