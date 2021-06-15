@@ -75,7 +75,7 @@
         </div>
         <div class="lesson-bottom">
             <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="isTrainerCabinetSmall"/>
-            <send-review :lesson="lesson" v-if="isStudentConfirmed && !user.isTrainer"/>
+            <send-review :lesson="lesson" v-if="!(new Date(lesson.dateAfter7Days) < new Date(lesson.today)) && isStudentConfirmed && !user.isTrainer"/>
         </div>
     </div>
 </template>

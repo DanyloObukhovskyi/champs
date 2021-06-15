@@ -42,9 +42,9 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route("/lesson/review/", methods={"POST"}, name="set_lesson_review")
+     * @Route("/lesson/review/{lessonId}", methods={"POST"}, name="set_lesson_review")
      */
-    public function setLessonReview(Request $request)
+    public function setLessonReview(Request $request, $lessonId)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -58,7 +58,7 @@ class ReviewController extends AbstractController
         $review->setStudent($student);
         $review->setTrainer($trainer);
         $review->setRate($request->request->get('rate'));
-
+        $review->setLesson($lessonId);
         $review->setTactics($request->request->get('tactics') ?? false);
         $review->setDuel($request->request->get('duel') ?? false);
         $review->setScatter($request->request->get('scatter') ?? false);
@@ -170,5 +170,22 @@ class ReviewController extends AbstractController
             }
         }
         return $this->json($permission);
+    }
+
+    /**
+     * @Route("/check/review/{lessonId}")
+     */
+    public function checkReviewExist($lessonId)
+    {
+        $lesson = $this->lessonService->find($lessonId);
+
+        $reviews = $this->getDoctrine()
+            ->getRepository(Review::class)
+            ->findRateByTrainerId($trainerId);
+
+        $reviewsData = $this->reviewService->reviewsDecorator($reviews);
+
+        return $this->json($reviewsData);
+
     }
 }

@@ -50,7 +50,7 @@
             sendReview() {
                 this.load = true;
                 CabinetService
-                    .sendReview(this.lesson.trainer.id, this.rate, this.review)
+                    .sendReview(this.lesson.trainer.id, this.rate, this.review, this.lesson.id)
                     .then(res => {
                         this.rate = 1;
                         this.review = null;
