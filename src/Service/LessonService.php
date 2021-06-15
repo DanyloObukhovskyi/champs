@@ -613,7 +613,7 @@ class LessonService extends EntityService
         $review = $this->entityManager->getRepository(Review::class)
             ->findBy(['lesson' => $lesson->getId()]);
 
-        $reviewsData = $this->reviewService->reviewsDecoratorForOne($review, $timeOffset);
+        $reviewsData = $this->reviewService->reviewsDecoratorForOne($review, $timezone);
 
         $reviewDataExist = $reviewsData['reviewCount'] > 0 ? true : false;
 
