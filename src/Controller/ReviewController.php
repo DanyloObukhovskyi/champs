@@ -42,9 +42,9 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route("/lesson/review/{lessonId}", methods={"POST"}, name="set_lesson_review")
+     * @Route("/lesson/review", methods={"POST"}, name="set_lesson_review")
      */
-    public function setLessonReview(Request $request, $lessonId)
+    public function setLessonReview(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -53,12 +53,18 @@ class ReviewController extends AbstractController
             ->getRepository(User::class)
             ->find(intval($request->request->get('trainer_id')));
 
+        $lesson = null;
+        $lessonId = intval($request->request->get('lessonId')) ?? null;
+        if($lessonId !== null){
+            $lesson = $this->lessonService->find($lessonId);
+        }
+
         /** @var Review $review */
         $review = new Review();
         $review->setStudent($student);
         $review->setTrainer($trainer);
         $review->setRate($request->request->get('rate'));
-        $review->setLesson($lessonId);
+        $review->setLesson($lesson !== null ? $lesson : null);
         $review->setTactics($request->request->get('tactics') ?? false);
         $review->setDuel($request->request->get('duel') ?? false);
         $review->setScatter($request->request->get('scatter') ?? false);
@@ -70,8 +76,67 @@ class ReviewController extends AbstractController
         $entityManager->persist($review);
         $entityManager->flush();
 
+        $reviewData = [
+            'id' => $review->getId(),
+            'text' => $review->getComment(),
+            'rate' => $review->getRate()
+        ];
+
         return $this->json([
             'status' => 200,
+            'review' => $reviewData
+        ]);
+    }
+
+
+    /**
+     * @Route("/lesson/editReview", methods={"POST"}, name="set_lesson_review")
+     */
+    public function setEditLessonReview(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $student = $this->getUser();
+        $trainer = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find(intval($request->request->get('trainer_id')));
+
+        $lesson = null;
+        $lessonId = intval($request->request->get('lessonId')) ?? null;
+        if($lessonId !== null){
+            $lesson = $this->lessonService->find($lessonId);
+        }
+
+
+        /** @var Review $review */
+        $review = $this->getDoctrine()
+            ->getRepository(Review::class)
+            ->findOneBy(['lesson' => $lesson->getId()]);
+
+        $review->setStudent($student);
+        $review->setTrainer($trainer);
+        $review->setRate($request->request->get('rate'));
+        $review->setTactics($request->request->get('tactics') ?? false);
+        $review->setDuel($request->request->get('duel') ?? false);
+        $review->setScatter($request->request->get('scatter') ?? false);
+        $review->setAim($request->request->get('aim') ?? false);
+        $review->setMentor($request->request->get('mentor') ?? false);
+
+        $review->setComment($request->request->get('comment'));
+
+        $entityManager->persist($review);
+        $entityManager->flush();
+
+        $reviewData = [
+            'id' => $review->getId(),
+            'text' => $review->getComment(),
+            'rate' => $review->getRate(),
+            'date' => $review->getCreatedAt()->format('Y.m.d H:i:s')
+        ];
+
+        return $this->json([
+            'status' => 200,
+            'review' => $reviewData
         ]);
     }
 
@@ -172,20 +237,22 @@ class ReviewController extends AbstractController
         return $this->json($permission);
     }
 
-    /**
-     * @Route("/check/review/{lessonId}")
-     */
-    public function checkReviewExist($lessonId)
-    {
-        $lesson = $this->lessonService->find($lessonId);
-
-        $reviews = $this->getDoctrine()
-            ->getRepository(Review::class)
-            ->findRateByTrainerId($trainerId);
-
-        $reviewsData = $this->reviewService->reviewsDecorator($reviews);
-
-        return $this->json($reviewsData);
-
-    }
+//    /**
+//     * @Route("/check/review/{lessonId}")
+//     */
+//    public function checkReviewExist($lessonId)
+//    {
+//        $lesson = $this->lessonService->find($lessonId);
+//
+//        $reviews = $this->getDoctrine()
+//            ->getRepository(Review::class)
+//            ->findBy(['lesson_id' => $lessonId]);
+//
+//        $reviewsData = $this->reviewService->reviewsDecorator($reviews);
+//
+//        $reviewDataExist = !empty($reviewsData) ? true : false;
+//
+//        return $this->json($reviewDataExist);
+//
+//    }
 }

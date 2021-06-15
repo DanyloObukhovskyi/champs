@@ -43,7 +43,7 @@
                         </template>
                     </cabinet-button>
                     <cabinet-button text-first="Занятие окончено?"
-                                    @click="setConfirmed"
+                                    @click="()=>{setConfirmed(); toggleSendReview()}"
                                     v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall"
                                     :text-second="finishLessonLabel">
                         <template v-slot:img>
@@ -52,7 +52,7 @@
                     </cabinet-button>
                 </div>
                 <div class="buttons" v-else>
-                    <cabinet-button text-first="Подробнее" @click="toggleMoreDetail" >
+                    <cabinet-button text-first="Подробнее" @click="toggleMoreDetail">
                         <template v-slot:img>
                             <img src="/images/cabinet/inviteIcon.png">
                         </template>
@@ -62,7 +62,7 @@
                         </template>
                     </cabinet-button>
                     <cabinet-button
-                            @click="setConfirmed"
+                            @click="()=>{ setConfirmed(), toggleSendReview()}"
                             text-first="Занятие окончено"
                             v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today))"
                             :text-second="finishLessonLabel">
@@ -73,9 +73,10 @@
                 </div>
             </div>
         </div>
+<!--        v-if="!lesson.reviewExist && (!isPast && isStudentConfirmed) || (isPast && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today)) && isStudentConfirmed) && !user.isTrainer"-->
         <div class="lesson-bottom">
             <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="isTrainerCabinetSmall"/>
-            <send-review :lesson="lesson" v-if="!(new Date(lesson.dateAfter7Days) < new Date(lesson.today)) && isStudentConfirmed && !user.isTrainer"/>
+            <send-review :lesson="lesson" :show="showSendReview"/>
         </div>
     </div>
 </template>
@@ -112,6 +113,7 @@
             return {
                 showMoreDetail: false,
                 showReview: false,
+                showSendReview: false
             }
         },
         computed: {
@@ -203,6 +205,10 @@
                         self.showMoreDetail = false;
                     }
                 })
+            },
+            toggleSendReview()
+            {
+                this.showSendReview = !this.showSendReview;
             },
             imageWrapperImage(image) {
                 return {

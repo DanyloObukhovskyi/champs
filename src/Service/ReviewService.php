@@ -114,4 +114,46 @@ class ReviewService extends EntityService
             'rating' => $rating
         ];
     }
+
+    public function reviewsDecoratorForOne($reviews)
+    {
+        $sum = 0;
+        $count = 0;
+
+        $rating = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $rating[$i] = 0;
+        }
+
+        $reviewsParse = [];
+        foreach ($reviews as $review) {
+            /** @var Review $review */
+            $sum += $review->getRate();
+            $rating[$review->getRate()]++;
+            $count++;
+
+            $newReview = [
+                'id' => $review->getId(),
+                'text' => $review->getComment(),
+                'rate' => $review->getRate(),
+                'date' => $review->getCreatedAt()->format('Y.m.d H:i:s')
+            ];
+
+            //$reviewCreatedAt = $review->getCreatedAt()->format('d F H:m');
+            //$newReview['dateRu'] = NewsService::replaceMonth($reviewCreatedAt);
+
+            $reviewsParse = $newReview;
+        }
+        $result = 0;
+        if ($sum > 0) {
+            $result = round($sum / $count, 2);
+        }
+
+        return [
+            'reviews' => $reviewsParse,
+            'reviewCount' => $count,
+            'ratingTotal' => $result,
+            'rating' => $rating
+        ];
+    }
 }

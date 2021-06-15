@@ -37,14 +37,26 @@ class CabinetService extends Service {
         return this.send(`ajax/cabinet/set/lesson/status/${lessonId}`)
     }
 
-    sendReview = (trainerId, rate, comment, id = null) => {
+    sendReview = (trainerId, rate, comment, lessonId) => {
         const form = new FormData();
 
         form.append('trainer_id', trainerId);
         form.append('rate', rate);
         form.append('comment', comment);
+        form.append('lessonId', lessonId);
 
-        return this.send(`lesson/review/`. id, form)
+        return this.send(`lesson/review`, form)
+    }
+
+    sendEditReview = (trainerId, rate, comment, lessonId) => {
+        const form = new FormData();
+
+        form.append('trainer_id', trainerId);
+        form.append('rate', rate);
+        form.append('comment', comment);
+        form.append('lessonId', lessonId);
+
+        return this.send(`lesson/editReview`, form)
     }
 
     getFirstLessonsAndEarned = () => {

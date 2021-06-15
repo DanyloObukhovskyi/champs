@@ -8,18 +8,26 @@ use App\Entity\Lessons;
 use App\Entity\LessonsPayment;
 use App\Entity\LessonTime;
 use App\Entity\Payment;
+use App\Entity\Review;
 use App\Entity\Schedule;
 use App\Entity\Teachers;
 use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
 use App\Repository\LessonsRepository;
+use App\Service\ReviewService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
 
+
 class LessonService extends EntityService
 {
     protected $entity = Lessons::class;
+
+    /**
+     * @var ReviewService
+     */
+    public $reviewService;
 
     /**
      * @var LessonsRepository
@@ -61,6 +69,8 @@ class LessonService extends EntityService
         $this->scheduleService = new ScheduleService($entityManager);
         $this->teacherService = new TeacherService($entityManager);
         $this->userService = new UserService($entityManager);
+
+        $this->reviewService = new ReviewService($entityManager);
     }
 
     /**
@@ -600,6 +610,13 @@ class LessonService extends EntityService
         if($dateFrom->format('Y.m.d H:i:s') < Carbon::now()->format('Y.m.d H:i:s')){
             $isOver = true;
         }
+        $review = $this->entityManager->getRepository(Review::class)
+            ->findBy(['lesson' => $lesson->getId()]);
+
+        $reviewsData = $this->reviewService->reviewsDecoratorForOne($review);
+
+        $reviewDataExist = $reviewsData['reviewCount'] > 0 ? true : false;
+
         return [
             'id' => $lesson->getId(),
             'type' => $lesson->getType(),
@@ -623,7 +640,9 @@ class LessonService extends EntityService
             'availableReview' =>  $lesson->getStudentStatus(),
             'dateAfter7Days' => $dateTo->modify('+7 days')->format('Y.m.d H:i:s'),
             'today' => Carbon::now()->format('Y.m.d H:i:s'),
-            'isOver' => $isOver
+            'isOver' => $isOver,
+            'reviewExist' => $reviewDataExist,
+            'review' => $reviewsData['reviews']
         ];
     }
 

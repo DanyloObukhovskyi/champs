@@ -1,21 +1,67 @@
 <template>
-    <div class="review-wrapper">
-        <div class="review">
-            <div class="review-title">
+    <div class="review-wrapper" v-if="show">
+        <div class="review" v-if="!lesson.reviewExist">
+            <div class="review-title" v-if="!lesson.reviewExist">
                 Оставте отзыв
             </div>
             <div class="review-body">
                 <div class="stars">
                     <template v-for="i in [10,9,8,7,6,5,4,3,2,1]">
-                        <label :class="{selected: rate >= i}" @click="rate = i"></label>
+                        <label :class="{selected: lesson.review.rate >= i}" @click="lesson.review.rate = i"></label>
                     </template>
                 </div>
                 <div class="textarea">
-                    <textarea v-model="review"></textarea>
+                    <textarea v-model="lesson.review.text"></textarea>
                 </div>
             </div>
             <div class="review-bottom">
                 <button type="button" class="send-btn" :class="{disable: load, update: !load && isUpdate}"
+                        @click="sendReview">
+                    Отправить <i class="fas fa-check"></i>
+                    <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                         viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                        <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
+                                stroke-dasharray="164.93361431346415 56.97787143782138">
+                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite"
+                                              dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+                        </circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="review" v-else>
+            <div class="review-title" v-if="!isUpdate">
+                Ваш отзыв
+            </div>
+            <div class="review-title" v-else>
+                Редактировать отзыв
+            </div>
+            <div class="review-body">
+                <div class="stars">
+                    <template v-for="i in [10,9,8,7,6,5,4,3,2,1]" >
+                        <label v-if="!isUpdate" :class="{selected: lesson.review.rate >= i}"></label>
+                        <label v-else :class="{selected: lesson.review.rate >= i}" @click="lesson.review.rate = i"></label>
+                    </template>
+                </div>
+                <div class="textarea">
+                    <textarea v-if="!isUpdate" disabled v-model="lesson.review.text"></textarea>
+                    <textarea v-else v-model="lesson.review.text"></textarea>
+                </div>
+            </div>
+            <div class="review-bottom" v-if="((new Date(lesson.review.date).getTime() + (20 * 60 * 1000)) >= new Date().getTime())">
+                <button v-if="!isUpdate" type="button" class="send-btn" :class="{disable: load, update: !load && isUpdate}"
+                        @click="editReview">
+                    Редактировать <i class="fas fa-check"></i>
+                    <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                         viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                        <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
+                                stroke-dasharray="164.93361431346415 56.97787143782138">
+                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite"
+                                              dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+                        </circle>
+                    </svg>
+                </button>
+                <button v-else type="button" class="send-btn" :class="{disable: load, update: !load && isUpdate}"
                         @click="sendReview">
                     Отправить <i class="fas fa-check"></i>
                     <svg v-if="load" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -37,27 +83,45 @@
 
     export default {
         name: "SendReview",
-        props: ['lesson'],
+        props: ['lesson', 'show'],
         data() {
             return {
-                review: null,
                 rate: 1,
                 load: false,
                 isUpdate: false,
             }
         },
+        computed: {
+            review() {
+                return this.lesson.review.text
+            }
+        },
         methods: {
             sendReview() {
                 this.load = true;
-                CabinetService
-                    .sendReview(this.lesson.trainer.id, this.rate, this.review, this.lesson.id)
-                    .then(res => {
-                        this.rate = 1;
-                        this.review = null;
-
-                        this.load = false;
-                        this.isUpdate = true;
-                    })
+                if(this.isUpdate === true){
+                    CabinetService
+                        .sendEditReview(this.lesson.trainer.id, this.lesson.review.rate, this.lesson.review.text, this.lesson.id)
+                        .then(res => {
+                            //this.rate = 1;
+                            this.lesson.reviewExist = true;
+                            this.load = false;
+                            this.isUpdate = false;
+                        })
+                } else {
+                    CabinetService
+                        .sendReview(this.lesson.trainer.id, this.lesson.review.rate, this.lesson.review.text, this.lesson.id)
+                        .then(res => {
+                            //this.rate = 1;
+                            this.lesson.reviewExist = true;
+                            this.load = false;
+                            this.isUpdate = false;
+                        })
+                }
+            },
+            editReview()
+            {
+                this.isUpdate = true
             }
         }
     }
