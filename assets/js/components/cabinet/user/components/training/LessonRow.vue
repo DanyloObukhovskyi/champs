@@ -64,7 +64,7 @@
                     <cabinet-button
                             @click="()=>{ setConfirmed(), toggleSendReview()}"
                             text-first="Занятие окончено"
-                            v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today))"
+                            v-if="!(user.isTrainer && isConfirmed) && !isTrainerCabinetSmall && !(new Date(lesson.dateAfter7Days).getTime() < new Date().getTime())"
                             :text-second="finishLessonLabel">
                         <template v-slot:img>
                             <img src="/images/cabinet/arrow.png">
