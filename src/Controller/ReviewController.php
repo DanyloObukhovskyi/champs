@@ -90,7 +90,7 @@ class ReviewController extends AbstractController
 
 
     /**
-     * @Route("/lesson/editReview", methods={"POST"}, name="set_lesson_review")
+     * @Route("/lesson/editReview", methods={"POST"}, name="set_lesson_edit_review")
      */
     public function setEditLessonReview(Request $request)
     {
