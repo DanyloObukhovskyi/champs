@@ -137,7 +137,7 @@ class ReviewService extends EntityService
                 'id' => $review->getId(),
                 'text' => $review->getComment(),
                 'rate' => $review->getRate(),
-                'date' => $this->parseDateToUserTimezone($review->getCreatedAt()->format('Y.m.d H:i:s'), $timeOffset)
+                'date' => $this->parseDateToUserTimezone($review->getCreatedAt()->format('Y.m.d H:i:s'), $timeOffset)->format('Y.m.d H:i:s')
             ];
 
             //$reviewCreatedAt = $review->getCreatedAt()->format('d F H:m');
@@ -165,7 +165,7 @@ class ReviewService extends EntityService
      */
     public function parseDateToUserTimezone($date, $timeOffset)
     {
-        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom = \Carbon::createFromFormat('Y.m.d H', $date);
         $dateFrom->setHour($dateFrom->hour + $timeOffset);
 
         return $dateFrom;
