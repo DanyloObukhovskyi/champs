@@ -5,18 +5,6 @@ var Encore = require('@symfony/webpack-encore');
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
-const CompressionPlugin = require("compression-webpack-plugin");
-const path = require('path');
-const firstConfig = {
-    entry: path.resolve(__dirname, 'assets') + '/js/app.js',
-    plugins: [
-        new CompressionPlugin(
-        {
-            algorithm: "gzip",
-            test: /\.js(\?.*)?$/i
-        }
-    )],
-};
 
 Encore
     .enableSassLoader()
@@ -93,6 +81,4 @@ Encore
     .enableVueLoader()
 ;
 
-const secondConfig = Encore.getWebpackConfig();
-
-module.exports = [firstConfig, secondConfig];
+module.exports = Encore.getWebpackConfig();
