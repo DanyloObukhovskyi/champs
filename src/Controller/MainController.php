@@ -111,7 +111,7 @@ class MainController extends DefController
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decorator($newsEntity);
+            $news[] = $this->newsService->decoratorForAllNews($newsEntity);
         }
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
@@ -150,7 +150,7 @@ class MainController extends DefController
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decorator($newsEntity);
+            $news[] = $this->newsService->decoratorForAllNews($newsEntity);
         }
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
@@ -269,7 +269,7 @@ class MainController extends DefController
 
         $newsArray = [];
         foreach ($news as $new) {
-            $newsArray[] = $this->newsService->decorator($new);
+            $newsArray[] = $this->newsService->decoratorForAllNews($new);
         }
         return $this->json($newsArray);
     }
@@ -561,7 +561,7 @@ class MainController extends DefController
                 $newsCollect = $this->newsService->getHotNews([], 0 , 0);
                 /** @var News $newsEntity */
                 foreach ($newsCollect as $newsEntity) {
-                    $news = $this->newsService->decorator($newsEntity);
+                    $news = $this->newsService->decoratorForAllNews($newsEntity);
                     try {
                         $newsType = $this->sanitize($news['type']->getTitle());
                         $game = !empty($news['game']) ? $this->sanitize($news['game']->getName()) : null;
