@@ -98,7 +98,7 @@ class NewsController extends AbstractController
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decorator($newsEntity);
+            $news[] = $this->newsService->decoratorForAllNews($newsEntity);
         }
         $link = $request->getSchemeAndHttpHost().$request->getBasePath();
 
@@ -554,7 +554,7 @@ class NewsController extends AbstractController
         $newsEntities = $this->newsService->getTopNews();
 
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decorator($newsEntity);
+            $news[] = $this->newsService->decoratorForAllNews($newsEntity);
         }
         return $this->json($news);
     }
