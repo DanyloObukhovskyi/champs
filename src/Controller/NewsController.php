@@ -129,7 +129,7 @@ class NewsController extends AbstractController
 
         /** @var News $newsEntity */
         foreach ($newsCollect as $newsEntity) {
-            $hotNews[] = $this->newsService->decorator($newsEntity);
+            $hotNews[] = $this->newsService->decoratorForHotNews($newsEntity);
         }
         return $this->json($hotNews);
     }
@@ -205,7 +205,7 @@ class NewsController extends AbstractController
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decorator($newsEntity);
+            $news[] = $this->newsService->decoratorForMainNews($newsEntity);
         }
         return $this->json($news);
     }
