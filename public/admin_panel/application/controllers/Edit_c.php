@@ -204,6 +204,8 @@ class Edit_c extends CI_Controller
                                         } else {
                                             $data = array('upload_data' => $this->upload->data());
                                             $article_img[$i] = $data["upload_data"]["orig_name"];
+                                            $image_patch = $config['upload_path'];
+                                            $this->compressImage($image_patch.'/'.$fileName, $image_patch);
                                         }
                                     }
                                 }
@@ -257,6 +259,8 @@ class Edit_c extends CI_Controller
                                 $data = array('upload_data' => $this->upload->data());
                                 $article_img = $data["upload_data"]["orig_name"];
                                 $update_data['logo'] = $article_img;
+                                $image_patch = $config['upload_path'];
+                                $this->compressImage($image_patch.'/'.$fileName, $image_patch);
                             }
                         }
                     }
@@ -817,5 +821,26 @@ class Edit_c extends CI_Controller
         );
         $hash = password_hash($password, $this->algo, $this->options);
         return $hash;
+    }
+
+    public function compressImage($patch, $sourcePatch)
+    {
+        $config_manip = array(
+            'image_library' => 'gd2',
+            'source_image' => $patch,
+            'new_image' => $sourcePatch,
+            'maintain_ratio' => TRUE,
+            'quality' => 65,
+        );
+
+        $this->load->library('image_lib', $config_manip);
+        if (!$this->image_lib->resize()) {
+            echo '<pre>';
+            var_dump($this->image_lib->display_errors());
+            die;
+            echo $this->image_lib->display_errors();
+        }
+
+        $this->image_lib->clear();
     }
 }

@@ -199,6 +199,8 @@ class Add_c extends CI_Controller
                                         } else {
                                             $data = array('upload_data' => $this->upload->data());
                                             $article_img[$i] = $data["upload_data"]["orig_name"];
+                                            $image_patch = $config['upload_path'];
+                                            $this->compressImage($image_patch.'/'.$fileName, $image_patch);
                                         }
                                     }
                                 }
@@ -248,6 +250,8 @@ class Add_c extends CI_Controller
                                 } else {
                                     $data = array('upload_data' => $this->upload->data());
                                     $article_img = $data["upload_data"]["orig_name"];
+                                    $image_patch = PUBLICPATH.'/'.$this->config->item('upload_article-pic');
+                                    $this->compressImage($image_patch.'/'.$fileName, $image_patch);
                                 }
                             }
                         }
@@ -304,9 +308,6 @@ class Add_c extends CI_Controller
                         }
                         if(empty($post_content)){
                             $this->session->set_flashdata('error','Вы не заполнили контент');
-                        }
-                        if(empty($post_url)){
-                            $this->session->set_flashdata('error','Вы не заполнили url');
                         }
                         redirect($_SERVER["HTTP_REFERER"]);
                         die();
@@ -824,5 +825,26 @@ class Add_c extends CI_Controller
         );
         $hash = password_hash($password, $this->algo, $this->options);
         return $hash;
+    }
+
+    public function compressImage($patch, $sourcePatch)
+    {
+        $config_manip = array(
+            'image_library' => 'gd2',
+            'source_image' => $patch,
+            'new_image' => $sourcePatch,
+            'maintain_ratio' => TRUE,
+            'quality' => 65,
+        );
+
+        $this->load->library('image_lib', $config_manip);
+        if (!$this->image_lib->resize()) {
+            echo '<pre>';
+            var_dump($this->image_lib->display_errors());
+            die;
+            echo $this->image_lib->display_errors();
+        }
+
+        $this->image_lib->clear();
     }
 }
