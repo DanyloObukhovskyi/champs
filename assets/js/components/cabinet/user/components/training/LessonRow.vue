@@ -76,7 +76,7 @@
 <!--        v-if="!lesson.reviewExist && (!isPast && isStudentConfirmed) || (isPast && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today)) && isStudentConfirmed) && !user.isTrainer"-->
         <div class="lesson-bottom">
             <more-detail :lesson="lesson" :show="showMoreDetail" :is-absolute="isTrainerCabinetSmall"/>
-            <send-review :lesson="lesson" :show="showSendReview" v-if="(!isPast && isStudentConfirmed) || (isPast && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today)) && isStudentConfirmed) && !user.is_trainer"/>
+            <send-review :lesson="lesson" :show="showSendReview" v-if="(!isPast && isStudentConfirmed)  && !user.isTrainer || (isPast && !(new Date(lesson.dateAfter7Days) < new Date(lesson.today)) && isStudentConfirmed) && !user.isTrainer"/>
         </div>
     </div>
 </template>
@@ -157,6 +157,7 @@
                 return `${hours}:${minutes}`;
             },
             setConfirmed() {
+                console.log(this.user.isTrainer);
                 if (!this.isConfirmed) {
                     CabinetService.setConfirmed(this.lesson.id)
                         .then(lesson => {
