@@ -830,7 +830,7 @@ class Edit_c extends CI_Controller
             'source_image' => $patch,
             'new_image' => $sourcePatch,
             'maintain_ratio' => TRUE,
-            'quality' => 65,
+            'width' => 1000,
         );
 
         $this->load->library('image_lib', $config_manip);
