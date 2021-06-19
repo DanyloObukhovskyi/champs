@@ -29,7 +29,7 @@
                     <table class="mt-2">
                         <tr>
                             <td style="color: rgba(0,0,0,.3)">
-                                Ссылка на профиль <a class="text-orange" href="{{ user.discord }}">Дискорда ученика</a>
+                                Дискорд ученика: {{ user.discord }}
                             </td>
                         </tr>
                     </table>
@@ -80,8 +80,10 @@
                         в <strong>{{ dateWithTimeZone|date('H') }}:00</strong>.
                     </p>
                     <p class="mt-2">
-                        Теперь вы можете пообщаться с вашим тренером в
-                        <a class="text-orange" href="{{ trainer.discord }}">Discord</a>
+                        Теперь вы можете пообщаться с вашим тренером в Discord
+                    </p>
+                    <p class="mt-2">
+                        Дискорд тренера : {{ trainer.discord }}
                     </p>
                     <p class="mt-2">
                         Если у вас возникли вопросы, пишите нам на почту - <a class="text-orange"

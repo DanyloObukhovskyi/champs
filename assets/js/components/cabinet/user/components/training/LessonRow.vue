@@ -171,7 +171,7 @@
                     title: this.user.isTrainer ? 'Теперь вы можете общаться с учеником!' : 'Теперь вы можете общаться с тренером!',
                     html: `
                             <div class="mt-5 d-flex justify-content-around">
-                                <a href="${this.lesson.trainer.discord}" class="discord-button">Перейти в дискорд</a>
+                                <a href="https://discord.com/invite/rakSKuE" class="discord-button">Перейти в дискорд</a>
                                 <div class="w-40">
                                     <label for="">Скачать дискорд</label>
                                     <div class="d-flex justify-content-around">
