@@ -29,7 +29,7 @@
                     <table class="mt-2">
                         <tr>
                             <td style="color: rgba(0,0,0,.3)">
-                                Дискорд ученика - {{ user.discord }}
+                                <span class="text-orange"> Дискорд ученика </span> - {{ user.discord }}
                             </td>
                         </tr>
                     </table>
@@ -80,7 +80,7 @@
                         в <strong>{{ dateWithTimeZone|date('H') }}:00</strong>.
                     </p>
                     <p class="mt-2">
-                        Теперь вы можете пообщаться с вашим тренером в Discord - {{ trainer.discord }}
+                        Теперь вы можете пообщаться с вашим тренером в <span class="text-orange"> Discord </span> - {{ trainer.discord }}
                     </p>
                     <p class="mt-2">
                         Если у вас возникли вопросы, пишите нам на почту - <a class="text-orange"

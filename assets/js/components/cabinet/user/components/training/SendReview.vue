@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 <template>
     <div class="review-wrapper" v-if="show">
         <div class="review" v-if="!lesson.reviewExist">
@@ -80,6 +81,7 @@
 
 <script>
     import CabinetService from "../../../../../services/CabinetService";
+    import Swal from 'sweetalert2'
 
     export default {
         name: "SendReview",
@@ -99,24 +101,42 @@
         methods: {
             sendReview() {
                 this.load = true;
-                if(this.isUpdate === true){
-                    CabinetService
-                        .sendEditReview(this.lesson.trainer.id, this.lesson.review.rate, this.lesson.review.text, this.lesson.id)
-                        .then(res => {
-                            //this.rate = 1;
-                            this.lesson.reviewExist = true;
-                            this.load = false;
-                            this.isUpdate = false;
-                        })
-                } else {
-                    CabinetService
-                        .sendReview(this.lesson.trainer.id, this.lesson.review.rate, this.lesson.review.text, this.lesson.id)
-                        .then(res => {
-                            //this.rate = 1;
-                            this.lesson.reviewExist = true;
-                            this.load = false;
-                            this.isUpdate = false;
-                        })
+                if(!this.lesson.review.rate){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не поставили оценку!',
+                    })
+                    this.load = false;
+                }
+                if(!this.lesson.review.text){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не оставили комментарий!',
+                    })
+                    this.load = false;
+                }
+                if(this.lesson.review.rate && this.lesson.review.text){
+                    if(this.isUpdate === true){
+                        CabinetService
+                            .sendEditReview(this.lesson.trainer.id, this.lesson.review.rate, this.lesson.review.text, this.lesson.id)
+                            .then(res => {
+                                //this.rate = 1;
+                                this.lesson.reviewExist = true;
+                                this.load = false;
+                                this.isUpdate = false;
+                            })
+                    } else {
+                        CabinetService
+                            .sendReview(this.lesson.trainer.id, this.lesson.review.rate, this.lesson.review.text, this.lesson.id)
+                            .then(res => {
+                                //this.rate = 1;
+                                this.lesson.reviewExist = true;
+                                this.load = false;
+                                this.isUpdate = false;
+                            })
+                    }
                 }
             },
             editReview()
