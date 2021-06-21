@@ -5,12 +5,15 @@
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                     <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
-                        <iframe :src="'https://www.youtube.com/embed/' + video.videoId"
-                                class="logo videoBox"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                        </iframe>
+                        <div class="youtube" :data-embed="video.videoId">
+                            <div class="play-button"></div>
+                        </div>
+<!--                        <iframe :src="'https://www.youtube.com/embed/' + video.videoId"-->
+<!--                                class="logo videoBox"-->
+<!--                                frameborder="0"-->
+<!--                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"-->
+<!--                                allowfullscreen>-->
+<!--                        </iframe>-->
                     </div>
                     <div class="title">
                         {{video.title}}
@@ -73,11 +76,39 @@
                     .then(channelId => {
                         this.channelId = channelId;
                     })
+            },
+            getImages()
+            {
+                var youtube = document.querySelectorAll( ".youtube" );
+
+                for (var i = 0; i < youtube.length; i++) {
+
+                    var source = "https://img.youtube.com/vi/"+ youtube[i].dataset.embed +"/sddefault.jpg";
+
+                    var image = new Image();
+                    image.src = source;
+                    image.addEventListener( "load", function() {
+                        youtube[ i ].appendChild( image );
+                    }( i ) );
+
+                    youtube[i].addEventListener( "click", function() {
+
+                        var iframe = document.createElement( "iframe" );
+
+                        iframe.setAttribute( "frameborder", "0" );
+                        iframe.setAttribute( "allowfullscreen", "" );
+                        iframe.setAttribute( "src", "https://www.youtube.com/embed/"+ this.dataset.embed +"?rel=0&showinfo=0&autoplay=1" );
+
+                        this.innerHTML = "";
+                        this.appendChild( iframe );
+                    } );
+                };
             }
         },
         mounted() {
             this.getVideoNews();
             this.getChannelId();
+            this.getImages();
         }
     }
 </script>
@@ -254,5 +285,57 @@
         -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 100%);
         -webkit-mask-size: 100% 50%;
         -webkit-mask-position: left top, left bottom;
+    }
+
+    .youtube {
+        background-color: #000;
+        margin-bottom: 30px;
+        position: relative;
+        padding-top: 56.25%;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .youtube img {
+        width: 100%;
+        top: -16.82%;
+        left: 0;
+        opacity: 0.7;
+    }
+    .youtube .play-button {
+        width: 90px;
+        height: 60px;
+        background-color: #333;
+        box-shadow: 0 0 30px rgba( 0,0,0,0.6 );
+        z-index: 1;
+        opacity: 0.8;
+        border-radius: 6px;
+    }
+    .youtube .play-button:before {
+        content: "";
+        border-style: solid;
+        border-width: 15px 0 15px 26.0px;
+        border-color: transparent transparent transparent #fff;
+    }
+    .youtube img,
+    .youtube .play-button {
+        cursor: pointer;
+    }
+    .youtube img,
+    .youtube iframe,
+    .youtube .play-button,
+    .youtube .play-button:before {
+        position: absolute;
+    }
+    .youtube .play-button,
+    .youtube .play-button:before {
+        top: 50%;
+        left: 50%;
+        transform: translate3d( -50%, -50%, 0 );
+    }
+    .youtube iframe {
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
     }
 </style>
