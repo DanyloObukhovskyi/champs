@@ -1,4 +1,9 @@
 var Encore = require('@symfony/webpack-encore');
+const CompressionPlugin = require("compression-webpack-plugin");
+const zlib = require("zlib");
+const zopfli = require("@gfx/zopfli");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const webpack = require('webpack');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -79,6 +84,18 @@ Encore
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
     .enableVueLoader()
-;
 
-module.exports = Encore.getWebpackConfig();
+    .addPlugin(new CompressionPlugin({
+        compressionOptions: {
+            numiterations: 15,
+        },
+        algorithm(input, compressionOptions, callback) {
+            return zopfli.gzip(input, compressionOptions, callback);
+        },
+    }))
+;
+const webpackConfig = Encore.getWebpackConfig();
+webpackConfig.optimization.minimizer = [
+    new UglifyJsPlugin()
+];
+module.exports = webpackConfig;
