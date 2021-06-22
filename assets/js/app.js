@@ -9,7 +9,7 @@
 import '../css/app.css';
 import '../css/sweet-alert.css';
 import 'v-title/lib/element-ui';
-// import 'vue-lazy-youtube-video/dist/style.css'
+import 'vue-lazy-youtube-video/dist/style.css'
 
 import Vuex from 'vuex'
 import VTitle from 'v-title';

@@ -6,7 +6,6 @@
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                     <LazyYoutubeVideo :src="'https://www.youtube.com/embed/' + video.videoId"
                                       preview-image-size="sddefault"
-                                      :thumbnail="getVideoLogo(video.videoId)"
                     />
                     <div class="title">
                         {{video.title}}
