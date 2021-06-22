@@ -15,31 +15,33 @@
     {% block schema %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
-    <link rel="preconnect" rel="shortcut icon" href="/images/favicon.ico" type="image/ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/ico">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
-    <link rel="preconnect" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
-
-    {{ encore_entry_link_tags('app') }}
-    {% block css %}{% endblock %}
-        {% include 'yandex.metric.html.twig' %}
-    <link  type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>
-    <link  type="text/css" rel="stylesheet" href="/assets/styles/404.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/styles/404.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/base.css"/>
 
-    <script   src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-    <script  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
-    <script  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
+    <script src="/assets/js/jquery.bracket.min.js"></script>
+    <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {{ encore_entry_link_tags('app') }}
+    {% block css %}{% endblock %}
+    {% include 'yandex.metric.html.twig' %}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>
 </head>
 <body>
 <div id="app">
@@ -75,9 +77,6 @@
 </div>
 {% include 'footer.html.twig' %}
 {% include 'popup.html.twig' %}
-<script  src="/assets/js/jquery.bracket.min.js"></script>
-<script  src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
-<script  async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 {% block js %}{% endblock %}
 </body>
 </html>
