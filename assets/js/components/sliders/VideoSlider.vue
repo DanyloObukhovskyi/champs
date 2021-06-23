@@ -5,12 +5,9 @@
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                     <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
-                        <iframe :src="'https://www.youtube.com/embed/' + video.videoId"
-                                class="logo videoBox"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                        </iframe>
+                        <LazyYoutubeVideo :src="'https://www.youtube.com/embed/' + video.videoId"
+                                          preview-image-size="sddefault"
+                        />
                     </div>
                     <div class="title">
                         {{video.title}}
