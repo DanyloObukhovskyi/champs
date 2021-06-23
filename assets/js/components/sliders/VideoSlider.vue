@@ -255,10 +255,4 @@
         -webkit-mask-size: 100% 50%;
         -webkit-mask-position: left top, left bottom;
     }
-    
-    picture {
-        width: auto;
-        display: contents;
-        height: 202px;
-    }
 </style>
