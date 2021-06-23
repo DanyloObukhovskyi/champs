@@ -43,7 +43,7 @@
                     centerMode: true,
                     centerPadding: "20px",
                     focusOnSelect: true,
-                    infinite: true,
+                    infinite: false,
                     slidesToShow: 3,
                     speed: 500,
                     dots: true,
@@ -102,8 +102,9 @@
 
     .video-slider .slider-body .carousel-item .preview {
         overflow: hidden;
-        max-height: fit-content;
+        max-height: 14vw;
         position: relative;
+        max-width: 25vw;
     }
 
 	.video-slider .slider-body .carousel-item .preview iframe {
