@@ -41,7 +41,6 @@
                 videos: [],
                 settings: {
                     centerMode: true,
-                    centerPadding: "20px",
                     focusOnSelect: true,
                     infinite: false,
                     slidesToShow: 3,
