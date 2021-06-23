@@ -63,8 +63,8 @@
         </div>
     </div>
 </div>
-<script src="https://player.twitch.tv/js/embed/v1.js"></script>
-<script src="https://www.youtube.com/iframe_api"></script>
+<script onload="getPlayerPopUp()" data-aload data-original="https://www.youtube.com/iframe_api"></script>
+<script onload="getPlayerPopUp()" data-aload data-original="https://player.twitch.tv/js/embed/v1.js"></script>
 <script type="text/javascript">
     {% set video = setting.get('main_video') %}
     let mute = false;
@@ -94,7 +94,7 @@
         }
     }
 
-    (function() {
+    function getPlayerPopUp(){
         if(videoTypeID === '1'){
             if (getCookie('hide_popup_video') !== undefined) {
                 return;
@@ -109,11 +109,10 @@
                 muted: false,
                 autoplay: true,
                 // only needed if your site is also embedded on embed.example.com and othersite.example.com
-                parent: ["test.champs.pro"]
+                parent: ["champs.pro"]
             };
             playerTW = new Twitch.Player('playerTW', options);
             playerTW.addEventListener(Twitch.Player.READY, () => {
-              console.log('playerTW.getMuted() ', playerTW.getMuted())
                 document.getElementById('stream').style.display = 'flex';
                 document.getElementById('playerTW').style.display = 'block';
                 document.getElementById('buttons').style.display = 'none';
@@ -190,7 +189,7 @@
                 // });
             });
         }
-    })();
+    };
 
     function onYouTubeIframeAPIReady() {
         if (getCookie('hide_popup_video') !== undefined) {
