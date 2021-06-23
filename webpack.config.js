@@ -86,12 +86,15 @@ Encore
     .enableVueLoader()
 
     .addPlugin(new CompressionPlugin({
+        filename: "[path][base].br",
+        algorithm: "brotliCompress",
+        test: /\.(js|css|html|svg|png)$/,
         compressionOptions: {
-            numiterations: 15,
+            params: {
+                [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+            },
         },
-        algorithm(input, compressionOptions, callback) {
-            return zopfli.gzip(input, compressionOptions, callback);
-        },
+        deleteOriginalAssets: false,
     }))
 ;
 const webpackConfig = Encore.getWebpackConfig();
