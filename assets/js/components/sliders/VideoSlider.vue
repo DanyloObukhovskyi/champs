@@ -4,7 +4,7 @@
         <div class="slider-body">
             <slick-carousel v-bind="settings" v-if="videos.length > 0">
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
-                    <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
+                    <div class="preview" style="overflow: hidden; max-height: fit-content; position: relative;">
                         <LazyYoutubeVideo :src="'https://www.youtube.com/embed/' + video.videoId"
                                           preview-image-size="sddefault"/>
                     </div>
