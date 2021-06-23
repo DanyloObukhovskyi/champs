@@ -40,7 +40,7 @@
             return {
                 videos: [],
                 settings: {
-                    centerMode: true,
+                    centerMode: false,
                     focusOnSelect: true,
                     infinite: false,
                     slidesToShow: 3,
