@@ -7,7 +7,7 @@
                     <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
                         <LazyYoutubeVideo :src="'https://www.youtube.com/embed/' + video.videoId"
                                           preview-image-size="sddefault"
-                        />
+                        /> 
                     </div>
                     <div class="title">
                         {{video.title}}
@@ -114,7 +114,7 @@
 
     .video-slider .slider-body .carousel-item .preview::after {
         content: "";
-        width: 100%;
+        width: 25vw;
         height: 0.15vw;
         position: absolute;
         left: 0;
@@ -152,7 +152,6 @@
     .video-slider .slider-body .carousel-item div.date {
         color: #5c6b79;
     }
-
 </style>
 
 <style>
