@@ -152,11 +152,7 @@
     .video-slider .slider-body .carousel-item div.date {
         color: #5c6b79;
     }
-    picture{
-        width: auto;
-        display: contents;
-        height: 202px;
-    }
+
 </style>
 
 <style>
@@ -258,5 +254,10 @@
         -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 100%);
         -webkit-mask-size: 100% 50%;
         -webkit-mask-position: left top, left bottom;
+    }
+    picture{
+        width: auto;
+        display: contents;
+        height: 202px;
     }
 </style>
