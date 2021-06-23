@@ -74,6 +74,16 @@
     let videoTypeID = "{{ video.videoType['video_type'] ?? null }}";
 
     let full = false;
+
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
     //temporary fix, rewrite this part for add videos
     // let playerTW = new Object();
     // playerTW.pause= function (){}
@@ -99,16 +109,8 @@
             if (getCookie('hide_popup_video') !== undefined) {
                 return;
             }
-            var tag = document.createElement('script');
 
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// 3. This function creates an <iframe> (and YouTube player)
-//    after the API code downloads.
-            var player;
-            
             var options = {
                 scrolling: 'no',
                 allowfullscreen: "true",
