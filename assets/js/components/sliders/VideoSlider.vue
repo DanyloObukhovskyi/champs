@@ -114,7 +114,7 @@
 
     .video-slider .slider-body .carousel-item .preview::after {
         content: "";
-        width: 25vw;
+        width: 100%;
         height: 0.15vw;
         position: absolute;
         left: 0;
@@ -151,6 +151,11 @@
 
     .video-slider .slider-body .carousel-item div.date {
         color: #5c6b79;
+    }
+    picture{
+        width: auto;
+        display: contents;
+        height: 202px;
     }
 </style>
 
