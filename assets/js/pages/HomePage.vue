@@ -249,13 +249,13 @@ export default {
 <style scoped>
 
 .news-wrapper {
-    background: url(/images/home/background2.png) no-repeat;
+    /*background: url(/images/home/background2.png) no-repeat;*/
     background-position: bottom;
     background-size: 100%;
 }
 
 .dark .news-wrapper {
-    background: url(/images/home/background2Black.png) no-repeat;
+    /*background: url(/images/home/background2Black.png) no-repeat;*/
     background-position: bottom;
     background-size: 100%;
 }
