@@ -6,8 +6,7 @@
                 <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
                     <div class="preview" style="overflow: hidden; max-height: 15vw; position: relative;">
                         <LazyYoutubeVideo :src="'https://www.youtube.com/embed/' + video.videoId"
-                                          preview-image-size="sddefault"
-                        /> 
+                                          preview-image-size="sddefault"/>
                     </div>
                     <div class="title">
                         {{video.title}}
@@ -114,7 +113,7 @@
 
     .video-slider .slider-body .carousel-item .preview::after {
         content: "";
-        width: 25vw;
+        width: 100%;
         height: 0.15vw;
         position: absolute;
         left: 0;
@@ -253,5 +252,8 @@
         -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 100%);
         -webkit-mask-size: 100% 50%;
         -webkit-mask-position: left top, left bottom;
+    }
+    picture{
+        display: contents;
     }
 </style>
