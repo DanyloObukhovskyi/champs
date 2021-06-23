@@ -21,11 +21,12 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <link type="text/css" rel="stylesheet" href="/assets/styles/404.css"/>
     <link type="text/css" rel="stylesheet" href="/assets/styles/base.css"/>
+    <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -37,11 +38,9 @@
             crossorigin="anonymous"></script>
     <script src="/assets/js/jquery.bracket.min.js"></script>
     <script src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     {{ encore_entry_link_tags('app') }}
     {% block css %}{% endblock %}
     {% include 'yandex.metric.html.twig' %}
-    <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>
 </head>
 <body>
 <div id="app">
@@ -78,5 +77,6 @@
 {% include 'footer.html.twig' %}
 {% include 'popup.html.twig' %}
 {% block js %}{% endblock %}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
