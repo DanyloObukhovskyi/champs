@@ -102,7 +102,7 @@
 
     .video-slider .slider-body .carousel-item .preview {
         overflow: hidden;
-        max-height: 14vw;
+        max-height: fit-content;
         position: relative;
     }
 
