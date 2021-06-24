@@ -118,7 +118,7 @@
             };
             playerTW = new Twitch.Player('playerTW', options);
             playerTW.addEventListener(Twitch.Player.READY, () => {
-              console.log('playerTW.getMuted() ', playerTW.getMuted())
+                console.log('playerTW.getMuted() ', playerTW.getMuted())
                 document.getElementById('stream').style.display = 'flex';
                 document.getElementById('playerTW').style.display = 'block';
                 document.getElementById('buttons').style.display = 'none';
@@ -279,7 +279,7 @@
         document.getElementById('streamPopupLink').querySelector('span').addEventListener('click', (e) => {
             if (window.innerWidth > 600) {
                 if (links !== null) {
-                  window.open('https://www.youtube.com/watch?v=' + links + '&has_verified=1', "_blank");
+                    window.open('https://www.youtube.com/watch?v=' + links + '&has_verified=1', "_blank");
                 }
             } else {
                 if (!full) {
