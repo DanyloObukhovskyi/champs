@@ -28,10 +28,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>#}
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{#    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"#}
+{#            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"#}
+{#            crossorigin="anonymous"></script>#}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
@@ -79,9 +79,12 @@
     {{ encore_entry_script_tags('app') }}
 </div>
 {% include 'footer.html.twig' %}
-{% include 'popup.html.twig' %}
+{#{% include '' %}#}
 {% block js %}{% endblock %}
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script async type="text/javascript">!function(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src="https://vk.com/js/api/openapi.js?169",t.onload=function(){VK.Retargeting.Init("VK-RTRG-1000201-8qL3W"),VK.Retargeting.Hit()},document.head.appendChild(t)}();</script><noscript><img src="https://vk.com/rtrg?p=VK-RTRG-1000201-8qL3W" style="position:fixed; left:-999px;" alt=""/></noscript>
+<script type="text/javascript">
+
+    $(function(){$.get('popup.html.twig');}); </script>
 </body>
 </html>
