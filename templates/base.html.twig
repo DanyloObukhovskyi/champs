@@ -18,57 +18,27 @@
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/ico">
     <link rel= "dns-prefetch" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
-{#    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>#}
+    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel= "dns-prefetch" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
-{#    <link type="text/css" rel="stylesheet" href="/assets/styles/404.css"/>#}
-{#    <link type="text/css" rel="stylesheet" href="/assets/styles/base.css"/>#}
-{#    <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>#}
+    <link type="text/css" rel="stylesheet" href="/assets/styles/404.css"/>
+    <link type="text/css" rel="stylesheet" href="/assets/styles/base.css"/>
+    <link type="text/css" rel="stylesheet" href="/assets/styles/politica.css"/>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    <script  src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script async src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
     <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-{#    <script async src="/assets/js/jquery.bracket.min.js"></script>#}
+    <script async src="/assets/js/jquery.bracket.min.js"></script>
     <script async src="https://kit.fontawesome.com/23b6115dfe.js" crossorigin="anonymous"></script>
-    <script>
-        /* Beginning of async download code. */
-        window.onload = function(){
-            function loadjscssfile(filename, filetype) {
-                if(filetype == "js") {
-                    var cssNode = document.createElement('script');
-                    cssNode.setAttribute("type", "text/javascript");
-                    cssNode.setAttribute("src", filename);
-                } else if(filetype == "css") {
-                    var cssNode = document.createElement("link");
-                    cssNode.setAttribute("rel", "stylesheet");
-                    cssNode.setAttribute("type", "text/css");
-                    cssNode.setAttribute("href", filename);
-                }
-                if(typeof cssNode != "undefined")
-                    document.getElementsByTagName("head")[0].appendChild(cssNode);
-            }
-            loadjscssfile("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css", "css");
-            // loadjscssfile("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap", "css");
-            // loadjscssfile("https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap", "css");
-            loadjscssfile("/assets/styles/404.css", "css");
-            loadjscssfile("/assets/styles/base.css", "css");
-            loadjscssfile("/assets/styles/politica.css", "css");
-            // loadjscssfile("https://cdn.jsdelivr.net/npm/vue@2.6.11", "js");
-            // loadjscssfile("https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js", "js");
-            // loadjscssfile("https://code.jquery.com/jquery-3.2.1.slim.min.js", "js");
-            loadjscssfile("/assets/js/jquery.bracket.min.js", "js");
-            // loadjscssfile("https://kit.fontawesome.com/23b6115dfe.js", "js");
-        };
-        /* End of async download code. */
-    </script>
+
     {{ encore_entry_link_tags('app') }}
     {% block css %}{% endblock %}
     {% include 'yandex.metric.html.twig' %}
