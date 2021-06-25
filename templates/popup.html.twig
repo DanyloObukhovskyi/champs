@@ -114,6 +114,7 @@
                 // only needed if your site is also embedded on embed.example.com and othersite.example.com
                 parent: ["champs.pro"]
             };
+            console.log(links);
             playerTW = new Twitch.Player('playerTW', options);
             playerTW.addEventListener(Twitch.Player.READY, () => {
                 console.log('playerTW.getMuted() ', playerTW.getMuted())
@@ -277,6 +278,8 @@
 <script type="text/javascript" async>
 
     $(document).ready(function() {
-        $("#include").load("/youtube.html.twig");
+        setTimeout(
+            $("#include").load("/youtube.html.twig"),
+            1000);
     });
 </script>
