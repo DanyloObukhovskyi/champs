@@ -277,9 +277,13 @@
 <div id="include"></div>
 <script type="text/javascript" async>
 
+    function getYouTube()
+    {
+        $("#include").load("/youtube.html.twig");
+    }
     $(document).ready(function() {
         setTimeout(
-            $("#include").load("/youtube.html.twig"),
+            getYouTube(),
             60000);
     });
 </script>
