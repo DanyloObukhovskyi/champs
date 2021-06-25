@@ -275,13 +275,13 @@
     })
 </script>
 <div id="include"></div>
-<script type="text/javascript" async>
+<script type="text/javascript" defer>
 
     function getYouTube()
     {
         $("#include").load("/youtube.html.twig");
     }
-    $(document).ready(function() {
+    (function(){
         setTimeout(
             getYouTube(),
             60000);
