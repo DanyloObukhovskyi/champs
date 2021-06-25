@@ -35,7 +35,7 @@
                         </div>
                     </template>
                     <lamp-header title="Горячие новости"/>
-                    <div class="news">
+                    <div class="news" :style="btnStyles">
                         <hot-news :news="hotNews"/>
                     </div>
                 </div>
@@ -107,7 +107,8 @@ export default {
                 titles: [],
                 texts: [],
                 tags: []
-            }
+            },
+            height: '100%'
         }
     },
     watch: {
@@ -138,6 +139,12 @@ export default {
             }
             return news;
         },
+        btnStyles() {
+            return {
+                'max-height': `${this.height}`,
+                'overflow-y': 'scroll'
+            };
+        }
     },
     methods: {
         getHotNews() {
@@ -198,7 +205,7 @@ export default {
             const self = this;
             window.onscroll = () => {
                 const scrollable = $(document).height() - ($(window).innerHeight() + $(window).scrollTop());
-
+                this.changeMaxHeight();
                 if (scrollable <= 2400) {
                     self.getNews()
                     self.getHotNews()
@@ -234,7 +241,11 @@ export default {
                 top: 100,
                 behavior: 'smooth'
             });
-        }
+        },
+        changeMaxHeight()
+        {
+            this.height = $('.right').height()+ 'px'
+        },
     },
     mounted() {
         this.getHotNews();
@@ -265,6 +276,9 @@ export default {
     margin-top: 1vw;
     margin-right: 1vw;
 }
+.news::-webkit-scrollbar {
+    width:0px;
+}
 
 .news-wrapper .left .hot-news {
     margin-top: 1vw;
@@ -274,6 +288,7 @@ export default {
     width: 75%;
     margin-top: 1vw;
     margin-right: -.6vw;
+    height: max-content;
 }
 
 .news-wrapper .right .news-row {
@@ -425,4 +440,9 @@ export default {
     color: #8298ac;
     margin-left: .2vw;
 }
+</style>
+<style>
+    .news::-webkit-scrollbar {
+        width:0px;
+    }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="news d-flex">
-        <div class="col-9 pl-0">
+        <div class="col-9 pl-0 news-page-row">
             <div class="tags">
                 <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
                     {{ tag }}
@@ -20,7 +20,7 @@
                 <loader v-show="load"></loader>
             </div>
         </div>
-        <div id="filters" class="articles__content col-3 pr-0">
+        <div id="filters" class="articles__content col-3 pr-0" :style="btnStyles">
             <news-filters :filters="filters" @reload="reload"/>
             <hot-news :news="hotNews"></hot-news>
         </div>
@@ -73,6 +73,7 @@ export default {
                 tags: []
             },
             pageEnd: false,
+            height: '100%'
         }
     },
     watch: {
@@ -108,6 +109,12 @@ export default {
         },
         lang() {
             return newsService.lang;
+        },
+        btnStyles() {
+            return {
+                'max-height': `${this.height}`,
+                'overflow-y': 'scroll'
+            };
         }
     },
     methods: {
@@ -160,6 +167,8 @@ export default {
             const self = this;
             window.onscroll = () => {
                 const scrollable = $("body").height() - ($(window).innerHeight() + $(window).scrollTop());
+                this.changeMaxHeight();
+
                 if (scrollable <= 10) {
                     self.getNews()
                     self.getHotNews()
@@ -220,7 +229,11 @@ export default {
                         }
                     })
             }
-        }
+        },
+        changeMaxHeight()
+        {
+            this.height = $('.news-page-row').height()+ 'px'
+        },
     },
     mounted() {
         //window.history.pushState('page2', '', `/${this.lang}/news/`);
@@ -291,6 +304,10 @@ export default {
     height: 18vw;
     background: rgb(255, 255, 255);
     background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 0) 65%);
+}
+
+.news-page-row {
+    height: max-content;
 }
 
 .news .news-row .article-wrapper .bookmark {
@@ -404,4 +421,12 @@ export default {
     color: #8298ac;
     margin-left: .2vw;
 }
+div#filters::-webkit-scrollbar {
+    width:0px;
+}
+</style>
+<style>
+    div#filters::-webkit-scrollbar {
+        width:0px;
+    }
 </style>
