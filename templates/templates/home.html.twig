@@ -39,7 +39,12 @@
                         "width": "300"
                     },
                     "author": [{"@type":"Person", "name":"Champs Pro"}]
-                },
+                }
+                {% if((loop.last)) %}
+
+                {% else %}
+                    ,
+                {% endif %}
             {% endfor %}
             ]
         }
