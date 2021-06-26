@@ -111,7 +111,7 @@ class MainController extends DefController
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decoratorForAllNews($newsEntity);
+            $news[] = $this->newsService->decoratorForJsonNews($newsEntity);
         }
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
@@ -150,7 +150,7 @@ class MainController extends DefController
 
         $news = [];
         foreach ($newsEntities as $newsEntity) {
-            $news[] = $this->newsService->decoratorForAllNews($newsEntity);
+            $news[] = $this->newsService->decoratorForJsonNews($newsEntity);
         }
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 

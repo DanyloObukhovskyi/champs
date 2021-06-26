@@ -381,4 +381,52 @@ class NewsService extends EntityService
             'commentsCount' => count($news->getComments())
         ];
     }
+
+    /**
+     * @param News $news
+     * @return array
+     */
+    public function decoratorForJsonNews(News $news): array
+    {
+        $tags = [];
+
+        /** @var NewsTag $tagsEntity */
+        foreach ($news->getTags() as $tagsEntity) {
+            $tags[] = [
+                'title' => $tagsEntity->getTitle(),
+            ];
+        }
+
+        $newsTypeId = $news->getType();
+        $type = [];
+        if(!empty($newsTypeId)){
+            $type = $this->entityManager
+                ->getRepository(NewsType::class)
+                ->findOneBy(['id' => $newsTypeId]);
+        }
+
+        if (empty($news->getUrl())) {
+            $generator = new SlugGenerator;
+
+            $news->setUrl($generator->generate($news->getTitle()));
+        }
+
+        return [
+            'id' => $news->getId(),
+            'title' => $news->getTitle(),
+            'text' => strip_tags(mb_strimwidth($news->getText(), 0, 900, "...")),
+            'logo' => $news->getLogo(),
+            'date' => $news->getDate()->format('m-d H:i'),
+            'url' => $news->getUrl(),
+            'type' => $type,
+            'tags' => $tags,
+            'game' => !empty($news->getGame()) ? $news->getGame() : null,
+            'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
+            'date_ru_msk' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($news->getDate()->format('d F Y')),
+            'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
+            'views' => $news->getViews() ?? 0,
+            'commentsCount' => count($news->getComments())
+        ];
+    }
+
 }
