@@ -414,7 +414,7 @@ class NewsService extends EntityService
         return [
             'id' => $news->getId(),
             'title' => $news->getTitle(),
-            'text' => str_replace( '&amp;raquo;', '', str_replace( '&amp;laquo;', '', strip_tags(mb_strimwidth($news->getText(), 0, 900, "...")))),
+            'text' => '',
             'logo' => $news->getLogo(),
             'date' => $news->getDate()->format('m-d H:i'),
             'url' => $news->getUrl(),
