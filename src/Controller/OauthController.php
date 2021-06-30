@@ -116,7 +116,7 @@ class OauthController extends AbstractController
                 ]);
 
                 if (empty($user)) {
-                    $user = $this->userService->createUserFromSteamData($steamId, $this->passwordEncoder);
+                    $user = $this->userService->createUserFromSteamData($player, $steamId, $this->passwordEncoder);
                 }
                 $this->loginUser($user);
             }
