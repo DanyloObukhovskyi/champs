@@ -440,7 +440,7 @@ class UserService  extends EntityService
      * @param $passwordEncoder
      * @return User|null
      */
-    public function createUserFromSteamData($steamId, $passwordEncoder): ?User
+    public function createUserFromSteamData($player, $steamId, $passwordEncoder): ?User
     {
         $user = new User();
         $user->setEmail('steam-email-' . $steamId . '@champs.pro');
@@ -456,6 +456,13 @@ class UserService  extends EntityService
         if(!empty($timeZone)){
             $user->setTimezone($timeZone);
         }
+
+        $photo = $this->downloadUserPhoto($player->avatarfull);
+        $user->setPhoto($photo);
+
+        $user->setNickname($player->personaname);
+
+        $user->setName($player->realname);
 
         $user->setIsTrainer(false);
         $user->setPurse(false);

@@ -103,6 +103,12 @@ class OauthController extends AbstractController
 
             if (count($key) > 0) {
                 $steamId = $key[1];
+                $STEAMAPI = 'ECC1265219ADE390299A46E256BDC94F';
+                $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$STEAMAPI&steamids=$steamId";
+                $json_object= file_get_contents($url);
+                $json_decoded = json_decode($json_object);
+
+                $player = $json_decoded->response->players[0];
 
                 /** @var User $user */
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
@@ -140,13 +146,15 @@ class OauthController extends AbstractController
                 $json_object= file_get_contents($url);
                 $json_decoded = json_decode($json_object);
 
+                $player = $json_decoded->response->players[0];
+
                 /** @var User $user */
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
                     'steam_id' => $steamId
                 ]);
 
                 if (empty($user)) {
-                    $user = $this->userService->createUserFromSteamData($steamId, $this->passwordEncoder);
+                    $user = $this->userService->createUserFromSteamData($player, $steamId, $this->passwordEncoder);
                 }
                 $this->loginUser($user);
             }
