@@ -120,6 +120,42 @@ class OauthController extends AbstractController
     }
 
     /**
+     * @Route("/ru/oauth/steam_test", name="oauth_steam_test")
+     */
+    public function steamTest(Request $request, AuthenticationUtils $authenticationUtils)
+    {
+
+        if (!empty($request->get('state')) and $request->get('state') == 'steam') {
+            // Вытаскиваем id юзера
+            preg_match(
+                "/^https:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/",
+                $request->get('openid_identity'),
+                $key
+            );
+
+            if (count($key) > 0) {
+                $steamId = $key[1];
+                $STEAMAPI = 'ECC1265219ADE390299A46E256BDC94F';
+                $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$STEAMAPI&steamids=$steamId";
+                $json_object= file_get_contents($url);
+                $json_decoded = json_decode($json_object);
+
+                /** @var User $user */
+                $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
+                    'steam_id' => $steamId
+                ]);
+
+                if (empty($user)) {
+                    $user = $this->userService->createUserFromSteamData($steamId, $this->passwordEncoder);
+                }
+                $this->loginUser($user);
+            }
+        }
+
+        return $this->redirectToRoute('main_redirect');
+    }
+
+    /**
      * @Route("/ru/auth/discord/", name="discord.auth")
      */
     public function loginWithDiscord()
@@ -132,7 +168,7 @@ class OauthController extends AbstractController
      */
     public function discordLoginHook(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        $discordUser = $this->discordAuthService->getUserByToken($request->get('code'));
+        $discordUser = $this->discordAuthService->getUserFByToken($request->get('code'));
 
         if (isset($discordUser)) {
             /** @var User $user */
