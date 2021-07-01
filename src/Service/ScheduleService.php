@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Repository\ScheduleRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\LessonTime;
+
 
 class ScheduleService extends EntityService
 {
@@ -98,6 +100,7 @@ class ScheduleService extends EntityService
                     $carbonDayDate->format("Y-m-d"),
                     $carbonDayDate->hour
                 );
+
             $carbonNow = Carbon::now();
             $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
 
@@ -109,7 +112,33 @@ class ScheduleService extends EntityService
                         $status = Schedule::TIME_STATUS_RESERVED;
                     }
                 } else {
-                    $status = $scheduleEntity->getStatus();
+                    $lessonTime = $this->entityManager
+                        ->getRepository(LessonTime::class)
+                        ->findOneBy(['trainerTime' => $scheduleEntity->getId()]);
+
+                    if(!empty($lessonTime)){
+                        $dateOrder = Carbon::createFromFormat(
+                            "Y-m-d %H:%i:%s",
+                            $lessonTime->getLesson()->getPayment()->getCreatedAt()->format("Y-m-d %H:%i:%s")
+                        );
+                        $dateAfterTwentyMinutes = $dateOrder->addMinutes(20);
+
+                        $lessonTime->getLesson()->getPayment()->getCreatedAt();
+
+                        $bookedDate = $lessonTime->getLesson()->getPayment()->getCreatedAt()->format("Y-m-d %H:%i:%s");
+                        if($dateAfterTwentyMinutes->format("Y-m-d %H:%i:%s") > $bookedDate){
+                            if($lessonTime->getLesson()->getPayment()->getPaymentStatus() === 0){
+                                $status = 1;
+                            } else {
+                                $status = $scheduleEntity->getStatus();
+                            }
+                        } else {
+                            $status = $scheduleEntity->getStatus();
+                        }
+                    } else {
+                        $status = $scheduleEntity->getStatus();
+                    }
+
                 }
                 $schedules[] = [
                     'date' => $scheduleEntity->getDate(),
