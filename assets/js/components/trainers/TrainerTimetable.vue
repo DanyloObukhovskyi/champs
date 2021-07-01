@@ -158,10 +158,50 @@
         },
         methods: {
             showPaymentModal() {
-                if (this.trainingType === undefined || this.trainingType === null) {
-                    this.showError('Выберете тип тренировки!')
+                let isFull = true;
+                let type = '';
+                if(!this.user.name){
+                    isFull = false
+                    type   = 'имя'
+                }
+                if(!this.user.family){
+                    isFull = false
+                    type   = 'фамилию'
+                }
+                if(!this.user.nickname){
+                    isFull = false
+                    type   = 'никнейм'
+                }
+                if(!this.user.gender){
+                    isFull = false
+                    type   = 'пол'
+                }
+                if(!this.user.email){
+                    isFull = false
+                    type   = 'эмейл'
+                }
+                if(!this.user.country){
+                    isFull = false
+                    type   = 'странна'
+                }
+                if(!this.user.bdate){
+                    isFull = false
+                    type   = 'день рождение'
+                }
+                if(!isFull){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не заполнили поле '  + type + ' в настройках аккаунта',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 } else {
-                    $('#confirmPaymentModal').modal()
+                    if (this.trainingType === undefined || this.trainingType === null) {
+                        this.showError('Выберете тип тренировки!')
+                    } else {
+                        $('#confirmPaymentModal').modal()
+                    }
                 }
             },
             showError(message) {

@@ -45,7 +45,7 @@
     </aside>
 
     <div class="main-content">
-        <h1 class="main-title">Ранги</h1>
+        <h1 class="main-title">Выплаты Тренерам</h1>
         <div class="relative">
             <div id="app">
                 <div class="tab-content">
@@ -104,7 +104,7 @@
                                         {{statuses[transaction.status]}}
                                     </td>
                                     <td class="d-flex" style="width: 25%;">
-                                        <button class="btn btn-success btn-small"
+                                        <button v-if="transaction.status !== 'success'" class="btn btn-success btn-small"
                                                 @click="transaction.status = 'success'">
                                                 Подтвердить
                                         </button>
