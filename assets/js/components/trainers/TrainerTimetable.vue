@@ -159,40 +159,48 @@
         methods: {
             showPaymentModal() {
                 let isFull = true;
-                let type = '';
+                let type = [];
                 if(!this.user.name){
                     isFull = false
-                    type   = 'имя'
+                    type.push('имя');
                 }
                 if(!this.user.family){
                     isFull = false
-                    type   = 'фамилию'
+                    type.push('фамилию');
                 }
                 if(!this.user.nickname){
                     isFull = false
-                    type   = 'никнейм'
+                    type.push('никнейм');
                 }
                 if(!this.user.gender){
                     isFull = false
-                    type   = 'пол'
+                    type.push('пол');
                 }
                 if(!this.user.email){
                     isFull = false
-                    type   = 'эмейл'
+                    type.push('эмейл');
                 }
                 if(!this.user.country){
                     isFull = false
-                    type   = 'странна'
+                    type.push('странна');
                 }
                 if(!this.user.bdate){
                     isFull = false
-                    type   = 'день рождение'
+                    type.push('день рождение');
                 }
+                let userType = '';
+                type.forEach((value, index) => {
+                    if(index > 0){
+                        userType = userType + ', ' + value;
+                    } else {
+                        userType = userType + ' ' + value;
+                    }
+                })
                 if(!isFull){
                     Swal.fire({
                         icon: 'error',
                         title: 'Упс...',
-                        text: 'Вы не заполнили поле '  + type + ' в настройках аккаунта',
+                        text: 'Вы не заполнили поле '  + userType + ' в настройках аккаунта',
                         showConfirmButton: false,
                         timer: 1500
                     })

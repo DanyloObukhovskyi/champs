@@ -62,10 +62,12 @@ class WalletController extends AbstractController
     /**
      * @Route("/trainer/wallet", name="wallet")
      */
-    public function index(TranslatorInterface $translator): Response
+    public function index(Request $request, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), false);
 
         $earned = [];
         $purseHistoryEntities = $this->walletService
@@ -75,7 +77,7 @@ class WalletController extends AbstractController
         foreach ($purseHistoryEntities as $historyEntity) {
             $purseHistory[] = $historyEntity->jsonSerialize();
         }
-        $confirmedPayments = $this->walletService->getStudentsPaymentHistory($user, $translator);
+        $confirmedPayments = $this->walletService->getStudentsPaymentHistory($data->timezone, $user, $translator);
         $balance = $this->walletService->getBalance($user);
         $available = $this->walletService->getAvailableToPurse($user);
 
@@ -89,8 +91,8 @@ class WalletController extends AbstractController
         $datePrev = Carbon::now()->subMonth();
         $datePrev->setDay(1);
 
-        $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
-        $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);
+        $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($data->timezone, $user, $date);
+        $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($data->timezone, $user, $datePrev);
 
         /** @var Teachers $trainer */
         $trainer = $this->entityManager->getRepository(Teachers::class)->findOneBy([

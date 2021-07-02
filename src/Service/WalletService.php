@@ -3,6 +3,7 @@
 
 namespace App\Service;
 
+use App\Entity\Teachers;
 use App\Service\Payment\PaymentService;
 use Carbon\Carbon;
 use DateTime;
@@ -156,7 +157,7 @@ class WalletService
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function getStudentsPaymentHistory(User $user, $translator)
+    public function getStudentsPaymentHistory($timezone = null, User $user, $translator)
     {
         $confirmedPayments = $this->getPaymentsByDate($user);
 
@@ -177,8 +178,33 @@ class WalletService
 
                 $studentsHistoryIds[] = $payment->getId();
 
+                $trainer = $lesson->getTrainer();
+
+                $timeOffset = 0;
+
+                if (!$user->getIsTrainer()) {
+                    [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                        $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+                    );
+                    if ($gmtNumeric < 0) {
+                        $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+                    } else {
+                        $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+                    }
+
+                    if ($trainerTimezone < 0 && $timezone < 0) {
+                        $timeOffset = $trainerTimezone + abs($timezone);
+                    } elseif($trainerTimezone < 0 || $timezone < 0) {
+                        $timeOffset = $trainerTimezone + $timezone;
+                    } else {
+                        $timeOffset = $trainerTimezone - $timezone;
+                    }
+                }
+
+                $lessonDate = $this->parseDateToUserTimezone($lesson->getDateTimeFrom()->format('Y.m.d H'), $timeOffset);
+
                 $studentsHistory[] = [
-                    'date' => $payment->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'date' => $lessonDate->format('Y-m-d H:i:s'),
                     'cost' => (int)$this->lessonService->getCostWithPercentage($lesson),
                     'student' => $this->userService->getUserData($lesson->getStudent()),
                     'lesson' => $this->lessonService->decorateLesson($lesson, $user, null, $translator),

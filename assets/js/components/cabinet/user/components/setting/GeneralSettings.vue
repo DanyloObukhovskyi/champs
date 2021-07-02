@@ -387,46 +387,94 @@ export default {
             if (!this.load) {
                 this.load = true;
                 const form = new FormData();
-
-                for (let key in this.user) {
-                    form.append(key, this.user[key]);
+                let isFull = true;
+                let type = [];
+                if(!this.user.name){
+                    isFull = false
+                    type.push('имя');
                 }
-                form.append('name', this.user.name);
-                form.append('nickname', this.user.nickname);
-                form.append('family', this.user.family);
-                form.append('email', this.user.email);
-                form.append('rank', this.user.rank);
-                form.append('game', this.user.game !== null ? this.user.game.code : null);
-                form.append('timezone', this.user.timezone);
-                form.append('gender', this.user.gender ? this.user.gender.type: null);
-                form.append('bdate', this.user.bdate !== null ? this.user.bdate : '');
-                form.append('countryId', this.user.country ? this.user.country.id : null);
-                form.append('cityId', this.user.city ? this.user.city.id : null);
-                form.append('additionallyGame', this.user.additionallyGame !== null ? this.user.additionallyGame.code : null);
-                form.append('additionallyRank', this.user.additionallyRank);
-
-                CabinetService.updateUser(form)
-                    .then(data => {
-                        this.$store.commit('setUser', data)
-
-                        this.setGender();
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Изменения были сохранены!',
-                            showConfirmButton: false,
-                        })
-                        this.load = false;
+                if(!this.user.family){
+                    isFull = false
+                    type.push('фамилию');
+                }
+                if(!this.user.nickname){
+                    isFull = false
+                    type.push('никнейм');
+                }
+                if(!this.user.gender){
+                    isFull = false
+                    type.push('пол');
+                }
+                if(!this.user.email){
+                    isFull = false
+                    type.push('эмейл');
+                }
+                if(!this.user.country){
+                    isFull = false
+                    type.push('странна');
+                }
+                if(!this.user.bdate){
+                    isFull = false
+                    type.push('день рождение');
+                }
+                let userType = '';
+                type.forEach((value, index) => {
+                    if(index > 0){
+                        userType = userType + ', ' + value;
+                    } else {
+                        userType = userType + ' ' + value;
+                    }
+                })
+                if(!isFull) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не заполнили поле ' + userType + ' в настройках аккаунта',
+                        showConfirmButton: false,
+                        timer: 1500
                     })
-                    .catch(({response: {data}}) => {
-                        this.load = false;
+                    this.load = false;
+                } else {
+                    for (let key in this.user) {
+                        form.append(key, this.user[key]);
+                    }
+                    form.append('name', this.user.name);
+                    form.append('nickname', this.user.nickname);
+                    form.append('family', this.user.family);
+                    form.append('email', this.user.email);
+                    form.append('rank', this.user.rank);
+                    form.append('game', this.user.game !== null ? this.user.game.code : null);
+                    form.append('timezone', this.user.timezone);
+                    form.append('gender', this.user.gender ? this.user.gender.type: null);
+                    form.append('bdate', this.user.bdate !== null ? this.user.bdate : '');
+                    form.append('countryId', this.user.country ? this.user.country.id : null);
+                    form.append('cityId', this.user.city ? this.user.city.id : null);
+                    form.append('additionallyGame', this.user.additionallyGame !== null ? this.user.additionallyGame.code : null);
+                    form.append('additionallyRank', this.user.additionallyRank);
 
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Упс...',
-                            text: data.email,
+                    CabinetService.updateUser(form)
+                        .then(data => {
+                            this.$store.commit('setUser', data)
+
+                            this.setGender();
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Изменения были сохранены!',
+                                showConfirmButton: false,
+                            })
+                            this.load = false;
                         })
-                    })
+                        .catch(({response: {data}}) => {
+                            this.load = false;
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Упс...',
+                                text: data.email,
+                            })
+                        })
+                }
             }
         },
         getCountries() {

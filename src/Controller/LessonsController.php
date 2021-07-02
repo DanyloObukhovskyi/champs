@@ -315,8 +315,29 @@ class LessonsController extends AbstractController
                 } else {
                     $type = 'past';
                 }
+                $timeOffset = 0;
+                $trainer = $lesson->getTrainer();
 
-                $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timezone);
+                if (!$user->getIsTrainer()) {
+                    [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                        $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+                    );
+                    if ($gmtNumeric < 0) {
+                        $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+                    } else {
+                        $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+                    }
+
+                    if ($trainerTimezone < 0 && $timezone < 0) {
+                        $timeOffset = $trainerTimezone + abs($timezone);
+                    } elseif($trainerTimezone < 0 || $timezone < 0) {
+                        $timeOffset = $trainerTimezone + $timezone;
+                    } else {
+                        $timeOffset = $trainerTimezone - $timezone;
+                    }
+                }
+
+                $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
 
                 $dateRu = $this->dateTranslate($dateFrom, $translator);
 

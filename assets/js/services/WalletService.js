@@ -3,7 +3,17 @@ import Service from "./Service";
 class WalletService extends Service {
 
     getTrainerWalletData = () => {
-        return this.send('trainer/wallet')
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0) {
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+
+        return this.send('trainer/wallet', {
+            timezone
+        })
     }
 
     saveTrainerPrice = (data) => {

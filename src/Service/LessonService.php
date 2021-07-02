@@ -513,10 +513,11 @@ class LessonService extends EntityService
      * @return mixed
      * @throws \Exception
      */
-    public function getTrainerEarnedLessonsByMonth(User $trainer, Carbon $date)
+    public function getTrainerEarnedLessonsByMonth($timezone = null, User $trainer, Carbon $date)
     {
+
         $currentDateFrom = new \DateTime($date->format('Y-m-d'));
-        $currentDateTo = new \DateTime($date->endOfMonth()->format('Y-m-d'));
+        $currentDateTo = new \DateTime($date->endOfMonth()->format('Y-m-d H:i:s'));
 
         $lessons = $this->getByTrainerAndPeriod(
             $trainer, $currentDateFrom, $currentDateTo
