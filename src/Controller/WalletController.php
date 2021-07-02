@@ -91,8 +91,8 @@ class WalletController extends AbstractController
         $datePrev = Carbon::now()->subMonth();
         $datePrev->setDay(1);
 
-        $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($data->timezone, $user, $date);
-        $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($data->timezone, $user, $datePrev);
+        $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
+        $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);
 
         /** @var Teachers $trainer */
         $trainer = $this->entityManager->getRepository(Teachers::class)->findOneBy([

@@ -513,7 +513,7 @@ class LessonService extends EntityService
      * @return mixed
      * @throws \Exception
      */
-    public function getTrainerEarnedLessonsByMonth($timezone = null, User $trainer, Carbon $date)
+    public function getTrainerEarnedLessonsByMonth(User $trainer, Carbon $date)
     {
 
         $currentDateFrom = new \DateTime($date->format('Y-m-d'));
