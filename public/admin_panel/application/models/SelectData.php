@@ -143,7 +143,7 @@
 		
 		public function getStudent($id=0) {
 			if($id > 0) {
-				$this->db->select('nickname');
+				$this->db->select('*, id as user_id');
 				$this->db->from("user");
 				$this->db->where('id', (int)$id);
 				$result = $this->db->get();
