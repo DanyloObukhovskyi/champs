@@ -36,10 +36,17 @@
 			<input type="hidden" value="true" name="edit">
 		<div class="colx2 mt-10">
 			<div class="col-item">
+                <label class="label" for="">Имя</label>
+                <div class="input mb-5" id="input">
+                    <input disabled type="text" class="fw-600 input2_txt"  placeholder="Example: Иван"  title="введите правильное имя" value="<?php print $user_info[0]['name']; ?>">
+                </div>
+                <label class="label" for="">Фамилия</label>
+                <div class="input mb-5" id="input">
+                    <input disabled type="text" class="fw-600 input2_txt" placeholder="Example: Иванова"  title="введите правильную фамилию" value="<?php print $user_info[0]['family']; ?>">
+                </div>
 				<label class="label" for="">Никнейм</label>
 				<div class="input mb-5" id="input">
 					<input required type="text" class="fw-600 input2_txt" name="nickname" id="nickname" placeholder="Example: nickname3456789"  title="введите правильный никнейм" value="<?php print $user_info[0]['nickname']; ?>">
-					
 				</div>
 				<div class="mb-15">
 					<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
@@ -49,14 +56,17 @@
 				<label class="label" for="">E-mail</label>
 				<div class="input mb-5" id="input">
 					<input required type="text" class="fw-600 input2_txt" name="Email" id="mail" placeholder="Example: example@example.com"  title="введите правильный E-mail" value="<?php print $user_info[0]['email']; ?>">
-				
 				</div>
+
 				<div class="mb-15">
 					<img src="<?php print base_url("assets/icons/info.svg"); ?>" />
 					<div class="info_txt">Вводите правильный E-mail</div>
 				</div>
-				
-				
+
+                <label class="label" for="">Дискорд</label>
+                <div class="input mb-5" id="input">
+                    <input disabled type="text" class="fw-600 input2_txt" placeholder=""  value="<?php print $user_info[0]['discord']; ?>">
+                </div>
 
 			</div>
 		</div>
