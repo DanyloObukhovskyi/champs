@@ -71,7 +71,7 @@
                                                        href="<?php print base_url("c-admin/user/edit/" . $val['id'] . "/" . $UserID); ?>">
                                     <button class="btn btn-dark-blue btn-small">Редактировать</button>
                                 </a>
-                                <div onclick="c_delete(<?php print "'" . base_url("admin_panel/c-admin/user/delete/" . $val['id'] . "/" . $UserID) . "'"; ?>,<?php print "'" . $val['nickname'] ?? 'Пользователь' . "'"; ?>,'USER')"
+                                <div onclick="c_delete(<?php print "'" . base_url("c-admin/user/delete/" . $val['id'] . "/" . $UserID) . "'"; ?>,<?php print "'" . $val['nickname'] . "'"; ?>,'USER')"
                                      class="pointer txt-orange ml-15 fw-600" style="display: inline-block;">Удалить
                                 </div>
                             </td>

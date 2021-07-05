@@ -71,7 +71,7 @@
 							<td data-id="<?php echo $rmo_i; ?>"> <?php echo $val['nickname']; ?></td>
 							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['created_at']; ?></td>
 							<td data-id="<?php echo $rmo_i; ?>"><?php echo $val['date_time_from']; ?></td>
-                            <td data-id="<?php echo $rmo_i; ?>"><a href="<?php echo  "/c-admin/user/edit/".$val["student"][0]['user_id'] . "/"; echo $UserID ;?>""><?php echo !empty($val["student"][0]["nickname"]) ? $val["student"][0]["nickname"] : $val["student"][0]["name"] ; ?></a></td>
+                            <td data-id="<?php echo $rmo_i; ?>"><a href="<?php echo  "/admin_panel/c-admin/user/edit/".$val["student"][0]['user_id'] . "/"; echo $UserID ;?>""><?php echo !empty($val["student"][0]["nickname"]) ? $val["student"][0]["nickname"] : $val["student"][0]["name"] ?? 'Пользователь' ; ?></a></td>
 							
 							<td data-id="<?php echo $rmo_i; ?>">
 								<?php
