@@ -31,7 +31,7 @@
                                     @change="$emit('input', $event.target.value)"/>
                         </label>
                         <span>
-                            <a href="/ru/terms-of-use" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a>
+                            <a href="/ru/pravila_ispolzovaniya" target="_blank">Ознакомлен с правилами использования сервиса «Champs»</a>
                         </span>
                     </div>
                     <div class="send" @click="checkIsEmailValid" :style="{opacity: $parent.check ? '1': '.5'}">
