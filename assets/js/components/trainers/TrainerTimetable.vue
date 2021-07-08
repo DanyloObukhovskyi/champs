@@ -182,7 +182,7 @@
                 }
                 if(!this.user.country){
                     isFull = false
-                    type.push('странна');
+                    type.push('страна');
                 }
                 if(!this.user.bdate){
                     isFull = false

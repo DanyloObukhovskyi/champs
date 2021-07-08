@@ -101,8 +101,9 @@ class InterkassaController extends AbstractController
 
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
-
-            $this->dispatchMessage(new PaymentLessonMail($mailer, $payment->getLesson()));
+            if ($request->request->get('ik_inv_st') === InterkassaService::STATE_SUCCESS) {
+                $this->dispatchMessage(new PaymentLessonMail($mailer, $payment->getLesson()));
+            }
         }
 
         return $this->render('templates/payment/payment.send.html.twig',[
@@ -126,7 +127,7 @@ class InterkassaController extends AbstractController
             ]);
 
         if (isset($payment)) {
-                $payment->setPaymentStatus(Payment::STATUS_OK);
+            $payment->setPaymentStatus(Payment::STATUS_OK);
 
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
