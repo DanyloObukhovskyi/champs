@@ -27,7 +27,7 @@
                             <span v-title="'Сумма, которую можно вывести'">
                                  {{ decoratePrice(available) }} p
                             </span>
-                            <button class="purse-btn" @click="checkout" v-if="available > 0">
+                            <button class="purse-btn" @click="checkout" v-if="available > 0 && showButton">
                                 Вывести
                             </button>
                             <button class="purse-btn disable" v-else>
@@ -73,7 +73,8 @@
         components: {SmallLoader},
         data() {
             return {
-                showAllHistory: false
+                showAllHistory: false,
+                showButton: true
             }
         },
         computed: {
@@ -119,11 +120,23 @@
                 return `${day}.${month}.${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`;
             },
             checkout() {
-                WalletService.checkout()
-                    .then(data => {
-                        this.$store.dispatch('cabinet/wallet/getWalletData', data);
-                        this.showSuccess();
+                this.showButton = false;
+                if(this.available < 1000){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Вы указали не верную сумму, минимальная сумма к выводу 1000р',
+                        showConfirmButton: false,
+                        timer: 1500
                     })
+                    this.showButton = true;
+                } else {
+                    WalletService.checkout()
+                        .then(data => {
+                            this.$store.dispatch('cabinet/wallet/getWalletData', data);
+                            this.showSuccess();
+                            this.showButton = true;
+                        })
+                }
             }
         }
     }

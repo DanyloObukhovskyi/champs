@@ -318,7 +318,8 @@ class LessonsController extends AbstractController
                 $timeOffset = 0;
                 $trainer = $lesson->getTrainer();
 
-                if (!$user->getIsTrainer()) {
+
+                if (!$user->getIsTrainer() && $trainer->getTimeZone() !== $user->getTimeZone()) {
                     [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
                         $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
                     );

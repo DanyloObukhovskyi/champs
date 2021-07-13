@@ -104,11 +104,11 @@
                                         {{statuses[transaction.status]}}
                                     </td>
                                     <td class="d-flex" style="width: 25%;">
-                                        <button v-if="transaction.status !== 'success'" class="btn btn-success btn-small"
+                                        <button v-if="transaction.status !== 'success' &&  transaction.status !== 'cancel'" class="btn btn-success btn-small"
                                                 @click="transaction.status = 'success'">
                                                 Подтвердить
                                         </button>
-                                        <button class="btn btn-danger btn-small"
+                                        <button v-if="transaction.status !== 'success' &&  transaction.status !== 'cancel'" class="btn btn-danger btn-small"
                                                 @click="transaction.status = 'cancel'">
                                                 Отменить
                                         </button>

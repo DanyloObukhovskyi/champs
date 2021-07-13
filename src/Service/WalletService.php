@@ -117,7 +117,9 @@ class WalletService
 
         /** @var PurseHistory $purseHistory */
         foreach ($purseHistories as $purseHistory) {
-            $allPurseSum += (int)$purseHistory->getAmount();
+            if($purseHistory->getStatus() !== 'cancel' && $purseHistory->getAmount() !== 0){
+                $allPurseSum += (int)$purseHistory->getAmount();
+            }
         }
         return $allPurseSum;
     }

@@ -25,7 +25,17 @@ class WalletService extends Service {
     }
 
     checkout = () => {
-        return this.send('trainer/wallet/checkout')
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0) {
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+
+        return this.send('trainer/wallet/checkout', {
+            timezone
+        })
     }
 }
 

@@ -73,9 +73,12 @@ class WalletController extends AbstractController
         $purseHistoryEntities = $this->walletService
             ->getPurseHistory($user);
 
+
         $purseHistory = [];
         foreach ($purseHistoryEntities as $historyEntity) {
-            $purseHistory[] = $historyEntity->jsonSerialize();
+            if($historyEntity->getStatus() !== 'cancel' && $historyEntity->getAmount() !== 0){
+                $purseHistory[] = $historyEntity->jsonSerialize();
+            }
         }
         $confirmedPayments = $this->walletService->getStudentsPaymentHistory($data->timezone, $user, $translator);
         $balance = $this->walletService->getBalance($user);
@@ -223,7 +226,7 @@ class WalletController extends AbstractController
     /**
      * @Route("/trainer/wallet/checkout")
      */
-    public function walletCheckout(TranslatorInterface $translator)
+    public function walletCheckout(Request $request, TranslatorInterface $translator)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -240,6 +243,6 @@ class WalletController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->index($translator);
+        return $this->index($request, $translator);
     }
 }
