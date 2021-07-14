@@ -1,6 +1,6 @@
 <template>
     <div class="hot-news-wrapper">
-        <a :href="`/ru/article/${news.id}/` + getSlug(news)" class="hot-news d-block" v-for="news in news">
+        <a :href="`/ru/novosti/${news.id}/` + getSlug(news)" class="hot-news d-block" v-for="news in news">
             <div class="d-flex hot-news-title">
                 <div class="game-logo" v-if="news.game !== null && news.game.newsIcon !== null">
                     <img :src="'/uploads/games/' + news.game.newsIcon">
@@ -60,7 +60,7 @@
                         .replace(/ /g, '-')
                         .replace(/[^\w-]+/g, '')
                     ;
-                    let date = this.getTitleUrl(news.date_ru_with_year)
+                    let date = this.getTitleUrl(news.date_ru_with_year_for_url)
                         .toLowerCase()
                         .replace(/ /g, '-')
                         .replace(/[^\w-]+/g, '')

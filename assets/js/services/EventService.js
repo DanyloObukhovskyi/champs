@@ -11,7 +11,7 @@ class EventService extends Service{
     }
 
     getEventUrl = (id) => {
-        return `/${this.lang}/event/${id}`;
+        return `/${this.lang}/turnir/${id}`;
     }
 
     eventsPage = () => {
@@ -23,7 +23,7 @@ class EventService extends Service{
     }
 
     getEvent = id => {
-        return this.send(`ajax/event/${id}`)
+        return this.send(`ajax/turnir/${id}`)
     }
 
     getDigestEvents = (type, page, filters) => {

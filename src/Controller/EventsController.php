@@ -124,7 +124,7 @@ class EventsController extends AbstractController
     }
 
     /**
-     * @Route("/event/{id}/{slug}", name="event.page")
+     * @Route("/turnir/{id}/{slug}", name="event.page")
      */
     public function eventPage($id, $slug)
     {
@@ -149,7 +149,7 @@ class EventsController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/event/{id}")
+     * @Route("/ajax/turnir/{id}")
      */
     public function getEvent($id)
     {

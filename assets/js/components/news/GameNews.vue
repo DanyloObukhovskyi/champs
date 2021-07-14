@@ -58,7 +58,7 @@
                     })
             },
             getNewsUrl(news) {
-                return `/ru/article/${news.id}/` + this.getSlug(news)
+                return `/ru/novosti/${news.id}/` + this.getSlug(news)
             },
             getTags(tags) {
                 if (tags !== null) {
@@ -83,7 +83,7 @@
                         .replace(/ /g, '-')
                         .replace(/[^\w-]+/g, '')
                     ;
-                    let date = this.getTitleUrl(news.date_ru_with_year)
+                    let date = this.getTitleUrl(news.date_ru_with_year_for_url)
                         .toLowerCase()
                         .replace(/ /g, '-')
                         .replace(/[^\w-]+/g, '')

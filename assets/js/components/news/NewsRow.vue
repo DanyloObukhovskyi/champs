@@ -1,5 +1,5 @@
 <template>
-    <a :href="`/${lang}/article/${news.id}/` + getSlug(news)"
+    <a :href="`/${lang}/novosti/${news.id}/` + getSlug(news)"
        class="article d-block animation-target"
        :style="{'background-image': `url(/images/temp/news/${news.logo})`}"
        :class="className">
@@ -132,7 +132,7 @@ export default {
                     .replace(/ /g, '-')
                     .replace(/[^\w-]+/g, '')
                 ;
-                let date = this.getTitleUrl(news.date_ru_with_year)
+                let date = this.getTitleUrl(news.date_ru_with_year_for_url)
                     .toLowerCase()
                     .replace(/ /g, '-')
                     .replace(/[^\w-]+/g, '')

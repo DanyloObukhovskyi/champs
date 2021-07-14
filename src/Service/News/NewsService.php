@@ -86,6 +86,7 @@ class NewsService extends EntityService
             'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_msk' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
+            'date_ru_with_year_for_url' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m') : $news->getDate()->format('d m Y'),
             'views' => $news->getViews() ?? 0,
             'commentsCount' => count($news->getComments()),
             'bookmark' => $bookmark
@@ -283,6 +284,7 @@ class NewsService extends EntityService
             'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_msk' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
+            'date_ru_with_year_for_url' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m') : $news->getDate()->format('d m Y'),
             'views' => $news->getViews() ?? 0,
             'commentsCount' => count($news->getComments())
         ];
@@ -330,6 +332,7 @@ class NewsService extends EntityService
             'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_msk' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
+            'date_ru_with_year_for_url' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m') : $news->getDate()->format('d m Y'),
             'views' => $news->getViews() ?? 0,
             'commentsCount' => count($news->getComments())
         ];
@@ -377,6 +380,7 @@ class NewsService extends EntityService
             'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_msk' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
+            'date_ru_with_year_for_url' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m') : $news->getDate()->format('d m Y'),
             'views' => $news->getViews() ?? 0,
             'commentsCount' => count($news->getComments())
         ];
@@ -424,6 +428,7 @@ class NewsService extends EntityService
             'date_ru' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_msk' => $news->getDate()->format('Y') === date('Y') ? self::replaceMonth($news->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($news->getDate()->format('d F Y')),
             'date_ru_with_year' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m H_i') : $news->getDate()->format('d m Y'),
+            'date_ru_with_year_for_url' => $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m') : $news->getDate()->format('d m Y'),
             'views' => $news->getViews() ?? 0,
             'commentsCount' => count($news->getComments())
         ];

@@ -211,7 +211,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}/{format}/{game}/{title}", name="news_view_single")
+     * @Route("/novosti/{id}/{format}/{game}/{title}", name="news_view_single")
      */
     public function view($id, $format, $game, $title, Request $request)
     {

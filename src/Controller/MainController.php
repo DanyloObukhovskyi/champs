@@ -566,7 +566,7 @@ class MainController extends DefController
                         $newsType = $this->sanitize($news['type']->getTitle());
                         $game = !empty($news['game']) ? $this->sanitize($news['game']->getName()) : null;
                         $title =  $this->sanitize($news['title']);
-                        $date = $this->sanitize($news['date_ru_with_year']);
+                        $date = $this->sanitize($news['date_ru_with_year_for_url']);
                         if(empty($newsType) || empty($game) || empty($title) || empty($date)){
                             $newsUrl = $news['slug'];
                         } else {
@@ -577,7 +577,7 @@ class MainController extends DefController
                         $newsUrl = $title;
                     }
                     $urlData.= ' <url>
-                      <loc>'.$baseUrl.'article/'.$news['id'].'/'.$newsUrl.'</loc> 
+                      <loc>'.$baseUrl.'novosti/'.$news['id'].'/'.$newsUrl.'</loc> 
                       <changefreq>daily</changefreq> 
                       <lastmod>'.date('Y-m-d').'</lastmod>
                       <priority>0.5</priority> 
@@ -648,7 +648,7 @@ class MainController extends DefController
                         }
                     }
                     $urlData.= ' <url>
-                          <loc>'.$baseUrl.'event/'.$event['id'].'/'.$eventUrl.'</loc> 
+                          <loc>'.$baseUrl.'turnir/'.$event['id'].'/'.$eventUrl.'</loc> 
                           <changefreq>daily</changefreq> 
                           <lastmod>'.date('Y-m-d').'</lastmod>
                           <priority>0.5</priority> 

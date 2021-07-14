@@ -28,7 +28,7 @@
             {% for article in news %}
                 {
                     "@type": "NewsArticle",
-                    "@id": "{{ link }}/ru/article/{{ article.id }}/{{ article.url }}",
+                    "@id": "{{ link }}/ru/novosti/{{ article.id }}/{{ article.url }}",
                     "headline": "{{ article.title }}",
                     "datePublished": "{{ article.date }}",
                     "articleBody": "{{ article.text }}",
