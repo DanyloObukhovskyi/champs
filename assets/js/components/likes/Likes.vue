@@ -119,13 +119,11 @@ export default {
 
 .likes .like:hover img,
 .likes .dislike:hover img {
-    display: none;
     margin: 0;
 }
 
 .likes .like:hover .active,
 .likes .dislike:hover .active {
-    display: unset;
     cursor: pointer;
     margin-right: .3vw;
 }
