@@ -116,7 +116,7 @@ class ScheduleService extends EntityService
                         ->getRepository(LessonTime::class)
                         ->findOneBy(['trainerTime' => $scheduleEntity->getId()]);
 
-                    if(!empty($lessonTime)){
+                    if(!empty($lessonTime) && !empty($lessonTime->getLesson()->getPayment())){
                         $dateOrder = Carbon::createFromFormat(
                             "Y-m-d %H:%i:%s",
                             $lessonTime->getLesson()->getPayment()->getCreatedAt()->format("Y-m-d %H:%i:%s")
