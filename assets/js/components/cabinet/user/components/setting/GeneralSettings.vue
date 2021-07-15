@@ -417,6 +417,11 @@ export default {
                     isFull = false
                     type.push('день рождение');
                 }
+                if(!this.user.discord){
+                    isFull = false
+                    type.push('дискорд');
+                }
+
                 let userType = '';
                 type.forEach((value, index) => {
                     if(index > 0){

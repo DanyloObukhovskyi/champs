@@ -58,25 +58,50 @@
                     return this.showError('Для начала укажите таймзону!')
                 }
                 if (!this.load) {
-                    const form = new FormData();
-                    form.append('discord', this.discordVal);
+                    let isFull = true;
+                    let type = [];
+                    if(!this.discordVal){
+                        isFull = false
+                        type.push('дискорд');
+                    }
+                    let userType = '';
+                    type.forEach((value, index) => {
+                        if(index > 0){
+                            userType = userType + ', ' + value;
+                        } else {
+                            userType = userType + ' ' + value;
+                        }
+                    })
+                    if(!isFull) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Вы не заполнили поле ' + userType + ' в настройках аккаунта',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.load = false;
+                    } else {
+                        const form = new FormData();
+                        form.append('discord', this.discordVal);
 
-                    this.load = true;
-                    CabinetService.updateUser(form)
-                        .then(data => {
-                            this.$store.commit('setUser', data)
+                        this.load = true;
+                        CabinetService.updateUser(form)
+                            .then(data => {
+                                this.$store.commit('setUser', data)
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Дискорд сохранен!',
-                                showConfirmButton: false,
-                                timer: 1500
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Дискорд сохранен!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.load = false;
                             })
-                            this.load = false;
-                        })
-                        .catch(() => {
-                            this.load = false;
-                        })
+                            .catch(() => {
+                                this.load = false;
+                            })
+                    }
                 }
             }
         },
