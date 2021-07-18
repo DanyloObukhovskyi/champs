@@ -85,6 +85,20 @@ class CabinetService extends Service {
     getUserBanner = () => {
         return this.send(`ajax/setting/user/banner`)
     }
+
+    sendToChannel = (lessonId) => {
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0) {
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+
+        return this.send(`cabinet/lessons/getRoom/${lessonId}`, {
+            timezone
+        });
+    }
 }
 
 export default new CabinetService();

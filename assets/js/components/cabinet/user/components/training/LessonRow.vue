@@ -27,7 +27,8 @@
                     <cabinet-button
                             :text-first="user.isTrainer ? 'Чат с учеником':'Чат с тренером'"
                             @click="showDiscordModal"
-                            v-if="!isTrainerCabinetSmall">
+                            v-if="!isTrainerCabinetSmall"
+                    >
                         <template v-slot:img>
                             <img src="/images/cabinet/user.png">
                         </template>
@@ -165,34 +166,50 @@
                         })
                 } else {
                     this.showReview = !this.showReview;
-                }
+                }F
             },
-            showDiscordModal() {
+            async showDiscordModal() {
                 Swal.fire({
-                    title: this.user.isTrainer ? 'Теперь вы можете общаться с учеником!' : 'Теперь вы можете общаться с тренером!',
-                    html: `
-                            <div class="mt-5 d-flex justify-content-around">
-                                <a href="https://discord.com/invite/rakSKuE" class="discord-button">Перейти в дискорд</a>
-                                <div class="w-40">
-                                    <label for="">Скачать дискорд</label>
-                                    <div class="d-flex justify-content-around">
-                                        <a href="https://discord.com/download" class="text-gray hover-orange" target="_blank">
-                                            <i class="fas fa-desktop"></i>
-                                        </a>
-                                        <a href="https://itunes.apple.com/us/app/discord-chat-for-games/id985746746" class="text-gray hover-orange" target="_blank">
-                                            <i class="fab fa-apple"></i>
-                                        </a>
-                                        <a href="https://play.google.com/store/apps/details?id=com.discord" class="text-gray hover-orange" target="_blank">
-                                            <i class="fab fa-android"></i>
-                                        </a>
+                    title: 'Загрузка',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    onOpen: () => {
+                        Swal.showLoading();
+                        let res = CabinetService.sendToChannel(this.lesson.id)
+                            .then((data) => {
+                                let discordChannel = data;
+                                Swal.hideLoading();
+                                Swal.fire({
+                                    title: this.user.isTrainer ? 'Теперь вы можете общаться с учеником!' : 'Теперь вы можете общаться с тренером!',
+                                    html: `
+                                    <div class="mt-5 d-flex justify-content-around">
+                                        <a href="${discordChannel}" class="discord-button">Перейти в дискорд</a>
+                                        <div class="w-40">
+                                            <label for="">Скачать дискорд</label>
+                                            <div class="d-flex justify-content-around">
+                                                <a href="https://discord.com/download" class="text-gray hover-orange" target="_blank">
+                                                    <i class="fas fa-desktop"></i>
+                                                </a>
+                                                <a href="https://itunes.apple.com/us/app/discord-chat-for-games/id985746746" class="text-gray hover-orange" target="_blank">
+                                                    <i class="fab fa-apple"></i>
+                                                </a>
+                                                <a href="https://play.google.com/store/apps/details?id=com.discord" class="text-gray hover-orange" target="_blank">
+                                                    <i class="fab fa-android"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        `,
-                    showCloseButton: true,
-                    showCancelButton: false,
-                    showConfirmButton: false
-                })
+                                `,
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: false
+                                })
+                            });
+                    }
+                }).then(
+                    (dismiss) => {
+
+                });
             },
             toggleMoreDetail() {
                 this.showMoreDetail = !this.showMoreDetail;
