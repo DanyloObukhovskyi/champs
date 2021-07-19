@@ -38,6 +38,14 @@ class NewsTagRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getCountAll()
+    {
+        return  $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function popularTags()
     {
         $allTags = $this->uniqueAll();

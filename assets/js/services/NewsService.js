@@ -60,6 +60,10 @@ class NewsService extends Service {
     getFormats = () => {
         return this.send(`news/formats`);
     }
+
+    getPopularNextTags = (from = 0) => {
+        return this.send('novosti/tags/' + from);
+    }
 }
 
 export default new NewsService();

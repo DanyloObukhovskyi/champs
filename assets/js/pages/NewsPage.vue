@@ -5,6 +5,9 @@
                 <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
                     {{ tag }}
                 </button>
+                <button class="tag" @click="getNextTags()" v-if="popularTags.length < tagsCount">
+                ...
+                </button>
             </div>
             <div class="news-row d-flex" v-for="(news, i) in newsSorted">
                 <news-row
@@ -73,7 +76,8 @@ export default {
                 tags: []
             },
             pageEnd: false,
-            height: '100%'
+            height: '100%',
+            tagsCount: 20
         }
     },
     watch: {
@@ -234,6 +238,20 @@ export default {
         {
             this.height = $('.news-page-row').height()+ 'px'
         },
+        getNextTags()
+        {
+          let count  = this.popularTags.length;
+          newsService.getPopularNextTags(count)
+          .then(dataResponse => {
+            console.log(data);
+            let data = dataResponse.data;
+            this.tagsCount = dataResponse.count;
+            for (let item of data) {
+              this.popularTags.push(item);
+            }
+
+          })
+        },
     },
     mounted() {
         //window.history.pushState('page2', '', `/${this.lang}/news/`);
@@ -246,6 +264,8 @@ export default {
         this.scrollEventTrigger();
 
         this.popularTags = JSON.parse(this.popularTags);
+      // console.log(popularTags.length);
+      console.log(this.tagsCount);
     }
 }
 </script>

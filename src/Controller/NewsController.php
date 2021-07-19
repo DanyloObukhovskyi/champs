@@ -91,7 +91,7 @@ class NewsController extends AbstractController
      */
     public function index(Request $request)
     {
-        $popularTags = $this->newsTagService->popularTags(11);
+        $popularTags = $this->newsTagService->popularTags(19);
 
         $seoSettings = $this->seoService->getSeo('news_index');
         $newsEntities = $this->newsService->getMainNews();
@@ -115,6 +115,17 @@ class NewsController extends AbstractController
             'tag' => $request->get('tag', null),
             'popularTags' => $popularTags
         ]);
+    }
+
+    /**
+     * @Route("/novosti/tags/{from}")
+     */
+    public function getPopularNextTags(Request $request, $from = 0) {
+        $request = json_decode($request->getContent(), false);
+        $popularNextTags = $this->newsTagService->popularNextTags($from, 20);
+//        dump($from);
+//        dump($popularNextTags);
+        return $this->json($popularNextTags);
     }
 
     /**
