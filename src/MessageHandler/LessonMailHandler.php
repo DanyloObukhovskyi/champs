@@ -42,7 +42,7 @@ trait LessonMailHandler
         $this->timezoneService = new TimeZoneService();
 
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-            $lesson->getTrainer()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            $lesson->getStudent()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
 
         if ($gmtNumeric < 0) {
