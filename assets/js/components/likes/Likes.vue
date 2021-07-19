@@ -7,7 +7,7 @@
             {{ likes }}
         </div>
         <div class="like" @click="setLike">
-            <img v-if="!isLiked" src="/images/news/like.svg">
+          <img v-if="!isLiked" src="/images/news/like.svg">
             <img v-else src="/images/news/likeActive.png">
 
             <svg class="active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 18">
@@ -117,15 +117,22 @@ export default {
     fill-rule: evenodd;
 }
 
-.likes .like:hover img,
-.likes .dislike:hover img {
-    margin: 0;
+.widget .likes .like:hover img,
+.widget .likes .dislike:hover img {
+    /*margin: 0;*/
+  margin-left: .3vw;
+}
+
+.share .likes .like:hover img,
+.share .likes .dislike:hover img {
+  /*margin: 0;*/
+  margin-bottom: .3vw;
 }
 
 .likes .like:hover .active,
 .likes .dislike:hover .active {
     cursor: pointer;
-    margin-right: .3vw;
+    /*margin-right: .3vw;*/
 }
 
 .likes .dislike img {
