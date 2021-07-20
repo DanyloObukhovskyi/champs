@@ -640,6 +640,7 @@ class LessonService extends EntityService
             ],
             'availableReview' =>  $lesson->getStudentStatus(),
             'dateAfter7Days' => $dateTo->modify('+7 days')->format('Y.m.d H:i:s'),
+            'dateBeforeOneHour' => $dateFrom->modify('- 1 hour')->format('Y.m.d H:i:s'),
             'today' => Carbon::now()->format('Y.m.d H:i:s'),
             'isOver' => $isOver,
             'reviewExist' => $reviewDataExist,

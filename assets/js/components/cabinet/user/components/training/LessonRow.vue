@@ -27,7 +27,7 @@
                     <cabinet-button
                             :text-first="user.isTrainer ? 'Чат с учеником':'Чат с тренером'"
                             @click="showDiscordModal"
-                            v-if="!isTrainerCabinetSmall"
+                            v-if="!isTrainerCabinetSmall && (new Date(lesson.dateBeforeOneHour).getTime() < new Date().getTime())"
                     >
                         <template v-slot:img>
                             <img src="/images/cabinet/user.png">
