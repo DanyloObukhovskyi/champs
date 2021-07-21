@@ -126,7 +126,8 @@ class ScheduleService extends EntityService
                         $lessonTime->getLesson()->getPayment()->getCreatedAt();
 
                         $bookedDate = $lessonTime->getLesson()->getPayment()->getCreatedAt()->format("Y-m-d %H:%i:%s");
-                        if($dateAfterTwentyMinutes->format("Y-m-d %H:%i:%s") > $bookedDate){
+
+                        if($dateAfterTwentyMinutes->timestamp < Carbon::now()->timestamp){
                             if($lessonTime->getLesson()->getPayment()->getPaymentStatus() === 0){
                                 $status = 1;
                             } else {

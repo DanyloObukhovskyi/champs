@@ -581,22 +581,35 @@ class LessonService extends EntityService
 
         $timeOffset = 0;
 
+        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+        );
+        if ($gmtNumeric < 0) {
+            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+        } else {
+            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+        }
+
         if (!$user->getIsTrainer()) {
-            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-                $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
-            );
-            if ($gmtNumeric < 0) {
-                $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+            if (!empty($user->getTimezone())) {
+                [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                    $user->getTimeZone()
+                );
+                if ($gmtNumeric < 0) {
+                    $userTimezone = -(int)gmdate("g", $gmtNumeric);
+                } else {
+                    $userTimezone = (int)gmdate("g", $gmtNumeric);
+                }
             } else {
-                $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+                $userTimezone = $timezone;
             }
 
-            if ($trainerTimezone < 0 && $timezone < 0) {
-                $timeOffset = $trainerTimezone + abs($timezone);
-            } elseif($trainerTimezone < 0 || $timezone < 0) {
-                $timeOffset = $trainerTimezone + $timezone;
+            if ($trainerTimezone < 0 && $userTimezone < 0) {
+                $timeOffset = $trainerTimezone + abs($userTimezone);
+            } elseif($trainerTimezone < 0 || $userTimezone < 0) {
+                $timeOffset = $trainerTimezone + $userTimezone;
             } else {
-                $timeOffset = $trainerTimezone - $timezone;
+                $timeOffset = $userTimezone - $trainerTimezone;
             }
         }
 

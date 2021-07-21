@@ -42,7 +42,7 @@ trait LessonMailHandler
         $this->timezoneService = new TimeZoneService();
 
         [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-            $lesson->getStudent()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            $lesson->getTrainer()->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
         );
 
         if ($gmtNumeric < 0) {
@@ -68,7 +68,7 @@ trait LessonMailHandler
         } elseif($trainerTimezone < 0 or $userTimezone < 0) {
             $timeOffset = $trainerTimezone + $userTimezone;
         } else {
-            $timeOffset = $trainerTimezone - $userTimezone;
+            $timeOffset = $userTimezone - $trainerTimezone;
         }
 
         $dateFrom = Carbon::createFromFormat('Y-m-d H:i:s', $lesson->getDateTimeFrom()->format('Y-m-d H:i:s'));
