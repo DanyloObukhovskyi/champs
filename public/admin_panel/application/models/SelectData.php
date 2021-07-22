@@ -13,7 +13,7 @@
 			$this->load->database();
 		}
 		
-		public function get_all_payments($where = array(), $is_count = false, $sort = array(), $limit = array(), $nickname=false, $user=false)
+		public function get_all_payments($limit, $offset, $count, $query, $column, $order)
 		{
 			
 			$this->db->select('payment.id, user.nickname, payment.created_at, payment.yandex_kassa_id, lessons.student_id, payment.yandex_data, lessons.date_time_from');

@@ -87,6 +87,7 @@ $route['c-admin/trainer/delete/(:num)/(:num)'] = 'delete_c/trainer/$1/$2';
 $route['c-admin/trainer/add/(:num)'] = 'add_c/trainer/$1';
 
 //payments' pages
+$route['c-admin/payments'] = 'home/getPayments';
 $route['c-admin/payments/page/(:num)'] = 'home/payments/$1';
 
 //admins' pages
