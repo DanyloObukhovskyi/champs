@@ -28,7 +28,7 @@
                             :multiple="false"
                             :searchable="false"
                             label="name"
-                            track-by="name"
+                            track-by="type"
                             placeholder="Выберете из списка">
                     </multiselect>
                 </div>
@@ -569,7 +569,6 @@ export default {
     },
     mounted() {
         this.getCountries();
-        this.setGender();
         this.setGameRank();
     }
 }

@@ -88,7 +88,6 @@ class UserController extends AbstractController
                 'No user found for mail ' . $mail
             );
         }
-
         return $this->json($user);
     }
 
@@ -239,6 +238,21 @@ class UserController extends AbstractController
         if (isset($inviteLink)) {
             $userData['inviteVk'] = $inviteLink->getLink();
         }
+
+        if(!empty($userData['gender']))
+        {
+
+            $userData['gender'] = $userData['gender'] == 'male' ? [
+                'type' => 'male',
+                'name' => 'Мужчина'
+                ] : [
+                'type' => 'female',
+                'name' => 'Женщина'
+            ];
+        }
+
+
         return $this->json(isset($user) ? $userData : null);
     }
+
 }
