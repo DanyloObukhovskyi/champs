@@ -925,7 +925,7 @@ class Home extends CI_Controller
                     $payment['total_price'], //5
                     !empty($payment['refund_amount']) ? $payment['refund_amount'] . ' RUB' : '0 RUB',//6
                     '<button class="btn btn-dark-blue btn-small" onclick="refund(
-                                                                                 \''.$payment['total_price'].'\',  
+                                                                                 \''. 0 .'\',  
                                                                                  \''.$payment['yandex_kassa_id'].'\',
                                                                                  \''.$this->UserID.'\',
                                                                                  \''.'RUB'.'\',
