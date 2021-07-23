@@ -83,7 +83,7 @@ class Slides_c extends CI_Controller
         $data['types'] = [
             Slide_model::HOME_TYPE => 'Главная',
             Slide_model::HOME_CS_TYPE => 'Главная CS:GO',
-            Slide_model::GENERAL_TYPE => 'Общие',
+            Slide_model::GENERAL_TYPE => 'Дайджест турниров',
         ];
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
         $data['user'] = $this->ion_auth->user()->row();
