@@ -219,7 +219,8 @@ export default {
 }
 
 .help {
-
+  position: absolute;
+  right: 0;
 }
 
 .help img {
