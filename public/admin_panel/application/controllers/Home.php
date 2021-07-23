@@ -921,7 +921,7 @@ class Home extends CI_Controller
                     $payment['trainer_nickname'], //1
                     $payment['created_at'], //2
                     $payment['date_time_from'], //3
-                    '<a href="'.base_url("/admin_panel/c-admin/user/edit/".$payment["user_id"]."/".$this->UserID).'">'.(!empty($payment["student_nickname"]) ? $payment["student_nickname"] : $payment["student_name"] ?? 'Пользователь').'</a>',
+                    '<a href="'.base_url("/c-admin/user/edit/".$payment["user_id"]."/".$this->UserID).'">'.(!empty($payment["student_nickname"]) ? $payment["student_nickname"] : $payment["student_name"] ?? 'Пользователь').'</a>',
                     $payment['total_price'], //5
                     !empty($payment['refund_amount']) ? $payment['refund_amount'] . ' RUB' : '0 RUB',//6
                     '<button class="btn btn-dark-blue btn-small" onclick="refund(
