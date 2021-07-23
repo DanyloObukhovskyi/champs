@@ -159,7 +159,10 @@
 
 	  .wallet-data-row {
 		.title {
-		  font-size: 1.3vw;
+		  //font-size: 1.3vw;
+      font-weight: normal;
+      color: gray;
+
 
 		  &:first-letter {
 			text-transform: uppercase;
