@@ -232,15 +232,20 @@ export default {
 }
 
 .help a .zendesk {
+    /*font-size: 1.2vw;*/
+    /*margin-top: .3vw;*/
+
     font-size: 1.2vw;
     margin-top: .3vw;
     color: black;
 }
 
 .help a .letter {
-    font-size: 1.5vw;
-    margin-top: .2vw;
-    color: black;
+    /*font-size: 1.5vw;*/
+    /*margin-top: .2vw;*/
+  font-size: 1.2vw;
+  margin-top: .3vw;
+  color: black;
 }
 
 .dark .help a .zendesk, .dark .help a .letter {
