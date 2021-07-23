@@ -35,7 +35,7 @@
                     <loader v-if="load"/>
                 </div>
             </div>
-            <div class="col-3 pr-0" :style="btnStyles">
+            <div class="news col-3 pr-0" :style="btnStyles">
                 <news-filters :filters="filters" @reload="reload"/>
                 <hot-news :news="hotNews"/>
             </div>
