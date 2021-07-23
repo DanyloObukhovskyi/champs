@@ -27,7 +27,8 @@ class Home extends CI_Controller
             'trainer_lesson_price_m',
             'post_type_model',
             'post_type_attributes_model',
-            'posts_model'
+            'posts_model',
+            'payments_model'
         ]);
         $this->user_capabilities = $this->config->item('user_capabilities');
     }
@@ -375,42 +376,17 @@ class Home extends CI_Controller
         $where['payment_status'] = 1;
 
         $offset = $this->post_per_page * $page;
-        $posts_count = $this->selectData->get_all_payments($where, true);
 
         $config = $this->config->item('pagination');
         $config['base_url'] = site_url('c-admin/posts/page/');
-        $config['total_rows'] = $posts_count;
-        $config['per_page'] = $this->post_per_page;
         $config['use_page_numbers'] = true;
         $config['reuse_query_string'] = true;
 
         $this->pagination->initialize($config);
         $data['pagination'] = $this->pagination->rmo_create_links();
 
-
-        $sort = $this->input->get('sort');
-        if (empty($sort)) {
-            $sort = array();
-        } else {
-            $sort = array_flip($sort);
-            foreach ($sort as $key => &$value) {
-                $value = str_replace("-", ".", $value);
-            }
-            $sort = array_flip($sort);
-        }
-
-        $data['sort_id'] = isset($sort['payment.id']) ? $sort['payment.id'] : '';
-        $data['sort_n'] = isset($sort['user.nickname']) ? $sort['user.nickname'] : '';
-        $data['sort_c'] = isset($sort['payment.created_at']) ? $sort['payment.created_at'] : '';
         $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
 
-
-        $data['payments'] = $this->selectData->get_all_payments($where, false, $sort, array($offset, $this->post_per_page), true);
-        foreach ($data['payments'] as $key => &$value) {
-            $value['refund'] = $this->selectData->checkRefund((int)$value["id"]);
-            $value['student'] = $this->selectData->getStudent((int)$value["student_id"]);
-            $value['totalPrice']   = $this->selectData->getTotalPrice((int)$value["id"])[0]['cost'] ?? 0;
-        }
 
         $data['output'] = $this->load->view('home/payments', $data, true);
         $this->load->view('layout/home', $data);
@@ -921,5 +897,52 @@ class Home extends CI_Controller
             "data"            => $data,
         ];
         die(json_encode($output));
+    }
+
+    public function getPayments() {
+        $this->load->model("selectData");
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+
+        $total_data_count = $this->payments_model->getPaymentsData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->payments_model->getPaymentsData($length, $start, false, $search, $column, $order);
+
+
+        $data = [];
+
+        if (!empty($total_data)) {
+            foreach ($total_data as $payment) {
+                $data[] = [
+                    $payment['id'], //0
+                    $payment['trainer_nickname'], //1
+                    $payment['created_at'], //2
+                    $payment['date_time_from'], //3
+                    '<a href="'.base_url("/admin_panel/c-admin/user/edit/".$payment["user_id"]."/".$this->UserID).'">'.(!empty($payment["student_nickname"]) ? $payment["student_nickname"] : $payment["student_name"] ?? 'Пользователь').'</a>',
+                    $payment['total_price'], //5
+                    !empty($payment['refund_amount']) ? $payment['refund_amount'] . ' RUB' : '0 RUB',//6
+                    '<button class="btn btn-dark-blue btn-small" onclick="refund(
+                                                                                 \''. 0 .'\',  
+                                                                                 \''.$payment['yandex_kassa_id'].'\',
+                                                                                 \''.$this->UserID.'\',
+                                                                                 \''.'RUB'.'\',
+                                                                                 \''.base_url("c-admin/refund/$this->UserID").'\',
+                                                                                 \''.$payment['id'].'\')">Refund</button>'
+                ];
+            }
+        }
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+
+        die(json_encode($output));
+
     }
 }
