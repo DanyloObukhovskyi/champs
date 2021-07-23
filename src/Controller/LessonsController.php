@@ -330,25 +330,15 @@ class LessonsController extends AbstractController
 
 
                 if (!$user->getIsTrainer() && $trainer->getTimeZone() !== $user->getTimeZone()) {
-                    [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-                        $user->getTimeZone() ?? User::DEFAULT_TIMEZONE
-                    );
-                    if ($gmtNumeric < 0) {
-                        $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
+                    if (!empty($user->getTimezone())) {
+                        $userTimezone = $user->getTimeZone();
                     } else {
-                        $trainerTimezone = (int)gmdate("g", $gmtNumeric);
+                        $userTimezone = User::DEFAULT_TIMEZONE;
                     }
-
-                    if ($trainerTimezone < 0 && $timezone < 0) {
-                        $timeOffset = $trainerTimezone + abs($timezone);
-                    } elseif($trainerTimezone < 0 || $timezone < 0) {
-                        $timeOffset = $trainerTimezone + $timezone;
-                    } else {
-                        $timeOffset = $trainerTimezone - $timezone;
-                    }
+                    $dateFrom = $this->parseDateToUserRightTimezone($dateFrom, $userTimezone);
+                } else {
+                    $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
                 }
-
-                $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
 
                 $dateRu = $this->dateTranslate($dateFrom, $translator);
 
@@ -503,5 +493,18 @@ class LessonsController extends AbstractController
         } else {
             $this->getActiveDiscordChannel($decodedPayload);
         }
+    }
+
+    /**
+     * @param $date
+     * @param $timeOffset
+     * @return string
+     */
+    public function parseDateToUserRightTimezone($date, $timeZone)
+    {
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom->setTimezone($timeZone);
+
+        return $dateFrom;
     }
 }

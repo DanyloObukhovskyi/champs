@@ -570,8 +570,6 @@ class LessonService extends EntityService
      */
     public function decorateLesson(Lessons $lesson, $user, $timezone = null, $translator)
     {
-        $trainer = $lesson->getTrainer();
-
         $dateFrom = $lesson->getDateTimeFrom()->format('Y.m.d H');
         if (empty($lesson->getDateTimeTo())) {
             $dateTo = $lesson->getDateTimeFrom()->modify('+1 hour')->format('Y.m.d H');
@@ -581,40 +579,18 @@ class LessonService extends EntityService
 
         $timeOffset = 0;
 
-        [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-            $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
-        );
-        if ($gmtNumeric < 0) {
-            $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
-        } else {
-            $trainerTimezone = (int)gmdate("g", $gmtNumeric);
-        }
-
         if (!$user->getIsTrainer()) {
             if (!empty($user->getTimezone())) {
-                [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
-                    $user->getTimeZone()
-                );
-                if ($gmtNumeric < 0) {
-                    $userTimezone = -(int)gmdate("g", $gmtNumeric);
-                } else {
-                    $userTimezone = (int)gmdate("g", $gmtNumeric);
-                }
+                $userTimezone = $user->getTimeZone();
             } else {
-                $userTimezone = $timezone;
+                $userTimezone = User::DEFAULT_TIMEZONE;
             }
-
-            if ($trainerTimezone < 0 && $userTimezone < 0) {
-                $timeOffset = $trainerTimezone + abs($userTimezone);
-            } elseif($trainerTimezone < 0 || $userTimezone < 0) {
-                $timeOffset = $trainerTimezone + $userTimezone;
-            } else {
-                $timeOffset = $userTimezone - $trainerTimezone;
-            }
+            $dateFrom = $this->parseDateToUserRightTimezone($dateFrom, $userTimezone);
+            $dateTo = $this->parseDateToUserRightTimezone($dateTo, $userTimezone);
+        } else {
+            $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
+            $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
         }
-
-        $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
-        $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
 
         $trainingTogetherCount = $this->getTrainingTogetherCount($lesson);
         $decorateTrainer = $this->userService->decorator($lesson->getTrainer());
@@ -687,6 +663,19 @@ class LessonService extends EntityService
     {
         $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
         $dateFrom->setHour($dateFrom->hour + $timeOffset);
+
+        return $dateFrom;
+    }
+
+    /**
+     * @param $date
+     * @param $timeOffset
+     * @return string
+     */
+    public function parseDateToUserRightTimezone($date, $timeZone)
+    {
+        $dateFrom = Carbon::createFromFormat('Y.m.d H', $date);
+        $dateFrom->setTimezone($timeZone);
 
         return $dateFrom;
     }
