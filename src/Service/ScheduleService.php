@@ -69,6 +69,9 @@ class ScheduleService extends EntityService
             ->getRepository(User::class)
             ->find($userId);
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         $date = new \DateTime($date->format("Y-m-d"));
         $hours = 24;
 
@@ -101,7 +104,7 @@ class ScheduleService extends EntityService
                     $carbonDayDate->hour
                 );
 
-            $carbonNow = Carbon::now();
+            $carbonNow = Carbon::now()->setTimezone($user->getTimezone() ?? User::DEFAULT_TIMEZONE);
             $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
 
             if (isset($scheduleEntity)) {
