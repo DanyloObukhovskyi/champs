@@ -580,11 +580,15 @@ class LessonService extends EntityService
         $timeOffset = 0;
 
         if (!$user->getIsTrainer()) {
+            $trainerTimezone = $lesson->getTrainer()->getTimezone();
+            $dateFrom = $this->parseDateToUserRightTimezone($dateFrom, $trainerTimezone);
+
             if (!empty($user->getTimezone())) {
                 $userTimezone = $user->getTimeZone();
             } else {
                 $userTimezone = User::DEFAULT_TIMEZONE;
             }
+
             $dateFrom = $this->parseDateToUserRightTimezone($dateFrom, $userTimezone);
             $dateTo = $this->parseDateToUserRightTimezone($dateTo, $userTimezone);
         } else {

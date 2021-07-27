@@ -128,7 +128,7 @@ export default {
             return TRAINING_TYPES[this.trainingType];
         },
         selectedLessons() {
-            return this.lessons.filter(t => t.status === 2)
+            return this.lessons.filter(t => t.status === 2 || t.status === 3)
         },
         getPrice() {
             let price = 0;
@@ -152,6 +152,7 @@ export default {
                         time: lesson.from,
                     }
                 });
+
                 MarketplaceService.setLessonPay(lessons, this.trainingType, this.trainer.id)
                     .then((data) => {
                         this.load = false;
