@@ -180,7 +180,7 @@ class ScheduleService extends EntityService
             $scheduleCollect[$time] = $schedule['status'];
         }
         $scheduleCollect['date'] = $date->format("Y-m-d");
-        $scheduleCollect['date_now'] = $carbonNow->format("Y-m-d H");
+
         return $scheduleCollect;
     }
 
