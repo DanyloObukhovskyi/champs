@@ -10,7 +10,8 @@ use App\Repository\ScheduleRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\LessonTime;
-
+use DateTime;
+use DateTimeZone;
 
 class ScheduleService extends EntityService
 {
@@ -104,7 +105,12 @@ class ScheduleService extends EntityService
                     $carbonDayDate->hour
                 );
 
-            $carbonNow = Carbon::now()->setTimezone($user->getTimezone() ?? User::DEFAULT_TIMEZONE);
+            $dateNow = new DateTime("now", new DateTimeZone($user->getTimezone() ?? User::DEFAULT_TIMEZONE) );
+            $carbonNow = Carbon::createFromFormat(
+                "Y-m-d",
+                $dateNow->format("Y-m-d")
+            );
+            
             $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
 
             if (isset($scheduleEntity)) {
