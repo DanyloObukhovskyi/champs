@@ -107,12 +107,10 @@ class ScheduleService extends EntityService
 
             $dateNow = new DateTime("now", new DateTimeZone($user->getTimezone() ?? User::DEFAULT_TIMEZONE) );
             $carbonNow = Carbon::createFromFormat(
-                "Y-m-d",
-                $dateNow->format("Y-m-d")
+                "Y-m-d H",
+                $dateNow->format("Y-m-d H")
             );
-            
             $carbonNow->addHour($_ENV['LIMITING_BOOKING_LESSON']);
-
             if (isset($scheduleEntity)) {
                 if (((int)$carbonNow->timestamp - (int)$carbonDayDate->timestamp) > 0) {
                     if ($isStudent) {
@@ -182,7 +180,7 @@ class ScheduleService extends EntityService
             $scheduleCollect[$time] = $schedule['status'];
         }
         $scheduleCollect['date'] = $date->format("Y-m-d");
-
+        $scheduleCollect['date_now'] = $carbonNow->format("Y-m-d H");
         return $scheduleCollect;
     }
 
