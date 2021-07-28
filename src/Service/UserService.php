@@ -688,6 +688,15 @@ class UserService  extends EntityService
                 $user->getTimezone() ?? User::DEFAULT_TIMEZONE
             );
 
+        if (!empty($user->getTimeZone())) {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                ->getGmtTimezoneString($user->getTimeZone());
+        } else {
+            [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
+                ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+        }
+        $timeZone = "$timeZone ($gmt)";
+
         $bdate = null;
 
         if (!empty($user->getBday())) {
@@ -704,7 +713,7 @@ class UserService  extends EntityService
             'family' => $user->getFamily(),
             'discord' => $user->getDiscord(),
             'purse' => $user->getPurse(),
-            'timezone' => $user->getTimezone(),
+            'timezone' => $timeZone,
             'isTrainer' => $user->getIsTrainer(),
             'gmt' => $gmt,
             'level' => $userLvl,

@@ -3,12 +3,21 @@
         <div class="trainer-nickname">
             Запись на тренировку к <span>{{ trainer.nickname }}</span>
         </div>
-        <div class="trainer-timezone">
+        <div class="trainer-timezone" v-if="!user">
             <img src="/images/matches/time.svg">
             <div class="trainer-gmt">
                 часовой пояс тренера
                 <span>
                     {{ trainer.timeZone }}
+                </span>
+            </div>
+        </div>
+        <div class="trainer-timezone" v-else>
+            <img src="/images/matches/time.svg">
+            <div class="trainer-gmt">
+                ваш часовой пояс
+                <span>
+                    {{ user.timezone }}
                 </span>
             </div>
         </div>
