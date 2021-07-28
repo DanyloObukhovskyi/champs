@@ -18,6 +18,8 @@ use App\Service\ReviewService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
+use DateTime as NewDateTime;
+use DateTimeZone;
 
 
 class LessonService extends EntityService
@@ -576,8 +578,10 @@ class LessonService extends EntityService
         } else {
             $dateTo = $lesson->getDateTimeTo()->format('Y.m.d H');
         }
-
         $timeOffset = 0;
+
+        $dateNewFrom = NewDateTime::createFromFormat('Y.m.d H', (string)$dateFrom , new DateTimeZone($lesson->getTrainer()->getTimezone()));
+        $dateToFrom  = NewDateTime::createFromFormat('Y.m.d H', (string)$dateTo , new DateTimeZone($lesson->getTrainer()->getTimezone()));
 
         if (!$user->getIsTrainer()) {
             if (!empty($user->getTimezone())) {
@@ -585,8 +589,8 @@ class LessonService extends EntityService
             } else {
                 $userTimezone = User::DEFAULT_TIMEZONE;
             }
-            $dateFrom = $this->parseDateToUserRightTimezone($dateFrom, $userTimezone);
-            $dateTo = $this->parseDateToUserRightTimezone($dateTo, $userTimezone);
+            $dateFrom = $this->parseDateToUserRightTimezone($dateNewFrom->format('Y.m.d H'), $userTimezone);
+            $dateTo = $this->parseDateToUserRightTimezone($dateToFrom->format('Y.m.d H'), $userTimezone);
         } else {
             $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
             $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
