@@ -683,12 +683,13 @@ class UserService  extends EntityService
             $balance[$balanceEntity->getType()] = $balanceEntity->getBalance();
         }
 
-        [$gmt] = $this->timeZoneService
-            ->getGmtTimezoneString(
-                $user->getTimezone() ?? User::DEFAULT_TIMEZONE
-            );
 
         if (!empty($user->getTimeZone())) {
+            [$gmt] = $this->timeZoneService
+                ->getGmtTimezoneString(
+                    $user->getTimezone() ?? User::DEFAULT_TIMEZONE
+                );
+
             [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
                 ->getGmtTimezoneString($user->getTimeZone());
         } else {
