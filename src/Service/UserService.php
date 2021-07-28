@@ -693,7 +693,7 @@ class UserService  extends EntityService
                 ->getGmtTimezoneString($user->getTimeZone());
         } else {
             [$gmt, $gmtNumeric, $timeZone] = $this->timeZoneService
-                ->getGmtTimezoneString(Teachers::DEFAULT_TIMEZONE);
+                ->getGmtTimezoneString(User::DEFAULT_TIMEZONE);
         }
         $timeZone = "$timeZone ($gmt)";
 
