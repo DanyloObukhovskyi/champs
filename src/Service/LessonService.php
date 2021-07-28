@@ -583,14 +583,42 @@ class LessonService extends EntityService
         $dateNewFrom = NewDateTime::createFromFormat('Y.m.d H', (string)$dateFrom , new DateTimeZone($lesson->getTrainer()->getTimezone()));
         $dateToFrom  = NewDateTime::createFromFormat('Y.m.d H', (string)$dateTo , new DateTimeZone($lesson->getTrainer()->getTimezone()));
 
+        $trainer = $lesson->getTrainer();
+
         if (!$user->getIsTrainer()) {
-            if (!empty($user->getTimezone())) {
-                $userTimezone = $user->getTimeZone();
+            [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                $trainer->getTimeZone() ?? Teachers::DEFAULT_TIMEZONE
+            );
+            if ($gmtNumeric < 0) {
+                $trainerTimezone = -(int)gmdate("g", $gmtNumeric);
             } else {
-                $userTimezone = User::DEFAULT_TIMEZONE;
+                $trainerTimezone = (int)gmdate("g", $gmtNumeric);
             }
-            $dateFrom = $this->parseDateToUserRightTimezone($dateNewFrom->format('Y.m.d H'), $userTimezone);
-            $dateTo = $this->parseDateToUserRightTimezone($dateToFrom->format('Y.m.d H'), $userTimezone);
+
+            if (!$user->getIsTrainer()) {
+                if (!empty($user->getTimezone())) {
+                    [$gmt, $gmtNumeric, $timeZone] = $this->timezoneService->getGmtTimezoneString(
+                        $user->getTimeZone()
+                    );
+                    if ($gmtNumeric < 0) {
+                        $userTimezone = -(int)gmdate("g", $gmtNumeric);
+                    } else {
+                        $userTimezone = (int)gmdate("g", $gmtNumeric);
+                    }
+                } else {
+                    $userTimezone = $timezone;
+                }
+
+                if ($trainerTimezone < 0 && $userTimezone < 0) {
+                    $timeOffset = $trainerTimezone + abs($userTimezone);
+                } elseif($trainerTimezone < 0 || $userTimezone < 0) {
+                    $timeOffset = $trainerTimezone + $userTimezone;
+                } else {
+                    $timeOffset = $userTimezone - $trainerTimezone;
+                }
+            }
+            $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
+            $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
         } else {
             $dateFrom = $this->parseDateToUserTimezone($dateFrom, $timeOffset);
             $dateTo = $this->parseDateToUserTimezone($dateTo, $timeOffset);
