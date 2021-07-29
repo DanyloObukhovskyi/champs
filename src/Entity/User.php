@@ -173,6 +173,11 @@ class User implements UserInterface
      */
     private $city;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Blogs::class, mappedBy="user_id")
+     */
+    private $blogs;
+
     public function __construct()
     {
         $this->charactristics = new ArrayCollection();
@@ -181,6 +186,7 @@ class User implements UserInterface
         $this->purseHistories = new ArrayCollection();
         $this->videosUrls = new ArrayCollection();
         $this->mvpTeams = new ArrayCollection();
+        $this->blogs = new ArrayCollection();
     }
 
     /**
@@ -768,5 +774,35 @@ class User implements UserInterface
             }
         }
         return $result;
+    }
+
+    /**
+     * @return Collection|Blogs[]
+     */
+    public function getBlogs(): Collection
+    {
+        return $this->blogs;
+    }
+
+    public function addBlog(Blogs $blog): self
+    {
+        if (!$this->blogs->contains($blog)) {
+            $this->blogs[] = $blog;
+            $blog->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlog(Blogs $blog): self
+    {
+        if ($this->blogs->removeElement($blog)) {
+            // set the owning side to null (unless already changed)
+            if ($blog->getUserId() === $this) {
+                $blog->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 }
