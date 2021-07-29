@@ -1,0 +1,74 @@
+<template>
+    <div class="blog-page">
+        <div class="text-wrapper">
+            <slot name="about"></slot>
+        </div>
+        <img src="/images/Champs_Logo_About.png"/>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "Blog",
+    }
+</script>
+
+<style lang="scss">
+    .blog-page {
+        padding: 0 10vw;
+        display: flex;
+        align-items: center;
+        height: 30vw;
+
+        .text-wrapper {
+            margin: 0 5vw;
+            color: black;
+
+            p {
+                margin-bottom: 2vw;
+                font-size: 1.1vw;
+
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        img {
+            opacity: .5;
+            height: 17vw;
+            margin-right: 3vw;
+        }
+    }
+
+    .dark {
+        .about-page {
+            padding: 0 10vw;
+            display: flex;
+            align-items: center;
+            height: 30vw;
+
+            .text-wrapper {
+                margin: 0 5vw;
+                color: #a3a5a6;
+
+                p {
+                    margin-bottom: 2vw;
+                    font-size: 1.1vw;
+
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            img {
+                opacity: .5;
+                height: 17vw;
+                margin-right: 3vw;
+            }
+        }
+    }
+</style>
