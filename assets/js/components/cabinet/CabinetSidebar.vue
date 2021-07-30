@@ -43,6 +43,12 @@ const USER_PAGES = [
         iconActive: 'tournamentsIconActive.png',
     },
     {
+      name: 'Блог',
+      code: 'blog',
+      icon: 'tournamentsIcon.png',
+      iconActive: 'tournamentsIconActive.png',
+    },
+    {
         name: 'Новости',
         code: 'news',
         icon: 'newsIcon.png',
@@ -126,6 +132,7 @@ export default {
             if (this.user.isTrainer) {
                 type = 'trainer';
             }
+          console.log(code);
             return `/${CabinetService.lang}/${type}/cabinet/${code}`;
         },
         pageUp() {

@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Blogs;
 use App\Service\Seo\SeoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\User;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
@@ -49,5 +51,28 @@ class BlogsController extends AbstractController
             'meta_tags' => $seoSettings['meta'],
             'link' => $link,
             'router' => 'blog']);
+    }
+
+    /**
+     * @Route("/blogs/user", name="blog_user")
+     */
+    public function getBlogByUser(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), false);
+
+        if (!$user->getIsTrainer()) {
+            $blogs = $this->getDoctrine()
+                ->getRepository(Blogs::class)
+                ->findByStudentId($user->getId());
+        } else {
+            $blogs = $this->getDoctrine()
+                ->getRepository(Blogs::class)
+                ->findByTrainerId($user->getId());
+        }
+//        $parseLessons = $this->decorateLessons($lessons, $user, $data->timezone, $translator);
+
+        return $this->json('');
     }
 }
