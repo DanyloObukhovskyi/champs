@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
+use Carbon\CarbonImmutable;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
@@ -91,8 +92,8 @@ class WalletController extends AbstractController
         $date = Carbon::now();
         $date->setDay(1);
 
-        $datePrev = Carbon::now()->subMonth();
-        $datePrev->setDay(1);
+
+        $datePrev = Carbon::now()->setDay(1)->modify('- 1 month');
 
         $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
         $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);

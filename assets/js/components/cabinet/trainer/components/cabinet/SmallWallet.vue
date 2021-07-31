@@ -46,7 +46,7 @@
                         maximumSignificantDigits: 2
                     }
                 );
-                return cost.substring(0, cost.length-1);
+                return price;
             }
         }
     }
