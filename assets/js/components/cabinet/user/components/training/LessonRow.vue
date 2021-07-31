@@ -166,7 +166,7 @@
                         })
                 } else {
                     this.showReview = !this.showReview;
-                }F
+                }
             },
             async showDiscordModal() {
                 Swal.fire({
