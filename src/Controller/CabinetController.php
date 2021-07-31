@@ -276,9 +276,6 @@ class CabinetController extends AbstractController
         } else {
             $filename = md5(uniqid('', true)) . '.' . $file->guessExtension();
             $file->move($path, $filename);
-
-            $filesystem = new Filesystem();
-            $filesystem->remove($path . $user->getPhoto());
         }
         return [
             'filename' => $filename,
