@@ -13,8 +13,8 @@
                 <a :href="newsPage" class="pointer" :class="{active : router == 'novosti'}">
                     Новости
                 </a>
-                <a :href="blogPage" class="pointer" :class="{active : router == 'blog'}">
-                  Блог
+                <a :href="blogPage"  class="pointer" :class="{active : router == 'blog'}">
+                  Блоги
                 </a>
                 <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">
                     Матчи

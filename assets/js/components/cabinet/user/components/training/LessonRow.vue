@@ -158,7 +158,6 @@
                 return `${hours}:${minutes}`;
             },
             setConfirmed() {
-                console.log(this.user.isTrainer);
                 if (!this.isConfirmed) {
                     CabinetService.setConfirmed(this.lesson.id)
                         .then(lesson => {
@@ -166,7 +165,7 @@
                         })
                 } else {
                     this.showReview = !this.showReview;
-                }F
+                }
             },
             async showDiscordModal() {
                 Swal.fire({

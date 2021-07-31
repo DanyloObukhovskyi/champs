@@ -38,7 +38,7 @@ class Blogs
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="blogs")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="blogs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user_id;
@@ -49,7 +49,7 @@ class Blogs
     private $views;
 
     /**
-     * @ORM\ManyToOne(targetEntity=game::class, inversedBy="blogs")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="blogs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $game_id;
