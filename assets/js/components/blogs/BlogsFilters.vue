@@ -4,7 +4,7 @@
             <lamp-header title="Блоги"/>
         </div>
         <div class="filters-middle">
-            <a href="#" @click="checkAuth" style="color: black" class="d-flex align-items-center">
+            <a href="createBlog" @click="checkAuth" style="color: black" class="d-flex align-items-center">
                 <img class="filters-icons" src="/images/icons/blog.svg" alt="">
                 Написать пост
             </a>

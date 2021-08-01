@@ -49,7 +49,8 @@ import CsHomePage from "./pages/CsHomePage";
 import Page404 from "./pages/Page404";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import Blog from "./pages/Blog";
+import Blog from "./pages/Blog"
+import blogCreate from "./pages/BlogCreate";
 import BlogsFilters from "./components/Blogs/BlogsFilters";
 import BlogsRow from "./components/Blogs/BlogsRow";
 import HotBlogs from "./components/Blogs/HotBlogs";
@@ -105,6 +106,7 @@ Vue.component('blog', Blog);
 Vue.component('blogs-row', BlogsRow);
 Vue.component('blog-filters', BlogsFilters);
 Vue.component('hot-blogs', HotBlogs);
+Vue.component('blog-create', blogCreate);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

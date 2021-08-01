@@ -129,4 +129,23 @@ class BlogsController extends AbstractController
 
         return $this->json('');
     }
+
+    /**
+     * @Route("/createBlog", name="createBlog")
+     */
+    public function createBlog(Request $request): Response
+    {
+        $seoSettings = $this->seoService->getSeo('contact_index');
+        $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
+
+        return $this->render('templates/blogs/create.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => 'Создать блог',
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'link' => $link,
+            'router' => 'blog']);
+    }
 }

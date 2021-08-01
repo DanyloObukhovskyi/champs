@@ -48,6 +48,7 @@
   "devDependencies": {
     "@gfx/zopfli": "^1.0.15",
     "@symfony/webpack-encore": "^0.31.0",
+    "@voerro/vue-tagsinput": "^2.7.1",
     "compression-webpack-plugin": "^6.0.5",
     "node-sass": "^5.0.0",
     "sass-loader": "^10.1.0",
