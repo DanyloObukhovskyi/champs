@@ -95,7 +95,7 @@ class EventsController extends AbstractController
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
-            'description' => $seoSettings['description'],
+            'description' => strip_tags($seoSettings['description']),
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
             'router' => 'events']);
@@ -231,7 +231,7 @@ class EventsController extends AbstractController
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
             'title' => $seoSettings['title'],
-            'description' => $seoSettings['description'],
+            'description' => strip_tags($seoSettings['description']),
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
             'router' => 'digest',
