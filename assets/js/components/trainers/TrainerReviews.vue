@@ -192,6 +192,8 @@
 	  .left {
 		width: 80%;
 
+
+
 		.empty-reviews-block {
 		  height: 25vw;
 		  background-color: #ffffff;
@@ -203,7 +205,8 @@
 
 		.reviews-list {
 		  background-color: #ffffff;
-		  min-height: 6vw;
+		  min-height: 25vw;
+
 
 		  .review {
 			padding: 1vw;
@@ -281,6 +284,9 @@
 			color: #ff6d1d;
 			font-size: 1vw;
 			cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
 
 			&:hover .span {
 			  opacity: .5;
