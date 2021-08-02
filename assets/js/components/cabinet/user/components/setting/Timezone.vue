@@ -60,6 +60,17 @@
         },
         methods: {
             updateDiscord() {
+              if (!this.timezone) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Упс...',
+                  text: 'Вы не заполнили часовой пояс!',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+                this.load = false;
+                return;
+              }
                 if (!this.load) {
                     const form = new FormData();
                     form.append('timezone', this.timezone);
@@ -111,7 +122,7 @@
 	.form-group{
       &.timezone{
 		.multiselect__tags {
-		  width: 13vw !important;
+		  width: 14vw !important;
 		}
       }
 	}
