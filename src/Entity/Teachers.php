@@ -65,6 +65,7 @@ class Teachers
 
     /**
      * @ORM\OneToMany(targetEntity=TrainerLessonPrice::class, mappedBy="trainer")
+     * @ORM\OrderBy({"price" = "ASC"})
      */
     private $costs;
 
