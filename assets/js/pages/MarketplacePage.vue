@@ -45,7 +45,7 @@
             return {
                 filters: {
                     workout: 'all',
-                    isExpensive: false,
+                    isExpensive: true,
                     search: null,
                 },
                 trainers: [],
@@ -110,7 +110,8 @@
             getTrainers() {
                 if (!this.load && !this.loadAllTrainers){
                     this.load = true;
-
+                  console.log('Filters');
+                  console.log(this.filters);
                     MarketplaceService.getTrainers(this.game, this.trainers.length,  this.filters)
                         .then(data => {
                             if (data.trainers.length === 0)
