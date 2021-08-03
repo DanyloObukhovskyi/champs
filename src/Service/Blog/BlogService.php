@@ -5,6 +5,7 @@ namespace App\Service\News;
 
 
 use App\Entity\Blogs;
+use App\Entity\BlogTags;
 use App\Entity\BlogTypes;
 use App\Entity\BlogTypeAttr;
 use App\Repository\BlogsRepository;
@@ -89,12 +90,11 @@ class BlogService extends EntityService
      * @param $formats
      * @return mixed
      */
-    public function getByFilters($request, $limit, $offset, $formats)
+    public function getByFilters($request, $limit, $offset)
     {
         return $this->repository->getByFilters(
             $request->search ?? null,
             $request->tags,
-            $formats,
             $request->titles,
             $request->texts,
             $this->parseDate($request->dateFrom ?? null),
@@ -256,42 +256,36 @@ class BlogService extends EntityService
     }
 
     /**
-     * @param Blogs $blogs
+     * @param Blogs $blog
      * @return array
      */
-    public function decoratorForAllBlogs(Blogs $blogs): array
+    public function decoratorForAllBlogs(Blogs $blog): array
     {
         $tags = [];
 
-//        /** @var NewsTag $tagsEntity */
-//        foreach ($blogs->getTags() as $tagsEntity) {
-//            $tags[] = [
-//                'title' => $tagsEntity->getTitle(),
-//            ];
-//        }
-
-        $blogsTypeId = $blogs->getType();
-        $type = [];
-        if(!empty($blogsTypeId)){
-            $type = $this->entityManager
-                ->getRepository(BlogTypes::class)
-                ->findOneBy(['id' => $blogsTypeId]);
+        /** @var BlogTags $tagsEntity */
+        foreach ($blog->getTags() as $tagsEntity) {
+            $tags[] = [
+                'title' => $tagsEntity->getTitle(),
+            ];
         }
 
         return [
-            'id' => $blogs->getId(),
-            'title' => $blogs->getTitle(),
-            'date' => $blogs->getDate()->format('m-d H:i'),
-            'url' => $blogs->getUrl(),
-            'type' => $type,
+            'id' => $blog->getId(),
+            'title' => $blog->getTitle(),
+            'logo' => $blog->getLogo(),
+            'date' => $blog->getDate()->format('m-d H:i'),
             'tags' => $tags,
-            'game' => !empty($blogs->getGame()) ? $blogs->getGame() : null,
-            'date_ru' => $blogs->getDate()->format('Y') === date('Y') ? self::replaceMonth($blogs->getDate()->format('d F H:i')) :  self::replaceMonth($blogs->getDate()->format('d F Y')),
-            'date_ru_msk' => $blogs->getDate()->format('Y') === date('Y') ? self::replaceMonth($blogs->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($blogs->getDate()->format('d F Y')),
-            'date_ru_with_year' => $blogs->getDate()->format('Y') === date('Y') ? $blogs->getDate()->format('d m H_i') : $blogs->getDate()->format('d m Y'),
-            'date_ru_with_year_for_url' => $blogs->getDate()->format('Y') === date('Y') ? $blogs->getDate()->format('d m') : $blogs->getDate()->format('d m Y'),
-            'views' => $blogs->getViews() ?? 0,
-            'commentsCount' => count($blogs->getComments())
+            'text' => $blog->getText(),
+            'game' => !empty($blog->getGame()) ? $blog->getGame()->getName() : null,
+            'date_ru' => $blog->getDate()->format('Y') === date('Y') ? self::replaceMonth($blog->getDate()->format('d F H:i')) :  self::replaceMonth($blog->getDate()->format('d F Y')),
+            'date_ru_msk' => $blog->getDate()->format('Y') === date('Y') ? self::replaceMonth($blog->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($blog->getDate()->format('d F Y')),
+            'date_ru_with_year' => $blog->getDate()->format('Y') === date('Y') ? $blog->getDate()->format('d m H_i') : $blog->getDate()->format('d m Y'),
+            'date_ru_with_year_for_url' => $blog->getDate()->format('Y') === date('Y') ? $blog->getDate()->format('d m') : $blog->getDate()->format('d m Y'),
+            'views' => $blog->getViews() ?? 0,
+            'username' => $blog->getUser()->getName() . ' ' . $blog->getUser()->getFamily(),
+            'user_logo' => $blog->getUser()->getPhoto()
+//            'commentsCount' => count($blogs->getComments())
         ];
     }
 

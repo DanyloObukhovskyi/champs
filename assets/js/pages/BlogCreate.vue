@@ -26,7 +26,7 @@ import Swal from "sweetalert2";
                             <div class="form-group">
                                 <label>Заголовок вашей публикации</label>
                                 <div class="input">
-                                    <input type="text" class="col-12">
+                                    <input v-model="title" type="text" class="col-12">
                                 </div>
                             </div>
                         </div>
@@ -48,7 +48,7 @@ import Swal from "sweetalert2";
                         <div class="setting-col-12">
                             <div class="form-group">
                                 <label style="margin-bottom: 0;">Загрузите изображения для вашей публикации</label>
-                                <form name="uploadAvatar" class="upload" style="margin-bottom: 0;">
+                                <form name="uploadImage" class="upload" style="margin-bottom: 0;">
                                     <label for="image-upload-form" style="color:white">
                                         {{selectedFileName}}
                                     </label>
@@ -61,6 +61,7 @@ import Swal from "sweetalert2";
                             <div class="form-group">
                                 <label>Текст вашей публикации</label>
                                     <editor
+                                            v-model="text"
                                             api-key="vh6riwhud16qd55ticd0ycx8lg3v3uqaavhdlvjlroakepce"
                                             :init="{
                                                  height: 500,
@@ -97,8 +98,8 @@ import Swal from "sweetalert2";
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="save-button col-3">Сохранить в черновик</button>
-                    <button class="save-button col-3">Отправить на модерацию</button>
+                    <button class="save-button col-3" @click="saveToEdit">Сохранить в черновик</button>
+                    <button class="save-button col-3" @click="sendToAdmin">Отправить на модерацию</button>
                 </div>
             </div>
         </div>
@@ -111,6 +112,8 @@ import Swal from "sweetalert2";
     import Editor from '@tinymce/tinymce-vue'
     import VueTagsInput from '@vojtechlanka/vue-tags-input';
     import Swal from 'sweetalert2';
+    import CabinetService from "../services/CabinetService";
+    import BlogService from "../services/BlogService";
 
     export default {
         name: "BlogCreate",
@@ -129,7 +132,7 @@ import Swal from "sweetalert2";
                 selectedFile: null,
                 title: null,
                 selectedGame: null,
-                text: null
+                text: ''
             }
         },
         computed: {
@@ -170,7 +173,147 @@ import Swal from "sweetalert2";
                     };
                     img.src = URL.createObjectURL(input.files[0]);
                     let name = input.files[0].name;
-                    this.selectedFile = name;
+                    this.selectedFileName = name;
+                }
+            },
+            saveToEdit()
+            {
+                let title = this.title;
+                let game = this.selectedCodeGame;
+                const input = document.querySelector('#image-upload-form');
+                let image = new FormData(document.forms.uploadImage);
+                let text = this.text;
+
+                this.load = true;
+
+                let isFull = true;
+                let type = [];
+                if(!title){
+                    isFull = false
+                    type.push('заголовок');
+                }
+                if(!game){
+                    isFull = false
+                    type.push('игру');
+                }
+                if(!input.files[0]){
+                    isFull = false
+                    type.push('изображение');
+                }
+                if(!text){
+                    isFull = false
+                    type.push('текст');
+                }
+                if(!this.tags){
+                    isFull = false
+                    type.push('теги');
+                }
+
+                let userType = '';
+                type.forEach((value, index) => {
+                    if(index > 0){
+                        userType = userType + ', ' + value;
+                    } else {
+                        userType = userType + ' ' + value;
+                    }
+                })
+                if(!isFull) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не заполнили поле ' + userType + ' при создании блога',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.load = false;
+                } else {
+                    const form = new FormData();
+                    form.append('title', title);
+                    form.append('game', game);
+                    form.append('image', input.files[0]);
+                    form.append('text', text);
+                    form.append('status', 2);
+                    let tags = [];
+                    this.tags.forEach((item, key) => {
+                        tags[key] = item.text;
+                    });
+                    form.append('tags', tags);
+
+                    BlogService.createBlog(form)
+                        .then(blog => {
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Блог сохранен!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
+                        })
+                        .catch(({response: {data}}) => {
+                            this.load = false;
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Упс...',
+                                text: data.avatar,
+                            })
+                        })
+                }
+            },
+            sendToAdmin()
+            {
+                let title = this.title;
+                let game = this.selectedCodeGame;
+                const input = document.querySelector('#image-upload-form');
+                let image = new FormData(document.forms.uploadImage);
+                let text = this.text;
+                let tags = this.tags;
+
+                this.load = true;
+
+                let isFull = true;
+                let type = [];
+                if(!title){
+                    isFull = false
+                    type.push('заголовок');
+                }
+                if(!game){
+                    isFull = false
+                    type.push('игру');
+                }
+                if(!input.files[0]){
+                    isFull = false
+                    type.push('изображение');
+                }
+                if(!text){
+                    isFull = false
+                    type.push('текст');
+                }
+                if(!tags){
+                    isFull = false
+                    type.push('теги');
+                }
+
+                let userType = '';
+                type.forEach((value, index) => {
+                    if(index > 0){
+                        userType = userType + ', ' + value;
+                    } else {
+                        userType = userType + ' ' + value;
+                    }
+                })
+                if(!isFull) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не заполнили поле ' + userType + ' при создании блога',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.load = false;
+                } else {
+
                 }
             }
         }

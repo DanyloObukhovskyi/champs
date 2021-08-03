@@ -1,7 +1,7 @@
 <template>
     <a :href="`/${lang}/blog/${blogs.id}/` + getSlug(blogs)"
        class="article d-block animation-target"
-       :style="{'background-image': `url(/images/temp/blogs/${blogs.logo})`}"
+       :style="{'background-image': `url(/uploads/blogs/${blogs.logo})`}"
        :class="className">
 
         <div class="article-wrapper">
@@ -25,7 +25,15 @@
 
         <div class="author-data d-flex justify-content-between align-items-center">
             <div class="author d-flex justify-content-between align-items-center">
-                Тестовый Автор
+                <div class="avatar-wrapper">
+                    <div class="avatar">
+                        <div class="gradient">
+                            <div class="image-wrapper" :style="imageWrapperImage">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span style="color: black"> {{ blogs.username }} </span>
                 <div class="date">
                     {{ blogs.date_ru }}
                 </div>
@@ -51,6 +59,16 @@ export default {
     computed: {
         lang() {
             return NewsService.lang;
+        },
+        imageWrapperImage() {
+            const background = '/uploads/avatars/' + this.blogs.user_logo;
+
+            return {
+                'background-image': `url('${background}'), url('/images/noLogoAvatar.png')`
+            }
+            return {
+                'background-image': `url('/images/noLogoAvatar.png')`
+            }
         }
     },
     methods: {
@@ -323,4 +341,93 @@ export default {
     color: #8298ac;
     margin-left: .2vw;
 }
+
+</style>
+<style scoped lang="scss">
+    #avatar-upload-form {
+        display: none;
+    }
+
+    .avatar-wrapper {
+        .avatar {
+            display: flex;
+            justify-content: center;
+            margin-right: 5px;
+
+            .gradient {
+                width: 2vw;
+                height: 2vw;
+                border-radius: 50%;
+                border-radius: 50%;
+                background: #ff6f1f;
+                background: -moz-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+                background: -webkit-linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+                background: linear-gradient(0deg, #ff6f1f 0%, #ffc24f 88%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6f1f", endColorstr="#ffc24f", GradientType=1);
+
+                .image-wrapper {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    background-image: url("/images/noLogo.png");
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        .upload {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5vw;
+            flex-direction: column;
+            align-items: center;
+
+            span {
+                font-size: 1vw;
+            }
+
+            label {
+                background: #ff6d1d;
+                font-size: 1vw;
+                height: 2.3vw;
+                width: 9.5vw;
+                color: white;
+                display: flex;
+                justify-content: center;
+                border-radius: .3vw;
+                align-items: center;
+                cursor: pointer;
+            }
+
+            label:hover {
+                background: #ff8f2b;
+            }
+        }
+    }
+
+    .dark {
+        #avatar.setting-container-body.avatar-setting {
+            background: #25282a;
+            background: -moz-linear-gradient(90deg, #25282a 0%, #3d4146 100%);
+            background: -webkit-linear-gradient(
+                            90deg, #25282a 0%, #3d4146 100%);
+            background: linear-gradient(
+                            90deg, #25282a 0%, #3d4146 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#25282a", endColorstr="#3d4146", GradientType=1);
+        }
+
+        .upload {
+            label {
+                border: .1vw solid white;
+            }
+        }
+    }
 </style>

@@ -31,6 +31,10 @@ class BlogService extends Service {
     getHotBlogs = (ofset = 0, filters = {}) => {
         return this.send(`hot/blogs/`+ ofset, filters);
     }
+
+    createBlog = updateData => {
+        return this.send('ajax/create/blog', updateData)
+    }
 }
 
 export default new BlogService();

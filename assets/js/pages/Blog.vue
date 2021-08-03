@@ -221,7 +221,7 @@
 
                             for (let item of data) {
                                 const blogs = this.hotBlogs.find(hotBlogs => Number(item.id) === Number(hotBlogs.id))
-                                if (!news) {
+                                if (!blogs) {
                                     this.hotBlogs.push(item);
                                 }
                             }

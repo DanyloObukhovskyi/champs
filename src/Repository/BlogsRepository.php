@@ -51,7 +51,6 @@ class BlogsRepository extends ServiceEntityRepository
     /**
      * @param string|null $search
      * @param array $tags
-     * @param array $formats
      * @param array $titles
      * @param array $texts
      * @param string|null $dateFrom
@@ -67,7 +66,6 @@ class BlogsRepository extends ServiceEntityRepository
     public function getByFilters(
         ?string $search = null,
         array $tags = [],
-        array $formats = [],
         array $titles = [],
         array $texts = [],
         string $dateFrom = null,
@@ -81,11 +79,6 @@ class BlogsRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder("n")
             ->orderBy("n.$orderField", $orderType);
-
-        if (!empty($formats)) {
-            $query->andwhere('n.type IN(:formats)')
-                ->setParameter('formats', $formats);
-        }
 
         if (!empty($tags)) {
             $query->leftJoin('n.newsTags', 'nt');

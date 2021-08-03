@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BlogsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Blogs
 {
+    const ACTIVE = 1;
+    const EDIT = 2;
+    const BLOCK  = 3;
+    const MODARATE = 4;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -38,21 +45,9 @@ class Blogs
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="blogs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user_id;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $views;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="blogs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $game_id;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -60,10 +55,37 @@ class Blogs
     private $is_top;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BlogTypes::class, inversedBy="blogs")
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BlogTags::class, mappedBy="blog", orphanRemoval=true)
+     */
+    private $tags;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="blogs")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $type_id;
+    private $game;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="blogs")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BlogComment::class, mappedBy="blog", orphanRemoval=true)
+     */
+    private $blogComments;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+        $this->blogComments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -118,18 +140,6 @@ class Blogs
         return $this;
     }
 
-    public function getUserId(): ?user
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(?user $user_id): self
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
     public function getViews(): ?int
     {
         return $this->views;
@@ -138,18 +148,6 @@ class Blogs
     public function setViews(?int $views): self
     {
         $this->views = $views;
-
-        return $this;
-    }
-
-    public function getGameId(): ?game
-    {
-        return $this->game_id;
-    }
-
-    public function setGameId(?game $game_id): self
-    {
-        $this->game_id = $game_id;
 
         return $this;
     }
@@ -166,14 +164,98 @@ class Blogs
         return $this;
     }
 
-    public function getTypeId(): ?BlogTypes
+    public function getStatus(): ?int
     {
-        return $this->type_id;
+        return $this->status;
     }
 
-    public function setTypeId(?BlogTypes $type_id): self
+    public function setStatus(int $status): self
     {
-        $this->type_id = $type_id;
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogTags[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(BlogTags $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->setBlog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(BlogTags $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            // set the owning side to null (unless already changed)
+            if ($tag->getBlog() === $this) {
+                $tag->setBlog(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getGame(): ?game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?game $game): self
+    {
+        $this->game = $game;
+
+        return $this;
+    }
+
+    public function getUser(): ?user
+    {
+        return $this->user;
+    }
+
+    public function setUser(?user $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogComment[]
+     */
+    public function getBlogComments(): Collection
+    {
+        return $this->blogComments;
+    }
+
+    public function addBlogComment(BlogComment $blogComment): self
+    {
+        if (!$this->blogComments->contains($blogComment)) {
+            $this->blogComments[] = $blogComment;
+            $blogComment->setBlog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogComment(BlogComment $blogComment): self
+    {
+        if ($this->blogComments->removeElement($blogComment)) {
+            // set the owning side to null (unless already changed)
+            if ($blogComment->getBlog() === $this) {
+                $blogComment->setBlog(null);
+            }
+        }
 
         return $this;
     }

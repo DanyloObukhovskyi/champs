@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ blogs.title }} - {{ blogs.category }} от Champs.pro{% endblock %}
+{% block router %}{{ blogs.title }}{% endblock %}
+{% block canonical %}
+{#    <link rel=“canonical” href=“{{ link }}/blogs/{{ blogs.id }}/{{ blogs.url }}” />#}
+{% endblock %}
+{% block description %}
+{#    {% if blogs.text|length > 155 %}#}
+{#        <meta name="description" content="{{ description|slice(0, 155) ~ '...' }}">#}
+{#    {% endif %}#}
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords" content="Игровые матчи, Игровые новости, События, Видео, Интервью">
+{% endblock %}
+{% block schema %}
+{#    <script type="application/ld+json">#}
+{#        {#}
+{#            "@context": "http://schema.org",#}
+{#            "@graph" :#}
+{#                {#}
+{#                    "@type": "NewsArticle",#}
+{#                    "@id": "{{ link }}/novosti/{{ news.id }}/{{ news.url }}",#}
+{#                    "headline": "{{ news.title }}",#}
+{#                    "datePublished": "{{ date }}",#}
+{#                    "articleBody": "{{ news.text }}",#}
+{#                    "image": {#}
+{#                        "@type": "imageObject",#}
+{#                        "url": "{{ link }}/images/temp/news/{{ news.logo }}",#}
+{#                        "height": "400",#}
+{#                        "width": "300"#}
+{#                    },#}
+{#                    "author": [{"@type":"Person", "name":"Champs Pro"}]#}
+{#                }#}
+{#        }#}
+{#    </script>#}
+{% endblock  %}
+{% block body %}
+    <h1 style="opacity: 0; position: absolute; left: 0; top: 0">
+        {{ blogs.title }}
+    </h1>
+
+    <div class="news page">
+        <div class="ml-8 mr-8 p-0">
+            <div class="navigation d-flex align-items-center justify-content-between" style="width: 11%;">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right" style="font-size: .7vw"></i>
+                <a style="" href="{{ url('blogs') }}">
+                    Блоги
+                </a>
+            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0 articles__content">
+            <blogs-view-page news-id="{{ blogsId }}"></blogs-view-page>
+        </div>
+    </div>
+{% endblock %}

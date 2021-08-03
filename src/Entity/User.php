@@ -174,9 +174,20 @@ class User implements UserInterface
     private $city;
 
     /**
-     * @ORM\OneToMany(targetEntity=Blogs::class, mappedBy="user_id")
+     * @ORM\OneToMany(targetEntity=Blogs::class, mappedBy="user", orphanRemoval=true)
      */
     private $blogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BlogComment::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $blogComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BlogCommentLikes::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $blogCommentLikes;
+
 
     public function __construct()
     {
@@ -187,6 +198,8 @@ class User implements UserInterface
         $this->videosUrls = new ArrayCollection();
         $this->mvpTeams = new ArrayCollection();
         $this->blogs = new ArrayCollection();
+        $this->blogComments = new ArrayCollection();
+        $this->blogCommentLikes = new ArrayCollection();
     }
 
     /**
@@ -776,19 +789,11 @@ class User implements UserInterface
         return $result;
     }
 
-    /**
-     * @return Collection|Blogs[]
-     */
-    public function getBlogs(): Collection
-    {
-        return $this->blogs;
-    }
-
     public function addBlog(Blogs $blog): self
     {
         if (!$this->blogs->contains($blog)) {
             $this->blogs[] = $blog;
-            $blog->setUserId($this);
+            $blog->setUser($this);
         }
 
         return $this;
@@ -798,8 +803,68 @@ class User implements UserInterface
     {
         if ($this->blogs->removeElement($blog)) {
             // set the owning side to null (unless already changed)
-            if ($blog->getUserId() === $this) {
-                $blog->setUserId(null);
+            if ($blog->getUser() === $this) {
+                $blog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogComment[]
+     */
+    public function getBlogComments(): Collection
+    {
+        return $this->blogComments;
+    }
+
+    public function addBlogComment(BlogComment $blogComment): self
+    {
+        if (!$this->blogComments->contains($blogComment)) {
+            $this->blogComments[] = $blogComment;
+            $blogComment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogComment(BlogComment $blogComment): self
+    {
+        if ($this->blogComments->removeElement($blogComment)) {
+            // set the owning side to null (unless already changed)
+            if ($blogComment->getUser() === $this) {
+                $blogComment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogCommentLikes[]
+     */
+    public function getBlogCommentLikes(): Collection
+    {
+        return $this->blogCommentLikes;
+    }
+
+    public function addBlogCommentLike(BlogCommentLikes $blogCommentLike): self
+    {
+        if (!$this->blogCommentLikes->contains($blogCommentLike)) {
+            $this->blogCommentLikes[] = $blogCommentLike;
+            $blogCommentLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogCommentLike(BlogCommentLikes $blogCommentLike): self
+    {
+        if ($this->blogCommentLikes->removeElement($blogCommentLike)) {
+            // set the owning side to null (unless already changed)
+            if ($blogCommentLike->getUser() === $this) {
+                $blogCommentLike->setUser(null);
             }
         }
 

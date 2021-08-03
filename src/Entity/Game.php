@@ -70,7 +70,7 @@ class Game implements \JsonSerializable
     private $show_rank;
 
     /**
-     * @ORM\OneToMany(targetEntity=Blogs::class, mappedBy="game_id")
+     * @ORM\OneToMany(targetEntity=Blogs::class, mappedBy="game", orphanRemoval=true)
      */
     private $blogs;
 
@@ -253,19 +253,11 @@ class Game implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return Collection|Blogs[]
-     */
-    public function getBlogs(): Collection
-    {
-        return $this->blogs;
-    }
-
     public function addBlog(Blogs $blog): self
     {
         if (!$this->blogs->contains($blog)) {
             $this->blogs[] = $blog;
-            $blog->setGameId($this);
+            $blog->setGame($this);
         }
 
         return $this;
@@ -275,8 +267,8 @@ class Game implements \JsonSerializable
     {
         if ($this->blogs->removeElement($blog)) {
             // set the owning side to null (unless already changed)
-            if ($blog->getGameId() === $this) {
-                $blog->setGameId(null);
+            if ($blog->getGame() === $this) {
+                $blog->setGame(null);
             }
         }
 
