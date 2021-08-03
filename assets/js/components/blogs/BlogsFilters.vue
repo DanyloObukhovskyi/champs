@@ -125,7 +125,6 @@ export default {
             types: {
                 titles: 'Названия',
                 texts: 'Текст',
-                formats: 'Форматы',
                 tags: ''
             },
             formats: []

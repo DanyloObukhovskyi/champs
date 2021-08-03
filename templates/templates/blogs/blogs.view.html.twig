@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ blogs.title }} - {{ blogs.category }} от Champs.pro{% endblock %}
+{% block title %}{{ blogs.title }}  от Champs.pro{% endblock %}
 {% block router %}{{ blogs.title }}{% endblock %}
 {% block canonical %}
 {#    <link rel=“canonical” href=“{{ link }}/blogs/{{ blogs.id }}/{{ blogs.url }}” />#}
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="ml-8 mr-8 p-0 articles__content">
-            <blogs-view-page news-id="{{ blogsId }}"></blogs-view-page>
+            <blogs-view-page blog-id="{{ blogsId }}"></blogs-view-page>
         </div>
     </div>
 {% endblock %}

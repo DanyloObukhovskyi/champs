@@ -130,7 +130,6 @@ class BlogService extends EntityService
         return $this->repository->getByFilters(
             $request->search ?? null,
             $filters->tags ?? [],
-            $filters->formats ?? [],
             $filters->titles ?? [],
             $filters->texts ?? [],
             $this->parseDate($filters->dateFrom ?? null),
@@ -327,6 +326,17 @@ class BlogService extends EntityService
             'views' => $blogs->getViews() ?? 0,
             'commentsCount' => count($blogs->getComments())
         ];
+    }
+
+    /**
+     * @param Blogs $blog
+     * @return mixed
+     */
+    public function incrementingViews(Blogs $blog)
+    {
+        $blog->setViews((int)$blog->getViews() + 1);
+
+        return $this->save($blog);
     }
 
 }

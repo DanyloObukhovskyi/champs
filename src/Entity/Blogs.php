@@ -81,10 +81,16 @@ class Blogs
      */
     private $blogComments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BlogLikes::class, mappedBy="blog", orphanRemoval=true)
+     */
+    private $blogLikes;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->blogComments = new ArrayCollection();
+        $this->blogLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -254,6 +260,36 @@ class Blogs
             // set the owning side to null (unless already changed)
             if ($blogComment->getBlog() === $this) {
                 $blogComment->setBlog(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogLikes[]
+     */
+    public function getBlogLikes(): Collection
+    {
+        return $this->blogLikes;
+    }
+
+    public function addBlogLike(BlogLikes $blogLike): self
+    {
+        if (!$this->blogLikes->contains($blogLike)) {
+            $this->blogLikes[] = $blogLike;
+            $blogLike->setBlog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogLike(BlogLikes $blogLike): self
+    {
+        if ($this->blogLikes->removeElement($blogLike)) {
+            // set the owning side to null (unless already changed)
+            if ($blogLike->getBlog() === $this) {
+                $blogLike->setBlog(null);
             }
         }
 

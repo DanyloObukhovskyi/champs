@@ -81,7 +81,7 @@ class BlogsRepository extends ServiceEntityRepository
             ->orderBy("n.$orderField", $orderType);
 
         if (!empty($tags)) {
-            $query->leftJoin('n.newsTags', 'nt');
+            $query->leftJoin('n.tags', 'nt');
             $query->andwhere('nt.title IN(:tags)')
                 ->setParameter('tags', $tags);
         }

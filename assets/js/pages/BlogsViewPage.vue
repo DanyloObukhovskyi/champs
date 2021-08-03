@@ -35,9 +35,9 @@
                     <loader v-if="load"/>
                 </div>
             </div>
-            <div class="news col-3 pr-0" :style="btnStyles">
+            <div class="news col-3 pr-0" >
                 <blogs-filters :filters="filters" @reload="reload"/>
-                <hot-blogs :blogs="hotBlogs"/>
+                <hot-blogs :blogs="hotBlogs" :style="btnStyles"/>
             </div>
         </div>
         <div class="d-flex">
@@ -62,7 +62,7 @@
                 <div class="comments" v-if="blogs !== null">
 <!--                    <blogs-comments-->
 <!--                            :comments-count="blogs.commentsCount"-->
-<!--                            :blogs-id="blogsId"-->
+<!--                            :blog-id="blogId"-->
 <!--                            :comments="comments"-->
 <!--                            @update="updateComments">-->
 <!--                    </blogs-comments>-->
@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import BlogsFilters from "../components/blogs/BlogsFilters";
-import HotBlogs from "../components/blogs/HotBlogs";
 import Loader from "../components/helpers/Loader";
 import ShareButtons from "../components/social/ShareButtons";
 // import BlogsComments from "../components/news/BlogsComments";
@@ -99,10 +97,13 @@ import ShareButtons from "../components/social/ShareButtons";
 import BlogService from "../services/BlogService";
 import Likes from "../components/likes/Likes";
 import { Tweet, Moment, Timeline } from 'vue-tweet-embed';
+import BlogsFilters from "../components/Blogs/BlogsFilters";
+import HotBlogs from "../components/Blogs/HotBlogs";
+
 export default {
     name: "BlogsViewPage",
     props: [
-        'blogsId'
+        'blogId'
     ],
     components: {
         Likes,
@@ -216,7 +217,7 @@ export default {
         },
         async getBlogs() {
             this.load = true;
-            await BlogService.getSingleBlogs(this.blogsId)
+            await BlogService.getSingleBlogs(this.blogId)
                 .then(data => {
                     this.blogs = data.blogs;
                     this.likes = data.likes;
@@ -233,7 +234,7 @@ export default {
                 })
         },
         blogsPageUrl(tag) {
-            return `/${BlogService.lang}/novosti?tag=${encodeURIComponent(tag)}`;
+            return `/${BlogService.lang}/blogs?tag=${encodeURIComponent(tag)}`;
         },
         clearImg() {
             this.img = null;
@@ -247,7 +248,7 @@ export default {
         },
         setLike(type) {
             if(this.user !== null){
-                BlogService.setLike(this.blogsId, type)
+                BlogService.setLike(this.blogId, type)
                     .then(({likesCount, userLike}) => {
                         this.likesCount = likesCount;
                         this.userLike = userLike;

@@ -1,23 +1,23 @@
 <template>
     <div class="hot-news-wrapper">
-        <a :href="`/ru/novosti/${news.id}/` + getSlug(news)" class="hot-news d-block" v-for="news in news">
+        <a :href="`/ru/blog/${blogs.id}/` + getSlug(blogs)" class="hot-news d-block" v-for="blogs in blogs">
             <div class="d-flex hot-news-title">
-                <div class="game-logo" v-if="news.game !== null && news.game.newsIcon !== null">
-                    <img :src="'/uploads/games/' + news.game.newsIcon">
+                <div class="game-logo" v-if="blogs.game !== null && blogs.game.newsIcon !== null">
+                    <img :src="'/uploads/games/' + blogs.game.newsIcon">
                 </div>
                 <div class="title">
-                    {{news.title}}
+                    {{blogs.title}}
                 </div>
             </div>
             <div class="d-flex justify-content-between">
                 <div class="date">
-                    {{news.date_ru_msk}}
+                    {{blogs.date_ru_msk}}
                 </div>
                 <div class="activity">
                     <i class="fas fa-eye"></i>
-                    {{news.views}}
+                    {{blogs.views}}
                     <i class="fas fa-comment-dots"></i>
-                    {{news.commentsCount}}
+                    {{blogs.commentsCount}}
                 </div>
             </div>
         </a>
@@ -35,7 +35,7 @@
     export default {
         name: "HotBlogs",
         props: [
-            'news'
+            'blogs'
         ],
         data() {
             return {

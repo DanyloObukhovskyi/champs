@@ -54,6 +54,7 @@ import blogCreate from "./pages/BlogCreate";
 import BlogsFilters from "./components/Blogs/BlogsFilters";
 import BlogsRow from "./components/Blogs/BlogsRow";
 import HotBlogs from "./components/Blogs/HotBlogs";
+import BlogsViewPage from "./pages/BlogsViewPage";
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -107,6 +108,7 @@ Vue.component('blogs-row', BlogsRow);
 Vue.component('blog-filters', BlogsFilters);
 Vue.component('hot-blogs', HotBlogs);
 Vue.component('blog-create', blogCreate);
+Vue.component('blogs-view-page', BlogsViewPage);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

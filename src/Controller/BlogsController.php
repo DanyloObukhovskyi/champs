@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Blogs;
 use App\Entity\BlogTags;
-use App\Entity\BlogTypes;
 use App\Entity\Game;
 use App\Entity\User;
+use App\Service\Blog\BlogsCommentLikeService;
+use App\Service\Blog\BlogsCommentService;
+use App\Service\Blog\BlogsLikeService;
+use App\Service\Blog\BlogsTagService;
 use App\Service\Seo\SeoService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,6 +44,26 @@ class BlogsController extends AbstractController
      */
     public $blogService;
 
+    /**
+     * @var BlogsCommentLikeService
+     */
+    public $blogCommentLikeService;
+
+    /**
+     * @var BlogsCommentService
+     */
+    public $blogCommentService;
+
+    /**
+     * @var BlogsLikeService
+     */
+    public $blogLikeService;
+
+    /**
+     * @var BlogsTagService
+     */
+    public $blogTagService;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
@@ -49,9 +72,15 @@ class BlogsController extends AbstractController
     {
         $this->entityManager = $entityManager;
 
-        $this->blogService = new blogService($entityManager);
+        $this->blogService = new BlogService($entityManager);
 
-        $this->seoService = new SeoService($entityManager);
+        $this->blogCommentLikeService = new BlogsCommentLikeService($entityManager);
+
+        $this->blogCommentService = new BlogsCommentService($entityManager);
+
+        $this->blogLikeService = new blogsLikeService($entityManager);
+
+        $this->blogTagService = new blogsTagService($entityManager);
 
         $this->translator = $translator;
         $this->validator = $validator;
@@ -82,16 +111,15 @@ class BlogsController extends AbstractController
     public function getHotBlogs(Request $request, $offset = 0)
     {
         $filters = json_decode($request->getContent(), false);
-//        dd($filters);
-//        $newsCollect = $this->blogService->getHotBlogs($filters, 0, $offset);
-//        $hotNews = [];
-//
-//        /** @var News $newsEntity */
-//        foreach ($newsCollect as $newsEntity) {
-//            $hotNews[] = $this->newsService->decoratorForHotBlogs($newsEntity);
-//        }
-//        return $this->json($hotNews);
-        return $this->json('');
+
+        $blogsCollect = $this->blogService->getHotBlogs($filters, 0, $offset);
+        $hotBlogs = [];
+
+        /** @var Blogs $blogEntity */
+        foreach ($blogsCollect as $blogEntity) {
+            $hotBlogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+        }
+        return $this->json($hotBlogs);
     }
 
     /**
@@ -134,9 +162,9 @@ class BlogsController extends AbstractController
     }
 
     /**
-     * @Route("/blog/{id}/{format}/{game}/{title}", name="blogs_view_single")
+     * @Route("/blog/{id}/{slug}", name="blogs_view_single")
      */
-    public function view($id, $format, $game, $title, Request $request)
+    public function view($id, $slug, Request $request)
     {
         /** @var Blogs $blog */
         $blog = $this->entityManager
@@ -158,7 +186,7 @@ class BlogsController extends AbstractController
             'link' => $link,
             'description' => $description,
             'blogsId' => $id,
-            'blog' => $blog,
+            'blogs' => $blog,
             'router' => 'news',
         ]);
     }
@@ -275,5 +303,51 @@ class BlogsController extends AbstractController
             'filename' => $filename,
             'error' => $error
         ];
+    }
+
+    /**
+     * @Route("/ajax/blogs/single/{id}")
+     */
+    public function getBlogsAjax($id)
+    {
+        $user = $this->getUser();
+
+        /** @var Blogs $blog */
+        $blogsEntity = $this->entityManager
+            ->getRepository(Blogs::class)
+            ->find($id);
+
+        $blog = $this->blogService->decoratorForAllBlogs($blogsEntity);
+
+        $likes = $this->blogLikeService->getLikes($blogsEntity, 3);
+        $likes = $this->blogLikeService->decorateAll($likes);
+
+        $userLike = null;
+
+        if (isset($user)) {
+            $like = $this->blogLikeService->userLike($blogsEntity, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->blogLikeService->decorator($like);
+            }
+        }
+        $likesCount = $this->blogLikeService->getLikesCount($blogsEntity);
+
+
+        $blogsComments = $this->blogCommentService->getRepository()->findAll();
+
+        dd($blogsComments);
+        $comments = $this->blogCommentService->recurciveComments(
+            $blogsComments,
+            $_ENV['MAX_COMMENTS_ANSWERS'],
+            $this->getUser()
+        );
+
+        return $this->json([
+            'blogs' => $blog,
+            'likes' => $likes,
+            'userLike' => $userLike,
+            'likesCount' => $likesCount,
+            'comments' => $comments
+        ]);
     }
 }

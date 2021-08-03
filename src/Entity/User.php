@@ -188,6 +188,11 @@ class User implements UserInterface
      */
     private $blogCommentLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BlogLikes::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $blogLikes;
+
 
     public function __construct()
     {
@@ -200,6 +205,7 @@ class User implements UserInterface
         $this->blogs = new ArrayCollection();
         $this->blogComments = new ArrayCollection();
         $this->blogCommentLikes = new ArrayCollection();
+        $this->blogLikes = new ArrayCollection();
     }
 
     /**
@@ -865,6 +871,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($blogCommentLike->getUser() === $this) {
                 $blogCommentLike->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogLikes[]
+     */
+    public function getBlogLikes(): Collection
+    {
+        return $this->blogLikes;
+    }
+
+    public function addBlogLike(BlogLikes $blogLike): self
+    {
+        if (!$this->blogLikes->contains($blogLike)) {
+            $this->blogLikes[] = $blogLike;
+            $blogLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogLike(BlogLikes $blogLike): self
+    {
+        if ($this->blogLikes->removeElement($blogLike)) {
+            // set the owning side to null (unless already changed)
+            if ($blogLike->getUser() === $this) {
+                $blogLike->setUser(null);
             }
         }
 

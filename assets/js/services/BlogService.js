@@ -35,6 +35,10 @@ class BlogService extends Service {
     createBlog = updateData => {
         return this.send('ajax/create/blog', updateData)
     }
+
+    getSingleBlogs = id => {
+        return this.send(`ajax/blogs/single/${id}`);
+    }
 }
 
 export default new BlogService();
