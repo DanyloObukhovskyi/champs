@@ -105,15 +105,31 @@ export default {
     watch: {},
     computed: {
         monthDays() {
-            const date = new Date(this.year, this.month + 1, 32);
+            const date = new Date(this.year, this.month);
 
-            return 32 - date.getDate();
+            let month = 0;
+            if(date.getMonth() == 8){
+                month = 31 - date.getDate();
+            } else if(date.getMonth() == 10){
+                month = 31 - date.getDate();
+            } else {
+                month = 32 - date.getDate();
+            }
+
+            return month;
         },
         prevMonthDays() {
             const date = new Date(this.year, this.month, 1);
+
             let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
 
-            const prevMonthDaysCount = day < 0 ? 0 : day;
+            let prevMonthDaysCount = 0;
+            if(date.getMonth() == 7){
+                prevMonthDaysCount = 6;
+            } else {
+                prevMonthDaysCount = day < 0 ? 0 : day;
+            }
+
             const prevMonth = new Date(this.year, this.month, 0);
 
             let prevDay = prevMonth.getDate();
@@ -123,10 +139,19 @@ export default {
                 prevDays.push(prevDay)
                 prevDay--;
             }
+
             return prevDays.reverse();
         },
         nextMonthDays() {
-            let day = 35 - this.monthDays - this.prevMonthDays.length
+            const date = new Date(this.year, this.month, 1);
+
+            let day = 0;
+            if(date.getMonth() == 7){
+                day = 42 - this.monthDays - this.prevMonthDays.length
+            } else {
+                day = 35 - this.monthDays - this.prevMonthDays.length
+            }
+
             if(day < 0){
                 day = 0;
             }
