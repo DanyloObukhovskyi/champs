@@ -485,4 +485,12 @@ class CabinetController extends AbstractController
         }
         return $this->json($vkLink);
     }
+
+    /**
+     * @Route("/time")
+     */
+    public function getTime(Request $request)
+    {
+        return $this->json(Carbon::now()->getTimestamp());
+    }
 }

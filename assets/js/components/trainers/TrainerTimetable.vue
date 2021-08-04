@@ -32,6 +32,8 @@
                             v-if="date !== null"
                             :date="date"
                             :available-dates="availableDates"
+                            :user="user"
+                            :trainer="trainer"
                             @date="setDate"/>
                 </div>
             </div>

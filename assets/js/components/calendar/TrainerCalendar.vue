@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import CabinetService from "../../services/CabinetService";
+
 const MONTHS = [
     'Январь',
     'Февраль',
@@ -89,7 +91,14 @@ export default {
         date: String,
         availableDates: {
             default: {}
-        }
+        },
+        user: {
+            default: {}
+        },
+        trainer: {
+            default: {}
+        },
+        day: String
     },
     data: function () {
         return {
@@ -99,7 +108,8 @@ export default {
             days: 0,
             day: 0,
             months: MONTHS,
-            weeks: WEEK_DAYS
+            weeks: WEEK_DAYS,
+            timestamp: null
         };
     },
     watch: {},
@@ -187,12 +197,40 @@ export default {
                 this.month++;
             }
             this.setDay(1)
+        },
+        getTime() {
+            CabinetService.getTime()
+                .then(time => {
+                    this.timestamp = time;
+                });
         }
     },
     created() {
+        this.getTime();
         const date = this.date.split('.');
 
-        this.day = Math.abs(date[0]);
+        var today = new Date();
+        var UTCstring = today.toISOString();
+
+        let estTime = new Date(UTCstring);
+        let currentDateTimeCentralTimeZone = estTime;
+
+
+        if(!this.user){
+            if(!this.trainer){
+                let timezone = this.user.timeZone.split(' ');
+                currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
+            } else {
+                currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: 'Europe/Moscow' }));
+            }
+        } else {
+            let timezone = this.user.timezone.split(' ');
+            currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
+        }
+
+        console.log( currentDateTimeCentralTimeZone, UTCstring, estTime)
+
+        this.day = Math.abs(currentDateTimeCentralTimeZone.getDate());
         this.month = Math.abs(date[1]) - 1;
         this.year = date[2];
     }
