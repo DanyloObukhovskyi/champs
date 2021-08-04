@@ -98,7 +98,6 @@ export default {
         trainer: {
             default: {}
         },
-        day: String
     },
     data: function () {
         return {
@@ -206,13 +205,7 @@ export default {
         }
     },
     created() {
-        this.getTime();
-        const date = this.date.split('.');
-
-        var today = new Date();
-        var UTCstring = today.toISOString();
-
-        let estTime = new Date(UTCstring);
+        let estTime = new Date();
         let currentDateTimeCentralTimeZone = estTime;
 
 
@@ -227,8 +220,6 @@ export default {
             let timezone = this.user.timezone.split(' ');
             currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
         }
-
-        console.log( currentDateTimeCentralTimeZone, UTCstring, estTime)
 
         this.day = Math.abs(currentDateTimeCentralTimeZone.getDate());
         this.month = Math.abs(date[1]) - 1;
