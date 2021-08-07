@@ -205,6 +205,9 @@ export default {
         }
     },
     created() {
+        this.getTime();
+        const date = this.date.split('.');
+
         let estTime = new Date();
         let currentDateTimeCentralTimeZone = estTime;
 
