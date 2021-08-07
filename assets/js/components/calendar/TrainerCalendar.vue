@@ -44,6 +44,7 @@
 
 <script>
 import CabinetService from "../../services/CabinetService";
+import {mapActions, mapGetters} from "vuex";
 
 const MONTHS = [
     'Январь',
@@ -113,6 +114,10 @@ export default {
     },
     watch: {},
     computed: {
+        ...mapGetters([
+            'user',
+            'loadUser'
+        ]),
         monthDays() {
             const date = new Date(this.year, this.month);
 
