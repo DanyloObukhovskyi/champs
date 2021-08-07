@@ -206,32 +206,32 @@ export default {
             CabinetService.getTime()
                 .then(time => {
                     this.timestamp = time;
+                    const date = this.date.split('.');
+
+                    let estTime = new Date(this.timestamp * 1000);
+                    let currentDateTimeCentralTimeZone = estTime;
+
+
+                    if(!this.user){
+                        if(!this.trainer){
+                            let timezone = this.user.timeZone.split(' ');
+                            currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
+                        } else {
+                            currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: 'Europe/Moscow' }));
+                        }
+                    } else {
+                        let timezone = this.user.timezone.split(' ');
+                        currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
+                    }
+
+                    this.day = Math.abs(currentDateTimeCentralTimeZone.getDate());
+                    this.month = Math.abs(date[1]) - 1;
+                    this.year = date[2];
                 });
         }
     },
     created() {
         this.getTime();
-        const date = this.date.split('.');
-
-        let estTime = new Date();
-        let currentDateTimeCentralTimeZone = estTime;
-
-
-        if(!this.user){
-            if(!this.trainer){
-                let timezone = this.user.timeZone.split(' ');
-                currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
-            } else {
-                currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: 'Europe/Moscow' }));
-            }
-        } else {
-            let timezone = this.user.timezone.split(' ');
-            currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
-        }
-
-        this.day = Math.abs(currentDateTimeCentralTimeZone.getDate());
-        this.month = Math.abs(date[1]) - 1;
-        this.year = date[2];
     }
 }
 </script>
