@@ -213,6 +213,9 @@ class TrainerController extends AbstractController
         $game = $this->entityManager->getRepository(Game::class)
             ->findOneBy(['code' => $gameCode]);
 
+        if(!isset($filters['isExpensive'])){
+            $filters['isExpensive'] = true;
+        }
         $users = $this->userService->getTrainers($filters, $game, $offset);
         $trainers = $this->userService->teachersDecorator($users, $gameCode);
 
