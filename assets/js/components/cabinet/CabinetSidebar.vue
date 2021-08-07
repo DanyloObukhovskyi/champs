@@ -82,6 +82,12 @@ const TRAINING_PAGES = [
         iconActive: 'trainingIconActive.png',
     },
     {
+        name: 'Блог',
+        code: 'blog',
+        icon: 'tournamentsIcon.png',
+        iconActive: 'tournamentsIconActive.png',
+    },
+    {
         name: 'Календарь',
         code: 'calendar',
         icon: 'calendar.png',
@@ -132,7 +138,6 @@ export default {
             if (this.user.isTrainer) {
                 type = 'trainer';
             }
-          console.log(code);
             return `/${CabinetService.lang}/${type}/cabinet/${code}`;
         },
         pageUp() {

@@ -33,6 +33,11 @@ class Setting
     private $title;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_page;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -126,5 +131,17 @@ class Setting
         }
 
         return $tmp;
+    }
+
+    public function getIsPage(): ?bool
+    {
+        return $this->is_page;
+    }
+
+    public function setIsPage(bool $is_page): self
+    {
+        $this->is_page = $is_page;
+
+        return $this;
     }
 }

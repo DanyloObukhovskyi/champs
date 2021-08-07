@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\BlogComment;
 use App\Entity\BlogCommentLikes;
+use App\Entity\BlogLikes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +49,33 @@ class BlogCommentLikesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param BlogComment $comment
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getCount(BlogComment $comment)
+    {
+        $likes = $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->andWhere('n.comment = :comment')
+            ->setParameter('comment', $comment)
+            ->andWhere('n.type = :type')
+            ->setParameter('type', BlogLikes::LIKE)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $dislikes = $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->andWhere('n.comment = :comment')
+            ->setParameter('comment', $comment)
+            ->andWhere('n.type = :type')
+            ->setParameter('type', BlogLikes::DISLIKE)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $likes - $dislikes;
+    }
 }

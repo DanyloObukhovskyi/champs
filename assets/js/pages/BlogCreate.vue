@@ -5,15 +5,15 @@ import Swal from "sweetalert2";
             <div class="col-12">
                 <div class="d-flex justify-content-between">
                         <div class="filters-middle">
-                                <a href="#" style="color: black" class="d-flex align-items-center">
+                                <a href="createBlogAndReward" style="color: black" class="d-flex align-items-center">
                                         <img class="filters-icons" src="/images/icons/blog2.svg" alt="">
-                                        Создай блог и заработай!
+                                    <span class="blog-button">Создай блог и заработай!</span>
                                 </a>
                         </div>
                         <div class="filters-middle">
-                                <a href="#" style="color: black" class="d-flex align-items-center">
+                                <a href="howCreateBlog" style="color: black" class="d-flex align-items-center">
                                         <img class="filters-icons" src="/images/icons/vrsti.svg" alt="">
-                                        Как вести успешный блог?
+                                    <span class="blog-button">Как вести успешный блог?</span>
                                 </a>
                         </div>
                 </div>
@@ -89,7 +89,10 @@ import Swal from "sweetalert2";
                                             :tags="tags"
                                             :is-draggable="true"
                                             placeholder="Добавить тег"
-                                            @tags-changed="newTags => tags = newTags"
+                                            @tags-changed="(newTags) => {
+                                                tags = newTags
+                                                tag = '#'
+                                            }"
                                             @tag-order-changed="newTags => tags = newTags"
                                     />
                                 </div>
@@ -109,8 +112,8 @@ import Swal from "sweetalert2";
     import '../../css/setting.css';
     import {mapGetters} from "vuex";
     import Button from "../components/cabinet/Button";
-    import Editor from '@tinymce/tinymce-vue'
-    import VueTagsInput from '@vojtechlanka/vue-tags-input';
+    import Editor from '@tinymce/tinymce-vue';
+    import VueTagsInput from '@voerro/vue-tagsinput';
     import Swal from 'sweetalert2';
     import CabinetService from "../services/CabinetService";
     import BlogService from "../services/BlogService";
@@ -126,7 +129,7 @@ import Swal from "sweetalert2";
         data() {
             return {
                 selectedCodeGame: null,
-                tag: '',
+                tag: '#',
                 tags: [],
                 selectedFileName: 'Выбрать файл',
                 selectedFile: null,
@@ -175,6 +178,15 @@ import Swal from "sweetalert2";
                     let name = input.files[0].name;
                     this.selectedFileName = name;
                 }
+            },
+            clearDialog(){
+                this.selectedCodeGame = null,
+                this.tags = [],
+                this.selectedFileName = 'Выбрать файл',
+                this.selectedFile = null,
+                this.title = null,
+                this.selectedGame = null,
+                this.text = ''
             },
             saveToEdit()
             {
@@ -249,6 +261,8 @@ import Swal from "sweetalert2";
                                 timer: 1500
                             })
                             this.load = false;
+
+                            this.clearDialog();
                         })
                         .catch(({response: {data}}) => {
                             this.load = false;
@@ -313,7 +327,39 @@ import Swal from "sweetalert2";
                     })
                     this.load = false;
                 } else {
+                    const form = new FormData();
+                    form.append('title', title);
+                    form.append('game', game);
+                    form.append('image', input.files[0]);
+                    form.append('text', text);
+                    form.append('status', 4);
+                    let tags = [];
+                    this.tags.forEach((item, key) => {
+                        tags[key] = item.text;
+                    });
+                    form.append('tags', tags);
 
+                    BlogService.createBlog(form)
+                        .then(blog => {
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Блог сохранен!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
+                            this.clearDialog();
+                        })
+                        .catch(({response: {data}}) => {
+                            this.load = false;
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Упс...',
+                                text: data.avatar,
+                            })
+                        })
                 }
             }
         }
@@ -450,5 +496,9 @@ import Swal from "sweetalert2";
     .vue-tags-input {
         max-width: 100% !important;
         width: 100%;
+    }
+    .blog-button:hover{
+        background-color: #ff6d1d;
+        color: white;
     }
 </style>

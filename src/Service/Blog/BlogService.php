@@ -4,6 +4,7 @@
 namespace App\Service\News;
 
 
+use App\Entity\BlogLikes;
 use App\Entity\Blogs;
 use App\Entity\BlogTags;
 use App\Entity\BlogTypes;
@@ -275,6 +276,8 @@ class BlogService extends EntityService
             'logo' => $blog->getLogo(),
             'date' => $blog->getDate()->format('m-d H:i'),
             'tags' => $tags,
+            'status' => $blog->getStatus(),
+            'status_name' => Blogs::TYPES[$blog->getStatus()],
             'text' => $blog->getText(),
             'game' => !empty($blog->getGame()) ? $blog->getGame()->getName() : null,
             'date_ru' => $blog->getDate()->format('Y') === date('Y') ? self::replaceMonth($blog->getDate()->format('d F H:i')) :  self::replaceMonth($blog->getDate()->format('d F Y')),
@@ -283,8 +286,8 @@ class BlogService extends EntityService
             'date_ru_with_year_for_url' => $blog->getDate()->format('Y') === date('Y') ? $blog->getDate()->format('d m') : $blog->getDate()->format('d m Y'),
             'views' => $blog->getViews() ?? 0,
             'username' => $blog->getUser()->getName() . ' ' . $blog->getUser()->getFamily(),
-            'user_logo' => $blog->getUser()->getPhoto()
-//            'commentsCount' => count($blogs->getComments())
+            'user_logo' => $blog->getUser()->getPhoto(),
+            'commentsCount' => count($blog->getBlogComments())
         ];
     }
 
@@ -318,6 +321,7 @@ class BlogService extends EntityService
             'url' => $blogs->getUrl(),
             'type' => $type,
             'tags' => $tags,
+            'status' => $blogs->getStatus(),
             'game' => !empty($blogs->getGame()) ? $blogs->getGame() : null,
             'date_ru' => $blogs->getDate()->format('Y') === date('Y') ? self::replaceMonth($blogs->getDate()->format('d F H:i')) :  self::replaceMonth($blogs->getDate()->format('d F Y')),
             'date_ru_msk' => $blogs->getDate()->format('Y') === date('Y') ? self::replaceMonth($blogs->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($blogs->getDate()->format('d F Y')),
@@ -337,6 +341,16 @@ class BlogService extends EntityService
         $blog->setViews((int)$blog->getViews() + 1);
 
         return $this->save($blog);
+    }
+
+    /**
+     * @param Blogs $blog
+     * @param $type
+     * @return mixed
+     */
+    public function getLikesCount(Blogs $blog)
+    {
+        return $this->entityManager->getRepository(BlogLikes::class)->getCount($blog);
     }
 
 }

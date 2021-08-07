@@ -206,3 +206,12 @@ $route['c-admin/team/delete/(:num)/(:num)'] = 'teams/delete/$1/$2';
 $route['c-admin/team/fetch'] = 'teams/fetch';
 $route['c-admin/team/create'] = 'teams/create';
 $route['c-admin/team/update'] = 'teams/update';
+
+$route['c-admin/pages'] = 'home/pages';
+$route['c-admin/home/fetchPages'] = 'home/fetchPages';
+$route['c-admin/home/fetch/page'] = 'home/fetchPage';
+$route['c-admin/home/edit/page'] = 'home/editPage';
+
+$route['c-admin/blogs'] = 'home/blogs';
+$route['c-admin/fetchBlogs'] = 'home/fetchBlogs';
+$route['c-admin/home/fetch/blog'] = 'home/fetchBlog';

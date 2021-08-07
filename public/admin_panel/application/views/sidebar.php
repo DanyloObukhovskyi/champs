@@ -3,6 +3,9 @@
     <li class="<?php echo 'posts' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/posts/page/1'); ?>">Статьи</a>
     </li>
+    <li class="<?php echo 'blogs' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/blogs'); ?>">Блоги</a>
+    </li>
     <?php endif;?>
     <?php if($roles[0] == 1 or $roles[2] == 1):?>
     <li class="<?php echo 'statistics' === $activePath ? 'active': ''?>">
@@ -26,8 +29,11 @@
     <li class="<?php echo 'admins' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a>
     </li>
-    <li class="<?php echo 'seo' === $activePath ? 'active': ''?>">
-        <a href="<?php echo base_url('c-admin/seo'); ?>">Сео</a>
+        <li class="<?php echo 'seo' === $activePath ? 'active': ''?>">
+            <a href="<?php echo base_url('c-admin/seo'); ?>">Сео</a>
+        </li>
+    <li class="<?php echo 'pages' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/pages'); ?>">Страницы</a>
     </li>
     <li class="<?php echo 'settings' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a>

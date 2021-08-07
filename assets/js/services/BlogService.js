@@ -39,6 +39,30 @@ class BlogService extends Service {
     getSingleBlogs = id => {
         return this.send(`ajax/blogs/single/${id}`);
     }
+
+    sendComment = (id, comment) => {
+        return this.send(`blogs/add/comment`, { comment, id });
+    }
+
+    getComments = id => {
+        return this.send(`blogs/${id}/comments`);
+    }
+
+    sendCommentAnswer = (id, commentId, comment) => {
+        return this.send(`blogs/add/comment`, { id, commentId, comment });
+    }
+
+    setCommentLike = (commentId, type) => {
+        return this.send(`like/blogs/comment/${commentId}`, { type });
+    }
+
+    getUserBlogs = () => {
+        return this.send(`blogs/user`);
+    }
+
+    getCommentsByUser = () => {
+        return this.send(`blogs/comments/user`);
+    }
 }
 
 export default new BlogService();

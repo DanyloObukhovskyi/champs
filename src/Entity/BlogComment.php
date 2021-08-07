@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BlogCommentRepository;
+use App\Service\News\BlogService;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,9 +41,15 @@ class BlogComment
     private $parent;
 
     /**
-     * @ORM\OneToOne(targetEntity=BlogCommentLikes::class, mappedBy="comment", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=blogComment::class, mappedBy="parent")
      */
-    private $blogCommentLikes;
+    private $children;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
 
     public function getId(): ?int
     {
@@ -97,20 +104,43 @@ class BlogComment
         return $this;
     }
 
-    public function getBlogCommentLikes(): ?BlogCommentLikes
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->blogCommentLikes;
+        return $this->createdAt;
     }
 
-    public function setBlogCommentLikes(BlogCommentLikes $blogCommentLikes): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        // set the owning side of the relation if necessary
-        if ($blogCommentLikes->getComment() !== $this) {
-            $blogCommentLikes->setComment($this);
-        }
-
-        $this->blogCommentLikes = $blogCommentLikes;
+        $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'blogId' => $this->getNews()->getId(),
+            'user' => [
+                'nickname' => $this->getUser()->getNickname(),
+                'surname' => $this->getUser()->getFamily(),
+                'name' => $this->getUser()->getName(),
+                'photo' => $this->getUser()->getPhoto(),
+            ],
+            'comment' => $this->getComment(),
+            'createdAt' => BlogService::replaceMonth($this->getCreatedAt()->format('d F H:i')),
+            'children' => $this->getChildren()
+        ];
     }
 }

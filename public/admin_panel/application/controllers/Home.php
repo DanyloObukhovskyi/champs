@@ -28,7 +28,8 @@ class Home extends CI_Controller
             'post_type_model',
             'post_type_attributes_model',
             'posts_model',
-            'payments_model'
+            'payments_model',
+            'blog_model'
         ]);
         $this->user_capabilities = $this->config->item('user_capabilities');
     }
@@ -944,5 +945,239 @@ class Home extends CI_Controller
 
         die(json_encode($output));
 
+    }
+
+    public function pages()
+    {
+        $current_u_can = $this->users_model->get_capabilities($this->UserID);
+        $current_u_can = json_decode($current_u_can[0]["roles"]);
+        $current_u_can = $current_u_can[0];
+
+        if ($current_u_can[0] == "1" || $current_u_can[1] == "1") {
+            $data = [];
+            $data['UserID'] = $this->UserID;
+            $data['user'] = $this->ion_auth->user()->row();
+            $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+            $data['output'] = $this->load->view('home/pages', $data, true);
+
+            $this->load->view('layout/home', $data);
+        } else {
+            redirect(base_url('404_override'));
+            die();
+        }
+    }
+
+    public function fetchPages()
+    {
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+
+        $total_data_count = $this->setting_model->getPagesData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->setting_model->getPagesData($length, $start, false, $search, $column, $order);
+
+        $data = [];
+
+        if (!empty($total_data)) {
+            foreach ($total_data as $page) {
+                $data[] = [
+                    '<h4>'.$page['key'].'</h4>',
+                    '<h5>'.$page['title'].'</h5>',
+                    '<a href="'.$page['key'].'">Открыть Страницу</a>',
+                    '<div class="row justify-content-center">
+                        <button type="button" style="left:50%" class="btn btn-dark-blue btn-small" onclick="fetch('.$page['id'].')">Редактировать</button>
+                        </div>'
+                ];
+            }
+        }
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+        die(json_encode($output));
+    }
+
+    public function fetchPage()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $id = $this->input->post('id');
+        $response->title = '';
+        $response->description = '';
+        if(!empty($id)){
+            $page = $this->setting_model->getOne(['id' => $id]);
+            if(!empty($page)){
+                if(!empty($page['title'])){
+                    $response->title = $page['title'];
+                }
+                if(!empty($page['value'])){
+                    $response->description = $page['value'];
+                }
+                $response->status = true;
+            }
+        }
+        die(json_encode($response));
+    }
+
+    public function editPage()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $posts = $this->input->post();
+        $this->form_validation->set_data(array_merge($posts));
+        $this->form_validation->set_rules('title', 'Название  страницы', 'required|min_length[2]');
+        if ($this->form_validation->run()) {
+            $id = $this->input->post('id');
+            if(!empty($id)){
+                if (!empty($posts)) {
+                    $data = [
+                        'title' => trim($posts['title']),
+                        'value' => trim($posts['description']),
+                    ];
+                    $this->setting_model->update($id, $data);
+                    $response->status = true;
+                }
+            }
+        } else {
+            $response->errors = validation_errors();
+        }
+        die(json_encode($response));
+    }
+
+    public function blogs()
+    {
+        $current_u_can = $this->users_model->get_capabilities($this->UserID);
+        $current_u_can = json_decode($current_u_can[0]["roles"]);
+        $current_u_can = $current_u_can[0];
+
+        if ($current_u_can[0] == "1" || $current_u_can[1] == "1") {
+            $data = [];
+            $data['UserID'] = $this->UserID;
+            $data['user'] = $this->ion_auth->user()->row();
+            $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+            $data['output'] = $this->load->view('home/blogs', $data, true);
+
+            $this->load->view('layout/home', $data);
+        } else {
+            redirect(base_url('404_override'));
+            die();
+        }
+    }
+
+    public function fetchBlogs()
+    {
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+
+        $total_data_count = $this->blog_model->getBlogsData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->blog_model->getBlogsData($length, $start, false, $search, $column, $order);
+
+        $data = [];
+
+        $types = $this->blog_model->getTypes();
+
+        if (!empty($total_data)) {
+            foreach ($total_data as $blog) {
+
+                $buttons =                     '<div class="row justify-content-center">
+                        <button type="button" class="btn btn-dark-blue btn-small" aria-label="Left Align" onclick="getBlog('.$blog['id'].')">
+                          <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                        </button>';
+                if($blog['status'] == 4){
+                    $buttons .= '<button type="button" class="btn btn-green btn-small" aria-label="Left Align" onclick="agree('.$blog['id'].')">
+                          <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-small" aria-label="Left Align" onclick="disagree('.$blog['id'].')">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>';
+                }
+
+                $data[] = [
+                    '<h4>'.$blog['id'].'</h4>',
+                    '<h5>'.$blog['title'].'</h5>',
+                    $types[$blog['status']],
+                    $blog['date'],
+                    $buttons
+                ];
+            }
+        }
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+        die(json_encode($output));
+    }
+
+    public function disagree($id)
+    {
+        $response = new stdClass();
+        $response->status = false;
+        if(!empty($id)){
+            $data = [
+                'status' => 3,
+            ];
+            $this->blog_model->update($id, $data);
+            $response->status = true;
+        }
+        die(json_encode($response));
+    }
+
+    public function agree($id)
+    {
+        $response = new stdClass();
+        $response->status = false;
+        if(!empty($id)){
+            $data = [
+                'status' => 1,
+            ];
+            $this->blog_model->update($id, $data);
+            $response->status = true;
+        }
+        die(json_encode($response));
+    }
+
+    public function fetchBlog()
+    {
+        $response = new stdClass();
+        $response->status = false;
+        $id = $this->input->post('id');
+        $response->title = '';
+        $response->description = '';
+        $response->author = '';
+        $response->image = '';
+
+        if(!empty($id)){
+            $blog = $this->blog_model->getOne(['id' => $id]);
+            if(!empty($blog)){
+                $user = $this->users_model->getOne(['id' => $blog['user_id']]);
+                if(!empty($blog['title'])){
+                    $response->title = $blog['title'];
+                }
+                if(!empty($blog['text'])){
+                    $response->description = $blog['text'];
+                }
+                if(!empty($blog['logo'])){
+                    $response->image = $this->config->item('main_url').'uploads/blogs/'.$blog['logo'];
+                }
+                if(!empty($user)){
+                    $response->author = $user['name']. ' ' . $user['family'];
+                }
+                $response->status = true;
+            }
+        }
+        die(json_encode($response));
     }
 }

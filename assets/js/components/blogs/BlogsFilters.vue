@@ -6,19 +6,19 @@
         <div class="filters-middle">
             <a href="createBlog" @click="checkAuth" style="color: black" class="d-flex align-items-center">
                 <img class="filters-icons" src="/images/icons/blog.svg" alt="">
-                Написать пост
+                <span class="blog-button">Написать пост</span>
             </a>
         </div>
         <div class="filters-middle">
-            <a href="#" style="color: black" class="d-flex align-items-center">
+            <a href="createBlogAndReward" style="color: black" class="d-flex align-items-center">
                 <img class="filters-icons" src="/images/icons/blog2.svg" alt="">
-                Создай блог и заработай!
+                <span class="blog-button">Создай блог и заработай!</span>
             </a>
         </div>
         <div class="filters-middle">
-            <a href="#" style="color: black" class="d-flex align-items-center">
+            <a href="howCreateBlog" style="color: black" class="d-flex align-items-center">
                 <img class="filters-icons" src="/images/icons/vrsti.svg" alt="">
-                Как вести успешный блог?
+                <span class="blog-button">Как вести успешный блог?</span>
             </a>
         </div>
         <div class="filters-body">
@@ -362,6 +362,10 @@ export default {
 {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+.blog-button:hover{
+    background-color: #ff6d1d;
+    color: white;
 }
 </style>
 <style>

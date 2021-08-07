@@ -11,8 +11,11 @@
                         {{ tag.title }}
                     </button>
                 </div>
-                <div class="bookmark" :class="{active: blogs.bookmark}" @click="addBookmark(blogs)">
-                    <i class="far fa-bookmark"></i>
+<!--                <div class="bookmark" :class="{active: blogs.bookmark}" @click="addBookmark(blogs)">-->
+<!--                    <i class="far fa-bookmark"></i>-->
+<!--                </div>-->
+                <div class="tags" v-if="!isPage">
+                    <p class="tag">{{ blogs.status_name }}</p>
                 </div>
             </div>
             <div class="news-data">
@@ -55,7 +58,17 @@ import NewsService from "../../services/NewsService";
 
 export default {
     name: "BlogsRow",
-    props: ['blogs', 'className'],
+    props: {
+        blogs: {
+            default: {}
+        },
+        className: {
+
+        },
+        isPage: {
+            default: true
+        }
+    },
     computed: {
         lang() {
             return NewsService.lang;
@@ -429,5 +442,17 @@ export default {
                 border: .1vw solid white;
             }
         }
+    }
+    .status{
+        font-size: 1vw;
+        text-transform: uppercase;
+        padding: .1vw .6vw;
+        color: white;
+        background: #ff6d1d;
+        border-radius: .2vw;
+        border: none;
+        margin-right: .5vw;
+        padding-top: 1vw;
+        padding-bottom: 1vw;
     }
 </style>

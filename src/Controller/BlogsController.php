@@ -2,14 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\BlogCommentLikes;
+use App\Entity\BlogLikes;
 use App\Entity\Blogs;
 use App\Entity\BlogTags;
 use App\Entity\Game;
 use App\Entity\User;
+use App\Message\SendBlogToModarator;
 use App\Service\Blog\BlogsCommentLikeService;
 use App\Service\Blog\BlogsCommentService;
 use App\Service\Blog\BlogsLikeService;
 use App\Service\Blog\BlogsTagService;
+use Swift_Mailer;
 use App\Service\Seo\SeoService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
@@ -73,6 +77,8 @@ class BlogsController extends AbstractController
         $this->entityManager = $entityManager;
 
         $this->blogService = new BlogService($entityManager);
+
+        $this->seoService = new SeoService($entityManager);
 
         $this->blogCommentLikeService = new BlogsCommentLikeService($entityManager);
 
@@ -139,29 +145,6 @@ class BlogsController extends AbstractController
     }
 
     /**
-     * @Route("/blogs/user", name="blog_user")
-     */
-    public function getBlogByUser(Request $request)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        $data = json_decode($request->getContent(), false);
-
-        if (!$user->getIsTrainer()) {
-            $blogs = $this->getDoctrine()
-                ->getRepository(Blogs::class)
-                ->findByStudentId($user->getId());
-        } else {
-            $blogs = $this->getDoctrine()
-                ->getRepository(Blogs::class)
-                ->findByTrainerId($user->getId());
-        }
-//        $parseLessons = $this->decorateLessons($lessons, $user, $data->timezone, $translator);
-
-        return $this->json('');
-    }
-
-    /**
      * @Route("/blog/{id}/{slug}", name="blogs_view_single")
      */
     public function view($id, $slug, Request $request)
@@ -196,6 +179,9 @@ class BlogsController extends AbstractController
      */
     public function createBlog(Request $request): Response
     {
+        if ($this->getUser() === null) {
+            return $this->redirectToRoute('main');
+        }
         $seoSettings = $this->seoService->getSeo('contact_index');
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
@@ -213,7 +199,7 @@ class BlogsController extends AbstractController
     /**
      * @Route("/ajax/create/blog", name="createBlogFromAjax")
      */
-    public function createBlogFromAjax(Request $request): Response
+    public function createBlogFromAjax(Request $request, Swift_Mailer $mailer): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -224,7 +210,11 @@ class BlogsController extends AbstractController
 
         if(!empty($data)){
             $file = $request->files->get('image');
-            $tags = explode(',', $data->tags);
+            $tags = $data->tags;
+            if (strpos($tags, '#Блоги') === false && strpos($tags, '#чблоги') === false) {
+                $tags .= '#Блоги';
+            }
+            $tags = explode(',', $tags);
 
             if (!empty($file)) {
                 $result = $this->validationAndUploadImage($file, $user);
@@ -268,6 +258,9 @@ class BlogsController extends AbstractController
             }
 
             $createdBlog = $this->blogService->decoratorForAllBlogs($blog);
+            if($createdBlog['status'] === Blogs::MODARATE){
+                $this->dispatchMessage(new SendBlogToModarator($mailer));
+            }
         }
 
         return $this->json(['blog' => $createdBlog]);
@@ -333,9 +326,11 @@ class BlogsController extends AbstractController
         $likesCount = $this->blogLikeService->getLikesCount($blogsEntity);
 
 
-        $blogsComments = $this->blogCommentService->getRepository()->findAll();
+        $blogsComments = $this->blogCommentService->getRepository()->findBy([
+            'blog' => $blogsEntity,
+            'parent' => null
+        ]);
 
-        dd($blogsComments);
         $comments = $this->blogCommentService->recurciveComments(
             $blogsComments,
             $_ENV['MAX_COMMENTS_ANSWERS'],
@@ -349,5 +344,186 @@ class BlogsController extends AbstractController
             'likesCount' => $likesCount,
             'comments' => $comments
         ]);
+    }
+
+    /**
+     * @Route("/blogs/add/comment")
+     */
+    public function addComment(Request $request)
+    {
+        $request = json_decode($request->getContent(), false);
+        $blog = $this->blogService->getRepository()->find($request->id);
+
+        $parentComment = null;
+
+        if (isset($request->commentId)) {
+            $parentComment = $this->blogCommentService->getRepository()
+                ->find($request->commentId);
+        }
+
+        if (!empty($this->getUser()) and isset($blog)) {
+            $this->blogCommentService->create(
+                $this->getUser(),
+                $blog,
+                $parentComment,
+                $request->comment
+            );
+
+            return $this->json('ok');
+        }
+        return $this->json('unauthorized', 401);
+    }
+
+    /**
+     * @Route("/blogs/{blogId}/comments")
+     */
+    public function getComments(int $blogId)
+    {
+        /** @var Blogs $blog */
+        $blog = $this->blogService
+            ->getRepository()
+            ->find($blogId);
+
+        $blogsComments = $this->blogCommentService->getRepository()->findBy([
+            'blog' => $blog,
+            'parent' => null
+        ]);
+        $blogsComments = $this->blogCommentService->recurciveComments($blogsComments);
+
+        return $this->json([
+            'comments' => $blogsComments,
+            'commentsCount' => count($blogsComments)
+        ]);
+    }
+
+    /**
+     * @Route("/like/blogs/comment/{commentId}")
+     */
+    public function setLikeComment(Request $request, $commentId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $blogsComment = $this->blogCommentService
+            ->getRepository()
+            ->find($commentId);
+
+        $blogsCommentLike = null;
+        if (isset($blogsComment) and !empty($this->getUser())) {
+            $blogsCommentLike = $this->entityManager->getRepository(BlogCommentLikes::class)
+                ->findOneBy([
+                    'comment' => $blogsComment,
+                    'user' => $this->getUser()
+                ]);
+
+            if (empty($blogsCommentLike)) {
+                $blogsCommentLike = new NewsCommentLike();
+                $blogsCommentLike->setUser($this->getUser());
+                $blogsCommentLike->setComment($blogsComment);
+            }
+            $blogsCommentLike->setType($request->type);
+
+            $this->entityManager->persist($blogsCommentLike);
+            $this->entityManager->flush();
+        }
+        $likesCount = $this->blogCommentLikeService->getLikesCount($blogsComment);
+
+        $userLike = null;
+
+        if (!empty($this->getUser())) {
+            $like = $this->blogCommentLikeService->userLike($blogsComment, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->blogCommentLikeService->decorator($like);
+            }
+        }
+        return $this->json([
+            'likesCount' => $likesCount,
+            'userLike' => $userLike
+        ]);
+    }
+
+    /**
+     * @Route("/like/blogs/{blogId}")
+     */
+    public function setLike(Request $request, $blogId)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        /** @var Blogs $blog */
+        $blog = $this->blogService
+            ->getRepository()
+            ->find($blogId);
+
+        $user = $this->getUser();
+
+        if (isset($request->type) and isset($user)
+            and in_array($request->type, BlogLikes::TYPES, true)) {
+
+            $userLike = $this->entityManager->getRepository(BlogLikes::class)
+                ->findOneBy([
+                    'user' => $user,
+                    'blog' => $blog
+                ]);
+
+            if (empty($userLike)) {
+                $userLike = new BlogLikes();
+                $userLike->setUser($user);
+                $userLike->setBlog($blog);
+            }
+            $userLike->setType($request->type);
+
+            $this->entityManager->persist($userLike);
+            $this->entityManager->flush();
+        }
+        $likesCount = $this->blogService->getLikesCount($blog);
+
+        $userLike = null;
+
+        if (isset($user)) {
+            $like = $this->blogLikeService->userLike($blog, $this->getUser());
+            if (isset($like)) {
+                $userLike = $this->blogLikeService->decorator($like);
+            }
+        }
+        return $this->json([
+            'likesCount' => $likesCount,
+            'userLike' => $userLike
+        ]);
+    }
+
+
+    /**
+     * @Route("/blogs/user", name="blogs.user", defaults={"offset" = 0})
+     */
+    public function getBlogsByUser(Request $request, $offset = 0)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $user = $this->getUser();
+
+        $blogEntities = $this->blogService->getRepository()->findBy(['user' => $user->getId()]);
+
+        $blogs = [];
+        foreach ($blogEntities as $blogEntity) {
+            $blogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+        }
+        return $this->json($blogs);
+    }
+
+    /**
+     * @Route("/blogs/comments/user", name="blogs.user", defaults={"offset" = 0})
+     */
+    public function getBlogCommentsByUser(Request $request, $offset = 0)
+    {
+        $request = json_decode($request->getContent(), false);
+
+        $user = $this->getUser();
+
+        $blogEntities = $this->blogService->getRepository()->findBy(['user' => $user->getId()]);
+
+        $blogs = [];
+        foreach ($blogEntities as $blogEntity) {
+            $blogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+        }
+        return $this->json($blogs);
     }
 }

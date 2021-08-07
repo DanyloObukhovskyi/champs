@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Repository\BlogCommentRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
+use App\Service\News\BlogService;
 use App\Traits\CommentRecursiveDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -55,10 +56,11 @@ class BlogsCommentService extends EntityService
     {
         /** @var BlogComment $blogComment */
         $blogComment = new $this->entity;
-        $blogComment->setNews($blogs);
+        $blogComment->setBlog($blogs);
         $blogComment->setUser($user);
         $blogComment->setParent($parentComment);
         $blogComment->setComment($comment);
+        $blogComment->setCreatedAt(new \DateTime());
 
         return $this->save($blogComment);
     }
@@ -104,7 +106,7 @@ class BlogsCommentService extends EntityService
                 'photo' => $comment->getUser()->getPhoto(),
             ],
             'comment' => $comment->getComment(),
-            'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
+            'createdAt' => BlogService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
             'timestamp' => $comment->getCreatedAt()->getTimestamp(),
             'likesCount' => $this->blogsCommentLikeService->getLikesCount($comment),
             'userLike' => $userLike
