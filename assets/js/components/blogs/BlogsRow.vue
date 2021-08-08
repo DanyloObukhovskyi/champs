@@ -79,9 +79,6 @@ export default {
             return {
                 'background-image': `url('${background}'), url('/images/noLogoAvatar.png')`
             }
-            return {
-                'background-image': `url('/images/noLogoAvatar.png')`
-            }
         }
     },
     methods: {

@@ -14,7 +14,7 @@
 
         <div class="cabinet-news">
             <div class="news-wrapper" v-if="tab == 'comments'">
-                <div class="empty-wrapper">
+                <div class="empty-wrapper" v-if="comments.length === 0">
                     <div class="title" style="font-size: 1.0vw;">
                         Твои комментарии
                     </div>
@@ -33,13 +33,14 @@
                     <div class="title">
                     </div>
                 </div>
-                <comment
-                        :user="user"
-                        :key="index"
-                        :active="active"
-                        :comment="comment"
-                        v-for="(comment, index) in sliceComments">
-                </comment>
+                <div v-else>
+                    <div class="title" style="font-size: 1.0vw;">
+                        Твои комментарии
+                    </div>
+                    <div v-for="comment in comments">
+                        <comment ref="comment" :user="user" :comment="comment"></comment>
+                    </div>
+                </div>
             </div>
             <div class="news-wrapper" v-if="tab == 'blog'">
                 <div class="empty-wrapper" v-if="blogs.length === 0">
@@ -101,19 +102,22 @@
     import {mapGetters} from "vuex";
     import BlogService from "../../services/BlogService";
     import WalletService from "../../services/WalletService";
+    import comment from "./components/comments/comment";
 
     export default {
         name: "Blog",
         components: {
             SmallLoader,
             WalletData,
-            WalletContainer
+            WalletContainer,
+            comment
         },
         data() {
             return {
                 blogs: [],
                 tab: 'comments',
-                load: false
+                load: false,
+                comments: []
             }
         },
         computed: {
@@ -126,7 +130,7 @@
                     blogs[i] = this.blogs.slice((i * 3), (i * 3) + 3);
                 }
                 return blogs;
-            },
+            }
         },
         methods: {
             setActive(tab){
@@ -170,6 +174,7 @@
                     .then(data => {
                         this.load = false;
                         this.$emit('update', data)
+                        this.comments = data.comments
                     })
             }
         },

@@ -4,13 +4,14 @@
             <img v-if="!isLiked" src="/images/news/like.svg" @click="setLike">
             <img v-else src="/images/news/likeActive.png">
         </div>
-        <div class="likes-count" :class="{'red': Number(likes) < 0, 'green': Number(likes) > 0}">
-            {{likes}}
-        </div>
         <div class="dislike">
             <img v-if="!isDisliked" src="/images/news/dislike.svg" @click="setDislike">
             <img v-else src="/images/news/dislikeActive.png">
         </div>
+        <div class="likes-count" :class="{'red': Number(likes) < 0, 'green': Number(likes) > 0}">
+            {{likes}}
+        </div>
+        нравится
     </div>
 </template>
 

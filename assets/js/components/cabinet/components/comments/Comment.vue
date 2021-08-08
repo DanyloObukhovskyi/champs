@@ -2,7 +2,7 @@
     <div>
         <div class="comment">
             <div class="user">
-                <div class="avatar">
+                <div class="avatar" style="width: 3%;height: 5.1vh;">
                     <div class="image-wrapper" :style="imageWrapperImage(comment.user.photo)">
                     </div>
                 </div>
@@ -17,11 +17,6 @@
                 {{comment.comment}}
             </div>
             <div class="d-flex">
-                <div v-if="hasChildren">
-                    <button class="answer" @click="setActive(comment)">
-                        {{active === comment ? 'Отмена' : 'Ответить'}}
-                    </button>
-                </div>
                 <div>
                     <comment-likes
                             :disable="user === null || comment.user.id === user.id"
@@ -47,8 +42,7 @@
             'active'
         ],
         components: {
-            CommentLikes,
-            CommentsForm
+            CommentLikes
         },
         inject: [
             'active'
@@ -113,7 +107,7 @@
                     path = '/uploads/avatars/' + photo;
                 }
                 return {
-                    'background-image': `url('${path}')`
+                    'background-image': `url('${path}'), url('/images/noLogoAvatar.png')`
                 }
             }
         }

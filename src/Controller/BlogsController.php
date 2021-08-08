@@ -7,12 +7,15 @@ use App\Entity\BlogLikes;
 use App\Entity\Blogs;
 use App\Entity\BlogTags;
 use App\Entity\Game;
+use App\Entity\Review;
 use App\Entity\User;
 use App\Message\SendBlogToModarator;
 use App\Service\Blog\BlogsCommentLikeService;
 use App\Service\Blog\BlogsCommentService;
 use App\Service\Blog\BlogsLikeService;
 use App\Service\Blog\BlogsTagService;
+use App\Service\News\NewsCommentService;
+use App\Service\ReviewService;
 use Swift_Mailer;
 use App\Service\Seo\SeoService;
 use Carbon\Carbon;
@@ -59,6 +62,16 @@ class BlogsController extends AbstractController
     public $blogCommentService;
 
     /**
+     * @var NewsCommentService
+     */
+    public $newsCommentService;
+
+    /**
+     * @var ReviewService
+     */
+    public $reviewService;
+
+    /**
      * @var BlogsLikeService
      */
     public $blogLikeService;
@@ -83,6 +96,10 @@ class BlogsController extends AbstractController
         $this->blogCommentLikeService = new BlogsCommentLikeService($entityManager);
 
         $this->blogCommentService = new BlogsCommentService($entityManager);
+
+        $this->newsCommentService = new NewsCommentService($entityManager);
+
+        $this->reviewService = new ReviewService($entityManager);
 
         $this->blogLikeService = new blogsLikeService($entityManager);
 
@@ -510,20 +527,79 @@ class BlogsController extends AbstractController
     }
 
     /**
-     * @Route("/blogs/comments/user", name="blogs.user", defaults={"offset" = 0})
+     * @Route("/blogs/comments/user", name="blogs.user.comment", defaults={"offset" = 0})
      */
     public function getBlogCommentsByUser(Request $request, $offset = 0)
     {
-        $request = json_decode($request->getContent(), false);
-
         $user = $this->getUser();
 
-        $blogEntities = $this->blogService->getRepository()->findBy(['user' => $user->getId()]);
+        $blogsComments = $this->blogCommentService->getRepository()->findBy([
+            'user' => $user->getId(),
+        ]);
 
-        $blogs = [];
-        foreach ($blogEntities as $blogEntity) {
-            $blogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+        $blogsComments = $this->blogCommentService->recurciveComments($blogsComments);
+
+        $newsComments = $this->newsCommentService->getRepository()->findBy([
+            'user' => $user->getId(),
+        ]);
+
+
+        $reviews = $this->reviewService->getRepository()->findBy([
+            'student' => $user->getId(),
+        ]);
+
+        $reviewComments = [];
+        if(!empty($reviews)){
+            /** @var Review $review */
+            foreach($reviews as $review){
+                $reviewComments = [
+                    'id' => $review->getId(),
+                    'user' => [
+                        'id' => $review->getStudent()->getId(),
+                        'nickname' => $review->getStudent()->getNickname(),
+                        'surname' => $review->getStudent()->getFamily(),
+                        'name' => $review->getStudent()->getName(),
+                        'photo' => $review->getStudent()->getPhoto(),
+                    ],
+                    'comment' => $review->getComment(),
+                    'createdAt' => $this->replaceMonth($review->getCreatedAt()->format('d F H:i')),
+                    'timestamp' => $review->getCreatedAt()->getTimestamp(),
+                    'likesCount' => 0,
+                    'userLike' => 0,
+                    'type' => 'blog'
+                ];
+            }
         }
-        return $this->json($blogs);
+
+        $newsComments = $this->newsCommentService->recurciveComments($newsComments);
+
+        $comments = array_merge($blogsComments, $newsComments, $reviewComments);
+
+        return $this->json([
+            'comments' => $comments,
+            'commentsCount' => count($blogsComments)
+        ]);
+    }
+
+    /**
+     * @param $date
+     * @return mixed
+     */
+    public static function replaceMonth($date)
+    {
+        $date = str_replace("January", "Января", $date);
+        $date = str_replace("February", "Февраля", $date);
+        $date = str_replace("March", "Марта", $date);
+        $date = str_replace("April", "Апреля", $date);
+        $date = str_replace("May", "Мая", $date);
+        $date = str_replace("June", "Июня", $date);
+        $date = str_replace("July", "Июля", $date);
+        $date = str_replace("August", "Августа", $date);
+        $date = str_replace("September", "Сентября", $date);
+        $date = str_replace("October", "Октября", $date);
+        $date = str_replace("November", "Ноября", $date);
+        $date = str_replace("December", "Декабря", $date);
+
+        return $date;
     }
 }
