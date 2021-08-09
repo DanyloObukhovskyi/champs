@@ -130,7 +130,7 @@
                     })
                     this.showButton = true;
                 } else {
-                    WalletService.checkout()
+                    WalletService.checkoutBlog()
                         .then(data => {
                             this.$store.dispatch('cabinet/wallet/getWalletData', data);
                             this.showSuccess();

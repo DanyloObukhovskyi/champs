@@ -287,7 +287,8 @@ class BlogService extends EntityService
             'views' => $blog->getViews() ?? 0,
             'username' => $blog->getUser()->getName() . ' ' . $blog->getUser()->getFamily(),
             'user_logo' => $blog->getUser()->getPhoto(),
-            'commentsCount' => count($blog->getBlogComments())
+            'commentsCount' => count($blog->getBlogComments()),
+            'code' => !empty($blog->getGame()) ? $blog->getGame()->getCode() : null
         ];
     }
 

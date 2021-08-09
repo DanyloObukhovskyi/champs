@@ -79,6 +79,49 @@
         </div>
     </div>
 
+    <div class="modal fade" id="blogPayment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <input type="hidden" id="blogId" value="">
+                    <button style="width: 100%;" type="button" class="btn btn-green btn-small" aria-label="Left Align" onclick="getAward()">
+                        Пост за вознагрождение
+                    </button>
+                    <button style="width: 100%;" type="button" class="btn btn-warning btn-small" aria-label="Left Align" onclick="agree()">
+                        Простая публикация
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="blogWithReward" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #333f52;color: white;" >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title  text-center" id="editSeoLabel">Отправить оплату</h3>
+                </div>
+                <input type="hidden" id="blogIdWithReward" value="" />
+                <div class="modal-body">
+                    <div class="main-post-editor-edit">
+                        <form class="editor-edit-form" enctype="multipart/form-data">
+                            <span class="editor-edit">Цена за пост</span>
+                            <input  class="editor-edit-form-input mt-15" type="number" id="reward" placeholder="0" value="">
+                            <br>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="agreeWithMoney()" class="btn btn-orange mt-15 mr-10">Отправить</button>
+                    <button type="button" class="btn btn-orange mt-15 mr-10" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 <script src="<?php echo base_url('assets/js/table-expander.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/common.js'); ?>"></script>
@@ -154,11 +197,19 @@
         });
     }
 
-    function agree(id)
+    function checkBlog(id)
     {
+        $('#blogPayment').modal('show');
+        $('#blogId').val(id);
+    }
+
+    function agree()
+    {
+        let blogId = $('#blogId').val();
+
         $.ajax({
             type:'POST',
-            url:'<?php echo base_url('/home/agree/') ;?>' + + id,
+            url:'<?php echo base_url('/home/agree/') ;?>' + blogId,
             data:{
 
             },
@@ -179,6 +230,45 @@
 
             }
         });
+        $('#blogPayment').modal('hide');
+    }
+
+    function agreeWithMoney()
+    {
+        let blogId = $('#blogIdWithReward').val();
+        let amount = $('#reward').val();
+        $.ajax({
+            type:'POST',
+            url:'<?php echo base_url('/home/agreeForMoney/') ;?>' + blogId,
+            data:{
+                amount: amount
+            },
+            success:function(data){
+                data = JSON.parse(data);
+                if(data.status == false){
+                    alert(data.errors);
+                } else if(data.status == true) {
+                    alert('Блог принят');
+                    $('#seoPageModal').modal('hide');
+                    $('#newsTable').DataTable().draw();
+                }
+            },
+            error:function(data){
+                $.each(data.responseJSON.errors, function (i, error) {
+                    alert(error[0]);
+                });
+
+            }
+        });
+        $('#blogWithReward').modal('hide');
+    }
+
+    function getAward(id)
+    {
+        let blogId = $('#blogId').val();
+        $('#blogWithReward').modal('show');
+        $('#blogIdWithReward').val(blogId);
+        $('#blogPayment').modal('hide');
     }
 
     function disagree(id)

@@ -68,6 +68,11 @@
         <a href="<?php echo base_url('c-admin/trainers/transactions'); ?>">Выплаты тренерам</a>
     </li>
     <?php endif;?>
+    <?php if($roles[0] == 1 or $roles[3] == 1):?>
+        <li class="<?php echo 'blogs/transactions' === $activePath ? 'active': ''?>">
+            <a href="<?php echo base_url('c-admin/blogs/transactions'); ?>">Выплаты блогерам</a>
+        </li>
+    <?php endif;?>
     <?php if($roles[0] == 1 or $roles[1] == 1):?>
         <li class="<?php echo 'teams' === $activePath ? 'active': ''?>">
             <a href="<?php echo base_url('c-admin/teams'); ?>">Команды</a>

@@ -2,7 +2,7 @@
     <div>
         <div class="comment">
             <div class="user">
-                <div class="avatar" style="width: 3%;height: 5.1vh;">
+                <div class="avatar" style="width: 3%;height: 2vw;">
                     <div class="image-wrapper" :style="imageWrapperImage(comment.user.photo)">
                     </div>
                 </div>
@@ -15,6 +15,9 @@
             </div>
             <div class="text">
                 {{comment.comment}}
+            </div>
+            <div class="text">
+                Опубликован: <a :href="getHref(comment)" style="color: #ff6d1d">"{{ getCommentType(comment) }}"</a>
             </div>
             <div class="d-flex">
                 <div>
@@ -33,6 +36,7 @@
 
 <script>
     import CommentLikes from "./CommentLikes";
+    import MarketplaceService from "../../../../services/MarketplaceService";
 
     export default {
         name: "Comment",
@@ -109,7 +113,106 @@
                 return {
                     'background-image': `url('${path}'), url('/images/noLogoAvatar.png')`
                 }
-            }
+            },
+            getHref(comment)
+            {
+                let href = '';
+                if(comment.type === 'blog'){
+                    href = this.getSlugForBlogs(comment.blog);
+                } else if(comment.type === 'news'){
+                    href = this.getSlugForNews(comment.news);
+                } else if(comment.type === 'review'){
+                    href = this.trainerUrl(comment.trainer);
+                }
+                return href;
+            },
+            getCommentType(comment)
+            {
+                let title = '';
+                if(comment.type === 'blog'){
+                    title = comment.blog.title;
+                } else if(comment.type === 'news'){
+                    title = comment.news.title;
+                } else if(comment.type === 'review'){
+                    title = comment.trainer.nickname;
+                }
+                return title;
+            },
+            getSlugForBlogs(blog) {
+                try{
+                    let title =  this.getTitleUrl(blog.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return '/ru/blog/'+ blog.id +'/' + title;
+                } catch (e) {
+                    let title =  this.getTitleUrl(blog.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return title;
+                }
+            },
+            getSlugForNews(news) {
+                try{
+                    let type = this.getTitleUrl(news.type.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let game = this.getTitleUrl(news.game.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let title =  this.getTitleUrl(news.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let date = this.getTitleUrl(news.date_ru_with_year_for_url)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+
+                    return '/ru/novosti/'+ news.id +'/'+ type+'/'+game+'/'+title+'-'+date;
+                } catch (e) {
+                    let title =  this.getTitleUrl(news.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return title;
+                }
+            },
+            getTitleUrl(title){
+                return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
+                    function (all, ch, space, words, i) {
+                        if (space || words) {
+                            return space ? '_' : '';
+                        }
+                        var code = ch.charCodeAt(0),
+                            index = code == 1025 || code == 1105 ? 0 :
+                                code > 1071 ? code - 1071 : code - 1039,
+                            t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
+                                'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+                                'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
+                                'shch', '', 'y', '', 'e', 'yu', 'ya'
+                            ];
+                        return t[index];
+                    });
+            },
+            trainerUrl(trainer) {
+                let slug =  this.getTitleUrl(trainer.nickname)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '')
+                ;
+                return MarketplaceService.getTrainerUrl(trainer.id, trainer.gameCode , slug)
+            },
         }
     }
 </script>

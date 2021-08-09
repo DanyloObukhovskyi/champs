@@ -153,6 +153,11 @@ $route['c-admin/trainers/transactions'] = 'trainer_transaction_c/index';
 $route['c-admin/ajax/trainers/transactions'] = 'trainer_transaction_c/ajax';
 $route['c-admin/ajax/trainers/transactions/save'] = 'trainer_transaction_c/save';
 
+//blogs transactions
+$route['c-admin/blogs/transactions'] = 'trainer_transaction_c/indexBlog';
+$route['c-admin/ajax/blogs/transactions'] = 'trainer_transaction_c/ajaxBlog';
+$route['c-admin/ajax/blogs/transactions/save'] = 'trainer_transaction_c/saveBlog';
+
 //events
 $route['c-admin/events'] = 'event_c/index';
 $route['c-admin/ajax/events'] = 'event_c/ajax';

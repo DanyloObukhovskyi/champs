@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PurseHistory;
+use App\Entity\PurseHistoryBlog;
 use App\Entity\Teachers;
 use App\Entity\TrainerLessonPrice;
 use App\Entity\User;
@@ -103,6 +104,57 @@ class WalletController extends AbstractController
         ]);
 
         $prices = !empty($trainer) ? $trainer->getCosts() : null;
+
+        return $this->json([
+            'earned' => $earned,
+            'balance' => $balance,
+            'available' => $available,
+            'transactionHistory' => $purseHistory,
+            'studentsHistory' => $confirmedPayments,
+            'lessonPrices' => !empty($prices) ? $this->decorateTrainerPrices($prices) : 0,
+            'wallet' => !empty($trainer) ? $trainer->getPayPal() : 0,
+            'isLessonCost' => !empty($trainer) ? $trainer->getIsLessonCost() : 0
+        ]);
+    }
+
+    /**
+     * @Route("/trainer/walletBlog", name="wallet")
+     */
+    public function indexBlog(Request $request, TranslatorInterface $translator): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), false);
+
+        $earned = [];
+        $purseHistoryEntities = $this->walletService
+            ->getPurseHistoryForBlog($user);
+
+
+        $purseHistory = [];
+        foreach ($purseHistoryEntities as $historyEntity) {
+            if($historyEntity->getStatus() !== 'cancel' && $historyEntity->getAmount() !== 0){
+                $purseHistory[] = $historyEntity->jsonSerialize();
+            }
+        }
+
+        $confirmedPayments = $this->walletService->getStudentsPaymentHistoryBlog($data->timezone, $user, $translator);
+        $balance = $this->walletService->getBalanceBlog($user);
+        $available = $this->walletService->getAvailableToPurseBlog($user);
+
+
+        $currentMonth = $translator->trans('earned.per this month');
+        $prevMonth = $translator->trans('earned.per previous month');
+
+        $date = Carbon::now();
+        $date->setDay(1);
+
+        $datePrev = Carbon::now()->subMonth();
+        $datePrev->setDay(1);
+
+        $earned[$currentMonth] = $this->walletService->getUserEarnedLessonsByMonthBlog($user, $date);
+        $earned[$prevMonth] = $this->walletService->getUserEarnedLessonsByMonthBlog($user, $datePrev);
 
         return $this->json([
             'earned' => $earned,
@@ -244,5 +296,85 @@ class WalletController extends AbstractController
         }
 
         return $this->index($request, $translator);
+    }
+
+    /**
+     * @Route("/trainer/wallet/checkoutBlog")
+     */
+    public function walletCheckoutBlog(Request $request, TranslatorInterface $translator)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (isset($user)) {
+            $available = $this->walletService->getAvailableToPurseBlog($user);
+
+            $purse = new PurseHistoryBlog();
+            $purse->setUser($user);
+            $purse->setStatus(PurseHistory::PENDING_STATUS);
+            $purse->setAmount($available);
+            $purse->setDatetime(new \DateTime());
+
+            $this->entityManager->persist($purse);
+            $this->entityManager->flush();
+        }
+
+        return $this->indexBlog($request, $translator);
+    }
+
+    /**
+     * @Route("/trainer/wallet/blog", name="walletBlog")
+     */
+    public function getWalletForBlog(Request $request, TranslatorInterface $translator): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), false);
+
+        $earned = [];
+        $purseHistoryEntities = $this->walletService
+            ->getPurseHistory($user);
+
+
+        $purseHistory = [];
+        foreach ($purseHistoryEntities as $historyEntity) {
+            if($historyEntity->getStatus() !== 'cancel' && $historyEntity->getAmount() !== 0){
+                $purseHistory[] = $historyEntity->jsonSerialize();
+            }
+        }
+        $confirmedPayments = $this->walletService->getStudentsPaymentHistory($data->timezone, $user, $translator);
+        $balance = $this->walletService->getBalance($user);
+        $available = $this->walletService->getAvailableToPurse($user);
+
+
+        $currentMonth = $translator->trans('earned.per this month');
+        $prevMonth = $translator->trans('earned.per previous month');
+
+        $date = Carbon::now();
+        $date->setDay(1);
+
+        $datePrev = Carbon::now()->subMonth();
+        $datePrev->setDay(1);
+
+        $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
+        $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);
+
+        /** @var Teachers $trainer */
+        $trainer = $this->entityManager->getRepository(Teachers::class)->findOneBy([
+            'userid' => $user->getId()
+        ]);
+
+        $prices = !empty($trainer) ? $trainer->getCosts() : null;
+
+        return $this->json([
+            'earned' => $earned,
+            'balance' => $balance,
+            'available' => $available,
+            'transactionHistory' => $purseHistory,
+            'studentsHistory' => $confirmedPayments,
+            'lessonPrices' => !empty($prices) ? $this->decorateTrainerPrices($prices) : 0,
+            'wallet' => !empty($trainer) ? $trainer->getPayPal() : 0,
+            'isLessonCost' => !empty($trainer) ? $trainer->getIsLessonCost() : 0
+        ]);
     }
 }

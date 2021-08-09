@@ -29,7 +29,8 @@ class Home extends CI_Controller
             'post_type_attributes_model',
             'posts_model',
             'payments_model',
-            'blog_model'
+            'blog_model',
+            'blog_payment_model'
         ]);
         $this->user_capabilities = $this->config->item('user_capabilities');
     }
@@ -1094,7 +1095,7 @@ class Home extends CI_Controller
                           <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
                         </button>';
                 if($blog['status'] == 4){
-                    $buttons .= '<button type="button" class="btn btn-green btn-small" aria-label="Left Align" onclick="agree('.$blog['id'].')">
+                    $buttons .= '<button type="button" class="btn btn-green btn-small" aria-label="Left Align" onclick="checkBlog('.$blog['id'].')">
                           <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
                         </button>
                         <button type="button" class="btn btn-danger btn-small" aria-label="Left Align" onclick="disagree('.$blog['id'].')">
@@ -1177,6 +1178,33 @@ class Home extends CI_Controller
                 }
                 $response->status = true;
             }
+        }
+        die(json_encode($response));
+    }
+
+    public function agreeForMoney($id)
+    {
+        $response = new stdClass();
+        $response->status = false;
+        if(!empty($id)){
+            $data = [
+                'status' => 1,
+            ];
+
+            $amount = $this->input->post('amount');
+
+            $blog = $this->blog_model->getOne(['id' => $id]);
+
+            $date = new DateTime();
+            $this->blog_payment_model->create([
+                'blog_id' => $id,
+                'user_id' => $blog['user_id'],
+                'amount' => $amount,
+                'datetime' => $date->format('Y-m-d H:i:s') . "\n"
+            ]);
+
+            $this->blog_model->update($id, $data);
+            $response->status = true;
         }
         die(json_encode($response));
     }

@@ -156,7 +156,9 @@ class BlogsController extends AbstractController
 
         $blogs = [];
         foreach ($blogEntities as $blogEntity) {
-            $blogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+            if($blogEntity->getStatus() === Blogs::ACTIVE){
+                $blogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+            }
         }
         return $this->json($blogs);
     }
@@ -214,6 +216,29 @@ class BlogsController extends AbstractController
     }
 
     /**
+     * @Route("/editBlog/{blogId}", name="editBlog")
+     */
+    public function editBlog(Request $request, $blogId): Response
+    {
+        if ($this->getUser() === null) {
+            return $this->redirectToRoute('main');
+        }
+        $seoSettings = $this->seoService->getSeo('contact_index');
+        $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
+
+        return $this->render('templates/blogs/edit.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => 'Отредактировать блог',
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'link' => $link,
+            'blogId' => $blogId,
+            'router' => 'blog']);
+    }
+
+    /**
      * @Route("/ajax/create/blog", name="createBlogFromAjax")
      */
     public function createBlogFromAjax(Request $request, Swift_Mailer $mailer): Response
@@ -261,6 +286,96 @@ class BlogsController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($blog);
             $em->flush();
+
+            if(!empty($tags) && !empty($blog->getId())){
+                foreach($tags as $key => $tag){
+                    $newTag = new BlogTags();
+                    $newTag->setBlog($blog);
+                    $newTag->setTitle($tag);
+
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($newTag);
+                    $em->flush();
+                }
+            }
+
+            $createdBlog = $this->blogService->decoratorForAllBlogs($blog);
+            if($createdBlog['status'] === Blogs::MODARATE){
+                $this->dispatchMessage(new SendBlogToModarator($mailer));
+            }
+        }
+
+        return $this->json(['blog' => $createdBlog]);
+    }
+
+    /**
+     * @Route("/ajax/edit/blog/{blogId}", name="editBlogFromAjax")
+     */
+    public function editBlogFromAjax(Request $request, Swift_Mailer $mailer, $blogId): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $data = (object)$request->request->all();
+
+        $createdBlog = [];
+
+        if(!empty($data)){
+            $file = $request->files->get('image');
+            $tags = $data->tags;
+            if (strpos($tags, '#Блоги') === false && strpos($tags, '#блоги') === false) {
+                $tags .= '#Блоги';
+            }
+            $tags = explode(',', $tags);
+
+            /** @var Game $gameEntity */
+            $gameEntity = $this->entityManager
+                ->getRepository(Game::class)
+                ->findOneBy([
+                    'code' => $data->game
+                ]);
+
+            /** @var Blogs $blog */
+            $blog = $this->entityManager
+                ->getRepository(Blogs::class)
+                ->findOneBy([
+                    'id' => $blogId
+                ]);
+
+            $blog->setGame($gameEntity);
+            $blog->setUser($user);
+            $blog->setStatus($data->status);
+            $blog->setText($data->text);
+            $blog->setTitle($data->title);
+            if (!empty($file)) {
+                $result = $this->validationAndUploadImage($file, $user);
+
+                if (!empty($result['error'])) {
+                    $errors['avatar'] = $result['error'];
+                } else {
+                    $data->image = $result['filename'];
+                }
+                $blog->setLogo($data->image);
+            }
+            $blog->setDate(Carbon::now());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($blog);
+            $em->flush();
+
+            $blogTags = $this->entityManager
+                ->getRepository(BlogTags::class)
+                ->findBy([
+                    'id' => $blogId
+                ]);
+
+            if(!empty($blogTags)){
+                /** @var BlogTags $blogTag */
+                foreach($blogTags as $blogTag){
+                    $em = $this->getDoctrine()->getManager();
+                    $em->remove($blogTag);
+                    $em->flush();
+                }
+            }
 
             if(!empty($tags) && !empty($blog->getId())){
                 foreach($tags as $key => $tag){
@@ -543,6 +658,7 @@ class BlogsController extends AbstractController
             'user' => $user->getId(),
         ]);
 
+        $newsComments = $this->newsCommentService->recurciveComments($newsComments);
 
         $reviews = $this->reviewService->getRepository()->findBy([
             'student' => $user->getId(),
@@ -552,7 +668,7 @@ class BlogsController extends AbstractController
         if(!empty($reviews)){
             /** @var Review $review */
             foreach($reviews as $review){
-                $reviewComments = [
+                $reviewComments[] = [
                     'id' => $review->getId(),
                     'user' => [
                         'id' => $review->getStudent()->getId(),
@@ -561,17 +677,21 @@ class BlogsController extends AbstractController
                         'name' => $review->getStudent()->getName(),
                         'photo' => $review->getStudent()->getPhoto(),
                     ],
+                    'trainer' => [
+                        'id' => $review->getTrainer()->getId(),
+                        'gameCode' => 'cs',
+                        'nickname' => $review->getTrainer()->getNickname()
+                    ],
                     'comment' => $review->getComment(),
                     'createdAt' => $this->replaceMonth($review->getCreatedAt()->format('d F H:i')),
                     'timestamp' => $review->getCreatedAt()->getTimestamp(),
                     'likesCount' => 0,
                     'userLike' => 0,
-                    'type' => 'blog'
+                    'type' => 'review'
                 ];
             }
         }
 
-        $newsComments = $this->newsCommentService->recurciveComments($newsComments);
 
         $comments = array_merge($blogsComments, $newsComments, $reviewComments);
 

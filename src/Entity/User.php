@@ -193,6 +193,16 @@ class User implements UserInterface
      */
     private $blogLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PurseHistoryBlog::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $purseHistoryBlogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BlogPayment::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $blogPayments;
+
 
     public function __construct()
     {
@@ -206,6 +216,8 @@ class User implements UserInterface
         $this->blogComments = new ArrayCollection();
         $this->blogCommentLikes = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
+        $this->purseHistoryBlogs = new ArrayCollection();
+        $this->blogPayments = new ArrayCollection();
     }
 
     /**
@@ -901,6 +913,66 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($blogLike->getUser() === $this) {
                 $blogLike->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PurseHistoryBlog[]
+     */
+    public function getPurseHistoryBlogs(): Collection
+    {
+        return $this->purseHistoryBlogs;
+    }
+
+    public function addPurseHistoryBlog(PurseHistoryBlog $purseHistoryBlog): self
+    {
+        if (!$this->purseHistoryBlogs->contains($purseHistoryBlog)) {
+            $this->purseHistoryBlogs[] = $purseHistoryBlog;
+            $purseHistoryBlog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurseHistoryBlog(PurseHistoryBlog $purseHistoryBlog): self
+    {
+        if ($this->purseHistoryBlogs->removeElement($purseHistoryBlog)) {
+            // set the owning side to null (unless already changed)
+            if ($purseHistoryBlog->getUser() === $this) {
+                $purseHistoryBlog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogPayment[]
+     */
+    public function getBlogPayments(): Collection
+    {
+        return $this->blogPayments;
+    }
+
+    public function addBlogPayment(BlogPayment $blogPayment): self
+    {
+        if (!$this->blogPayments->contains($blogPayment)) {
+            $this->blogPayments[] = $blogPayment;
+            $blogPayment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogPayment(BlogPayment $blogPayment): self
+    {
+        if ($this->blogPayments->removeElement($blogPayment)) {
+            // set the owning side to null (unless already changed)
+            if ($blogPayment->getUser() === $this) {
+                $blogPayment->setUser(null);
             }
         }
 

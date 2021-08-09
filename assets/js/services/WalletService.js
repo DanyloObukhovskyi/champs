@@ -16,6 +16,20 @@ class WalletService extends Service {
         })
     }
 
+    getWalletDataForBlogs = () => {
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0) {
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+
+        return this.send('trainer/walletBlog', {
+            timezone
+        })
+    }
+
     saveTrainerPrice = (data) => {
         return this.send('trainer/wallet/update/price', data)
     }
@@ -34,6 +48,20 @@ class WalletService extends Service {
         }
 
         return this.send('trainer/wallet/checkout', {
+            timezone
+        })
+    }
+
+    checkoutBlog = () => {
+        let timezone = (new Date().getTimezoneOffset()) / 60;
+
+        if (timezone < 0) {
+            timezone = Math.abs(timezone);
+        } else {
+            timezone = -timezone
+        }
+
+        return this.send('trainer/wallet/checkoutBlog', {
             timezone
         })
     }

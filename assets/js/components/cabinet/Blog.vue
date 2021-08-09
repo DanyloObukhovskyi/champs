@@ -179,7 +179,7 @@
             }
         },
         mounted() {
-            WalletService.getTrainerWalletData()
+            WalletService.getWalletDataForBlogs()
                 .then(data => {
                     this.$store.dispatch('cabinet/wallet/getWalletData', data);
                     this.load = false;

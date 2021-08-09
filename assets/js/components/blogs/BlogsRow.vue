@@ -1,5 +1,5 @@
 <template>
-    <a :href="`/${lang}/blog/${blogs.id}/` + getSlug(blogs)"
+    <a :href="getUrl(blogs)"
        class="article d-block animation-target"
        :style="{'background-image': `url(/uploads/blogs/${blogs.logo})`}"
        :class="className">
@@ -188,6 +188,20 @@ export default {
                         ];
                     return t[index];
                 });
+        },
+        getUrl(blog){
+            let url  = '';
+
+            if(this.isPage){
+                url = `/${this.lang}/blog/${blog.id}/` + this.getSlug(blog);
+            } else {
+                if(blog.status === 1){
+                    url = `/${this.lang}/blog/${blog.id}/` + this.getSlug(blog);
+                } else  if(blog.status === 2){
+                    url = `/${this.lang}/editBlog/${blog.id}`;
+                }
+            }
+            return url;
         }
     }
 }

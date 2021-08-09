@@ -89,10 +89,7 @@
                                             :tags="tags"
                                             :is-draggable="true"
                                             placeholder="Добавить тег"
-                                            @tags-changed="(newTags) => {
-                                                tags = newTags
-                                                tag = '#'
-                                            }"
+                                            @tags-changed="newTags => tags = newTags"
                                             @tag-order-changed="newTags => tags = newTags"
                                     />
                                 </div>
@@ -119,7 +116,10 @@
     import BlogService from "../services/BlogService";
 
     export default {
-        name: "BlogCreate",
+        name: "BlogEdit",
+        props: [
+            'blogId'
+        ],
         components: {
             Button,
             Editor,
@@ -208,7 +208,7 @@
                     isFull = false
                     type.push('игру');
                 }
-                if(!input.files[0]){
+                if(!this.selectedFileName){
                     isFull = false
                     type.push('изображение');
                 }
@@ -251,7 +251,7 @@
                     });
                     form.append('tags', tags);
 
-                    BlogService.createBlog(form)
+                    BlogService.updateBlog(form, this.blogId)
                         .then(blog => {
 
                             Swal.fire({
@@ -296,7 +296,7 @@
                     isFull = false
                     type.push('игру');
                 }
-                if(!input.files[0]){
+                if(!this.selectedFileName){
                     isFull = false
                     type.push('изображение');
                 }
@@ -339,7 +339,7 @@
                     });
                     form.append('tags', tags);
 
-                    BlogService.createBlog(form)
+                    BlogService.updateBlog(form, this.blogId)
                         .then(blog => {
 
                             Swal.fire({
@@ -361,7 +361,28 @@
                             })
                         })
                 }
-            }
+            },
+            async getBlogs() {
+                this.load = true;
+                await BlogService.getSingleBlogs(this.blogId)
+                    .then(data => {
+                        let blog = data.blogs;
+
+                        this.selectedCodeGame =  blog.code;
+                        this.selected = blog.code;
+                        blog.tags.forEach((item, key) => {
+                            this.tags.push({text: item.title});
+                        });
+                        this.selectedFileName = blog.logo;
+                        this.title = blog.title;
+                        this.text = blog.text;
+
+                        this.load = false;
+                    })
+            },
+        },
+        mounted() {
+            this.getBlogs();
         }
     }
 </script>

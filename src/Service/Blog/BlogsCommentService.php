@@ -105,6 +105,10 @@ class BlogsCommentService extends EntityService
                 'name' => $comment->getUser()->getName(),
                 'photo' => $comment->getUser()->getPhoto(),
             ],
+            'blog' => [
+                'id' => $comment->getBlog()->getId(),
+                'title' => $comment->getBlog()->getTitle()
+            ],
             'comment' => $comment->getComment(),
             'createdAt' => BlogService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
             'timestamp' => $comment->getCreatedAt()->getTimestamp(),

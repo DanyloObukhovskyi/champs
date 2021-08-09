@@ -36,6 +36,10 @@ class BlogService extends Service {
         return this.send('ajax/create/blog', updateData)
     }
 
+    updateBlog = (updateData, blogId) => {
+        return this.send('ajax/edit/blog/' + blogId, updateData)
+    }
+
     getSingleBlogs = id => {
         return this.send(`ajax/blogs/single/${id}`);
     }
