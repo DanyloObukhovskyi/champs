@@ -51,7 +51,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog"
 import blogCreate from "./pages/BlogCreate";
-import blogEdit from "./pages/blogEdit";
+import blogEdit from "./pages/BlogEdit";
 import BlogsFilters from "./components/blogs/BlogsFilters";
 import BlogsRow from "./components/blogs/BlogsRow";
 import HotBlogs from "./components/blogs/HotBlogs";
