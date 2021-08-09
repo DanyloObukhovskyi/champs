@@ -99,6 +99,10 @@ class CabinetService extends Service {
             timezone
         });
     }
+
+    getTime = () => {
+        return this.send('time', {});
+    }
 }
 
 export default new CabinetService();

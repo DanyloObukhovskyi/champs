@@ -276,9 +276,6 @@ class CabinetController extends AbstractController
         } else {
             $filename = md5(uniqid('', true)) . '.' . $file->guessExtension();
             $file->move($path, $filename);
-
-            $filesystem = new Filesystem();
-            $filesystem->remove($path . $user->getPhoto());
         }
         return [
             'filename' => $filename,
@@ -487,5 +484,13 @@ class CabinetController extends AbstractController
             $vkLink = $setting->getValue();
         }
         return $this->json($vkLink);
+    }
+
+    /**
+     * @Route("/time")
+     */
+    public function getTime(Request $request)
+    {
+        return $this->json(Carbon::now()->getTimestamp());
     }
 }

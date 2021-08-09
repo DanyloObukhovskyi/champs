@@ -386,8 +386,7 @@ class LessonsController extends AbstractController
             $date = Carbon::now();
             $date->setDay(1);
 
-            $datePrev = Carbon::now()->subMonth();
-            $datePrev->setDay(1);
+            $datePrev = Carbon::now()->setDay(1)->modify('- 1 month');
 
             $earned[$currentMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $date);
             $earned[$prevMonth] = $this->lessonService->getTrainerEarnedLessonsByMonth($user, $datePrev);

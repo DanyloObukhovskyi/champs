@@ -43,6 +43,9 @@
 </template>
 
 <script>
+import CabinetService from "../../services/CabinetService";
+import {mapActions, mapGetters} from "vuex";
+
 const MONTHS = [
     'Январь',
     'Февраль',
@@ -89,7 +92,13 @@ export default {
         date: String,
         availableDates: {
             default: {}
-        }
+        },
+        user: {
+            default: {}
+        },
+        trainer: {
+            default: {}
+        },
     },
     data: function () {
         return {
@@ -99,21 +108,42 @@ export default {
             days: 0,
             day: 0,
             months: MONTHS,
-            weeks: WEEK_DAYS
+            weeks: WEEK_DAYS,
+            timestamp: null
         };
     },
     watch: {},
     computed: {
+        ...mapGetters([
+            'user',
+            'loadUser'
+        ]),
         monthDays() {
-            const date = new Date(this.year, this.month + 1, 32);
+            const date = new Date(this.year, this.month);
 
-            return 32 - date.getDate();
+            let month = 0;
+            if(date.getMonth() == 8){
+                month = 31 - date.getDate();
+            } else if(date.getMonth() == 10){
+                month = 31 - date.getDate();
+            } else {
+                month = 32 - date.getDate();
+            }
+
+            return month;
         },
         prevMonthDays() {
             const date = new Date(this.year, this.month, 1);
+
             let day = date.getDay() === 0 ? 0 : date.getDay() - 1;
 
-            const prevMonthDaysCount = day < 0 ? 0 : day;
+            let prevMonthDaysCount = 0;
+            if(date.getMonth() == 7){
+                prevMonthDaysCount = 6;
+            } else {
+                prevMonthDaysCount = day < 0 ? 0 : day;
+            }
+
             const prevMonth = new Date(this.year, this.month, 0);
 
             let prevDay = prevMonth.getDate();
@@ -123,10 +153,19 @@ export default {
                 prevDays.push(prevDay)
                 prevDay--;
             }
+
             return prevDays.reverse();
         },
         nextMonthDays() {
-            let day = 35 - this.monthDays - this.prevMonthDays.length
+            const date = new Date(this.year, this.month, 1);
+
+            let day = 0;
+            if(date.getMonth() == 7){
+                day = 42 - this.monthDays - this.prevMonthDays.length
+            } else {
+                day = 35 - this.monthDays - this.prevMonthDays.length
+            }
+
             if(day < 0){
                 day = 0;
             }
@@ -162,14 +201,37 @@ export default {
                 this.month++;
             }
             this.setDay(1)
+        },
+        getTime() {
+            CabinetService.getTime()
+                .then(time => {
+                    this.timestamp = time;
+                    const date = this.date.split('.');
+
+                    let estTime = new Date(this.timestamp * 1000);
+                    let currentDateTimeCentralTimeZone = estTime;
+
+
+                    if(!this.user){
+                        if(!this.trainer){
+                            let timezone = this.user.timeZone.split(' ');
+                            currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
+                        } else {
+                            currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: 'Europe/Moscow' }));
+                        }
+                    } else {
+                        let timezone = this.user.timezone.split(' ');
+                        currentDateTimeCentralTimeZone = new Date(estTime.toLocaleString('en-US', { timeZone: timezone[0] }));
+                    }
+
+                    this.day = Math.abs(currentDateTimeCentralTimeZone.getDate());
+                    this.month = Math.abs(date[1]) - 1;
+                    this.year = date[2];
+                });
         }
     },
     created() {
-        const date = this.date.split('.');
-
-        this.day = Math.abs(date[0]);
-        this.month = Math.abs(date[1]) - 1;
-        this.year = date[2];
+        this.getTime();
     }
 }
 </script>

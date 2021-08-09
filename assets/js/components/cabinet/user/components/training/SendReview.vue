@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
             <div class="review-body">
                 <div class="stars">
                     <template v-for="i in [10,9,8,7,6,5,4,3,2,1]">
-                        <label :class="{selected: lesson.review.rate >= i}" @click="lesson.review.rate = i"></label>
+                        <label :class="{selected: rate >= i}" @click="check(i)"></label>
                     </template>
                 </div>
                 <div class="textarea">
@@ -96,9 +96,16 @@ import Swal from "sweetalert2";
         computed: {
             review() {
                 return this.lesson.review.text
-            }
+            },
+            rate(){
+                return this.lesson.review.rate
+            },
         },
         methods: {
+            check(i){
+                this.lesson.review.rate = i
+                this.rate = i
+            },
             sendReview() {
                 this.load = true;
                 if(!this.lesson.review.rate){
