@@ -51,6 +51,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog"
 import blogCreate from "./pages/BlogCreate";
+import blogEdit from "./pages/blogEdit";
 import BlogsFilters from "./components/Blogs/BlogsFilters";
 import BlogsRow from "./components/Blogs/BlogsRow";
 import HotBlogs from "./components/Blogs/HotBlogs";
@@ -110,6 +111,7 @@ Vue.component('blogs-row', BlogsRow);
 Vue.component('blog-filters', BlogsFilters);
 Vue.component('hot-blogs', HotBlogs);
 Vue.component('blog-create', blogCreate);
+Vue.component('blog-edit', blogEdit);
 Vue.component('blogs-view-page', BlogsViewPage);
 Vue.component('tabs', Tabs);
 Vue.component('tab', Tab);
