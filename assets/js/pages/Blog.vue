@@ -31,10 +31,10 @@
 </template>
 
 <script>
-    import BlogsFilters from "../components/Blogs/BlogsFilters";
+    import BlogsFilters from "../components/blogs/BlogsFilters";
     import Loader from "../components/helpers/Loader";
-    import HotBlogs from "../components/Blogs/HotBlogs";
-    import BlogsRow from "../components/Blogs/BlogsRow";
+    import HotBlogs from "../components/blogs/HotBlogs";
+    import BlogsRow from "../components/blogs/BlogsRow";
     import blogService from "../services/BlogService";
 
     export default {
