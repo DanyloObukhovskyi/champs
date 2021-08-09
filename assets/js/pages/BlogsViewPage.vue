@@ -111,8 +111,8 @@ import BlogsComments from "../components/blogs/BlogsComments";
 import BlogService from "../services/BlogService";
 import Likes from "../components/likes/Likes";
 import { Tweet, Moment, Timeline } from 'vue-tweet-embed';
-import BlogsFilters from "../components/Blogs/BlogsFilters";
-import HotBlogs from "../components/Blogs/HotBlogs";
+import BlogsFilters from "../components/blogs/BlogsFilters";
+import HotBlogs from "../components/blogs/HotBlogs";
 
 export default {
     name: "BlogsViewPage",
