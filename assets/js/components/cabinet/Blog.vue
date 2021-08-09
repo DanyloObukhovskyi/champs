@@ -102,7 +102,7 @@
     import {mapGetters} from "vuex";
     import BlogService from "../../services/BlogService";
     import WalletService from "../../services/WalletService";
-    import comment from "./components/comment";
+    import comment from "./components/comments/Comment";
 
     export default {
         name: "Blog",
