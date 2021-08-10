@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Service\News;
+namespace App\Service\Blog;
 
 
 use App\Entity\BlogLikes;
