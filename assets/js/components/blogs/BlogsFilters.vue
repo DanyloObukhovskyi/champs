@@ -103,6 +103,7 @@ import Multiselect from 'vue-multiselect';
 import NewsService from "../../services/NewsService";
 import MatchService from "../../services/MatchService";
 import Button from "../cabinet/Button";
+import BlogService from "../../services/BlogService";
 
 export default {
     name: "BlogsFilters",
@@ -127,7 +128,8 @@ export default {
                 texts: 'Текст',
                 tags: ''
             },
-            formats: []
+            formats: [],
+            user: []
         }
     },
     computed: {
@@ -196,15 +198,27 @@ export default {
         },
         checkAuth()
         {
-            if(this.user !== null){
+            if(!this.user && this.user !== undefined && this.user !== 'undefined' && this.user !== null){
+                console.log(this.user);
+                debugger
                 window.location = '/createBlog';
             } else {
                 this.showLogin();
             }
+        },
+        showLogin() {
+            this.$store.dispatch('showLogin')
+        },
+        getAuth(){
+            BlogService.getAuthUser()
+                .then(user => {
+                    this.user = user;
+                })
         }
     },
     mounted() {
         this.getFormats();
+        this.getAuth();
     }
 }
 </script>
