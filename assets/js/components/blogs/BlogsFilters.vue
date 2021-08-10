@@ -199,7 +199,7 @@ export default {
         checkAuth()
         {
             if(this.user !== null){
-                window.location = '/createBlog';
+                window.location = '/ru/createBlog';
             } else {
                 this.showLogin();
             }
