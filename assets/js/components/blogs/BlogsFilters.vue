@@ -4,7 +4,7 @@
             <lamp-header title="Блоги"/>
         </div>
         <div class="filters-middle">
-            <a @click="checkAuth" :href="user !== null ? 'createBlog' : '#'" style="color: black" class="d-flex align-items-center">
+            <a @click="checkAuth"  style="color: black" class="d-flex align-items-center">
                 <img class="filters-icons" src="/images/icons/blog.svg" alt="">
                 <span class="blog-button">Написать пост</span>
             </a>
@@ -197,6 +197,7 @@ export default {
         checkAuth()
         {
             if(this.user !== null){
+                window.location = '/createBlog';
             } else {
                 this.showLogin();
             }
