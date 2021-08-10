@@ -198,9 +198,7 @@ export default {
         },
         checkAuth()
         {
-            if(!this.user && this.user !== undefined && this.user !== 'undefined' && this.user !== null){
-                console.log(this.user);
-                debugger
+            if(this.user !== null){
                 window.location = '/createBlog';
             } else {
                 this.showLogin();
