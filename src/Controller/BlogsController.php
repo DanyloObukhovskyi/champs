@@ -140,7 +140,9 @@ class BlogsController extends AbstractController
 
         /** @var Blogs $blogEntity */
         foreach ($blogsCollect as $blogEntity) {
-            $hotBlogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+            if($blogEntity->getStatus() === Blogs::ACTIVE) {
+                $hotBlogs[] = $this->blogService->decoratorForAllBlogs($blogEntity);
+            }
         }
         return $this->json($hotBlogs);
     }
