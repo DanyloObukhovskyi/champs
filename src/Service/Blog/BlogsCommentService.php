@@ -10,7 +10,7 @@ use App\Entity\User;
 use App\Repository\BlogCommentRepository;
 use App\Service\EntityService;
 use App\Service\ImageService;
-use App\Service\News\BlogService;
+use App\Service\Blog\BlogService;
 use App\Traits\CommentRecursiveDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 

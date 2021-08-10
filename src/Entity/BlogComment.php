@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BlogCommentRepository;
-use App\Service\News\BlogService;
+use App\Service\Blog\BlogService;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
