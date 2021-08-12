@@ -5,14 +5,14 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between">
                         <div class="filters-middle">
-                                <a href="createBlogAndReward" style="color: black" class="d-flex align-items-center">
-                                        <img class="filters-icons" src="/images/icons/blog2.svg" alt="">
+                                <a href="createBlogAndReward" class="d-flex align-items-center filters-button">
+                                    <div class="filters-icons filters-icons2" alt=""></div>
                                     <span class="blog-button">Создай блог и заработай!</span>
                                 </a>
                         </div>
                         <div class="filters-middle">
-                                <a href="howCreateBlog" style="color: black" class="d-flex align-items-center">
-                                        <img class="filters-icons" src="/images/icons/vrsti.svg" alt="">
+                                <a href="howCreateBlog" class="d-flex align-items-center filters-button">
+                                    <div class="filters-icons filters-icons3" alt=""></div>
                                     <span class="blog-button">Как вести успешный блог?</span>
                                 </a>
                         </div>
@@ -35,9 +35,8 @@
                                 <label>Выберете игру к которой относится ваша публикация</label>
                                 <div class="games d-flex">
                                     <div class="cs d-flex align-items-center" v-for="game in games"
-                                         v-if="game.active"
                                          @click="setGame(game.code)">
-                                        <a :style="game.code == selected ? 'color:rgb(173, 175, 176);' : '' ">
+                                        <a :style="game.code == selected ? 'color: #ff6d1d;border: 3px solid;padding: 10px;' : 'color:rgb(173, 175, 176);' ">
                                             <img :src="`/uploads/games/${game.sidebarIcon}`">
                                             {{ game.name }}
                                         </a>
@@ -60,6 +59,7 @@
                         <div class="setting-col-12" >
                             <div class="form-group">
                                 <label>Текст вашей публикации</label>
+                                    <input id="my-file" type="file" name="my-file" style="display: none;" onchange="" />
                                     <editor
                                             v-model="text"
                                             api-key="vh6riwhud16qd55ticd0ycx8lg3v3uqaavhdlvjlroakepce"
@@ -67,14 +67,24 @@
                                                  height: 500,
                                                  menubar: false,
                                                  plugins: [
-                                                   'advlist autolink lists link image charmap print preview anchor',
-                                                   'searchreplace visualblocks code fullscreen',
-                                                   'insertdatetime media table paste code help wordcount'
+                                                    'code | lists advlist | autolink ',
+                                                    'advlist autolink lists link image charmap print preview anchor',
+                                                    'searchreplace visualblocks advcode fullscreen',
+                                                    'insertdatetime media table powerpaste hr code',
+                                                    'advlist autolink lists link image charmap print preview anchor',
+                                                    'searchreplace visualblocks code fullscreen',
+                                                    'insertdatetime media table paste code help wordcount'
                                                  ],
-                                                 toolbar:
-                                                   'undo redo | formatselect | bold italic backcolor | \
-                                                   alignleft aligncenter alignright alignjustify | \
-                                                   bullist numlist outdent indent | removeformat | help'
+                                                 toolbar: 'code | undo redo | bold italic underline strikethrough | blockquote |fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | lists advlist | autolink',
+                                                 a11y_advanced_options: true,
+                                                 image_title: true,
+                                                 /* enable automatic uploads of images represented by blob or data URIs*/
+                                                 automatic_uploads: true,
+                                                file_picker_types: 'image',
+                                                file_picker_callback: function (callback, value, meta) {
+                                                     filePicker(callback, value, meta);
+                                                },
+                                                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                                }"
                                     />
 <!--                                    <textarea id="blogTextArea" class="col-12"/>-->
@@ -252,16 +262,16 @@
                     form.append('tags', tags);
 
                     BlogService.createBlog(form)
-                        .then(blog => {
+                        .then(data => {
 
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Блог сохранен!',
+                                title: 'Ваша публикация сохранена!',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
                             this.load = false;
-
+                             window.location = '/ru/editBlog/'+ data.blog.id;
                             this.clearDialog();
                         })
                         .catch(({response: {data}}) => {
@@ -273,6 +283,22 @@
                                 text: data.avatar,
                             })
                         })
+                }
+            },
+            filePicker(callback, value, meta){
+                if (meta.filetype == 'image') {
+                    var input = document.getElementById('my-file');
+                    input.click();
+                    input.onchange = function () {
+                        var file = input.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            callback(e.target.result, {
+                                alt: file.name
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    };
                 }
             },
             sendToAdmin()
@@ -370,7 +396,6 @@
 
     .filters-icons{
         width: 30px;
-        margin-right: 10px;
     }
     .filters-middle
     {
@@ -497,8 +522,53 @@
         max-width: 100% !important;
         width: 100%;
     }
-    .blog-button:hover{
+    .filters-middle:hover .blog-button{
         background-color: #ff6d1d;
         color: white;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .filters-icons2{
+        background-image: url('/images/icons/blog2.svg');
+        background-repeat: no-repeat;
+        width: 3vw;
+        height: 3vw;
+    }
+    .dark .filters-icons2{
+        background-image: url('/images/icons/blog2White.svg');
+        background-repeat: no-repeat;
+        width: 3vw;
+        height: 3vw;
+    }
+    .filters-icons3{
+        background-image: url('/images/icons/vrsti.svg');
+        background-repeat: no-repeat;
+        width: 3vw;
+        height: 3vw;
+    }
+    .dark .filters-icons3{
+        background-image: url('/images/icons/vrstiWhite.svg');
+        background-repeat: no-repeat;
+        width: 3vw;
+        height: 3vw;
+    }
+    .filters-button{
+        color: black;
+    }
+    .dark .filters-button{
+        color: white;
+    }
+    .filters-middle:hover .filters-icons2{
+        background-image: url('/images/icons/blog2Hover.svg');
+        background-repeat: no-repeat;
+        width: 3vw;
+        height: 3vw;
+    }
+    .filters-middle:hover .filters-icons3{
+        background-image: url('/images/icons/vrstiHover.svg');
+        background-repeat: no-repeat;
+        width: 3vw;
+        height: 3vw;
+        left:10px
     }
 </style>

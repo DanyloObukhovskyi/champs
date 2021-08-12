@@ -2,12 +2,12 @@
     <div class="news d-flex">
         <div class="col-9 pl-0 news-page-row">
             <div class="tags">
-<!--                <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">-->
-<!--                    {{ tag }}-->
-<!--                </button>-->
-<!--                <button class="tag" @click="getNextTags()" v-if="[].length < tagsCount">-->
-<!--                    ...-->
-<!--                </button>-->
+                <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
+                    {{ tag }}
+                </button>
+                <button class="tag" @click="getNextTags()" v-if="[].length < tagsCount">
+                    ...
+                </button>
             </div>
             <div class="news-row d-flex" v-for="(blogs, i) in blogsSorted">
                 <blogs-row
