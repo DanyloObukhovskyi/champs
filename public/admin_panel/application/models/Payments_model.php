@@ -29,12 +29,13 @@ class Payments_model extends CI_Model {
         $this->db->join("refund", "payment.id = refund.payment_id", "left");
 
 //        $this->db->last_query()
-
+        $this->db->where("payment.payment_status", 1);
         if ($query != '') {
             $this->db->where("(user.nickname LIKE '%$query%'");
             $this->db->or_where("trainer.nickname LIKE '%$query%'");
             $this->db->or_where("payment.id LIKE '%$query%')");
         }
+
 
         if ($column == 0) {
             $this->db->order_by("payment.id", $order);
@@ -91,5 +92,55 @@ class Payments_model extends CI_Model {
             $data = $query->result_array();
         }
         return $data;
+    }
+
+    public function getNotRelatedPaymentsData($limit, $offset, $count, $query, $column, $order)
+    {
+
+        $this->db->select('payment.id, 
+                           payment.created_at, 
+                           user.nickname as student_nickname,
+                           user.name as student_name,
+                           user.id as user_id, 
+                           trainer.nickname  as trainer_nickname,  
+                           payment.yandex_kassa_id, 
+                           lessons.student_id, 
+                           payment.yandex_data, 
+                           lessons.date_time_from, 
+                           lessons.cost as total_price, 
+                           refund.amount as refund_amount');
+        $this->db->join("lessons", "payment.lesson_id = lessons.id");
+        $this->db->join("user as trainer", "lessons.trainer_id = trainer.id" );
+        $this->db->join("user", "lessons.student_id = user.id" );
+        $this->db->join("refund", "payment.id = refund.payment_id", "left");
+
+//        $this->db->last_query()
+        $this->db->where("payment.payment_status != 1");
+        $this->db->where("payment.created_at <= date('". date('Y-m-d H:i:s', strtotime('- 20 minutes'))."')");
+
+        if ($query != '') {
+            $this->db->where("(user.nickname LIKE '%$query%'");
+            $this->db->or_where("trainer.nickname LIKE '%$query%'");
+            $this->db->or_where("payment.id LIKE '%$query%')");
+        }
+
+
+        if ($column == 0) {
+            $this->db->order_by("payment.id", $order);
+        } elseif ($column == 1) {
+            $this->db->order_by("trainer.nickname", $order);
+        } elseif ($column == 2) {
+            $this->db->order_by("lessons.date_time_from", $order);
+        } elseif ($column == 3) {
+            $this->db->order_by("user.nickname", $order);
+        }
+
+        if ($count) {
+            return count($this->get([]));
+        }
+
+        $payments = $this->getData([], $limit, $offset);
+
+        return $payments;
     }
 }

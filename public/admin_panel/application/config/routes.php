@@ -90,6 +90,9 @@ $route['c-admin/trainer/add/(:num)'] = 'add_c/trainer/$1';
 $route['c-admin/payments'] = 'home/getPayments';
 $route['c-admin/payments/page/(:num)'] = 'home/payments/$1';
 
+$route['c-admin/not_related_payments'] = 'home/getNotRelatedPayments';
+$route['c-admin/not_related_payments/page/(:num)'] = 'home/notRelatedPayments/$1';
+
 //admins' pages
 $route['c-admin/admins/page/(:num)'] = 'home/admins/$1';
 $route['c-admin/admin/edit/(:num)/(:num)'] = 'edit_c/admin/$1/$2';
