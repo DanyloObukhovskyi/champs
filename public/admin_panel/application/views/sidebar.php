@@ -21,6 +21,9 @@
     <li class="<?php echo 'payments' === $activePath ? 'active': ''?>">
         <a href="<?php echo base_url('c-admin/payments/page/1'); ?>">Оплаты</a>
     </li>
+    <li class="<?php echo 'not_related_payments' === $activePath ? 'active': ''?>">
+        <a href="<?php echo base_url('c-admin/not_related_payments/page/1'); ?>">Неудачные оплаты</a>
+    </li>
     <?php endif;?>
     <?php if($roles[0] == 1):?>
     <li class="<?php echo 'admins' === $activePath ? 'active': ''?>">

@@ -34,7 +34,7 @@
     ?>
 
     <div class="main-content">
-        <h1 class="main-title">Посты</h1>
+        <h1 class="main-title">Оплаты</h1>
         <div class="relative">
             <table class="new-table" id="paymentsTable">
                 <thead>

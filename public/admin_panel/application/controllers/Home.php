@@ -392,6 +392,54 @@ class Home extends CI_Controller
         $this->load->view('layout/home', $data);
     }
 
+    public function notRelatedPayments($page = 0)
+    {
+        $current_u_can = $this->users_model->get_capabilities($this->UserID);
+        $current_u_can = json_decode($current_u_can[0]["roles"]);
+        $current_u_can = $current_u_can[0];
+
+        $data['UserID'] = $this->UserID;
+        $data['user'] = $this->ion_auth->user()->row();
+        $this->load->model("selectData");
+
+        $page = (int)$page;
+        if ($page > 0) {
+            $page = $page - 1;
+        }
+
+        $data['UserID'] = $this->UserID;
+        $data['user'] = $this->ion_auth->user()->row();
+
+        $data['field_search'] = array(
+            'type' => 'text',
+            'name' => 'search',
+            'id' => 'search'
+        );
+        $search = $this->input->post('search');
+        if ((int)$search > 0) {
+            $where['search'] = (int)$search;
+        } else {
+            $where['search'] = $search;
+        }
+        $where['payment_status'] = 1;
+
+        $offset = $this->post_per_page * $page;
+
+        $config = $this->config->item('pagination');
+        $config['base_url'] = site_url('c-admin/posts/page/');
+        $config['use_page_numbers'] = true;
+        $config['reuse_query_string'] = true;
+
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->rmo_create_links();
+
+        $data['roles'] = json_decode($this->users_model->get_capabilities($this->UserID)[0]['roles'])[0];
+
+
+        $data['output'] = $this->load->view('home/not_related_payments', $data, true);
+        $this->load->view('layout/home', $data);
+    }
+
     public function admins($page = 0)
     {
         $current_u_can = $this->users_model->get_capabilities($this->UserID);
@@ -911,7 +959,6 @@ class Home extends CI_Controller
         $total_data_count = $this->payments_model->getPaymentsData($length, $start, true, $search, $column, $order);
         $total_data    = $this->payments_model->getPaymentsData($length, $start, false, $search, $column, $order);
 
-
         $data = [];
 
         if (!empty($total_data)) {
@@ -931,6 +978,44 @@ class Home extends CI_Controller
                                                                                  \''.'RUB'.'\',
                                                                                  \''.base_url("c-admin/refund/$this->UserID").'\',
                                                                                  \''.$payment['id'].'\')">Refund</button>'
+                ];
+            }
+        }
+
+        $output = [
+            "draw"            => $draw,
+            "recordsTotal"    => $total_data_count,
+            "recordsFiltered" => $total_data_count,
+            "data"            => $data,
+        ];
+
+        die(json_encode($output));
+
+    }
+
+    public function getNotRelatedPayments() {
+        $this->load->model("selectData");
+        $draw   = intval($this->input->post("draw"));
+        $start  = intval($this->input->post("start"));
+        $length = intval($this->input->post("length"));
+        $search = $this->input->post("search")["value"];
+        $column = isset($this->input->post("order")[0]['column']) ? $this->input->post("order")[0]['column'] : -1;
+        $order  = isset($this->input->post("order")[0]['dir']) ? $this->input->post("order")[0]['dir'] : -1;
+
+        $total_data_count = $this->payments_model->getNotRelatedPaymentsData($length, $start, true, $search, $column, $order);
+        $total_data    = $this->payments_model->getNotRelatedPaymentsData($length, $start, false, $search, $column, $order);
+
+        $data = [];
+
+        if (!empty($total_data)) {
+            foreach ($total_data as $payment) {
+                $data[] = [
+                    $payment['id'], //0
+                    $payment['trainer_nickname'], //1
+                    $payment['created_at'], //2
+                    $payment['date_time_from'], //3
+                    '<a href="'.base_url("/c-admin/user/edit/".$payment["user_id"]."/".$this->UserID).'">'.(!empty($payment["student_nickname"]) ? $payment["student_nickname"] : $payment["student_name"] ?? 'Пользователь').'</a>',
+                    $payment['total_price'], //5
                 ];
             }
         }
