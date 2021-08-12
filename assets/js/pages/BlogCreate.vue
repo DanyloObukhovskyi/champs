@@ -6,13 +6,13 @@
                 <div class="d-flex justify-content-between">
                         <div class="filters-middle">
                                 <a href="createBlogAndReward" class="d-flex align-items-center filters-button">
-                                    <div class="filters-icons filters-icons2" alt=""></div>
+                                    <img class="filters-icons filters-icons2" alt="">
                                     <span class="blog-button">Создай блог и заработай!</span>
                                 </a>
                         </div>
                         <div class="filters-middle">
                                 <a href="howCreateBlog" class="d-flex align-items-center filters-button">
-                                    <div class="filters-icons filters-icons3" alt=""></div>
+                                    <img class="filters-icons filters-icons3" alt="">
                                     <span class="blog-button">Как вести успешный блог?</span>
                                 </a>
                         </div>
@@ -53,7 +53,7 @@
                                     </label>
                                     <input type="file" name="image" id="image-upload-form" @change="setPreviewImage">
                                 </form>
-                                <label style="font-size: 0.7vw;margin-top: 0;margin-left: 1vw;">Размер не более 3 МБ</label>
+                                <label style="font-size: 0.7vw;top: -0.8vw;margin-left: 1vw;">Размер не более 3 МБ</label>
                             </div>
                         </div>
                         <div class="setting-col-12" >
@@ -395,6 +395,7 @@
     @import '../../css/animations.css';
 
     .filters-icons{
+        margin-right: 10px;
         width: 30px;
     }
     .filters-middle
@@ -525,32 +526,27 @@
     .filters-middle:hover .blog-button{
         background-color: #ff6d1d;
         color: white;
-        padding: 5px;
         border-radius: 5px;
     }
+    .filters-middle{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
     .filters-icons2{
-        background-image: url('/images/icons/blog2.svg');
+        content: url('/images/icons/blog2.svg');
         background-repeat: no-repeat;
-        width: 3vw;
-        height: 3vw;
     }
     .dark .filters-icons2{
-        background-image: url('/images/icons/blog2White.svg');
+        content: url('/images/icons/blog2White.svg');
         background-repeat: no-repeat;
-        width: 3vw;
-        height: 3vw;
     }
     .filters-icons3{
-        background-image: url('/images/icons/vrsti.svg');
+        content: url('/images/icons/vrsti.svg');
         background-repeat: no-repeat;
-        width: 3vw;
-        height: 3vw;
     }
     .dark .filters-icons3{
-        background-image: url('/images/icons/vrstiWhite.svg');
+        content: url('/images/icons/vrstiWhite.svg');
         background-repeat: no-repeat;
-        width: 3vw;
-        height: 3vw;
     }
     .filters-button{
         color: black;
@@ -559,16 +555,11 @@
         color: white;
     }
     .filters-middle:hover .filters-icons2{
-        background-image: url('/images/icons/blog2Hover.svg');
+        content: url('/images/icons/blog2Hover.svg');
         background-repeat: no-repeat;
-        width: 3vw;
-        height: 3vw;
     }
     .filters-middle:hover .filters-icons3{
-        background-image: url('/images/icons/vrstiHover.svg');
+        content: url('/images/icons/vrstiHover.svg');
         background-repeat: no-repeat;
-        width: 3vw;
-        height: 3vw;
-        left:10px
     }
 </style>

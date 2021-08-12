@@ -5,19 +5,19 @@
         </div>
         <div class="filters-middle">
             <a @click="checkAuth" href="#"  class="d-flex align-items-center filters-buttons">
-                <div class="filters-icons1" alt=""></div>
+                <img class="filters-icons filters-icons1" alt="">
                 <span class="blog-button">Написать пост</span>
             </a>
         </div>
         <div class="filters-middle">
             <a href="createBlogAndReward" class="d-flex align-items-center filters-buttons">
-                <div class="filters-icons filters-icons2" alt=""></div>
+                <img class="filters-icons filters-icons2" alt=""></img>
                 <span class="blog-button">Создай блог и заработай!</span>
             </a>
         </div>
         <div class="filters-middle">
             <a href="howCreateBlog"  class="d-flex align-items-center filters-buttons">
-                <div class="filters-icons filters-icons3" alt=""></div>
+                <img class="filters-icons filters-icons3" alt=""></img>
                 <span class="blog-button">Как вести успешный блог?</span>
             </a>
         </div>
@@ -367,17 +367,19 @@ export default {
 /*    color: #adadad !important;*/
 /*}*/
 .filters-icons{
+    margin-right: 10px;
     width: 30px;
 }
 .filters-middle
 {
     margin-top: 10px;
     margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 .filters-middle:hover .blog-button{
     background-color: #ff6d1d;
     color: white;
-    padding: 5px;
     border-radius: 5px;
 }
 .filters-buttons{
@@ -387,58 +389,40 @@ export default {
     color: white;
 }
 .filters-icons1{
-    background-image: url('/images/icons/blog.svg');
+    content: url('/images/icons/blog.svg');
     background-repeat: no-repeat;
-    height: 2vw;
-    width: 3vw;
 }
 .dark .filters-icons1{
-    background-image: url('/images/icons/blogWhite.svg');
+    content: url('/images/icons/blogWhite.svg');
     background-repeat: no-repeat;
-    height: 2vw;
-    width: 3vw;
 }
 .filters-icons2{
-    background-image: url('/images/icons/blog2.svg');
+    content: url('/images/icons/blog2.svg');
     background-repeat: no-repeat;
-    width: 3vw;
-    height: 2.5vw
 }
 .dark .filters-icons2{
-    background-image: url('/images/icons/blog2White.svg');
+    content: url('/images/icons/blog2White.svg');
     background-repeat: no-repeat;
-    width: 3vw;
-    height: 2.5vw;
 }
 .filters-icons3{
-    background-image: url('/images/icons/vrsti.svg');
+    content: url('/images/icons/vrsti.svg');
     background-repeat: no-repeat;
-    width: 3vw;
-    height: 2.5vw;
 }
 .dark .filters-icons3{
-    background-image: url('/images/icons/vrstiWhite.svg');
+    content: url('/images/icons/vrstiWhite.svg');
     background-repeat: no-repeat;
-    width: 3vw;
-    height: 2.5vw;
 }
 .filters-middle:hover .filters-icons1{
-    background-image: url('/images/icons/blogHover.svg');
+    content: url('/images/icons/blogHover.svg');
     background-repeat: no-repeat;
-    height: 2vw;
-    width: 3vw;
 }
 .filters-middle:hover .filters-icons2{
-    background-image: url('/images/icons/blog2Hover.svg');
+    content: url('/images/icons/blog2Hover.svg');
     background-repeat: no-repeat;
-    width: 3vw;
-    height: 2.5vw
 }
 .filters-middle:hover .filters-icons3{
-    background-image: url('/images/icons/vrstiHover.svg');
+    content: url('/images/icons/vrstiHover.svg');
     background-repeat: no-repeat;
-    width: 3vw;
-    height: 2.5vw;
 }
 </style>
 <style>

@@ -15,7 +15,7 @@
         <div class="cabinet-news">
             <div class="news-wrapper" v-if="tab == 'comments'">
                 <div class="empty-wrapper" v-if="comments.length === 0">
-                    <div class="title" style="font-size: 1.0vw;">
+                    <div class="title" style="font-size: 1.0vw;color: #9d9fa0">
                         Твои комментарии
                     </div>
                     <div class="body">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <div class="title" style="font-size: 1.0vw;">
+                    <div class="title" style="font-size: 1.0vw;color: #9d9fa0">
                         Твои комментарии
                     </div>
                     <div v-for="comment in comments">
@@ -422,5 +422,14 @@
         display: flex;
         justify-content: space-between;
     }
-
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+        color: white;
+        background-color: #ff6d1d;
+    }
+    .dark .nav-button {
+        border-color: dimgrey !important;
+    }
+    .nav-button {
+        border-color: white !important;
+    }
 </style>
