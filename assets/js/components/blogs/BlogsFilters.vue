@@ -24,7 +24,7 @@
         <div class="filters-body">
             <div class="keyword d-flex" v-if="filterType !== 'formats'">
                 <div class="search-keyword">
-                    <i class="fas fa-search"></i>
+                    <img style="width: 1.5vw;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABmUlEQVRIie2WTUpCURTHz9V0kg0VgmgB2qgNZIMaOVDRtiBK9LELaQ01qgXUKoqwQRZYVI4iamyDCurXwHPxEvX0vidO8sDl8njn//+ddz8OT2QaEwozLAFIikhRx7KILOirRxG5EJETETk2xnyMrSqgDDwwPO6B0jiAMWDPMb4EtoAsMKsjB2wDbSevCcSigC30DagFmWmRdc0FaIaFlh3oiocu78CLvtCks6e1EEU3VHsHJHyEG86eeu8VEAeu1KMSlPvT3J7MfWPMly/YGPMpIgf6OPpyA7dabdYX6njk1OPGR9RTUSoCeE49ekF54e/c3zG0G/4GftJ5MQLYap99wC2d1yKA13U+G1nhXKd2hOt0rR5VH2FSGz5APQR4U7VdYMZXXHJaZt5Dtwq8q7bgW7Q1aTrwBhAPyI3rl1roC5AOC445cLQN7mhzSOlYAnadPbVQm58JBdcCivQb/rDoAgUgzaBXR4YngApwBHTod7dXLegQqLoHCciMDR6i2DSDP5MOMP9v4O6yn08M7MBbwOlEwdOw8Q2L5IpTUK5vWgAAAABJRU5ErkJggg=="/>
                 </div>
                 <div class="full-input" >
                     <input @keyup.enter="addWord"
@@ -367,8 +367,7 @@ export default {
 /*    color: #adadad !important;*/
 /*}*/
 .filters-icons{
-    margin-right: 10px;
-    width: 30px;
+    position: absolute;
 }
 .filters-middle
 {
@@ -376,6 +375,9 @@ export default {
     margin-bottom: 10px;
     padding-left: 5px;
     padding-right: 5px;
+}
+.blog-button{
+    margin-left: 2.5vw;
 }
 .filters-middle:hover .blog-button{
     background-color: #ff6d1d;
@@ -391,6 +393,7 @@ export default {
 .filters-icons1{
     content: url('/images/icons/blog.svg');
     background-repeat: no-repeat;
+    width: 2vw;
 }
 .dark .filters-icons1{
     content: url('/images/icons/blogWhite.svg');
@@ -399,6 +402,8 @@ export default {
 .filters-icons2{
     content: url('/images/icons/blog2.svg');
     background-repeat: no-repeat;
+    width: 1.5vw;
+    margin-left: 0.25vw;
 }
 .dark .filters-icons2{
     content: url('/images/icons/blog2White.svg');
@@ -407,6 +412,8 @@ export default {
 .filters-icons3{
     content: url('/images/icons/vrsti.svg');
     background-repeat: no-repeat;
+    width: 1.5vw;
+    margin-left: 0.25vw;
 }
 .dark .filters-icons3{
     content: url('/images/icons/vrstiWhite.svg');
