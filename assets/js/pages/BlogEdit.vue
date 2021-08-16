@@ -262,27 +262,41 @@
                     });
                     form.append('tags', tags);
 
-                    BlogService.updateBlog(form, this.blogId)
-                        .then(blog => {
+                    Swal.fire({
+                        title: 'Загрузка',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            Swal.showLoading();
+                            BlogService.updateBlog(form, this.blogId)
+                                .then(blog => {
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Ваша публикация сохранена!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.load = false;
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Ваша публикация сохранена!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
 
-                        })
-                        .catch(({response: {data}}) => {
-                            this.load = false;
+                                })
+                                .catch(({response: {data}}) => {
+                                    this.load = false;
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: data.avatar,
-                            })
-                        })
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Упс...',
+                                        text: data.avatar,
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
+                                })
+                        }
+                    });
                 }
             },
             sendToAdmin()
@@ -348,28 +362,40 @@
                         tags[key] = item.text;
                     });
                     form.append('tags', tags);
+                    Swal.fire({
+                            title: 'Загрузка',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            onOpen: () => {
+                                Swal.showLoading();
+                                BlogService.updateBlog(form, this.blogId)
+                                    .then(blog => {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Публикация отправлена на проверку!',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                        Swal.hideLoading();
+                                        Swal.close()
+                                        window.location = '/ru/user/cabinet/blog?tab=blogs';
+                                    })
+                                    .catch(({response: {data}}) => {
+                                        this.load = false;
 
-                    BlogService.updateBlog(form, this.blogId)
-                        .then(blog => {
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Публикация отправлена на проверку!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.load = false;
-                            window.location = '/ru/user/cabinet/blog?tab=blogs';
-                        })
-                        .catch(({response: {data}}) => {
-                            this.load = false;
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: data.avatar,
-                            })
-                        })
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Упс...',
+                                            text: data.avatar,
+                                        })
+                                        Swal.hideLoading();
+                                        Swal.close()
+                                    })
+                            }
+                    });
                 }
             },
             filePicker(callback, value, meta){
@@ -390,21 +416,33 @@
             },
             async getBlogs() {
                 this.load = true;
-                await BlogService.getSingleBlogs(this.blogId)
-                    .then(data => {
-                        let blog = data.blogs;
+                Swal.fire({
+                    title: 'Загрузка',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    onOpen: () => {
+                        Swal.showLoading();
+                        BlogService.getSingleBlogs(this.blogId)
+                            .then(data => {
+                                let blog = data.blogs;
 
-                        this.selectedCodeGame =  blog.code;
-                        this.selected = blog.code;
-                        blog.tags.forEach((item, key) => {
-                            this.tags.push({text: item.title});
-                        });
-                        this.selectedFileName = blog.logo;
-                        this.title = blog.title;
-                        this.text = blog.text;
+                                this.selectedCodeGame = blog.code;
+                                this.selected = blog.code;
+                                blog.tags.forEach((item, key) => {
+                                    this.tags.push({text: item.title});
+                                });
+                                this.selectedFileName = blog.logo;
+                                this.title = blog.title;
+                                this.text = blog.text;
 
-                        this.load = false;
-                    })
+                                Swal.hideLoading();
+                                Swal.close()
+                            })
+                    }
+                });
             },
             checkTags(newTags)
             {

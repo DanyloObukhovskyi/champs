@@ -261,28 +261,41 @@
                     });
                     form.append('tags', tags);
 
-                    BlogService.createBlog(form)
-                        .then(data => {
+                    Swal.fire({
+                        title: 'Загрузка',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            Swal.showLoading();
+                            BlogService.createBlog(form)
+                                .then(data => {
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Ваша публикация сохранена!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.load = false;
-                             window.location = '/ru/editBlog/'+ data.blog.id;
-                            this.clearDialog();
-                        })
-                        .catch(({response: {data}}) => {
-                            this.load = false;
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Ваша публикация сохранена!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
+                                    window.location = '/ru/editBlog/'+ data.blog.id;
+                                })
+                                .catch(({response: {data}}) => {
+                                    this.load = false;
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: data.avatar,
-                            })
-                        })
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Упс...',
+                                        text: data.avatar,
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
+                                })
+                        }
+                    });
                 }
             },
             filePicker(callback, value, meta){
@@ -365,28 +378,42 @@
                     });
                     form.append('tags', tags);
 
-                    BlogService.createBlog(form)
-                        .then(blog => {
+                    Swal.fire({
+                        title: 'Загрузка',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            Swal.showLoading();
+                            BlogService.createBlog(form)
+                                .then(blog => {
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Публикация отправлена на проверку!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.load = false;
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Публикация отправлена на проверку!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
 
-                            window.location = '/ru/user/cabinet/blog?tab=blogs';
-                        })
-                        .catch(({response: {data}}) => {
-                            this.load = false;
+                                    window.location = '/ru/user/cabinet/blog?tab=blogs';
+                                })
+                                .catch(({response: {data}}) => {
+                                    this.load = false;
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Упс...',
-                                text: data.avatar,
-                            })
-                        })
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Упс...',
+                                        text: data.avatar,
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
+                                })
+                        }
+                    });
                 }
             }
         }
