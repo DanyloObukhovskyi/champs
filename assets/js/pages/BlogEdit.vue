@@ -3,18 +3,20 @@
     <div class="blog-create" ref="blog-create">
         <div class="container" style="align-items: center;">
             <div class="col-12">
-                <div class="d-flex justify-content-between">
-                    <div class="filters-middle">
-                        <a href="createBlogAndReward" class="d-flex align-items-center filters-button">
-                            <img class="filters-icons filters-icons2" alt="">
-                            <span class="blog-button">Создай блог и заработай!</span>
-                        </a>
-                    </div>
-                    <div class="filters-middle">
-                        <a href="howCreateBlog" class="d-flex align-items-center filters-button">
-                            <img class="filters-icons filters-icons3" alt="">
-                            <span class="blog-button">Как вести успешный блог?</span>
-                        </a>
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <div class="filters-middle">
+                            <a href="createBlogAndReward" class="d-flex align-items-center filters-button">
+                                <img class="filters-icons filters-icons2" alt="">
+                                <span class="blog-button">Создай блог и заработай!</span>
+                            </a>
+                        </div>
+                        <div class="filters-middle">
+                            <a href="howCreateBlog" class="d-flex align-items-center filters-button">
+                                <img class="filters-icons filters-icons3" alt="">
+                                <span class="blog-button">Как вести успешный блог?</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center" style="margin-top: 10px">
@@ -48,7 +50,7 @@
                             <div class="form-group">
                                 <label style="margin-bottom: 0;">Загрузите изображения для вашей публикации</label>
                                 <form name="uploadImage" class="upload" style="margin-bottom: 0;">
-                                    <label for="image-upload-form" style="color:white">
+                                    <label for="image-upload-form" :style="selectedFileName !== 'Выбрать файл' ? 'justify-content: left;overflow: hidden;' : ''"  style="color:white">
                                         {{selectedFileName}}
                                     </label>
                                     <input type="file" name="image" id="image-upload-form" @change="setPreviewImage">
@@ -98,7 +100,7 @@
                                             :tags="tags"
                                             :is-draggable="true"
                                             placeholder="Добавить тег"
-                                            @tags-changed="newTags => tags = newTags"
+                                            @tags-changed="(newTags) => checkTags(newTags)"
                                             @tag-order-changed="newTags => tags = newTags"
                                     />
                                 </div>
@@ -265,12 +267,12 @@
 
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Ваша публикация сохранена!\'',
+                                title: 'Ваша публикация сохранена!',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
                             this.load = false;
-                            
+
                         })
                         .catch(({response: {data}}) => {
                             this.load = false;
@@ -352,12 +354,12 @@
 
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Блог сохранен!',
+                                title: 'Публикация отправлена на проверку!',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
                             this.load = false;
-                            this.clearDialog();
+                            window.location = '/ru/user/cabinet/blog?tab=blogs';
                         })
                         .catch(({response: {data}}) => {
                             this.load = false;
@@ -404,6 +406,10 @@
                         this.load = false;
                     })
             },
+            checkTags(newTags)
+            {
+                this.tags = newTags;
+            }
         },
         mounted() {
             this.getBlogs();
@@ -585,5 +591,9 @@
     .filters-middle:hover .filters-icons3{
         content: url('/images/icons/vrstiHover.svg');
         background-repeat: no-repeat;
+    }
+    span.blog-button {
+        padding-left: 0.3vw;
+        padding-right: 0.3vw;
     }
 </style>

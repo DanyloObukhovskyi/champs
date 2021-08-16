@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <span style="color: black"> {{ blogs.username }} </span>
+                <span class="date"> {{ blogs.username }} </span>
                 <div class="date">
                     {{ blogs.date_ru }}
                 </div>
@@ -119,7 +119,7 @@ export default {
                 .replace(/\s{2,}/g, ' ')
                 .replace(/&nbsp;/gi, ' ')
                 .trim();
-
+            
             if (description.length > count) {
                 return `${description.substr(0, count)}...`
             } else {

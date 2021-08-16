@@ -48,7 +48,7 @@
                             <div class="form-group">
                                 <label style="margin-bottom: 0;">Загрузите изображения для вашей публикации</label>
                                 <form name="uploadImage" class="upload" style="margin-bottom: 0;">
-                                    <label for="image-upload-form" style="color:white">
+                                    <label for="image-upload-form" :style="selectedFileName !== 'Выбрать файл' ? 'justify-content: left;overflow: hidden;' : ''" style="color:white">
                                         {{selectedFileName}}
                                     </label>
                                     <input type="file" name="image" id="image-upload-form" @change="setPreviewImage">
@@ -370,12 +370,13 @@
 
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Блог сохранен!',
+                                title: 'Публикация отправлена на проверку!',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
                             this.load = false;
-                            this.clearDialog();
+
+                            window.location = '/ru/user/cabinet/blog?tab=blogs';
                         })
                         .catch(({response: {data}}) => {
                             this.load = false;
@@ -561,5 +562,9 @@
     .filters-middle:hover .filters-icons3{
         content: url('/images/icons/vrstiHover.svg');
         background-repeat: no-repeat;
+    }
+    span.blog-button {
+        padding-left: 0.3vw;
+        padding-right: 0.3vw;
     }
 </style>

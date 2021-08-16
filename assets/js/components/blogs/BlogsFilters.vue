@@ -378,6 +378,8 @@ export default {
 }
 .blog-button{
     margin-left: 2.5vw;
+    padding-left: 0.3vw;
+    padding-right: 0.3vw;
 }
 .filters-middle:hover .blog-button{
     background-color: #ff6d1d;

@@ -255,8 +255,8 @@ class BlogsController extends AbstractController
         if(!empty($data)){
             $file = $request->files->get('image');
             $tags = $data->tags;
-            if (strpos($tags, '#Блоги') === false && strpos($tags, '#чблоги') === false) {
-                $tags .= '#Блоги';
+            if (strpos($tags, '#Блоги') === false && strpos($tags, '#блоги') === false) {
+                $tags .=',#Блоги';
             }
             $tags = explode(',', $tags);
 
@@ -291,13 +291,21 @@ class BlogsController extends AbstractController
 
             if(!empty($tags) && !empty($blog->getId())){
                 foreach($tags as $key => $tag){
-                    $newTag = new BlogTags();
-                    $newTag->setBlog($blog);
-                    $newTag->setTitle($tag);
+                    if($tag[0] !== '#'){
+                        $tag = '#'.$tag;
+                    }
+                    if($tag[0].$tag[1] === '##'){
+                        $tag = substr($tag, 1);
+                    }
+                    if($tag !== '#'){
+                        $newTag = new BlogTags();
+                        $newTag->setBlog($blog);
+                        $newTag->setTitle($tag);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($newTag);
-                    $em->flush();
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($newTag);
+                        $em->flush();
+                    }
                 }
             }
 
@@ -326,7 +334,7 @@ class BlogsController extends AbstractController
             $file = $request->files->get('image');
             $tags = $data->tags;
             if (strpos($tags, '#Блоги') === false && strpos($tags, '#блоги') === false) {
-                $tags .= '#Блоги';
+                $tags .=',#Блоги';
             }
             $tags = explode(',', $tags);
 
@@ -367,7 +375,7 @@ class BlogsController extends AbstractController
             $blogTags = $this->entityManager
                 ->getRepository(BlogTags::class)
                 ->findBy([
-                    'id' => $blogId
+                    'blog' => $blogId
                 ]);
 
             if(!empty($blogTags)){
@@ -381,13 +389,21 @@ class BlogsController extends AbstractController
 
             if(!empty($tags) && !empty($blog->getId())){
                 foreach($tags as $key => $tag){
-                    $newTag = new BlogTags();
-                    $newTag->setBlog($blog);
-                    $newTag->setTitle($tag);
+                    if($tag[0] !== '#'){
+                        $tag = '#'.$tag;
+                    }
+                    if($tag[0].$tag[1] === '##'){
+                        $tag = substr($tag, 1);
+                    }
+                    if($tag !== '#'){
+                        $newTag = new BlogTags();
+                        $newTag->setBlog($blog);
+                        $newTag->setTitle($tag);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($newTag);
-                    $em->flush();
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($newTag);
+                        $em->flush();
+                    }
                 }
             }
 

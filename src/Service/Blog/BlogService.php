@@ -285,7 +285,7 @@ class BlogService extends EntityService
             'date_ru_with_year' => $blog->getDate()->format('Y') === date('Y') ? $blog->getDate()->format('d m H_i') : $blog->getDate()->format('d m Y'),
             'date_ru_with_year_for_url' => $blog->getDate()->format('Y') === date('Y') ? $blog->getDate()->format('d m') : $blog->getDate()->format('d m Y'),
             'views' => $blog->getViews() ?? 0,
-            'username' => $blog->getUser()->getName() . ' ' . $blog->getUser()->getFamily(),
+            'username' => $blog->getUser()->getNickname(),
             'user_logo' => $blog->getUser()->getPhoto(),
             'commentsCount' => count($blog->getBlogComments()),
             'code' => !empty($blog->getGame()) ? $blog->getGame()->getCode() : null

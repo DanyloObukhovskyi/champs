@@ -19,7 +19,7 @@ class Blogs
 
     public const TYPES = [
         self::ACTIVE => 'Принят',
-        self::EDIT => 'В черновике',
+        self::EDIT => 'Черновик',
         self::BLOCK => 'Отказано',
         self::MODARATE => 'На проверке'
     ];
@@ -67,7 +67,7 @@ class Blogs
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity=BlogTags::class, mappedBy="blog", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=BlogTags::class, mappedBy="blog")
      */
     private $tags;
 

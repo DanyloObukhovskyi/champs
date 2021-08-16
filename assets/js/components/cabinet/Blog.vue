@@ -5,7 +5,7 @@
                 <a class="nav-link nav-button" :class="tab == 'comments' ? 'active' : ''" @click="setActive('comments')">Комментарии</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-button" :class="tab == 'blog' ? 'active' : ''" @click="setActive('blog')">Личный блог</a>
+                <a class="nav-link nav-button" :class="tab == 'blogs' ? 'active' : ''" @click="setActive('blogs')">Личный блог</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav-button" :class="tab == 'reward' ? 'active' : ''" @click="setActive('reward')">Заработано</a>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            <div class="news-wrapper" v-if="tab == 'blog'">
+            <div class="news-wrapper" v-if="tab == 'blogs'">
                 <div class="empty-wrapper" v-if="blogs.length === 0">
                     <div class="title" style="font-size: 1.0vw;">
                         Личный Блог
@@ -142,7 +142,6 @@
                 BlogService.getUserBlogs()
                     .then(blogs => {
                         this.blogs = blogs;
-
                         this.load = false;
                     })
             },
@@ -176,6 +175,13 @@
                         this.$emit('update', data)
                         this.comments = data.comments
                     })
+            },
+            getTab(){
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+                if(params.tab){
+                    this.setActive(params.tab);
+                }
             }
         },
         mounted() {
@@ -186,6 +192,7 @@
                 })
             this.getUsersBlog();
             this.getComments();
+            this.getTab();
         }
     }
 </script>
