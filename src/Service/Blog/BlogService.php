@@ -279,6 +279,7 @@ class BlogService extends EntityService
             'status' => $blog->getStatus(),
             'status_name' => Blogs::TYPES[$blog->getStatus()],
             'text' => $blog->getText(),
+            'gameBlog' => !empty($blog->getGame()) ? $blog->getGame() : null,
             'game' => !empty($blog->getGame()) ? $blog->getGame()->getName() : null,
             'date_ru' => $blog->getDate()->format('Y') === date('Y') ? self::replaceMonth($blog->getDate()->format('d F H:i')) :  self::replaceMonth($blog->getDate()->format('d F Y')),
             'date_ru_msk' => $blog->getDate()->format('Y') === date('Y') ? self::replaceMonth($blog->getDate()->format('d F H:i')) . ' мск' :  self::replaceMonth($blog->getDate()->format('d F Y')),

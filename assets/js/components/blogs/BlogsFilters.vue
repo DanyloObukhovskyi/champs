@@ -3,7 +3,7 @@
         <div class="filters-header">
             <lamp-header title="Блоги"/>
         </div>
-        <div class="filters-middle" v-if="view && blog.status !== 5">
+        <div class="filters-middle" v-if="!view || blog && blog.status !== 5">
             <a @click="checkAuth" href="#"  class="d-flex align-items-center filters-buttons">
                 <img class="filters-icons filters-icons1" alt="">
                 <span class="blog-button">Написать пост</span>

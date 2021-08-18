@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="articles__content col-3 pr-0">
-            <blogs-filters :filters="filters" @reload="reload"/>
+            <blogs-filters :view="false" :filters="filters" @reload="reload"/>
             <hot-blogs id="filters" :blogs="hotBlogs" :style="btnStyles"></hot-blogs>
         </div>
     </div>
@@ -261,7 +261,7 @@
             this.getBlogs();
             this.scrollEventTrigger();
 
-            // this.popularTags = JSON.parse(this.popularTags);
+            this.popularTags = JSON.parse(this.popularTags);
         }
     }
 </script>

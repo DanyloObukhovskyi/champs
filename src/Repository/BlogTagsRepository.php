@@ -19,6 +19,33 @@ class BlogTagsRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogTags::class);
     }
 
+    public function uniqueAll()
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n.title')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCountByTitle(string $title)
+    {
+        return $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->where('n.title = :title')
+            ->setParameter('title', $title)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getCountAll()
+    {
+        return  $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return BlogTags[] Returns an array of BlogTags objects
     //  */

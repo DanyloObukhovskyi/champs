@@ -116,6 +116,7 @@ class BlogsController extends AbstractController
     {
         $seoSettings = $this->seoService->getSeo('contact_index');
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
+        $popularTags = $this->blogTagService->popularTags(19);
 
         return $this->render('templates/blogs/index.html.twig', [
             'heading_type' => $seoSettings['heading_type'],
@@ -125,7 +126,10 @@ class BlogsController extends AbstractController
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
             'link' => $link,
-            'router' => 'blog']);
+            'router' => 'blog',
+            'tag' => $request->get('tag', null),
+            'popularTags' => $popularTags
+        ]);
     }
 
     /**

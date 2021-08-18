@@ -3,7 +3,7 @@
         <a :href="`/ru/blog/${blogs.id}/` + getSlug(blogs)" class="hot-news d-block" v-for="blogs in blogs">
             <div class="d-flex hot-news-title">
                 <div class="game-logo" v-if="blogs.game !== null && blogs.game.newsIcon !== null">
-                    <img :src="'/uploads/games/' + blogs.game.newsIcon">
+                    <img :src="'/uploads/games/' + blogs.gameBlog.newsIcon">
                 </div>
                 <div class="title">
                     {{blogs.title}}
