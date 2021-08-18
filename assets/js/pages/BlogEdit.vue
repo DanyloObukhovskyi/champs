@@ -3,27 +3,27 @@
     <div class="blog-create" ref="blog-create">
         <div class="container" style="align-items: center;">
             <div class="col-12">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between">
-                        <div class="filters-middle">
-                            <a href="createBlogAndReward" class="d-flex align-items-center filters-button">
-                                <img class="filters-icons filters-icons2" alt="">
-                                <span class="blog-button">Создай блог и заработай!</span>
-                            </a>
-                        </div>
-                        <div class="filters-middle">
-                            <a href="howCreateBlog" class="d-flex align-items-center filters-button">
-                                <img class="filters-icons filters-icons3" alt="">
-                                <span class="blog-button">Как вести успешный блог?</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center" style="margin-top: 10px">
-                    <h5 style="color: #adafb0;">Новая публикация</h5>
-                </div>
                 <div class="setting" style="margin-top: 10px;">
                     <div class="setting-container-body" style="background-color: transparent;padding:0;padding-bottom: 2.7vw;">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <div class="filters-middle">
+                                    <a href="createBlogAndReward" class="d-flex align-items-center filters-button">
+                                        <img class="filters-icons filters-icons2" alt="">
+                                        <span class="blog-button">Создай блог и заработай!</span>
+                                    </a>
+                                </div>
+                                <div class="filters-middle">
+                                    <a href="howCreateBlog" class="d-flex align-items-center filters-button">
+                                        <img class="filters-icons filters-icons3" alt="">
+                                        <span class="blog-button">Как вести успешный блог?</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center" style="margin-top: 10px">
+                            <h5 style="color: #adafb0;">Новая публикация</h5>
+                        </div>
                         <div class="setting-col-12">
                             <div class="form-group">
                                 <label>Заголовок вашей публикации</label>
@@ -55,7 +55,7 @@
                                     </label>
                                     <input type="file" name="image" id="image-upload-form" @change="setPreviewImage">
                                 </form>
-                                <label style="font-size: 0.7vw;top: -0.8vw;margin-left: 1vw;">Размер не более 3 МБ</label>
+                                <label style="font-size: 0.7vw;top: -0.4vw;margin-left: 1vw;">Размер не более 3 МБ</label>
                             </div>
                         </div>
                         <div class="setting-col-12" >
@@ -106,11 +106,12 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="d-flex justify-content-between col-12">
+                            <button class="save-button col-3" @click="saveToEdit">Сохранить в черновик</button>
+                            <button class="save-button col-3" @click="sendToAdmin">Отправить на модерацию</button>
+                            <button class="save-button col-3" @click="preview" style="margin-right: 0vw;">Предпросмотр</button>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button class="save-button col-3" @click="saveToEdit">Сохранить в черновик</button>
-                    <button class="save-button col-3" @click="sendToAdmin">Отправить на модерацию</button>
                 </div>
             </div>
         </div>
@@ -447,6 +448,150 @@
             checkTags(newTags)
             {
                 this.tags = newTags;
+            },
+            preview()
+            {
+                let title = this.title;
+                let game = this.selectedCodeGame;
+                const input = document.querySelector('#image-upload-form');
+                let image = new FormData(document.forms.uploadImage);
+                let text = this.text;
+
+                this.load = true;
+
+                let isFull = true;
+                let type = [];
+                if(!title){
+                    isFull = false
+                    type.push('заголовок');
+                }
+                if(!game){
+                    isFull = false
+                    type.push('игру');
+                }
+                if(!this.selectedFileName){
+                    isFull = false
+                    type.push('изображение');
+                }
+                if(!text){
+                    isFull = false
+                    type.push('текст');
+                }
+                if(!this.tags){
+                    isFull = false
+                    type.push('теги');
+                }
+
+                let userType = '';
+                type.forEach((value, index) => {
+                    if(index > 0){
+                        userType = userType + ', ' + value;
+                    } else {
+                        userType = userType + ' ' + value;
+                    }
+                })
+                if(!isFull) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Упс...',
+                        text: 'Вы не заполнили поле ' + userType + ' при создании блога',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.load = false;
+                } else {
+                    const form = new FormData();
+                    form.append('title', title);
+                    form.append('game', game);
+                    form.append('image', input.files[0]);
+                    form.append('text', text);
+                    form.append('status', 5);
+                    let tags = [];
+                    this.tags.forEach((item, key) => {
+                        tags[key] = item.text;
+                    });
+                    form.append('tags', tags);
+
+                    Swal.fire({
+                        title: 'Загрузка',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            Swal.showLoading();
+                            BlogService.updateBlog(form, this.blogId)
+                                .then(data => {
+
+                                    Swal.hideLoading();
+                                    Swal.close()
+
+                                    window.location = '/ru/blog/'+ data.blog.id + '/'+this.getSlug(data.blog);
+                                })
+                                .catch(({response: {data}}) => {
+                                    this.load = false;
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Упс...',
+                                        text: data.avatar,
+                                    })
+                                    Swal.hideLoading();
+                                    Swal.close()
+                                })
+                        }
+                    });
+                }
+            },
+            getSlug(blogs) {
+                try{
+                    let type = this.getTitleUrl(blogs.type.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let game = this.getTitleUrl(blogs.game.name)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let title =  this.getTitleUrl(blogs.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    let date = this.getTitleUrl(blogs.date_ru_with_year_for_url)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return type+'/'+game+'/'+title+'-'+date;
+                } catch (e) {
+                    let title =  this.getTitleUrl(blogs.title)
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '')
+                    ;
+                    return title;
+                }
+            },
+            getTitleUrl(title) {
+                return title.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
+                    function (all, ch, space, words, i) {
+                        if (space || words) {
+                            return space ? '_' : '';
+                        }
+                        var code = ch.charCodeAt(0),
+                            index = code == 1025 || code == 1105 ? 0 :
+                                code > 1071 ? code - 1071 : code - 1039,
+                            t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
+                                'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+                                'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
+                                'shch', '', 'y', '', 'e', 'yu', 'ya'
+                            ];
+                        return t[index];
+                    });
             }
         },
         mounted() {
@@ -578,6 +723,7 @@
         cursor: pointer;
         font-size: 1vw;
         border: none;
+        margin-right: 5vw;
     }
     .save-button:hover{
         background: #ff8f2b;

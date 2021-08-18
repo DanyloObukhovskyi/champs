@@ -16,12 +16,14 @@ class Blogs
     const EDIT = 2;
     const BLOCK  = 3;
     const MODARATE = 4;
+    const Preview = 5;
 
     public const TYPES = [
         self::ACTIVE => 'Принят',
         self::EDIT => 'Черновик',
         self::BLOCK => 'Отказано',
-        self::MODARATE => 'На проверке'
+        self::MODARATE => 'На проверке',
+        self::Preview => 'Черновик'
     ];
 
     /**

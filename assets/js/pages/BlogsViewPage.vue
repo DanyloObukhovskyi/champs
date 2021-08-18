@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="news col-3 pr-0" >
-                <blogs-filters :filters="filters" @reload="reload"/>
+                <blogs-filters :view="true" :blog="blogs" :filters="filters" @reload="reload"/>
                 <hot-blogs :blogs="hotBlogs" :style="btnStyles"/>
             </div>
         </div>
@@ -73,7 +73,7 @@
                     </div>
                     <share-buttons/>
                 </div>
-                <div class="comments" v-if="blogs !== null">
+                <div class="comments" v-if="blogs !== null && blogs.status !== 5">
                     <blogs-comments
                             :comments-count="blogs.commentsCount"
                             :blog-id="blogId"

@@ -197,7 +197,7 @@ export default {
             } else {
                 if(blog.status === 1){
                     url = `/${this.lang}/blog/${blog.id}/` + this.getSlug(blog);
-                } else  if(blog.status === 2){
+                } else  if(blog.status === 2 || blog.status === 5){
                     url = `/${this.lang}/editBlog/${blog.id}`;
                 }
             }

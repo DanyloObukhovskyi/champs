@@ -175,7 +175,19 @@ class BlogsController extends AbstractController
             ->getRepository(Blogs::class)
             ->find($id);
 
-        if (!$blog) {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$blog || (
+            $blog
+            &&  $blog->getStatus() === Blogs::Preview
+            && !$user
+            )|| (
+                $blog
+                &&  $blog->getStatus() === Blogs::Preview
+                && $user
+                && $blog->getUser()->getId() !== $user->getId()
+            )) {
             return $this->redirectToRoute('blogs');
         }
 

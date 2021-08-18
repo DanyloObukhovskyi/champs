@@ -3,10 +3,16 @@
         <div class="filters-header">
             <lamp-header title="Блоги"/>
         </div>
-        <div class="filters-middle">
+        <div class="filters-middle" v-if="view && blog.status !== 5">
             <a @click="checkAuth" href="#"  class="d-flex align-items-center filters-buttons">
                 <img class="filters-icons filters-icons1" alt="">
                 <span class="blog-button">Написать пост</span>
+            </a>
+        </div>
+        <div class="filters-middle" v-else>
+            <a @click="checkAuth" href="#" class="d-flex align-items-center filters-buttons">
+                <img class="filters-icons filters-icons1" alt="">
+                <span class="blog-button">Вернуться к редактированию</span>
             </a>
         </div>
         <div class="filters-middle">
@@ -107,9 +113,19 @@ import BlogService from "../../services/BlogService";
 
 export default {
     name: "BlogsFilters",
-    props: [
-        'filters',
-    ],
+    props: {
+        filters: {
+            default: {
+
+            }
+        },
+        view: {
+            default: false
+        },
+        blog: {
+            default: {}
+        }
+    },
     components: {
         Button,
         CalendarFilter,
@@ -199,7 +215,11 @@ export default {
         checkAuth()
         {
             if(this.user !== null){
-                window.location = '/ru/createBlog';
+                if(this.blog.status === 5){
+                    window.location = '/ru/editBlog/'+ this.blog.id;
+                } else {
+                    window.location = '/ru/createBlog';
+                }
             } else {
                 this.showLogin();
             }
