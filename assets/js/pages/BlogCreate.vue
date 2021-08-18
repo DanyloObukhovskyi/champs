@@ -36,12 +36,17 @@
                             <div class="form-group">
                                 <label>Выберете игру к которой относится ваша публикация</label>
                                 <div class="games d-flex">
-                                    <div class="cs d-flex align-items-center" v-for="game in games"
+                                    <div class="cs d-flex align-items-center" v-for="game in sortedGames"
                                          @click="setGame(game.code)">
-                                        <a :style="game.code == selected ? 'color: #ff6d1d;border: 3px solid;padding: 10px;' : 'color:rgb(173, 175, 176);' ">
+                                        <a class="d-flex" :style="game.code == selected ? 'color: #ff6d1d;border: 3px solid;padding: 10px;' : 'color:rgb(173, 175, 176);' ">
                                             <img :src="`/uploads/games/${game.sidebarIcon}`">
                                             {{ game.name }}
                                         </a>
+                                    </div>
+                                    <div class="cs d-flex align-items-center">
+                                        <button class="tag" @click="getNextGames()" v-if="sortedGames.length <  games.length">
+                                            ...
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +153,8 @@
                 selectedFile: null,
                 title: null,
                 selectedGame: null,
-                text: ''
+                text: '',
+                gamesCount: 100
             }
         },
         computed: {
@@ -160,6 +166,15 @@
             ]),
             selected(){
                 return this.selectedCodeGame
+            },
+            sortedGames(){
+                let games = [];
+                if(this.games.length > 11){
+                    games = this.games.slice(0, 11)
+                } else {
+                    games = this.games
+                }
+                return games
             }
         },
         methods:{
@@ -317,6 +332,7 @@
                     };
                 }
             },
+
             sendToAdmin()
             {
                 let title = this.title;
@@ -563,7 +579,26 @@
                             ];
                         return t[index];
                     });
+            },
+            getNextGames()
+            {
+                this.sortedGames = this.games
+            },
+            getGames(){
+                let games = [];
+                let oldGames = this.games;
+                if(this.games.length > 11){
+                    games = this.games.slice(0, 11)
+                } else {
+                    games = this.games
+                }
+                this.games = oldGames;
+
+                return games
             }
+        },
+        mounted() {
+            this.getGames()
         }
     }
 </script>
@@ -618,6 +653,7 @@
     .games {
         font-size: .9vw;
         color: #ff6d1d;
+        flex-wrap: wrap;
     }
 
     .games a {
@@ -631,7 +667,8 @@
 
     .games div {
         cursor: pointer;
-        margin-right: 1.4vw;
+        margin-right: 1vw;
+        margin-bottom: 1vw;
     }
 
     #image-upload-form {
@@ -742,5 +779,11 @@
     span.blog-button {
         padding-left: 0.3vw;
         padding-right: 0.3vw;
+    }
+    .tag{
+        color: rgb(173, 175, 176);
+        background: none;
+        border: none;
+        cursor: pointer;
     }
 </style>

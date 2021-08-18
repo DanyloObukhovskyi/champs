@@ -5,7 +5,7 @@
                 <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
                     {{ tag }}
                 </button>
-                <button class="tag" @click="getNextTags()" v-if="[].length < tagsCount">
+                <button class="tag" @click="getNextTags()" v-if="popularTags.length < tagsCount">
                     ...
                 </button>
             </div>
