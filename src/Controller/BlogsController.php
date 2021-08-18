@@ -756,4 +756,14 @@ class BlogsController extends AbstractController
 
         return $date;
     }
+
+    /**
+     * @Route("/blogs/tags/{from}")
+     */
+    public function getPopularNextTags(Request $request, $from = 0) {
+        $request = json_decode($request->getContent(), false);
+        $popularNextTags = $this->blogTagService->popularNextTags($from, 20);
+
+        return $this->json($popularNextTags);
+    }
 }

@@ -23,13 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'https://champs.pro/admin_panel/';
+$config['base_url'] = 'http://champs.admin/';
                        //https://172.104.237.6/ru/admin_panel/
 
 if(ENVIRONMENT == 'production'){
-    $config['main_url'] = 'https://champs.pro/';
+    $config['main_url'] = 'http://champs.admin/';
 } else{
-    $config['main_url'] = 'https://test.champs.pro/';
+    $config['main_url'] = 'http://champs/';
 }
 /*
 |--------------------------------------------------------------------------
