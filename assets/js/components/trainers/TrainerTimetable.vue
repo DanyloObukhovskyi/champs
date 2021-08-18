@@ -164,7 +164,7 @@
                 return str;
             },
             selectedTime() {
-                return this.times.filter(t => t.status === 2)
+              return this.times.filter(t => t.status === 2 || t.status === 3);
             }
         },
         methods: {
@@ -268,13 +268,41 @@
                     })
             },
             setTime(time) {
-                this.times = this.times.map(timeItem => {
+                this.times = this.times.map((timeItem, index, elements) => {
                     if (timeItem.from === time.from && timeItem.to === time.to) {
-                        if (timeItem.status === 1) {
-                            timeItem.status = 2;
-                        } else if (timeItem.status === 2) {
-                            timeItem.status = 1;
+                      // console.log(this.times);
+                      let hoursLessonTrainer = this.trainer.trainer.isLessonCost ? 1 : 3;
+                      // console.log(hoursLessonTrainer);
+
+                      if (hoursLessonTrainer == 3) {
+                        var next1 = elements[index + 1];
+                        var next2 = elements[index + 2];
+                        if ((timeItem.status === 1) && (next1.status === 1) && (next2.status === 1)) {
+                          timeItem.status = 2;
+                          next1.status = 3;
+                          next2.status = 3;
+                        } else if ((timeItem.status === 2) && (next1.status === 3) && (next2.status === 3)) {
+                          timeItem.status = 1;
+                          next1.status = 1;
+                          next2.status = 1;
+                        } else if (timeItem.status === 3) {
+
+                        } else {
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Упс...',
+                            text: 'Невозможно выбрать 3 часа подряд!',
+                            showConfirmButton: false,
+                            timer: 2000
+                          })
                         }
+                      } else {
+                        if (timeItem.status === 1) {
+                          timeItem.status = 2;
+                        } else if (timeItem.status === 2) {
+                          timeItem.status = 1;
+                        }
+                      }
                     }
                     return timeItem;
                 })

@@ -41,6 +41,8 @@ export default {
         showCheck(status) {
             if (this.isTrainerCabinet && status === 1) {
                 return true;
+            } else if (status === 3) {
+              return status === 3;
             } else {
                 return status === 2;
             }
@@ -55,12 +57,18 @@ export default {
                 if (time.status === 1) {
                     status = 'received';
                 }
+              if (time.status === 2) {
+                status = 'hour3';
+              }
             } else {
                 if (time.status === 1) {
                     status = 'free';
                 }
                 if (time.status === 2) {
                     status = 'received';
+                }
+                if (time.status === 3) {
+                    status = 'hour3';
                 }
             }
             return status
@@ -161,6 +169,27 @@ export default {
       .ball {
         border: .25vw solid #ff6d1d;
         color: #ff6d1d;
+        text-align: center;
+        font-size: 1vw;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        i {
+          position: absolute;
+        }
+      }
+    }
+
+    &.hour3 {
+      .title {
+        color: gray;
+      }
+
+      .ball {
+        border: .25vw solid gray;
+        color: gray;
         text-align: center;
         font-size: 1vw;
         cursor: pointer;
