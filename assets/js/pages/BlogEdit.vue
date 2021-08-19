@@ -135,7 +135,9 @@
     export default {
         name: "BlogEdit",
         props: [
-            'blogId'
+            'blogId',
+            'games',
+            'allGames'
         ],
         components: {
             Button,
@@ -143,10 +145,6 @@
             VueTagsInput,
             Swal
         },
-        props:[
-            'games',
-            'allGames'
-        ],
         data() {
             return {
                 selectedCodeGame: null,
@@ -613,8 +611,8 @@
             }
         },
         mounted() {
-            this.games = JSON.parse(this.games);
             this.getBlogs();
+            this.games = JSON.parse(this.games);
         }
     }
 </script>
