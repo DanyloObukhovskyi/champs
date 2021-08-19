@@ -23,9 +23,9 @@
                 <loader v-show="load"></loader>
             </div>
         </div>
-        <div id="filters" class="articles__content col-3 pr-0" :style="btnStyles">
+        <div id="filters" class="articles__content col-3 pr-0">
             <news-filters :filters="filters" @reload="reload"/>
-            <hot-news :news="hotNews"></hot-news>
+            <hot-news :style="btnStyles" :news="hotNews"></hot-news>
         </div>
     </div>
 </template>
