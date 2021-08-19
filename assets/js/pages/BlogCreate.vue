@@ -36,7 +36,7 @@
                             <div class="form-group">
                                 <label>Выберете игру к которой относится ваша публикация</label>
                                 <div class="games d-flex">
-                                    <div class="cs d-flex align-items-center" v-for="game in sortedGames"
+                                    <div class="cs d-flex align-items-center" v-for="game in games"
                                          @click="setGame(game.code)">
                                         <a class="d-flex" :style="game.code == selected ? 'color: #ff6d1d;border: 3px solid;padding: 10px;' : 'color:rgb(173, 175, 176);' ">
                                             <img :src="`/uploads/games/${game.sidebarIcon}`">
@@ -44,7 +44,7 @@
                                         </a>
                                     </div>
                                     <div class="cs d-flex align-items-center">
-                                        <button class="tag" @click="getNextGames()" v-if="sortedGames.length <  games.length">
+                                        <button class="tag" @click="getNextGames()" v-if="games.length <  allGames">
                                             ...
                                         </button>
                                     </div>
@@ -144,6 +144,10 @@
             VueTagsInput,
             Swal
         },
+        props:[
+            'games',
+            'allGames'
+        ],
         data() {
             return {
                 selectedCodeGame: null,
@@ -153,28 +157,17 @@
                 selectedFile: null,
                 title: null,
                 selectedGame: null,
-                text: '',
-                gamesCount: 100
+                text: ''
             }
         },
         computed: {
             ...mapGetters([
-                'games',
                 'game',
                 'user',
                 'showLogin'
             ]),
             selected(){
                 return this.selectedCodeGame
-            },
-            sortedGames(){
-                let games = [];
-                if(this.games.length > 11){
-                    games = this.games.slice(0, 11)
-                } else {
-                    games = this.games
-                }
-                return games
             }
         },
         methods:{
@@ -582,23 +575,17 @@
             },
             getNextGames()
             {
-                this.sortedGames = this.games
-            },
-            getGames(){
-                let games = [];
-                let oldGames = this.games;
-                if(this.games.length > 11){
-                    games = this.games.slice(0, 11)
-                } else {
-                    games = this.games
-                }
-                this.games = oldGames;
-
-                return games
+                BlogService.getGamesBlog(this.games.length)
+                    .then(data => {
+                        for (let item of data) {
+                            this.games.push(item);
+                        }
+                        this.$forceUpdate();
+                    });
             }
         },
         mounted() {
-            this.getGames()
+            this.games = JSON.parse(this.games);
         }
     }
 </script>

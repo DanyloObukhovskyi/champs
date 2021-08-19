@@ -14,6 +14,7 @@ use App\Service\Blog\BlogsCommentLikeService;
 use App\Service\Blog\BlogsCommentService;
 use App\Service\Blog\BlogsLikeService;
 use App\Service\Blog\BlogsTagService;
+use App\Service\Game\GameService;
 use App\Service\News\NewsCommentService;
 use App\Service\ReviewService;
 use Swift_Mailer;
@@ -81,6 +82,11 @@ class BlogsController extends AbstractController
      */
     public $blogTagService;
 
+    /**
+     * @var GameService
+     */
+    public $gameService;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
@@ -104,6 +110,8 @@ class BlogsController extends AbstractController
         $this->blogLikeService = new blogsLikeService($entityManager);
 
         $this->blogTagService = new blogsTagService($entityManager);
+
+        $this->gameService = new GameService($entityManager);
 
         $this->translator = $translator;
         $this->validator = $validator;
@@ -222,6 +230,9 @@ class BlogsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('contact_index');
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
+        $games = $this->gameService->getForBlog();
+        $allGames = $this->gameService->getAll();
+
         return $this->render('templates/blogs/create.html.twig', [
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
@@ -230,7 +241,10 @@ class BlogsController extends AbstractController
             'keywords' => $seoSettings['keywords'],
             'meta_tags' => $seoSettings['meta'],
             'link' => $link,
-            'router' => 'blog']);
+            'router' => 'blog',
+            'games'  => $games,
+            'allGames' => count($allGames)
+        ]);
     }
 
     /**
@@ -244,6 +258,9 @@ class BlogsController extends AbstractController
         $seoSettings = $this->seoService->getSeo('contact_index');
         $link = $request->getSchemeAndHttpHost() . $request->getBasePath();
 
+        $games = $this->gameService->getForBlog();
+        $allGames = $this->gameService->getAll();
+
         return $this->render('templates/blogs/edit.html.twig', [
             'heading_type' => $seoSettings['heading_type'],
             'heading' => $seoSettings['heading'],
@@ -253,7 +270,10 @@ class BlogsController extends AbstractController
             'meta_tags' => $seoSettings['meta'],
             'link' => $link,
             'blogId' => $blogId,
-            'router' => 'blog']);
+            'router' => 'blog',
+            'games'  => $games,
+            'allGames' => count($allGames)
+        ]);
     }
 
     /**

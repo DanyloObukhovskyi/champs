@@ -67,6 +67,10 @@ class BlogService extends Service {
     getCommentsByUser = () => {
         return this.send(`blogs/comments/user`);
     }
+
+    getGamesBlog = (offset) => {
+        return this.send('gamesBlog/' + offset)
+    }
 }
 
 export default new BlogService();

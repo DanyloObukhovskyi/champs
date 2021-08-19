@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="ml-8 mr-8 p-0">
-            <blog-edit :blog-id="{{ blogId }}"/>
+            <blog-edit :all-games="{{ allGames }}" :games="{{ games|json_encode }}" :blog-id="{{ blogId }}"/>
         </div>
     </div>
 {% endblock %}

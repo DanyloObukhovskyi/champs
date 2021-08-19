@@ -43,6 +43,11 @@
                                             {{ game.name }}
                                         </a>
                                     </div>
+                                    <div class="cs d-flex align-items-center">
+                                        <button class="tag" @click="getNextGames()" v-if="games.length <  allGames">
+                                            ...
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -138,6 +143,10 @@
             VueTagsInput,
             Swal
         },
+        props:[
+            'games',
+            'allGames'
+        ],
         data() {
             return {
                 selectedCodeGame: null,
@@ -152,7 +161,6 @@
         },
         computed: {
             ...mapGetters([
-                'games',
                 'game',
                 'user',
                 'showLogin'
@@ -592,9 +600,20 @@
                             ];
                         return t[index];
                     });
+            },
+            getNextGames()
+            {
+                BlogService.getGamesBlog(this.games.length)
+                    .then(data => {
+                        for (let item of data) {
+                            this.games.push(item);
+                        }
+                        this.$forceUpdate();
+                    });
             }
         },
         mounted() {
+            this.games = JSON.parse(this.games);
             this.getBlogs();
         }
     }
@@ -650,6 +669,7 @@
     .games {
         font-size: .9vw;
         color: #ff6d1d;
+        flex-wrap: wrap;
     }
 
     .games a {
@@ -663,7 +683,8 @@
 
     .games div {
         cursor: pointer;
-        margin-right: 1.4vw;
+        margin-right: 1vw;
+        margin-bottom: 1vw;
     }
 
     #image-upload-form {
@@ -779,5 +800,11 @@
     span.blog-button {
         padding-left: 0.3vw;
         padding-right: 0.3vw;
+    }
+    .tag{
+        color: rgb(173, 175, 176);
+        background: none;
+        border: none;
+        cursor: pointer;
     }
 </style>
