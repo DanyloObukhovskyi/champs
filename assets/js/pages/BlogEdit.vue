@@ -54,8 +54,8 @@
                         <div class="setting-col-12">
                             <div class="form-group">
                                 <label style="margin-bottom: 0;">Загрузите изображения для вашей публикации</label>
-                                <form name="uploadImage" class="upload" style="margin-bottom: 0;">
-                                    <label for="image-upload-form" :style="selectedFileName !== 'Выбрать файл' ? 'justify-content: left;overflow: hidden;' : ''"  style="color:white">
+                                <form name="uploadImage" class="upload" style="margin-bottom: 0;" :class="selectedFileName !== 'Выбрать файл' ? 'col-3' : ''">
+                                    <label for="image-upload-form" :style="selectedFileName !== 'Выбрать файл' ? 'justify-content: center;overflow: hidden;width:100%' : ''"  style="color:white">
                                         {{selectedFileName}}
                                     </label>
                                     <input type="file" name="image" id="image-upload-form" @change="setPreviewImage">
