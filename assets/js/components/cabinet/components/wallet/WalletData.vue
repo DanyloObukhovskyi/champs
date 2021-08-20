@@ -27,10 +27,10 @@
                             <span v-title="'Сумма, которую можно вывести'">
                                  {{ decoratePrice(available) }} p
                             </span>
-                            <button class="purse-btn" @click="checkout" v-if="available > 0 && showButton">
+                            <button v-title="'Минимальный к выводу баланс 1000р.'" class="purse-btn" @click="checkout" v-if="available > 1000 && showButton">
                                 Вывести
                             </button>
-                            <button class="purse-btn disable" v-else>
+                            <button v-title="'Минимальный к выводу баланс 1000р.'" class="purse-btn disable" v-else>
                                 Вывести
                             </button>
                         </div>

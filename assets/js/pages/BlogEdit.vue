@@ -38,7 +38,7 @@
                                 <div class="games d-flex">
                                     <div class="cs d-flex align-items-center" v-for="game in games"
                                          @click="setGame(game.code)">
-                                        <a :style="game.code == selected ? 'color: #ff6d1d;border: 3px solid;padding: 10px;' : 'color:rgb(173, 175, 176);' ">
+                                        <a :style="game.code == selected ? 'color: #ff6d1d;border: 3px solid;padding: 7px;' : 'color:rgb(173, 175, 176);border: 3px transparent;padding: 10px;' ">
                                             <img :src="`/uploads/games/${game.sidebarIcon}`">
                                             {{ game.name }}
                                         </a>
@@ -677,6 +677,7 @@
     .games img {
         width: 1vw;
         margin-right: .3vw;
+        height: 100%;
     }
 
     .games div {

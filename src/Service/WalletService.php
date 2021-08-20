@@ -220,7 +220,7 @@ class WalletService
 
         $dateTime = new DateTime($dateFrom->format('Y-m-d'));
 
-        $payments = $this->getPaymentsByDateForBlog($user, $dateTime);
+        $payments = $this->getPaymentsByDateForBlog($user);
 
         $available = 0;
 

@@ -122,6 +122,7 @@ class NewsCommentService extends EntityService
             ],
             'comment' => $comment->getComment(),
             'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
+            'date' => $comment->getCreatedAt()->format('d F H:i'),
             'timestamp' => $comment->getCreatedAt()->getTimestamp(),
             'likesCount' => $this->newsCommentLikeService->getLikesCount($comment),
             'userLike' => $userLike,

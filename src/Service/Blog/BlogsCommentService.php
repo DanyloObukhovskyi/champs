@@ -111,6 +111,7 @@ class BlogsCommentService extends EntityService
             ],
             'comment' => $comment->getComment(),
             'createdAt' => BlogService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
+            'date' => $comment->getCreatedAt()->format('d F H:i'),
             'timestamp' => $comment->getCreatedAt()->getTimestamp(),
             'likesCount' => $this->blogsCommentLikeService->getLikesCount($comment),
             'userLike' => $userLike,

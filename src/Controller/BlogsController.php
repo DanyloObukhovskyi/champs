@@ -686,7 +686,7 @@ class BlogsController extends AbstractController
 
         $user = $this->getUser();
 
-        $blogEntities = $this->blogService->getRepository()->findBy(['user' => $user->getId()]);
+        $blogEntities = $this->blogService->getRepository()->findBy(['user' => $user->getId()], ['date' => 'DESC']);
 
         $blogs = [];
         foreach ($blogEntities as $blogEntity) {
@@ -738,6 +738,7 @@ class BlogsController extends AbstractController
                     ],
                     'comment' => $review->getComment(),
                     'createdAt' => $this->replaceMonth($review->getCreatedAt()->format('d F H:i')),
+                    'date' => $review->getCreatedAt()->format('d F H:i'),
                     'timestamp' => $review->getCreatedAt()->getTimestamp(),
                     'likesCount' => 0,
                     'userLike' => 0,
@@ -748,6 +749,14 @@ class BlogsController extends AbstractController
 
 
         $comments = array_merge($blogsComments, $newsComments, $reviewComments);
+
+        usort($comments, function($a, $b)
+        {
+            if ($a["date"] == $b["date"]) {
+                return 0;
+            }
+            return (strtotime($a["date"]) < strtotime($b["date"])) ? -1 : 1;
+        });
 
         return $this->json([
             'comments' => $comments,
