@@ -203,6 +203,11 @@ class User implements UserInterface
      */
     private $blogPayments;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $payPall;
+
 
     public function __construct()
     {
@@ -975,6 +980,18 @@ class User implements UserInterface
                 $blogPayment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPayPall(): ?string
+    {
+        return $this->payPall;
+    }
+
+    public function setPayPall(?string $payPall): self
+    {
+        $this->payPall = $payPall;
 
         return $this;
     }

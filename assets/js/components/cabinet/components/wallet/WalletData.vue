@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="wallet-data-wrapper">
+                <div class="wallet-data-wrapper" style="margin-right: 0">
                     <div class="wallet-data-row" v-for="(earn, title) in earned">
                         <div class="title">
                             {{ title }}:
@@ -156,7 +156,7 @@
 	  flex-direction: column;
 	  justify-content: space-between;
 	  margin-bottom: 1vw;
-        margin-right: 1vw;
+        margin-right: 15vw;
 	  .wallet-data-row {
 		.title {
 		  //font-size: 1.3vw;

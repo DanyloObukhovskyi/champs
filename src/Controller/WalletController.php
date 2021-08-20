@@ -113,13 +113,13 @@ class WalletController extends AbstractController
             'transactionHistory' => $purseHistory,
             'studentsHistory' => $confirmedPayments,
             'lessonPrices' => !empty($prices) ? $this->decorateTrainerPrices($prices) : 0,
-            'wallet' => !empty($trainer) ? $trainer->getPayPal() : 0,
+            'wallet' => !empty($user) ? $user->getPayPall() : null,
             'isLessonCost' => !empty($trainer) ? $trainer->getIsLessonCost() : 0
         ]);
     }
 
     /**
-     * @Route("/trainer/walletBlog", name="wallet")
+     * @Route("/trainer/walletBlog", name="walletBlogIndex")
      */
     public function indexBlog(Request $request, TranslatorInterface $translator): Response
     {
@@ -163,9 +163,9 @@ class WalletController extends AbstractController
             'available' => $available,
             'transactionHistory' => $purseHistory,
             'studentsHistory' => $confirmedPayments,
-            'lessonPrices' => !empty($prices) ? $this->decorateTrainerPrices($prices) : 0,
-            'wallet' => !empty($trainer) ? $trainer->getPayPal() : 0,
-            'isLessonCost' => !empty($trainer) ? $trainer->getIsLessonCost() : 0
+            'lessonPrices' => 0,
+            'wallet' => !empty($user) ? $user->getPayPall() : null,
+            'isLessonCost' =>  0
         ]);
     }
 
@@ -270,6 +270,36 @@ class WalletController extends AbstractController
                 $trainer->setPayPal($data->payPal);
 
                 $this->entityManager->persist($trainer);
+                $this->entityManager->flush();
+            }
+        }
+        return $this->json('ok');
+    }
+
+    /**
+     * @Route ("/trainer/wallet/update/paypalBlog")
+     */
+    public function updateTrainerPayPalBlog(Request $request)
+    {
+        $data = json_decode($request->getContent(), false);
+        $user = $this->getUser();
+
+
+        /** @var User $user */
+        if (isset($data->payPal) and isset($user)) {
+            $violations = $this->validator->validate(
+                $data->payPal,
+                new Email([])
+            );
+            if ($violations->count() > 0) {
+                $message = $this->translator->trans('Paypal was specified in the wrong format');
+
+                return $this->json($message, 422);
+            }
+            if (isset($user)) {
+                $user->setPayPall($data->payPal);
+
+                $this->entityManager->persist($user);
                 $this->entityManager->flush();
             }
         }

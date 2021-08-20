@@ -35,7 +35,11 @@ class WalletService extends Service {
     }
 
     updatePayPal = payPal => {
-        return this.send('trainer/wallet/update/paypal', {payPal})
+        return this.send('trainer/wallet/update/paypalBlog', {payPal})
+    }
+
+    updatePayPalBlog = payPal => {
+        return this.send('trainer/wallet/update/paypalBlog', {payPal})
     }
 
     checkout = () => {

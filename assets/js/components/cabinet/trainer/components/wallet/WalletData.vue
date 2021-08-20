@@ -227,4 +227,7 @@
 	  }
 	}
   }
+  .title {
+      font-size: 1rem !important;
+  }
 </style>

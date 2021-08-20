@@ -1,10 +1,10 @@
 <template>
-    <div class="setting-container-body wallet">
+    <div class="setting-container-body wallet" style="padding: 1vw;">
         <div class="d-flex justify-content-center align-items-center" v-if="load">
             <small-loader/>
         </div>
         <template v-else>
-            <div class="trainer-title" v-tooltip.top-center="'msg'">
+            <div class="trainer-title" v-tooltip.top-center="'msg'" style="font-size: 1rem;font-weight: normal">
                 Кошелек для вывода
             </div>
             <div class="wallet-setting-body">
@@ -21,18 +21,18 @@
                         <input type="text" v-model="paypalConfirm" @paste="forbidPaste" placeholder="Повторите адрес кошелька">
                     </div>
                 </div>
-            </div>
-            <div class="bottom-save" @click="updateWallet" :class="{disable: loadWallet}">
-                Сохранить изменения
-                <i class="fas fa-check"></i>
-                <svg v-if="loadWallet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                     viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-                    <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
-                            stroke-dasharray="164.93361431346415 56.97787143782138">
-                        <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite"
-                                          dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
-                    </circle>
-                </svg>
+                <div class="bottom-save" @click="updateWallet" :class="{disable: loadWallet}" style="position: inherit;">
+                    Сохранить изменения
+                    <i class="fas fa-check"></i>
+                    <svg v-if="loadWallet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                         viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                        <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35"
+                                stroke-dasharray="164.93361431346415 56.97787143782138">
+                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite"
+                                              dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+                        </circle>
+                    </svg>
+                </div>
             </div>
         </template>
     </div>
@@ -84,7 +84,7 @@
                 }
                 this.loadWallet = true;
 
-                WalletService.updatePayPal(this.paypal)
+                WalletService.updatePayPalBlog(this.paypal)
                     .then((data) => {
                         this.showSuccess();
                         this.loadWallet = false;
@@ -121,5 +121,8 @@
 
   .wallet-setting-body {
 	margin-right: 2vw;
+  }
+  .form-group {
+      padding: 0px !important;
   }
 </style>
