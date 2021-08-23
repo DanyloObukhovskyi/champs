@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Bot;
 use App\Entity\DiscordChannel;
 use App\Entity\Lessons;
 use App\Entity\Payment;
@@ -438,46 +439,64 @@ class LessonsController extends AbstractController
                 ->getRepository(Lessons::class)
                 ->find($lessonId);
 
-
             $student = $lesson->getStudent();
             $trainer = $lesson->getTrainer();
 
-            $channel_name = $student->getNickname() . '#'.$lessonId;
-            $lessonTime = Carbon::now()->format('Y-m-d H:i:s');
+            $bots = $this->getDoctrine()
+                ->getRepository(Bot::class)
+                ->findAll();
 
-            $formFields = [
-                'bot_token' => 'NzY5MTcyNzAyODc4NDk4ODM3.X5LJ5g.OVLuqROWndnyN7gGA7-oGiCl0Kw',
-                'training_start_dt' => $lessonTime,
-                'trainer_id' => $trainer->getNickname(),
-                'channel_name' => $channel_name
-            ];
-//            $trainer->getNickname();
-            $formData = new FormDataPart($formFields);
+            /** @var Bot $bot */
+            foreach ($bots as $bot){
+                if($bot->getStatus() == 2){
 
-            $headers = $formData->getPreparedHeaders()->toArray();
-            $headers['Accept'] = 'application/json';
-            $discordRequest = $this->client->request('POST', 'http://172.104.237.6:8000/api/bot/', [
-                'headers' => $headers,
-                'body' => $formData->bodyToString()
-            ]);
+                } else {
+                    $channel_name = $student->getNickname() . '#'.$lessonId;
+                    $lessonTime = Carbon::now()->format('Y-m-d H:i:s');
 
-            $decodedPayload = $discordRequest->toArray();
+                    $formFields = [
+                        'bot_token' => $bot->getToken(),
+                        'training_start_dt' => $lessonTime,
+                        'trainer_id' => $trainer->getNickname(),
+                        'channel_name' => $channel_name
+                    ];
 
-            $this->getActiveDiscordChannel($decodedPayload);
+                    $formData = new FormDataPart($formFields);
 
-            if($this->discord_channel['status'] !== 'new'){
-                /** @var DiscordChannel $discord */
-                $discord = new DiscordChannel();
-                $discord->setUserId($student->getId());
-                $discord->setDiscordId($decodedPayload['pk']);
-                $discord->setTrainerId($trainer->getId());
-                $discord->setLessonId($lesson->getId());
-                $discord->setChannelName($channel_name);
-                $discord->setInviteLink($this->discord_channel['invite_link']);
-                $entityManager->persist($discord);
-                $entityManager->flush();
+                    $headers = $formData->getPreparedHeaders()->toArray();
+                    $headers['Accept'] = 'application/json';
+                    $discordRequest = $this->client->request('POST', 'http://172.104.237.6:8000/api/bot/', [
+                        'headers' => $headers,
+                        'body' => $formData->bodyToString()
+                    ]);
 
-                return $this->json($discord->getInviteLink());
+                    $decodedPayload = $discordRequest->toArray();
+
+                    $this->getActiveDiscordChannel($decodedPayload);
+
+                    if($this->discord_channel['status'] !== 'new'){
+                        $lesson->setBot($bot);
+                        $entityManager->persist($lesson);
+                        $entityManager->flush();
+
+                        /** @var DiscordChannel $discord */
+                        $discord = new DiscordChannel();
+                        $discord->setUserId($student->getId());
+                        $discord->setDiscordId($decodedPayload['pk']);
+                        $discord->setTrainerId($trainer->getId());
+                        $discord->setLessonId($lesson->getId());
+                        $discord->setChannelName($channel_name);
+                        $discord->setInviteLink($this->discord_channel['invite_link']);
+                        $entityManager->persist($discord);
+                        $entityManager->flush();
+
+                        $bot->setStatus(2);
+                        $entityManager->persist($bot);
+                        $entityManager->flush();
+
+                        return $this->json($discord->getInviteLink());
+                    }
+                }
             }
         }
     }
