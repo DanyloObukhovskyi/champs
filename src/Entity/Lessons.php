@@ -100,6 +100,11 @@ class Lessons
     private $trenerPrice;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Bot::class, inversedBy="lessons")
+     */
+    private $bot;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -368,6 +373,18 @@ class Lessons
     public function setTrenerPrice(?int $trenerPrice): self
     {
         $this->trenerPrice = $trenerPrice;
+
+        return $this;
+    }
+
+    public function getBot(): ?bot
+    {
+        return $this->bot;
+    }
+
+    public function setBot(?bot $bot): self
+    {
+        $this->bot = $bot;
 
         return $this;
     }
