@@ -13,6 +13,12 @@ class Service {
         return data;
     }
 
+    sendToApi = async (url, params = {}) => {
+        const {data} = await axios.post(`${url}`, params)
+
+        return data;
+    }
+
     getUserFull = () =>  {
         return this.send('auth/user/full')
     }

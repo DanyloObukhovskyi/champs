@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -66,6 +68,16 @@ class Game implements \JsonSerializable
      * @ORM\Column(type="boolean")
      */
     private $show_rank;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Blogs::class, mappedBy="game", orphanRemoval=true)
+     */
+    private $blogs;
+
+    public function __construct()
+    {
+        $this->blogs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -237,6 +249,28 @@ class Game implements \JsonSerializable
     public function setShowRank(bool $show_rank): self
     {
         $this->show_rank = $show_rank;
+
+        return $this;
+    }
+
+    public function addBlog(Blogs $blog): self
+    {
+        if (!$this->blogs->contains($blog)) {
+            $this->blogs[] = $blog;
+            $blog->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlog(Blogs $blog): self
+    {
+        if ($this->blogs->removeElement($blog)) {
+            // set the owning side to null (unless already changed)
+            if ($blog->getGame() === $this) {
+                $blog->setGame(null);
+            }
+        }
 
         return $this;
     }

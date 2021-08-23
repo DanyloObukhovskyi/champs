@@ -6,6 +6,7 @@ namespace App\Service\News;
 
 use App\Entity\News;
 use App\Entity\NewsComment;
+use App\Entity\NewsType;
 use App\Entity\User;
 use App\Repository\NewsCommentRepository;
 use App\Service\EntityService;
@@ -93,6 +94,15 @@ class NewsCommentService extends EntityService
                 $userLike = $this->newsCommentLikeService->decorator($userLike);
             }
         }
+
+        $newsTypeId = $comment->getNews()->getType();
+        $type = [];
+        if(!empty($newsTypeId)){
+            $type = $this->entityManager
+                ->getRepository(NewsType::class)
+                ->findOneBy(['id' => $newsTypeId]);
+        }
+
         return [
             'id' => $comment->getId(),
             'newsId' => $comment->getNews()->getId(),
@@ -103,11 +113,20 @@ class NewsCommentService extends EntityService
                 'name' => $comment->getUser()->getName(),
                 'photo' => $comment->getUser()->getPhoto(),
             ],
+            'news' => [
+                'id' => $comment->getNews()->getId(),
+                'title' => $comment->getNews()->getTitle(),
+                'type' => $type,
+                'game' => !empty($comment->getNews()->getGame()) ? $comment->getNews()->getGame() : null,
+                'date_ru_with_year_for_url' => $comment->getNews()->getDate()->format('Y') === date('Y') ? $comment->getNews()->getDate()->format('d m') : $comment->getNews()->getDate()->format('d m Y')
+            ],
             'comment' => $comment->getComment(),
             'createdAt' => NewsService::replaceMonth($comment->getCreatedAt()->format('d F H:i')),
+            'date' => $comment->getCreatedAt()->format('d F H:i'),
             'timestamp' => $comment->getCreatedAt()->getTimestamp(),
             'likesCount' => $this->newsCommentLikeService->getLikesCount($comment),
-            'userLike' => $userLike
+            'userLike' => $userLike,
+            'type' => 'news'
         ];
     }
 

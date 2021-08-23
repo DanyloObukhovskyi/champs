@@ -1,0 +1,64 @@
+{% extends 'templates/mails/template.html.twig' %}
+{% block css %}
+    <style>
+        label {
+            position: relative;
+            color: #C8C8C8;
+        }
+
+        label:before {
+            content: "★";
+            display: inline-block;
+            font-size: 1.5em;
+            color: #ccc;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        input:checked ~ label:before {
+            color: #FF6D1D;
+        }
+
+        input:checked ~ {
+            color: #FF6D1D;
+        }
+
+        label:hover ~ label:before {
+            color: #ff8300;
+        }
+
+        label:hover:before {
+            color: #FF6D1D;;
+        }
+
+        .stars {
+            unicode-bidi: bidi-override;
+            direction: rtl;
+        }
+
+        .stars input {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td style="padding: 0 2.5em; text-align: left;">
+                    <div class="text">
+                        <h2>
+                            Добрый день!
+                        </h2>
+                        <p class="mt-2">
+                            Добавлен новый пост для модерации
+                        </p>
+                        <p class="mt-2">
+                            Проверить пост можно по этой ссылке <a href="/admin_panel/c-admin/blogs"></a>
+                        </p>
+                    </div>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

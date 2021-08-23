@@ -68,6 +68,10 @@
                     <input disabled type="text" class="fw-600 input2_txt" placeholder=""  value="<?php print $user_info[0]['discord']; ?>">
                 </div>
 
+                <label class="label" for="">PayPall</label>
+                <div class="input mb-5" id="input">
+                    <input disabled type="text" class="fw-600 input2_txt" placeholder=""  value="<?php print $user_info[0]['pay_pall']; ?>">
+                </div>
 			</div>
 		</div>
 		<!--- --->

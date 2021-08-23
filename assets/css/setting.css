@@ -95,6 +95,7 @@
 	font-size: .8vw;
 	color: #adafb0;
 	margin-bottom: .5vw;
+	overflow: hidden;
 }
 
 .setting .setting-container-body .form-group .button-save {

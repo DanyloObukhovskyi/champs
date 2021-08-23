@@ -49,6 +49,14 @@ import CsHomePage from "./pages/CsHomePage";
 import Page404 from "./pages/Page404";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Blog from "./pages/Blog"
+import blogCreate from "./pages/BlogCreate";
+import blogEdit from "./pages/BlogEdit";
+import BlogsFilters from "./components/blogs/BlogsFilters";
+import BlogsRow from "./components/blogs/BlogsRow";
+import HotBlogs from "./components/blogs/HotBlogs";
+import BlogsViewPage from "./pages/BlogsViewPage";
+import {Tabs, Tab} from 'vue-tabs-component';
 
 
 window.axios = require('axios');
@@ -98,6 +106,15 @@ Vue.component('cs-home-page', CsHomePage);
 Vue.component('page-404', Page404);
 Vue.component('about', About);
 Vue.component('contacts', Contact)
+Vue.component('blog', Blog);
+Vue.component('blogs-row', BlogsRow);
+Vue.component('blog-filters', BlogsFilters);
+Vue.component('hot-blogs', HotBlogs);
+Vue.component('blog-create', blogCreate);
+Vue.component('blog-edit', blogEdit);
+Vue.component('blogs-view-page', BlogsViewPage);
+Vue.component('tabs', Tabs);
+Vue.component('tab', Tab);
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 

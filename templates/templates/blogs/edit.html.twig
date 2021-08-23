@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+{% block canonical %}
+    <link rel=“canonical” href=“{{ link }}/ru/blogs” />
+{% endblock %}
+{% block description %}
+    <meta name="description"
+          content="{{ description }}">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="{{ keywords }}">
+{% endblock %}
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+            <meta name="{{ meta.name }}"
+                  content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    {% if heading_type == 1 %}
+        <h1 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h1>
+    {% else %}
+        <h2 style="opacity: 0; position: absolute; left: 0; top: 0">{{ heading }}</h2>
+    {% endif %}
+    <div class="news page">
+        <div class="ml-8 mr-8 p-0">
+            <div class="navigation d-flex align-items-center justify-content-between" style="width: 11%;">
+                <a style="margin-right: 5px" href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right" href="/blogs" style="font-size: .7vw;margin-right: 5px"></i>
+                <a style="margin-right: 5px" href="{{ url('blogs') }}">
+                    Блоги
+                </a>
+                <i class="fas fa-arrow-right" style="font-size: .7vw;margin-right: 5px"></i>
+                <span style="">
+                    Отредактировать
+                </span>
+            </div>
+        </div>
+        <div class="ml-8 mr-8 p-0">
+            <blog-edit :all-games="{{ allGames }}" :games="{{ games|json_encode }}" :blog-id="{{ blogId }}"/>
+        </div>
+    </div>
+{% endblock %}

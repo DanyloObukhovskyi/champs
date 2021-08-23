@@ -43,6 +43,12 @@ const USER_PAGES = [
         iconActive: 'tournamentsIconActive.png',
     },
     {
+      name: 'Блог',
+      code: 'blog',
+      icon: 'tournamentsIcon.png',
+      iconActive: 'tournamentsIconActive.png',
+    },
+    {
         name: 'Новости',
         code: 'news',
         icon: 'newsIcon.png',
@@ -74,6 +80,12 @@ const TRAINING_PAGES = [
         code: 'timetable',
         icon: 'timetable.png',
         iconActive: 'trainingIconActive.png',
+    },
+    {
+        name: 'Блог',
+        code: 'blog',
+        icon: 'tournamentsIcon.png',
+        iconActive: 'tournamentsIconActive.png',
     },
     {
         name: 'Календарь',

@@ -48,4 +48,37 @@ class AboutController extends AbstractController
     }
 
 
+    /**
+     * @Route("/createBlogAndReward", name="createBlogAndReward")
+     */
+    public function createBlogAndReward()
+    {
+        $seoSettings = $this->seoService->getSeo('createBlogAndReward');
+
+        return $this->render('templates/createBlogInfo.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'router' => 'createBlogAndReward']);
+    }
+
+    /**
+     * @Route("/howCreateBlog", name="howCreateBlog")
+     */
+    public function howCreateBlog()
+    {
+        $seoSettings = $this->seoService->getSeo('howCreateBlog');
+
+        return $this->render('templates/howCreateBlog.html.twig', [
+            'heading_type' => $seoSettings['heading_type'],
+            'heading' => $seoSettings['heading'],
+            'title' => $seoSettings['title'],
+            'description' => $seoSettings['description'],
+            'keywords' => $seoSettings['keywords'],
+            'meta_tags' => $seoSettings['meta'],
+            'router' => 'howCreateBlog']);
+    }
 }

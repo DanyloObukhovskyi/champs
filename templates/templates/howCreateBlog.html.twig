@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+{% block router %}about{% endblock %}
+{% block description %}
+    <meta name="description"
+          content="{{ description }}">
+{% endblock %}
+{% block keywords %}
+    <meta name="Keywords"
+          content="{{ keywords }}">
+{% endblock %}
+{% block meta %}
+    {% if meta_tags is not empty %}
+        {% for meta in meta_tags %}
+            <meta name="{{ meta.name }}"
+                  content="{{ meta.value }}">
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <div class="about page">
+        <div class="ml-8 mr-8 p-0 d-flex">
+            <div class="navigation d-flex align-items-center justify-content-between">
+                <a href="{{ url('main') }}">
+                    Главная
+                </a>
+                <i class="fas fa-arrow-right ml-2 mr-2" style="font-size: .7vw"></i>
+                <span>
+                    Как вести успешный блог?
+                </span>
+            </div>
+        </div>
+        <about>
+            <template v-slot:about>
+                {{setting.get('howCreateBlog') is not null ? setting.get('howCreateBlog').value|raw : ''}}
+            </template>
+        </about>
+    </div>
+{% endblock %}

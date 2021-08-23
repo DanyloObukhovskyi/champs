@@ -42,6 +42,16 @@ class GameController extends AbstractController
     }
 
     /**
+     * @Route("/gamesBlog/{offset}", name="gamesBlog")
+     */
+    public function gamesBlog($offset)
+    {
+        $games = $this->gameService->getForBlog($offset);
+
+        return $this->json($games);
+    }
+
+    /**
      * @Route("/games/banners", name="games_banners")
      */
     public function gamesBanners()

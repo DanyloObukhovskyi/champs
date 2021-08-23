@@ -74,6 +74,14 @@ class ReviewService extends EntityService
     }
 
     /**
+     * @return mixed
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+    /**
      * @param $reviews
      * @return array
      */

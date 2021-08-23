@@ -30,4 +30,14 @@ class GameService extends EntityService
             'isDeleted' => false
         ]);
     }
+
+    /**
+     * @return Game[]
+     */
+    public function getForBlog($offset = 0)
+    {
+        return $this->repository->findBy([
+            'isDeleted' => false
+        ], array('id'=>'ASC'),11,$offset);
+    }
 }

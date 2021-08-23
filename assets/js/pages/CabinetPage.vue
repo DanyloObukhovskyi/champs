@@ -60,6 +60,7 @@
     import UserCabinet from "../components/cabinet/user/pages/UserCabinet";
     import Training from "../components/cabinet/user/pages/Training";
     import News from "../components/cabinet/user/pages/News";
+    import Blog from "../components/cabinet/Blog";
     import Video from "../components/cabinet/user/pages/Video";
     import UserSetting from "../components/cabinet/user/pages/Setting";
     import {mapActions, mapGetters} from "vuex";
@@ -77,6 +78,7 @@
         {path: `/${CabinetService.lang}/user/cabinet/news`, component: News},
         {path: `/${CabinetService.lang}/user/cabinet/videos`, component: Video},
         {path: `/${CabinetService.lang}/user/cabinet/settings`, component: UserSetting},
+        {path: `/${CabinetService.lang}/user/cabinet/blog`, component: Blog},
 
         {path: `/${CabinetService.lang}/trainer/cabinet/`, component: TrainerCabinet},
         {path: `/${CabinetService.lang}/trainer/cabinet/timetable`, component: Training},
@@ -84,6 +86,7 @@
         {path: `/${CabinetService.lang}/trainer/cabinet/videos`, component: Video},
         {path: `/${CabinetService.lang}/trainer/cabinet/settings`, component: TrainerSetting},
         {path: `/${CabinetService.lang}/trainer/cabinet/wallet`, component: Wallet},
+        {path: `/${CabinetService.lang}/trainer/cabinet/blog`, component: Blog},
     ];
 
     export default {

@@ -264,8 +264,6 @@ export default {
         this.scrollEventTrigger();
 
         this.popularTags = JSON.parse(this.popularTags);
-      // console.log(popularTags.length);
-      console.log(this.tagsCount);
     }
 }
 </script>

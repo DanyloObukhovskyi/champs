@@ -58,7 +58,7 @@ export default {
             return state.lessonPrices;
         },
         wallet(state) {
-            return state.wallet;
+            return state.wallet ? state.wallet : null;
         },
         earned(state) {
             return state.earned;
