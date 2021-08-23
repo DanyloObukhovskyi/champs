@@ -449,7 +449,66 @@ class LessonsController extends AbstractController
             /** @var Bot $bot */
             foreach ($bots as $bot){
                 if($bot->getStatus() == 2){
+                    /** @var Lessons $lastLesson */
+                    $lastLesson = $this->getDoctrine()
+                        ->getRepository(Lessons::class)
+                        ->findBy(['bot' => $bot->getId()], ['id' => 'DESC'], 1);
 
+                    if(!empty($lastLesson)){
+                        /** @var DiscordChannel $lastDiscordChannelBot */
+                        $lastDiscordChannelBot = $this->getDoctrine()
+                            ->getRepository(DiscordChannel::class)
+                            ->findBy(['lesson_id' => $lastLesson[0]->getId()], ['id' => 'DESC'], 1);
+
+                        if(!empty($lastDiscordChannelBot)){
+                            $discordChannelInfo = $this->client->request('GET', 'http://172.104.237.6:8000/api/training/'.$lastDiscordChannelBot[0]->getDiscordId());
+                            $decodedChannelPayload = $discordChannelInfo->toArray();
+                            if($decodedChannelPayload['status'] === 'finished'){
+                                $channel_name = $student->getNickname() . '#'.$lessonId;
+                                $lessonTime = Carbon::now()->format('Y-m-d H:i:s');
+
+                                $formFields = [
+                                    'bot_token' => $bot->getToken(),
+                                    'training_start_dt' => $lessonTime,
+                                    'trainer_id' => $trainer->getDiscordId(),
+                                    'channel_name' => $channel_name
+                                ];
+
+                                $formData = new FormDataPart($formFields);
+
+                                $headers = $formData->getPreparedHeaders()->toArray();
+                                $headers['Accept'] = 'application/json';
+                                $discordRequest = $this->client->request('POST', 'http://172.104.237.6:8000/api/bot/', [
+                                    'headers' => $headers,
+                                    'body' => $formData->bodyToString()
+                                ]);
+
+                                $decodedPayload = $discordRequest->toArray();
+
+                                $this->getActiveDiscordChannel($decodedPayload);
+
+                                if($this->discord_channel['status'] !== 'new'){
+                                    $lesson->setBot($bot);
+                                    $entityManager->persist($lesson);
+                                    $entityManager->flush();
+
+                                    /** @var DiscordChannel $discord */
+                                    $discord = new DiscordChannel();
+                                    $discord->setUserId($student->getId());
+                                    $discord->setDiscordId($decodedPayload['pk']);
+                                    $discord->setTrainerId($trainer->getId());
+                                    $discord->setLessonId($lesson->getId());
+                                    $discord->setChannelName($channel_name);
+                                    $discord->setInviteLink($this->discord_channel['invite_link']);
+                                    $entityManager->persist($discord);
+                                    $entityManager->flush();
+
+                                    return $this->json($discord->getInviteLink());
+                                }
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     $channel_name = $student->getNickname() . '#'.$lessonId;
                     $lessonTime = Carbon::now()->format('Y-m-d H:i:s');
@@ -457,7 +516,7 @@ class LessonsController extends AbstractController
                     $formFields = [
                         'bot_token' => $bot->getToken(),
                         'training_start_dt' => $lessonTime,
-                        'trainer_id' => $trainer->getNickname(),
+                        'trainer_id' => $trainer->getDiscordId(),
                         'channel_name' => $channel_name
                     ];
 
@@ -496,9 +555,11 @@ class LessonsController extends AbstractController
 
                         return $this->json($discord->getInviteLink());
                     }
+                    break;
                 }
             }
         }
+        return $this->json('Не получилось создать канал , попробуйте позже');
     }
 
     public function getActiveDiscordChannel($decodedPayload)

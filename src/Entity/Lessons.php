@@ -100,7 +100,7 @@ class Lessons
     private $trenerPrice;
 
     /**
-     * @ORM\ManyToOne(targetEntity=bot::class, inversedBy="lessons")
+     * @ORM\ManyToOne(targetEntity=Bot::class, inversedBy="lessons")
      */
     private $bot;
 
