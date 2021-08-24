@@ -115,14 +115,15 @@ class Payments_model extends CI_Model {
         $this->db->join("refund", "payment.id = refund.payment_id", "left");
 
 //        $this->db->last_query()
-        $this->db->where("payment.payment_status != 1");
-        $this->db->where("payment.created_at <= date('". date('Y-m-d H:i:s', strtotime('- 20 minutes'))."')");
 
         if ($query != '') {
             $this->db->where("(user.nickname LIKE '%$query%'");
             $this->db->or_where("trainer.nickname LIKE '%$query%'");
             $this->db->or_where("payment.id LIKE '%$query%')");
         }
+
+        $this->db->where("payment.payment_status != 1");
+        $this->db->where("payment.created_at <= date('". date('Y-m-d H:i:s', strtotime('- 20 minutes'))."')");
 
 
         if ($column == 0) {

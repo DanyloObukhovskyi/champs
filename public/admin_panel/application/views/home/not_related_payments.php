@@ -84,7 +84,7 @@
             "lengthChange": true,
             "ordering": true,
             "ajax": {
-                url: '<?php echo base_url('/c-admin/payments') ;?>',
+                url: '<?php echo base_url('/c-admin/not_related_payments') ;?>',
                 type: 'POST',
                 data: {
 
