@@ -2,7 +2,7 @@
 {% block title %}Матч {{ match.team1 is not null ? match.team1.name: '' }} Против {{ match.team2 is not null ? match.team2.name: '' }} на турнире {{ matchDecorator.event.name }} по Cs:Go{% endblock %}
 {% block router %}matches{% endblock %}
 {% block description %}
-    <meta name="description" content="Матч по League of Legends, Dota и Cs:Go">
+    <meta name="description" content="Матч {{ match.team1 is not null ? match.team1.name: '' }} Против {{ match.team2 is not null ? match.team2.name: '' }} на турнире {{ matchDecorator.event.name }} по Cs:Go {{ matchDecorator.startAt|date('d-m-Y') }}">
 {% endblock %}
 {% block keywords %}
     <meta name="Keywords" content="Матч {{ match.team1 is not null ? match.team1.name: '' }} Против {{ match.team2 is not null ? match.team2.name: '' }} на турнире {{ matchDecorator.event.name }} по Cs:Go история встреч и подробности">
