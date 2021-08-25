@@ -965,8 +965,13 @@ class Home extends CI_Controller
 
         if (!empty($total_data)) {
             foreach ($total_data as $payment) {
+                $interkassaId = 'Не оплаченно';
+                if(!empty($payment['interkassa_data']) && $payment['interkassa_data'] != '[]'){
+                    $interkassaData = json_decode($payment['interkassa_data']);
+                    $interkassaId = $interkassaData->ik_inv_id;
+                }
                 $data[] = [
-                    $payment['id'], //0
+                    $interkassaId, //0
                     $payment['trainer_nickname'], //1
                     $payment['created_at'], //2
                     $payment['date_time_from'], //3
@@ -1272,8 +1277,13 @@ class Home extends CI_Controller
 
         if (!empty($total_data)) {
             foreach ($total_data as $payment) {
+                $interkassaId = 'Не оплаченно';
+                if(!empty($payment['interkassa_data']) && $payment['interkassa_data'] != '[]'){
+                    $interkassaData = json_decode($payment['interkassa_data']);
+                    $interkassaId = $interkassaData->ik_inv_id;
+                }
                 $data[] = [
-                    $payment['id'], //0
+                    $interkassaId, //0
                     $payment['trainer_nickname'], //1
                     $payment['created_at'], //2
                     $payment['date_time_from'], //3

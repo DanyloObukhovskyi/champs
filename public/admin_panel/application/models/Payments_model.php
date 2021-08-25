@@ -18,6 +18,7 @@ class Payments_model extends CI_Model {
                            user.id as user_id, 
                            trainer.nickname  as trainer_nickname,  
                            payment.yandex_kassa_id, 
+                           payment.interkassa_data,
                            lessons.student_id, 
                            payment.yandex_data, 
                            lessons.date_time_from, 
@@ -106,6 +107,7 @@ class Payments_model extends CI_Model {
                            payment.yandex_kassa_id, 
                            lessons.student_id, 
                            payment.yandex_data, 
+                           payment.interkassa_data,
                            lessons.date_time_from, 
                            lessons.cost as total_price, 
                            refund.amount as refund_amount');
