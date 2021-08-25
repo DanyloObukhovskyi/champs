@@ -122,8 +122,8 @@ class Payments_model extends CI_Model {
             $this->db->or_where("payment.id LIKE '%$query%')");
         }
 
-        $this->db->where("payment.payment_status == 2");
-        $this->db->orWhere("payment.payment_status == 0 and payment.created_at <= date('". date('Y-m-d H:i:s', strtotime('- 20 minutes'))."')");
+        $this->db->where("payment.payment_status = 2");
+        $this->db->or_where("payment.payment_status = 0 and payment.created_at <= date('". date('Y-m-d H:i:s', strtotime('- 20 minutes'))."')");
 
 
         if ($column == 0) {
