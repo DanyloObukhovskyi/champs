@@ -69,7 +69,10 @@
 						}elseif($val['roles'][3] == "1") {
 							$img="coach-mn";
 							$Type = "Ответственный за обучение";
-						}
+						}elseif($val['roles'][4] == "1") {
+                            $img="coach-mn";
+                            $Type = "Ответственный за ceо";
+                        }
 //						if($val['type'] == "video") {
 //							$Type = "Видео";
 //						}

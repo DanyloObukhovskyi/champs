@@ -696,11 +696,12 @@ class Add_c extends CI_Controller
                 $new_passw = (isset($_POST["new_password"]) && !empty($_POST["new_password"])) ? trim($_POST["new_password"]) : '';
                 $new_passw_confirm = (isset($_POST["new_confirm"]) && !empty($_POST["new_confirm"])) ? trim($_POST["new_confirm"]) : '';
 
-                $mask = "0000";
+                $mask = "00000";
                 $mask[0] = (isset($_POST["main-admin"])) ? "1" : '0';
                 $mask[1] = (isset($_POST["content-mn"])) ? "1" : '0';
                 $mask[2] = (isset($_POST["statistics-mn"])) ? "1" : '0';
                 $mask[3] = (isset($_POST["coach-mn"])) ? "1" : '0';
+                $mask[4] = (isset($_POST["seo-specialist"])) ? "1" : '0';
                 if ($mask == "0000") {
                     redirect($_SERVER["HTTP_REFERER"]);
                     die();

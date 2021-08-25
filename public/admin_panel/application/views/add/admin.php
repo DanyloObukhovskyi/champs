@@ -97,6 +97,11 @@
 				<!--			</div>-->
 				<div class="col-item">
 					<div class="admin-notice">
+                        <div style="display: block" class="ml-35 mt-15">
+                            <input name="seo-specialist" value="1" type="checkbox" class="admin-checkbox" style="margin-top: 3px;" >
+                            <div class="admin-notice-text">Сео специалист</div>
+                            <div class="admin-notice-descr">Доступны все функции связанные с сео.</div>
+                        </div>
 						<div style="display: block; height: 50px;   vertical-align: top;" class="ml-35 mt-10">
 							<input name="coach-mn" value="1" type="checkbox" class="admin-checkbox" style="margin-top: 13px;" >
 							<div class="admin-notice-text" style=" margin-top: 10px;">Ответственный за обучение</div>

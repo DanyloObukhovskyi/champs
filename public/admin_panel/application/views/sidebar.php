@@ -28,19 +28,23 @@
         <a href="<?php echo base_url('c-admin/not_related_payments/page/1'); ?>">Неудачные оплаты</a>
     </li>
     <?php endif;?>
-    <?php if($roles[0] == 1):?>
-    <li class="<?php echo 'admins' === $activePath ? 'active': ''?>">
-        <a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a>
-    </li>
+    <?php if($roles[0] == 1 || $roles[4] == 1):?>
+    <?php if($roles[0] == 1 || $roles[1] == 1):?>
+        <li class="<?php echo 'admins' === $activePath ? 'active': ''?>">
+            <a href="<?php echo base_url('c-admin/admins/page/1'); ?>">Администраторы</a>
+        </li>
+    <?php endif;?>
+    <?php if($roles[1] == 1 || $roles[4] == 1):?>
         <li class="<?php echo 'seo' === $activePath ? 'active': ''?>">
             <a href="<?php echo base_url('c-admin/seo'); ?>">Сео</a>
         </li>
-    <li class="<?php echo 'pages' === $activePath ? 'active': ''?>">
-        <a href="<?php echo base_url('c-admin/pages'); ?>">Страницы</a>
-    </li>
-    <li class="<?php echo 'settings' === $activePath ? 'active': ''?>">
-        <a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a>
-    </li>
+        <li class="<?php echo 'pages' === $activePath ? 'active': ''?>">
+            <a href="<?php echo base_url('c-admin/pages'); ?>">Страницы</a>
+        </li>
+        <li class="<?php echo 'settings' === $activePath ? 'active': ''?>">
+            <a href="<?php echo base_url('c-admin/settings'); ?>">Настройки</a>
+        </li>
+    <?php endif;?>
     <?php endif;?>
     <?php if($roles[0] == 1):?>
     <li class="<?php echo 'slides' === $activePath ? 'active': ''?>">
