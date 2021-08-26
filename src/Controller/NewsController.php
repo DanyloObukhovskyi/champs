@@ -638,7 +638,7 @@ class NewsController extends AbstractController
     {
         $rssTape = new RssTape();
 
-        $link = $request->getSchemeAndHttpHost().$request->getBasePath() . '/ru/';
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
 
         $rssTape
             ->setTitle('Champs.pro - киберспорт и игры, новости, турниры, расписание матчей, рейтинги команд и игроков, обучение')
@@ -658,14 +658,14 @@ class NewsController extends AbstractController
 
         /** @var News $newsEntity */
         foreach ($newsCollect as $newsEntity) {
-            $records[] = $this->newsService->decoratorForRssNews($newsEntity, $link . '/');
+            $records[] = $this->newsService->decoratorForRssNews($newsEntity, $link. '/ru/');
         }
 
         $blogsCollect = $this->blogsService->getByFilters((object)$request, 0 , 0, []);
 
         /** @var Blogs $blogsEntity */
         foreach ($blogsCollect as $blogsEntity) {
-            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link);
+            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link. '/ru/');
         }
 
         foreach ($records as $record) {
