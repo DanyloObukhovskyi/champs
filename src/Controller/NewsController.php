@@ -266,7 +266,7 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/novosti/{id}/{slug}", name="news_view_single")
+     * @Route("/novosti/{id}/{slug}", name="news_view_single_slug")
      */
     public function viewSlug($id, $slug, Request $request)
     {
@@ -674,8 +674,7 @@ class NewsController extends AbstractController
                 'link' => $record['link'],
                 'description' => $record['description'],
                 'author' => $record['author'],
-                'category' => $record['category'],
-                'pubDate' => $record['pubDate']
+                'category' => $record['category']
             ];
             $rssTape->addItem($item);
         }
