@@ -665,7 +665,7 @@ class NewsController extends AbstractController
 
         /** @var Blogs $blogsEntity */
         foreach ($blogsCollect as $blogsEntity) {
-            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link );
+            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link);
         }
 
         foreach ($records as $record) {
@@ -676,6 +676,7 @@ class NewsController extends AbstractController
                 'author' => $record['author'],
                 'category' => $record['category'],
                 'pubDate' => $record['pubDate'],
+                'turbo' => true
             ];
             $rssTape->addItem($item);
         }
