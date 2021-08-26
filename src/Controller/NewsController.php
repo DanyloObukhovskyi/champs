@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Blogs;
 use App\Entity\Game;
 use App\Entity\News;
 use App\Entity\NewsType;
@@ -9,6 +10,7 @@ use App\Entity\NewsBookmark;
 use App\Entity\NewsCommentLike;
 use App\Entity\NewsLike;
 use App\Entity\NewsTag;
+use App\Service\Blog\BlogService;
 use App\Service\News\NewsCommentLikeService;
 use App\Service\News\NewsCommentService;
 use App\Service\News\NewsLikeService;
@@ -17,9 +19,11 @@ use App\Service\Match\MatchService;
 use App\Service\News\NewsTagService;
 use App\Service\Seo\SeoService;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Env\Url;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Rss\RssTape;
 
 /**
  * @Route("/{_locale}", requirements={"locale": "ru"})
@@ -35,6 +39,11 @@ class NewsController extends AbstractController
      * @var NewsService
      */
     protected $newsService;
+
+    /**
+     * @var BlogService
+     */
+    protected $blogsService;
 
     /**
      * @var MatchService
@@ -82,6 +91,8 @@ class NewsController extends AbstractController
 
         $this->newsLikeService = new NewsLikeService($entityManager);
         $this->newsCommentLikeService = new NewsCommentLikeService($entityManager);
+
+        $this->blogsService = new BlogService($entityManager);
 
         $this->seoService = new SeoService($entityManager);
     }
@@ -225,6 +236,39 @@ class NewsController extends AbstractController
      * @Route("/novosti/{id}/{format}/{game}/{title}", name="news_view_single")
      */
     public function view($id, $format, $game, $title, Request $request)
+    {
+        /** @var News $news */
+        $news = $this->entityManager
+            ->getRepository(News::class)
+            ->find($id);
+
+        if (!$news) {
+            return $this->redirectToRoute('news_index');
+        }
+        $this->newsService->incrementingViews($news);
+
+        $description = strip_tags($news->getText());
+
+        $news->category = $this->entityManager
+            ->getRepository(NewsType::class)
+            ->findOneBy(['id' => $news->getType()])->getTitle();
+
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath();
+
+        return $this->render('templates/news.view.html.twig', [
+            'date' => $news->getDate()->format('Y-m-d H:i:s'),
+            'link' => $link,
+            'description' => $description,
+            'newsId' => $id,
+            'news' => $news,
+            'router' => 'news',
+        ]);
+    }
+
+    /**
+     * @Route("/novosti/{id}/{slug}", name="news_view_single")
+     */
+    public function viewSlug($id, $slug, Request $request)
     {
         /** @var News $news */
         $news = $this->entityManager
@@ -585,5 +629,64 @@ class NewsController extends AbstractController
             }
         }
         return $this->json(['formats' => $formats]);
+    }
+
+    /**
+     * @Route("/news/rss")
+     */
+    public function getRss(Request $request)
+    {
+        $rssTape = new RssTape();
+
+        $link = $request->getSchemeAndHttpHost().$request->getBasePath() . '/ru/';
+
+        $rssTape
+            ->setTitle('Champs.pro - киберспорт и игры, новости, турниры, расписание матчей, рейтинги команд и игроков, обучение')
+            ->setDescription('Самые актуальные новости, интервью и обзоры из мира киберспорта и онлайн игр - Dota 2, CS:GO, Valorant, PUBG, Fortnite и других игр. Турниры, расписание матчей, рейтинги команд и игроков. Обучение от профессионалов.')
+            ->setLink($link)
+            ->setLanguage(RssTape::LANGUAGE_RU)
+            ->setLastBuildDate(date('Y-m-d'));
+
+        $request = [
+            'tags' => [],
+            'titles' => [],
+            'texts' => []
+        ];
+
+        $newsCollect = $this->newsService->getByFilters((object)$request, 0 , 0, []);
+        $records = [];
+
+        /** @var News $newsEntity */
+        foreach ($newsCollect as $newsEntity) {
+            $records[] = $this->newsService->decoratorForRssNews($newsEntity, $link . '/');
+        }
+
+        $blogsCollect = $this->blogsService->getByFilters((object)$request, 0 , 0, []);
+
+        /** @var Blogs $blogsEntity */
+        foreach ($blogsCollect as $blogsEntity) {
+            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link );
+        }
+
+        foreach ($records as $record) {
+            $item = [
+                'title' => $record['title'],
+                'link' => $record['link'],
+                'description' => $record['description'],
+                'author' => $record['author'],
+                'category' => $record['category'],
+                'pubDate' => $record['pubDate'],
+            ];
+            $rssTape->addItem($item);
+        }
+
+        /**
+         * Add Content-Type, for xml document.
+         */
+        header("Content-Type: text/xml");
+
+        echo $rssTape->output();
+
+        exit;
     }
 }
