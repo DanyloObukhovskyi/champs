@@ -50,6 +50,7 @@ class RssTape extends \DOMDocument
             }
         } else {
             $parentNode->appendChild($this->createElement($name, htmlspecialchars($value)));
+            $parentNode->setAttribute('turbo', 'true');
         }
     }
 
@@ -100,7 +101,7 @@ class RssTape extends \DOMDocument
     public function addItem(array $arr)
     {
         $name = 'item';
-        $this->setValue($this->channel, $name, $arr);
+        $node = $this->setValue($this->channel, $name, $arr);
         return $this;
     }
 
