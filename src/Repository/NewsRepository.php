@@ -54,23 +54,24 @@ class NewsRepository extends ServiceEntityRepository
             ->orderBy("n.$orderField", $orderType);
 
         if (!empty($formats)) {
-            $query->andwhere('n.type IN(:formats)')
+            $query->where('n.type IN(:formats)')
                 ->setParameter('formats', $formats);
         }
 
         if (!empty($tags)) {
             $query->leftJoin('n.newsTags', 'nt');
-            $query->andwhere('nt.title IN(:tags)')
+            $query->andWhere('nt.title IN(:tags)')
                 ->setParameter('tags', $tags);
         }
 //        else {
 //            $query->leftJoin('n.newsTags', 'nt');
 //        }
+
         if (!empty($search)) {
-            $query->andWhere('n.title like :search')
-                ->orWhere('n.text like :search')
-                ->orWhere('n.title like :search')
-                ->setParameter('search', "%$search%");
+            $query->andWhere('n.title LIKE :search')
+                ->orWhere('n.text like :searchText')
+                ->setParameter('search', "%$search%")
+                ->setParameter('searchText', $search);
         }
         if(!empty($titles)){
             foreach ($titles as $title) {
