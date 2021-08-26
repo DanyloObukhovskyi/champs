@@ -676,7 +676,7 @@ class NewsController extends AbstractController
                 'author' => $record['author'],
                 'category' => $record['category'],
                 'pubDate' => $record['pubDate'],
-                'turbo' => true
+                'turbo' => 'true'
             ];
             $rssTape->addItem($item);
         }
