@@ -643,7 +643,7 @@ class NewsController extends AbstractController
         $rssTape
             ->setTitle('Champs.pro - киберспорт и игры, новости, турниры, расписание матчей, рейтинги команд и игроков, обучение')
             ->setDescription('Самые актуальные новости, интервью и обзоры из мира киберспорта и онлайн игр - Dota 2, CS:GO, Valorant, PUBG, Fortnite и других игр. Турниры, расписание матчей, рейтинги команд и игроков. Обучение от профессионалов.')
-            ->setLink($link)
+            ->setLink($link.'/')
             ->setLanguage(RssTape::LANGUAGE_RU)
             ->setLastBuildDate(date('Y-m-d'));
 
