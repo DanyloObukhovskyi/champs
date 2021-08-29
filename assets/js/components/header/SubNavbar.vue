@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="help d-flex">
-            <a href="https://discord.gg/rakSKuE" target="_blank">
+            <a href="https://discord.gg/XsYHZXD9" target="_blank">
                 <svg class="discord" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                      aria-hidden="true"
                      focusable="false"
