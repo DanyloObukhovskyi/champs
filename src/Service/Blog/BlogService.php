@@ -380,13 +380,15 @@ class BlogService extends EntityService
         $date = $blogs->getDate()->format('Y') === date('Y') ? $blogs->getDate()->format('d m') : $blogs->getDate()->format('d m Y');
         $slug = $this->getSlug($game, $blogs->getTitle(), $date, '');
 
+        $content = '<header><h1>'. $blogs->getTitle() .'</h1><figure><img src="'. $url .'/uploads/blogs/'. $blogs->getLogo() .'"></figure></header>';
         return [
             'title' => $blogs->getTitle(),
             'description' => mb_strimwidth(htmlspecialchars(trim(strip_tags($blogs->getText()))), 0, 900, "..."),
-            'link' => $url . 'blogs/'. $blogs->getId() .'/'. $slug,
+            'link' => $url . '/ru/blogs/'. $blogs->getId() .'/'. $slug,
             'category' => 'blog',
             'author' => ''. $blogs->getUser()->getEmail() .' ('. $blogs->getUser()->getNickname() .')',
             'pubDate' => $blogs->getDate()->format('D, d M Y H:i:s'). ' GMT',
+            'content' => $content.$blogs->getText()
         ];
     }
 

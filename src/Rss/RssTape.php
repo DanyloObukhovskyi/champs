@@ -26,6 +26,10 @@ class RssTape extends \DOMDocument
 
         $rssNode->setAttribute('version', '2.0');
         $rssNode->setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
+        $rssNode->setAttribute('xmlns:yandex', 'http://news.yandex.ru');
+        $rssNode->setAttribute('xmlns:media', 'http://search.yahoo.com/mrss/');
+        $rssNode->setAttribute('xmlns:turbo', 'http://turbo.yandex.ru');
+
 
         $channel = $rssNode->appendChild(
             $this->createElement('channel')
@@ -43,14 +47,19 @@ class RssTape extends \DOMDocument
 
     private function setValue($parentNode, $name, $value)
     {
-        if (is_array($value)) {
+        if($name === 'turbo:content'){
             $node = $parentNode->appendChild($this->createElement($name));
-            foreach ($value as $itemIndex => $item) {
-                $this->setValue($node, $itemIndex, $item);
-            }
+            $node->appendChild($this->createCDATASection($value));
         } else {
-            $parentNode->appendChild($this->createElement($name, htmlspecialchars($value)));
-            $parentNode->setAttribute('turbo', 'true');
+            if (is_array($value)) {
+                $node = $parentNode->appendChild($this->createElement($name));
+                foreach ($value as $itemIndex => $item) {
+                    $this->setValue($node, $itemIndex, $item);
+                }
+            } else {
+                $parentNode->appendChild($this->createElement($name, htmlspecialchars($value)));
+                $parentNode->setAttribute('turbo', 'true');
+            }
         }
     }
 

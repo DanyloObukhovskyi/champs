@@ -658,14 +658,14 @@ class NewsController extends AbstractController
 
         /** @var News $newsEntity */
         foreach ($newsCollect as $newsEntity) {
-            $records[] = $this->newsService->decoratorForRssNews($newsEntity, $link. '/ru/');
+            $records[] = $this->newsService->decoratorForRssNews($newsEntity, $link);
         }
 
         $blogsCollect = $this->blogsService->getByFilters((object)$request, 0 , 0, []);
 
         /** @var Blogs $blogsEntity */
         foreach ($blogsCollect as $blogsEntity) {
-            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link. '/ru/');
+            $records[] = $this->blogsService->decoratorForRssNews($blogsEntity, $link);
         }
 
         foreach ($records as $record) {
@@ -674,7 +674,8 @@ class NewsController extends AbstractController
                 'link' => $record['link'],
                 'description' => $record['description'],
                 'author' => $record['author'],
-                'category' => $record['category']
+                'category' => $record['category'],
+                'turbo:content' => $record['content']
             ];
             $rssTape->addItem($item);
         }
@@ -683,7 +684,13 @@ class NewsController extends AbstractController
          * Add Content-Type, for xml document.
          */
         header("Content-Type: text/xml");
-
+        header('Content-Description: File Transfer');
+        header("Content-Disposition: attachment; filename=XMLFile.xml");
+        header("Content-Type: application/xml; charset=utf-8");
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
         echo $rssTape->output();
 
         exit;

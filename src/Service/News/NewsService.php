@@ -468,13 +468,15 @@ class NewsService extends EntityService
         $date = $news->getDate()->format('Y') === date('Y') ? $news->getDate()->format('d m') : $news->getDate()->format('d m Y');
         $slug = $this->getSlug($type, $game, $news->getTitle(), $date, $news->getUrl());
 
+        $content = '<header><h1>'. $news->getTitle() .'</h1><figure><img src="'. $url .'/images/temp/news/'. $news->getLogo() .'"></figure></header>';
         return [
             'title' => $news->getTitle(),
             'description' => mb_strimwidth(htmlspecialchars(trim(strip_tags($news->getText()))), 0, 900, "..."),
-            'link' => $url . 'novosti/'. $news->getId() .'/'. $slug,
+            'link' => $url . '/ru/novosti/'. $news->getId() .'/'. $slug,
             'category' => $type,
             'author' => 'editor@champs.pro (Champs.pro)',
             'pubDate' => $news->getDate()->format('D, d M Y H:i:s'). ' GMT',
+            'content' => $content.$news->getText()
         ];
     }
 
