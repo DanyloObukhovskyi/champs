@@ -388,7 +388,7 @@ class BlogService extends EntityService
             'category' => 'blog',
             'author' => ''. $blogs->getUser()->getEmail() .' ('. $blogs->getUser()->getNickname() .')',
             'pubDate' => $blogs->getDate()->format('D, d M Y H:i:s'). ' GMT',
-            'content' => mb_strimwidth(htmlspecialchars($content.$blogs->getText()), 0, 900, "...")
+            'content' => mb_strimwidth(htmlspecialchars($content.$blogs->getText()), 0, 9000, "...")
         ];
     }
 

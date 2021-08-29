@@ -476,7 +476,7 @@ class NewsService extends EntityService
             'category' => $type,
             'author' => 'editor@champs.pro (Champs.pro)',
             'pubDate' => $news->getDate()->format('D, d M Y H:i:s'). ' GMT',
-            'content' => mb_strimwidth(htmlspecialchars($content.$news->getText()), 0, 900, "...")
+            'content' => mb_strimwidth(htmlspecialchars($content.$news->getText()), 0, 9000, "...")
         ];
     }
 
