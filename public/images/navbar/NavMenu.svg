@@ -1,0 +1,16 @@
+<svg id="Кнопка" xmlns="http://www.w3.org/2000/svg" width="25" height="22" viewBox="0 0 25 22">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #ff6d1d;
+      }
+    </style>
+  </defs>
+  <rect id="Прямоугольник_1" data-name="Прямоугольник 1" class="cls-1" width="25" height="2"/>
+  <rect id="Прямоугольник_1_копия" data-name="Прямоугольник 1 копия" class="cls-2" y="10" width="18" height="2"/>
+  <rect id="Прямоугольник_1_копия_2" data-name="Прямоугольник 1 копия 2" class="cls-1" y="20" width="25" height="2"/>
+</svg>

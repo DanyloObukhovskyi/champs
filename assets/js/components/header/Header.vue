@@ -1,13 +1,13 @@
 <template>
     <header>
-        <nav-bar
+        <NavBarMobile
                 :social="social"
                 :is-page-start="isPageStart"
                 @show="showLoginModal"
                 :router="router"
                 :is-trainer="isTrainer"
                 :is-authorize="isAuthorize">
-        </nav-bar>
+        </NavBarMobile>
 <!--        <sub-nav-bar @setgame="setGame" :games="games">-->
 <!--        </sub-nav-bar>-->
         <sub-nav-bar @setgame="setGame" :games="[]">
@@ -27,6 +27,7 @@
     import SubNavbar from "./SubNavbar";
     import LoginModal from "../LoginModal";
     import Service from "../../services/Service";
+    import NavBarMobile from "./NavBarMobile";
 
     Vue.component('nav-bar', NavBar);
     Vue.component('sub-nav-bar', SubNavbar);
@@ -35,7 +36,8 @@
     const service = new Service();
     export default {
         name: "Header",
-        props: [
+      components: {NavBarMobile},
+      props: [
             'social',
             'isTrainer',
             'isAuthorize',
