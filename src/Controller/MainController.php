@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Service\EntityService;
+use App\Service\Game\GameService;
 use App\Service\HLTVService;
 use App\Service\LoggerService;
 use App\Entity\{Game, News, Result, Match, Teachers, User};
@@ -72,6 +74,10 @@ class MainController extends DefController
      * @var UserService
      */
     public $userService;
+    /**
+     * @var GameService
+     */
+    public $gameService;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -89,6 +95,7 @@ class MainController extends DefController
         $this->seoService = new SeoService($entityManager);
 
         $this->userService = new UserService($entityManager);
+        $this->gameService = new GameService($entityManager);
     }
 
     /**

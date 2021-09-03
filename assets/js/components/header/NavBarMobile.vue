@@ -1,12 +1,16 @@
 <template>
-  <nav class="header_nav fixed-top pl-8 pr-8" id="header">
-    <div class="container nav p-0">
-      <a>
-        <img @click="toggle_up" class="dropbtn" src="/images/navbar/NavMenu.svg">
-      </a>
-      <a class="">
-        <img src="/images/logo.svg" />
-      </a>
+  <nav class="header_nav" id="header">
+    <div class="container d-flex justify-content-between nav p-0">
+      <div class="menuLabel">
+        <a>
+          <img @click="toggle_up" class="dropbtn" src="/images/navbar/NavMenu.svg">
+        </a>
+      </div>
+      <div class="logo">
+        <a :href="home" :class="{active : router == 'home'}">
+          <img src="/images/logo.svg" />
+        </a>
+      </div>
       <div id="myDropdown" class="dropdown-content">
         <a class="exit_button">&Chi;</a>
         <div class="pb-2">
@@ -28,13 +32,16 @@
           <a :href="marketplacePage" class="pointer" :class="{active : router === 'marketplace'}">
             Обучение
           </a>
+          <a :href="blogPage"  class="pointer" :class="{active : router == 'blog'}">
+            Блоги
+          </a>
         </div>
         <div class="lower-dropdown pt-2">
           <a>
-            Часовой пояс
+            <small>Часовой пояс</small>
           </a>
           <a>
-            Помощь игроку
+            <small>Помощь игроку</small>
           </a>
         </div>
       </div>
@@ -76,7 +83,7 @@
             {{user !== null ? user.nickname: 'КАБИНЕТ'}}
             <small v-if="user !== null && user.isTrainer">Тренер</small>
           </a>
-          <span style="padding-right: 2vw" v-else
+          <span v-else
                 @click="$emit('show')">
                           ВОЙТИ
                     </span>
@@ -203,29 +210,30 @@ export default {
   justify-content: space-between;
   align-items: center;
   background: rgb(51, 56, 61);
-  padding-left: 1vw;
-  padding-right: 1vw;
+  position: relative;
+  height: 54%
 }
 .nav {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width: calc(100% - 20px);
 }
 .login-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: calc(100% - (100% - 78px));
+  background: linear-gradient(270deg, rgba(45, 49, 53, 0) 0%, rgba(64, 68, 74, 1) 79%);
 }
 .login {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: rgb(45, 49, 53);
-  background: linear-gradient(270deg, rgba(45, 49, 53, 0) 0%, rgba(64, 68, 74, 1) 79%);
-  font-size: 4vw;
-  padding-left: 2vw;
+  width: 80%;
+  padding-left: 5%;
 }
 .gradient {
   background: #ff6f1f;
@@ -255,15 +263,15 @@ export default {
   color: white;
 }
 .arrow-right {
-  font-size: 10px;
-  width: 5vw;
-  height: 5vw;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   display: flex;
   background-color: #ff6d1d;
   border-radius: 50%;
+  width: 20%;
+  height: 4vw;
+  max-height: 16px;
+  font-size: 50%;
 }
 .dropdown {
   position: relative;
@@ -273,30 +281,39 @@ export default {
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 38px;
-  right: 109px;
+  top: 115%;
+  right: 33%;
   background-color: rgb(66, 61, 61);;
-  min-width: 160px;
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  width: 70vw;
+  z-index: 1029;
+  width: 70%;
 }
-
 .dropdown-content a {
   color: white;
-  padding: 12px 16px;
+  padding: 4%;
   text-decoration: none;
   display: block;
 }
 .lower-dropdown {
-  font-size: 3vw;
+  text-decoration: none;
   background: rgb(51, 56, 61);
+  cursor: pointer;
 }
 .exit_button {
   text-align: right;
+  position: absolute;
+  right: 0;
 }
 .dropdown a:hover {background-color: #ddd;}
 
-.show {display: block;}
+.show {
+  display: block;
+}
+.menuLabel {
+  width: calc(100% - (100% - 25px));
+}
+.logo {
+  width: calc(100% - (100% - 102px));
+}
 </style>

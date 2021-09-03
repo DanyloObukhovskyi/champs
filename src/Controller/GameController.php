@@ -62,4 +62,12 @@ class GameController extends AbstractController
 
         return $this->json($banners);
     }
+    /**
+     * @Route("/gamesListForNavBar", name="games_for_navBar")
+     */
+    public function gamesList() {
+        $games = $this->gameService->getForBlog();
+        $allGames = $this->gameService->getAll();
+        return $this->json(['games' => $games, 'allGames' =>$allGames]);
+    }
 }

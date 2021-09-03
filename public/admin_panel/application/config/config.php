@@ -27,7 +27,7 @@ $config['base_url'] = 'http://champs.admin/';
                        //https://172.104.237.6/ru/admin_panel/
 
 if(ENVIRONMENT == 'production'){
-    $config['main_url'] = 'http://champs.admin/';
+    $config['main_url'] = 'http://champs/';
 } else{
     $config['main_url'] = 'http://champs/';
 }

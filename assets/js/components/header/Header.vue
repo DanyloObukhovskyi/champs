@@ -1,5 +1,6 @@
 <template>
     <header>
+      <div style="position: fixed; width: 100%; height: calc(100% - (100% - 88px) ); z-index: 1030">
         <NavBarMobile
                 :social="social"
                 :is-page-start="isPageStart"
@@ -10,8 +11,10 @@
         </NavBarMobile>
 <!--        <sub-nav-bar @setgame="setGame" :games="games">-->
 <!--        </sub-nav-bar>-->
-        <sub-nav-bar @setgame="setGame" :games="[]">
-        </sub-nav-bar>
+        <SubNavbarMobile @setgame="setGame" :games="games"></SubNavbarMobile>
+      </div>
+<!--        <sub-nav-bar @setgame="setGame" :games="[]">-->
+<!--        </sub-nav-bar>-->
         <login-modal
                 :token="token"
                 :show-first="router === 'mvp' || token ? 'registration': 'login'"
@@ -28,6 +31,7 @@
     import LoginModal from "../LoginModal";
     import Service from "../../services/Service";
     import NavBarMobile from "./NavBarMobile";
+    import SubNavbarMobile from "./SubNavbarMobile";
 
     Vue.component('nav-bar', NavBar);
     Vue.component('sub-nav-bar', SubNavbar);
@@ -36,7 +40,7 @@
     const service = new Service();
     export default {
         name: "Header",
-      components: {NavBarMobile},
+      components: {SubNavbarMobile, NavBarMobile},
       props: [
             'social',
             'isTrainer',

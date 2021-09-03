@@ -1,66 +1,66 @@
 <template>
     <div>
-        <div class="ml-8 mr-8 p-0">
-            <div class="d-flex p-0 mt-4">
-                <div class="col-12 pr-0">
-                    <big-home-slider></big-home-slider>
+        <div class="">
+            <div class="">
+                <div class="">
+                  <BigHomeSliderMobile></BigHomeSliderMobile>
                 </div>
             </div>
         </div>
-        <div class="video-slider-container">
-            <div class="ml-8 mr-8 p-0">
-                <video-slider></video-slider>
-            </div>
-        </div>
-        <div class="video-slider-container">
-            <div class="ml-8 mr-8 p-0">
-                <top-news></top-news>
-            </div>
-        </div>
-        <div class="news-wrapper">
-            <div class="ml-8 mr-8 p-0 d-flex">
-                <div class="left">
-                    <template v-if="filters.tags.length > 0">
-                        <div class="tags">
-                            <div class="d-flex title">
-                                ТЕГИ
-                            </div>
-                            <button
-                                    @click="removeTag(tag)"
-                                    class="tag"
-                                    v-for="tag in filters.tags">
-                                {{tag}}
-                                <i class="fas fa-times ml-1"></i>
-                            </button>
-                        </div>
-                    </template>
-                    <lamp-header title="Горячие новости"/>
-                    <div class="news" :style="btnStyles">
-                        <hot-news :news="hotNews"/>
-                    </div>
-                </div>
-                <div class="right">
-                    <div class="tags">
-                        <a class="tag" v-for="tag in popularTags" @click="addTag(tag)">
-                            {{ tag }}
-                        </a>
-                    </div>
-                    <div class="news-row d-flex" v-for="(news, i) in newsSorted">
-                        <news-row
-                                v-for="(item, y) in news"
-                                :key="y"
-                                :news="item"
-                                @addTag="addTag"
-                                :class-name="getClass(i, y)"
-                                @setBookmark="() => item.bookmark = !item.bookmark">
-                        </news-row>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <loader v-show="load"></loader>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        <div class="video-slider-container">-->
+<!--            <div class="ml-8 mr-8 p-0">-->
+<!--                <video-slider></video-slider>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="video-slider-container">-->
+<!--            <div class="ml-8 mr-8 p-0">-->
+<!--                <top-news></top-news>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="news-wrapper">-->
+<!--            <div class="ml-8 mr-8 p-0 d-flex">-->
+<!--                <div class="left">-->
+<!--                    <template v-if="filters.tags.length > 0">-->
+<!--                        <div class="tags">-->
+<!--                            <div class="d-flex title">-->
+<!--                                ТЕГИ-->
+<!--                            </div>-->
+<!--                            <button-->
+<!--                                    @click="removeTag(tag)"-->
+<!--                                    class="tag"-->
+<!--                                    v-for="tag in filters.tags">-->
+<!--                                {{tag}}-->
+<!--                                <i class="fas fa-times ml-1"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </template>-->
+<!--                    <lamp-header title="Горячие новости"/>-->
+<!--                    <div class="news" :style="btnStyles">-->
+<!--                        <hot-news :news="hotNews"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="right">-->
+<!--                    <div class="tags">-->
+<!--                        <a class="tag" v-for="tag in popularTags" @click="addTag(tag)">-->
+<!--                            {{ tag }}-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="news-row d-flex" v-for="(news, i) in newsSorted">-->
+<!--                        <news-row-->
+<!--                                v-for="(item, y) in news"-->
+<!--                                :key="y"-->
+<!--                                :news="item"-->
+<!--                                @addTag="addTag"-->
+<!--                                :class-name="getClass(i, y)"-->
+<!--                                @setBookmark="() => item.bookmark = !item.bookmark">-->
+<!--                        </news-row>-->
+<!--                    </div>-->
+<!--                    <div class="d-flex justify-content-center">-->
+<!--                        <loader v-show="load"></loader>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </template>
 
@@ -74,10 +74,12 @@ import LampHeader from "../components/helpers/LampHeader";
 import NewsRow from "../components/news/NewsRow";
 import Loader from "../components/helpers/Loader";
 import NewsService from "../services/NewsService";
+import BigHomeSliderMobile from "../components/sliders/BigHomeSliderMobile";
 
 export default {
     name: "HomePage",
     components: {
+      BigHomeSliderMobile,
         Loader,
         NewsRow,
         LampHeader,

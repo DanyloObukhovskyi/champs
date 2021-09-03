@@ -38,6 +38,9 @@ class Service {
     getGames = () => {
         return this.send('games')
     }
+    getGamesForNavBar = () => {
+        return this.send('gamesListForNavBar')
+    }
 }
 
 export default Service;
