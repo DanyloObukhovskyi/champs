@@ -9,7 +9,7 @@ export default {
             loadUser: false,
             game: null,
             games: [],
-            showLogin: false,
+            showLogin: false
         }
     },
     mutations: {
@@ -45,6 +45,9 @@ export default {
         },
         loadUser(state) {
             return state.loadUser;
+        },
+        isMobile(state){
+            return screen.width <= 600;
         }
     },
     actions: {

@@ -24,9 +24,20 @@
         <div style="display: flex;
         flex-direction: row;
         justify-content: center;
-        align-items: center; width: 1% !important;">
-            <img src="/uploads/games/e9bbebe96dceb23726523d.png">
+        align-items: center; width: 1% !important;" @click="toggle_up_game" >
+            <img src="/uploads/games/e9bbebe96dceb23726523d.png" class="dropbtn-game">
         </div>
+      </div>
+      <div id="gameMenu" class="dropdown-content-games">
+          <div class="pb-2" style="background: #1a1d21;">
+              <div class="page" v-for="game in allGames">
+                  <a :href="'/ru/' + game.code">
+                      <img style="width: 5vw;
+    height: auto;" :src="`/uploads/games/${game.sidebarIcon}`">
+                      {{ game.name }}
+                  </a>
+              </div>
+          </div>
       </div>
   </nav>
 </template>
@@ -90,10 +101,27 @@ export default {
       }
       this.theme = localStorage.getItem('theme');
     },
+    toggle_up_game: function () {
+      document.getElementById("gameMenu").classList.toggle("show");
+    },
+    toggle_down_game: function (event) {
+      if (!event.target.matches('.dropbtn-game')) {
+
+          var dropdowns = document.getElementsByClassName("dropdown-content-games");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                  openDropdown.classList.remove('show');
+              }
+          }
+      }
+    },
   },
   mounted() {
     this.setDefaultTheme()
     this.getGamesForNavBar();
+    document.addEventListener('click', this.toggle_down_game)
   }
 }
 </script>
@@ -115,4 +143,32 @@ export default {
   width: 24%
 }
 
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content-games {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 33%;
+    background-color: rgb(66, 61, 61);
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 20%);
+    z-index: 1029;
+    width: 70%;
+}
+.dropdown-content-games a {
+    color: white;
+    padding: 4%;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {
+    display: block;
+}
 </style>

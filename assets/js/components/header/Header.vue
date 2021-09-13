@@ -1,23 +1,37 @@
 <template>
     <header>
-      <div style="position: fixed; width: 100%; height: calc(100% - (100% - 88px) ); z-index: 1030">
-        <NavBarMobile
-                :social="social"
-                :is-page-start="isPageStart"
-                @show="showLoginModal"
-                :router="router"
-                :is-trainer="isTrainer"
-                :is-authorize="isAuthorize">
-        </NavBarMobile>
-<!--        <sub-nav-bar @setgame="setGame" :games="games">-->
-<!--        </sub-nav-bar>-->
-        <SubNavbarMobile @setgame="setGame" :games="games"></SubNavbarMobile>
-      </div>
+        <div v-if="isMobile" style="position: fixed; width: 100%; height: calc(100% - (100% - 88px) ); z-index: 1030">
+            <NavBarMobile
+                    :social="social"
+                    :is-page-start="isPageStart"
+                    @show="showLoginModal"
+                    :router="router"
+                    :is-trainer="isTrainer"
+                    :is-authorize="isAuthorize">
+            </NavBarMobile>
+
+            <SubNavbarMobile @setgame="setGame" :games="games"></SubNavbarMobile>
+        </div>
 <!--        <sub-nav-bar @setgame="setGame" :games="[]">-->
 <!--        </sub-nav-bar>-->
+        <div v-else>
+            <nav-bar
+                    :social="social"
+                    :is-page-start="isPageStart"
+                    @show="showLoginModal"
+                    :router="router"
+                    :is-trainer="isTrainer"
+                    :is-authorize="isAuthorize">
+            </nav-bar>
+
+            <sub-nav-bar @setgame="setGame" :games="games">
+            </sub-nav-bar>
+        </div>
+
         <login-modal
                 :token="token"
                 :show-first="router === 'mvp' || token ? 'registration': 'login'"
+                :isMobile="isMobile"
                 :show="showLogin">
         </login-modal>
     </header>
@@ -58,7 +72,8 @@
                 'games',
                 'game',
                 'user',
-                'showLogin'
+                'showLogin',
+                'isMobile'
             ])
         },
         methods: {

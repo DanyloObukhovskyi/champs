@@ -1,0 +1,272 @@
+<template>
+    <div>
+        <div class="video-slider video-slider-home">
+            <div class="slider-body">
+                <slick-carousel v-bind="settings" v-if="videos.length > 0">
+                    <div class="carousel-item" :class="{active: index === 0}" v-for="(video, index) in videos">
+                        <div class="preview" style="overflow: hidden; max-height: fit-content; position: relative;">
+                            <LazyYoutubeVideo :src="'https://www.youtube.com/embed/' + video.videoId"
+                                              preview-image-size="sddefault"/>
+                        </div>
+                        <div class="title">
+                            {{video.title}}
+                        </div>
+                        <div class="date d-flex align-items-center">
+                            <a href="https://www.youtube.com/channel/UCgVGBU8rdEV97x8XVQY_aHA?"
+                               class="d-flex align-items-center">
+                                <img class="youtube" src="/images/news/youtube.svg" alt="">
+                                Chanel Champs
+                            </a>
+                            {{video.date}}
+                        </div>
+                    </div>
+                </slick-carousel>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import VueSlickCarousel from 'vue-slick-carousel'
+    import LampHeader from "../helpers/LampHeader";
+    import LampHeaderMobile from "../helpers/LampHeaderMobile";
+    import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+    import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+    import CabinetService from "../../services/CabinetService";
+    import YouTubeService from "../../services/YouTubeService";
+    import LazyYoutubeVideo from 'vue-lazy-youtube-video'
+
+    export default {
+        name: "VideoSliderMobile",
+        data() {
+            return {
+                videos: [],
+                settings: {
+                    centerMode: false,
+                    focusOnSelect: true,
+                    infinite: false,
+                    slidesToShow: 1,
+                    speed: 500,
+                    dots: true,
+                },
+                channelId: null
+            }
+        },
+        components: {
+            'slick-carousel': VueSlickCarousel,
+            'lamp-header': LampHeader,
+            LazyYoutubeVideo,
+            LampHeaderMobile,
+        },
+        methods: {
+            getVideoNews() {
+                CabinetService.getVideos()
+                    .then(videos => {
+                        this.videos = videos;
+                    })
+            },
+            getVideoLogo(videoId) {
+                return `//img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            },
+            getChannelId() {
+                YouTubeService.getChannelId()
+                    .then(channelId => {
+                        this.channelId = channelId;
+                    })
+            }
+        },
+        mounted() {
+            this.getVideoNews();
+            this.getChannelId();
+        }
+    }
+</script>
+
+<style scoped>
+
+    .video-slider {
+        margin-top: 2vw;
+    }
+
+    .video-slider .action {
+        margin-right: 1vw;
+        font-size: .8vw;
+        color: #ff6d1d;
+    }
+
+    .video-slider .slider-body {
+        margin-top: 1.5vw;
+    }
+
+    .video-slider .slider-body .slick-slide img:not(.youtube) {
+        width: 25vw;
+    }
+
+    .video-slider .slider-body .carousel-item .preview {
+        overflow: hidden;
+        max-height: 100%;
+        position: relative;
+        max-width: 100%;
+    }
+
+	.video-slider .slider-body .carousel-item .preview iframe {
+		width: 25vw;
+		height: 15vw;
+    }
+
+    .video-slider .slider-body .carousel-item .preview::after {
+        content: "";
+        width: 100%;
+        height: 0.15vw;
+        position: absolute;
+        left: 0;
+        background: linear-gradient(270deg, #ff6d1d -25%, #ffc350 125%);
+        bottom: 0;
+    }
+
+    .video-slider .slider-body .carousel-item .preview img {
+        margin-top: -2.3vw;
+    }
+
+    .video-slider .slider-body .carousel-item div.title {
+        width: 100%;
+        font-size: 3vw;
+    }
+
+    .dark .video-slider .slider-body .carousel-item div.title {
+        color: white;
+    }
+
+    .video-slider .slider-body .carousel-item div.date {
+        color: #898989;
+        font-size: 2.7vw;
+    }
+
+    .video-slider .slider-body .carousel-item div.date a {
+        color: #5c6b79;
+        margin-right: .2vw;
+    }
+
+    .video-slider .slider-body .carousel-item div.date a img {
+        margin-right: .2vw;
+    }
+
+    .video-slider .slider-body .carousel-item div.date {
+        color: #5c6b79;
+    }
+</style>
+
+<style scoped>
+    .video-slider.video-slider-home .slider-body .slick-list {
+        padding: 0px !important;
+    }
+
+    .slick-prev::before {
+        transition: all .2s ease;
+        opacity: 1;
+        font-family: FontAwesome;
+        content: "\f053";
+        color: white;
+        clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%);
+        width: 12vw;
+        height: 18vw;
+        font-size: 4vw;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        background: rgb(254, 121, 36);
+        background: -moz-linear-gradient(90deg, rgba(254, 121, 36, 1) 0%, rgba(255, 179, 71, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(254, 121, 36, 1) 0%, rgba(255, 179, 71, 1) 100%);
+        background: linear-gradient(90deg, rgba(254, 121, 36, 1) 0%, rgba(255, 179, 71, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fe7924", endColorstr="#ffb347", GradientType=1);
+    }
+
+    .slick-prev:hover::before {
+        transition: all .2s ease;
+        opacity: 1;
+        font-family: FontAwesome;
+        content: "\f053";
+        clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%);
+        width: 12vw;
+        height: 18vw;
+        font-size: 4vw;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        color: #ff6d1d;
+        background: white;
+    }
+
+    .slick-next::before {
+        transition: all .2s ease;
+        opacity: 1;
+        font-family: FontAwesome;
+        content: "\f054";
+        color: white;
+        clip-path: polygon(0 0, 100% 30%, 100% 70%, 0% 100%);
+        width: 12vw;
+        height: 18vw;
+        font-size: 4vw;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        background: rgb(255, 179, 71);
+        background: -moz-linear-gradient(90deg, rgba(255, 179, 71, 1) 0%, rgba(254, 121, 36, 1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(255, 179, 71, 1) 0%, rgba(254, 121, 36, 1) 100%);
+        background: linear-gradient(90deg, rgba(255, 179, 71, 1) 0%, rgba(254, 121, 36, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffb347", endColorstr="#fe7924", GradientType=1);
+    }
+
+    .slick-next:hover:before {
+        transition: all .2s ease;
+        opacity: 1;
+        font-family: FontAwesome;
+        content: "\f054";
+        color: #ff6d1d;
+        clip-path: polygon(0 0, 100% 30%, 100% 70%, 0% 100%);
+        width: 12vw;
+        height: 18vw;
+        font-size: 4vw;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        background: white;
+    }
+
+    .slick-prev, .video-slider .slick-next {
+        z-index: 1;
+        top: 30%;
+    }
+
+    .slick-next {
+        margin-right: 12vw;
+    }
+    .slick-prev{
+        left: 0;
+    }
+    .slick-dots {
+        position: initial;
+    }
+    .slick-dots li.slick-active button::before {
+        content: url("/images/videoSliderActive.svg");
+        top: .1vw;
+    }
+
+    .slick-dots li button::before {
+        color: #9a9c9f;
+    }
+
+    .video-slider.video-slider-home .slick-slide[aria-hidden='true']:not(.slick-active) {
+        -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 100%);
+        -webkit-mask-size: 100% 50%;
+        -webkit-mask-position: left top, left bottom;
+    }
+    picture{
+        display: contents;
+    }
+</style>
+<style>
+    .slick-dots {
+        position: initial;
+    }
+</style>

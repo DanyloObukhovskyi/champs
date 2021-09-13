@@ -12,13 +12,16 @@
         </a>
       </div>
       <div id="myDropdown" class="dropdown-content">
-        <a class="exit_button">&Chi;</a>
-        <div class="pb-2">
+        <div class="pb-2" style="background: #1a1d21;">
+          <a class="exit_button">&Chi;</a>
           <a :href="home" class="pointer" :class="{active : router == 'home'}">
             Главная
           </a>
           <a :href="newsPage" class="pointer" :class="{active : router == 'novosti'}">
             Новости
+          </a>
+          <a :href="blogPage"  class="pointer" :class="{active : router == 'blog'}">
+            Блоги
           </a>
           <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">
             Матчи
@@ -32,54 +35,40 @@
           <a :href="marketplacePage" class="pointer" :class="{active : router === 'marketplace'}">
             Обучение
           </a>
-          <a :href="blogPage"  class="pointer" :class="{active : router == 'blog'}">
-            Блоги
-          </a>
         </div>
         <div class="lower-dropdown pt-2">
           <a>
-            <small>Часовой пояс</small>
+            <small>Часовой пояс</small> <small style="float: right">{{ user !== null && user.gmt !== null ? user.gmt : 'GMT+3' }}</small>
           </a>
           <a>
             <small>Помощь игроку</small>
+            <div class="help d-flex" style="float: right">
+            <a style="fill: rgba(0, 0, 0, 0);width: 10.6vw;" href="https://discord.gg/XsYHZXD9" target="_blank">
+              <svg class="discord" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                   aria-hidden="true"
+                   focusable="false"
+                   style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
+                   preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                <path style="fill: white;" d="M12.656 4.906L11.875 5s-3.504.383-6.063 2.438h-.03l-.032.03c-.574.528-.824 1.177-1.219 2.126a30.69 30.69 0 0 0-1.187 3.5C2.602 15.777 2 19.027 2 22v.25l.125.25c.926 1.625 2.57 2.66 4.094 3.375c1.523.715 2.84 1.094 3.75 1.125l.594.031l.312-.531l1.094-1.938c1.16.262 2.496.438 4.031.438c1.535 0 2.871-.176 4.031-.438l1.094 1.938l.313.531l.593-.031c.91-.031 2.227-.41 3.75-1.125c1.524-.715 3.168-1.75 4.094-3.375l.125-.25V22c0-2.973-.602-6.223-1.344-8.906a30.69 30.69 0 0 0-1.187-3.5c-.395-.95-.645-1.598-1.219-2.125l-.031-.032h-.032C23.63 5.383 20.125 5 20.125 5l-.781-.094l-.282.719s-.289.73-.468 1.563A20.095 20.095 0 0 0 16 7c-.535 0-1.46.035-2.594.188c-.18-.833-.469-1.563-.469-1.563zm-1.375 2.282c.043.14.086.261.125.375c-1.293.32-2.672.808-3.937 1.593l1.062 1.688C11.125 9.234 14.851 9 16 9c1.148 0 4.875.234 7.469 1.844l1.062-1.688c-1.265-.785-2.644-1.273-3.937-1.594c.039-.113.082-.234.125-.375c.933.188 2.715.618 4.187 1.782c-.008.004.375.582.719 1.406c.352.848.742 1.977 1.094 3.25c.676 2.441 1.207 5.414 1.25 8.031c-.63.961-1.797 1.828-3.032 2.407a9.744 9.744 0 0 1-2.437.78L22 24c.297-.11.59-.23.844-.344c1.539-.676 2.375-1.406 2.375-1.406l-1.313-1.5s-.562.516-1.875 1.094C20.72 22.422 18.715 23 16 23s-4.719-.578-6.031-1.156c-1.313-.578-1.875-1.094-1.875-1.094l-1.313 1.5s.836.73 2.375 1.406c.254.114.547.235.844.344l-.5.844a9.744 9.744 0 0 1-2.438-.782c-1.234-.578-2.402-1.445-3.03-2.406c.042-2.617.573-5.59 1.25-8.031a28.663 28.663 0 0 1 1.093-3.25c.344-.824.727-1.402.719-1.406c1.472-1.164 3.254-1.594 4.187-1.781zM12.5 14c-.773 0-1.457.441-1.875 1c-.418.559-.625 1.246-.625 2s.207 1.441.625 2c.418.559 1.102 1 1.875 1c.773 0 1.457-.441 1.875-1c.418-.559.625-1.246.625-2s-.207-1.441-.625-2c-.418-.559-1.102-1-1.875-1zm7 0c-.773 0-1.457.441-1.875 1c-.418.559-.625 1.246-.625 2s.207 1.441.625 2c.418.559 1.102 1 1.875 1c.773 0 1.457-.441 1.875-1c.418-.559.625-1.246.625-2s-.207-1.441-.625-2c-.418-.559-1.102-1-1.875-1zm-7 2c.055 0 .125.02.25.188c.125.167.25.46.25.812c0 .352-.125.645-.25.813c-.125.167-.195.187-.25.187c-.055 0-.125-.02-.25-.188A1.401 1.401 0 0 1 12 17c0-.352.125-.645.25-.813c.125-.167.195-.187.25-.187zm7 0c.055 0 .125.02.25.188c.125.167.25.46.25.812c0 .352-.125.645-.25.813c-.125.167-.195.187-.25.187c-.055 0-.125-.02-.25-.188A1.401 1.401 0 0 1 19 17c0-.352.125-.645.25-.813c.125-.167.195-.187.25-.187z"
+                      fill="black"/>
+                <rect x="0" y="0" width="32" height="32"/>
+              </svg>
+            </a>
+            <a href="">
+              <i class="far fa-question-circle zendesk"></i>
+            </a>
+            <a href="mailto:support@champs.pro" target="_blank">
+              <i class="fas fa-envelope letter"></i>
+            </a>
+          </div>
           </a>
         </div>
       </div>
-<!--      <div class="menu pl-0">-->
-<!--        <a :href="home" class="pointer" :class="{active : router == 'home'}">-->
-<!--          Главная-->
-<!--        </a>-->
-<!--        <a :href="newsPage" class="pointer" :class="{active : router == 'novosti'}">-->
-<!--          Новости-->
-<!--        </a>-->
-<!--        <a :href="blogPage"  class="pointer" :class="{active : router == 'blog'}">-->
-<!--          Блоги-->
-<!--        </a>-->
-<!--        <a :href="matchesPage" class="pointer" :class="{active : router == 'matches'}">-->
-<!--          Матчи-->
-<!--        </a>-->
-<!--        <a href="/ru/statistika" class="pointer" :class="{active : router === 'statistics'}">-->
-<!--          Статистика-->
-<!--        </a>-->
-<!--        <a :href="marketplacePage" class="pointer" :class="{active : router === 'marketplace'}">-->
-<!--          <div>-->
-<!--            <small>pro</small>-->
-<!--            Обучение-->
-<!--          </div>-->
-<!--        </a>-->
-<!--        <a :href="digestPage" :class="{active : router === 'digest'}">-->
-<!--          Дайджест турниров-->
-<!--        </a>-->
-<!--        &lt;!&ndash;                <a href="/ru/mvp" class="pointer" :class="{active : router == 'mvp'}">&ndash;&gt;-->
-<!--        &lt;!&ndash;                    MVP&ndash;&gt;-->
-<!--        &lt;!&ndash;                </a>&ndash;&gt;-->
-<!--      </div>-->
-      <!--            <social :social="social"></social>-->
       <div class="login-wrapper">
         <div class="login">
-          <a :href="`/${lang}/${isTrainer ? 'trainer': 'user'}/cabinet`"
+          <a @click="toggle_up_login_menu"
              v-if="isAuthorize"
-             class="ln text-light nickname">
+             class="ln text-light nickname drop_btn_login_menu">
             {{user !== null ? user.nickname: 'КАБИНЕТ'}}
             <small v-if="user !== null && user.isTrainer">Тренер</small>
           </a>
@@ -103,6 +92,24 @@
           <i v-else class="fas fa-arrow-right" @click="$emit('show')"></i>
         </div>
       </div>
+      <div v-if="isAuthorize" id="cabinetMenu" class="dropdown-content-login">
+        <div  class="lower-dropdown-login pt-2">
+          <div class="page" v-for="page in pages">
+            <a :href="`/${lang}/${isTrainer ? 'trainer': 'user'}/cabinet` + '/'+ page.code">
+              <img :src="'/images/cabinet/' + page.icon">
+              <img :src="'/images/cabinet/' + page.iconActive" class="active">
+              {{ page.name }}
+            </a>
+          </div>
+          <div class="page">
+            <a :href="logoutUrl">
+              <img src="/images/cabinet/logout.png">
+              <img src="/images/cabinet/logoutActive.png" class="active">
+              Выйти
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
@@ -118,6 +125,92 @@ import newsService from "../../services/NewsService";
 import blogService from "../../services/BlogService";
 import MarketplaceService from "../../services/MarketplaceService";
 import Service from "../../services/Service";
+import CabinetService from "../../services/CabinetService";
+
+
+const USER_PAGES = [
+  {
+    name: 'Личный кабинет',
+    code: '',
+    icon: 'cabinetIcon.png',
+    iconActive: 'cabinetIconActive.png',
+  },
+  {
+    name: 'Обучение',
+    code: 'training',
+    icon: 'trainingIcon.png',
+    iconActive: 'trainingIconActive.png',
+  },
+  {
+    name: 'Турниры Champs',
+    code: 'tournaments',
+    icon: 'tournamentsIcon.png',
+    iconActive: 'tournamentsIconActive.png',
+  },
+  {
+    name: 'Блог',
+    code: 'blog',
+    icon: 'tournamentsIcon.png',
+    iconActive: 'tournamentsIconActive.png',
+  },
+  {
+    name: 'Новости',
+    code: 'news',
+    icon: 'newsIcon.png',
+    iconActive: 'newsIconActive.png',
+  },
+  {
+    name: 'Видео',
+    code: 'videos',
+    icon: 'videosIcon.png',
+    iconActive: 'videosIconActive.png',
+  },
+  {
+    name: 'Настройки',
+    code: 'settings',
+    icon: 'settingsIcon.png',
+    iconActive: 'settingsIconActive.png',
+  }
+];
+
+const TRAINING_PAGES = [
+  {
+    name: 'Личный кабинет',
+    code: '',
+    icon: 'cabinetIcon.png',
+    iconActive: 'cabinetIconActive.png',
+  },
+  {
+    name: 'Расписание',
+    code: 'timetable',
+    icon: 'timetable.png',
+    iconActive: 'trainingIconActive.png',
+  },
+  {
+    name: 'Блог',
+    code: 'blog',
+    icon: 'tournamentsIcon.png',
+    iconActive: 'tournamentsIconActive.png',
+  },
+  {
+    name: 'Календарь',
+    code: 'calendar',
+    icon: 'calendar.png',
+    iconActive: 'calendarIconActive.png',
+  },
+  {
+    name: 'Кошелек',
+    code: 'wallet',
+    icon: 'wallet.png',
+    iconActive: 'walletIconActive.png',
+  },
+  {
+    name: 'Настройки',
+    code: 'settings',
+    icon: 'settingsIcon.png',
+    iconActive: 'settingsIconActive.png',
+  }
+];
 
 export default {
   name: "NavBarMobile",
@@ -129,6 +222,8 @@ export default {
   ],
   data() {
     return {
+      userPages: USER_PAGES,
+      trainingPages: TRAINING_PAGES,
       theme: null
     }
   },
@@ -146,6 +241,13 @@ export default {
         lang = document.documentElement.lang
       }
       return lang;
+    },
+    pages() {
+      if (this.user.isTrainer) {
+        return this.trainingPages;
+      } else {
+        return this.userPages;
+      }
     },
     isPageStart() {
       return this.$parent.isPageStart;
@@ -178,10 +280,16 @@ export default {
         'background-image': `url('${'/uploads/avatars/' + this.user.photo}'), url('/images/noLogoAvatar.png')`
       }
     },
+    logoutUrl() {
+      return CabinetService.logoutUrl;
+    },
   },
   methods: {
     toggle_up: function () {
       document.getElementById("myDropdown").classList.toggle("show");
+    },
+    toggle_up_login_menu: function () {
+      document.getElementById("cabinetMenu").classList.toggle("show");
     },
     toggle_down: function (event) {
       if (!event.target.matches('.dropbtn')) {
@@ -195,15 +303,29 @@ export default {
           }
         }
       }
+    },
+    toggle_down_login_menu: function (event) {
+      if (!event.target.matches('.drop_btn_login_menu')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content-login");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
     }
   },
   mounted() {
     document.addEventListener('click', this.toggle_down)
+    document.addEventListener('click', this.toggle_down_login_menu)
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header_nav {
   display: flex;
   flex-direction: row;
@@ -295,14 +417,40 @@ export default {
   text-decoration: none;
   display: block;
 }
+
+.dropdown-content-login {
+  display: none;
+  position: absolute;
+  top: 115%;
+  left: 33%;
+  background-color: rgb(66, 61, 61);;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1029;
+  width: 70%;
+}
+.dropdown-content-login a {
+  color: white;
+  padding: 4%;
+  text-decoration: none;
+  display: block;
+}
+
 .lower-dropdown {
   text-decoration: none;
   background: rgb(51, 56, 61);
   cursor: pointer;
 }
+
+.lower-dropdown-login {
+  text-decoration: none;
+  background: #1a1d21;
+  cursor: pointer;
+}
+
 .exit_button {
   text-align: right;
-  position: absolute;
+  position: inherit;
   right: 0;
 }
 .dropdown a:hover {background-color: #ddd;}
@@ -310,10 +458,64 @@ export default {
 .show {
   display: block;
 }
+
 .menuLabel {
   width: calc(100% - (100% - 25px));
 }
 .logo {
   width: calc(100% - (100% - 102px));
+}
+
+.page {
+  margin-bottom: .8vw;
+  font-size: 4.8vw;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding-top: 0;
+
+  a {
+    color: #9d9fa0;
+    width: 100%;
+    padding: 2.2vw;
+    border-radius: 0 .5vw .5vw 0;
+    transition: all .2s ease-in-out;
+
+    img {
+      margin-left: 1.2vw;
+      margin-right: 1vw;
+      width: 5vw;
+
+      &.active {
+         display: none;
+      }
+    }
+
+    &.router-link-exact-active {
+       background-color: #ff6d1d;
+       color: white;
+
+      img {
+        display: none;
+
+        &.active {
+           display: unset;
+         }
+      }
+    }
+
+    &:hover {
+       background-color: #ff6d1d;
+       color: white;
+
+      img {
+        display: none;
+
+        &.active {
+           display: unset;
+         }
+      }
+    }
+  }
 }
 </style>

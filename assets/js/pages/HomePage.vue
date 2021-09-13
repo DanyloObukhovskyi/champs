@@ -1,66 +1,95 @@
 <template>
-    <div>
-        <div class="">
-            <div class="">
-                <div class="">
-                  <BigHomeSliderMobile></BigHomeSliderMobile>
+    <div v-if="!isMobile">
+        <div class="ml-8 mr-8 p-0">
+            <div class="d-flex p-0 mt-4">
+                <div class="col-12 pr-0">
+                    <big-home-slider></big-home-slider>
                 </div>
             </div>
         </div>
-<!--        <div class="video-slider-container">-->
-<!--            <div class="ml-8 mr-8 p-0">-->
-<!--                <video-slider></video-slider>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="video-slider-container">-->
-<!--            <div class="ml-8 mr-8 p-0">-->
-<!--                <top-news></top-news>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="news-wrapper">-->
-<!--            <div class="ml-8 mr-8 p-0 d-flex">-->
-<!--                <div class="left">-->
-<!--                    <template v-if="filters.tags.length > 0">-->
-<!--                        <div class="tags">-->
-<!--                            <div class="d-flex title">-->
-<!--                                ТЕГИ-->
-<!--                            </div>-->
-<!--                            <button-->
-<!--                                    @click="removeTag(tag)"-->
-<!--                                    class="tag"-->
-<!--                                    v-for="tag in filters.tags">-->
-<!--                                {{tag}}-->
-<!--                                <i class="fas fa-times ml-1"></i>-->
-<!--                            </button>-->
-<!--                        </div>-->
-<!--                    </template>-->
-<!--                    <lamp-header title="Горячие новости"/>-->
-<!--                    <div class="news" :style="btnStyles">-->
-<!--                        <hot-news :news="hotNews"/>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="right">-->
-<!--                    <div class="tags">-->
-<!--                        <a class="tag" v-for="tag in popularTags" @click="addTag(tag)">-->
-<!--                            {{ tag }}-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                    <div class="news-row d-flex" v-for="(news, i) in newsSorted">-->
-<!--                        <news-row-->
-<!--                                v-for="(item, y) in news"-->
-<!--                                :key="y"-->
-<!--                                :news="item"-->
-<!--                                @addTag="addTag"-->
-<!--                                :class-name="getClass(i, y)"-->
-<!--                                @setBookmark="() => item.bookmark = !item.bookmark">-->
-<!--                        </news-row>-->
-<!--                    </div>-->
-<!--                    <div class="d-flex justify-content-center">-->
-<!--                        <loader v-show="load"></loader>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="video-slider-container">
+            <div class="ml-8 mr-8 p-0">
+                <video-slider></video-slider>
+            </div>
+        </div>
+        <div class="video-slider-container">
+            <div class="ml-8 mr-8 p-0">
+                <top-news></top-news>
+            </div>
+        </div>
+        <div class="news-wrapper">
+            <div class="ml-8 mr-8 p-0 d-flex">
+                <div class="left">
+                    <template v-if="filters.tags.length > 0">
+                        <div class="tags">
+                            <div class="d-flex title">
+                                ТЕГИ
+                            </div>
+                            <button
+                                    @click="removeTag(tag)"
+                                    class="tag"
+                                    v-for="tag in filters.tags">
+                                {{tag}}
+                                <i class="fas fa-times ml-1"></i>
+                            </button>
+                        </div>
+                    </template>
+                    <lamp-header title="Горячие новости"/>
+                    <div class="news" :style="btnStyles">
+                        <hot-news :news="hotNews"/>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="tags">
+                        <a class="tag" v-for="tag in popularTags" @click="addTag(tag)">
+                            {{ tag }}
+                        </a>
+                    </div>
+                    <div class="news-row d-flex" v-for="(news, i) in newsSorted">
+                        <news-row
+                                v-for="(item, y) in news"
+                                :key="y"
+                                :news="item"
+                                @addTag="addTag"
+                                :class-name="getClass(i, y)"
+                                @setBookmark="() => item.bookmark = !item.bookmark">
+                        </news-row>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <loader v-show="load"></loader>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <div class="home-block" style="margin-top: 16%;">
+            <div class="">
+                <div class="slider-block">
+                    <BigHomeSliderMobile></BigHomeSliderMobile>
+                </div>
+                <div class="video-slider-block">
+                    <lamp-header-mobile title="Видео"></lamp-header-mobile>
+                    <div class="video-slider-container p-0">
+                        <video-slider-mobile></video-slider-mobile>
+                    </div>
+                </div>
+                <div class="news-block">
+                    <lamp-header-mobile title="Новости"></lamp-header-mobile>
+                    <news-filters-mobile :filters="filters" @reload="reload" />
+                    <div class="news-row d-flex" v-for="(news, i) in newsSortedMobile">
+                        <news-row-mobile
+                                v-for="(item, y) in news"
+                                :key="y"
+                                :news="item"
+                                @addTag="addTag"
+                                :class-name="getClassMobile(i, y)"
+                                @setBookmark="() => item.bookmark = !item.bookmark">
+                        </news-row-mobile>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -71,23 +100,32 @@ import TopNews from "../components/news/TopNews";
 import HotNews from "../components/news/HotNews";
 import Header from "../components/header/Header";
 import LampHeader from "../components/helpers/LampHeader";
+import LampHeaderMobile from "../components/helpers/LampHeaderMobile";
 import NewsRow from "../components/news/NewsRow";
+import NewsRowMobile from "../components/news/NewsRowMobile";
 import Loader from "../components/helpers/Loader";
 import NewsService from "../services/NewsService";
+import NewsFiltersMobile from "../components/news/NewsFiltersMobile";
 import BigHomeSliderMobile from "../components/sliders/BigHomeSliderMobile";
+import VideoSliderMobile from "../components/sliders/VideoSliderMobile";
+import {mapGetters} from "vuex";
 
 export default {
     name: "HomePage",
     components: {
-      BigHomeSliderMobile,
+        NewsFiltersMobile,
+        VideoSliderMobile,
+        BigHomeSliderMobile,
         Loader,
         NewsRow,
         LampHeader,
+        LampHeaderMobile,
         Header,
         HotNews,
         TopNews,
         BigHomeSlider,
         VideoSlider,
+        NewsRowMobile
     },
     props: [
         'popularTags'
@@ -134,10 +172,20 @@ export default {
         },
     },
     computed: {
+        ...mapGetters([
+            'isMobile'
+        ]),
         newsSorted() {
             const news = [];
             for (let i = 0; i < Math.ceil(this.news.length / 2); i++) {
                 news[i] = this.news.slice((i * 2), (i * 2) + 2);
+            }
+            return news;
+        },
+        newsSortedMobile() {
+            const news = [];
+            for (let i = 0; i < Math.ceil(this.news.length / 1); i++) {
+                news[i] = this.news.slice((i * 1), (i * 1) + 1);
             }
             return news;
         },
@@ -173,6 +221,16 @@ export default {
         },
         getClass(index, index2) {
             let className = 'w-60';
+
+            if (index % 2 === 0) {
+                if (index2 % 2 !== 0) {
+                    className = 'w-40'
+                }
+            }
+            return className;
+        },
+        getClassMobile(index, index2) {
+            let className = 'w-100';
 
             if (index % 2 === 0) {
                 if (index2 % 2 !== 0) {
@@ -441,6 +499,21 @@ export default {
 .news .news-row .article .activity i {
     color: #8298ac;
     margin-left: .2vw;
+}
+
+.slider-block{
+    margin-top: 18%;
+}
+.home-block{
+    width: 96%;
+    margin-left: 2%;
+}
+.video-slider-block{
+    margin-top: 10%;
+}
+.news-block{
+    margin-top: 10%;
+    margin-bottom: 3%;
 }
 </style>
 <style>

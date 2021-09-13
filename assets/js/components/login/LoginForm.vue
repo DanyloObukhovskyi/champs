@@ -77,7 +77,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .login_form {
     width: 100%;
     height: 100%;
