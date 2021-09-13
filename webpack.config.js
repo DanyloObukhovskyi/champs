@@ -1,8 +1,8 @@
 var Encore = require('@symfony/webpack-encore');
 const CompressionPlugin = require("compression-webpack-plugin");
-// const zlib = require("zlib");
-// const zopfli = require("@gfx/zopfli");
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const zlib = require("zlib");
+const zopfli = require("@gfx/zopfli");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -85,21 +85,21 @@ Encore
     //.addEntry('admin', './assets/js/admin.js')
     .enableVueLoader()
 
-    // .addPlugin(new CompressionPlugin({
-    //     compressionOptions: {
-    //         verbose: false,
-    //         verbose_more: false,
-    //         numiterations: 15,
-    //         blocksplitting: true,
-    //         blocksplittingmax: 15
-    //     },
-    //     algorithm(input, compressionOptions, callback) {
-    //         return zopfli.gzip(input, compressionOptions, callback);
-    //     },
-    // }))
+    .addPlugin(new CompressionPlugin({
+        compressionOptions: {
+            verbose: false,
+            verbose_more: false,
+            numiterations: 15,
+            blocksplitting: true,
+            blocksplittingmax: 15
+        },
+        algorithm(input, compressionOptions, callback) {
+            return zopfli.gzip(input, compressionOptions, callback);
+        },
+    }))
 ;
 const webpackConfig = Encore.getWebpackConfig();
-// webpackConfig.optimization.minimizer = [
-//     new UglifyJsPlugin()
-// ];
+webpackConfig.optimization.minimizer = [
+    new UglifyJsPlugin()
+];
 module.exports = webpackConfig;

@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'root',
-	'database' => 'champs',
+    'hostname' => '178.79.164.123',
+    'username' => 'root',
+    'password' => 'kDkL9WKv29SurMjT',
+    'database' => 'champs_prod',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
