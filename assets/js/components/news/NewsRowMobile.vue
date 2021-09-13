@@ -203,7 +203,7 @@ export default {
 }
 
 .article.h-25vw .article-wrapper {
-    height: 25vw;
+    height: 50vw;
 }
 
 .article:hover {
@@ -218,25 +218,25 @@ export default {
 }
 
 .article .tags .tag {
-    font-size: .8vw;
+    font-size: 4.8vw;
 }
 
 .article-wrapper {
-    height: 18vw;
+    height: 50vw;
     background: rgb(255, 255, 255);
     background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 0) 65%);
 }
 
 .article-wrapper .bookmark {
     margin: 1vw;
-    width: 1.5vw;
-    height: 1.5vw;
+    width: 9.5vw;
+    height: 7.5vw;
     background-color: #fbf8f8;
     display: flex;
     justify-content: center;
     align-items: center;
     border: .15vw solid #ff6d1d;
-    font-size: 1vw;
+    font-size: 4vw;
     color: black;
     cursor: pointer;
 }
@@ -265,13 +265,13 @@ export default {
 }
 
 .article-wrapper .news-data .title {
-    font-size: 1.5vw;
+    font-size: 4.5vw;
     font-weight: 800;
     color: black;
 }
 
 .article-wrapper .news-data .description {
-    font-size: 1vw;
+    font-size: 3vw;
     color: #46484a;
 }
 
@@ -315,7 +315,7 @@ export default {
 
 .article .author-data {
     padding: 1vw;
-    font-size: .8vw;
+    font-size: 2.8vw;
 }
 
 .article .activity {
