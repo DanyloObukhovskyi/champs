@@ -182,9 +182,9 @@ export default {
     padding: .1vw .6vw;
     color: white;
     background: #ff6d1d;
-    border-radius: .2vw;
+    border-radius: .8vw;
     border: none;
-    margin-right: .5vw;
+    margin-right: 3.6vw;
     cursor: pointer;
 }
 
@@ -218,7 +218,7 @@ export default {
 }
 
 .article .tags .tag {
-    font-size: 4.8vw;
+    font-size: 3.2vw;
 }
 
 .article-wrapper {
@@ -229,8 +229,7 @@ export default {
 
 .article-wrapper .bookmark {
     margin: 1vw;
-    width: 9.5vw;
-    height: 7.5vw;
+    height: 6.5vw;
     background-color: #fbf8f8;
     display: flex;
     justify-content: center;
@@ -239,6 +238,8 @@ export default {
     font-size: 4vw;
     color: black;
     cursor: pointer;
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 
 .article-wrapper .bookmark.active {

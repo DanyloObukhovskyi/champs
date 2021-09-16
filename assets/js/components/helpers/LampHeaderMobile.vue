@@ -48,6 +48,7 @@
         background: -webkit-linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
         background: linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#42464a",endColorstr="#373b40",GradientType=1);
+        margin-bottom: 5vw;
     }
     .lamp-header .lamp{
         width: 10.2vw;

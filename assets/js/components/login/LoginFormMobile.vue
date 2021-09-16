@@ -39,10 +39,10 @@
                     <!--                    <a href="/ru/auth/facebook/">-->
                     <!--                        <img src="/images/facebook.png">-->
                     <!--                    </a>-->
-                    <a href="/ru/auth/google/">
+                    <a href="/ru/auth/google/" style="padding-right: 2vw">
                         <img src="/images/google.png">
                     </a>
-                    <a href="/ru/auth/twich/">
+                    <a href="/ru/auth/twich/" style="padding-right: 2vw">
                         <img src="/images/twich.png">
                     </a>
                     <a href="/ru/auth/vk/">

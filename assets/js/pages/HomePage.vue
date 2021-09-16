@@ -76,7 +76,12 @@
                 </div>
                 <div class="news-block">
                     <lamp-header-mobile title="Новости"></lamp-header-mobile>
-                    <news-filters-mobile :filters="filters" @reload="reload" />
+                  <div class="tags">
+                    <a class="mobile-tag" v-for="tag in popularTags" @click="addTag(tag)">
+                      {{ tag }}
+                    </a>
+                  </div>
+<!--                    <news-filters-mobile :filters="filters" @reload="reload" />-->
                     <div class="news-row d-flex" v-for="(news, i) in newsSortedMobile">
                         <news-row-mobile
                                 v-for="(item, y) in news"
@@ -356,7 +361,10 @@ export default {
 }
 
 .tags {
-    padding-bottom: 1vw;
+    padding: .5vw;
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 5vw;
 }
 
 .news .news-small-wrapper {
@@ -514,6 +522,21 @@ export default {
 .news-block{
     margin-top: 10%;
     margin-bottom: 3%;
+}
+.mobile-tag {
+  font-size: 3.2vw;
+  text-transform: uppercase;
+  padding: .1vw .6vw;
+  color: white !important;
+  background: #ff6d1d;
+  border-radius: .8vw;
+  border: none;
+  margin-right: 3.6vw;
+  cursor: pointer;
+  margin-top: 1vw;
+}
+.news-row {
+  margin-bottom: 2vw;
 }
 </style>
 <style>
