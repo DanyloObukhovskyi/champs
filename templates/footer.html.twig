@@ -1,4 +1,5 @@
 <div class="cookie" id="cookie">
+    <div v-if="!isMobile">
     <div class="footer">
         <div class="d-flex justify-content-center arrow-up w-100" @click="up">
             <i class="fas fa-chevron-up"></i>
@@ -142,7 +143,7 @@
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     <transition name="slide-fades">
         <div class="cookie__modal" v-if="modal" v-show="modal" style="display: none">
             <div class="component">
@@ -167,6 +168,75 @@
             <div @click="setCookie">Принять</div>
         </div>
     {% endif %}
+    </div>
+    <div v-else>
+        <div class="footer">
+            <div class="footer-title" style="color: white; display: flex; justify-content: center; align-items: center;">
+                <a>Наши соцальные сети</a>
+            </div>
+            <div class="footer-gradient-line">
+                <img src="/images/FooterGradientLine.svg" style="width: 100%">
+            </div>
+            <div class="footer-social-references">
+                <div class="footer-social-ref-csgo">
+                    <div>
+                        <img src="/images/csgo_png.png">
+                    </div>
+                    <div>
+                        <img src="/images/VerticalGragientLine.png">
+                    </div>
+                    <div>
+                        <img src="/images/yt.png">
+                        <img src="/images/tt.png">
+                        <img src="/images/vk_new.png">
+                        <img src="/images/tg.png">
+                    </div>
+                </div>
+                <div class="footer-social-ref-fortnite">
+                    <div>
+                    <img src="/images/fortnite-footer.png">
+                    </div>
+                    <div>
+                        <img src="/images/VerticalGragientLine.png">
+                    </div>
+                    <div>
+                        <img src="/images/yt.png">
+                        <img src="/images/tt.png">
+                        <img src="/images/vk_new.png">
+                        <img src="/images/tg.png">
+                    </div>
+                </div>
+                <div class="footer-social-ref-valorant">
+                    <div>
+                    <img src="/images/valorant-footer.png">
+                    </div>
+                    <div style="padding-left: 4px">
+                        <img src="/images/VerticalGragientLine.png">
+                    </div>
+                    <div style="padding-right: 4px">
+                        <img src="/images/yt.png">
+                        <img src="/images/tt.png">
+                        <img src="/images/vk_new.png">
+                        <img src="/images/tg.png">
+                    </div>
+                </div>
+                <div class="footer-social-ref-dota2">
+                    <div>
+                    <img src="/images/dota-footer.png" style="margin-right: 16px; padding-left: 15px;">
+                    </div>
+                    <div>
+                        <img src="/images/VerticalGragientLine.png">
+                    </div>
+                    <div>
+                        <img src="/images/yt.png">
+                        <img src="/images/tt.png">
+                        <img src="/images/vk_new.png">
+                        <img src="/images/tg.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     var cookie = new Vue({
@@ -189,5 +259,51 @@
                 });
             }
         },
+        computed: {
+            isMobile(){
+                return screen.width <= 600;
+            }
+        }
     });
 </script>
+<style>
+    .footer-social-references {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .footer-social-ref-csgo {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 50%;
+        margin-bottom: 3vw;
+        align-items: center;
+    }
+    .footer-social-ref-fortnite {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 50%;
+        margin-bottom: 3vw;
+        align-items: center;
+    }
+    .footer-social-ref-valorant {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 50%;
+        margin-left: 7px;
+        margin-bottom: 3vw;
+        align-items: center;
+    }
+    .footer-social-ref-dota2 {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 50%;
+        margin-bottom: 3vw;
+        align-items: center;
+    }
+</style>
