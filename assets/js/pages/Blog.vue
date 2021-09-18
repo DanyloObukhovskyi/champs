@@ -1,31 +1,51 @@
 <template>
-    <div class="news d-flex">
-        <div class="col-9 pl-0 news-page-row">
-            <div class="tags">
-                <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
-                    {{ tag }}
-                </button>
-                <button class="tag" @click="getNextTags()" v-if="popularTags.length < tagsCount">
-                    ...
-                </button>
+    <div class="ml-8 mr-8 p-0" v-if="!isMobile">
+        <div class="news d-flex">
+            <div class="col-9 pl-0 news-page-row">
+                <div class="tags">
+                    <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
+                        {{ tag }}
+                    </button>
+                    <button class="tag" @click="getNextTags()" v-if="popularTags.length < tagsCount">
+                        ...
+                    </button>
+                </div>
+                <div class="news-row d-flex" v-for="(blogs, i) in blogsSorted">
+                    <blogs-row
+                            v-for="(item, y) in blogs"
+                            :key="y"
+                            :blogs="item"
+                            :class-name="getClass(i, y)"
+                            @addTag="addTag"
+                            @setBookmark="() => item.bookmark = !item.bookmark">
+                    </blogs-row>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <loader v-show="load"></loader>
+                </div>
             </div>
-            <div class="news-row d-flex" v-for="(blogs, i) in blogsSorted">
-                <blogs-row
-                        v-for="(item, y) in blogs"
-                        :key="y"
-                        :blogs="item"
-                        :class-name="getClass(i, y)"
-                        @addTag="addTag"
-                        @setBookmark="() => item.bookmark = !item.bookmark">
-                </blogs-row>
-            </div>
-            <div class="d-flex justify-content-center">
-                <loader v-show="load"></loader>
+            <div class="articles__content col-3 pr-0">
+                <blogs-filters :view="false" :filters="filters" @reload="reload"/>
+                <hot-blogs id="filters" :blogs="hotBlogs" :style="btnStyles"></hot-blogs>
             </div>
         </div>
-        <div class="articles__content col-3 pr-0">
-            <blogs-filters :view="false" :filters="filters" @reload="reload"/>
-            <hot-blogs id="filters" :blogs="hotBlogs" :style="btnStyles"></hot-blogs>
+    </div>
+    <div class="news-mobile-block" style="margin-top: 20%;" v-else>
+        <div class="">
+            <div class="news-block">
+                <lamp-header-mobile title="Блоги"></lamp-header-mobile>
+                <blogs-filters-mobile :filters="filters" @reload="reload" />
+                <div class="news-row d-flex" v-for="(blogs, i) in blogsSortedMobile">
+                    <blogs-row-mobile
+                            v-for="(item, y) in blogs"
+                            :key="y"
+                            :blogs="item"
+                            :class-name="getClassMobile(i, y)"
+                            @addTag="addTag"
+                            @setBookmark="() => item.bookmark = !item.bookmark">
+                    </blogs-row-mobile>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -35,7 +55,11 @@
     import Loader from "../components/helpers/Loader";
     import HotBlogs from "../components/blogs/HotBlogs";
     import BlogsRow from "../components/blogs/BlogsRow";
+    import BlogsRowMobile from "../components/blogs/BlogsRowMobile";
+    import LampHeaderMobile from "../components/helpers/LampHeaderMobile";
+    import BlogsFiltersMobile from "../components/blogs/BlogsFiltersMobile";
     import blogService from "../services/BlogService";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Blog",
@@ -48,7 +72,10 @@
             BlogsFilters,
             Loader,
             HotBlogs,
-            blogService
+            blogService,
+            BlogsRowMobile,
+            LampHeaderMobile,
+            BlogsFiltersMobile
         },
         data() {
             return {
@@ -103,10 +130,20 @@
             },
         },
         computed: {
+            ...mapGetters([
+                'isMobile'
+            ]),
             blogsSorted() {
                 const blogs = [];
                 for (let i = 0; i < Math.ceil(this.blogs.length / 2); i++) {
                     blogs[i] = this.blogs.slice((i * 2), (i * 2) + 2);
+                }
+                return blogs;
+            },
+            blogsSortedMobile() {
+                const blogs = [];
+                for (let i = 0; i < Math.ceil(this.blogs.length / 1); i++) {
+                    blogs[i] = this.blogs.slice((i * 1), (i * 1) + 1);
                 }
                 return blogs;
             },
@@ -118,7 +155,7 @@
                     'max-height': `${this.height}`,
                     'overflow-y': 'scroll'
                 };
-            }
+            },
         },
         methods: {
             pageUp() {
@@ -136,6 +173,16 @@
             },
             getClass(index, index2) {
                 let className = 'w-60';
+
+                if (index % 2 === 0) {
+                    if (index2 % 2 !== 0) {
+                        className = 'w-40'
+                    }
+                }
+                return className;
+            },
+            getClassMobile(index, index2) {
+                let className = 'w-100';
 
                 if (index % 2 === 0) {
                     if (index2 % 2 !== 0) {
@@ -439,6 +486,14 @@
     }
     div#filters::-webkit-scrollbar {
         width:0px;
+    }
+    .news-mobile-block{
+        width: 96%;
+        margin-left: 2%;
+    }
+    .news-block{
+        margin-top: 10%;
+        margin-bottom: 3%;
     }
 </style>
 <style>
