@@ -1,42 +1,66 @@
 <template>
-    <div class="news d-flex">
-        <div class="col-9 pl-0 news-page-row">
-            <div class="tags">
-                <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
-                    {{ tag }}
-                </button>
-                <button class="tag" @click="getNextTags()" v-if="popularTags.length < tagsCount">
-                ...
-                </button>
+    <div class="ml-8 mr-8 p-0" v-if="!isMobile">
+        <div class="news d-flex">
+            <div class="col-9 pl-0 news-page-row">
+                <div class="tags">
+                    <button @click="addTag(tag)" class="tag" v-for="tag in popularTags">
+                        {{ tag }}
+                    </button>
+                    <button class="tag" @click="getNextTags()" v-if="popularTags.length < tagsCount">
+                    ...
+                    </button>
+                </div>
+                <div class="news-row d-flex" v-for="(news, i) in newsSorted">
+                    <news-row
+                            v-for="(item, y) in news"
+                            :key="y"
+                            :news="item"
+                            :class-name="getClass(i, y)"
+                            @addTag="addTag"
+                            @setBookmark="() => item.bookmark = !item.bookmark">
+                    </news-row>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <loader v-show="load"></loader>
+                </div>
             </div>
-            <div class="news-row d-flex" v-for="(news, i) in newsSorted">
-                <news-row
-                        v-for="(item, y) in news"
-                        :key="y"
-                        :news="item"
-                        :class-name="getClass(i, y)"
-                        @addTag="addTag"
-                        @setBookmark="() => item.bookmark = !item.bookmark">
-                </news-row>
-            </div>
-            <div class="d-flex justify-content-center">
-                <loader v-show="load"></loader>
+            <div id="filters" class="articles__content col-3 pr-0">
+                <news-filters :filters="filters" @reload="reload"/>
+                <hot-news :style="btnStyles" :news="hotNews"></hot-news>
             </div>
         </div>
-        <div id="filters" class="articles__content col-3 pr-0">
-            <news-filters :filters="filters" @reload="reload"/>
-            <hot-news :style="btnStyles" :news="hotNews"></hot-news>
+    </div>
+    <div class="news-mobile-block" style="margin-top: 20%;" v-else>
+        <div class="">
+            <div class="news-block">
+                <lamp-header-mobile title="Новости"></lamp-header-mobile>
+                <news-filters-mobile :filters="filters" @reload="reload" />
+                <div class="news-row d-flex" v-for="(news, i) in newsSortedMobile">
+                    <news-row-mobile
+                            v-for="(item, y) in news"
+                            :key="y"
+                            :news="item"
+                            :class-name="getClassMobile(i, y)"
+                            @addTag="addTag"
+                            @setBookmark="() => item.bookmark = !item.bookmark">
+                    </news-row-mobile>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import NewsFilters from "../components/news/NewsFilters";
+import NewsFiltersMobile from "../components/news/NewsFiltersMobile";
+import LampHeaderMobile from "../components/helpers/LampHeaderMobile";
+import NewsRowMobile from "../components/news/NewsRowMobile";
 import Loader from "../components/helpers/Loader";
 import HotNews from "../components/news/HotNews";
 import newsService from "../services/NewsService";
 import Swal from 'sweetalert2';
 import NewsRow from "../components/news/NewsRow";
+import {mapGetters} from "vuex";
 
 
 export default {
@@ -50,6 +74,9 @@ export default {
         NewsFilters,
         Loader,
         HotNews,
+        NewsFiltersMobile,
+        LampHeaderMobile,
+        NewsRowMobile
     },
     data() {
         return {
@@ -104,10 +131,20 @@ export default {
         },
     },
     computed: {
+        ...mapGetters([
+            'isMobile'
+        ]),
         newsSorted() {
             const news = [];
             for (let i = 0; i < Math.ceil(this.news.length / 2); i++) {
                 news[i] = this.news.slice((i * 2), (i * 2) + 2);
+            }
+            return news;
+        },
+        newsSortedMobile() {
+            const news = [];
+            for (let i = 0; i < Math.ceil(this.news.length / 1); i++) {
+                news[i] = this.news.slice((i * 1), (i * 1) + 1);
             }
             return news;
         },
@@ -137,6 +174,16 @@ export default {
         },
         getClass(index, index2) {
             let className = 'w-60';
+
+            if (index % 2 === 0) {
+                if (index2 % 2 !== 0) {
+                    className = 'w-40'
+                }
+            }
+            return className;
+        },
+        getClassMobile(index, index2) {
+            let className = 'w-100';
 
             if (index % 2 === 0) {
                 if (index2 % 2 !== 0) {
@@ -441,6 +488,14 @@ export default {
 }
 div#filters::-webkit-scrollbar {
     width:0px;
+}
+.news-mobile-block{
+    width: 96%;
+    margin-left: 2%;
+}
+.news-block{
+    margin-top: 10%;
+    margin-bottom: 3%;
 }
 </style>
 <style>

@@ -42,7 +42,7 @@
 <style scoped>
     .lamp-header{
         border-radius: 2vw 0 0 2vw;
-        height: 6.8vw;
+        height: 11.8vw;
         background: rgb(66,70,74);
         background: -moz-linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
         background: -webkit-linear-gradient(90deg, rgba(66,70,74,1) 15%, rgba(55,59,64,1) 100%);
@@ -50,36 +50,36 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#42464a",endColorstr="#373b40",GradientType=1);
     }
     .lamp-header .lamp{
-        width: 10.2vw;
-        top: -2.29vw;
-        left: -1vw;
+        width: 14vw;
+        top: -1.29vw;
+        left: -1.8vw;
     }
     .lamp-header .lamp .round{
-        width: 10.2vw;
-        height: 10.2vw;
+        width: 15.2vw;
+        height: 14.2vw;
         background: #2d3135;
         border-radius: 50%;
     }
     .lamp-header .lamp .round div {
-        width: 7.3vw;
+        width: 12.3vw;
         padding: 0;
-        height: 8.3vw;
+        height: 12.3vw;
         border-radius: 50%;
         position: relative;
         background: #383c3f;
     }
     .lamp-header .lamp .round div img{
-        height: 8.6vw;
-        width: 6.6vw;
+        height: 10.6vw;
+        width: 8.6vw;
     }
     .lamp-header .wrapper{
-        top: -10vw;
-        margin-left: 12vw;
+        top: -12vw;
+        margin-left: 15vw;
     }
     .lamp-header .wrapper .title{
         color: white;
         font-family: 'Exo 2';
-        font-size: 4.4vw;
+        font-size: 5vw;
     }
     .lamp-header .description{
         margin-right: 1vw;
