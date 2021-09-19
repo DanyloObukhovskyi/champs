@@ -1,0 +1,236 @@
+<template>
+    <div>
+        <div class="comment">
+            <div class="user">
+                <div class="avatar">
+                    <div class="image-wrapper" :style="imageWrapperImage(comment.user.photo)">
+                    </div>
+                </div>
+                <div class="d-block">
+                    <div class="name">
+                        {{getUserName(comment.user)}}
+                    </div>
+                    <div class="date">
+                        {{comment.createdAt}}
+                    </div>
+                </div>
+            </div>
+            <div class="text">
+                {{comment.comment}}
+            </div>
+            <div class="d-flex">
+                <div v-if="hasChildren">
+                    <button class="answer" @click="setActive(comment)">
+                        {{active === comment ? 'Отмена' : 'Ответить'}}
+                    </button>
+                </div>
+                <div>
+                    <comment-likes-mobile
+                        :disable="user === null || comment.user.id === user.id"
+                        @setLike="setLike"
+                        :user="user"
+                        :likes="comment.likesCount"
+                        :user-like="comment.userLike">
+                    </comment-likes-mobile>
+                </div>
+            </div>
+        </div>
+        <template v-if="hasChildren">
+            <comments-form-mobile
+                @send="sendAnswer"
+                v-if="user !== null && active === comment"
+                :user="user">
+            </comments-form-mobile>
+            <div class="children" v-if="comment.children.length > 0">
+                <img src="/images/news/commentAnswer.svg">
+                <div class="comments">
+                    <div class="comments-count">
+                        {{childrenCount}}
+                    </div>
+                    <comment-mobile
+                         :key="index"
+                         :user="user"
+                         :active="active"
+                         :comment="child"
+                         @setActive="setActive"
+                         @setLike="sendChildLike"
+                         @sendAnswer="sendChildAnswer"
+                         v-for="(child, index) in comment.children">
+                    </comment-mobile>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+
+<script>
+    import CommentsFormMobile from "./CommentsFormMobile";
+    import CommentLikesMobile from "./CommentLikesMobile";
+
+    export default {
+        name: "CommentMobile",
+        props: [
+            'comment',
+            'user',
+            'active'
+        ],
+        components: {
+            CommentLikesMobile,
+            CommentsFormMobile
+        },
+        inject: [
+            'active'
+        ],
+        computed: {
+            hasChildren() {
+                return this.comment.hasOwnProperty('children');
+            },
+            childrenCount() {
+                let text;
+                if (this.comment.children.length === 1){
+                    text = '1 ответ';
+                } else if (this.comment.children.length > 1 && this.comment.children.length <= 4){
+                    text = `${this.comment.children.length} ответа`;
+                } else {
+                    text = `${this.comment.children.length} ответов`;
+                }
+                return text;
+            }
+        },
+        methods: {
+            getUserName(user) {
+                if (user.name === null || user.surname === null) {
+                    return user.nickname;
+                } else {
+                    return `${user.name} ${user.surname}`;
+                }
+            },
+            setActive(comment) {
+                if (this.user !== null){
+                    if (this.active === comment) {
+                        this.$emit('setActive', null);
+                    } else {
+                        this.$emit('setActive', comment);
+                    }
+                }
+            },
+            sendChildAnswer(data) {
+                this.$emit('sendAnswer', data);
+            },
+            sendAnswer(answer) {
+                this.$emit('sendAnswer', {
+                    comment: this.comment,
+                    answer: answer
+                });
+            },
+            sendChildLike(data) {
+                this.$emit('setLike', data);
+            },
+            setLike(type) {
+                this.$emit('setLike', {
+                    comment: this.comment,
+                    type: type
+                });
+            },
+            imageWrapperImage(photo) {
+                const image = new Image();
+                image.src = '/uploads/avatars/' + photo;
+
+                let path = "/images/noLogo.png";
+                if (image.width !== 0) {
+                    path = '/uploads/avatars/' + photo;
+                }
+                return {
+                    'background-image': `url('${path}')`
+                }
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .comment {
+        width: 100%;
+        display: flex;
+        padding: 1vw 0;
+        flex-direction: column;
+        padding: .8vw;
+    }
+
+    .children {
+        display: flex;
+        padding-left: .8vw;
+    }
+
+    .children .comments {
+        width: 100%;
+    }
+
+    .children > img {
+        height: 100%;
+        width: 1vw;
+    }
+
+    .children .comments .comments-count{
+        font-size: 1vw;
+        margin-left: .7vw;
+        margin-top: -.2vw;
+        color: #5c6b79;
+    }
+
+    .comment img {
+        height: 3vw;
+        border-radius: 50%;
+        background-color: #AAA;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .comment .avatar .image-wrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-image: url("/images/noLogo.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 10vw;
+        width: 10vw;
+    }
+
+    .comment .user {
+        display: flex;
+        align-items: center;
+    }
+
+    .comment .user .name {
+        font-size: 5vw;
+        color: #5c6b79;
+        padding: 0 .6vw;
+    }
+
+    .comment .user .date {
+        font-size: 3vw;
+        color: #919191;
+    }
+
+    .comment .text {
+        font-size: 4vw;
+        margin-top: .5vw;
+    }
+
+    .dark .comment .text {
+        color: white;
+    }
+
+    .comment button.answer {
+        outline: unset;
+        border: unset;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+        color: #898989;
+        font-size: 2vw;
+        margin-right: 1vw;
+    }
+</style>
