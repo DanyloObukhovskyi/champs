@@ -87,8 +87,8 @@ export default {
 
 .comments-form .image .user-photo {
     background: #fc6c1d;
-    width: 10.4vw;
-    height: 9.4vw;
+    width: 12.4vw;
+    height: 12.4vw;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -204,5 +204,6 @@ export default {
     float: right;
     display: flex;
     height: 30%;
+    margin-bottom: 3vw;
 }
 </style>
