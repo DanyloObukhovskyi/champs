@@ -177,14 +177,14 @@ export default {
 }
 
 .tags .tag {
-    font-size: 1vw;
+    font-size: 3.8vw;
     text-transform: uppercase;
     padding: .1vw .6vw;
     color: white;
     background: #ff6d1d;
     border-radius: .8vw;
     border: none;
-    margin-right: 3.6vw;
+    margin-right: 2vw;
     cursor: pointer;
 }
 
