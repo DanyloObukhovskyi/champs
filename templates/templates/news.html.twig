@@ -63,11 +63,9 @@
                 </span>
             </div>
         </div>
-        <div class="ml-8 mr-8 p-0">
-            <news-page
-                    popular-tags="{{ popularTags|json_encode }}"
-                    tag="{{ tag }}">
-            </news-page>
-        </div>
+        <news-page
+                popular-tags="{{ popularTags|json_encode }}"
+                tag="{{ tag }}">
+        </news-page>
     </div>
 {% endblock %}

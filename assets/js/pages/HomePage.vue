@@ -524,16 +524,16 @@ export default {
     margin-bottom: 3%;
 }
 .mobile-tag {
-  font-size: 3.2vw;
-  text-transform: uppercase;
-  padding: .1vw .6vw;
-  color: white !important;
-  background: #ff6d1d;
-  border-radius: .8vw;
-  border: none;
-  margin-right: 3.6vw;
-  cursor: pointer;
-  margin-top: 1vw;
+    font-size: 3.8vw;
+    text-transform: uppercase;
+    padding: .1vw .6vw;
+    color: white !important;
+    background: #ff6d1d;
+    border-radius: .8vw;
+    border: none;
+    margin-right: 3.6vw;
+    cursor: pointer;
+    margin-top: 1vw;
 }
 .news-row {
   margin-bottom: 2vw;
