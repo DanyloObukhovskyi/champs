@@ -347,7 +347,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: calc(100% - (100% - 78px));
+  width: 30%;
   background: linear-gradient(270deg, rgba(45, 49, 53, 0) 0%, rgba(64, 68, 74, 1) 79%);
 }
 .login {
@@ -375,8 +375,8 @@ export default {
 }
 .login small {
   color: #ff6d1d;
-  font-size: .35vw;
-  line-height: .2vw;
+  font-size: 4.35vw;
+  margin-left: 3vw;
 }
 .login span {
   color: #ff6d1d;
@@ -390,9 +390,8 @@ export default {
   display: flex;
   background-color: #ff6d1d;
   border-radius: 50%;
-  width: 20%;
-  height: 4vw;
-  max-height: 16px;
+  width: 8vw;
+  height: 8vw;
   font-size: 50%;
 }
 .dropdown {
@@ -403,7 +402,7 @@ export default {
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 115%;
+  top: 100%;
   right: 33%;
   background-color: rgb(66, 61, 61);;
   overflow: auto;
@@ -463,7 +462,7 @@ export default {
   width: calc(100% - (100% - 25px));
 }
 .logo {
-  width: calc(100% - (100% - 102px));
+  width: calc(100% - (100% - 21%));
 }
 
 .page {

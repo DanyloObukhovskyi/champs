@@ -21,9 +21,8 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
-  height: 3vw;
+  height: 7vw;
   background-color: white;
-  padding: .5vw;
 }
 
 .dark .select{
@@ -35,7 +34,7 @@ export default {
   outline: unset;
   color: black;
   border: unset;
-  font-size: 1vw;
+  font-size: 4vw;
   padding: .15vw 1vw .3vw 1vw;
   cursor: pointer;
   background: transparent;
