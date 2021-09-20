@@ -1,5 +1,6 @@
 <template>
-    <div class="matches">
+  <div>
+    <div class="matches ml-8 mr-8 p-0" v-if="!isMobile">
         <div class="d-flex align-items-end justify-content-between">
             <tense-select @selected="(select) => selectMatchesType = select"
                           :counts="counts"
@@ -28,6 +29,14 @@
             <loader v-if="load"/>
         </div>
     </div>
+    <div v-else>
+      <TenseSelectMobile @selected="(select) => selectMatchesType = select"
+                         :counts="counts"
+                         :types="matchTypes"
+                         :selected="selectMatchesType">
+      </TenseSelectMobile>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -37,10 +46,13 @@ import Loader from "../components/helpers/Loader";
 import TenseSelect from "../components/helpers/TenseSelect";
 import matchService from "../services/MatchService";
 import Filters from "../components/filters/Filters";
+import {mapGetters} from "vuex";
+import TenseSelectMobile from "../components/helpers/TenseSelectMobile";
 
 export default {
     name: "MatchesPage",
     components: {
+      TenseSelectMobile,
         TenseSelect,
         Filters,
         Loader,
@@ -88,6 +100,9 @@ export default {
         },
     },
     computed: {
+      ...mapGetters([
+        'isMobile'
+      ]),
         pagesCount() {
             return Math.ceil(this.counts[this.selectMatchesType] / this.perPage)
         },
