@@ -64,6 +64,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="event-block">
+
+                </div>
                 <div class="event d-flex align-items-center">
                     <div class="event-logo">
                         <img :src="match.event.image">
@@ -73,6 +76,8 @@
                     </div>
                 </div>
             </div>
+            <div class="time-block">
+            </div>
             <div class="time d-block" v-if="!match.streamTime || match.streamTime && match.type !== 'live'">
                 <div>
                     <img src="/images/matches/time.svg">
@@ -80,7 +85,6 @@
                 <div>
                     {{match.time}}
                 </div>
-
             </div>
             <div class="play" v-else>
                 <div class="play-wrapper">
@@ -179,7 +183,7 @@
 <style scoped>
     .match-row {
         margin-bottom: 0.75em;
-        height: 12vw;
+        height: 15vw;
         background: url(/images/matches/matchBackground.png);
         background-repeat: round;
         background-size: 100%;
@@ -201,7 +205,8 @@
     }
 
     .match-wrapper {
-        height: 12vw;
+        height: 15vw;
+        background: #292c2e;
     }
 
     .event {
@@ -211,15 +216,15 @@
     }
 
     .event-logo img {
-        width: 1.5vw;
+        width: 2.5vw;
         margin-right: .5vw;
-        top: 0vw;
+        top: 1vw;
     }
 
     .event-name {
-        font-size: 1.5vw;
+        font-size: 2vw;
         color: #5c6b79;
-        top: 0.5vw;
+        top: 1.5vw;
     }
 
     .teams {
@@ -347,5 +352,24 @@
 
     .teams .score.green {
         color: #33cc66;
+    }
+    .time-block{
+        background: #36383b;
+        background-size: 100%;
+        position: absolute;
+        display: block;
+        width: 20%;
+        height: 100%;
+        right: 0;
+        clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .event-block{
+        background: #2f3234;
+        width: 101%;
+        height: 30%;
+        position: absolute;
+        top: 70%;
+        clip-path: polygon(0 0, 100% 0, 98% 100%, 0% 100%);
     }
 </style>
