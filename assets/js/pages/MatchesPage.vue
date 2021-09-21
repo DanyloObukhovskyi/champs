@@ -31,28 +31,28 @@
     </div>
     <div v-else>
         <div style="margin-top: 20%;">
-            <div>
+            <div class="matches">
                 <tense-select-mobile @selected="(select) => selectMatchesType = select"
                                      :counts="counts"
                                      :types="matchTypes"
                                      :selected="selectMatchesType">
                 </tense-select-mobile>
-                <div class="d-block justify-content-between" style= "margin-left: .5vw;">
-                    <filters-mobile @setFilter="setFilter" v-bind="filters"/>
+                <div class="d-block justify-content-between" style= "margin-left: .5vw;margin-top: 3vw;">
+                    <filters-mobile class="multi_date" @setFilter="setFilter" v-bind="filters"/>
                 </div>
             </div>
-            <div class="matches-body">
+            <div class="matches-body ml-2 mr-2">
                 <div v-for="day in matches">
                     <div class="date">
                         {{ day.date }}
                     </div>
-                    <match-row
+                    <match-row-mobile
                             :key="index"
                             :show-score="match.type === 'live'|| match.isLive || selectMatchesType === 'past'"
                             :match="match"
                             :is-past="selectMatchesType === 'past'"
                             v-for="(match, index) in day.items">
-                    </match-row>
+                    </match-row-mobile>
                 </div>
             </div>
             <div class="w-100 d-flex justify-content-center">
@@ -66,6 +66,7 @@
 <script>
 import Paginate from 'vuejs-paginate'
 import MatchRow from "../components/matches/MatchRow";
+import MatchRowMobile from "../components/matches/MatchRowMobile";
 import Loader from "../components/helpers/Loader";
 import TenseSelect from "../components/helpers/TenseSelect";
 import matchService from "../services/MatchService";
@@ -83,6 +84,7 @@ export default {
         FiltersMobile,
         Loader,
         MatchRow,
+        MatchRowMobile,
         Paginate,
     },
     props: ['type'],
@@ -222,10 +224,13 @@ export default {
 }
 
 .matches .matches-body .date {
-    font-size: 2vw;
+    font-size: 4vw;
 }
 
 .dark .matches .matches-body .date {
     color: white;
+}
+.multi_date::v-deep .date {
+    font-size: 3.9vw;
 }
 </style>
