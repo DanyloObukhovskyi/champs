@@ -1,5 +1,6 @@
 <template>
-    <div class="match-view">
+  <div>
+    <div class="match-view ml-8 mr-8 p-0" v-if="!isMobile">
         <div class="match-header" v-if="!load && match !== null">
             <img class="image-header white" :src="imageHeader.white">
             <img class="image-header dark" :src="imageHeader.dark">
@@ -102,6 +103,112 @@
             </match-comments>
         </div>
     </div>
+    <div class="mr-2 ml-2" v-else>
+    <div class="match-view-mobile">
+      <div class="match-header" v-if="!load && match !== null">
+        <img class="image-header white" :src="imageHeader.white">
+        <img class="image-header dark" :src="imageHeader.dark">
+        <div class="teams">
+          <div class="teamA">
+            <div class="team-title" style="font-size: 100%">
+              {{match.teamA.title}}
+            </div>
+            <div class="team-logo">
+              <img class="w-100" :src="match.teamA.logo" alt="">
+            </div>
+          </div>
+          <div class="score" style="font-size: 100%">
+                    <span class="d-flex justify-content-center" v-if="!match.isLive && isFuture">
+<!--                         <img class="vs" src="/images/matches/matchVs.png">-->
+                        <div class="vs">
+
+                        </div>
+                    </span>
+            <span class="d-flex justify-content-center" v-else>
+                        <span :class="getScoreClass(match.teamA.score, match.teamB.score)">
+                            {{match.teamA.score}}
+                        </span>
+                        <span>&nbsp;:&nbsp;</span>
+                        <span :class="getScoreClass(match.teamB.score, match.teamA.score)">
+                            {{match.teamB.score}}
+                        </span>
+                    </span>
+          </div>
+          <div class="teamB">
+            <div class="team-logo">
+              <img class="w-100" :src="match.teamB.logo" alt="">
+            </div>
+            <div class="team-title" style="font-size: 100%">
+              {{match.teamB.title}}
+            </div>
+          </div>
+        </div>
+        <div class="watch-stream" v-if="match.isLive">
+          <div class="play">
+            <div class="caret" @click="showStreams = !showStreams">
+              <i class="fas fa-caret-right"></i>
+            </div>
+          </div>
+          <div>
+            Прямая трансляция
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" v-if="!match.isLive">
+          <div class="match-status">
+            <div class="status" :class="isFuture ? 'future' : 'ended'" style="font-size: 75%">
+              {{ isFuture ? 'Матч скоро начнется' : 'Матч завершился'}}
+            </div>
+            <div class="date">
+              <i class="far fa-clock" aria-hidden="true"></i>
+              {{match.startedAt.date}} в {{match.startedAt.time}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <stream-viewer
+        v-if="!load && match !== null && showStreams"
+        @hide="() => showStreams = false"
+        :streams="match.streams">
+    </stream-viewer>
+    <div class="d-flex justify-content-center">
+      <loader v-if="load"/>
+    </div>
+    <div class="last-matches" v-if="!load && match !== null">
+      <teams-last-matches
+          :team-a="match.teamA"
+          :team-b="match.teamB"
+          :meeting-matches="match.meetingMatches">
+      </teams-last-matches>
+    </div>
+    <div class="matches d-flex" v-if="!load && match !== null">
+      <match-maps-pick-and-ban
+          class="col-4 pl-0"
+          v-if="match.pickAndBans.length > 0"
+          :pick-and-bans="match.pickAndBans"/>
+      <match-maps-statistics
+          class="col-8 pr-0"
+          :team-a="match.teamA"
+          :team-b="match.teamB"
+          :maps="maps">
+      </match-maps-statistics>
+    </div>
+    <match-statistics
+        v-if="showStatistic"
+        :team-a="match.teamA"
+        :team-b="match.teamB">
+    </match-statistics>
+    <div class="comments">
+      <match-comments
+          v-if="match !== null"
+          :comments-count="match.commentsCount"
+          :match-id="matchId"
+          :comments="comments"
+          @update="updateComments">
+      </match-comments>
+    </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -113,6 +220,7 @@
     import matchService from "../services/MatchService";
     import StreamViewer from "../components/streams/StreamViewer";
     import MatchComments from "../components/matches/MatchComments";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "MatchPage",
@@ -140,6 +248,9 @@
             }
         },
         computed: {
+          ...mapGetters([
+            'isMobile'
+          ]),
             showStatistic() {
                 return !this.load
                     && this.match !== null
@@ -390,5 +501,8 @@
 
     .lose {
         color: #be1517;
+    }
+    .match-view-mobile {
+      margin-top: 20%;
     }
 </style>
