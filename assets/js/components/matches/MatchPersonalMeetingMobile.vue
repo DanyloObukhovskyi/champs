@@ -52,7 +52,8 @@ export default {
 .meeting-matches{
   background-color: #1e2123;
   margin: 1vw 0;
-  width: 96%
+  width: 100%;
+  display: grid;
 }
 
 .title{
@@ -94,10 +95,10 @@ export default {
     position: absolute;
     height: 6vw;
     width: 6vw;
-    top: -.25vw;
-    left: -.25vw;
+    top: -0.25vw;
+    left: -0.30vw;
     border-radius: 50%;
-    border: .1vw solid #33cc66;
+    border: .1vw solid whitesmoke;
   }
 
   &.lose {

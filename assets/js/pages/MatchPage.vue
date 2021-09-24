@@ -143,7 +143,7 @@
             </div>
           </div>
         </div>
-        <div class="watch-stream" v-if="match.isLive">
+        <div class="watch-stream-mobile" v-if="match.isLive">
           <div class="play">
             <div class="caret" @click="showStreams = !showStreams">
               <i class="fas fa-caret-right"></i>
@@ -181,31 +181,31 @@
           :meeting-matches="match.meetingMatches">
       </teams-last-matches>
     </div>
-    <div class="matches d-flex" v-if="!load && match !== null">
-      <match-maps-pick-and-ban
-          class="col-4 pl-0"
+    <div class="matches d-block" v-if="!load && match !== null">
+      <match-maps-pick-and-ban-mobile
+          class="col-12 pl-0"
           v-if="match.pickAndBans.length > 0"
           :pick-and-bans="match.pickAndBans"/>
-      <match-maps-statistics
-          class="col-8 pr-0"
+      <match-maps-statistics-mobile
+          class="col-12 pr-0"
           :team-a="match.teamA"
           :team-b="match.teamB"
           :maps="maps">
-      </match-maps-statistics>
+      </match-maps-statistics-mobile>
     </div>
-    <match-statistics
+    <match-statistics-mobile
         v-if="showStatistic"
         :team-a="match.teamA"
         :team-b="match.teamB">
-    </match-statistics>
+    </match-statistics-mobile>
     <div class="comments">
-      <match-comments
+      <match-comments-mobile
           v-if="match !== null"
           :comments-count="match.commentsCount"
           :match-id="matchId"
           :comments="comments"
           @update="updateComments">
-      </match-comments>
+      </match-comments-mobile>
     </div>
     </div>
   </div>
@@ -221,6 +221,10 @@
     import StreamViewer from "../components/streams/StreamViewer";
     import MatchComments from "../components/matches/MatchComments";
     import {mapGetters} from "vuex";
+    import MatchMapsPickAndBanMobile from "../components/maps/MatchMapsPickAndBanMobile";
+    import MatchMapsStatisticsMobile from "../components/maps/MatchMapsStatisticsMobile";
+    import MatchStatisticsMobile from "../components/matches/MatchStatisticsMobile";
+    import MatchCommentsMobile from "../components/matches/MatchCommentsMobile";
 
     export default {
         name: "MatchPage",
@@ -228,6 +232,10 @@
             'matchId'
         ],
         components: {
+            MatchCommentsMobile,
+            MatchStatisticsMobile,
+            MatchMapsStatisticsMobile,
+            MatchMapsPickAndBanMobile,
             MatchComments,
             StreamViewer,
             MatchStatistics,
@@ -388,6 +396,40 @@
     .match-header .team-title {
         font-size: 1.8vw;
         padding: 1vw;
+    }
+
+    .watch-stream-mobile {
+        margin-top: .5vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: #FF6D1D;
+        font-size: 4vw;
+    }
+
+    .watch-stream-mobile .caret {
+        background: #FF6D1D;
+        width: 7vw;
+        height: 7vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        padding-left: .25vw;
+        padding-top: .05vw;
+    }
+
+    .watch-stream-mobile .caret i {
+        color: white;
+        font-size: 5vw;
+        cursor: pointer;
+    }
+
+    .watch-stream-mobile .play {
+        border-radius: 50%;
+        background: rgba(255, 109, 29, .2);
+        padding: .5vw;
     }
 
     .watch-stream {

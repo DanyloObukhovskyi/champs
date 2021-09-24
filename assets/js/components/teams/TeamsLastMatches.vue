@@ -2,7 +2,7 @@
   <div>
     <div class="last-matches" v-if="!isMobile">
         <div class="last-matches-header">
-            <lamp-header-mobile title="Последние матчи и личные встречи"/>
+            <lamp-header title="Последние матчи и личные встречи"/>
         </div>
         <div class="last-matches-body">
             <team-last-matches :team="teamA"/>
@@ -18,12 +18,14 @@
       <div class="last-matches-header">
         <lamp-header-mobile title="Последние матчи и личные встречи"/>
       </div>
-      <div class="last-matches-body">
+      <div class="last-matches-body-mobile">
         <MatchPersonalMeetingMobile
             :matches="meetingMatches"
             :team-a="teamA"
             :team-b="teamB">
         </MatchPersonalMeetingMobile>
+        <team-last-matches-mobile :team="teamA"/>
+        <team-last-matches-mobile :team="teamB"/>
       </div>
     </div>
   </div>
@@ -36,6 +38,7 @@
     import {mapGetters} from "vuex";
     import LampHeaderMobile from "../helpers/LampHeaderMobile";
     import MatchPersonalMeetingMobile from "../matches/MatchPersonalMeetingMobile";
+    import TeamLastMatchesMobile from "./TeamLastMatchesMobile";
 
     export default {
         name: "TeamsLastMatches",
@@ -45,8 +48,9 @@
             'meetingMatches'
         ],
         components: {
-          MatchPersonalMeetingMobile,
-          LampHeaderMobile,
+            TeamLastMatchesMobile,
+            MatchPersonalMeetingMobile,
+            LampHeaderMobile,
             MatchPersonalMeeting,
             TeamLastMatches,
             LampHeader
@@ -64,6 +68,12 @@
       display: flex;
       justify-content: center;
       width: 100%;
+    }
+
+    .last-matches-body-mobile {
+        display: block;
+        justify-content: center;
+        width: 100%;
     }
 
     .last-matches-header {
