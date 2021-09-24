@@ -223,7 +223,7 @@ export default {
     background: #ff6d1d;
     border-radius: .8vw;
     border: none;
-    margin-right: 3.6vw;
+    margin-right: 2vw;
     cursor: pointer;
 }
 

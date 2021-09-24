@@ -135,7 +135,7 @@ export default {
 .games img {
   width: calc(100% - (100% - 17px));
   height: calc(100% - (100% - 20px));
-  margin-right: 2%;
+  margin-right: 6%;
 }
 
 .games div {

@@ -189,6 +189,7 @@ export default {
 
 .news-filters .filters-body .keyword {
     height: 13vw;
+  margin-bottom: 4%;
 }
 
 .news-filters .filters-body .search-keyword,
@@ -205,7 +206,7 @@ export default {
 }
 
 .news-filters .filters-body .types {
-    margin-top: 1vw;
+  margin-bottom: 4%;
 }
 
 .news-filters .filters-body .types .icon {

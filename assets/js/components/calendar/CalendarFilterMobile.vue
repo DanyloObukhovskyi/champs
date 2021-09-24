@@ -69,7 +69,7 @@
     }
 
     .dates, .types {
-        margin-top: 1vw;
+      margin-bottom: 4%;
     }
 
     .date {
