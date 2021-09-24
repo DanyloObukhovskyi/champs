@@ -10,7 +10,7 @@
                      no-options="Команд не найдено"
                      :placeholder="description"
                      open-direction="bottom"
-                     style="width: 100%"
+                     style="width: 100%; height: 100%"
                      :options="teams"
                      :multiple="false"
                      :searchable="true"
@@ -92,11 +92,15 @@
 		display: flex;
 		margin-top: 1vw;
 		margin-right: .5vw;
+      justify-content: center;
+      align-items: center;
+      height: 12vw;
+      width: 48%;
     }
     .filter-icon{
-        width: 17vw;
+      width: 43%;
         cursor: pointer;
-        height: 12vw;
+        height: 100%;
         background: rgb(255, 183, 73);
         background: linear-gradient(
                 90deg
@@ -116,7 +120,7 @@
         padding: .4vw;
         border: 1px solid #e8e8e8;
         background: #fff;
-        font-size: 4vw;
+        font-size: 3.3vw;
         width: 100%;
     }
 

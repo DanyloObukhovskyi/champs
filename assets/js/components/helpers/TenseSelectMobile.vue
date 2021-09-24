@@ -35,7 +35,6 @@ export default {
   color: black;
   border: unset;
   font-size: 4vw;
-  padding: .15vw 1vw .3vw 1vw;
   cursor: pointer;
   background: transparent;
 }

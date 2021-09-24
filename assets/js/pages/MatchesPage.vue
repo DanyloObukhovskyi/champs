@@ -31,7 +31,7 @@
     </div>
     <div v-else>
         <div style="margin-top: 20%;">
-            <div class="matches">
+            <div class="matches-mobile">
                 <tense-select-mobile @selected="(select) => selectMatchesType = select"
                                      :counts="counts"
                                      :types="matchTypes"

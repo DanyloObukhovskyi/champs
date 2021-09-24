@@ -1,8 +1,15 @@
 <template>
     <div class="filters">
-        <teams-filter-mobile team="teamA" @setTeam="(team) => setFilter('teamA', team)" description="Команда 1 / Игрок 1"/>
-        <teams-filter-mobile  team="teamB" @setTeam="(team) => setFilter('teamB', team)" description="Команда 2 / Игрок 2"/>
-        <calendar-filter-mobile
+      <div style="display: flex;
+                  flex-direction: row;
+                  justify-content: center;
+                  align-items: center;
+                  width: 100%;
+                  margin-bottom: 2%;">
+        <teams-filter-mobile class="teams" team="teamA" @setTeam="(team) => setFilter('teamA', team)" description="Команда 1 / Игрок 1"/>
+        <teams-filter-mobile class="teams"  team="teamB" @setTeam="(team) => setFilter('teamB', team)" description="Команда 2 / Игрок 2"/>
+      </div>
+        <calendar-filter-mobile style="width: 97%"
                 @setFromDate="(date) => setFilter('dateFrom', date)"
                 @setToDate="(date) => setFilter('dateTo', date)"
                 :date-from="dateFrom"
@@ -45,10 +52,11 @@
 
 <style scoped>
     .filters{
-        display: block;
+        display: flex;
         width: 100%;
-        align-items: end;
+        align-items: center;
         justify-content: space-between;
+      flex-direction: column;
     }
 </style>
 
@@ -58,5 +66,8 @@
     }
     .filters .dates .date .date-calendar{
         margin-right: 0;
+    }
+    .teams {
+      width: 48%;
     }
 </style>
