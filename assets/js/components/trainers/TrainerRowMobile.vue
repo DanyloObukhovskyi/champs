@@ -77,26 +77,28 @@
             <div class="trainer-video">
                 <trainer-row-video-slider-mobile :videos="trainer.videos"/>
             </div>
-            <div class="rank">
-                <label>Ранг/Рейтинг</label>
-                <div class="d-flex align-items-center">
-                    <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
-                    <div>
-                        {{ getRank(trainer) }}
-                        <div class="global-elite" v-if="trainer.trainer.globalElite">
-                            THE GLOBAL ELITE
+            <div class="d-flex col-12">
+                <div class="rank">
+                    <label>Ранг/Рейтинг</label>
+                    <div class="d-flex align-items-center">
+                        <img v-if="!rankIconError" :src="'/images/ranks/' + trainer.rankIcon" @error="rankIconError = true">
+                        <div>
+                            {{ getRank(trainer) }}
+                            <div class="global-elite" v-if="trainer.trainer.globalElite">
+                                THE GLOBAL ELITE
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="achievements">
-                <label v-if="trainer.achievements.length > 0">Достижения</label>
-                <div class="achievement" v-for="achievement in trainer.achievements.slice(0, 3)">
-                    <div class="name">
-                        {{ achievement.tournament }}
-                    </div>
-                    <div class="position">
-                        {{ achievement.achievement }}
+                <div class="achievements">
+                    <label v-if="trainer.achievements.length > 0">Достижения</label>
+                    <div class="achievement" v-for="achievement in trainer.achievements.slice(0, 3)">
+                        <div class="name">
+                            {{ achievement.tournament }}
+                        </div>
+                        <div class="position">
+                            {{ achievement.achievement }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -408,10 +410,10 @@ export default {
     margin-top: 1vw;
 
     .achievements {
-      width: 25%;
+      width: 50%;
 
       .achievement {
-        font-size: 1vw;
+        font-size: 3vw;
 
         .position {
           color: #ff6d1d;
@@ -425,23 +427,23 @@ export default {
 
     div {
       label {
-        font-size: 1vw;
+        font-size: 5vw;
         color: #858585;
       }
     }
 
     .rank {
-      width: 25%;
+      width: 50%;
 
       label {
-        font-size: 1vw;
+        font-size: 5vw;
         color: #858585;
       }
 
       div {
         img {
-          width: 2vw;
-          margin-right: .5vw;
+          width: 6vw;
+          margin-right: 1.5vw;
         }
       }
 

@@ -82,13 +82,13 @@
             transition: .5s ease-in-out;
             display: flex;
             align-items: center;
+            margin-left: 6vw;
         }
 
         .game.active{
             color: white;
-            background-color: #ff6d1d;
-            border-bottom: 1.1vw solid #ff6d1d;
-            border-top: 1.1vw solid #ff6d1d;
+            border: 0.6vw solid #ff6d1d;
+            border-radius: 15%;
         }
 
         .game img {

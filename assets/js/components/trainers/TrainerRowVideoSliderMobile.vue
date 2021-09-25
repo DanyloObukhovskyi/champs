@@ -15,6 +15,10 @@
 import VueSlickCarousel from 'vue-slick-carousel';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
+import YouTubeService from "../../services/YouTubeService";
+import LazyYoutubeVideo from 'vue-lazy-youtube-video'
+import LampHeaderMobile from "../helpers/LampHeaderMobile";
+
 
 export default {
     name: "TrainerRowVideoSliderMobile",
@@ -25,6 +29,8 @@ export default {
     },
     components: {
         'slick-carousel': VueSlickCarousel,
+        LazyYoutubeVideo,
+        LampHeaderMobile,
     },
     data() {
         return {
