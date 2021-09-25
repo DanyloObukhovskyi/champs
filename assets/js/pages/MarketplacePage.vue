@@ -1,19 +1,40 @@
 <template>
-    <div class="marketplace">
-        <marketplace-header :game="game"/>
-        <div class="marketplace-body">
-            <div class="left">
-                <marketplace-sidebar @setGame="setGame" :game="game" :games="games"/>
+    <div class="ml-8 mr-8 p-0 mt-2" v-if="!isMobile">
+        <div class="marketplace">
+            <marketplace-header :game="game"/>
+            <div class="marketplace-body">
+                <div class="left">
+                    <marketplace-sidebar @setGame="setGame" :game="game" :games="games"/>
+                </div>
+                <div class="right">
+                    <marketplace-filters @setFilter="setFilter" v-bind="filters"/>
+                    <trainer-row
+                            v-for="(trainer, index) in trainers"
+                            :key="index"
+                            :games="games"
+                            :description="description"
+                            :trainer="trainer">
+                    </trainer-row>
+                    <div class="d-flex justify-content-center w-100" v-if="load">
+                        <loader/>
+                    </div>
+                </div>
             </div>
-            <div class="right">
-                <marketplace-filters @setFilter="setFilter" v-bind="filters"/>
-                <trainer-row
+        </div>
+    </div>
+    <div style="margin-top: 20%" v-else>
+        <marketplace-header-mobile :game="game"/>
+        <marketplace-sidebar-mobile @setGame="setGame" :game="game" :games="games"/>
+        <div class="marketplace-body">
+            <div class="col-12">
+                <marketplace-filters-mobile @setFilter="setFilter" v-bind="filters"/>
+                <trainer-row-mobile
                         v-for="(trainer, index) in trainers"
                         :key="index"
                         :games="games"
                         :description="description"
                         :trainer="trainer">
-                </trainer-row>
+                </trainer-row-mobile>
                 <div class="d-flex justify-content-center w-100" v-if="load">
                     <loader/>
                 </div>
@@ -31,10 +52,18 @@
     import MarketplaceService from "../services/MarketplaceService";
     import TrainerRow from "../components/trainers/TrainerRow";
     import Loader from "../components/helpers/Loader";
+    import MarketplaceSidebarMobile from "../components/marketplace/MarketplaceSidebarMobile";
+    import MarketplaceHeaderMobile from "../components/marketplace/MarketplaceHeaderMobile";
+    import MarketplaceFiltersMobile from "../components/marketplace/MarketplaceFiltersMobile";
+    import TrainerRowMobile from "../components/trainers/TrainerRowMobile";
 
     export default {
         name: "MarketplacePage",
         components: {
+            TrainerRowMobile,
+            MarketplaceFiltersMobile,
+            MarketplaceHeaderMobile,
+            MarketplaceSidebarMobile,
             Loader,
             TrainerRow,
             MarketplaceFilters,
@@ -93,7 +122,8 @@
         computed: {
             ...mapGetters([
                 'game',
-                'games'
+                'games',
+                'isMobile'
             ]),
             pagesCount() {
                 return Math.ceil(+this.count / +this.perPage)
