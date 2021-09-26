@@ -72,6 +72,7 @@
         background-color: white;
         transition: background-color .5s ease-in-out;
         display: flex;
+        margin-top: 1vw;
 
         .game {
             cursor: pointer;

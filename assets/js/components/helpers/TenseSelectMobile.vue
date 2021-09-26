@@ -34,7 +34,7 @@ export default {
   outline: unset;
   color: black;
   border: unset;
-  font-size: 4vw;
+  font-size: 3.6vw;
   cursor: pointer;
   background: transparent;
 }
