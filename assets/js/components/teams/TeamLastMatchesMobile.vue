@@ -60,7 +60,7 @@ export default {
   .team-matches-head {
     display: flex;
     justify-content: center;
-    font-size: 5vw;
+    font-size: 100%;
     margin-bottom: .5vw;
   }
 

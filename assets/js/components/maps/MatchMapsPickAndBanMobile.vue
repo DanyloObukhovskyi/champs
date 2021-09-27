@@ -70,7 +70,9 @@
 
     .map-pool .map-pool-body .pick-row {
         padding: .9vw;
-        font-size: 6.3vw;
+        font-size: 100%;
+      margin-left: 6%;
+      margin-bottom: 3%;
     }
     .map-height{
         height: 90%;

@@ -4,14 +4,30 @@
       Личные встречи
     </div>
     <div class="match" v-for="match in matches">
-      <div class="ball" :class="checkIsWin(match, teamA) ? 'win' : 'lose'">
-
+      <div class="team-result" style="justify-content: end;">
+        <a class="team-title">{{match.teamA.title}}</a>
+        <div class="personal-meeting-teamA">
+          <a v-if="checkIsWin(match, teamA)">
+            <img src="/images/teamWin.png">
+          </a>
+          <a v-else>
+            <img src="/images/teamLose.png">
+          </a>
+        </div>
       </div>
       <div class="date">
         {{parseDate(match.startedAt.timeStamp)}}
       </div>
-      <div class="ball" :class="checkIsWin(match, teamB) ? 'win' : 'lose'">
-
+      <div class="team-result">
+        <div class="personal-meeting-teamB">
+          <a v-if="checkIsWin(match, teamB)">
+            <img src="/images/teamWin.png">
+          </a>
+          <a v-else>
+            <img src="/images/teamLose.png">
+          </a>
+        </div>
+        <a class="team-title">{{match.teamB.title}}</a>
       </div>
     </div>
   </div>
@@ -53,7 +69,10 @@ export default {
   background-color: #1e2123;
   margin: 1vw 0;
   width: 100%;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .title{
@@ -67,9 +86,8 @@ export default {
 
 .match {
   display: flex;
-  justify-content: space-around;
-  width: 100%;
-  padding: 0 .6vw;
+  justify-content: space-between;
+  width: 80%;
   margin-bottom: .3vw;
   align-items: center;
 
@@ -116,5 +134,21 @@ export default {
     border-radius: 50%;
     border: .1vw solid #2d3135;
   }
+}
+.match .team-title {
+  color: white;
+  font-size: 90%;
+}
+.team-result {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 25%;
+}
+.personal-meeting-teamA {
+  margin-left: 5%;
+}
+.personal-meeting-teamB {
+  margin-right: 5%;
 }
 </style>

@@ -10,15 +10,13 @@
                 </div>
                 <div class="map-statistics-col">
                     <img :src="teamA.logo" alt="">
-                    {{teamA.title}}
                 </div>
                 <div class="map-statistics-col">
                     <img :src="teamB.logo" alt="">
-                    {{teamB.title}}
                 </div>
             </div>
             <div class="maps-row" v-for="map in maps" v-if="map.image !== null">
-                <div class="map" :style="getMapBackground(map)">
+                <div class="map">
                     {{map.name}}
                 </div>
                 <div class="teamA">
@@ -104,7 +102,6 @@
         width: 22%;
         height: 7vw;
         display: flex;
-        justify-content: center;
         align-items: center;
         font-size: 5.3vw;
         margin: 1.05vw 20px;
@@ -112,12 +109,13 @@
 
     .maps-row .map {
         background-size: cover;
-        color: white;
+      font-size: 90%;
     }
 
     .maps-row .teamA,
     .maps-row .teamB {
         background-color: white;
+      justify-content: center;
     }
 
     .dark .maps-row .teamA,
