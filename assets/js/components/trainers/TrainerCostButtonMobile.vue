@@ -19,7 +19,7 @@
                 <i class="fas fa-sort-up" :class="{active: active}" v-else></i>
             </div>
         </div>
-        <div class="description" v-if="show && type !== null" @click="show = false">
+        <div class="description" v-if="show && type !== null && !full" @click="show = false">
             <div class="arrow" :style="descriptionArrowStyle">
             </div>
             <p class="title">
@@ -29,13 +29,22 @@
             </div>
             <a :href="trainerUrl + `?type=${type}`" class="confirm">Принять</a>
         </div>
+        <div class="description" v-show="trainingType !== null && trainingType !== undefined && full && active">
+            <div class="arrow" :style="descriptionArrowStyle">
+            </div>
+            <p class="title">
+                {{ description[trainingType] ? description[trainingType].title : '' }}
+            </p>
+            <div class="text" v-html="description[trainingType] ? description[trainingType].text: ''">
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     name: "TrainerCostButtonMobile",
-    props: ['type', 'cost', 'label', 'show', 'active' , 'trainer', 'description', 'descriptionArrowStyle', 'trainerUrl'],
+    props: ['type', 'cost', 'label', 'show', 'active' , 'trainer', 'description', 'descriptionArrowStyle', 'trainerUrl', 'full', 'trainingType'],
     computed: {
         lessonHoursCount() {
             let str = '';

@@ -59,6 +59,8 @@
                     :type="cost.lessonType"
                     :show="type === cost.lessonType"
                     :active="type === cost.lessonType"
+                    :full="false"
+                    :training-type="null"
                     :trainerUrl="trainerUrl"
                     :cost="cost.price">
             </trainer-cost-button-mobile>

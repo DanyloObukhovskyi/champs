@@ -61,16 +61,16 @@
                         <pre v-html="trainer.trainer.method"></pre>
                     </div>
                 </div>
-                <trainer-timetable
+                <trainer-timetable-mobile
                         v-if="trainer !== null && !load"
                         :training-type="trainingType"
                         :payment-type="paymentType"
                         :trainer="trainer">
-                </trainer-timetable>
-                <trainer-reviews v-if="trainer !== null && !load"
+                </trainer-timetable-mobile>
+                <trainer-reviews-mobile v-if="trainer !== null && !load"
                                  @update="updateReviews"
                                  :trainer="trainer">
-                </trainer-reviews>
+                </trainer-reviews-mobile>
             </div>
             <div class="d-flex justify-content-center" v-if="load">
                 <loader/>
@@ -89,6 +89,8 @@ import TrainerReviews from "../components/trainers/TrainerReviews";
 import MarketplaceTrainerBannerMobile from "../components/marketplace/MarketplaceTrainerBannerMobile";
 import {mapGetters} from "vuex";
 import TrainerFullRowMobile from "../components/trainers/TrainerFullRowMobile";
+import TrainerTimetableMobile from "../components/trainers/TrainerTimetableMobile";
+import TrainerReviewsMobile from "../components/trainers/TrainerReviewsMobile";
 
 const games = [
     {
@@ -112,6 +114,8 @@ export default {
     name: "MarketplaceTrainerPage",
     props: ['social', 'trainerId', 'trainingType', 'paymentType'],
     components: {
+        TrainerReviewsMobile,
+        TrainerTimetableMobile,
         TrainerFullRowMobile,
         MarketplaceTrainerBannerMobile,
         TrainerReviews,

@@ -85,7 +85,8 @@ export default {
   width: 6vw;
   border-radius: 50%;
   border: .25vw solid #2d3135;
-
+  margin-bottom: 2vw;
+  
   &.win {
     background: #33cc66;
   }

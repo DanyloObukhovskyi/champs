@@ -58,20 +58,13 @@
                     :descriptionArrowStyle="descriptionArrowStyle"
                     :show="show"
                     :trainer="trainer"
-                    :active="type === cost.lessonType"
+                    :active="trainingType === cost.lessonType"
                     :trainerUrl="trainerUrl"
+                    :training-type="trainingType"
+                    :full="true"
                     :cost="cost.price">
             </trainer-cost-button-mobile>
         </div>
-<!--        <div class="description" v-show="trainingType !== null && trainingType !== undefined">-->
-<!--            <div class="arrow" :style="descriptionArrowStyle">-->
-<!--            </div>-->
-<!--            <p class="title">-->
-<!--                {{ description[trainingType] ? description[trainingType].title : '' }}-->
-<!--            </p>-->
-<!--            <div class="text" v-html="description[trainingType] ? description[trainingType].text: ''">-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="trainer-footer">
             <div class="video-slider">
                 <trainer-row-video-slider-mobile :videos="trainer.videos"/>

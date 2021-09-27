@@ -365,6 +365,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        left: 25%;
     }
 
     .match-header .teamA {
