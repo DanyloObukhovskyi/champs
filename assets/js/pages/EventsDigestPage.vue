@@ -769,6 +769,9 @@
         border-radius: 1vw;
         font-size: 3vw;
         margin-top: 1vw;
+        background: white;
+        color: #35495e;
+        border: 1px solid #e8e8e8;
     }
 
     .events-digest-mobile .search-filter input,
@@ -814,6 +817,9 @@
 
     .events-digest-mobile .search-filter.prize input {
         width: 18vw;
+        background: white;
+        color: #35495e;
+        border: 1px solid #e8e8e8;
     }
 
     .events-digest-mobile .dates .date:nth-child(1) {

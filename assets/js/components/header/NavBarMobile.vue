@@ -12,8 +12,17 @@
         </a>
       </div>
       <div id="myDropdown" class="dropdown-content">
-        <div class="pb-2" style="background: #1a1d21;">
-          <a class="exit_button">&Chi;</a>
+        <div class="pb-2" style="background: #1a1d21;" >
+          <div class="d-flex col-12">
+            <div class="theme-toggle d-flex align-items-center" style="width: 85%;
+}">
+              <i class="fas fa-sun sun"></i>
+              <div class="toggler" :class="{active: theme === 'dark'}" @click="toggleTheme">
+              </div>
+              <i class="fas fa-moon moon"></i>
+            </div>
+            <a class="exit_button">&Chi;</a>
+          </div>
           <a :href="home" class="pointer" :class="{active : router == 'home'}">
             Главная
           </a>
@@ -292,7 +301,7 @@ export default {
       document.getElementById("cabinetMenu").classList.toggle("show");
     },
     toggle_down: function (event) {
-      if (!event.target.matches('.dropbtn')) {
+      if (!event.target.matches('.dropbtn') && !event.target.matches('.theme-toggle.d-flex.align-items-center') && !event.target.matches('.toggler') && !event.target.matches('i.fas.fa-sun.sun') && !event.target.matches('i.fas.fa-moon.moon')) {
 
         var dropdowns = document.getElementsByClassName("dropdown-content");
         var i;
@@ -316,11 +325,32 @@ export default {
           }
         }
       }
+    },
+    toggleTheme() {
+      if (this.theme === 'dark') {
+        this.setTheme('light');
+      } else {
+        this.setTheme('dark');
+      }
+      this.theme = localStorage.getItem('theme');
+    },
+    setDefaultTheme() {
+      if (localStorage.getItem('theme') === null) {
+        this.setTheme('light');
+      } else {
+        this.setTheme(localStorage.getItem('theme'));
+      }
+      this.theme = localStorage.getItem('theme');
+    },
+    setTheme(themeName) {
+      localStorage.setItem('theme', themeName);
+      document.documentElement.className = themeName;
     }
   },
   mounted() {
     document.addEventListener('click', this.toggle_down)
     document.addEventListener('click', this.toggle_down_login_menu)
+    this.setDefaultTheme()
   }
 }
 </script>
@@ -516,5 +546,63 @@ export default {
       }
     }
   }
+}
+
+.dark .theme-toggle .toggler {
+  border: 2px solid #2d3135;
+}
+
+.theme-toggle .toggler {
+  padding: .7vw;
+  height: 6.6vw;
+  width: 13.5vw;
+  border-radius: 99px;
+  cursor: pointer;
+  font-weight: 400;
+  vertical-align: middle;
+  border: 2px solid #e5e5e5;
+  transition: background-color .4s ease, border-color .4s ease, padding-left .4s ease;
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9InBvZGxvemhrYSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjUwJSIgeDI9IjEwMCUiIHkyPSI1MCUiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzYzQxNDYiIHN0b3Atb3BhY2l0eT0iMSIgLz4KPHN0b3Agb2Zmc2V0PSIyNS40Mzk0NTMlIiBzdG9wLWNvbG9yPSIjM2EzZjQ0IiBzdG9wLW9wYWNpdHk9IjEiIC8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzM1MzkzZSIgc3RvcC1vcGFjaXR5PSIwIiAvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI3BvZGxvemhrYSkiIC8+PC9zdmc+), #202225;
+  background: -moz-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+  background: -o-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+  background: -webkit-linear-gradient(0deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0, #3c4146), color-stop(25.439453%, #3a3f44), to(rgba(53, 57, 62, 0.0))), #202225;
+  background: -webkit-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+  background: -moz-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+  background: -o-linear-gradient(left, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+  background: linear-gradient(90deg, #3c4146 0, #3a3f44 25.439453%, rgba(53, 57, 62, 0.0) 100%), #202225;
+}
+
+.theme-toggle .toggler::before {
+  display: inline-block;
+  width: 3.8vw;
+  height: 3.8vw;
+  background-color: white;
+  content: "";
+  text-align: center;
+  vertical-align: top;
+  line-height: 1.2vw;
+  border-radius: 99px;
+}
+
+.theme-toggle .toggler.active {
+  padding-left: 7.1vw !important;
+}
+
+.theme-toggle .toggler.active::before {
+  background-color: #fff;
+  content: "";
+}
+
+.sun {
+  color: #ff6d1d;
+  font-size: 3.8vw;
+  margin-right: 1.3vw;
+}
+
+.moon {
+  color: #8298ac;
+  font-size: 3.8vw;
+  margin-left: 1.3vw;
 }
 </style>
