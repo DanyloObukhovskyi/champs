@@ -357,7 +357,7 @@
                               p {
                                   line-height: 1vw;
                                   margin-bottom: 0;
-                                  font-size: 3vw;
+                                  font-size: 2.5vw;
                                   font-weight: 600;
 
                                   &:first-child {

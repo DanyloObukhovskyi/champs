@@ -169,7 +169,7 @@ export default {
         border: .25vw solid #ff6d1d;
         color: #ff6d1d;
         text-align: center;
-        font-size: 1vw;
+        font-size: 3vw;
         cursor: pointer;
         display: flex;
         justify-content: center;
@@ -190,7 +190,7 @@ export default {
         border: .25vw solid gray;
         color: gray;
         text-align: center;
-        font-size: 1vw;
+        font-size: 3vw;
         cursor: pointer;
         display: flex;
         justify-content: center;

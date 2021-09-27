@@ -70,7 +70,7 @@
                 Записаться
             </button>
         </div>
-        <trainer-confirm-payment
+        <trainer-confirm-payment-mobile
                 :trainer="trainer"
                 :lessons="times"
                 :date="date"
@@ -78,7 +78,7 @@
                 :payment-type="paymentType"
                 :selected-length="times.filter(t => t.status === 2).length"
                 :training-type="trainingType">
-        </trainer-confirm-payment>
+        </trainer-confirm-payment-mobile>
     </div>
 </template>
 
@@ -92,10 +92,12 @@
     import Swal from "sweetalert2";
     import TrainerCalendarMobile from "../calendar/TrainerCalendarMobile";
     import TrainerTimePickerMobile from "./TrainerTimePickerMobile";
+    import TrainerConfirmPaymentMobile from "./TrainerConfirmPaymentMobile";
 
     export default {
         name: "TrainerTimetableMobile",
         components: {
+            TrainerConfirmPaymentMobile,
             TrainerTimePickerMobile,
             TrainerCalendarMobile,
             TrainerConfirmPayment,
@@ -436,7 +438,7 @@
 	  .result-time {
 		background-color: #ffffff;
 		padding: 1vw;
-		font-size: 1vw;
+		font-size: 4vw;
 		margin-right: 1vw;
 	  }
 

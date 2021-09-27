@@ -144,9 +144,10 @@ export default {
           padding: .5vw;
           border: unset;
           outline: unset;
-          font-size: 1vw;
+          font-size: 6vw;
           cursor: pointer;
           background-color: white;
+            color: black;
 
           &:hover {
             opacity: .5;
@@ -158,7 +159,7 @@ export default {
           padding: .5vw;
           border: unset;
           outline: unset;
-          font-size: 1vw;
+          font-size: 6vw;
           cursor: pointer;
           color: white;
           background-color: #ff6d1d;
@@ -263,7 +264,7 @@ export default {
             padding: .5vw;
             border: unset;
             outline: unset;
-            font-size: 1vw;
+            font-size: 6vw;
             cursor: pointer;
             color: white;
             background-color: #2d3135;
@@ -278,7 +279,7 @@ export default {
             padding: .5vw;
             border: unset;
             outline: unset;
-            font-size: 1vw;
+            font-size: 6vw;
             cursor: pointer;
             color: white;
             background-color: #ff6d1d;

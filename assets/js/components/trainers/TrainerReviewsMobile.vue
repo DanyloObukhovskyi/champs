@@ -83,17 +83,19 @@
                 </div>
             </div>
         </div>
-        <trainer-send-review @send="sendReview" v-if="hasPermissionToReview"/>
+        <trainer-send-review-mobile @send="sendReview" v-if="hasPermissionToReview"/>
     </div>
 </template>
 
 <script>
     import TrainerSendReview from "./TrainerSendReview";
     import MarketplaceService from "../../services/MarketplaceService";
+    import TrainerSendReviewMobile from "./TrainerSendReviewMobile";
 
     export default {
         name: "TrainerReviewsMobile",
         components: {
+            TrainerSendReviewMobile,
             TrainerSendReview
         },
         props: [
