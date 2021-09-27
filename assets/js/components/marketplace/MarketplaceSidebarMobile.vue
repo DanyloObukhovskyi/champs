@@ -77,8 +77,6 @@
         .game {
             cursor: pointer;
             padding: 1.5vw 2vw;
-            border-bottom: .1vw solid #f8f8f8;
-            border-top: .1vw solid #f8f8f8;
             font-weight: 700;
             transition: .5s ease-in-out;
             display: flex;
@@ -108,11 +106,6 @@
         .marketplace-sidebar{
             background-color: #1e2123;
             color: white;
-
-            .game {
-                border-bottom: .1vw solid #35393e;
-                border-top: .1vw solid #35393e;
-            }
         }
     }
 </style>

@@ -207,12 +207,9 @@ export default {
 
 .dark {
   .price-row {
-    width: 30%;
-    padding: .1vw .11vw;
     background: url(/images/marketplace/darkPriceBackground.png);
     background-position: center;
     background-size: cover;
-    height: 4.1vw;
 
     &:hover {
       background: linear-gradient(
