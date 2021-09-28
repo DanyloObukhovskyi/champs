@@ -80,7 +80,7 @@
     .lamp-header .wrapper .title{
         color: white;
         font-family: 'Exo 2';
-        font-size: 5vw;
+        font-size: 4.6vw;
     }
     .lamp-header .description{
         margin-right: 1vw;
