@@ -216,15 +216,16 @@ export default {
 }
 
 .tags .tag {
-    font-size: 1vw;
+    font-size: 3.8vw;
     text-transform: uppercase;
-    padding: .1vw .6vw;
+    padding: .6vw 2vw;
     color: white;
     background: #ff6d1d;
     border-radius: .8vw;
     border: none;
-    margin-right: 2vw;
+    margin-right: 3vw;
     cursor: pointer;
+    margin-bottom: 3vw;
 }
 
 .tags .tag:hover {

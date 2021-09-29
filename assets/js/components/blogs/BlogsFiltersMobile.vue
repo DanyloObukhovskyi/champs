@@ -13,15 +13,15 @@
             </a>
         </div>
         <div class="filters-middle">
-            <a href="createBlogAndReward" class="d-flex align-items-center filters-buttons">
-                <img class="filters-icons filters-icons2" alt=""></img>
-                <span class="blog-button">Создай блог и заработай!</span>
-            </a>
-        </div>
-        <div class="filters-middle">
             <a href="howCreateBlog"  class="d-flex align-items-center filters-buttons">
                 <img class="filters-icons filters-icons3" alt=""></img>
                 <span class="blog-button">Как вести успешный блог?</span>
+            </a>
+        </div>
+        <div class="filters-middle">
+            <a href="createBlogAndReward" class="d-flex align-items-center filters-buttons">
+                <img class="filters-icons filters-icons2" alt=""></img>
+                <span class="blog-button">Создай блог и заработай!</span>
             </a>
         </div>
         <div class="filters-body">
@@ -248,14 +248,14 @@ export default {
     }
 
     .news-filters .filters-body .keyword {
-        height: 13vw;
-      margin-bottom: 4%;
+        height: 11vw;
+        margin-bottom: 4%;
     }
 
     .news-filters .filters-body .search-keyword,
     .types .icon {
-        width: 16vw;
-        height: 13vw;
+        width: 14vw;
+        height: 11vw;
         background: rgb(255, 183, 73);
         background: linear-gradient(90deg, rgba(255, 183, 73, 1) 0%, rgba(254, 121, 36, 1) 100%);
         color: white;
@@ -270,7 +270,7 @@ export default {
     }
 
     .news-filters .filters-body .types .icon {
-        width: 13.35vw;
+        width: 12vw;
     }
 
     .news-filters .filters-body .full-input {
@@ -280,12 +280,14 @@ export default {
         border: 0.02vw solid #CFDCF3;
         background-color: white;
         flex-wrap: wrap;
-        font-size: 5vw;
+        font-size: 3vw;
     }
 
     .news-filters .filters-body .full-input input {
         outline: unset;
         border: none;
+        font-weight: 600;
+        padding-left: 3vw;
     }
 
     .news-filters .filters-body .types i {
@@ -293,7 +295,7 @@ export default {
     }
 
     .news-filters .filters-body .types .icon img {
-        width: 5.4vw;
+        width: 5vw;
     }
 
     .news-filters .filters-body .pointer {
@@ -358,6 +360,7 @@ export default {
     }
     .filters_text{
         color: #212529;
+        margin-left: 2vw;
     }
     .news-filters_multiselect::v-deep .multiselect {
         width: 100% !important;
@@ -413,7 +416,7 @@ export default {
 }
 .filters-middle
 {
-  margin-bottom: 6vw;
+  margin-bottom: 8vw;
   padding-left: 2vw;
   padding-right: 2vw;
 }
@@ -421,6 +424,7 @@ export default {
     margin-left: 10.5vw;
     padding-left: 0.3vw;
     padding-right: 0.3vw;
+    font-size: 4vw;
 }
 .filters-middle:hover .blog-button{
     background-color: #ff6d1d;
@@ -436,7 +440,7 @@ export default {
 .filters-icons1{
     content: url('/images/icons/blog.svg');
     background-repeat: no-repeat;
-    width: 8vw;
+    width: 7vw;
 }
 .dark .filters-icons1{
     content: url('/images/icons/blogWhite.svg');
@@ -447,6 +451,7 @@ export default {
     background-repeat: no-repeat;
     width: 6.5vw;
     margin-left: 0.25vw;
+    height: 7vw;
 }
 .dark .filters-icons2{
     content: url('/images/icons/blog2White.svg');
@@ -455,7 +460,7 @@ export default {
 .filters-icons3{
     content: url('/images/icons/vrsti.svg');
     background-repeat: no-repeat;
-    width: 6.5vw;
+    height: 7vw;
     margin-left: 0.25vw;
 }
 .dark .filters-icons3{

@@ -329,16 +329,18 @@
   padding-bottom: 5vw;
 }
 .news-block .mobile-tags .mobile-tag {
-  font-size: 3.8vw;
-  text-transform: uppercase;
-  padding: .1vw .6vw;
-  color: white !important;
-  background: #ff6d1d;
-  border-radius: .8vw;
-  border: none;
-  margin-right: 2vw;
-  cursor: pointer;
-  margin-top: 1vw;
+    font-size: 3.8vw;
+    text-transform: uppercase;
+    padding: .1vw 1.6vw;
+    color: white !important;
+    background: #ff6d1d;
+    border-radius: .8vw;
+    border: none;
+    margin-bottom: 3vw;
+    cursor: pointer;
+    margin-top: 3vw;
+    height: 7vw;
+    margin-right: 3vw;
 }
     .news {
         margin-bottom: 3vw;

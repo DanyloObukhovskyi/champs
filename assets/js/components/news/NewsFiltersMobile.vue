@@ -188,14 +188,14 @@ export default {
 }
 
 .news-filters .filters-body .keyword {
-    height: 13vw;
-  margin-bottom: 4%;
+    height: 11vw;
+    margin-bottom: 4%;
 }
 
 .news-filters .filters-body .search-keyword,
 .types .icon {
-    width: 16vw;
-    height: 13vw;
+    width: 14vw;
+    height: 11vw;
     background: rgb(255, 183, 73);
     background: linear-gradient(90deg, rgba(255, 183, 73, 1) 0%, rgba(254, 121, 36, 1) 100%);
     color: white;
@@ -210,7 +210,7 @@ export default {
 }
 
 .news-filters .filters-body .types .icon {
-    width: 13.35vw;
+    width: 12vw;
 }
 
 .news-filters .filters-body .full-input {
@@ -220,12 +220,14 @@ export default {
     border: 0.02vw solid #CFDCF3;
     background-color: white;
     flex-wrap: wrap;
-    font-size: 5vw;
+    font-size: 3vw;
 }
 
 .news-filters .filters-body .full-input input {
     outline: unset;
     border: none;
+    font-weight: 600;
+    padding-left: 3vw;
 }
 
 .news-filters .filters-body .types i {
@@ -233,7 +235,7 @@ export default {
 }
 
 .news-filters .filters-body .types .icon img {
-    width: 5.4vw;
+    width: 5vw;
 }
 
 .news-filters .filters-body .pointer {
@@ -298,6 +300,7 @@ export default {
 }
 .filters_text{
     color: #212529;
+    margin-left: 2vw;
 }
 .news-filters_multiselect::v-deep .multiselect {
     width: 100% !important;

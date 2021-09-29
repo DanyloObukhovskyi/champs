@@ -62,7 +62,7 @@
                 90deg
                 , rgba(255, 183, 73, 1) 0%, rgba(254, 121, 36, 1) 100%);
         color: white;
-        font-size: 7.2vw;
+        font-size: 5.2vw;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -73,7 +73,7 @@
     }
 
     .date {
-        font-size: 4.9vw;
+        font-size: 4vw;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -84,10 +84,10 @@
     }
 
     .dates .date .date-calendar {
-        width: 14.35vw;
+        width: 12vw;
         align-items: center;
         display: flex;
-        margin-right: .3vw;
+        margin-right: 2.3vw;
         cursor: pointer;
     }
 
