@@ -416,7 +416,7 @@ export default {
 }
 .filters-middle
 {
-  margin-bottom: 8vw;
+  margin-bottom: 6vw;
   padding-left: 2vw;
   padding-right: 2vw;
 }
@@ -424,7 +424,6 @@ export default {
     margin-left: 10.5vw;
     padding-left: 0.3vw;
     padding-right: 0.3vw;
-    font-size: 4vw;
 }
 .filters-middle:hover .blog-button{
     background-color: #ff6d1d;
@@ -440,7 +439,7 @@ export default {
 .filters-icons1{
     content: url('/images/icons/blog.svg');
     background-repeat: no-repeat;
-    width: 7vw;
+    width: 8vw;
 }
 .dark .filters-icons1{
     content: url('/images/icons/blogWhite.svg');
@@ -451,7 +450,6 @@ export default {
     background-repeat: no-repeat;
     width: 6.5vw;
     margin-left: 0.25vw;
-    height: 7vw;
 }
 .dark .filters-icons2{
     content: url('/images/icons/blog2White.svg');
@@ -460,7 +458,7 @@ export default {
 .filters-icons3{
     content: url('/images/icons/vrsti.svg');
     background-repeat: no-repeat;
-    height: 7vw;
+    width: 6.5vw;
     margin-left: 0.25vw;
 }
 .dark .filters-icons3{

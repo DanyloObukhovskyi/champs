@@ -51,12 +51,12 @@
 </script>
 
 <style scoped>
-    .filters{
+    .filters {
         display: flex;
         width: 100%;
         align-items: center;
         justify-content: space-between;
-      flex-direction: column;
+        flex-direction: column;
     }
     .calendarFilter >>> .fas {
       font-size: 5vw;
