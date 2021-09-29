@@ -9,7 +9,7 @@
         <teams-filter-mobile class="teams" team="teamA" @setTeam="(team) => setFilter('teamA', team)" description="Команда 1 / Игрок 1"/>
         <teams-filter-mobile class="teams"  team="teamB" @setTeam="(team) => setFilter('teamB', team)" description="Команда 2 / Игрок 2"/>
       </div>
-        <calendar-filter-mobile style="width: 97%"
+        <calendar-filter-mobile style="width: 97%" class="calendarFilter"
                 @setFromDate="(date) => setFilter('dateFrom', date)"
                 @setToDate="(date) => setFilter('dateTo', date)"
                 :date-from="dateFrom"
@@ -57,6 +57,9 @@
         align-items: center;
         justify-content: space-between;
       flex-direction: column;
+    }
+    .calendarFilter >>> .fas {
+      font-size: 5vw;
     }
 </style>
 

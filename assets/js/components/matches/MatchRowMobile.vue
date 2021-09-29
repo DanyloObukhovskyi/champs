@@ -216,15 +216,15 @@
     }
 
     .event-logo img {
-        width: 2.5vw;
-        margin-right: .5vw;
-        top: 1vw;
+      width: 3.5vw;
+      margin-right: .5vw;
+      top: 0.5vw;
     }
 
     .event-name {
-        font-size: 2vw;
-        color: #5c6b79;
-        top: 1.5vw;
+      font-size: 3vw;
+      color: #5c6b79;
+      top: 1vw;
     }
 
     .teams {

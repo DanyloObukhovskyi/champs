@@ -1,7 +1,7 @@
 <template>
     <div class="teams-filter">
         <div class="filter-icon" @click="clear">
-            <i class="fab fa-teamspeak"></i>
+            <i class="fab fa-teamspeak" style="font-size: 5vw;"></i>
         </div>
         <multiselect v-model="selected"
                      label="name"
