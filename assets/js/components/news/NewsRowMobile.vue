@@ -179,14 +179,14 @@ export default {
 .tags .tag {
     font-size: 3.8vw;
     text-transform: uppercase;
-    padding: .6vw 2vw;
+    padding: .1vw .6vw;
     color: white;
     background: #ff6d1d;
     border-radius: .8vw;
     border: none;
-    margin-right: 3vw;
+    margin-right: 2vw;
     cursor: pointer;
-    margin-bottom: 3vw;
+    margin-bottom: 1vw;
 }
 
 .tags .tag:hover {
