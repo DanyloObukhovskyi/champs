@@ -535,6 +535,7 @@ export default {
     cursor: pointer;
     margin-top: 3vw;
     height: 7vw;
+    margin-right: 3vw;
 }
 .news-row {
   margin-bottom: 2vw;
