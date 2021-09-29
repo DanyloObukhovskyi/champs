@@ -300,7 +300,7 @@
         display: flex;
         justify-content: center;
         margin-right: .5vw;
-        font-size: .8vw;
+        font-size: 1.8vw;
         align-items: center;
         color: #ff6d1d;
         padding-left: 3.5vw;
@@ -314,7 +314,7 @@
     }
 
     .play .play-wrapper i {
-        font-size: 2vw;
+        font-size: 3vw;
         color: #ff6d1d;
     }
 

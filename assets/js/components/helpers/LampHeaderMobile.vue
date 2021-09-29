@@ -84,7 +84,7 @@
     }
     .lamp-header .description{
         margin-right: 1vw;
-        font-size: .8vw;
+        font-size: 3vw;
         color: #ff6d1d;
         transition: all .1s ease;
     }

@@ -106,7 +106,7 @@
         color: black;
         margin-top: 1vw;
         padding: .3vw .8vw;
-        height: 20vw;
+        height: 25vw;
         moz-transition: all .1s ease-in-out;
         -o-transition: all .1s ease-in-out;
         -webkit-transition: all .1s ease-in-out;
