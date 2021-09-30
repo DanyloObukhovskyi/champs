@@ -184,7 +184,7 @@
         width: 70%;
         margin: 0 auto;
         margin-top: 6.1vw;
-        height: 2%;
+        height: 4%;
     }
 
     .login_form .login_block .login_input input {
@@ -199,6 +199,7 @@
         transition: 0.3s;
         color: #000000;
         font-weight: 500;
+      top: 2vw
     }
 
     .login_form .login_block .login_input span {
@@ -206,7 +207,7 @@
         height: 100%;
         position: absolute;
         left: 0;
-        bottom: 0;
+        bottom: 2vw;
         display: flex;
         align-items: center;
         font-size: 3.8vw;
