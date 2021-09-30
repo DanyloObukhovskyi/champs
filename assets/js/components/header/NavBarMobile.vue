@@ -12,10 +12,9 @@
         </a>
       </div>
       <div id="myDropdown" class="dropdown-content">
-        <div class="pb-2" style="background: #1a1d21;" >
+        <div class="pb-2">
           <div class="d-flex col-12">
-            <div class="theme-toggle d-flex align-items-center" style="width: 85%;
-}">
+            <div class="theme-toggle d-flex align-items-center" style="width: 85%; margin-left: 2%;">
               <i class="fas fa-sun sun"></i>
               <div class="toggler" :class="{active: theme === 'dark'}" @click="toggleTheme">
               </div>
@@ -46,11 +45,14 @@
           </a>
         </div>
         <div class="lower-dropdown pt-2">
-          <a>
-            <small>Часовой пояс</small> <small style="float: right">{{ user !== null && user.gmt !== null ? user.gmt : 'GMT+3' }}</small>
+          <div class="timezone">
+          <a class="timezone-content">
+            <small style="color: #9d9fa0;">Часовой пояс</small> <small style="float: right; color: #8298ac;">{{ user !== null && user.gmt !== null ? user.gmt : 'GMT+3' }}</small>
           </a>
-          <a>
-            <small>Помощь игроку</small>
+          </div>
+          <div class="helping-player">
+          <a style="display: flex;
+             justify-content: center;">
             <div class="help d-flex" style="float: right">
             <a style="fill: rgba(0, 0, 0, 0);width: 10.6vw;" href="https://discord.gg/XsYHZXD9" target="_blank">
               <svg class="discord" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -64,13 +66,14 @@
               </svg>
             </a>
             <a href="">
-              <i class="far fa-question-circle zendesk"></i>
+              <i class="far fa-question-circle zendesk" style="font-size: 5.2vw;"></i>
             </a>
             <a href="mailto:support@champs.pro" target="_blank">
-              <i class="fas fa-envelope letter"></i>
+              <i class="fas fa-envelope letter" style="font-size: 5.2vw;"></i>
             </a>
           </div>
           </a>
+          </div>
         </div>
       </div>
       <div class="login-wrapper">
@@ -434,7 +437,7 @@ export default {
   position: absolute;
   top: 100%;
   right: 33%;
-  background-color: rgb(66, 61, 61);;
+  background-color: #35393e;
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1029;
@@ -444,7 +447,7 @@ export default {
   color: white;
   padding: 4%;
   text-decoration: none;
-  display: block;
+  display: flex;
 }
 
 .dropdown-content-login {
@@ -467,7 +470,6 @@ export default {
 
 .lower-dropdown {
   text-decoration: none;
-  background: rgb(51, 56, 61);
   cursor: pointer;
 }
 
@@ -604,5 +606,23 @@ export default {
   color: #8298ac;
   font-size: 3.8vw;
   margin-left: 1.3vw;
+}
+.timezone {
+  background: #26292c;
+  margin-bottom: 0.6%;
+}
+.helping-player {
+  background: #26292c;
+}
+.timezone-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.help {
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
