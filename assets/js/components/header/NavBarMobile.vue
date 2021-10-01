@@ -52,7 +52,8 @@
           </div>
           <div class="helping-player">
           <a style="display: flex;
-             justify-content: center;">
+             justify-content: center;
+              height: 100%;">
             <div class="help d-flex" style="float: right">
             <a style="fill: rgba(0, 0, 0, 0);" href="https://discord.gg/XsYHZXD9" target="_blank">
               <svg class="discord" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -613,6 +614,8 @@ export default {
 }
 .helping-player {
   background: #26292c;
+  border-top: 0.5vw solid #423d3d;
+  height: 19vw;
 }
 .timezone-content {
   display: flex;
