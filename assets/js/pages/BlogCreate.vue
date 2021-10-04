@@ -1215,4 +1215,8 @@
         min-width: 12.6vw;
         width: 100% !important;
     }
+
+    .multiselect.events-digest-mobile-discipline::v-deep .setting .setting-container-body .multiselect .multiselect__single {
+        font-size: 3vw;
+    }
 </style>
