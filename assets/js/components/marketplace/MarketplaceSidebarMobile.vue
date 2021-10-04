@@ -72,7 +72,8 @@
         background-color: white;
         transition: background-color .5s ease-in-out;
         display: flex;
-        margin-top: 1vw;
+      padding: 2vw 0vw;
+      justify-content: space-around;
 
         .game {
             cursor: pointer;
@@ -81,7 +82,6 @@
             transition: .5s ease-in-out;
             display: flex;
             align-items: center;
-            margin-left: 6vw;
         }
 
         .game.active{
@@ -107,6 +107,8 @@
             background-color: #1e2123;
             color: white;
           padding: 2vw 0vw;
+          display: flex;
+          justify-content: space-around;
         }
     }
 </style>
