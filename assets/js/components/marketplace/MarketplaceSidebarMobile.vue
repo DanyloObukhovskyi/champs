@@ -92,7 +92,7 @@
 
         .game img {
             width: 10vw;
-            margin-right: .8vw;
+          margin-left: .2vw;
         }
     }
 
@@ -106,6 +106,7 @@
         .marketplace-sidebar{
             background-color: #1e2123;
             color: white;
+          padding: 2vw 0vw;
         }
     }
 </style>
